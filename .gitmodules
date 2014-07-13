@@ -7,3 +7,6 @@
 [submodule "assets/vendor/respondjs"]
 	path = assets/vendor/respondjs
 	url = https://github.com/scottjehl/Respond.git
+[submodule "wpametu"]
+	path = wpametu
+	url = https://github.com/hametuha/wpametu.git
