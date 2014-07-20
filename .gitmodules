@@ -10,6 +10,3 @@
 [submodule "wpametu"]
 	path = wpametu
 	url = https://github.com/hametuha/wpametu.git
-[submodule "assets/vendor/jquery-ui-mp6"]
-	path = assets/vendor/jquery-ui-mp6
-	url = https://github.com/hametuha/jquery-ui-mp6.git
