@@ -1,0 +1,82 @@
+#add-thread{
+  margin: 20px 0;
+}
+
+// プロフィール
+.thread-info{
+  .avatar{
+    width: 80px;
+    height: 80px;
+    @extend .img-circle;
+  }
+  .author{
+    span{
+      font-size: 1.2em;
+    }
+  }
+}
+
+// キャレットのサイズ
+$carret-size: 20px;
+
+// タイトルヘッダー
+.thread-body{
+  h1{
+    position: relative;
+    margin-top: 0;
+    padding: 0.5em;
+    @include border-radius(10px);
+    border: 2px solid $thin-border;
+    &:before, &:after{
+      content: "";
+      display: block;
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: $carret-size solid transparent;
+      top: 15px;
+    }
+    &:before{
+      left: -2 * $carret-size;
+      border-right-color: $thin-border;
+    }
+    &:after{
+      left: -2 * $carret-size + 2;
+      border-right-color: #fff;
+    }
+
+  }
+  .metadata{
+    border-bottom: none;
+  }
+  // スレッド本文
+  .thread-inner{
+    font-size: 1.4em;
+    line-height: 1.6;
+  }
+}
+
+@media only screen and (max-width: $screen-xs-max) {
+  .thread-body{
+    h1{
+      font-size: 20px;
+      margin-top: 20px;
+      &:before, &:after{
+        left: 20px;
+        border-right-color: transparent;
+      }
+      &:before{
+        top: (-2 * $carret-size) - 2;
+        border-bottom-color: $thin-border;
+      }
+      &:after{
+        top: -2 * $carret-size + 2;
+        border-bottom-color: #fff;
+      }
+    }
+    // スレッド本文
+    .thread-inner{
+      font-size: 14px;
+    }
+  }
+}

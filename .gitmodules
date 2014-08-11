@@ -1,0 +1,12 @@
+[submodule "assets/vendor/bootstrap-sass"]
+	path = assets/vendor/bootstrap-sass
+	url = https://github.com/twbs/bootstrap-sass.git
+[submodule "assets/vendor/html5shiv"]
+	path = assets/vendor/html5shiv
+	url = https://github.com/aFarkas/html5shiv.git
+[submodule "assets/vendor/respondjs"]
+	path = assets/vendor/respondjs
+	url = https://github.com/scottjehl/Respond.git
+[submodule "wpametu"]
+	path = wpametu
+	url = https://github.com/hametuha/wpametu.git

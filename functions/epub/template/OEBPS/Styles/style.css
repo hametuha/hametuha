@@ -1,0 +1,229 @@
+@charset "UTF-8";
+/* CSS Document */
+body{
+    font-size:10pt;
+	font-family:'HiraMinProN-W3', serif;
+	color:#1e1e1e;
+}
+a:link{
+	color:#06c;
+	text-decoration:underline;
+}
+a:visited{
+	color:#06c;
+	text-decoration:underline;
+}
+a:hover{
+	color:#D14836;
+	text-decoration:none;
+}
+a:active{
+	color:#D14836;
+	text-decoration:none;
+}
+
+/*カバー*/
+#cover_image{
+	page-break-after: always;
+}
+
+
+/*タイトル*/
+#title{
+	color:#444444;
+	text-align:center;
+}
+h1{
+	font-size:2.5em;
+	font-weight:normal;
+	text-align:center;
+	margin:3em 0 1em;
+	font-family:'HiraMinProN-W3', serif;
+}
+#author_name{
+	text-align:center !important;
+	font-size:1.5em;
+	page-break-after:always;
+}
+
+#author_epigraph{
+	text-align:center !important;
+	margin-top: 2em;
+	color:#000000;
+	line-height:3;
+}
+
+p.center{
+	text-align:center !important;
+}
+.blue{
+	color:#1ca6a8;
+}
+
+
+
+h2{
+	font-size:1.8em;
+	font-weight:normal;
+	margin:3em 0 2em;
+	color:#1ca6a8;
+}
+
+
+/*本文*/
+.paragraph{
+	margin:0;
+	line-height:2.2em;
+	text-indent:1em;
+	text-align:justify;
+	text-justify:inter-ideograph;
+}
+.no-indent{
+	margin:0;
+	line-height:2.2em;
+	text-indent:0;
+	text-align:justify;
+	text-justify:inter-ideograph;
+}
+.indent1{margin-left:1em;text-indent:0}
+.indent2{margin-left:2em;text-indent:0}
+.indent3{margin-left:3em;text-indent:0}
+
+
+
+/*引用*/
+blockquote{
+	margin:1em 0;
+	color:#555;
+	font-style:normal;
+	font-weight:normal;
+	font-size:10pt;
+}
+
+/*ルビ*/
+rt{
+	font-size:0.5em;
+}
+/*
+.ruby{
+	overflow:hidden;
+	width:auto;
+	display:inline-table;
+	line-height:2.2em;
+	vertical-align:text-bottom;
+	border-collapse:collapse;
+	border-width:0;
+	padding:0;
+	margin:0;
+	text-indent:0;
+}
+.rb {
+	line-height:1.1em;
+	text-align:center;
+	vertical-align:baseline;
+	display:table-row-group;
+	text-indent:0;
+	margin:0;
+	padding:0;
+	border-width:0;
+}
+.rt {
+	font-size:0.5em;
+	display:table-header-group;
+	text-align:center;
+	text-justify:distribute-all-lines;
+	line-height:1.1;
+	text-indent:0;
+}
+.intel{
+	width:0;
+	font-size:0;
+	overflow:hidden;
+}
+*/
+/*圏点*/
+strong{
+	font-weight:normal;
+	-webkit-text-emphasis-style:sesame;
+	text-emphasis-style:sesame;
+}
+
+/*ダーシ*/
+.dash{
+	letter-spacing: -2px;
+	margin-right:2px;
+	white-space:nowrap;
+}
+
+/*罫線*/
+.hr{
+	margin:2em 0;
+	text-align:center;
+}
+
+/*テキスト右寄せ*/
+.right{
+	text-align:right;
+}
+
+/*著作権*/
+h2.header-line{
+	
+}
+.em{
+	font-size:1.2em;
+	font-family:"Courier New" serif;
+}
+.mono{
+	font-family:"Trebuchet MS" sans-serif;
+}
+em{
+	font-size:1.6em;
+	font-weight:bold;
+	font-style:normal;
+	color:#444444;
+}
+
+dl{
+	padding:1em;
+	border:1px solid #ccc;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+dt{
+	font-family:'HiraKakuProN-W6' sans;
+	font-weight:bold;
+	font-size:1.2em;
+	margin:1em 0 5pt;
+	color:#999;
+	padding:3pt 5pt;
+	border-bottom:1px dotted #ccc;
+}
+dd{
+	margin-left:5pt;
+}
+#copyright ul{
+	margin:0;
+	padding-left:0;
+}
+#copyright ul li{
+	list-style:none;
+}
+#copyright ul li:before{
+	content:'-';
+	margin-right:0.5em;
+}
+.float-left{
+	float:left;
+	margin-right:2em;
+	margin-bottom:2em;
+}
+.float-right{
+	float:right;
+	margin-left:2em;
+	margin-bottom:2em;
+}
+.clear{
+	clear:both;
+}

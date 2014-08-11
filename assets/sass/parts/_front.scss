@@ -1,0 +1,158 @@
+.front-container{
+  h2{
+    font-family: $work-title;
+  }
+  .tag-cloud{
+    font-family: $work-title;
+  }
+  .frontpage-widget{
+    font-family: $work-body;
+    .col-sm-4{
+      padding-bottom: 60px;
+    }
+    h2{
+      background-color: $footer-navbar-bg;
+      color: $inverse-body;
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
+      @include ellipsis();
+      text-align: center;
+    }
+    img{
+      width: auto;
+      height: auto;
+    }
+    .btn{
+      font-family: san-serif;
+    }
+    .widget_sp_image-description{
+      color: $shade-font;
+      margin-top: 10px;
+    }
+  }
+
+  .post-list{
+    padding: 10px 0;
+    li{
+      list-style: none;
+      padding: 0;
+      border-bottom: 1px solid $thin-border;
+      a{
+        display: block;
+        padding: 10px;
+        &:link, &:visited{
+          text-decoration: none;
+          color: $base-color;
+        }
+        &:hover, &:active{
+          text-decoration: none;
+          color: $link-color;
+          background-color: $zebra-bg;
+        }
+      }
+      &:first-child{
+        border-top: 1px solid $thin-border;
+      }
+      .list-heading{
+        font-size: 20px;
+        margin-top: 0;
+      }
+      .avatar{
+        width: 30px;
+        height: 30px;
+        @include border-radius(50%);
+      }
+      // サムネイルがあるとき
+      .wp-post-image{
+        max-width: 60px;
+        width: auto;
+        height: auto;
+        float: left;
+        & + .list-heading,
+        & + .list-heading + .list-meta{
+          margin-left: 80px;
+        }
+      }
+    }
+  }
+
+
+
+  .list-group-item-heading{
+    font-size: 20px;
+  }
+
+  .list-excerpt{
+    color: $shade-font;
+    margin-top: 10px;
+  }
+
+  .user-list{
+    padding: 10px 0;
+    li{
+      list-style: none;
+      padding: 10px;
+      border-bottom: 1px solid $thin-border;
+      position: relative;
+      &:first-child{
+        border-top:  1px solid $thin-border;
+      }
+      .avatar{
+        float: left;
+        width: 40px;
+        height: 40px;
+        @include border-radius(50%);
+        margin-bottom: 10px;
+      }
+      .user-info{
+        margin-left: 60px;
+        h3{
+          margin-top: 0;
+        }
+      }
+      .list-excerpt{
+        clear: both;
+      }
+      .icon-crown{
+        position: absolute;
+        font-size: 40px;
+        right: 10px;
+        top: 50%;
+        margin-top: -20px;
+        color: #ffff00;
+      }
+    }
+  }
+  .twitter-widget{
+    height: 400px;
+  }
+  .share-panel{
+    margin: 60px 0;
+  }
+}
+
+// レーダー
+#genre-context{
+  height: 300px;
+}
+
+// 破滅派について
+#about-us{
+  padding-bottom: 80px;
+  h3{
+    text-align: center;
+  }
+  p.icon{
+    height: 180px;
+    line-height: 180px;
+    text-align: center;
+    i{
+      font-size: 120px;
+      color: $shade-font;
+    }
+  }
+  .caption{
+    font-family: $work-body;
+  }
+}
