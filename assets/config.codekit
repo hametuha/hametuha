@@ -11,6 +11,15 @@
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0
 		},
+	"\/css\/admin.css": {
+		"fileType": 16,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/css\/admin.css",
+		"outputAbbreviatedPath": "No Output Path",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0
+		},
 	"\/css\/app.css": {
 		"fileType": 16,
 		"ignore": 0,
@@ -218,7 +227,7 @@
 		},
 	"\/js\/bootstrap.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/bootstrap.min.js",
 		"outputAbbreviatedPath": "\/js\/bootstrap.min.min.js",
@@ -240,21 +249,10 @@
 		},
 	"\/js\/common.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/common.min.js",
 		"outputAbbreviatedPath": "\/js\/common.min.min.js",
-		"outputPathIsOutsideProject": 0,
-		"outputPathIsSetByUser": 0,
-		"outputStyle": 1,
-		"syntaxCheckerStyle": 1
-		},
-	"\/js\/components\/become-author-min.js": {
-		"fileType": 64,
-		"ignore": 1,
-		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/components\/become-author-min.js",
-		"outputAbbreviatedPath": "\/js\/components\/become-author-min-min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -265,18 +263,18 @@
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/components\/become-author.js",
-		"outputAbbreviatedPath": "\/js\/components\/become-author-min.js",
+		"outputAbbreviatedPath": "\/js\/components\/become-author.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/js\/components\/front-helper-min.js": {
+	"\/js\/components\/become-author.min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/components\/front-helper-min.js",
-		"outputAbbreviatedPath": "\/js\/components\/front-helper-min-min.js",
+		"inputAbbreviatedPath": "\/js\/components\/become-author.min.js",
+		"outputAbbreviatedPath": "\/js\/components\/become-author.min.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -287,18 +285,18 @@
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/components\/front-helper.js",
-		"outputAbbreviatedPath": "\/js\/components\/front-helper-min.js",
+		"outputAbbreviatedPath": "\/js\/components\/front-helper.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
-	"\/js\/components\/login-change-helper-min.js": {
+	"\/js\/components\/front-helper.min.js": {
 		"fileType": 64,
 		"ignore": 1,
 		"ignoreWasSetByUser": 0,
-		"inputAbbreviatedPath": "\/js\/components\/login-change-helper-min.js",
-		"outputAbbreviatedPath": "\/js\/components\/login-change-helper-min-min.js",
+		"inputAbbreviatedPath": "\/js\/components\/front-helper.min.js",
+		"outputAbbreviatedPath": "\/js\/components\/front-helper.min.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -309,7 +307,18 @@
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/components\/login-change-helper.js",
-		"outputAbbreviatedPath": "\/js\/components\/login-change-helper-min.js",
+		"outputAbbreviatedPath": "\/js\/components\/login-change-helper.min.js",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 1,
+		"syntaxCheckerStyle": 1
+		},
+	"\/js\/components\/login-change-helper.min.js": {
+		"fileType": 64,
+		"ignore": 1,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/js\/components\/login-change-helper.min.js",
+		"outputAbbreviatedPath": "\/js\/components\/login-change-helper.min.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 1,
@@ -328,7 +337,7 @@
 		},
 	"\/js\/components\/user-tag.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/components\/user-tag.min.js",
 		"outputAbbreviatedPath": "\/js\/components\/user-tag.min.min.js",
@@ -350,7 +359,7 @@
 		},
 	"\/js\/modernizr.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/modernizr.min.js",
 		"outputAbbreviatedPath": "\/js\/modernizr.min.min.js",
@@ -394,7 +403,7 @@
 		},
 	"\/js\/single-announcement.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/single-announcement.min.js",
 		"outputAbbreviatedPath": "\/js\/single-announcement.min.min.js",
@@ -416,7 +425,7 @@
 		},
 	"\/js\/single-post.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/js\/single-post.min.js",
 		"outputAbbreviatedPath": "\/js\/single-post.min.min.js",
@@ -514,6 +523,22 @@
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/sass\/_variables.scss",
 		"outputAbbreviatedPath": "\/stylesheets\/_variables.css",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"outputStyle": 3,
+		"shouldRunAutoprefixer": 0,
+		"shouldRunBless": 0,
+		"useLibsass": 0
+		},
+	"\/sass\/admin.scss": {
+		"createSourceMap": 0,
+		"debugStyle": 0,
+		"decimalPrecision": 5,
+		"fileType": 4,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"inputAbbreviatedPath": "\/sass\/admin.scss",
+		"outputAbbreviatedPath": "\/css\/admin.css",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 0,
 		"outputStyle": 3,
@@ -957,7 +982,7 @@
 		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap.js",
-		"outputAbbreviatedPath": "\/js\/bootstrap.min.js",
+		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap.min.js",
 		"outputPathIsOutsideProject": 0,
 		"outputPathIsSetByUser": 1,
 		"outputStyle": 1,
@@ -965,7 +990,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/affix.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/affix.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/affix.min.js",
@@ -976,7 +1001,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/alert.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/alert.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/alert.min.js",
@@ -987,7 +1012,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/button.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/button.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/button.min.js",
@@ -998,7 +1023,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/carousel.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/carousel.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/carousel.min.js",
@@ -1009,7 +1034,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/collapse.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/collapse.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/collapse.min.js",
@@ -1020,7 +1045,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/dropdown.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/dropdown.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/dropdown.min.js",
@@ -1031,7 +1056,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/modal.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/modal.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/modal.min.js",
@@ -1042,7 +1067,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/popover.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/popover.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/popover.min.js",
@@ -1053,7 +1078,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/scrollspy.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/scrollspy.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/scrollspy.min.js",
@@ -1064,7 +1089,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tab.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tab.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tab.min.js",
@@ -1075,7 +1100,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tooltip.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tooltip.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/tooltip.min.js",
@@ -1086,7 +1111,7 @@
 		},
 	"\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/transition.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/transition.js",
 		"outputAbbreviatedPath": "\/vendor\/bootstrap-sass\/vendor\/assets\/javascripts\/bootstrap\/transition.min.js",
@@ -2292,7 +2317,7 @@
 		},
 	"\/vendor\/html5shiv\/dist\/html5shiv-printshiv.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/html5shiv\/dist\/html5shiv-printshiv.min.js",
 		"outputAbbreviatedPath": "\/vendor\/html5shiv\/dist\/html5shiv-printshiv.min.min.js",
@@ -2314,7 +2339,7 @@
 		},
 	"\/vendor\/html5shiv\/dist\/html5shiv.min.js": {
 		"fileType": 64,
-		"ignore": 1,
+		"ignore": 0,
 		"ignoreWasSetByUser": 0,
 		"inputAbbreviatedPath": "\/vendor\/html5shiv\/dist\/html5shiv.min.js",
 		"outputAbbreviatedPath": "\/vendor\/html5shiv\/dist\/html5shiv.min.min.js",
@@ -3218,7 +3243,7 @@
 	"jadeCompileDebug": 1,
 	"jadeOutputStyle": 0,
 	"javascriptAutoOutputPathEnabled": 1,
-	"javascriptAutoOutputPathFilenamePattern": "*-min.js",
+	"javascriptAutoOutputPathFilenamePattern": "*.min.js",
 	"javascriptAutoOutputPathRelativePath": "\/min",
 	"javascriptAutoOutputPathReplace1": "",
 	"javascriptAutoOutputPathReplace2": "",
