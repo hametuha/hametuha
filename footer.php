@@ -1,41 +1,40 @@
-	</div><!-- // .content -->
-<?php
-	//Load Sideba by it's context
-	if(needs_left_sidebar()){
-		get_sidebar('left');
-	}
-	if(is_tax('faq_cat') || is_post_type_archive('faq') || is_singular('faq')){
-		get_sidebar('faq');
-	}elseif(is_singular ('anpi') || is_post_type_archive ('anpi') || is_tax('anpi_cat')){
-		get_sidebar('anpi');
-	}elseif(is_singular('announcement') || is_post_type_archive('announcement')){
-		get_sidebar('announcement');
-	}elseif(is_singular('post') || is_author() || is_singular('series') || (defined('IS_PROFILE_PAGE') && IS_PROFILE_PAGE) ){
-		get_sidebar('post');
-	}elseif(is_singular('thread') || is_post_type_archive('thread') || is_tax('topic')){
-		get_sidebar('thread');
-	}else{
-		get_sidebar();
-	}
-?>
+<footer id="footer">
+	<div id="footer-sidebar" class="container">
+		<div class="col-sm-4">
+            <h3>破滅派とは？</h3>
+            <?php wp_nav_menu(array(
+                'theme_location' => 'hametuha_global_about',
+                'container' => false,
+                'menu_class' => 'nav nav-pills nav-stacked'
+            )); ?>
+		</div>
+        <div class="col-sm-4">
+            <h3>関連リンク</h3>
+            <ul class="nav nav-pills nav-stacked external-links">
+                <li><a href="http://hametuha.co.jp"><i class="icon-ha"></i> <span>株式会社破滅派</span></a></li>
+                <li><a href="https://www.facebook.com/hametuha.inc"><i class="icon-facebook4"></i> <span>Facebook</span></a></li>
+                <li><a href="https://twitter.com/hametuha"><i class="icon-twitter"></i> <span>Twitter</span></a></li>
+                <li><a href="https://plus.google.com/b/115001047459194790006/115001047459194790006/about/p/pub" rel="publisher"><i class="icon-googleplus3"></i> <span>Google+</span></a></li>
+                <li><a href="http://www.ustream.tv/channel/<?= rawurlencode('破滅派') ?>"><i class="icon-ustream"></i> <span>Ustream</span></a></li>
+                <li><a href="https://www.youtube.com/user/hametuha"><i class="icon-youtube"></i> <span>Youtube</span></a></li>
+                <li><a href="http://minico.me"><i class="icon-minicome"></i> <span>ミニコme!</span></a></li>
+                <li><a href="https://github.com/hametuha/"><i class="icon-github3"></i> <span>Github</span></a></li>
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <h3>破滅派通信<small>メルマガ</small></h3>
+            <?php if( function_exists('alo_em_show_widget_form') ) echo alo_em_show_widget_form() ?>
+            <p class="mail-desc text-muted">
+                破滅派がお届けするメルマガです。滅多に送りませんので、ぜひ登録してください。
+            </p>
 
-</div>
-<!-- #main ends -->
+        </div>
+	</div>
 
-<div id="footer">
-	<div id="footer-sidebar" class="margin clearfix">
-		<?php dynamic_sidebar("footer-sidebar"); ?>
-	</div>
-	<div class="margin footer-note clearfix">
-		<p class="copy-right alignleft serif">
-			&copy; 2007-<?php echo date_i18n('Y'); ?> HAMETUHA
-		</p>
-		<p class="related alignright">
-			<a href="http://hametuha.co.jp">Web制作・電子書籍</a>｜
-			<a href="http://minico.me">ミニコミ販売ポータル</a>
-		</p>
-	</div>
-</div>
+    <p class="copy-right text-center">
+        &copy; 2007 破滅派
+    </p>
+</footer>
 
 <?php wp_footer(); ?>
 </body>

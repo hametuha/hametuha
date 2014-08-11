@@ -1,1 +1,0 @@
-swfobject.registerObject(HametuhaFlash.id, '8.0.0');

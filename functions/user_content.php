@@ -283,6 +283,7 @@ add_action('wp_ajax_delete_favorite', '_hametuha_ajax_delete_fav');
 
 /**
  * 投稿が取得した☆の平均を返す
+ *
  * @global object $post
  * @global wpdb $wpdb
  * @global Hametuha_User_Content $hametuha_user_content_manager
@@ -314,36 +315,6 @@ EOS;
 	}
 }
 
-/**
- * 投稿に付与された評価の件数を返す
- * @global object $post
- * @global wpdb $wpdb
- * @global Hametuha_User_Content $hametuha_user_content_manager
- * @return int 
- */
-function get_post_rank_count($post = null){
-	global $wpdb, $hametuha_user_content_manager;
-	$post = get_post($post);
-	if($post){
-		$sql = <<<EOS
-			SELECT COUNT(ID) FROM {$hametuha_user_content_manager->table}
-			WHERE rel_type = %s AND 
-EOS;
-		if($post->post_type == 'series'){
-			$sql .= <<<EOS
-				object_id IN (
-					SELECT ID FROM {$wpdb->posts}
-					WHERE post_type = 'post' AND post_status = 'publish' AND post_parent = %d
-				)
-EOS;
-		}else{
-			$sql .= 'object_id = %d';
-		}
-		return (int)$wpdb->get_var($wpdb->prepare($sql, $hametuha_user_content_manager->typeRank, $post->ID));
-	}else{
-		return 0;
-	}
-}
 
 /**
  * お気に入りの数を返す

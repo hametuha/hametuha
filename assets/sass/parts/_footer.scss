@@ -1,0 +1,93 @@
+$nav-padding: 15px;
+
+// 共通
+#footer{
+  background-color: $navbar-default-bg;
+  padding: 20px 0;
+  border-top: 3px double $navbar-default-border;
+
+  .external-links{
+    $font-size: 32px;
+    li a{
+      padding-left: $font-size + $nav-padding + $nav-padding;
+    }
+    i{
+      position: absolute;
+      font-size: $font-size;
+      top: 50%;
+      left: $nav-padding;
+      margin-top: $font-size / -2;
+    }
+  }
+  .img-circle{
+    width: auto;
+    height: auto;
+    max-width: 100%;
+  }
+  .copy-right{
+    padding-top: 20px;
+  }
+
+  // メルマガ
+  .alo_easymail_widget_form{
+    th, td{
+      padding: 0.5em;
+    }
+    .input-submit{
+      @extend .btn;
+      @extend .btn-block;
+      @extend .btn-primary;
+    }
+  }
+  .mail-desc{
+    margin: 1em 0;
+    font-size: 0.85em;
+  }
+  .alo_em_widget_loading, .alo_easymail_widget_ok{
+    text-align: center;
+    margin: 1em 0;
+  }
+}
+
+
+@media only screen and (max-width: $screen-xs-max) {
+  #footer{
+    .col-sm-4{
+      padding-bottom: 20px;
+      padding-right: 0;
+      padding-left: 0;
+      border-bottom: 1px solid $navbar-default-border;
+    }
+    .external-links{
+      li{
+        $size: 40px;
+        width: $nav-padding + $size;
+        float: left;
+        margin-right: $nav-padding;
+        a{
+          padding-left: $nav-padding;
+          padding-right: $nav-padding;
+          width: $size + $nav-padding * 2;
+        }
+        span{
+          display: none;
+        }
+        i{
+          position: relative;
+          top: 0;
+          left: 0;
+          margin-top: 0;
+          font-size: 40px;
+        }
+      }
+    }
+  }
+}
+
+
+
+// 投稿ページ
+#footer-single{
+  background-color: $navbar-default-bg;
+  border-top: $navbar-default-border;
+}

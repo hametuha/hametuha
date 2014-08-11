@@ -1,10 +1,11 @@
-<div id="sidebar">
-	<div class="widget">
+
+    <div class="widget">
 		<h2 class="widget-title search">よくある質問を検索</h2>
 		<div class="widget-content search-widget">
 			<?php get_search_form(); ?>
 		</div>
 	</div>
+
 	<div class="widget">
 		<h2 class="widget-title search">カテゴリー</h2>
 		<div class="widget-content search-widget">
@@ -15,9 +16,8 @@
 				?>
 				<dt><?php echo $cat->name; ?></dt>
 				<dd>
-					
 					<?php echo wpautop($cat->description); ?>
-					<p class="right">
+					<p>
 						<a href="<?php echo get_term_link($cat);?>" class="small-button"><?php echo number_format_i18n($cat->count); ?>件の記事</a>
 					</p>
 				</dd>
@@ -25,5 +25,5 @@
 			</dl>
 		</div>
 	</div>
+
 	<?php dynamic_sidebar("faq-sidebar"); ?>
-</div>

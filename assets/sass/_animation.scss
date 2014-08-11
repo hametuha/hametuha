@@ -1,0 +1,15 @@
+// Load wpametu's animation
+@import "../../wpametu/assets/scss/animations";
+
+// Original animations
+
+
+// ボタンの背景色が明滅
+@include keyframes( blinker ){
+  0%, 100% {
+    background-color: $footer-navbar-bg;
+  }
+  50% {
+    background-color: $brand-danger;
+  }
+}

@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+@import "bootstrap";
+
+@import "parts/post_body";
+
+body{
+  margin: 20px;
+  @include post-style();
+}

@@ -1,22 +1,25 @@
 <?php
+/*
+ * Template Name: ログインフォーム
+ */
 define("IS_LOGIN_PAGE", true);
-get_header('meta');
+get_header('login');
 
 ?>
-<body <?php body_class('login-page'); ?>>
 
-	<div id="login-form">
+        <p class="catch-copy text-center">
+            <?php bloginfo('description') ?>
+        </p>
+
 		<?php if(have_posts()): while(have_posts()): the_post();?>
-		<div id="login-body">
-			<h1><?php the_title(); ?></h1>
-			<a id="login-logo" href="<?php bloginfo('url'); ?>" rel="home" title="破滅派に戻る"><img src="<?php bloginfo('template_directory'); ?>/img/header-logo.png" alt="<?php bloginfo('name'); ?>" width="140" height="50" /></a>
-			<?php the_content(); ?>
-		</div>
-		<?php endwhile; endif; ?>
-		<div id="footer-login" class="footer-note">
-			<p class="copy-right serif center">&copy; 2007-<?php echo date_i18n('Y'); ?> HAMETUHA</p>
-		</div>
-	</div>
-<?php wp_footer(); ?>
-</body>
-</html>
+            <div id="login-body">
+                <?php the_content(); ?>
+            </div><!--  -->
+        <?php endwhile; endif; ?>
+
+
+        <p class="text-center">
+            <a href="<?= home_url('/', 'http') ?>">破滅派トップに戻る</a>
+        </p>
+
+<?php get_footer('login') ?>

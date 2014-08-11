@@ -1,0 +1,78 @@
+
+//
+//
+// 色の設定
+//
+// ----------------------
+//
+
+
+$thin-border: #ddd;
+$zebra-bg: #f9f9f9;
+
+$footer-navbar-bg: #242424;
+
+// 文字
+$blue-font: #173e59;
+$little-shade-font: #444;
+$shade-font: #888;
+$more-shade-font: #aaa;
+$clear-font: #000;
+$inverse-body: #fff;
+$start-font: #ffff00;
+
+// リンク
+$link-active: red;
+
+// ソーシャルアイコンの色
+$hametuha-color: #000000;
+$facebook-color: #3C5A95;
+$twitter-color: #58ACEB;
+$google-color: #DB4B3E;
+$line-color: #00DA13;
+$youtube-color: #D70000;
+$hatena-color: #576CEA;
+$github-color: #333333;
+$minicome-color: #252525;
+$ustream-color: #2F7BFF;
+
+// アイコンの色を決める
+@each $brand in facebook $facebook-color, twitter $twitter-color, google $google-color, line $line-color, ha $hametuha-color, hatebu $hatena-color, github $github-color, minicome $minicome-color, youtube $youtube-color, ustream $ustream-color{
+  [class^="icon-#{nth($brand, 1)}"]{
+    color: nth($brand, 2) !important;
+  }
+}
+
+
+// アイコンを読み込む
+@mixin hameticon(){
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  font-family: 'hameticon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+//
+//
+// フォントの設定
+//
+// ----------------------
+//
+
+$work-body: TsukuAOldMinPr6N-R, serif;
+$work-bold: TsukuAOldMinPr6-E, serif;
+$work-title: TsukuBOldMinPr6-R, serif;
+
+.text-justify{
+  text-align: justify;
+  text-justify: inter-ideograph;
+}

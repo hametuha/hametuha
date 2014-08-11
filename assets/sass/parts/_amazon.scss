@@ -1,0 +1,94 @@
+//
+// hamazon
+//
+// ----------------------
+//
+
+div.tmkm-amazon-view {
+  @include clearfix();
+  clear: both;
+  margin: 1em auto;
+  padding: 1em 1.5em;
+  font-size: 12px;
+  font-familly: $font-family-sans-serif;
+
+  .tmkm-amazon-title{
+    font-size: 1.4em;
+    line-height: 1.2;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  .tmkm-amazon-img{
+    float: right;
+    margin: 0 0 1em 1em;
+    padding: 0;
+    width: 200px;
+    text-align: right;
+    img {
+      @include box-shadow(0 0 5px rgba(0,0,0,0.5));
+      max-width: 200px;
+      width: auto;
+      height: auto;
+    }
+  }
+  p {
+    margin: 0.5em 0;
+    em {
+      color: #000;
+      font-style: normal;
+      font-weight: bold;
+      @include text-emphasis(none);
+    }
+    &.vendor{
+      clear: both;
+      font-size: 0.85em;
+      text-align: right;
+      a{
+        color: #999;
+      }
+    }
+    &.additional-description{
+      @include clearfix();
+      @extend .bg-info;
+      font-size: 1.2em;
+      line-height: 1.2;
+      margin: 1em 220px 1em 0;
+      padding: 1em;
+      @include border-radius(3px);
+    }
+    &.review{
+      clear: both;
+      iframe{
+        width: 100%;
+        height: 180px;
+      }
+    }
+    span.label{
+      @include inline-block();
+      color: $blockquote-small-color;
+      width: 8em;
+    }
+    &.price em{
+      color: $brand-warning;
+    }
+  }
+}
+
+
+@media screen and (max-width: $screen-xs-max) {
+  div.tmkm-amazon-view {
+    .tmkm-amazon-img{
+      width: 100px;
+      img{
+        max-width: 100px;
+      }
+    }
+    p{
+      &.additional-description{
+        margin-right: 120px;
+      }
+    }
+  }
+}
+
+

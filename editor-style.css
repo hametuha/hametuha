@@ -81,7 +81,7 @@ body > p{
 		border-bottom:1px dotted #ddd;
 		margin:1em 0 1em 1em;
 		padding:0.5em 1em;
-		background: url(img/tag-blockquote.gif) 0 5px no-repeat;
+		background: url(assets/img/tag-blockquote.gif) 0 5px no-repeat;
 		} blockquote cite{
 			font-size:0.7em;
 			display: block;

@@ -1,0 +1,45 @@
+#sidebar{
+  .widget{
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $thin-border;
+  }
+  .widget-title{
+    margin-top: 0;
+    font-size: 14px;
+    color: $shade-font;
+    font-family: $work-title;
+  }
+  img{
+    max-width: 100%;
+    width: auto;
+    heigth: auto;
+  }
+  .small-button{
+    @extend .btn;
+    @extend .btn-sm;
+    @extend .btn-default;
+    @extend .btn-block;
+  }
+  ul{
+    @extend .nav;
+    @extend .nav-pills;
+    @extend .nav-stacked;
+  }
+  .widget_sp_image-image-link{
+    display: block;
+    text-align: center;
+  }
+  p.author{
+    padding: 0 15px;
+    margin-bottom: 5px;
+    color: $shade-font;
+    img{
+      margin-right: 0.5em;
+    }
+    .old{
+      font-family: serif;
+      margin-left: 1em;
+    }
+  }
+}

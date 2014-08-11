@@ -1,0 +1,249 @@
+.page-template-page-login-php{
+  background: $navbar-default-bg;
+}
+
+
+#login-form{
+  margin: 0 auto;
+  padding: 40px 10px 0;
+  max-width: 400px;
+  // タイトル
+  h1{
+    font-size: 80px;
+    line-height: 1;
+    margin-bottom: 0;
+    i{
+      margin-left: -10px;
+    }
+    a{
+      &:hover,
+      &:active{
+        text-decoration: none;
+      }
+    }
+  }
+  // Gianism
+  #wpg-login.large .wpg-button{
+    padding: 0 0 0 40px;
+    i.lsf{
+      font-size: 26px;
+      left: 10px;
+      top: 50%;
+      margin-top: -16px;
+    }
+  }
+  // 送信ボタン
+  p.catch-copy{
+    text-shadow: 1px 1px 2px #fff, -1px -1px 2px rgba(0, 0, 0, .2);
+    font-size: 1.2em;
+  }
+
+  // アクションリンク
+  .tml-action-links{
+    @extend .nav;
+    @extend .nav-pills
+  }
+
+  .gravatar{
+    img{
+      @extend .img-circle;
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+}
+
+#login-body{
+  background: #fff;
+  padding: 10px;
+  @include border-radius(3px);
+
+  // フォーム調整
+  .login-form-hook{
+    p{
+      @extend .form-group;
+      input{
+        &[type=text], &[type=password]{
+          @extend .form-control;
+        }
+      }
+      &.alo_easymail_reg_optin{
+        input[type=checkbox]{
+          margin-right: 0.5em;
+        }
+        label{
+          font-weight: normal;
+        }
+      }
+    }
+  }
+
+  // メッセージ
+  p.message{
+    @extend .alert;
+    @extend .alert-warning;
+  }
+  p.error{
+    @extend .alert;
+    @extend .alert-danger;
+    &:before{
+      @include hameticon();
+      @extend .icon-cancel-circle2:before;
+    }
+  }
+  &+p{
+    margin-top: 20px;
+  }
+  .notice-list{
+    padding-left: 1em;
+  }
+}
+
+#pass-strength-result{
+  text-align: center;
+  display: block;
+  float: none;
+  margin-top: 1em;
+  @extend .alert;
+  background: $navbar-default-bg;
+  @include border-radius(0);
+  margin-bottom: 10px;
+  font-weight: bold;
+  &:before{
+    margin-right: .5em;
+    @include hameticon();
+    @extend .icon-tongue:before;
+  }
+  &.short{
+    background-color: $brand-danger;
+    color: #fff;
+    &:before{
+      @extend .icon-sad:before;
+    }
+  }
+  &.good{
+    background-color: $brand-info;
+    color: #fff;
+    &:before{
+      @extend .icon-smiley:before;
+    }
+  }
+  &.bad{
+   background-color: $brand-warning;
+    color: #fff;
+   &:before{
+     @extend .icon-confused:before;
+   }
+}
+  &.strong{
+    background-color: $brand-success;
+    color: #fff;
+    &:before{
+      @extend .icon-cool:before;
+    }
+  }
+
+}
+
+.profile-container{
+  max-width: $screen-tablet;
+  padding-bottom: 40px;
+  label{
+    margin-bottom: 10px;
+  }
+}
+#your-profile{
+  section{
+    font-size: 18px;
+    margin: 20px 0;
+    padding: 20px;
+    h2{
+      margin-top: 0;
+    }
+    h3{
+      margin:0 0 20px;
+    }
+    &:nth-child(even){
+      background-color: $zebra-bg;
+      border-top: 1px solid $thin-border;
+      border-bottom: 1px solid $thin-border;
+    }
+    &.misc-section{
+      border-top: 3px double $thin-border;
+      margin-top: 40px;
+      padding-top: 40px;
+    }
+  }
+  .form-group{
+    label{
+      margin-bottom: 10px;
+    }
+  }
+  p.description{
+    font-size: 14px;
+    margin-top: 0.5em;
+  }
+
+  .avatar{
+    @extend .img-circle;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  p.submit{
+    margin-top: 20px;
+  }
+
+  .misc-section{
+    h3{
+      border-top: 1px solid #ccc;
+      padding-top: 20px;
+      &:first-child{
+        border-top: none;
+        padding-top: 0;
+      }
+    }
+  }
+}
+#footer-login{
+  padding: 10px 0;
+}
+
+#profile-navi{
+  margin: 20px 0;
+}
+
+
+@media only screen and (max-width: $screen-xs-max){
+  #your-profile{
+    .form-table{
+      display: block;
+      th, td{
+        display: block;
+      }
+      th{
+        width: auto;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+#profile-indicator{
+  @include border-radius(3px);
+  background-color: $zebra-bg;
+  position: relative;
+  height: 30px;
+  line-height: 30px;
+  strong{
+    position: relative;
+    z-index: 2;
+  }
+  span{
+    z-index: 1;
+    display: block;
+    position: absolute;
+    height: 30px;
+  }
+}

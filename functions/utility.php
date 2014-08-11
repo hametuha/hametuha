@@ -9,6 +9,58 @@ function emp($var){
 	return empty($var);
 }
 
+
+
+
+
+/**
+ * 最近の日時かどうか
+ *
+ * @param string $datetime
+ * @param int $limit
+ * @return bool
+ */
+function is_recent_date($datetime, $limit = 3){
+    if( !is_numeric($datetime) ){
+        $datetime = strtotime($datetime);
+    }
+    $limit = current_time('timestamp') - $limit * 60 * 60 * 24;
+    return $limit < $datetime;
+}
+
+
+
+/**
+ * どのぐらい前なのかを書式化する
+ *
+ * @param string|int $datetime MySQLのDatetimeかタイムスタンプ
+ * @param bool $timestamp タイムスタンプの場合はtrue
+ * @return string
+ */
+function hametuha_passed_time($datetime, $timestamp = false){
+    if( !$timestamp ){
+        $datetime = strtotime($datetime);
+    }
+    $diff = current_time('timestamp') - $datetime;
+    if( 60 * 60 > $diff ){
+        $unit = '分';
+        $divide = round($diff / 60);
+    }elseif( 60 * 60 * 24 > $diff ){
+        $unit = '時間';
+        $divide = round($diff / 60 / 60);
+    }elseif( 60 * 60 * 24 * 31 > $diff){
+        $unit = '日';
+        $divide = round($diff / 60 / 60 / 24);
+    }elseif( 60 * 60 * 24 * 365 > $diff ){
+        $unit = 'ヶ月';
+        $divide = min(12, round($diff / 60 / 60 / 24 / 30.5));
+    }else{
+        $unit = '年';
+        $divide = round($diff / 60 / 60 / 24 / 365);
+    }
+    return sprintf('%s%s前', number_format($divide), $unit);
+}
+
 /**
  * HTML5に対応したtype属性を出力する
  * @global boolean $is_IE
@@ -38,6 +90,17 @@ function attr_search($echo = true){
 	return $type;
 }
 
+
+/**
+ * 最後のページか否か
+ *
+ * @return bool
+ */
+function is_last_page(){
+    global $page, $numpages, $multipage;
+    return !$multipage || ($page == $numpages);
+}
+
 /**
  *
  * @global WP_Query $wp_query
@@ -56,6 +119,7 @@ function loop_count(){
 
 /**
  * アドセンス広告を出力する
+ *
  * @param type $type 
  */
 function google_ads($type = 'default'){
@@ -77,6 +141,7 @@ function google_ads($type = 'default'){
 
 /**
  * 現在登録されている作品の数を返す
+ *
  * @global wpdb $wpdb 
  * @return int
  */
@@ -91,6 +156,7 @@ EOS;
 
 /**
  * 投稿の長さを返す
+ *
  * @global wpdb $wpdb
  * @param mixed $post
  * @return int 
@@ -111,6 +177,7 @@ EOS;
 
 /**
  * 投稿の長さを出力する
+ *
  * @param string $prefix
  * @param string $suffix
  * @param string $placeholder
@@ -128,6 +195,7 @@ function the_post_length($prefix = '', $suffix = '', $placeholder = '0', $per_pa
 
 /**
  * 投稿の平均的な文字数を調べる
+ *
  * @global wpdb $wpdb
  * @param itn $parent_id
  * @return int 
@@ -144,22 +212,6 @@ EOS;
 	return $wpdb->get_var($sql);
 }
 
-/**
- * ヘルプ用アイコンを出力する
- * @param string $string 
- */
-function help_tip($string){
-	echo '<img class="tooltip" src="'.get_template_directory_uri().'/img/icon-help-small.png" alt="'.esc_attr($string).'" width="16" height="16"/>';
-}
-
-/**
- * URLに自動リンクを貼る
- * @param string $text
- * @return string 
- */
-function hametuha_auto_link($text){
-	return preg_replace("/(https?)(:\/\/[[:alnum:]\+\$\;\?\.%,!#~*\/:@&=_-]+)/i", "<a target=\"_blank\" rel=\"nofollow\" href=\"$1$2\">$1$2</a>", $text);
-}
 
 /**
  * 指定されたユーザーが投稿を行っているか
@@ -182,6 +234,7 @@ EOS;
 
 /**
  * 投稿がいつのものかを出力する
+ *
  * @param object $post
  */
 function the_post_time_diff($modified = false, $post = null){
@@ -191,8 +244,9 @@ function the_post_time_diff($modified = false, $post = null){
 
 /**
  * human_time_diffを日本語対応にしたもの
+ *
  * @param int $from 
- * @param int $to
+ * @param string $to
  * @return string
  */
 function human_time_diff_jp($from, $to = ''){
@@ -222,7 +276,7 @@ function human_time_diff_jp($from, $to = ''){
  */
 function is_new_post($offset = 7, $post = null){
 	$post = get_post($post);
-	return (time() - strtotime($post->post_date)) < 60 * 60 * 24 * $offset;
+	return (current_time('timestamp') - strtotime($post->post_date)) < 60 * 60 * 24 * $offset;
 }
 
 /**

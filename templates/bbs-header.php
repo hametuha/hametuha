@@ -1,1 +1,0 @@
-<img src="<?php echo get_template_directory_uri();?>/img/banner-bulletin-board.png" width="670" height="336" alt="破滅派BBS" />

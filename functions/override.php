@@ -1,46 +1,75 @@
 <?php
+
 /**
- * wp_titleを変更 
- * @param string $title
- * @param string $sep
- * @param string $seplocation 
+ * メディアは自分がアップロードしたものしか使えない
+ *
+ * @action pre_get_posts
+ * @param WP_Query $wp_query
  */
-function _hametuha_wp_title($title, $sep, $seplocation){
-	if(is_singular('post')){
-		global $post;
-		$cats = get_the_category($post->ID);
-		if(!empty($cats)){
-			$cat = current($cats)->name;
-		}else{
-			$cat = "投稿";
-		}
-		$title .= "$cat {$sep} ";
-	}elseif(is_singular('info')){
-		$title .= "おしらせ {$sep} ";
-	}elseif(is_singular('faq')){
-		$title .= "よくある質問 {$sep} ";
-	}elseif(is_singular('announcement')){
-		$title .= "告知 {$sep} ";
-	}elseif(is_singular('anpi')){
-		$title .= "安否情報 {$sep} ";
-	}elseif(is_singular('series')){
-		$title .= "作品集 {$sep} ";
-	}elseif(is_singular('thread')){
-		$title .= "BBS {$sep} ";
-	}elseif(is_category()){
-		$title = "ジャンル: {$title}";
-	}elseif(is_tag()){
-		$title = "タグ: $title";
-	}elseif(is_tax('faq_cat')){
-		$title = "よくある質問: {$title}";
-	}elseif(is_post_type_archive('thread')){
-		$title = "破滅派BBS {$sep} ";
-	}elseif(is_tax('topic')){
-		$title = "破滅派BBSトピック: {$title}";
-	}
-	return $title;
+add_filter('ajax_query_attachments_args', function ( array $query ) {
+    // 現在のユーザーが投稿者じゃなければ、自分のだけに限定
+    if( !current_user_can('edit_others_posts') ){
+        $query['author'] =  get_current_user_id();
+    }
+    return $query;
+});
+
+
+// 管理画面でだけ実行
+if( is_admin() ){
+
+    /**
+     * コメントは自分の投稿についたものだけ
+     *
+     * @action pre_get_comments
+     * @param WP_Comment_Query &$comment_query
+     */
+    add_action('pre_get_comments', function( WP_Comment_Query &$comment_query ){
+        $screen = get_current_screen();
+        if( 'edit-comments' === $screen->id && !current_user_can('edit_others_posts') ){
+            $comment_query->query_vars['post_author'] = get_current_user_id();
+        }
+    });
+
+
+    /**
+     * 投稿は自分のだけ
+     *
+     * @action pre_get_posts
+     * @param WP_Query &$wp_query
+     */
+    add_action('pre_get_posts', function( WP_Query &$wp_query ){
+        $screen = get_current_screen();
+        if( $wp_query->is_main_query() && 'edit' === $screen->base && !current_user_can('edit_others_posts') ){
+            $wp_query->set('author', get_current_user_id());
+        }
+    });
+
+    /**
+     * アドミンバーをカスタマイズ
+     */
+    add_action('admin_bar_menu', function( WP_Admin_Bar &$wp_admin_bar){
+        $wp_admin_bar->remove_menu('wp-logo');
+    }, 10000);
+
 }
-add_filter('wp_title', '_hametuha_wp_title', 10, 3);
+
+
+/**
+ * ツールボックスからPress Thisを消す
+ *
+ * @action tool_box
+ */
+add_action('tool_box', function(){
+    echo <<<HTML
+<script>
+jQuery(document).ready(function($){
+    $('.wrap .tool-box:eq(0)', '#wpbody-content').remove();
+});
+</script>
+HTML;
+
+});
 
 /**
  * 画像ファイルを表示していたページにおける後方置換
