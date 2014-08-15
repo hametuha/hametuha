@@ -140,7 +140,9 @@ SQL;
                 $s = '%'.$term.'%';
                 $new_query[] = $this->authors->db->prepare($sql, $s, $s);
             }
-            $search = ' AND '.implode(' AND ', $new_query);
+            if( !empty($new_query) ){
+                $search = ' AND '.implode(' AND ', $new_query);
+            }
         }
         return $search;
     }

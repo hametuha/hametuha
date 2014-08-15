@@ -42,7 +42,7 @@ class PostFormatMetabox extends EditMetaBox
                 '0' => '横書き',
                 'image' => '縦書き'
             ],
-            'description' => 'この作品がどのように表示されるかを選んでください。',
+            'description' => 'この作品がどのように表示されるかを選んでください。<small>※縦書きレイアウトは一時的に停止しています。設定だけしておけば、そのうち有効になります。</small>',
         ],
     ];
 } 
