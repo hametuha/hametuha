@@ -58,11 +58,15 @@ class Picture extends Singleton
      * @return string
      */
     private function get_url(){
-        $url = wp_upload_dir();
+        $dir = wp_upload_dir();
+        $url = $dir['baseurl'].'/'.$this->dir;
         if( is_ssl() ){
             $url = str_replace('http:', 'https:', $url);
         }
-        return $url['baseurl'].'/'.$this->dir;
+        if( !is_admin() ){
+            $url = str_replace('://', '://s.', $url);
+        }
+        return $url;
     }
 
     /**

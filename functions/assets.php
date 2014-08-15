@@ -14,6 +14,7 @@ add_image_size('pinky', 160, 160, true);
 
 
 
+
 /**
  * アセットを登録する
  *

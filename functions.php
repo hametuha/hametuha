@@ -60,6 +60,7 @@ get_template_part('functions/post_list_admin');
 get_template_part('functions/series');
 get_template_part('functions/dashboard');
 get_template_part('functions/assets');
+get_template_part('functions/assets', 'ssl');
 get_template_part('functions/analytics');
 get_template_part('functions/override');
 get_template_part('functions/social');
