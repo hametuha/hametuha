@@ -157,7 +157,7 @@
             <ul class="user-list">
                 <?php $counter = 0; foreach(get_recent_authors(3) as $user): $counter++;?>
                 <li class="clearfix">
-                    <a href="<?php echo get_author_posts_url($user->ID); ?>">
+                    <a href="<?= get_author_posts_url($user->ID); ?>">
                         <?php echo get_avatar($user->ID, 80); ?>
                         <div class="user-info">
                             <h3>
@@ -200,7 +200,7 @@
                             <?= get_avatar($user->ID, 80); ?>
                             <div class="user-info">
                                 <h3>
-                                    <a href="<?= get_author_posts_url($user->ID, $user->length); ?>"><?= esc_html($user->display_name); ?></a>
+                                    <a href="<?= get_author_posts_url($user->ID); ?>"><?= esc_html($user->display_name); ?></a>
                                     <small><?php echo mysql2date('Y/m/d', $user->user_registered); ?>登録</small>
                                 </h3>
                             </div>
@@ -225,7 +225,7 @@
                         <?= get_avatar($user->ID, 80); ?>
                         <div class="user-info">
                             <h3>
-                                <a href="<?= get_author_posts_url($user->ID, $user->length); ?>"><?= esc_html($user->display_name); ?></a>
+                                <a href="<?= get_author_posts_url($user->ID); ?>"><?= esc_html($user->display_name); ?></a>
                                 <small><?php echo mysql2date('Y/m/d', $user->user_registered); ?>登録</small>
                             </h3>
                         </div>
