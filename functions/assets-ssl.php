@@ -79,8 +79,9 @@ add_filter('script_loader_src', function($src){
  */
 add_filter('style_loader_tag', function($tag, $handle){
     switch( $handle ){
-        case 'font-awesome':
-            // 同じドメインにしたい場合、何もしない
+        case 'hametuha-app':
+            // メインのCSSは同じドメインに直す
+            $tag = str_replace('://s.hametuha', '://hametuha', $tag);
             break;
         default:
             // 同一ドメインのものだけURLを書き換え
