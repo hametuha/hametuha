@@ -23,6 +23,8 @@ add_filter('wp_title', function($title, $sep, $seplocation){
             $cat = "投稿";
         }
         $title .= "$cat {$sep} ";
+    }elseif( is_ranking() ){
+        $title = "ランキング {$sep} ".$title;
     }elseif(is_singular('info')){
         $title .= "おしらせ {$sep} ";
     }elseif(is_singular('faq')){

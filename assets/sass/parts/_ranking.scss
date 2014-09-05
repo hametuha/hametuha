@@ -1,0 +1,88 @@
+// ランキング用
+
+// リスト
+.rank-list{
+  .pull-left{
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    position: relative;
+    font-size: 40px;
+    color: white;
+    i{
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 80px;
+      color: $thin-border;
+      z-index: 1;
+    }
+    strong{
+      position: relative;
+      z-index: 2;
+    }
+  }
+  &.king{
+    @include animation( ranker 5s linear infinite );
+    .pull-left{
+      color: black;
+      i{
+        color: #ffff00;;
+      }
+    }
+  }
+  &.ranker{
+    .pull-left{
+      color: black;
+      i{
+        color: yellow;
+      }
+    }
+  }
+}
+
+// カレンダー
+.calendar-year{
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  caption{
+    padding: 1em;
+    font-size: 1.25em;
+    color: $shade-font;
+    border-top: 3px double $thin-border;
+  }
+  th, td{
+    border: 1px solid $thin-border;
+    text-align: center;
+    padding: 0;
+    a{
+      display: block;
+      padding: 0.5em;
+      &:hover{
+        text-decoration: none;
+        background-color: $zebra-bg;
+      }
+    }
+    span{
+      display: block;
+      padding: 0.5em;
+      color: $more-shade-font;
+    }
+  }
+}
+
+@media only screen and (max-width: $screen-xs-max) {
+  .rank-list{
+    .pull-left{
+      width: 60px;
+      height: 60px;
+      line-height: 60px;
+      font-size: 32px;
+      i{
+        font-size: 60px;
+      }
+    }
+  }
+}

@@ -29,25 +29,31 @@
                 <?php get_template_part('parts/author') ?>
             <?php endif; ?>
 
+            <?php if( is_ranking() ): ?>
+                <?php get_template_part('parts/ranking') ?>
+            <?php else: ?>
+                <div class="archive-meta">
+                    <h1>
+                        <?php get_template_part('parts/h1'); ?>
+                        <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
+                    </h1>
 
-            <div class="archive-meta">
-                <h1>
-                    <?php get_template_part('parts/h1'); ?>
-                    <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
-                </h1>
+                    <div class="desc">
+                        <?php get_template_part('parts/meta-desc'); ?>
+                    </div>
 
-                <div class="desc">
-                    <?php get_template_part('parts/meta-desc'); ?>
+                    <?php if( hametuha_is_profile_page() ): ?>
+                        <?php get_template_part('parts/search', 'author') ?>
+                    <?php endif; ?>
+
+                    <?php if( have_posts() ): ?>
+                        <?php /* get_template_part('parts/sort-order') */ ?>
+                    <?php endif; ?>
                 </div>
 
-                <?php if( hametuha_is_profile_page() ): ?>
-                    <?php get_template_part('parts/search', 'author') ?>
-                <?php endif; ?>
+            <?php endif; ?>
 
-                <?php if( have_posts() ): ?>
-                    <?php /* get_template_part('parts/sort-order') */ ?>
-                <?php endif; ?>
-            </div>
+
 
 
             <?php
@@ -71,12 +77,17 @@
                     $query->the_post();
                     $counter++;
                     $even = ($counter % 2 == 0) ? ' even' : ' odd';
-                    get_template_part('parts/loop', get_post_type());
+                    if( is_ranking() ){
+                        get_template_part('parts/loop', 'ranking');
+                    }else{
+                        get_template_part('parts/loop', get_post_type());
+                    }
                 }
             ?>
             </ol>
 
             <?php if( is_tax('topic') ): ?>
+
                 <?php get_template_part('parts/nav', 'thread') ?>
 
             <?php endif; ?>
@@ -97,7 +108,9 @@
 
             <?php endif; wp_reset_postdata(); ?>
 
-            <?php if( !hametuha_is_profile_page() ): ?>
+            <?php if( is_ranking() ): ?>
+                <?php get_template_part('parts/ranking', 'calendar') ?>
+            <?php elseif( !hametuha_is_profile_page() ): ?>
                 <?php get_search_form() ?>
             <?php endif; ?>
 

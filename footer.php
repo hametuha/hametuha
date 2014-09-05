@@ -12,6 +12,7 @@
             <h3>関連リンク</h3>
             <ul class="nav nav-pills nav-stacked external-links">
                 <li><a href="http://hametuha.co.jp"><i class="icon-ha"></i> <span>株式会社破滅派</span></a></li>
+                <li><a href="http://hametuha.tokyo"><i class="icon-cup"></i> <span>破滅サロン</span></a></li>
                 <li><a href="https://www.facebook.com/hametuha.inc"><i class="icon-facebook4"></i> <span>Facebook</span></a></li>
                 <li><a href="https://twitter.com/hametuha"><i class="icon-twitter"></i> <span>Twitter</span></a></li>
                 <li><a href="https://plus.google.com/b/115001047459194790006/115001047459194790006/about/p/pub" rel="publisher"><i class="icon-googleplus3"></i> <span>Google+</span></a></li>

@@ -13,3 +13,15 @@
     background-color: $brand-danger;
   }
 }
+
+
+// 背景色が点滅
+
+@include keyframes( ranker ){
+  0%, 100%{
+    background-color: yellow;
+  }
+  50%{
+    background-color: white;
+  }
+}

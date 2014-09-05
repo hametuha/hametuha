@@ -227,7 +227,10 @@ function hametuha_commment_display( $comment, $args, $depth ) {
 }
 
 
-
+/**
+ * @param null $rank
+ * @param int $total
+ */
 function the_post_rank($rank = null, $total = 0){
     if( is_null($rank) ){
         printf('<div class="alert alert-warning"><p>この作品にはまだレビューがありません。ぜひレビューを残してください。</p></div>');

@@ -1,6 +1,8 @@
 <?php
 if( hametuha_is_profile_page() ){
     echo '著者一覧';
+}elseif( is_ranking() ){
+    echo ranking_title();
 }elseif(is_home()){
 	single_post_title();
 }elseif(is_tax('faq_cat')){

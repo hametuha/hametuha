@@ -11311,6 +11311,30 @@ button.close {
   /* line 12, ../sass/_animation.scss */
   50% {
     background-color: #d9534f; } }
+@-webkit-keyframes ranker {
+  /* line 21, ../sass/_animation.scss */
+  0%, 100% {
+    background-color: yellow; }
+
+  /* line 24, ../sass/_animation.scss */
+  50% {
+    background-color: white; } }
+@-o-keyframes ranker {
+  /* line 21, ../sass/_animation.scss */
+  0%, 100% {
+    background-color: yellow; }
+
+  /* line 24, ../sass/_animation.scss */
+  50% {
+    background-color: white; } }
+@keyframes ranker {
+  /* line 21, ../sass/_animation.scss */
+  0%, 100% {
+    background-color: yellow; }
+
+  /* line 24, ../sass/_animation.scss */
+  50% {
+    background-color: white; } }
 /*! jQuery UI - v1.10.3 - 2014-01-15
 * http://jqueryui.com
 * Includes: jquery.ui.core.css, jquery.ui.resizable.css, jquery.ui.selectable.css, jquery.ui.accordion.css, jquery.ui.autocomplete.css, jquery.ui.button.css, jquery.ui.datepicker.css, jquery.ui.dialog.css, jquery.ui.menu.css, jquery.ui.progressbar.css, jquery.ui.slider.css, jquery.ui.spinner.css, jquery.ui.tabs.css, jquery.ui.tooltip.css, jquery.ui.theme.css
@@ -15096,3 +15120,83 @@ body.error .error-container a:hover, body.error .error-container a:active {
 body.error .error-container .btn:link, body.error .error-container .tag-container a:link, .tag-container body.error .error-container a:link, body.error .error-container .afb_container .good:link, .afb_container body.error .error-container .good:link, body.error .error-container .afb_container .bad:link, .afb_container body.error .error-container .bad:link, body.error .error-container #footer .alo_easymail_widget_form .input-submit:link, #footer .alo_easymail_widget_form body.error .error-container .input-submit:link, body.error .error-container #sidebar .small-button:link, #sidebar body.error .error-container .small-button:link, body.error .error-container .post-type-bar .small-button:link, .post-type-bar body.error .error-container .small-button:link, body.error .error-container #discussion .reply a:link, #discussion .reply body.error .error-container a:link, body.error .error-container .btn:visited, body.error .error-container .tag-container a:visited, .tag-container body.error .error-container a:visited, body.error .error-container .afb_container .good:visited, .afb_container body.error .error-container .good:visited, body.error .error-container .afb_container .bad:visited, .afb_container body.error .error-container .bad:visited, body.error .error-container #footer .alo_easymail_widget_form .input-submit:visited, #footer .alo_easymail_widget_form body.error .error-container .input-submit:visited, body.error .error-container #sidebar .small-button:visited, #sidebar body.error .error-container .small-button:visited, body.error .error-container .post-type-bar .small-button:visited, .post-type-bar body.error .error-container .small-button:visited, body.error .error-container #discussion .reply a:visited, #discussion .reply body.error .error-container a:visited, body.error .error-container .btn:hover, body.error .error-container .tag-container a:hover, .tag-container body.error .error-container a:hover, body.error .error-container .afb_container .good:hover, .afb_container body.error .error-container .good:hover, body.error .error-container .afb_container .bad:hover, .afb_container body.error .error-container .bad:hover, body.error .error-container #footer .alo_easymail_widget_form .input-submit:hover, #footer .alo_easymail_widget_form body.error .error-container .input-submit:hover, body.error .error-container #sidebar .small-button:hover, #sidebar body.error .error-container .small-button:hover, body.error .error-container .post-type-bar .small-button:hover, .post-type-bar body.error .error-container .small-button:hover, body.error .error-container #discussion .reply a:hover, #discussion .reply body.error .error-container a:hover, body.error .error-container .btn:active, body.error .error-container .tag-container a:active, .tag-container body.error .error-container a:active, body.error .error-container .afb_container .good:active, .afb_container body.error .error-container .good:active, body.error .error-container .afb_container .bad:active, .afb_container body.error .error-container .bad:active, body.error .error-container #footer .alo_easymail_widget_form .input-submit:active, #footer .alo_easymail_widget_form body.error .error-container .input-submit:active, body.error .error-container #sidebar .small-button:active, #sidebar body.error .error-container .small-button:active, body.error .error-container .post-type-bar .small-button:active, .post-type-bar body.error .error-container .small-button:active, body.error .error-container #discussion .reply a:active, #discussion .reply body.error .error-container a:active {
   color: #fff;
   text-decoration: none; }
+
+/* line 5, ../sass/parts/_ranking.scss */
+.rank-list .pull-left {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  position: relative;
+  font-size: 40px;
+  color: white; }
+  /* line 13, ../sass/parts/_ranking.scss */
+  .rank-list .pull-left i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 80px;
+    color: #dddddd;
+    z-index: 1; }
+  /* line 21, ../sass/parts/_ranking.scss */
+  .rank-list .pull-left strong {
+    position: relative;
+    z-index: 2; }
+/* line 26, ../sass/parts/_ranking.scss */
+.rank-list.king {
+  -webkit-animation: ranker 5s linear infinite;
+  -o-animation: ranker 5s linear infinite;
+  animation: ranker 5s linear infinite; }
+  /* line 28, ../sass/parts/_ranking.scss */
+  .rank-list.king .pull-left {
+    color: black; }
+    /* line 30, ../sass/parts/_ranking.scss */
+    .rank-list.king .pull-left i {
+      color: #ffff00; }
+/* line 36, ../sass/parts/_ranking.scss */
+.rank-list.ranker .pull-left {
+  color: black; }
+  /* line 38, ../sass/parts/_ranking.scss */
+  .rank-list.ranker .pull-left i {
+    color: yellow; }
+
+/* line 46, ../sass/parts/_ranking.scss */
+.calendar-year {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse; }
+  /* line 50, ../sass/parts/_ranking.scss */
+  .calendar-year caption {
+    padding: 1em;
+    font-size: 1.25em;
+    color: #888888;
+    border-top: 3px double #dddddd; }
+  /* line 56, ../sass/parts/_ranking.scss */
+  .calendar-year th, .calendar-year td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    padding: 0; }
+    /* line 60, ../sass/parts/_ranking.scss */
+    .calendar-year th a, .calendar-year td a {
+      display: block;
+      padding: 0.5em; }
+      /* line 63, ../sass/parts/_ranking.scss */
+      .calendar-year th a:hover, .calendar-year td a:hover {
+        text-decoration: none;
+        background-color: #f9f9f9; }
+    /* line 68, ../sass/parts/_ranking.scss */
+    .calendar-year th span, .calendar-year td span {
+      display: block;
+      padding: 0.5em;
+      color: #aaaaaa; }
+
+@media only screen and (max-width: 767px) {
+  /* line 78, ../sass/parts/_ranking.scss */
+  .rank-list .pull-left {
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 32px; }
+    /* line 83, ../sass/parts/_ranking.scss */
+    .rank-list .pull-left i {
+      font-size: 60px; } }

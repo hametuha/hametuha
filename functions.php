@@ -53,6 +53,7 @@ $script_flg = array();
 
 get_template_part('functions/utility');
 get_template_part('functions/display');
+get_template_part('functions/ranking');
 get_template_part('functions/meta');
 get_template_part('functions/post_types');
 get_template_part('functions/post_list');
