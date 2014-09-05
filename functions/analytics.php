@@ -42,6 +42,8 @@ ga('require', 'linkid', 'linkid.js');
     ga('set', 'dimension4', '404');
 <?php elseif( is_admin() ): ?>
     ga('set', 'dimension4', 'admin');
+<?php elseif( is_ranking() ): ?>
+    ga('set', 'dimension4', 'ranking');
 <?php endif; ?>
 ga('send', 'pageview');
 </script>

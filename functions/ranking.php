@@ -71,6 +71,25 @@ function ranking_class($rank){
 }
 
 /**
+ * 確定済みのランキングか否か
+ *
+ * @return bool
+ */
+function is_fixed_ranking(){
+    if( is_ranking('yearly') ){
+        return get_query_var('year') < date_i18n('Y');
+    }elseif( is_ranking('monthly') ){
+        // 現在の日時が翌月3日以降かをチェック
+        return current_time('timestamp') > strtotime(sprintf('%d-%02d-03 00:00:00', get_query_var('year'), (get_query_var('monthnum') + 1)));
+    }elseif( is_ranking('daily') ){
+        // 基本OK
+        return current_time('timestamp') > strtotime(sprintf('%d-%02d-%0dd 00:00:00', get_query_var('year'), (get_query_var('monthnum') + 1), (get_query_var('day') + 3)));
+    }else{
+        return false;
+    }
+}
+
+/**
  * ランキングのタイトルを返す
  *
  * @return string
