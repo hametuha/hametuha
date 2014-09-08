@@ -37,6 +37,9 @@ $rank = get_the_ranking();
                     <small><?= esc_html($category->name) ?></small>
                 <?php endforeach; ?>
             <?php endif; ?>
+            <?php if( current_user_can('edit_others_posts') ): ?>
+                <span class="label label-default"><?= number_format($post->pv) ?>PV</span>
+            <?php endif; ?>
         </h2>
 
         <!-- Post Data -->

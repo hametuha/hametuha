@@ -207,6 +207,9 @@ SQL;
                 break;
             case 'last_week':
                 $prev_thursday = strtotime('Previous Thursday', current_time('timestamp'));
+                if( $previous ){
+                    $prev_thursday -= 60 * 60 * 24 * 7;
+                }
                 $sunday = date_i18n('Y-m-d', strtotime('Previous Sunday', $prev_thursday));
                 $monday = date_i18n('Y-m-d', strtotime('Previous Monday', $sunday));
                 $wheres[] = $this->db->prepare("calc_date <= %s", $sunday);
@@ -217,6 +220,9 @@ SQL;
                 break;
             case 'weekly':
                 $sunday = sprintf('%d-%02d-%02d', $year, $month, $day);
+                if( $previous ){
+                    $sunday = date_i18n('Y-m-d', strtotime($sunday.' 00:00:00') - 60 * 60 * 24 * 7);
+                }
                 $monday = date_i18n('Y-m-d', strtotime('Previous Monday', strtotime($sunday)));
                 $wheres[] = $this->db->prepare("calc_date <= %s", $sunday);
                 $wheres[] = $this->db->prepare("calc_date >= %s", $monday);
