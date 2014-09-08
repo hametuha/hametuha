@@ -24,9 +24,13 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a rel="home" href="<?= home_url('', 'http') ?>"><i class="icon-home"></i>トップページ</a></li>
+                        <li class="divider"></li>
                         <li><a rel="home" href="<?= home_url('announcement', 'http') ?>"><i class="icon-bullhorn"></i> 告知</a></li>
+                        <li class="divider"></li>
                         <li><a href="<?= home_url('/thread/', 'http'); ?>"><i class="icon-stack-list"></i> 掲示板トップ</a></li>
+                        <li class="divider"></li>
                         <li><a href="<?= home_url('/faq/', 'http'); ?>"><i class="icon-question2"></i> よくある質問</a></li>
+                        <li class="divider"></li>
                         <li><a href="<?= home_url('/about/', 'http'); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
                     </ul>
                 </li>
@@ -34,7 +38,16 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-book"></i> <span>読む</span>
                     </a>
-                    <?php wp_nav_menu(array('theme_location' => 'hametuha_global_works', 'container' => false, 'menu_class' => 'dropdown-menu')); ?>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?= get_permalink(get_option('page_for_posts')) ?>"><i class="icon-books"></i> 作品新着</a></li>
+                        <li class="divider"></li>
+                        <li><span class="text-muted"><i class="icon-tags"></i> ジャンル</span></li>
+                        <?php foreach( get_categories(['parent' => 0, 'number' => 6]) as $cat): ?>
+                        <li><a href="<?= get_category_link($cat) ?>"><?= esc_html($cat->name) ?></a></li>
+                        <?php endforeach; ?>
+                        <li class="divider"></li>
+                        <li><a href="<?= home_url('/ranking/') ?>"><i class="icon-crown"></i> ランキング</a></li>
+                    </ul>
                 </li>
                 <?php if( is_user_logged_in() && current_user_can('read') ): ?>
                     <?php if( current_user_can('edit_posts') ): ?>
@@ -46,12 +59,15 @@
                                 <li class="active">
                                     <a href="<?= admin_url('post-new.php') ?>"><i class="icon-quill3"></i>作品を書く</a>
                                 </li>
+                                <li class="divider"></li>
                                 <li>
                                     <a href="<?= admin_url('edit.php') ?>"><i class="icon-books"></i>自分の作品一覧</a>
                                 </li>
+                                <li class="divider"></li>
                                 <li>
                                     <a href="<?= admin_url('post-new.php?post_type=anpi') ?>"><i class="icon-mic5"></i> 安否情報をお知らせ</a>
                                 </li>
+                                <li class="divider"></li>
                                 <li>
                                     <a href="<?= admin_url('post-new.php?post_type=thread') ?>"><i class="icon-fire2"></i> 掲示板にスレたて</a>
                                 </li>

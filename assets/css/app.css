@@ -11314,27 +11314,27 @@ button.close {
 @-webkit-keyframes ranker {
   /* line 21, ../sass/_animation.scss */
   0%, 100% {
-    background-color: yellow; }
+    color: yellow; }
 
   /* line 24, ../sass/_animation.scss */
   50% {
-    background-color: white; } }
+    color: orange; } }
 @-o-keyframes ranker {
   /* line 21, ../sass/_animation.scss */
   0%, 100% {
-    background-color: yellow; }
+    color: yellow; }
 
   /* line 24, ../sass/_animation.scss */
   50% {
-    background-color: white; } }
+    color: orange; } }
 @keyframes ranker {
   /* line 21, ../sass/_animation.scss */
   0%, 100% {
-    background-color: yellow; }
+    color: yellow; }
 
   /* line 24, ../sass/_animation.scss */
   50% {
-    background-color: white; } }
+    color: orange; } }
 /*! jQuery UI - v1.10.3 - 2014-01-15
 * http://jqueryui.com
 * Includes: jquery.ui.core.css, jquery.ui.resizable.css, jquery.ui.selectable.css, jquery.ui.accordion.css, jquery.ui.autocomplete.css, jquery.ui.button.css, jquery.ui.datepicker.css, jquery.ui.dialog.css, jquery.ui.menu.css, jquery.ui.progressbar.css, jquery.ui.slider.css, jquery.ui.spinner.css, jquery.ui.tabs.css, jquery.ui.tooltip.css, jquery.ui.theme.css
@@ -13515,115 +13515,116 @@ ul.metadata {
   padding-right: 1em; }
   /* line 280, ../sass/parts/_components.scss */
   .archive-meta h1 .label {
-    font-family: san-serif; }
-/* line 284, ../sass/parts/_components.scss */
+    font-family: san-serif;
+    margin-left: 0.5em; }
+/* line 285, ../sass/parts/_components.scss */
 .archive-meta .desc {
   font-family: TsukuBOldMinPr6-R, serif; }
-  /* line 286, ../sass/parts/_components.scss */
+  /* line 287, ../sass/parts/_components.scss */
   .archive-meta .desc p {
     margin-bottom: 1em;
     color: #444444;
     padding-left: 1em;
     padding-right: 1em; }
-    /* line 291, ../sass/parts/_components.scss */
+    /* line 292, ../sass/parts/_components.scss */
     .archive-meta .desc p:first-child {
       padding-top: 2em;
       margin-top: 2em;
       border-top: 3px double #dddddd; }
-    /* line 296, ../sass/parts/_components.scss */
+    /* line 297, ../sass/parts/_components.scss */
     .archive-meta .desc p:last-child {
       padding-bottom: 2em;
       margin-bottom: 2em;
       border-bottom: 3px double #dddddd; }
 
-/* line 310, ../sass/parts/_components.scss */
+/* line 311, ../sass/parts/_components.scss */
 .archive-container {
   margin: 20px 0;
   border-top: 1px solid #dddddd; }
-  /* line 313, ../sass/parts/_components.scss */
+  /* line 314, ../sass/parts/_components.scss */
   .archive-container > li {
     margin-top: 0;
     padding: 1em;
     border-bottom: 1px solid #dddddd; }
-    /* line 317, ../sass/parts/_components.scss */
+    /* line 318, ../sass/parts/_components.scss */
     .archive-container > li:nth-child(even) {
       background-color: #f9f9f9; }
-  /* line 322, ../sass/parts/_components.scss */
+  /* line 323, ../sass/parts/_components.scss */
   .archive-container h3, .archive-container h2 {
     margin-top: 0; }
-  /* line 327, ../sass/parts/_components.scss */
+  /* line 328, ../sass/parts/_components.scss */
   .archive-container .pull-left img, .archive-container .pull-right img {
     height: auto;
     width: auto;
     max-width: 160px; }
-  /* line 332, ../sass/parts/_components.scss */
+  /* line 333, ../sass/parts/_components.scss */
   .archive-container .pull-left .avatar, .archive-container .pull-right .avatar {
     width: 80px;
     height: 80px; }
-  /* line 338, ../sass/parts/_components.scss */
+  /* line 339, ../sass/parts/_components.scss */
   .archive-container .author-info .avatar {
     width: 20px;
     height: 20px; }
-  /* line 343, ../sass/parts/_components.scss */
+  /* line 344, ../sass/parts/_components.scss */
   .archive-container ul.list-inline {
     color: #666;
     margin-bottom: 10px; }
-    /* line 346, ../sass/parts/_components.scss */
+    /* line 347, ../sass/parts/_components.scss */
     .archive-container ul.list-inline i {
       color: #aaa; }
-    /* line 349, ../sass/parts/_components.scss */
+    /* line 350, ../sass/parts/_components.scss */
     .archive-container ul.list-inline li {
       border-left: 1px solid #ddd; }
-      /* line 351, ../sass/parts/_components.scss */
+      /* line 352, ../sass/parts/_components.scss */
       .archive-container ul.list-inline li:first-child {
         border-left: none; }
 
-/* line 359, ../sass/parts/_components.scss */
+/* line 360, ../sass/parts/_components.scss */
 .excerpt {
   margin: 2em 1em; }
 
-/* line 367, ../sass/parts/_components.scss */
+/* line 368, ../sass/parts/_components.scss */
 .post-pager {
   margin: 20px 0; }
 
-/* line 378, ../sass/parts/_components.scss */
+/* line 379, ../sass/parts/_components.scss */
 .share-panel a {
   margin-right: 20px;
   margin-left: 20px; }
-  /* line 379, ../sass/parts/_components.scss */
+  /* line 380, ../sass/parts/_components.scss */
   .share-panel a:link, .share-panel a:visited {
     text-decoration: none; }
-  /* line 382, ../sass/parts/_components.scss */
+  /* line 383, ../sass/parts/_components.scss */
   .share-panel a:hover {
     opacity: 0.8; }
-  /* line 385, ../sass/parts/_components.scss */
+  /* line 386, ../sass/parts/_components.scss */
   .share-panel a:active {
     opacity: 1; }
-/* line 391, ../sass/parts/_components.scss */
+/* line 392, ../sass/parts/_components.scss */
 .share-panel i {
   font-size: 40px; }
 
 @media only screen and (max-width: 767px) {
-  /* line 398, ../sass/parts/_components.scss */
+  /* line 399, ../sass/parts/_components.scss */
   .share-panel a {
     margin-right: 10px;
     margin-left: 10px; }
-  /* line 402, ../sass/parts/_components.scss */
+  /* line 403, ../sass/parts/_components.scss */
   .share-panel i {
     font-size: 30px; } }
-/* line 415, ../sass/parts/_components.scss */
+/* line 416, ../sass/parts/_components.scss */
 .event-detail .dl-horizontal {
   border-top: 2px solid #dddddd;
   border-bottom: 2px solid #dddddd;
   padding: 15px; }
 
-/* line 424, ../sass/parts/_components.scss */
+/* line 425, ../sass/parts/_components.scss */
 #gmap-announcement {
   height: 250px;
   background-color: #f8f8f8;
   margin-bottom: 20px; }
 
-/* line 435, ../sass/parts/_components.scss */
+/* line 436, ../sass/parts/_components.scss */
 .afb_container .good:link, .afb_container .bad:link {
   text-decoration: none; }
 
@@ -13700,15 +13701,21 @@ ul.metadata {
   #user-info .greeting .role {
     color: #888888; }
 
+/* line 81, ../sass/parts/_header.scss */
+.dropdown-menu > li > span {
+  display: block;
+  padding: 3px 20px;
+  clear: both; }
+
 @media only screen and (max-width: 767px) {
-  /* line 85, ../sass/parts/_header.scss */
+  /* line 90, ../sass/parts/_header.scss */
   #user-info {
     position: absolute;
     right: 0;
     top: 0;
     margin-top: 0;
     margin-bottom: 0; }
-    /* line 91, ../sass/parts/_header.scss */
+    /* line 96, ../sass/parts/_header.scss */
     #user-info .dropdown-menu {
       position: absolute;
       right: 0;
@@ -13717,29 +13724,29 @@ ul.metadata {
       border: 1px solid #e7e7e7;
       -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.8);
       box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.8); } }
-/* line 107, ../sass/parts/_header.scss */
+/* line 112, ../sass/parts/_header.scss */
 #breadcrumb {
   font-size: 12px;
   color: #888888;
   overflow-x: scroll; }
-  /* line 111, ../sass/parts/_header.scss */
+  /* line 116, ../sass/parts/_header.scss */
   #breadcrumb .container {
     height: 32px;
     line-height: 1;
     padding-top: 10px;
     padding-bottom: 10px;
     white-space: nowrap; }
-  /* line 118, ../sass/parts/_header.scss */
+  /* line 123, ../sass/parts/_header.scss */
   #breadcrumb i {
     margin-right: 1em; }
-  /* line 122, ../sass/parts/_header.scss */
+  /* line 127, ../sass/parts/_header.scss */
   #breadcrumb a:link, #breadcrumb a:visited {
     color: #444444;
     text-decoration: none; }
-  /* line 126, ../sass/parts/_header.scss */
+  /* line 131, ../sass/parts/_header.scss */
   #breadcrumb a:hover {
     color: #428bca; }
-  /* line 129, ../sass/parts/_header.scss */
+  /* line 134, ../sass/parts/_header.scss */
   #breadcrumb a:active {
     color: red; }
 
@@ -13825,7 +13832,7 @@ ul.metadata {
 #sidebar img {
   max-width: 100%;
   width: auto;
-  heigth: auto; }
+  height: auto; }
 /* line 29, ../sass/parts/_sidebar.scss */
 #sidebar .widget_sp_image-image-link {
   display: block;
@@ -15121,82 +15128,107 @@ body.error .error-container .btn:link, body.error .error-container .tag-containe
   color: #fff;
   text-decoration: none; }
 
-/* line 5, ../sass/parts/_ranking.scss */
-.rank-list .pull-left {
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
-  text-align: center;
-  position: relative;
-  font-size: 40px;
-  color: white; }
-  /* line 13, ../sass/parts/_ranking.scss */
-  .rank-list .pull-left i {
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 80px;
-    color: #dddddd;
-    z-index: 1; }
-  /* line 21, ../sass/parts/_ranking.scss */
-  .rank-list .pull-left strong {
+/* line 4, ../sass/parts/_ranking.scss */
+.rank-list {
+  position: relative; }
+  /* line 6, ../sass/parts/_ranking.scss */
+  .rank-list .pull-left {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
     position: relative;
-    z-index: 2; }
-/* line 26, ../sass/parts/_ranking.scss */
-.rank-list.king {
-  -webkit-animation: ranker 5s linear infinite;
-  -o-animation: ranker 5s linear infinite;
-  animation: ranker 5s linear infinite; }
-  /* line 28, ../sass/parts/_ranking.scss */
+    font-size: 40px;
+    color: white; }
+    /* line 14, ../sass/parts/_ranking.scss */
+    .rank-list .pull-left .icon-circle2 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-size: 80px;
+      color: #dddddd;
+      z-index: 1; }
+    /* line 22, ../sass/parts/_ranking.scss */
+    .rank-list .pull-left strong {
+      position: relative;
+      z-index: 2; }
+    /* line 26, ../sass/parts/_ranking.scss */
+    .rank-list .pull-left .rank-status {
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      font-size: 30px;
+      margin-left: -15px;
+      z-index: 5;
+      color: #aaaaaa; }
+      /* line 34, ../sass/parts/_ranking.scss */
+      .rank-list .pull-left .rank-status.icon-new {
+        color: #f0ad4e; }
+      /* line 37, ../sass/parts/_ranking.scss */
+      .rank-list .pull-left .rank-status.icon-arrow-up-right2 {
+        color: #d9534f; }
+      /* line 40, ../sass/parts/_ranking.scss */
+      .rank-list .pull-left .rank-status.icon-arrow-down-right2 {
+        color: #428bca; }
+  /* line 46, ../sass/parts/_ranking.scss */
   .rank-list.king .pull-left {
     color: black; }
-    /* line 30, ../sass/parts/_ranking.scss */
-    .rank-list.king .pull-left i {
+    /* line 48, ../sass/parts/_ranking.scss */
+    .rank-list.king .pull-left .icon-circle2 {
       color: #ffff00; }
-/* line 36, ../sass/parts/_ranking.scss */
-.rank-list.ranker .pull-left {
-  color: black; }
-  /* line 38, ../sass/parts/_ranking.scss */
-  .rank-list.ranker .pull-left i {
-    color: yellow; }
+  /* line 55, ../sass/parts/_ranking.scss */
+  .rank-list.ranker .pull-left .icon-circle2 {
+    color: #ba5c00; }
+  /* line 60, ../sass/parts/_ranking.scss */
+  .rank-list .rank-icon {
+    position: absolute;
+    display: block;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    -webkit-animation: ranker 3s linear infinite;
+    -o-animation: ranker 3s linear infinite;
+    animation: ranker 3s linear infinite; }
 
-/* line 46, ../sass/parts/_ranking.scss */
+/* line 73, ../sass/parts/_ranking.scss */
 .calendar-year {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse; }
-  /* line 50, ../sass/parts/_ranking.scss */
+  /* line 77, ../sass/parts/_ranking.scss */
   .calendar-year caption {
     padding: 1em;
     font-size: 1.25em;
     color: #888888;
     border-top: 3px double #dddddd; }
-  /* line 56, ../sass/parts/_ranking.scss */
+  /* line 83, ../sass/parts/_ranking.scss */
   .calendar-year th, .calendar-year td {
     border: 1px solid #dddddd;
     text-align: center;
     padding: 0; }
-    /* line 60, ../sass/parts/_ranking.scss */
+    /* line 87, ../sass/parts/_ranking.scss */
     .calendar-year th a, .calendar-year td a {
       display: block;
       padding: 0.5em; }
-      /* line 63, ../sass/parts/_ranking.scss */
+      /* line 90, ../sass/parts/_ranking.scss */
       .calendar-year th a:hover, .calendar-year td a:hover {
         text-decoration: none;
         background-color: #f9f9f9; }
-    /* line 68, ../sass/parts/_ranking.scss */
+    /* line 95, ../sass/parts/_ranking.scss */
     .calendar-year th span, .calendar-year td span {
       display: block;
       padding: 0.5em;
       color: #aaaaaa; }
 
 @media only screen and (max-width: 767px) {
-  /* line 78, ../sass/parts/_ranking.scss */
+  /* line 105, ../sass/parts/_ranking.scss */
   .rank-list .pull-left {
     width: 60px;
     height: 60px;
     line-height: 60px;
     font-size: 32px; }
-    /* line 83, ../sass/parts/_ranking.scss */
+    /* line 110, ../sass/parts/_ranking.scss */
     .rank-list .pull-left i {
       font-size: 60px; } }

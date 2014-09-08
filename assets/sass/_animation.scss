@@ -19,9 +19,9 @@
 
 @include keyframes( ranker ){
   0%, 100%{
-    background-color: yellow;
+    color: yellow;
   }
   50%{
-    background-color: white;
+    color: orange;
   }
 }

@@ -2,6 +2,7 @@
 
 // リスト
 .rank-list{
+  position: relative;
   .pull-left{
     width: 80px;
     height: 80px;
@@ -10,7 +11,7 @@
     position: relative;
     font-size: 40px;
     color: white;
-    i{
+    .icon-circle2{
       position: absolute;
       top: 0;
       left: 0;
@@ -22,23 +23,49 @@
       position: relative;
       z-index: 2;
     }
+    .rank-status{
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      font-size: 30px;
+      margin-left: -15px;
+      z-index: 5;
+      color: $more-shade-font;
+      &.icon-new{
+        color: $brand-warning;
+      }
+      &.icon-arrow-up-right2{
+        color: $brand-danger;
+      }
+      &.icon-arrow-down-right2{
+        color: $brand-primary;
+      }
+    }
   }
   &.king{
-    @include animation( ranker 5s linear infinite );
     .pull-left{
       color: black;
-      i{
+      .icon-circle2{
         color: #ffff00;;
       }
     }
   }
   &.ranker{
     .pull-left{
-      color: black;
-      i{
-        color: yellow;
+      .icon-circle2{
+        color: #ba5c00;
       }
     }
+  }
+  .rank-icon{
+    position: absolute;
+    display: block;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    @include animation( ranker 3s linear infinite );
   }
 }
 

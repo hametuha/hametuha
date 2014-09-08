@@ -24,7 +24,7 @@ add_filter('wp_title', function($title, $sep, $seplocation){
         }
         $title .= "$cat {$sep} ";
     }elseif( is_ranking() ){
-        $title = "ランキング {$sep} ".$title;
+        $title = ranking_title()." {$sep} ";
     }elseif(is_singular('info')){
         $title .= "おしらせ {$sep} ";
     }elseif(is_singular('faq')){
@@ -163,3 +163,25 @@ EOS;
 }, 1);
 
 
+/**
+ * サイト内検索ボックスをGoogleに表示
+ */
+add_action('wp_head', function(){
+    if( is_front_page() ){
+        $url = home_url();
+        echo <<<HTML
+<script type="application/ld+json">
+{
+   "@context": "http://schema.org",
+   "@type": "WebSite",
+   "url": "{$url}",
+   "potentialAction": {
+     "@type": "SearchAction",
+     "target": "{$url}?s={search_term}",
+     "query-input": "required name=search_term"
+   }
+}
+</script>
+HTML;
+    }
+});

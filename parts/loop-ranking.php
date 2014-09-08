@@ -8,15 +8,23 @@ $rank = get_the_ranking();
 ?>
 <li <?php post_class('media rank-list'.ranking_class($rank)) ?>>
 
+    <?php if( 1 === $rank ): ?>
+        <i class="rank-icon icon-trophy2"></i>
+    <?php endif; ?>
     <span class="pull-left" >
-        <?php switch($rank): case 1: ?>
-            <i class="icon-trophy-star"></i>
-        <?php break;case 2: case 3: ?>
-            <i class="icon-trophy2"></i>
-        <?php break; default: ?>
-            <i class="icon-circle2"></i>
-        <?php break; endswitch; ?>
+        <i class="icon-circle2"></i>
         <strong><?= $rank ?></strong>
+        <?php if( is_null($post->transition) ): ?>
+            <i class="rank-status icon-new"></i>
+        <?php else: ?>
+            <?php switch( $post->transition ): case 0: ?>
+                <i class="rank-status icon-arrow-right5"></i>
+            <?php break; case -1: ?>
+                <i class="rank-status icon-arrow-down-right2"></i>
+            <?php break; case 1: ?>
+                <i class="rank-status icon-arrow-up-right2"></i>
+            <?php break; endswitch; ?>
+        <?php endif; ?>
     </span>
 
     <div class="media-body">

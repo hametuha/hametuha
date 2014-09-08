@@ -1,8 +1,8 @@
-<?php if( is_ranking('yearly') ): ?>
-    <?php $year = get_query_var('year'); ?>
+<?php if( is_ranking('yearly') || is_ranking('top') ): ?>
+    <?php $year = is_ranking('top') ? date_i18n('Y') : get_query_var('year'); ?>
 
     <table class="calendar-year">
-        <caption><?= $year ?>年</caption>
+        <caption><?= $year ?>年月別ランキング</caption>
         <tbodY>
             <?php for( $i = 0; $i < 2; $i++ ): ?>
             <tr>
@@ -41,7 +41,8 @@
         $monthnum = $year * 12 + $month;
         $prev = $monthnum - 1;
         $next = $monthnum + 1;
-        $week = ['月', '火', '水', '木', '金', '土', '日'];
+        $calc_starts = strtotime('2014-08-23 00:00:00');
+        $week = ['月', '火', '水', '木', '金', '土', '日', '週間'];
         $start_of_month = sprintf('%d-%02d-01 00:00:00', $year, $month);
         $limit_of_month = date_i18n("t", mktime(0, 0, 0, $month, 1, $year));
         $start_of_date = array_search(date_i18n('D', strtotime($start_of_month)), $week) + 1;
@@ -51,7 +52,10 @@
     ?>
 
     <table class="calendar-year">
-        <caption><a href="<?= home_url('/ranking/'.$year.'/') ?>"><?= $year ?>年</a></caption>
+        <caption>
+            <a href="<?= home_url('/ranking/'.$year.'/') ?>"><?= $year ?>年</a>
+            <?php printf('%d月', $month) ?>
+        </caption>
         <thead>
             <tr>
                 <?php foreach( $week as $date): ?>
@@ -71,16 +75,27 @@
                     }
                 ?>
                 <td>
-                    <?php if( $starting && !$ended): $out_date++; ?>
-                        <?php if( current_time('timestamp') - strtotime(sprintf('%d/%02d/%02d', $year, $month, $out_date)) < 60 * 60 * 48 ): ?>
+                    <?php $unfixed = true; if( $starting && !$ended ): $out_date++; ?>
+                        <?php
+                            $calc_date = current_time('timestamp') - 60 * 60 * 72;
+                            $date_to_ouput = strtotime(sprintf('%d/%02d/%02d', $year, $month, $out_date));
+                            if( $date_to_ouput > $calc_date || $date_to_ouput < $calc_starts ) :
+                        ?>
                             <span><?= $out_date ?></span>
-                        <?php else: ?>
+                        <?php else: $unfixed = false; ?>
                             <a href="<?= home_url(sprintf('/ranking/%d/%02d/%02d/', $year, $month, $out_date)) ?>"><?= $out_date ?></a>
                         <?php endif; ?>
                     <?php else: ?>
                         &nbsp;
                     <?php endif; ?>
                 </td>
+                <?php if( $l == 7 ): ?>
+                    <?php if( !$unfixed ): ?>
+                        <td><a href="<?= home_url(sprintf('/ranking/weekly/%04d%02d%02d/', $year, $month, $out_date)) ?>"><i class="icon-trophy-star"></i></a></td>
+                    <?php else: ?>
+                        <td><span><i class="icon-trophy2"></i></span></td>
+                    <?php endif;  ?>
+                <?php endif; ?>
             <?php endfor; ?>
         </tr>
         <?php if( $ended ) break; endfor; ?>
@@ -104,3 +119,39 @@
     </ul>
 
 <?php endif; ?>
+
+<?php if( !is_ranking('top') ): ?>
+<p>
+    <a class="btn btn-lg btn-primary btn-block" href="<?= home_url('/ranking') ?>">ランキングトップへ</a>
+</p>
+<?php endif; ?>
+
+<hr />
+
+<div id="ranking-detail" class="panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">ランキングの仕組み</h2>
+    </div>
+    <div class="panel-body">
+
+        <h3><i class="icon-certificate"></i> 基本原則</h3>
+        <ul>
+            <li>ランキングは任意の期間でページビュー（以下PV）が多い順に決定されます。</li>
+            <li>PVとは、そのページが表示された回数です。これにより「その作品を読もうとした人」の数を擬似的に表現しています。</li>
+            <li>この基本原則は変わることがあります。</li>
+        </ul>
+
+        <h3><i class="icon-database"></i> データ収集の仕組み</h3>
+        <ul>
+            <li>Google Analyticsという計測ツールを利用し、誰かが作品ページを開いたときにPVを取得してします。</li>
+            <li>現在はPVであるため、同じ人が何回も同じページを開いたときもカウントされます。<small>（※今後は改善する予定です）</small></li>
+            <li>毎日深夜に前日のPVを記録し、集計用データとして保存します。</li>
+            <li>集計中のランキングには「現在集計中」と表示されます。確定したランキングには「確定」と表示されます。</li>
+        </ul>
+
+        <h3><i class="icon-gift2"></i> おまけ</h3>
+        <ul>
+            <li>2014年9月現在、毎週一回木曜日にランキングを作成し、1位になった作品にAmazonギフト券500円をプレゼントしています。<small>（※これは暫定的なキャンペーンです）</small></li>
+        </ul>
+    </div>
+</div>

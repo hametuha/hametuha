@@ -32,6 +32,9 @@ class RankingQuery extends QueryHighJack
         'ranking/([0-9]{4})/([0-9]{2})/?' => 'index.php?ranking=monthly&year=$matches[1]&monthnum=$matches[2]',
         'ranking/([0-9]{4})/page/([0-9]+)/?' => 'index.php?ranking=yearly&year=$matches[1]&paged=$matches[2]',
         'ranking/([0-9]{4})/?' => 'index.php?ranking=yearly&year=$matches[1]',
+        'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]',
+        'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/page/([0-9]+)/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]',
+        'ranking/?$' => 'index.php?ranking=top',
     ];
 
     /**
@@ -42,6 +45,20 @@ class RankingQuery extends QueryHighJack
     public static $cur_score = [];
 
     /**
+     * ランキングトップだけ別テンプレート
+     *
+     * @param \WP_Query $wp_query
+     */
+    public function pre_get_posts( \WP_Query $wp_query ){
+        if( $wp_query->is_main_query() && is_ranking('top') ){
+            // クエリをハイジャックする
+            do_action('template_redirect');
+            get_template_part('front', 'ranking');
+            exit;
+        }
+    }
+
+    /**
      * ランキング取得用にpost_requestを書き換え
      *
      * @param string $request
@@ -50,7 +67,6 @@ class RankingQuery extends QueryHighJack
      */
     public function posts_request( $request, \WP_Query $wp_query ){
         if( $this->is_valid_query($wp_query) ){
-
             // 初期条件
             $wheres = $this->get_wheres($wp_query);
             // 初期条件を追加してWhere節を作る
@@ -78,12 +94,11 @@ class RankingQuery extends QueryHighJack
             LIMIT {$offset}, {$per_page}
 SQL;
         }
-
         return $request;
     }
 
     /**
-     * 投稿のランクを取得する
+     * 投稿のランクと上昇値を取得する
      *
      * @param array $posts
      * @param \WP_Query $wp_query
@@ -108,9 +123,45 @@ SQL;
                   AND p.post_type = 'post'
                   AND ranking.pv > %d
 SQL;
+            $prev_where = implode(' AND ', $this->get_wheres($wp_query, true));
+            // 先週のPVを取得するクエリ
+            $pv_query = <<<SQL
+               SELECT SUM(object_value)
+               FROM {$this->db->prefix}wpg_ga_ranking
+               WHERE object_id = %d AND {$prev_where}
+SQL;
+            // 先週の順位を取得するクエリ
+            $prev_rank_query = <<<SQL
+              SELECT COUNT(*)
+                FROM (
+                    SELECT
+                        object_id,
+                        SUM(object_value) AS pv
+                    FROM {$this->db->prefix}wpg_ga_ranking
+                    WHERE {$prev_where}
+                    GROUP BY object_id
+                ) AS ranking
+                INNER JOIN {$this->db->posts} AS p
+                ON p.ID = ranking.object_id
+                WHERE p.post_status = 'publish'
+                  AND p.post_type = 'post'
+                  AND ranking.pv > %d
+SQL;
+
             foreach( $posts as &$post ){
+                // 順位を取得する
                 if( isset($post->pv) ){
-                    $post->rank = (int)$this->db->get_var($this->db->prepare($query, $post->pv)) + 1;
+                    $post->rank = $this->db->get_var($this->db->prepare($query, $post->pv)) + 1;
+                }
+                // 先週のPVを取得する
+                $prev_pv = $this->db->get_var($this->db->prepare($pv_query, $post->ID));
+                if( !$prev_pv ){
+                    // なければnull
+                    $post->transition = null;
+                }else{
+                    // 先週の順位を取得する
+                    $prev_rank = $this->db->get_var($this->db->prepare($prev_rank_query, $prev_pv)) + 1;
+                    $post->transition = version_compare($prev_rank, $post->rank);
                 }
             }
         }
@@ -121,22 +172,57 @@ SQL;
      * Get where clause
      *
      * @param \WP_Query $wp_query
+     * @param bool $previous trueにすると前の期間を取得。相対評価のため。
      * @return array
      */
-    private function get_wheres( \WP_Query $wp_query ){
+    private function get_wheres( \WP_Query $wp_query, $previous = false ){
         $wheres  = [
             "category = 'general'"
         ];
+        $year = $wp_query->get('year');
+        $month = $wp_query->get('monthnum');
+        $day = $wp_query->get('day');
         switch( $wp_query->get('ranking') ){
             case 'yearly':
-                $wheres[] = $this->db->prepare("YEAR(calc_date) = %d", $wp_query->get('year'));
+                if( $previous ){
+                    $year--;
+                }
+                $wheres[] = $this->db->prepare("YEAR(calc_date) = %d", $year);
                 break;
             case 'monthly':
-                $wheres[] = $this->db->prepare("YEAR(calc_date) = %d", $wp_query->get('year'));
-                $wheres[] = $this->db->prepare("MONTH(calc_date) = %d", $wp_query->get('monthnum'));
+                if( $previous ){
+                    $last_month = strtotime(sprintf('%04d-%02d-01 00:00:00', $year, $month)) - 1;
+                    $year = date_i18n('Y', $last_month);
+                    $month = date_i18n('n', $last_month);
+                }
+                $wheres[] = $this->db->prepare("YEAR(calc_date) = %d", $year);
+                $wheres[] = $this->db->prepare("MONTH(calc_date) = %d", $month);
                 break;
             case 'daily':
-                $wheres[] = $this->db->prepare("calc_date = %s", sprintf("%s-%s-%s", $wp_query->get('year'), $wp_query->get('monthnum'), $wp_query->get('day')));
+                $day = sprintf("%s-%s-%s", $year, $month, $day);
+                if( $previous ){
+                    $day = date_i18n('Y-m-d', strtotime($day.' 00:00:00') - 1 );
+                }
+                $wheres[] = $this->db->prepare("calc_date = %s", $day);
+                break;
+            case 'last_week':
+                $prev_thursday = strtotime('Previous Thursday', current_time('timestamp'));
+                $sunday = date_i18n('Y-m-d', strtotime('Previous Sunday', $prev_thursday));
+                $monday = date_i18n('Y-m-d', strtotime('Previous Monday', $sunday));
+                $wheres[] = $this->db->prepare("calc_date <= %s", $sunday);
+                $wheres[] = $this->db->prepare("calc_date >= %s", $monday);
+                break;
+            case 'range':
+                // TODO: 範囲指定に対応する
+                break;
+            case 'weekly':
+                $sunday = sprintf('%d-%02d-%02d', $year, $month, $day);
+                $monday = date_i18n('Y-m-d', strtotime('Previous Monday', strtotime($sunday)));
+                $wheres[] = $this->db->prepare("calc_date <= %s", $sunday);
+                $wheres[] = $this->db->prepare("calc_date >= %s", $monday);
+                break;
+            default:
+                $wheres[] = '1 = 2';
                 break;
         }
         return $wheres;
@@ -150,6 +236,6 @@ SQL;
      */
     protected function is_valid_query(\WP_Query $wp_query)
     {
-        return false !== array_search($wp_query->get('ranking'), ['yearly', 'monthly', 'daily']);
+        return false !== array_search($wp_query->get('ranking'), ['yearly', 'monthly', 'daily', 'weekly', 'top']);
     }
 }

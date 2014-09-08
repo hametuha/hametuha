@@ -20,7 +20,6 @@
                 <?php get_template_part('parts/jumbotron', 'announcement');?>
             <?php endif; ?>
 
-
             <?php if( is_tax('topic') || is_post_type_archive('thread') ): ?>
                 <?php get_template_part('parts/jumbotron', 'thread') ?>
             <?php endif; ?>
@@ -30,30 +29,28 @@
             <?php endif; ?>
 
             <?php if( is_ranking() ): ?>
-                <?php get_template_part('parts/ranking') ?>
-            <?php else: ?>
-                <div class="archive-meta">
-                    <h1>
-                        <?php get_template_part('parts/h1'); ?>
-                        <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
-                    </h1>
-
-                    <div class="desc">
-                        <?php get_template_part('parts/meta-desc'); ?>
-                    </div>
-
-                    <?php if( hametuha_is_profile_page() ): ?>
-                        <?php get_template_part('parts/search', 'author') ?>
-                    <?php endif; ?>
-
-                    <?php if( have_posts() ): ?>
-                        <?php /* get_template_part('parts/sort-order') */ ?>
-                    <?php endif; ?>
-                </div>
-
+                <?php get_template_part('parts/jumbotron', 'ranking') ?>
             <?php endif; ?>
 
 
+            <div class="archive-meta">
+                <h1>
+                    <?php get_template_part('parts/h1'); ?>
+                    <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
+                </h1>
+
+                <div class="desc">
+                    <?php get_template_part('parts/meta-desc'); ?>
+                </div>
+
+                <?php if( hametuha_is_profile_page() ): ?>
+                    <?php get_template_part('parts/search', 'author') ?>
+                <?php endif; ?>
+
+                <?php if( have_posts() ): ?>
+                    <?php /* get_template_part('parts/sort-order') */ ?>
+                <?php endif; ?>
+            </div>
 
 
             <?php

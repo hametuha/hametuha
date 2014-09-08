@@ -78,6 +78,11 @@
   }
 }
 
+.dropdown-menu > li > span{
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+}
 
 
 // スマートフォンのときの挙動
