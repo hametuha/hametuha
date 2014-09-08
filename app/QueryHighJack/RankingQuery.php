@@ -242,6 +242,6 @@ SQL;
      */
     protected function is_valid_query(\WP_Query $wp_query)
     {
-        return false !== array_search($wp_query->get('ranking'), ['yearly', 'monthly', 'daily', 'weekly', 'top']);
+        return false !== array_search($wp_query->get('ranking'), ['yearly', 'monthly', 'daily', 'weekly', 'top', 'last_week']);
     }
 }

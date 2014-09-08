@@ -25,6 +25,27 @@
 
         <?php dynamic_sidebar("frontpage-sidebar");?>
 
+
+        <div class="col-xs-12 col-sm-4">
+            <h2>人気の投稿</h2>
+            <ul class="post-list">
+                <?php
+                $ranking_query = new WP_Query([
+                    'ranking' => 'last_week',
+                    'posts_per_page' => 5,
+                ]);
+                while( $ranking_query->have_posts() ){
+                    $ranking_query->the_post();
+                    get_template_part('parts/loop', 'front');
+                }
+                wp_reset_postdata();
+                ?>
+            </ul>
+            <p>
+                <a href="<?= home_url('/ranking/', 'http') ?>" class="btn btn-default btn-block">ランキング一覧</a>
+            </p>
+        </div>
+
         <div class="col-xs-12 col-sm-4">
             <h2>新着投稿</h2>
             <ul class="post-list">
