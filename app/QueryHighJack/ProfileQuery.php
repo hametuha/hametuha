@@ -43,7 +43,20 @@ class ProfileQuery extends QueryHighJack
         'profile/([^/]+)/?$' => 'index.php?profile_name=$matches[1]',
     ];
 
-    /**
+	/**
+	 * タイトル変更
+	 *
+	 * @param string $title
+	 * @param string $sep
+	 * @param string $sep_location
+	 *
+	 * @return string
+	 */
+	public function wp_title($title, $sep, $sep_location){
+		return "執筆者一覧 {$sep} ";
+	}
+
+	/**
      * セレクトフィールドを変える
      *
      * @param string $select

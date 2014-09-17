@@ -30,6 +30,19 @@ class CommentsQuery extends QueryHighJack
         'your/comments/?$' => 'index.php?comments_author=0',
     ];
 
+	/**
+	 * タイトルを変更
+	 *
+	 * @param string $title
+	 * @param string $sep
+	 * @param string $sep_location
+	 *
+	 * @return string
+	 */
+	public function wp_title($title, $sep, $sep_location){
+		return "あなたのコメント {$sep} ";
+	}
+
     /**
      * 現在のユーザーIDを設定する
      *

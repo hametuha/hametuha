@@ -41,6 +41,19 @@ class ReviewQuery extends QueryHighJack
         'review' => Review::class
     ];
 
+	/**
+	 * タイトルの上書き
+	 *
+	 * @param string $title
+	 * @param string $sep
+	 * @param string $sep_location
+	 *
+	 * @return string
+	 */
+	public function wp_title($title, $sep, $sep_location){
+		return "レビューした作品 {$sep} ";
+	}
+
     /**
      * レビュアーのIDを設定する
      *

@@ -30,16 +30,36 @@
     display: block;
     text-align: center;
   }
+  .recent-post-list{
+    border-top: 1px dotted $thin-border;
+    h3{
+      font-size: 18px;
+    }
+    .meta{
+      font-size: 12px;
+      color: $more-shade-font;
+    }
+    .icon-calendar{
+      margin-left: 0.5em;
+    }
+  }
   p.author{
     padding: 0 15px;
     margin-bottom: 5px;
     color: $shade-font;
     img{
       margin-right: 0.5em;
+      width: 24px;
+      height: 24px;
+      @include border-radius(50%);
     }
     .old{
       font-family: serif;
       margin-left: 1em;
     }
+  }
+  .recentcomments{
+    border-top: 1px dotted $thin-border;
+    padding: 1em 0.5em;
   }
 }

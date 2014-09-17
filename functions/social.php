@@ -77,7 +77,7 @@ function _hametuha_publish_tweet($new_status, $old_status, $post){
 				switch($post->post_type){
 					case 'post':
 						$url = wp_get_shortlink($post->ID);
-						$author = get_author_name($post->post_author);
+						$author = get_the_author_meta('display_name', $post->post_author);
 						$string = "{$author}さんが新作「{$post->post_title}」を投稿しました {$url}";
 						update_twitter_status($string);
 						break;

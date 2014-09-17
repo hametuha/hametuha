@@ -10,28 +10,27 @@ if( hametuha_is_profile_page() ){
         echo '<span class="label label-success">確定済み</span>';
     }
 
-}elseif(is_home()){
+}elseif( is_home() ){
 
-	single_post_title();
+	wp_title('');
 
-}elseif(is_tax('faq_cat')){
+}elseif( is_tax('faq_cat') ){
 
 	single_term_title('カテゴリー: ');
 
-}elseif(is_tag()){
+}elseif( is_tag() ){
 
 	single_tag_title('タグ: ');
 
-}elseif(is_category()){
+}elseif( is_category() ){
 
 	single_cat_title('ジャンル: ');
 
-}elseif(is_tax('topic')){
+}elseif( is_tax('topic') ){
 
     single_term_title('掲示板トピック: ');
 
-}elseif(is_tax()){
-
+}elseif( is_tax() ){
 	single_term_title();
 
 }elseif( is_search() ){
@@ -45,7 +44,7 @@ if( hametuha_is_profile_page() ){
 	$author = get_queried_object();
 	echo $author->display_name.'の作品一覧';
 
-}elseif(is_singular('series')){
+}elseif( is_singular('series') ){
 
 	echo '<span>シリーズ</span>';
 	the_title();
@@ -74,8 +73,12 @@ if( hametuha_is_profile_page() ){
 
 	echo 'アーカイブ';
 
-}elseif( is_404() ){
+}elseif( is_404() ) {
 
 	echo '404: ページが見つかりませんでした';
 
-}	
+}else{
+
+	wp_title('');
+
+}

@@ -38,9 +38,12 @@ class Recent extends Widget
         if( $query->have_posts() ){
             $out = '<ul class="widgets-content recent-widgets">';
             while( $query->have_posts() ){
-                $query->the_post();
-                $output = $this->set_avatar($this->replace($layout, $instance));
-                $out .= '<li>'.$output.'</li>';
+	            $query->the_post();
+                ob_start();
+	            get_template_part('parts/loop-widget', get_post_type());
+	            $li = ob_get_contents();
+	            ob_end_clean();
+                $out .= $li;
             }
             wp_reset_postdata();
             $out .= '</ul>';

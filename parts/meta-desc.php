@@ -34,7 +34,7 @@
 
     <p>投稿作品を日付別に表示しています。</p>
 
-<?php elseif(is_home()): ?>
+<?php elseif( is_home() && 'latest' == get_query_var('pagename') ): ?>
 
 	<p>投稿を新着順に表示しています。</p>
 

@@ -4,5 +4,5 @@
     <p>
         ページビューを元に計算される厳粛なランキングです。
     </p>
-    <p><a class="btn btn-success btn-lg" href="#ranking-detail">ランキングの仕組みについて</a></p>
+    <p><a class="btn btn-success btn-lg" href="#ranking-detail">ランキングの仕組み</a></p>
 </div>
