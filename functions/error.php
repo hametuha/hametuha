@@ -4,20 +4,6 @@
  */
 
 
-/**
- * bodyにクラス属性を追加する
- *
- * @param array $classes
- * @return array
- */
-add_filter('body_class', function( array $classes ){
-    if( is_404() ){
-        $classes[] = 'error';
-    }
-    return $classes;
-});
-
-
 
 /**
  * wp_dieの描画関数をフィルター
@@ -84,11 +70,11 @@ function _hametuha_wp_die( $message, $title = '', $args = array() ) {
 	}
 
 	if ( empty($title) ){
-		$title = '500 Internal Server Error｜破滅派｜オンライン文芸誌';
+		$title = $r['response'].' '.get_status_header_desc($r['response']).'｜破滅派｜オンライン文芸誌';
 	}
 
 	$text_direction = 'ltr';
 	endif;
-	require_once dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR."503.php";
+	include TEMPLATEPATH.'/503.php';
 	die();
 }

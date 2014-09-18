@@ -47,12 +47,14 @@ add_filter("manage_users_columns", function($columns){
 	foreach( $columns as $key => $val ){
 		if( 'name' === $key ){
 			$new_column['display_name'] = '表示名';
+		}elseif( false !== array_search($columns, ['backwpup_role', 'ure_roles']) ) {
+			// 邪魔なのは消す
 		}else{
 			$new_column[$key] = $val;
 		}
 	}
 	return $new_column;
-}, 10);
+}, 200);
 
 
 /**
