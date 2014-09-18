@@ -27,6 +27,25 @@
     height: auto;
     max-width: 100%;
   }
+  p{
+    color: $more-shade-font;
+    font-size: 11px;
+    text-align: center;
+    margin-top: 0.5em;
+    a{
+      &:link, &:visited{
+        color: darken($more-shade-font, 10);
+        text-decoration: underline;
+      }
+      &:hover{
+        text-decoration: none;
+        color: $link-active;
+      }
+      &:active{
+        color: lighten($link-active, 20);
+      }
+    }
+  }
 }
 
 // 投稿本文

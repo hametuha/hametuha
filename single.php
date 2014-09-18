@@ -5,7 +5,7 @@
 <div class="container single">
 
     <div class="row row-offcanvas row-offcanvas-right">
-        <?php if(have_posts()): while(have_posts()): the_post(); ?>
+        <?php if( have_posts() ): while( have_posts() ): the_post(); ?>
 
         <article itemscope itemtype="http://schema.org/Article" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
 
@@ -19,6 +19,9 @@
             <?php if( has_post_thumbnail() ): ?>
                 <div class="post-title-thumbnail row">
                     <?php the_post_thumbnail('large', array('itemprop' => 'image')); ?>
+	                <?php $thumbnail = get_post(get_post_thumbnail_id()); if(!empty($thumbnail->post_excerpt)): ?>
+	                <?= wpautop($thumbnail->post_excerpt) ?>
+	                <?php endif; ?>
                 </div>
             <?php endif; ?>
 
