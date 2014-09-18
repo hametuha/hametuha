@@ -23,7 +23,7 @@ function hametuha_user_name(){
 add_filter('pre_user_query', function( WP_User_Query &$user_query ){
 	/** @var wpdb $wpdb */
 	global $wpdb;
-	if( is_admin() && !defined('DOING_AJAX') && isset($user_query->query_vars['search']) && !empty($user_query->query_vars['search']) ){
+	if( is_admin() && isset($user_query->query_vars['search']) && !empty($user_query->query_vars['search']) ){
 		$where = str_replace('*', '%', $user_query->query_vars['search']);
 
 		$user_query->query_from .= <<<SQL
@@ -59,7 +59,7 @@ add_filter("manage_users_columns", function($columns){
  * 名前を表示する
  */
 add_filter( 'manage_users_custom_column', function($td, $column, $user_id){
-	if( 'displya_name' == $column ){
+	if( 'display_name' == $column ){
 		$ruby = (string)get_user_meta($user_id, 'last_name', true);
 		$name = (string)get_the_author_meta('display_name', $user_id);
 		return sprintf('<ruby>%s<rt>%s</rt></ruby>', esc_html($name), esc_html($ruby));
