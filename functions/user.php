@@ -16,6 +16,56 @@ function hametuha_user_name(){
     }
 }
 
+/**
+ * 管理画面でユーザーを探せるようにする
+ *
+ */
+add_filter('pre_user_query', function( WP_User_Query &$user_query ){
+	/** @var wpdb $wpdb */
+	global $wpdb;
+	if( is_admin() && !defined('DOING_AJAX') && isset($user_query->query_vars['search']) && !empty($user_query->query_vars['search']) ){
+		$where = str_replace('*', '%', $user_query->query_vars['search']);
+
+		$user_query->query_from .= <<<SQL
+		LEFT JOIN {$wpdb->usermeta} AS last_name
+		ON {$wpdb->users}.ID = last_name.user_id AND last_name.meta_key = 'last_name'
+SQL;
+
+		$query = <<<SQL
+		( {$wpdb->users}.user_login LIKE %s OR {$wpdb->users}.user_nicename LIKE %s OR {$wpdb->users}.display_name LIKE %s OR last_name.meta_value LIKE %s)
+SQL;
+		$user_query->query_where = preg_replace('/\(user_login LIKE \'%.*%\' OR user_nicename LIKE \'%.*%\'\)/u', $wpdb->prepare($query, $where, $where, $where, $where), $user_query->query_where);
+	}
+});
+
+
+/**
+ * ユーザーテーブルの名前表示を変更
+ */
+add_filter("manage_users_columns", function($columns){
+	$new_column = array();
+	foreach( $columns as $key => $val ){
+		if( 'name' === $key ){
+			$new_column['display_name'] = '表示名';
+		}else{
+			$new_column[$key] = $val;
+		}
+	}
+	return $new_column;
+}, 10);
+
+
+/**
+ * 名前を表示する
+ */
+add_filter( 'manage_users_custom_column', function($td, $column, $user_id){
+	$ruby = (string)get_user_meta($user_id, 'last_name', true);
+	$name = (string)get_the_author_meta('display_name', $user_id);
+	return sprintf('<ruby>%s<rt>%s</rt></ruby>', esc_html($name), esc_html($ruby));
+}, 20, 3);
+
+
+
 
 /**
  * 現在のユーザーの登録日を返す
