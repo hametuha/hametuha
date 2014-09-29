@@ -144,7 +144,7 @@ add_action("admin_enqueue_scripts", function( $page = '' ){
  * @action wp_head
  */
 add_action('wp_head', function(){
-    $shiv = get_template_directory_uri().'/assets/vendor/html5shiv/dist/html5shiv.js';
+    $shiv = get_template_directory_uri().'/assets/vendor/html5shiv/dist/html5shiv.min.js';
     $respond = get_template_directory_uri().'/assets/vendor/respondjs/dest/respond.min.js';
     echo <<<EOS
 <!--[if lt IE 9]>
