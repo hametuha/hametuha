@@ -223,3 +223,12 @@ function _hametuha_fix_script_on_prview(){
 	}
 }
 add_action('wp_print_scripts', '_hametuha_fix_script_on_prview', 100000);
+
+/**
+ * ALO NewsLetterが表示されないので、修正。
+ */
+add_filter('alo_easymail_register_newsletter_args', function($args){
+	unset($args['capabilities']);
+	$args['capability_type'] = 'page';
+	return $args;
+});
