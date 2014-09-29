@@ -6,7 +6,7 @@
 
     <div class="row row-offcanvas row-offcanvas-right">
 
-        <?php if(have_posts()): while(have_posts()): the_post(); ?>
+        <?php if( have_posts() ): while( have_posts() ): the_post(); ?>
 
         <article itemscope itemtype="http://schema.org/Article" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
 
@@ -51,7 +51,6 @@
                     <h1 itemprop="name"><?php the_title(); ?></h1>
 
                     <?php get_template_part('parts/metadata') ?>
-
 
                     <?php if( isset($_GET['action']) && $_GET['action'] == 'edit' && current_user_can('edit_posts', get_the_ID()) ): ?>
 

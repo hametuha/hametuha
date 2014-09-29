@@ -128,7 +128,7 @@ add_action('wp_head', function(){
             $url =  get_permalink();
             $type =  'article';
             $desc = str_replace("\n", "", get_the_excerpt());
-            $author = '<meta property="article:author" content="'.  get_author_posts_url(get_the_author_ID()).'" />';
+            $author = '<meta property="article:author" content="'.  get_author_posts_url(get_the_author_meta('ID')).'" />';
             if(is_singular('thread')){
                 $image = preg_replace("/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar(get_the_author_meta('ID'), 150));
             }elseif(has_post_thumbnail()){

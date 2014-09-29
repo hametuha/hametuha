@@ -103,7 +103,7 @@ function hametuha_user_role($user = null){
         $user = wp_get_current_user();
     }
     if( is_numeric($user) ){
-        $user = get_userdata($user);
+	    $user = new WP_User($user);
         if( !$user ){
             return 'ゲスト';
         }

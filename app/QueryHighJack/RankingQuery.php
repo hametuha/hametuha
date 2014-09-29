@@ -49,7 +49,7 @@ class RankingQuery extends QueryHighJack
      *
      * @param \WP_Query $wp_query
      */
-    public function pre_get_posts( \WP_Query $wp_query ){
+    public function pre_get_posts( \WP_Query &$wp_query ){
         if( $wp_query->is_main_query() && is_ranking('top') ){
             // クエリをハイジャックする
             do_action('template_redirect');
