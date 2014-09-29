@@ -149,10 +149,12 @@ EOS;
               furigana.meta_value LIKE %s
             )
 SQL;
-            foreach( $wp_query->get('search_terms') as $term ){
-                $s = '%'.$term.'%';
-                $new_query[] = $this->authors->db->prepare($sql, $s, $s);
-            }
+	        if( $terms = $wp_query->get('search_terms') ){
+	            foreach( $terms as $term ){
+	                $s = '%'.$term.'%';
+	                $new_query[] = $this->authors->db->prepare($sql, $s, $s);
+	            }
+	        }
             if( !empty($new_query) ){
                 $search = ' AND '.implode(' AND ', $new_query);
             }

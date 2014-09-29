@@ -108,6 +108,9 @@ function hametuha_user_role($user = null){
             return 'ゲスト';
         }
     }
+	if( !method_exists($user, 'has_cap') ){
+		return 'ゲスト';
+	}
     if( $user->has_cap('manage_options') ){
         return '管理者';
     }elseif( $user->has_cap('edit_others_posts') ){
