@@ -100,7 +100,7 @@ function _hametuha_flash_script(){
 		}
 	}
 }
-add_action('template_redirect', '_hametuha_flash_script');
+//add_action('template_redirect', '_hametuha_flash_script');
 
 /**
  * ショートコードの後方互換

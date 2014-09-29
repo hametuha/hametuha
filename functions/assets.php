@@ -127,11 +127,7 @@ add_action("admin_enqueue_scripts", function( $page = '' ){
     wp_enqueue_style('hametuha-admin');
 
 	if( current_user_can('edit_posts') ){
-		wp_enqueue_style('hametuha-admin-author', get_bloginfo('template_directory')."/css/admin-author.css", array(), HAMETUHA_THEME_VERSION);
-		wp_enqueue_script('hametuha-admin-author', get_bloginfo('template_directory')."/js/admin-author.js", array('jquery'), HAMETUHA_THEME_VERSION);
-		wp_localize_script('hametuha-admin-author', 'HamtuhaAdmin', array(
-			'isEditor' => current_user_can('edit_others_posts')
-		));
+
 	}
 }, 200);
 
