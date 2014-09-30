@@ -417,11 +417,26 @@ ul.metadata{
     border-top: 2px solid $thin-border;
     border-bottom: 2px solid $thin-border;
     padding: 15px;
+    dt, dd{
+      margin-bottom: 10px;
+    }
   }
 }
+
+@media only screen and (max-width: $screen-xs-max) {
+  .event-detail{
+    .dl-horizontal{
+      dt{
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
 caption.outdated{
   @extend .text-danger;
 }
+
 #gmap-announcement{
   height: 250px;
   background-color: $navbar-default-bg;

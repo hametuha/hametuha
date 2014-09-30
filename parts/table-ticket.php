@@ -10,7 +10,7 @@ $footer_note = $lwp->event->get_footer_note(get_the_ID());
 		<?php if (lwp_is_event_available()): ?>
 			<caption><?php echo lwp_selling_limit('Y年n月j日（D）'); ?>まで！</caption>
 		<?php else: ?>
-			<caption class="outdated">申込期限は過ぎました</caption>
+			<caption class="alert alert-danger">申込期限は過ぎました</caption>
 		<?php endif; ?>
 		<thead>
 			<tr>

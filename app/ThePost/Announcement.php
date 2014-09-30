@@ -22,7 +22,6 @@ use WPametu\Utility\PostHelper;
 class Announcement extends PostHelper
 {
 
-
     const START_OPTION = '_hametuha_announcement_start';
 
     const END_OPTION = '_hametuha_announcement_end';
@@ -59,6 +58,15 @@ class Announcement extends PostHelper
 
     const COMMIT_CATEGORY = '_hametuha_commit_category';
 
+
+	/**
+	 * 開催期間が存在するか
+	 *
+	 * @return bool
+	 */
+	public function has_period(){
+		return ($this->start || $this->end);
+	}
 
     /**
      * 告知に期限はあるか
@@ -126,7 +134,7 @@ class Announcement extends PostHelper
      * @return bool
      */
     public function is_participating(){
-        return (boolean)get_post_meta($this->post->ID, self::COMMIT_TYPE, true);
+        return (boolean) get_post_meta($this->post->ID, self::COMMIT_TYPE, true);
     }
 
     /**
@@ -134,9 +142,9 @@ class Announcement extends PostHelper
      */
     public function get_participating_period(){
         $end = get_post_meta($this->post->ID, self::COMMIT_END, true);
-        if($end){
+        if( $end ){
             $start = get_post_meta($this->post->ID, self::COMMIT_START, true) ?: $this->post->post_date;
-            return mysql2date('Y年m月d日（D）', $start)." 〜 ".  mysql2date('Y年m月d日（D）', $end);
+           return mysql2date('Y年m月d日（D）', $start)." 〜 ".  mysql2date('Y年m月d日（D）', $end);
         }else{
             return '無期限';
         }

@@ -13735,14 +13735,21 @@ ul.metadata {
   border-top: 2px solid #ddd;
   border-bottom: 2px solid #ddd;
   padding: 15px; }
+  /* line 420, ../sass/parts/_components.scss */
+  .event-detail .dl-horizontal dt, .event-detail .dl-horizontal dd {
+    margin-bottom: 10px; }
 
-/* line 425, ../sass/parts/_components.scss */
+@media only screen and (max-width: 767px) {
+  /* line 429, ../sass/parts/_components.scss */
+  .event-detail .dl-horizontal dt {
+    margin-bottom: 5px; } }
+/* line 440, ../sass/parts/_components.scss */
 #gmap-announcement {
   height: 250px;
   background-color: #f8f8f8;
   margin-bottom: 20px; }
 
-/* line 436, ../sass/parts/_components.scss */
+/* line 451, ../sass/parts/_components.scss */
 .afb_container .good:link, .afb_container .bad:link {
   text-decoration: none; }
 
