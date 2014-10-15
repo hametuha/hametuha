@@ -54,6 +54,12 @@ if( is_admin() ){
 
 }
 
+/**
+ * Theme My Loginにno cache headersを吐かせる
+ */
+add_action('login_init', function(){
+	nocache_headers();
+});
 
 /**
  * ツールボックスからPress Thisを消す
@@ -77,30 +83,13 @@ HTML;
  * @param string $content
  * @return string 
  */
-function _hametuha_file($atts, $content = ''){
+add_shortcode('file', function($atts, $content = ''){
 	extract(shortcode_atts(array(
 		'href' => ''
 	), $atts));
 	return '<p class="center"><a target="_blank" href="'.$href.'" class="button flash-button">フルサイズで表示</a></p>';
-}
-add_shortcode('file', '_hametuha_file');
+});
 
-/**
- * 投稿ページでFlashのショートコードを含む場合のみスクリプトを載せる
- * @global object $post 
- */
-function _hametuha_flash_script(){
-	if(is_singular('post')){
-		global $post;
-		if(false !== strpos($post->post_content, '[flash')){
-			wp_enqueue_script('hametuha-flash', get_bloginfo('template_directory').'/js/single-post-flash.js', array('swfobject'), HAMETUHA_THEME_VERSION, false);
-			wp_localize_script('hametuha-flash', 'HametuhaFlash', array(
-				'id' => 'hametuha-flash-content'
-			));
-		}
-	}
-}
-//add_action('template_redirect', '_hametuha_flash_script');
 
 /**
  * ショートコードの後方互換
@@ -202,27 +191,6 @@ function _hametuha_comment_message_header($header , $comment_id){
 }
 add_filter('comment_notification_headers', '_hametuha_comment_message_header', 10, 2);
 
-
-/**
- * Theme My Loginが出力するJavascriptのエラーを修正 
- */
-function _hametuha_wp_attempt_focus_fix(){
-	global $theme_my_login_object;
-	if($theme_my_login_object && !is_page('login')){
-		remove_action('wp_print_footer_scripts', array($theme_my_login_object, 'print_footer_scripts'));
-	}
-}
-add_action('wp_print_footer_scripts', '_hametuha_wp_attempt_focus_fix', 1);
-
-/**
- * Google Analyticator が吐き出すJSをプレビュー画面で停止 
- */
-function _hametuha_fix_script_on_prview(){
-	if(is_preview()){
-		wp_dequeue_script('ga-external-tracking');
-	}
-}
-add_action('wp_print_scripts', '_hametuha_fix_script_on_prview', 100000);
 
 /**
  * ALO NewsLetterが表示されないので、修正。
