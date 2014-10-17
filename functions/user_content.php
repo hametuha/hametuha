@@ -64,7 +64,7 @@ class Hametuha_User_Content{
 						PRIMARY KEY (ID),
 						KEY user (rel_type,object_id,user_id),
 						KEY favored_date (updated,object_id,user_id)
-					) ENGINE = MYISAM DEFAULT CHARSET = {$char};
+					) ENGINE = InnoDb DEFAULT CHARSET = {$char};
 EOS;
 				//テーブルの作成
 				require_once ABSPATH."wp-admin/includes/upgrade.php";

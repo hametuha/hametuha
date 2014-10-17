@@ -32,9 +32,20 @@ add_action('init', function(){
 		'rewrite' => array('slug' => $series)
 	);
 	register_post_type($series, $args);
+
+	// リスト
+	register_post_type('lists', array(
+		'label' => 'リスト',
+		'description' => '作品を自由にまとめられるリストです。',
+		'public' => true,
+		'show_ui' => false,
+		'has_archive' => true,
+		'capability_type' => 'post',
+		'exclude_from_search' => true,
+		'rewrite' => array('slug' => 'lists')
+	));
 	
-	
-	//告知
+	// 告知
 	$annoucement_post_type = 'announcement';
 	$args = array(
 		'label' => '告知',
@@ -114,22 +125,50 @@ add_action('init', function(){
     ));
 });
 
+/**
+ * リライトルールを追加
+ *
+ */
+add_filter('rewrite_rules_array', function(array $rules){
+	return array_merge([
+		'^lists/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists',
+		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
+	], $rules);
+});
+
+/**
+ *
+ * パーマリンクをIDに
+ *
+ * @since 3.0.0
+ *
+ * @param string  $post_link The post's permalink.
+ * @param WP_Post $post      The post in question.
+ * @param bool    $leavename Whether to keep the post name.
+ * @param bool    $sample    Is it a sample permalink.
+ */
+add_filter('post_type_link', function($post_link, $post){
+	switch( $post->post_type ){
+		case 'lists':
+			$post_link = home_url("/{$post->post_type}/{$post->ID}/");
+			break;
+		default:
+			break;
+	}
+	return $post_link;
+}, 10, 2);
 
 
 /**
- * 長過ぎる文字列を短くして返す
- * @param string $sentence
- * @param int $length
- * @param string $elipsis
- * @return string
+ * アーカイブ系シングルの表示を変更する
  */
-function trim_long_sentence($sentence, $length = 100, $elipsis = '…'){
-	if(mb_strlen($sentence, 'utf-8') <= $length){
-		return $sentence;
-	}else{
-		return mb_substr($sentence, 0, $length - 1, 'utf-8').$elipsis;
+add_filter('single_template', function($template){
+	if( is_singular('lists') || is_singular('series') ){
+		$template = get_template_directory().'/index.php';
 	}
-}
+	return $template;
+});
+
 
 /**
  * サブページじゃなければfalse、 サブページの場合は親の投稿IDを返す
@@ -144,6 +183,24 @@ function is_subpage($post = null){
 		$post = get_post($post);
 	}
 	return (int)$post->post_parent;
+}
+
+/**
+ * 指定した投稿がリストに含まれているか
+ *
+ * @param int|WP_Post $post
+ * @param int|WP_Post $list
+ *
+ * @return bool
+ */
+function in_lists($post, $list){
+	$post = get_post($post);
+	$list = get_post($list);
+	if( !$post || !$list || 'lists' !== $list->post_type ){
+		return false;
+	}else{
+		return false;
+	}
 }
 
 /**

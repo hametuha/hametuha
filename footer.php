@@ -36,7 +36,7 @@
         &copy; 2007 破滅派
     </p>
 </footer>
-
+<?php get_template_part('parts/modal') ?>
 <?php wp_footer(); ?>
 </body>
 </html>

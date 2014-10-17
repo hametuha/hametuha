@@ -98,6 +98,7 @@
                         <li><a href="<?= home_url('/your/favorites/', 'http') ?>"><i class="icon-highlight"></i> 保存したフレーズ</a></li>
                         */ ?>
                         <li><a href="<?= home_url('/your/comments/', 'http') ?>"><i class="icon-bubble-dots"></i> あなたのコメント</a></li>
+	                    <li><a href="<?= home_url('/your/lists/', 'http') ?>"><i class="icon-drawer3"></i> あなたのリスト</a></li>
                         <li><a href="<?= home_url('/your/reviews/', 'http') ?>"><i class="icon-star2"></i> レビューした作品</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= admin_url('profile.php') ?>"><i class="icon-profile"></i> プロフィール</a></li>

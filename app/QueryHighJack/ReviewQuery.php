@@ -61,6 +61,9 @@ class ReviewQuery extends QueryHighJack
      */
     public function pre_get_posts( \WP_Query &$wp_query ){
         if( $this->is_valid_query($wp_query) ){
+	        if( $wp_query->is_main_query() ){
+		        nocache_headers();
+	        }
             $reviewer_id = (int)$wp_query->get('reviewer');
             if( !$reviewer_id ){
                 if( is_user_logged_in() ){
