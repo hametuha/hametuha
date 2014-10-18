@@ -199,7 +199,9 @@ function in_lists($post, $list){
 	if( !$post || !$list || 'lists' !== $list->post_type ){
 		return false;
 	}else{
-		return false;
+		/** @var \Hametuha\Model\Lists $lists */
+		$lists = \Hametuha\Model\Lists::get_instance();
+		return $lists->exists_in($list->ID, $post->ID);
 	}
 }
 

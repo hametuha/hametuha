@@ -3,9 +3,15 @@
 namespace Hametuha\Rest;
 
 
+use Hametuha\Model\Lists;
 use WPametu\API\Rest\RestJSON;
 
-
+/**
+ * ListCreator
+ *
+ * @package Hametuha\Rest
+ * @property-read Lists $lists
+ */
 class ListCreator extends RestJSON
 {
 
@@ -14,6 +20,12 @@ class ListCreator extends RestJSON
 	 */
 	public static $prefix = 'list/edit';
 
+	/**
+	 * @var array
+	 */
+	protected $models = [
+		'lists' => Lists::class,
+	];
 
 	/**
 	 * リストを作成する
@@ -58,8 +70,44 @@ class ListCreator extends RestJSON
 		}
 	}
 
+	/**
+	 * 保存する
+	 *
+	 * @param int $post_id
+	 *
+	 * @return array
+	 */
 	public function post_save($post_id){
-
+		try{
+			// 権限チェック
+			if( !current_user_can('read') || !wp_verify_nonce($this->input->post('_wpnonce'), 'list-save') ){
+				$this->auth_error();
+			}
+			// 投稿をチェック
+			$post = get_post($post_id);
+			if( !$post || 'post' !== $post->post_type ){
+				throw new \Exception('指定された作品はリストに追加できません');
+			}
+			// リストをチェック
+			$lists = (array) $this->input->post('lists');
+			foreach( $lists as $list_id ){
+				$list = get_post($list_id);
+				if( 'lists' !== $list->post_type || !$this->lists->user_can($list->ID, get_current_user_id()) ){
+					throw new \Exception('あなたにはこのリストを編集する権限がありません。');
+				}
+			}
+			// O.K.
+			$this->lists->bulk_register($post->ID, $lists);
+			return [
+				'success' => true,
+				'message' => '作品をリストに保存しました。',
+			];
+		}catch( \Exception $e ){
+			return [
+				'success' => false,
+				'message' => $e->getMessage(),
+			];
+		}
 	}
 
 	/**
@@ -135,6 +183,6 @@ HTML;
 	 * @return string|void
 	 */
 	public static function save_link( $post_id ){
-		return home_url(sprintf('%s/save/%d/', self::$prefix, $post_id), 'https');
+		return home_url(sprintf('%s/save/%d/', self::$prefix, $post_id));
 	}
 }

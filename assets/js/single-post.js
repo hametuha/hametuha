@@ -249,6 +249,16 @@ Chart.defaults.global.responsive = true;
             });
             $(this).nextAll('input[type=hidden]').val(value);
         });
+
+
+        // リスト作成完了
+        $(document).on('created.hametuha', '.list-create-form', function(event, post){
+            $('#list-changer').append('<div class="checkbox"><label>' +
+            '<input type="checkbox" name="lists[]" value="' + post.ID + '" checked>' +
+            ( 'private' === post.post_status ? '非公開: ' : '公開　: ') + post.post_title +
+            '</label></div>');
+        });
+
     });
 
 

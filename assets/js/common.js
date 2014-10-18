@@ -274,7 +274,6 @@ jQuery(document).ready(function($){
         e.preventDefault();
         var form = $(this);
         form.addClass('loading');
-        form.find('input[type=submit]').attr('disabled', true);
         form.ajaxSubmit({
             success: function(result){
                 if( result.success ){
@@ -291,6 +290,26 @@ jQuery(document).ready(function($){
     // モーダルの中のリスト
     $('.modal').on('created.hametuha', '.list-create-form', function(){
         Hametuha.modal.close();
+    });
+
+    // リスト追加フォーム
+    $(document).on('submit', '.list-save-manager', function(e){
+        e.preventDefault();
+        var form = $(this);
+        form.addClass('loading');
+        form.ajaxSubmit({
+            success: function(result){
+                form.find('input[type=submit]').attr('disabled', false);
+                form.removeClass('loading');
+                var msg = $('<div class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button></div>');
+                msg.addClass('alert-' + ( result.success ? 'success' : 'danger' ))
+                    .append('<span>' + result.message + '</span>');
+                form.prepend(msg);
+                setTimeout(function(){
+                    msg.find('button').trigger('click');
+                }, 5000);
+            }
+        });
     });
 
 });

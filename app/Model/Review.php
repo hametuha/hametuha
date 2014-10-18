@@ -155,7 +155,7 @@ SQL;
     }
 
     /**
-     * レビューのWEHREを返す
+     * レビューのWHEREを返す
      *
      * @param string $where
      * @param int $user_id

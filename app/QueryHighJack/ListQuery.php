@@ -30,7 +30,6 @@ class ListQuery extends QueryHighJack
 	];
 
 	/**
-	 *
 	 * Detect if query var is valid
 	 *
 	 * @param \WP_Query $wp_query

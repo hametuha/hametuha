@@ -132,7 +132,7 @@
 
 	        <?php if( is_user_logged_in() ): ?>
 
-		        <form id="list-save-manager" method="post" action="<?= esc_url(Hametuha\Rest\ListCreator::save_link(get_the_ID())) ?>">
+		        <form class="list-save-manager" method="post" action="<?= esc_url(Hametuha\Rest\ListCreator::save_link(get_the_ID())) ?>">
 			        <?php wp_nonce_field('list-save') ?>
 					<div id="list-changer">
 				        <?php
@@ -141,7 +141,7 @@
 					            'post_author' => get_current_user_id(),
 					            'post_status' => ['publish', 'private'],
 					            'orderby' => 'post_title',
-					            'order' => 'DESC'
+					            'order' => 'DESC',
 				            ]);
 				            $current_post_id = get_the_ID();
 				            if( $lists->have_posts() ){
@@ -156,7 +156,7 @@ HTML;
 					            while($lists->have_posts()){
 						            $lists->the_post();
 						            printf($html, get_the_ID(),
-							            checked(in_lists($current_post_id, $post), true, false),
+							            checked(in_lists($current_post_id, get_the_ID()), true, false),
 							            esc_html( ($post->post_status == 'publish' ? '公開　: ' : '').get_the_title() )
 						            );
 					            }
@@ -171,11 +171,11 @@ HTML;
 			        <div class="row">
 
 				        <div class="col-xs-6 text-left">
-					        <a class="btn btn-success list-creator" title="リストを作成する" href="<?= esc_url(Hametuha\Rest\ListCreator::form_link()) ?>"><i class="icon-plus-circle"></i> リストを作成</a>
+							<input type="submit" class="btn btn-primary" value="変更を保存" />
 				        </div>
 
 				        <div class="col-xs-6 text-right">
-							<input type="submit" class="btn btn-primary" value="変更を保存" />
+					        <a class="btn btn-success list-creator" title="リストを作成する" href="<?= esc_url(Hametuha\Rest\ListCreator::form_link()) ?>"><i class="icon-plus-circle"></i> リストを作成</a>
 				        </div>
 
 			        </div>
