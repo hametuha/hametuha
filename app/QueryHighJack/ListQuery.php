@@ -52,8 +52,8 @@ class ListQuery extends QueryHighJack
 	 * @var array
 	 */
 	protected $rewrites = [
-		'^your/lists/?$' => 'index.php?my-content=lists&post_type=lists&post_status=publish,private&post_author=0',
-		'^your/lists/paged/([0-9]+)/?$' => 'index.php?my-content=lists&post_type=lists&post_status=publish,private&paged=$matches[1]&post_author=0',
+		'^your/lists/?$' => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&author=0',
+		'^your/lists/paged/([0-9]+)/?$' => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&paged=$matches[1]&author=0',
 		'^recommends/?$' => 'index.php?my-content=recommends&post_type=lists&post_status=publish',
 		'^recommends/paged/([0-9]+)/?$' => 'index.php?my-content=recommends&post_type=lists&post_status=publish&paged=$matches[1]',
 	];
@@ -83,7 +83,8 @@ class ListQuery extends QueryHighJack
 				nocache_headers();
 			}
 			// クエリにユーザーIDを追加
-			$wp_query->set('post_author', get_current_user_id());
+			$wp_query->set('author', get_current_user_id());
+			$wp_query->set('post_status', ['publish', 'private', 'future']);
 		}
 		elseif( 'recommends' == $wp_query->get('my-content') ){
 			// おすすめの場合はメタクエリ追加

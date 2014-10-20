@@ -288,8 +288,9 @@ jQuery(document).ready(function($){
     });
 
     // モーダルの中のリスト
-    $('.modal').on('created.hametuha', '.list-create-form', function(){
+    $('.modal').on('created.hametuha', '.list-create-form', function(e, post){
         Hametuha.modal.close();
+        Hametuha.hitEvent('list', 'add', post.ID);
         if( $('body').hasClass('single-lists') ){
             location.reload();
         }
@@ -321,7 +322,6 @@ jQuery(document).ready(function($){
         if( confirm($(this).attr('title')) ){
             $.post($(this).attr('href'), function(result){
                 alert(result.message);
-                console.log(result, result.succes, $('body').hasClass('single-lists'));
                 if( result.success && $('body').hasClass('single-lists') ){
                     window.location.href = result.url;
                 }

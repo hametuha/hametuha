@@ -12,6 +12,10 @@
 	</p>
 </div>
 
+<?php if( is_singular('lists') ): ?>
+	<?php get_template_part('parts/share') ?>
+<?php endif; ?>
+
 <ul class="nav nav-pills">
 	<li><a href="<?= home_url('/recommends/', 'http'); ?>">編集部オススメ</a></li>
 	<li><a href="<?= get_post_type_archive_link('lists', 'http'); ?>">新着リスト</a></li>
