@@ -16,12 +16,18 @@ class Lists extends Model
 {
 
 	/**
+	 * リコメンドのメタキー
+	 *
+	 * @const
+	 */
+	const META_KEY_RECOMMEND = '_recommended_list';
+
+	/**
 	 * コンテンツとコンテンツを紐づけるテーブル
 	 *
 	 * @var string
 	 */
 	protected $name = 'object_relationships';
-
 
 	/**
 	 * 関連するテーブル
@@ -173,6 +179,83 @@ class Lists extends Model
 
 		}
 		return $this->delete_where($wheres);
+	}
+
+	/**
+	 * ひも付けられた投稿の数を出力する
+	 *
+	 * @param array $post_ids
+	 *
+	 * @return array|mixed|null
+	 */
+	public function num_children($post_ids){
+		if( is_numeric($post_ids) ){
+			$post_ids = [$post_ids];
+		}else{
+			$post_ids = (array)$post_ids;
+		}
+		return $this->select("subject_id, COUNT(object_id) AS count")
+			->where("rel_type = %s", 'list')
+			->where_in("subject_id", $post_ids, '%d')
+			->group_by("subject_id")->result();
+	}
+
+	/**
+	 * 指定されたリストの件数を返す
+	 *
+	 * @param int $list_id
+	 *
+	 * @return int
+	 */
+	public function count($list_id){
+		return (int) $this->select("COUNT(object_id)")
+			->where("rel_type = %s", 'list')
+			->where("subject_id = %d", $list_id)
+			->get_var();
+	}
+
+	/**
+	 * お勧めにする
+	 *
+	 * @param int $post_id
+	 */
+	public function mark_as_recommended($post_id){
+		update_post_meta($post_id, self::META_KEY_RECOMMEND, 1);
+	}
+
+	/**
+	 * お勧めではなくする
+	 *
+	 * @param int $post_id
+	 */
+	public function not_recommended($post_id){
+		delete_post_meta($post_id, self::META_KEY_RECOMMEND);
+	}
+
+	/**
+	 * 投稿がお勧めか否か
+	 *
+	 * @param int $post_id
+	 *
+	 * @return bool
+	 */
+	public function is_recommended($post_id){
+		return (bool) get_post_meta($post_id, self::META_KEY_RECOMMEND, true);
+	}
+
+	/**
+	 * 投稿を削除する
+	 *
+	 * @param int $post_id
+	 *
+	 * @return false|int
+	 * @throws \Exception
+	 */
+	public function clear_relation($post_id){
+		return $this->delete_where([
+			['rel_type', '=', 'list', '%s'],
+			['subject_id', '=', $post_id, '%d']
+		]);
 	}
 
 }

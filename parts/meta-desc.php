@@ -7,7 +7,6 @@
 
 <?php elseif( is_tag() || is_tax() ): ?>
 
-
     <?= wpautop(term_description()) ?>
 
 <?php elseif( is_search() ): ?>
@@ -24,7 +23,7 @@
         </p>
     <?php endif; ?>
 
-    <p class="descrpition">
+    <p class="description">
         ページビューを元に計算しています。ページビューを出すと悲しいかな？　と思いまして、
         出さないようにしています。
         <strong>※ 今後、集計方法の変更などを予定しています。</strong>
@@ -37,6 +36,10 @@
 <?php elseif( is_home() && 'latest' == get_query_var('pagename') ): ?>
 
 	<p>投稿を新着順に表示しています。</p>
+
+<?php elseif( is_singular('series') ): ?>
+
+	<?php get_template_part('parts/meta', 'single'); ?>
 
 <?php elseif(is_post_type_archive('announcement') || is_post_type_archive('faq') || is_post_type_archive('info') || is_post_type_archive('news') || is_post_type_archive('thread')): ?>
 

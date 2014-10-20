@@ -137,11 +137,13 @@
 					<div id="list-changer">
 				        <?php
 				            $lists = new WP_Query([
+					            'my-content' => 'lists',
 					            'post_type' => 'lists',
-					            'post_author' => get_current_user_id(),
+					            'post_author' => 0,
 					            'post_status' => ['publish', 'private'],
 					            'orderby' => 'post_title',
 					            'order' => 'DESC',
+					            'posts_per_page' => -1,
 				            ]);
 				            $current_post_id = get_the_ID();
 				            if( $lists->have_posts() ){

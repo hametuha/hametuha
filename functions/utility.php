@@ -108,9 +108,11 @@ function is_last_page(){
  * @return int
  */
 function loop_count(){
-	if(is_singular('series')){
+	if( is_singular('series') ) {
 		global $wpdb;
-		return (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_type = 'post' AND post_parent = %d AND post_status = 'publish'", get_the_ID()));
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_type = 'post' AND post_parent = %d AND post_status = 'publish'", get_the_ID() ) );
+	}elseif( is_singular('lists') ){
+		return Hametuha\Model\Lists::get_instance()->count(get_the_ID());
 	}else{
 		global $wp_query;
 		return (int)$wp_query->found_posts;

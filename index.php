@@ -33,39 +33,57 @@
             <?php endif; ?>
 
 
-            <div class="archive-meta">
-                <h1>
-                    <?php get_template_part('parts/h1'); ?>
-                    <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
-                </h1>
 
-                <div class="desc">
-                    <?php get_template_part('parts/meta-desc'); ?>
-                </div>
+	        <?php if( is_post_type_archive('lists') ): ?>
+		        <?php get_template_part('parts/jumbotron', 'lists') ?>
+	        <?php endif; ?>
 
-                <?php if( hametuha_is_profile_page() ): ?>
-                    <?php get_template_part('parts/search', 'author') ?>
-                <?php endif; ?>
 
-                <?php if( have_posts() ): ?>
-                    <?php /* get_template_part('parts/sort-order') */ ?>
-                <?php endif; ?>
-            </div>
+	        <?php if( is_singular('lists') ): ?>
+	            <?php get_template_part('parts/meta', 'lists') ?>
+			<?php else: ?>
+
+	            <div class="archive-meta">
+	                <h1>
+	                    <?php get_template_part('parts/h1'); ?>
+	                    <span class="label label-default"><?php echo number_format_i18n(loop_count()); ?>件</span>
+	                </h1>
+
+	                <div class="desc">
+	                    <?php get_template_part('parts/meta-desc'); ?>
+	                </div>
+
+	                <?php if( hametuha_is_profile_page() ): ?>
+	                    <?php get_template_part('parts/search', 'author') ?>
+	                <?php endif; ?>
+
+	            </div>
+	        <?php endif; ?>
 
 
             <?php
-                if( is_singular('series') ){
-                    $query = new WP_Query(array(
-                        'post_type' => 'post',
-                        'post_status' => 'publish',
-                        'post_parent' => get_the_ID(),
-                        'paged' => max(1, intval(get_query_var('paged')))
-                    ));
+                if( is_singular('series') ) {
+	                // 親投稿の場合はリストを変更
+	                $query = new WP_Query([
+		                'post_type'   => 'post',
+		                'post_status' => 'publish',
+		                'post_parent' => get_the_ID(),
+		                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
+	                ]);
+                }elseif( is_singular('lists') ){
+	                $query = new WP_Query([
+		                'post_type' => 'in_list',
+		                'post_status' => 'publish',
+		                'post_parent' => get_the_ID(),
+		                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
+	                ]);
                 }else{
                     global $wp_query;
                     $query = $wp_query;
                 }
-                if( $query->have_posts() ): ?>
+                if( $query->have_posts() ):
+					/* get_template_part('parts/sort-order') */
+            ?>
 
             <ol class="archive-container media-list">
             <?php
@@ -107,6 +125,8 @@
 
             <?php if( is_ranking() ): ?>
                 <?php get_template_part('parts/ranking', 'calendar') ?>
+            <?php elseif( is_singular('lists') || is_post_type_archive('lists') ): ?>
+	            <?php get_template_part('parts/nav', 'lists') ?>
             <?php elseif( !hametuha_is_profile_page() ): ?>
                 <?php get_search_form() ?>
             <?php endif; ?>

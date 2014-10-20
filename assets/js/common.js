@@ -290,6 +290,9 @@ jQuery(document).ready(function($){
     // モーダルの中のリスト
     $('.modal').on('created.hametuha', '.list-create-form', function(){
         Hametuha.modal.close();
+        if( $('body').hasClass('single-lists') ){
+            location.reload();
+        }
     });
 
     // リスト追加フォーム
@@ -312,4 +315,17 @@ jQuery(document).ready(function($){
         });
     });
 
+    // リスト削除ボタン
+    $(document).on('click', '.list-eraser', function(e){
+        e.preventDefault();
+        if( confirm($(this).attr('title')) ){
+            $.post($(this).attr('href'), function(result){
+                alert(result.message);
+                console.log(result, result.succes, $('body').hasClass('single-lists'));
+                if( result.success && $('body').hasClass('single-lists') ){
+                    window.location.href = result.url;
+                }
+            });
+        }
+    });
 });

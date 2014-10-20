@@ -46,6 +46,41 @@
             </p>
         </div>
 
+
+
+        <?php
+        $query = new WP_Query([
+	        "my-content" => "recommends",
+	        "posts_per_page" => 1,
+	        "post_type" => "lists",
+	        "post_status" => "publish"
+        ]);
+        if( $query->have_posts() ): $query->the_post();
+	        $url = get_permalink();
+        ?>
+        <div class="col-xs-12 col-sm-4">
+	        <h2>編集部オススメ</h2>
+	        <ul class="post-list">
+		        <?php
+		        $sub_query = new WP_Query([
+			        'post_type' => 'in_list',
+			        'post_status' => 'publish',
+			        'post_parent' => get_the_ID(),
+		        ]);
+		        while( $sub_query->have_posts() ){
+			        $sub_query->the_post();
+			        get_template_part('parts/loop', 'front');
+		        }
+		        ?>
+	        </ul>
+	        <p>
+		        <a href="<?= $url ?>" class="btn btn-default btn-block">もっと見る</a>
+	        </p>
+        </div>
+
+        <?php wp_reset_postdata(); endif; ?>
+
+
         <div class="col-xs-12 col-sm-4">
             <h2>新着投稿</h2>
             <ul class="post-list">
@@ -131,28 +166,6 @@
         </div>
 
 
-
-        <div class="col-xs-12 col-sm-4">
-            <h2>編集部オススメ</h2>
-            <ul class="post-list">
-                <?php
-                $query = new WP_Query([
-                    "post_type" => "post",
-                    "posts_per_page" => 3,
-                    "tag" => "recommended",
-                    "orderby" => "rand"
-                ]);
-                while($query->have_posts()){
-                    $query->the_post();
-                    get_template_part('parts/loop', 'front');
-                }
-                wp_reset_postdata();
-                ?>
-            </ul>
-            <p>
-                <a href="<?= get_tag_link(get_term_by('slug', 'recommended', 'post_tag')) ?>" class="btn btn-default btn-block">一覧</a>
-            </p>
-        </div>
 
 
         <div class="col-xs-12 col-sm-4">

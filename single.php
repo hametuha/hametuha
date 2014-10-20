@@ -15,15 +15,7 @@
                 <?php get_template_part('parts/bar', 'posttype') ?>
             <?php endif; ?>
 
-            <!-- post thumbnail -->
-            <?php if( has_post_thumbnail() ): ?>
-                <div class="post-title-thumbnail row">
-                    <?php the_post_thumbnail('large', array('itemprop' => 'image')); ?>
-	                <?php $thumbnail = get_post(get_post_thumbnail_id()); if(!empty($thumbnail->post_excerpt)): ?>
-	                <?= wpautop($thumbnail->post_excerpt) ?>
-	                <?php endif; ?>
-                </div>
-            <?php endif; ?>
+            <?php get_template_part('parts/meta', 'thumbnail') ?>
 
             <!-- title -->
             <div class="page-header">
@@ -38,7 +30,7 @@
             <!-- Meta data -->
             <div <?php post_class('post-meta')?>>
 
-                <?php get_template_part('parts/metadata') ?>
+                <?php get_template_part('parts/meta', 'single') ?>
 
             </div><!-- //.post-meta -->
 

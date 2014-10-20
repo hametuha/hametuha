@@ -47,6 +47,8 @@
                         <?php endforeach; ?>
                         <li class="divider"></li>
                         <li><a href="<?= home_url('/ranking/') ?>"><i class="icon-crown"></i> ランキング</a></li>
+	                    <li><a href="<?= home_url('/recommends/') ?>"><i class="icon-star3"></i> おすすめ</a></li>
+	                    <li><a href="<?= get_post_type_archive_link('lists') ?>"><i class="icon-drawer3"></i> みんなのリスト</a></li>
 	                    <li class="divider"></li>
 	                    <li><a href="<?= get_post_type_archive_link('anpi') ?>"><i class="icon-skull3"></i> 安否情報</a></li>
                     </ul>

@@ -36,7 +36,7 @@ add_action('init', function(){
 	// リスト
 	register_post_type('lists', array(
 		'label' => 'リスト',
-		'description' => '作品を自由にまとめられるリストです。',
+		'description' => '破滅派同人が作る作品集です。あなただけの選集を作りましょう！',
 		'public' => true,
 		'show_ui' => false,
 		'has_archive' => true,
@@ -160,6 +160,26 @@ add_filter('post_type_link', function($post_link, $post){
 
 
 /**
+ * 削除
+ *
+ * @param int $post_id
+ */
+add_action('delete_post', function($post_id){
+	$post = get_post($post_id);
+	switch( $post->post_type ){
+		case 'lists':
+			// リストのリレーションを消す
+			/** @var Hametuha\Model\Lists $lists */
+			$lists = \Hametuha\Model\Lists::get_instance();
+			$lists->clear_relation($post_id);
+			break;
+		default:
+			// Do nothing.
+			break;
+	}
+});
+
+/**
  * アーカイブ系シングルの表示を変更する
  */
 add_filter('single_template', function($template){
@@ -203,6 +223,20 @@ function in_lists($post, $list){
 		$lists = \Hametuha\Model\Lists::get_instance();
 		return $lists->exists_in($list->ID, $post->ID);
 	}
+}
+
+/**
+ * 投稿がお勧めかどうか
+ *
+ * @param null|int|WP_Post $post
+ *
+ * @return bool
+ */
+function is_recommended($post = null){
+	$post = get_post($post);
+	/** @var Hametuha\Model\Lists $lists */
+	$lists = Hametuha\Model\Lists::get_instance();
+	return $lists->is_recommended($post->ID);
 }
 
 /**
@@ -291,8 +325,12 @@ function hametuha_page_type(){
         return 'front';
     }elseif( is_page() ){
         return 'page';
-    }elseif( is_search() ){
-        return 'search';
+    }elseif( is_search() ) {
+	    return 'search';
+    }elseif( is_singular('lists') || is_post_type_archive('lists') ){
+	    return 'lists';
+    }elseif( is_singular('series') || is_post_type_archive('series') ){
+	    return 'series';
     }else{
         return '';
     }

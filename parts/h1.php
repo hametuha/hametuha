@@ -53,6 +53,20 @@ if( hametuha_is_profile_page() ){
 
 	echo '破滅派BBS';
 
+}elseif( is_post_type_archive('lists') ) {
+
+	switch( get_query_var('my-content') ){
+		case 'lists':
+			echo 'あなたのリスト';
+			break;
+		case 'recommends':
+			echo '編集部オススメ';
+			break;
+		default:
+			echo 'みんなのリスト';
+			break;
+	}
+
 }elseif( is_post_type_archive() ){
 
 	wp_title('');
@@ -60,14 +74,14 @@ if( hametuha_is_profile_page() ){
 
 }elseif( is_date() ){
 
-    $date = get_query_var('year').'年';
-    if( !is_year() ){
-        $date .= sprintf('%d月', get_query_var('monthnum'));
-    }
-    if( is_day() ){
-        $date .= sprintf('%d日', get_query_var('day'));
-    }
-    echo $date.'の投稿一覧';
+	$date = get_query_var('year').'年';
+	if( !is_year() ){
+		$date .= sprintf('%d月', get_query_var('monthnum'));
+	}
+	if( is_day() ){
+		$date .= sprintf('%d日', get_query_var('day'));
+	}
+	echo $date.'の投稿一覧';
 
 }elseif( is_archive() ){
 
@@ -78,7 +92,6 @@ if( hametuha_is_profile_page() ){
 	echo '404: ページが見つかりませんでした';
 
 }else{
-
 	wp_title('');
 
 }
