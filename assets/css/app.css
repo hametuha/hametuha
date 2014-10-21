@@ -14955,158 +14955,166 @@ p.pixiv-embed-illust {
   /* line 78, ../sass/parts/_thread.scss */
   .thread-body .thread-inner {
     font-size: 14px; } }
-/* line 2, ../sass/parts/_front.scss */
-.front-container h2 {
-  font-family: TsukuBOldMinPr6-R, serif; }
-/* line 5, ../sass/parts/_front.scss */
-.front-container .tag-cloud {
-  font-family: TsukuBOldMinPr6-R, serif; }
-/* line 8, ../sass/parts/_front.scss */
-.front-container .frontpage-widget {
-  font-family: TsukuAOldMinPr6N-R, serif; }
-  /* line 10, ../sass/parts/_front.scss */
-  .front-container .frontpage-widget .col-sm-4 {
-    padding-bottom: 60px; }
-  /* line 13, ../sass/parts/_front.scss */
-  .front-container .frontpage-widget h2 {
-    background-color: #242424;
-    color: #fff;
-    height: 40px;
-    line-height: 40px;
-    font-size: 20px;
-    white-space: nowrap;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-    text-overflow: ellipsis;
-    text-align: center; }
-  /* line 22, ../sass/parts/_front.scss */
-  .front-container .frontpage-widget img {
-    width: auto;
-    height: auto; }
-  /* line 26, ../sass/parts/_front.scss */
-  .front-container .frontpage-widget .btn, .front-container .frontpage-widget .tag-container a, .tag-container .front-container .frontpage-widget a, .front-container .frontpage-widget .afb_container .good, .afb_container .front-container .frontpage-widget .good, .front-container .frontpage-widget .afb_container .bad, .afb_container .front-container .frontpage-widget .bad, .front-container .frontpage-widget #footer .alo_easymail_widget_form .input-submit, #footer .alo_easymail_widget_form .front-container .frontpage-widget .input-submit, .front-container .frontpage-widget #sidebar .small-button, #sidebar .front-container .frontpage-widget .small-button, .front-container .frontpage-widget .post-type-bar .small-button, .post-type-bar .front-container .frontpage-widget .small-button, .front-container .frontpage-widget #discussion .reply a, #discussion .reply .front-container .frontpage-widget a {
-    font-family: san-serif; }
-  /* line 29, ../sass/parts/_front.scss */
-  .front-container .frontpage-widget .widget_sp_image-description {
+/* line 1, ../sass/parts/_front.scss */
+.front-container {
+  padding-top: 50px; }
+  /* line 3, ../sass/parts/_front.scss */
+  .front-container .jumbotron {
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0; }
+  /* line 6, ../sass/parts/_front.scss */
+  .front-container h2 {
+    font-family: TsukuBOldMinPr6-R, serif; }
+  /* line 9, ../sass/parts/_front.scss */
+  .front-container .tag-cloud {
+    font-family: TsukuBOldMinPr6-R, serif; }
+  /* line 12, ../sass/parts/_front.scss */
+  .front-container .frontpage-widget {
+    font-family: TsukuAOldMinPr6N-R, serif; }
+    /* line 14, ../sass/parts/_front.scss */
+    .front-container .frontpage-widget .col-sm-4 {
+      padding-bottom: 60px; }
+    /* line 17, ../sass/parts/_front.scss */
+    .front-container .frontpage-widget h2 {
+      background-color: #242424;
+      color: #fff;
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      -ms-text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      text-align: center; }
+    /* line 26, ../sass/parts/_front.scss */
+    .front-container .frontpage-widget img {
+      width: auto;
+      height: auto; }
+    /* line 30, ../sass/parts/_front.scss */
+    .front-container .frontpage-widget .btn, .front-container .frontpage-widget .tag-container a, .tag-container .front-container .frontpage-widget a, .front-container .frontpage-widget .afb_container .good, .afb_container .front-container .frontpage-widget .good, .front-container .frontpage-widget .afb_container .bad, .afb_container .front-container .frontpage-widget .bad, .front-container .frontpage-widget #footer .alo_easymail_widget_form .input-submit, #footer .alo_easymail_widget_form .front-container .frontpage-widget .input-submit, .front-container .frontpage-widget #sidebar .small-button, #sidebar .front-container .frontpage-widget .small-button, .front-container .frontpage-widget .post-type-bar .small-button, .post-type-bar .front-container .frontpage-widget .small-button, .front-container .frontpage-widget #discussion .reply a, #discussion .reply .front-container .frontpage-widget a {
+      font-family: san-serif; }
+    /* line 33, ../sass/parts/_front.scss */
+    .front-container .frontpage-widget .widget_sp_image-description {
+      color: #888;
+      margin-top: 10px; }
+  /* line 39, ../sass/parts/_front.scss */
+  .front-container .post-list {
+    padding: 10px 0; }
+    /* line 41, ../sass/parts/_front.scss */
+    .front-container .post-list li {
+      list-style: none;
+      padding: 0;
+      border-bottom: 1px solid #ddd; }
+      /* line 45, ../sass/parts/_front.scss */
+      .front-container .post-list li a {
+        display: block;
+        padding: 10px; }
+        /* line 48, ../sass/parts/_front.scss */
+        .front-container .post-list li a:link, .front-container .post-list li a:visited {
+          text-decoration: none;
+          color: #222; }
+        /* line 52, ../sass/parts/_front.scss */
+        .front-container .post-list li a:hover, .front-container .post-list li a:active {
+          text-decoration: none;
+          color: #428bca;
+          background-color: #f9f9f9; }
+      /* line 58, ../sass/parts/_front.scss */
+      .front-container .post-list li:first-child {
+        border-top: 1px solid #ddd; }
+      /* line 61, ../sass/parts/_front.scss */
+      .front-container .post-list li .list-heading {
+        font-size: 20px;
+        margin-top: 0; }
+      /* line 65, ../sass/parts/_front.scss */
+      .front-container .post-list li .avatar {
+        width: 30px;
+        height: 30px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%; }
+      /* line 71, ../sass/parts/_front.scss */
+      .front-container .post-list li .wp-post-image {
+        max-width: 60px;
+        width: auto;
+        height: auto;
+        float: left; }
+        /* line 76, ../sass/parts/_front.scss */
+        .front-container .post-list li .wp-post-image + .list-heading, .front-container .post-list li .wp-post-image + .list-heading + .list-meta {
+          margin-left: 80px; }
+  /* line 86, ../sass/parts/_front.scss */
+  .front-container .list-group-item-heading {
+    font-size: 20px; }
+  /* line 90, ../sass/parts/_front.scss */
+  .front-container .list-excerpt {
     color: #888;
     margin-top: 10px; }
-/* line 35, ../sass/parts/_front.scss */
-.front-container .post-list {
-  padding: 10px 0; }
-  /* line 37, ../sass/parts/_front.scss */
-  .front-container .post-list li {
-    list-style: none;
-    padding: 0;
-    border-bottom: 1px solid #ddd; }
-    /* line 41, ../sass/parts/_front.scss */
-    .front-container .post-list li a {
-      display: block;
-      padding: 10px; }
-      /* line 44, ../sass/parts/_front.scss */
-      .front-container .post-list li a:link, .front-container .post-list li a:visited {
-        text-decoration: none;
-        color: #222; }
-      /* line 48, ../sass/parts/_front.scss */
-      .front-container .post-list li a:hover, .front-container .post-list li a:active {
-        text-decoration: none;
-        color: #428bca;
-        background-color: #f9f9f9; }
-    /* line 54, ../sass/parts/_front.scss */
-    .front-container .post-list li:first-child {
-      border-top: 1px solid #ddd; }
-    /* line 57, ../sass/parts/_front.scss */
-    .front-container .post-list li .list-heading {
-      font-size: 20px;
-      margin-top: 0; }
-    /* line 61, ../sass/parts/_front.scss */
-    .front-container .post-list li .avatar {
-      width: 30px;
-      height: 30px;
-      -moz-border-radius: 50%;
-      -webkit-border-radius: 50%;
-      border-radius: 50%; }
-    /* line 67, ../sass/parts/_front.scss */
-    .front-container .post-list li .wp-post-image {
-      max-width: 60px;
-      width: auto;
-      height: auto;
-      float: left; }
-      /* line 72, ../sass/parts/_front.scss */
-      .front-container .post-list li .wp-post-image + .list-heading, .front-container .post-list li .wp-post-image + .list-heading + .list-meta {
-        margin-left: 80px; }
-/* line 82, ../sass/parts/_front.scss */
-.front-container .list-group-item-heading {
-  font-size: 20px; }
-/* line 86, ../sass/parts/_front.scss */
-.front-container .list-excerpt {
-  color: #888;
-  margin-top: 10px; }
-/* line 91, ../sass/parts/_front.scss */
-.front-container .user-list {
-  padding: 10px 0; }
-  /* line 93, ../sass/parts/_front.scss */
-  .front-container .user-list li {
-    list-style: none;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    position: relative; }
-    /* line 98, ../sass/parts/_front.scss */
-    .front-container .user-list li:first-child {
-      border-top: 1px solid #ddd; }
-    /* line 101, ../sass/parts/_front.scss */
-    .front-container .user-list li .avatar {
-      float: left;
-      width: 40px;
-      height: 40px;
-      -moz-border-radius: 50%;
-      -webkit-border-radius: 50%;
-      border-radius: 50%;
-      margin-bottom: 10px; }
-    /* line 108, ../sass/parts/_front.scss */
-    .front-container .user-list li .user-info {
-      margin-left: 60px; }
-      /* line 110, ../sass/parts/_front.scss */
-      .front-container .user-list li .user-info h3 {
-        margin-top: 0; }
-    /* line 114, ../sass/parts/_front.scss */
-    .front-container .user-list li .list-excerpt {
-      clear: both; }
-    /* line 117, ../sass/parts/_front.scss */
-    .front-container .user-list li .icon-crown {
-      position: absolute;
-      font-size: 40px;
-      right: 10px;
-      top: 50%;
-      margin-top: -20px;
-      color: #ffff00; }
-/* line 127, ../sass/parts/_front.scss */
-.front-container .twitter-widget {
-  height: 400px; }
-/* line 130, ../sass/parts/_front.scss */
-.front-container .share-panel {
-  margin: 60px 0; }
+  /* line 95, ../sass/parts/_front.scss */
+  .front-container .user-list {
+    padding: 10px 0; }
+    /* line 97, ../sass/parts/_front.scss */
+    .front-container .user-list li {
+      list-style: none;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      position: relative; }
+      /* line 102, ../sass/parts/_front.scss */
+      .front-container .user-list li:first-child {
+        border-top: 1px solid #ddd; }
+      /* line 105, ../sass/parts/_front.scss */
+      .front-container .user-list li .avatar {
+        float: left;
+        width: 40px;
+        height: 40px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        margin-bottom: 10px; }
+      /* line 112, ../sass/parts/_front.scss */
+      .front-container .user-list li .user-info {
+        margin-left: 60px; }
+        /* line 114, ../sass/parts/_front.scss */
+        .front-container .user-list li .user-info h3 {
+          margin-top: 0; }
+      /* line 118, ../sass/parts/_front.scss */
+      .front-container .user-list li .list-excerpt {
+        clear: both; }
+      /* line 121, ../sass/parts/_front.scss */
+      .front-container .user-list li .icon-crown {
+        position: absolute;
+        font-size: 40px;
+        right: 10px;
+        top: 50%;
+        margin-top: -20px;
+        color: #ffff00; }
+  /* line 131, ../sass/parts/_front.scss */
+  .front-container .twitter-widget {
+    height: 400px; }
+  /* line 134, ../sass/parts/_front.scss */
+  .front-container .share-panel {
+    margin: 60px 0; }
 
-/* line 136, ../sass/parts/_front.scss */
+/* line 140, ../sass/parts/_front.scss */
 #genre-context {
   height: 300px; }
 
-/* line 141, ../sass/parts/_front.scss */
+/* line 145, ../sass/parts/_front.scss */
 #about-us {
   padding-bottom: 80px; }
-  /* line 143, ../sass/parts/_front.scss */
+  /* line 147, ../sass/parts/_front.scss */
   #about-us h3 {
     text-align: center; }
-  /* line 146, ../sass/parts/_front.scss */
+  /* line 150, ../sass/parts/_front.scss */
   #about-us p.icon {
     height: 180px;
     line-height: 180px;
     text-align: center; }
-    /* line 150, ../sass/parts/_front.scss */
+    /* line 154, ../sass/parts/_front.scss */
     #about-us p.icon i {
       font-size: 120px;
       color: #888; }
-  /* line 155, ../sass/parts/_front.scss */
+  /* line 159, ../sass/parts/_front.scss */
   #about-us .caption {
     font-family: TsukuAOldMinPr6N-R, serif; }
 
