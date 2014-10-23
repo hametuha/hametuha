@@ -370,6 +370,39 @@ ul.metadata{
   margin: 20px 0;
 }
 
+// ページネーション
+.link-pages{
+  margin: 1.5em 0 2em !important;
+  text-align: center;
+  font-family: sans-serif;
+  text-indent: 0 !important;
+  & > span, a{
+    font-size: 12px;
+    @include inline-block();
+    margin-left: 0.5em;
+    padding: 0.4em 0.75em;
+    @include border-radius(2px);
+    color: #fff;
+  }
+  & > span{
+    background-color: $shade-font;
+  }
+  a{
+    &:link, &:visited{
+      background-color: $link-color;
+      text-decoration: none;
+    }
+    &:hover{
+      background-color: $link-active;
+      text-decoration: none;
+    }
+    &:active{
+      background-color: lighten($link-active, 10);
+      text-decoration: none;
+    }
+  }
+}
+
 //
 // シェアパネル
 //
