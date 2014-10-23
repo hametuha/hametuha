@@ -155,7 +155,7 @@ SQL;
     }
 
     /**
-     * レビューのWEHREを返す
+     * レビューのWHEREを返す
      *
      * @param string $where
      * @param int $user_id
@@ -184,23 +184,23 @@ SQL;
             'datasets' => [
                 [
                     'label' => '健全指数',
-                    'fillColor' => "rgba(0, 0, 255, 0.2)",
-                    'strokeColor' => "rgba(0, 0, 255, 1)",
-                    'pointColor' => "rgba(0, 0, 255, 1)",
+                    'fillColor' => "rgba(172, 255, 165, 0.4)",
+                    'strokeColor' => "rgba(172, 255, 165, 0.8)",
+                    'pointColor' => "rgba(172, 255, 165, 1)",
                     'pointStrokeColor' => "#fff",
                     'pointHighlightFill' => "#fff",
-                    'pointHighlightStroke' => "rgba(0, 0, 255, 1)",
+                    'pointHighlightStroke' => "rgba(172, 255, 165, 1)",
                     'data' => [],
                     'label_set' => []
                 ],
                 [
                     'label' => '破滅指数',
-                    'fillColor' => "rgba(255, 0, 0, 0.2)",
-                    'strokeColor' => "rgba(255, 0, 0, 1)",
-                    'pointColor' => "rgba(255, 0, 0, 1)",
+                    'fillColor' => "rgba(232, 76, 63, 0.4)",
+                    'strokeColor' => "rgba(232, 76, 63, 0.8)",
+                    'pointColor' => "rgba(232, 76, 63, 1)",
                     'pointStrokeColor' => "#fff",
                     'pointHighlightFill' => "#fff",
-                    'pointHighlightStroke' => "rgba(255, 0, 0, 1)",
+                    'pointHighlightStroke' => "rgba(232, 76, 63, 1)",
                     'data' => [],
                     'label_set' => []
                 ]

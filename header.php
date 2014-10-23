@@ -47,6 +47,8 @@
                         <?php endforeach; ?>
                         <li class="divider"></li>
                         <li><a href="<?= home_url('/ranking/') ?>"><i class="icon-crown"></i> ランキング</a></li>
+	                    <li><a href="<?= home_url('/recommends/') ?>"><i class="icon-star3"></i> おすすめ</a></li>
+	                    <li><a href="<?= get_post_type_archive_link('lists') ?>"><i class="icon-drawer3"></i> みんなのリスト</a></li>
 	                    <li class="divider"></li>
 	                    <li><a href="<?= get_post_type_archive_link('anpi') ?>"><i class="icon-skull3"></i> 安否情報</a></li>
                     </ul>
@@ -98,6 +100,7 @@
                         <li><a href="<?= home_url('/your/favorites/', 'http') ?>"><i class="icon-highlight"></i> 保存したフレーズ</a></li>
                         */ ?>
                         <li><a href="<?= home_url('/your/comments/', 'http') ?>"><i class="icon-bubble-dots"></i> あなたのコメント</a></li>
+	                    <li><a href="<?= home_url('/your/lists/', 'http') ?>"><i class="icon-drawer3"></i> あなたのリスト</a></li>
                         <li><a href="<?= home_url('/your/reviews/', 'http') ?>"><i class="icon-star2"></i> レビューした作品</a></li>
                         <li class="divider"></li>
                         <li><a href="<?= admin_url('profile.php') ?>"><i class="icon-profile"></i> プロフィール</a></li>

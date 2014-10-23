@@ -7,6 +7,7 @@ use WPametu\DB\Model;
 
 /**
  * Class Rank
+ *
  * @package Hametuha\Model
  * @property-read string $posts
  */

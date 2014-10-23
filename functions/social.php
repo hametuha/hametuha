@@ -86,14 +86,14 @@ function _hametuha_publish_tweet($new_status, $old_status, $post){
 						if(user_can($post->post_author, 'edit_others_posts')){
 							$string = "破滅派編集部からのお知らせです > {$post->post_title} {$url}";
 						}else{
-							$author = get_author_name($post->post_author);
+							$author = get_the_author_meta('display_name', $post->post_author);
 							$string = "{$author}さんから告知があります > {$post->post_title} {$url}";
 						}
 						update_twitter_status($string);
 						break;
 					case 'anpi':
 						$url = home_url()."?p={$post->ID}";
-						$author = get_author_name($post->post_author);
+						$author = get_the_author_meta('display_name', $post->post_author);
 						$string = "{$author}さんの安否です。「{$post->post_title}」 {$url}";
 						update_twitter_status($string);
 						break;
@@ -103,7 +103,7 @@ function _hametuha_publish_tweet($new_status, $old_status, $post){
 						break;
 					case 'thread':
 						$url = home_url()."?p={$post->ID}";
-						$author = get_author_name($post->post_author);
+						$author = get_the_author_meta('display_name', $post->post_author);
 						update_twitter_status("{$author}さんがBBSにスレッドを立てました > {$post->post_title} {$url}");
 						break;
 				}

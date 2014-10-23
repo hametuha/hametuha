@@ -31,4 +31,4 @@
         </div>
     </div>
 <?php endforeach; ?>
-<input type="submit" value="送信" data-complete-text="評価済み" data-loading-text="送信中..." class="btn btn-info btn-block" />
+<input type="submit" value="送信" data-complete-text="評価済み" data-loading-text="送信中..." class="btn btn-lg btn-primary btn-block" />

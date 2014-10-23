@@ -262,3 +262,21 @@ function the_post_rank($rank = null, $total = 0){
         <?php
     }
 }
+
+
+
+
+/**
+ * 長過ぎる文字列を短くして返す
+ * @param string $sentence
+ * @param int $length
+ * @param string $elipsis
+ * @return string
+ */
+function trim_long_sentence($sentence, $length = 100, $elipsis = '…'){
+	if(mb_strlen($sentence, 'utf-8') <= $length){
+		return $sentence;
+	}else{
+		return mb_substr($sentence, 0, $length - 1, 'utf-8').$elipsis;
+	}
+}

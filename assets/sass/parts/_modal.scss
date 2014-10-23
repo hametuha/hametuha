@@ -1,0 +1,11 @@
+
+#hametu-modal{
+  &.loading{
+    .modal-body{
+      min-height: 200px;
+      background: url("../img/ajax-loader-big.gif") center center no-repeat;
+      @include background-size(33px 33px);
+    }
+  }
+}
+

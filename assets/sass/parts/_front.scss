@@ -1,4 +1,8 @@
 .front-container{
+  padding-top: $navbar-height;
+  .jumbotron{
+    @include border-radius(0);
+  }
   h2{
     font-family: $work-title;
   }
