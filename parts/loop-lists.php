@@ -1,4 +1,4 @@
-<li <?php post_class('media loop-lists') ?>>
+<li data-post-id="<?php the_ID() ?>" <?php post_class('media loop-lists') ?>>
 
 	<?php if( has_post_thumbnail() ): ?>
 		<a class="pull-right" href="<?php the_permalink() ?>">

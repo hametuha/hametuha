@@ -12,7 +12,6 @@
 		<?php else: ?>
 			<small>リスト</small>
 		<?php endif; ?>
-
 	</h1>
 </div>
 
@@ -25,4 +24,11 @@
 	<div class="excerpt">
 		<?php the_excerpt(); ?>
 	</div><!-- //.excerpt -->
+<?php endif; ?>
+
+
+<?php if( is_user_logged_in() && get_current_user_id() == get_the_author_meta('ID') ): ?>
+<script id="my-list-deleter" type="text/x-jsrender" data-href="<?= home_url('your/lists/') ?>">
+	<li><a href="<?= Hametuha\Rest\ListCreator::deregister_link(get_the_ID(), '{{:postId}}') ?>" class="deregister-button btn btn-xs btn-danger">&times; リストから削除</a></li>
+</script>
 <?php endif; ?>

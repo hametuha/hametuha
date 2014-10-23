@@ -290,7 +290,7 @@ jQuery(document).ready(function($){
     // モーダルの中のリスト
     $('.modal').on('created.hametuha', '.list-create-form', function(e, post){
         Hametuha.modal.close();
-        Hametuha.hitEvent('list', 'add', post.ID);
+        Hametuha.ga.hitEvent('list', 'add', post.ID);
         if( $('body').hasClass('single-lists') ){
             location.reload();
         }
@@ -328,4 +328,37 @@ jQuery(document).ready(function($){
             });
         }
     });
+
+    // リストから投稿を削除
+    var listTpl = $('#my-list-deleter');
+    if( listTpl.length ){
+        // ボタンを追加
+        $('ol.media-list > li').each(function(index, elt){
+            $(elt).find('.list-inline').append(listTpl.render({
+                postId: $(elt).attr('data-post-id')
+            }));
+        });
+        // イベントリスナー
+        $('ol.media-list').on('click', '.deregister-button', function(e){
+            e.preventDefault();
+            var btn = $(this);
+            if( confirm('リストからこの作品を削除します。この操作は取り消せませんが、よろしいですか？') ){
+                $.post(btn.attr('href'), {}, function(result){
+                    if( result.success ){
+                        btn.parents('li.media').remove();
+                        if( !$('ol.media-list > li').length ){
+                            $('ol.media-list').before('<div class="alert alert-danger">' + result.message + '</div>');
+                            setTimeout(function(){
+                                window.location.href = result.home_url;
+                            }, 3000);
+                        }
+                    }else{
+                        alert(result.message);
+                    }
+                });
+            }
+        });
+    }
+
+
 });

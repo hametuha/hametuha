@@ -166,6 +166,43 @@ class ListCreator extends RestJSON
 		}
 	}
 
+
+	/**
+	 * 投稿から削除する
+	 *
+	 * @param int $list_id
+	 * @param int $post_id
+	 *
+	 * @return array
+	 */
+	public function post_deregister($list_id, $post_id){
+		try{
+			// 権限チェック
+			if( !$post_id || !$list_id || !wp_verify_nonce($this->input->get('_wpnonce'), 'list-deregister') || !current_user_can('edit_post', $list_id) ){
+				$this->auth_error();
+			}
+			// 投稿タイプチェック
+			$list = get_post($list_id);
+			if( !$list || 'lists' !== $list->post_type ){
+				throw new \Exception('リストの指定が不正です。。');
+			}
+			// 削除する
+			if( !$this->lists->deregister($list_id, $post_id) ){
+				throw new \Exception('リストから削除できませんでした。あとでやり直してください。');
+			}
+			return [
+				'success' => true,
+				'message' => '削除しました。あなたのリスト一覧に移動します。',
+				'home_url' => home_url('/your/lists/', 'https'),
+			];
+		}catch ( \Exception $e ){
+			return [
+				'success' => false,
+				'message' => $e->getMessage(),
+			];
+		}
+	}
+
 	/**
 	 * フォームを返す
 	 *
@@ -280,5 +317,17 @@ HTML;
 	 */
 	public static function delete_link($post_id){
 		return wp_nonce_url(home_url(sprintf('%s/delete/%d', self::$prefix, $post_id)), 'list-delete');
+	}
+
+	/**
+	 * リスト解除用のリンクを返す
+	 *
+	 * @param int $list_id
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public static function deregister_link($list_id, $post_id){
+		return wp_nonce_url(home_url(self::$prefix.'/deregister/'.$list_id.'/'.$post_id), 'list-deregister');
 	}
 }

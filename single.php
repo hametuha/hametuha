@@ -35,7 +35,7 @@
             </div><!-- //.post-meta -->
 
 
-            <?php if(has_excerpt()): ?>
+            <?php if( has_excerpt() ): ?>
                 <div class="excerpt">
                     <?php the_excerpt(); ?>
                 </div><!-- //.excerpt -->

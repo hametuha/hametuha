@@ -143,6 +143,23 @@ class Lists extends Model
 		return count($list_ids);
 	}
 
+	/**
+	 * リストから登録を解除する
+	 *
+	 * @param int $list_id
+	 * @param int $post_id
+	 *
+	 * @return false|int
+	 * @throws \Exception
+	 */
+	public function deregister($list_id, $post_id){
+		return $this->delete_where([
+			[ 'rel_type', '=', 'list', '%s' ],
+			[ 'subject_id', '=', $list_id, '%d' ],
+			[ 'object_id', '=', $post_id, '%d' ],
+		]);
+	}
+
 
 	/**
 	 * リストの中に指定した投稿が存在するか

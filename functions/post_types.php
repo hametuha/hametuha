@@ -226,6 +226,22 @@ function in_lists($post, $list){
 }
 
 /**
+ * 自分のコンテンツかいなか
+ *
+ * @param string $key
+ *
+ * @return bool
+ */
+function is_my_content($key = ''){
+	if( empty($key) ){
+		$var = get_query_var('my-content');
+		return !empty($var);
+	}else{
+		return $key == get_query_var('my-content');
+	}
+}
+
+/**
  * 投稿がお勧めかどうか
  *
  * @param null|int|WP_Post $post
