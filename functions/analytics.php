@@ -25,7 +25,7 @@ ga('require', 'linkid', 'linkid.js');
 <?php if( is_user_logged_in() ): ?>
     ga('set', '&uid', <?= get_current_user_id() ?>);
 <?php endif; ?>
-<?php if( is_singular() ): ?>
+<?php if( is_singular() && !is_preview() ): ?>
     ga('set', 'dimension1', '<?= get_post_type() ?>');
     ga('set', 'dimension2', '<?= get_the_author_meta('ID') ?>');
     <?php
