@@ -105,14 +105,14 @@
 
     <ul class="pager post-pager">
         <li class="previous">
-            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $prev / 12 ), ($prev % 12))) ?>">
-                &laquo; <?= floor( $prev / 12 ) ?>年<?= $prev % 12 ?>月
+            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $prev / 12 ), ($prev % 12 ?: 12))) ?>">
+                &laquo; <?= floor( $prev / 12 ) ?>年<?= $prev % 12 ?: 12 ?>月
             </a>
         </li>
         <li class="next">
             <?php if( $next <= ((int)date_i18n('Y') * 12) + (int)date_i18n('n')  ): ?>
-            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $next / 12 ), ($next % 12))) ?>">
-                <?= floor( $next / 12 ) ?>年<?= $next % 12 ?>月 &raquo;
+            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $next / 12 ), ($next % 12 ?: 12))) ?>">
+                <?= floor( $next / 12 ) ?>年<?= $next % 12 ?: 12 ?>月 &raquo;
             </a>
             <?php endif; ?>
         </li>
