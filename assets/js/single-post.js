@@ -160,9 +160,10 @@ Chart.defaults.global.responsive = true;
                 if( !this.animating ){
                     this.slider.slider('value', parseInt(percent * 1000, 10));
                 }
-                if( !this.toLast && limitPos < scroll + $(window).height() && $('#work-end-ranker').length ){
+                var ranker = $('#work-end-ranker');
+                if( !this.toLast && limitPos < this.scrollTop + $(window).height() && ranker.length ){
                     this.toLast = true;
-                    var postId = $('#work-end-ranker').attr('data-post');
+                    var postId = ranker.attr('data-post');
                     Hametuha.ga.hitEvent('read', 'complete', postId);
                     Hametuha.ga.hitEvent('read', 'passed', postId, this.passedTime());
                     $('body').addClass('finish-reading');
