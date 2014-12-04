@@ -93,7 +93,7 @@ if( is_search() ){
                     </select>
                 </div>
 
-                <?php if(is_user_logged_in()): ?>
+                <?php if( is_user_logged_in() ): ?>
                     <div class="checkbox">
                         <label>
                             <input type="checkbox" name="anonymous" value="1" <?php checked(isset($_REQUEST['anonymous']) && $_REQUEST['anonymous']) ?> />
@@ -104,13 +104,13 @@ if( is_search() ){
                 <?php else: ?>
                     <div class="form-group">
                         <label for="recaptcha_response_field">スパム確認 by reCaptcha <span class="label label-danger">必須</span></label>
-                        <?= wpametu_recaptcha('clean', 'en') ?>
+                        <?= wpametu_recaptcha('clean', 'ja') ?>
                         <?php if( ($message = get_thread_error('recaptcha')) ): ?>
-                            <p class="text-danger">※キャプチャが難しくて読めない場合は、<i class="icon-spinner10"></i> ボタンを押してください。</p>
+                            <p class="text-danger">※Googleはあなたがロボットではないかと疑っているようです。やりなおしてください。</p>
                         <?php endif; ?>
                         <p class="help-block">
-                            スパムロボットによる投稿を防止するため、画像の文字の入力にご協力をお願いします。
-                            <?php help_tip('人間にしか読めないだろう画像の文字を入力することで、スパムロボットでないことを保証する仕組みです。表示されているのはGoogleの電子書籍化プロジェクトで機械が読みとれなかった単語だそうです。', 'right') ?>
+                            スパムロボットによる投稿を防止するため、チェックしてください。
+                            <?php help_tip('Googleの最新技術でスパムロボットでないことを保証する仕組みです。怪しかったりすると、画像認証が出たりするらしいです。', 'right') ?>
                         </p>
                     </div>
                 <?php endif; ?>

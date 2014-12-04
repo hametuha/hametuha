@@ -35,7 +35,8 @@
   // 送信ボタン
   p.catch-copy{
     text-shadow: 1px 1px 2px #fff, -1px -1px 2px rgba(0, 0, 0, .2);
-    font-size: 1.2em;
+    margin-bottom: 2em;
+    color: $shade-font;
   }
 
   // アクションリンク

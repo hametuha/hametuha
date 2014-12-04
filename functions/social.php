@@ -21,7 +21,10 @@ function hametuha_share($post = null){
         ['line', "line://msg/text/{$encoded_title}%20{$encoded_url}", '']
     ] as list($brand, $href, $suffix) ){
 	    printf('<a class="share" data-medium="%1$s" data-target="%2$d" href="%3$s"><i class="icon-%1$s%4$s"></i></a>',
-               $brand, $post->ID, $href, $suffix);
+               $brand,
+		    get_the_ID(),
+		    $href,
+		    $suffix);
     }
 }
 

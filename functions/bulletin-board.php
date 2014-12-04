@@ -70,51 +70,60 @@ function get_anonymous_user(){
 
 /**
  * スレッド作成フォームを受け取る
+ *
  * @global array $_hametuha_thread_error 
  * @global wpdb $wpdb
  */
 function _hametuha_thread_add(){
-	if( is_post_type_archive('thread') && isset($_REQUEST['_wpnonce']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'hametuha_add_thread') ){
-		global $_hametuha_thread_error, $wpdb;
-		//匿名かログイン済みかを問わず、ユーザー情報をチェックする
-		if( is_user_logged_in() ){
-			$user = (isset($_REQUEST['anonymous']) && $_REQUEST['anonymous']) ? get_anonymous_user() : get_userdata(get_current_user_id());
-		}else{
-			//キャプチャをチェックする
-			if( wpametu()->recaptcha->validate() ){
-				$user = get_anonymous_user();
-			}else{
-				$_hametuha_thread_error['recaptcha'] = 'reCaptchaに入力された文字列が間違っています。正しく入力してください。';
+	if( is_post_type_archive('thread') ){
+		nocache_headers();
+		/** @var \WPametu\Http\Input $input */
+		$input = \WPametu\Http\Input::get_instance();
+		if( $input->verify_nonce('hametuha_add_thread') ) {
+			global $_hametuha_thread_error, $wpdb;
+			//匿名かログイン済みかを問わず、ユーザー情報をチェックする
+			if ( is_user_logged_in() ) {
+				$user = ( $input->post('anonymous') ) ? get_anonymous_user() : get_userdata( get_current_user_id() );
+			} else {
+				//キャプチャをチェックする
+				if ( wpametu()->recaptcha->validate() ) {
+					$user = get_anonymous_user();
+				} else {
+					$_hametuha_thread_error['recaptcha'] = 'reCaptchaがエラーを返しました。';
+				}
 			}
-		}
-		//タイトルの空白・重複チェック
-		if( empty($_REQUEST['thread_title']) ){
-			$_hametuha_thread_error['thread_title'] = 'タイトルが入力されていません';
-		}elseif($wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = 'thread' AND post_title = %s", $_REQUEST['thread_title']))){
-			$_hametuha_thread_error['thread_title'] = '同名のスレッドがすでに存在します。別のタイトルにしてください。';
-		}
-		//トピック
-		if( !isset($_REQUEST['topic_id']) || !term_exists($_REQUEST['topic_id'], 'topic')  ){
-			$_hametuha_thread_error['topic_id'] = 'トピックは必ず選択してください。';
-		}
-		if( empty($_hametuha_thread_error) ){
-			//エラーがないので登録
-			$result = wp_insert_post(array(
-				'post_title' => (string)$_REQUEST['thread_title'],
-				'post_content' => (empty($_REQUEST['thread_content'])) ? '詳細は入力されていません。' : strip_tags((string)$_REQUEST['thread_content']),
-				'post_author' => $user->ID,
-				'post_type' => 'thread',
-				'post_status' => 'publish'
-			), true);
-			if( is_wp_error($result) ){
-				$_hametuha_thread_error['add'] = 'スレッドを保存できませんでした。もう一度やりなおすか、時間をおいてお試しください。';
-			}else{
-                // トピックを紐付け
-				wp_set_object_terms($result, array(intval($_REQUEST['topic_id'])), 'topic');
-				// 公開アクション
-                do_action( 'transition_post_status', 'publish', 'post-new', get_post($result) );
-                wp_redirect(get_permalink($result));
-				die();
+			// タイトルの空白・重複チェック
+			if ( !$input->post('thread_title') ) {
+				$_hametuha_thread_error['thread_title'] = 'タイトルが入力されていません';
+			} elseif ( $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'thread' AND post_title = %s", $input->post('thread_title') ) ) ) {
+				$_hametuha_thread_error['thread_title'] = '同名のスレッドがすでに存在します。別のタイトルにしてください。';
+			}
+			// トピック
+			$topic_id = $input->post('topic_id');
+			if ( !$topic_id || !is_numeric($topic_id) || !term_exists( intval($topic_id), 'topic' ) ) {
+				$_hametuha_thread_error['topic_id'] = 'トピックは必ず選択してください。';
+			}
+			// コンテンツ
+			$content = strip_tags( (string) $input->post('thread_content'));
+			if ( empty( $_hametuha_thread_error ) ) {
+				//エラーがないので登録
+				$result = wp_insert_post( array(
+					'post_title'   => (string) $input->post('thread_title'),
+					'post_content' => $content ?: '詳細は入力されていません。',
+					'post_author'  => $user->ID,
+					'post_type'    => 'thread',
+					'post_status'  => 'publish'
+				), true );
+				if ( is_wp_error( $result ) ) {
+					$_hametuha_thread_error['add'] = 'スレッドを保存できませんでした。もう一度やりなおすか、時間をおいてお試しください。';
+				} else {
+					// トピックを紐付け
+					wp_set_object_terms( $result, array( intval( $topic_id ) ), 'topic' );
+					// 公開アクション
+					do_action( 'transition_post_status', 'publish', 'post-new', get_post( $result ) );
+					wp_redirect( get_permalink( $result ) );
+					die();
+				}
 			}
 		}
 	}

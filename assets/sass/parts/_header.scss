@@ -52,13 +52,14 @@
       // ログインボタン
       &.login-btn{
         margin-top: 5px;
-        background-color: $btn-primary-bg;
+        background-color: transparent;
         @include border-radius(3px);
         &:link, &:visited{
-          color: $btn-primary-color;
+          color: $btn-primary-bg;
         }
         &:hover, &:active{
-          background-color: $btn-danger-bg;
+          color: $btn-primary-color;
+          background-color: $btn-primary-bg;
         }
       }
     }

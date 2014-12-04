@@ -109,10 +109,10 @@ endif;
 
 			<?php if( !is_user_logged_in() ): ?>
 				<div class="comment-as clearfix">
-					<?= wpametu()->recaptcha->get_html('clean') ?>
+					<?= wpametu_recaptcha('clean', 'ja') ?>
 					<div class="alert alert-warning">
                         <p>
-                            あなたはログインしていないので、匿名でコメントを行います。スパムロボットによるコメント投稿を防ぐため、左のキャプチャを入力してください。
+                            あなたはログインしていないので、匿名でコメントを行います。スパムロボットによるコメント投稿を防ぐため、キャプチャを入力してください。
                             これによって人間であると判断します。<br />
                             ちなみに、<a class="alert-link" href="<?php echo wp_login_url(get_permalink().'#respond');?>">ログイン</a>して記名コメントにすると、キャプチャを入力しなくて済みますし、<strong>責任感があるように見えます</strong>。
                         </p>
