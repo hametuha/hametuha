@@ -73,7 +73,7 @@
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="<?= admin_url('post-new.php?post_type=thread') ?>"><i class="icon-fire2"></i> 掲示板にスレたて</a>
+                                    <a href="<?= home_url('/thread/#thread-add', 'http') ?>"><i class="icon-fire2"></i> 掲示板にスレたて</a>
                                 </li>
                             </ul>
                         </li>
