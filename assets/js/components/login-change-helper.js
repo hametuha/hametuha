@@ -89,6 +89,18 @@
             });
         }
 
+
+        // プロフィール写真変更フォーム
+        $('#select-picture-form, #delete-picture-form').submit(function(e){
+            var $checked = $('input:checked', '#pic-file-list');
+            if( !$checked.length ){
+                e.preventDefault();
+                Hametuha.alert('画像が選択されていません。');
+            }else{
+                $(this).find('.attachment_id_holder').val($checked.val());
+            }
+        });
+
     });
 
 })(jQuery);

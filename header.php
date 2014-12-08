@@ -29,9 +29,9 @@
                         <li class="divider"></li>
                         <li><a href="<?= home_url('/thread/', 'http'); ?>"><i class="icon-stack-list"></i> 掲示板トップ</a></li>
                         <li class="divider"></li>
-                        <li><a href="<?= home_url('/faq/', 'http'); ?>"><i class="icon-question2"></i> よくある質問</a></li>
-                        <li class="divider"></li>
                         <li><a href="<?= home_url('/about/', 'http'); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
+	                    <li><a href="<?= home_url('/authors/', 'http'); ?>"><i class="icon-users"></i> 執筆者一覧</a></li>
+                        <li><a href="<?= home_url('/faq/', 'http'); ?>"><i class="icon-question2"></i> よくある質問</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">

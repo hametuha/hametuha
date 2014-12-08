@@ -1,13 +1,20 @@
-<?php get_header('login') ?>
+<?php
 
-    <div id="login-body">
+/** @var array $pictures */
+
+get_header('login')
+?>
+
+    <div id="login-body" class="profile-pic-editor">
 
         <?php do_action(\WPametu\Http\PostRedirectGet::PUBLIC_HOOK); ?>
+
+	    <h3><i class="icon-upload"></i> 画像のアップロード</h3>
 
         <div class="form-group">
             <label>現在のプロフィール写真</label>
             <p class="gravatar text-center">
-                <?= get_avatar(get_current_user_id(), 240) ?>
+                <?= get_avatar(get_current_user_id(), 300) ?>
             </p>
 
             <?php if( $uploaded ): ?>
@@ -40,7 +47,6 @@
                 <input class="hidden" type="file" id="new_picture" name="new_picture"  />
                 <p class="help-block">
                     アップロードできるのは<?= $max_size ?>までです。
-                    すでにアップロード済みの場合は上書きされます。
                 </p>
             </div>
 
@@ -50,28 +56,51 @@
 
         </form>
 
-        <?php if( $uploaded ): ?>
+        <?php if( $pictures ): ?>
 
         <hr />
 
-        <form id="delete-picture-form" method="post" action="<?= $delete_action ?>">
-            <?= $nonce ?>
+	        <h3><i class="icon-stack-picture"></i> アップロード済み画像</h3>
 
-            <div class="checkbox">
-                <label>
-                    <input class="form-unlimiter" type="checkbox" name="delete_picture" value="1" />
-                    現在アップロードされている画像を削除する
-                </label>
-                <p class="help-block">
-                    アップロードされている写真を削除すると、Gravatarまたは画像なしになります。
-                </p>
-            </div>
-            <p>
-                <input type="submit" class="btn btn-danger btn-block btn-lg" data-confirm="削除してしまってよろしいですか？　この操作は取り消せません。" disabled value="削除">
-            </p>
+		    <div id="pic-file-list" class="row">
+			    <?php foreach( $pictures as $picture ): ?>
+				    <div class="col-xs-3">
+					    <input type="radio" name="picture" id="pic-<?= $picture['attachment_id'] ?>" value="<?= $picture['attachment_id'] ?>" />
+					    <label for="pic-<?= $picture['attachment_id'] ?>">
+						    <?= $picture['img'] ?>
+					    </label>
+					    <?php if( $picture['attachment_id'] == $selected ): ?>
+					    <span class="label label-success">使用中</span>
+					    <?php endif; ?>
+				    </div>
+		        <?php endforeach; ?>
+		    </div><!-- //#pic-file-list -->
 
+	        <div class="row">
+		        <div class="col-xs-5">
+			        <form id="delete-picture-form" method="post" action="<?= $delete_action ?>">
+				        <?= $nonce ?>
+				        <input type="hidden" class="attachment_id_holder" name="delete_picture" id="delete_picture" value="" />
+				        <input type="submit" class="btn btn-danger btn-block" data-confirm="削除してしまってよろしいですか？　この操作は取り消せません。" value="削除">
+				        <p class="text-muted">
+					        選択した画像を削除します。
+				        </p>
+			        </form>
+		        </div>
+		        <div class="col-xs-2"></div>
+		        <div class="col-xs-5">
+			        <form id="select-picture-form" method="post" action="<?= $select_action ?>">
+				        <?= $nonce ?>
+				        <input type="hidden" class="attachment_id_holder" name="select_picture" id="select_picture" value="" />
+				        <input type="submit" class="btn btn-success btn-block" value="変更">
+				        <p class="text-muted">
+					        選択した画像をプロフィール画像にします。
+				        </p>
 
-        </form>
+			        </form>
+		        </div>
+	        </div>
+
 
         <?php endif; ?>
 

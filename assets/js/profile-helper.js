@@ -2,6 +2,8 @@
  * プロフィール編集画面で読み込まれる関数
  */
 jQuery(document).ready(function($){
+
+
 	//ログイン名変更画面
 	$('#change-user-login').fancybox({
 		width:600,

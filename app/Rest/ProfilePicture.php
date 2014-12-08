@@ -59,7 +59,36 @@ class ProfilePicture extends RestTemplate
         }
     }
 
-    /**
+	/**
+	 * 画像選択アクション
+	 */
+	public function post_select(){
+		if( !is_user_logged_in() || !$this->verify_nonce() ){
+			$this->error('不正なアクセスです。', 403);
+		}
+		$this->prg->start_session();
+		try{
+			$attachment_id = $this->input->post('select_picture');
+			if( !$attachment_id ){
+				throw new \Exception('画像が選択されていません。');
+			}
+			if( !$this->picture->is_available_for(get_current_user_id(), $attachment_id)){
+				throw new \Exception('画像の使用許可がありません。');
+			}
+			if( !$this->picture->assign_user_pic(get_current_user_id(), $attachment_id) ){
+				throw new \Exception('画像の変更に失敗しました。');
+			}
+			$this->prg->addMessage('画像を変更しました。');
+		}catch ( \Exception $e){
+			$this->prg->addErrorMessage($e->getMessage());
+		}finally{
+			nocache_headers();
+			wp_safe_redirect($this->url('', force_ssl_admin()));
+			exit;
+		}
+	}
+
+	/**
      * 画像削除アクション
      */
     public function post_delete(){
@@ -68,10 +97,13 @@ class ProfilePicture extends RestTemplate
         }
         $this->prg->start_session();
         try{
-            if( !$this->input->post('delete_picture') ){
-                throw new \Exception('確認のチェックが入れられていません。');
+	        $attachment_id = $this->input->post('delete_picture');
+            if( !$attachment_id ){
+                throw new \Exception('画像が選択されていません。');
             }
-            $this->picture->delete_user(get_current_user_id());
+            if( !$this->picture->delete_user_pic(get_current_user_id(), $attachment_id)){
+	            throw new \Exception('画像の削除に失敗しました。あとでやり直してください。');
+            }
             $this->prg->addMessage('アップロードされた画像を削除しました');
         }catch ( \Exception $e){
             $this->prg->addErrorMessage($e->getMessage());
@@ -104,8 +136,11 @@ class ProfilePicture extends RestTemplate
             'nonce' => $this->nonce_field('_wpnonce', true, false),
             'upload_action' => $this->url('/upload/', force_ssl_admin()),
             'delete_action' => $this->url('/delete/', force_ssl_admin()),
+	        'select_action' => $this->url('/select/', force_ssl_admin()),
             'has_gravatar' => has_gravatar($this->user->ID),
             'uploaded' => $this->picture->has_profile_pic($this->user->ID),
+	        'pictures' => $this->picture->get_profile_pic($this->user->ID),
+	        'selected' => $this->picture->has_profile_pic($this->user->ID),
             'max_size' => $this->picture->get_allowed_size(),
         ]);
 

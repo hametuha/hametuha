@@ -12,7 +12,19 @@
 //画像のサイズ（小さい）を追加
 add_image_size('pinky', 160, 160, true);
 
+// プロフィール写真を追加
+add_image_size('profile', 300, 300, true);
 
+/**
+ * 選択できる画像サイズを追加
+ *
+ * @param array $sizes
+ * @return array
+ */
+add_filter( 'image_size_names_choose', function($sizes){
+	$sizes['pinky'] = '小型正方形';
+	return $sizes;
+});
 
 
 /**
@@ -43,8 +55,6 @@ add_action('init', function(){
         'icon' => get_template_directory_uri().'/assets/img/facebook-logo.png',
     ]);
 
-
-
     // ログイン名変更用JS
     wp_register_script('hametuha-login-changer', get_template_directory_uri().'/assets/js/components/login-change-helper'.hametuha_min_ext(), ['jquery-form', 'hametuha-common']);
 
@@ -59,6 +69,10 @@ add_action('init', function(){
 
     // 管理画面用CSS
     wp_register_style('hametuha-admin', get_template_directory_uri().'/assets/css/admin.css', null, hametuha_version());
+
+	// プロフィール変更用JS
+	wp_register_script('hametuha-user-edit', get_template_directory_uri().'/assets/js/components/edit-profile-helper'.hametuha_min_ext(), ['jquery-effects-highlight']);
+
 });
 
 
@@ -128,6 +142,12 @@ add_action("admin_enqueue_scripts", function( $page = '' ){
 
 	if( current_user_can('edit_posts') ){
 
+	}
+
+	// プロフィール編集画面
+	if( 'user-edit.php' == $page ){
+		wp_enqueue_media();
+		wp_enqueue_script('hametuha-user-edit');
 	}
 }, 200);
 

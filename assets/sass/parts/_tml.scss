@@ -101,6 +101,8 @@
   }
 }
 
+
+// パスワード強度表示
 #pass-strength-result{
   text-align: center;
   display: block;
@@ -147,6 +149,7 @@
 
 }
 
+// プロフィール
 .profile-container{
   max-width: $screen-tablet;
   padding-bottom: 40px;
@@ -154,6 +157,7 @@
     margin-bottom: 10px;
   }
 }
+
 #your-profile{
   section{
     font-size: 18px;
@@ -231,6 +235,7 @@
   }
 }
 
+// プロフィールの入力度
 #profile-indicator{
   @include border-radius(3px);
   background-color: $zebra-bg;
@@ -246,5 +251,55 @@
     display: block;
     position: absolute;
     height: 30px;
+  }
+}
+
+// プロフィール写真編集
+.profile-pic-editor{
+  #pic-file-list{
+    margin-bottom: 0.5em;
+    .col-xs-3{
+      position: relative;
+    }
+    input{
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      &:checked + label{
+        img{
+          border-color: $brand-success;
+          @include opacity(1);
+        }
+      }
+    }
+    label{
+      display: block;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      background-color: #fff;
+      &:hover img{
+        @include opacity(1);
+      }
+    }
+    .label{
+      width: 4em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -2em;
+      margin-top: -0.75em;
+      z-index: 3;
+    }
+    img{
+      @include transition(opcity liner 0.5s, border-color liner 0.5s);
+      border: 2px solid #fff;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      @extend .img-circle;
+      @include opacity(.6);
+    }
+
   }
 }

@@ -25,6 +25,19 @@ class Picture extends Singleton
      */
     private $dir = 'profile-picture';
 
+	/**
+	 * User meta key
+	 *
+	 * @var string
+	 */
+	private $user_meta_key = '_profile_picture';
+
+	/**
+	 * Post meta key
+	 *
+	 * @var string
+	 */
+	public $post_meta_key = '_is_profile_pic';
 
     /**
      * アップロードできる最大サイズ
@@ -37,7 +50,7 @@ class Picture extends Singleton
      *
      * @return string
      */
-    private function get_dir(){
+    public function get_dir(){
         $dir = wp_upload_dir();
         return $dir['basedir'].DIRECTORY_SEPARATOR.$this->dir.DIRECTORY_SEPARATOR;
     }
@@ -73,10 +86,15 @@ class Picture extends Singleton
      * ディレクトリが存在するかを返す
      *
      * @param int $user_id
-     * @return boolean
+     * @param bool $deprecated trueにすると、昔のアップロード方法で取得
+     * @return int
      */
-    public function has_profile_pic( $user_id ){
-        return file_exists($this->get_user_dir($user_id));
+    public function has_profile_pic( $user_id, $deprecated = false ){
+	    if( $deprecated ){
+	        return (int) file_exists($this->get_user_dir($user_id));
+	    }else{
+		    return (int) get_user_meta($user_id, $this->user_meta_key, true);
+	    }
     }
 
     /**
@@ -107,34 +125,84 @@ class Picture extends Singleton
         if( !is_writable($this->get_dir()) ){
             throw new \Exception('ディレクトリに書き込みできません。管理者に連絡してください', 500);
         }
-        // 以前のものを削除してディレクトリを作成
-        $this->remove_dir( $this->get_user_dir($user_id) );
-        mkdir($this->get_user_dir($user_id));
-        //新しいファイル名を作成し、移動
-        $ext = $this->image->mime->get_extension($path);
-        $dest_path = $this->get_user_dir($user_id).'profile.'.$ext;
-        if( !move_uploaded_file($path, $dest_path) ){
-            throw new \Exception('ファイルを保存できませんでした。時間をおいて試してみてください。', 500);
-        }
-        // ファイルの大きさをチェックし、300 x 300より小さかったら拡大して保存
-        // 必要なければそのまま
-        $size = $this->image->get_image_size($dest_path);
-        if( $size[0] < 300 || $size[1] < 300){
-            $resized = $this->image->fit($path,  $this->get_user_dir($user_id).'profile-300x300.'.$ext, 300, 300);
-        }else{
-            //正方形にリサイズ
-            $resized = $this->image->trim($dest_path, 300, 300, true, null);
-        }
-        if( !$resized || is_wp_error($resized) ){
-            throw new \Exception('画像のリサイズに失敗しました。');
-        }
+	    $this->image->include_wp_libs();
+	    $attachment_id = media_handle_sideload($file, 0, '', [
+		    'post_author' => $user_id,
+	    ]);
+	    if( is_wp_error($attachment_id) || !is_numeric($attachment_id) ){
+		    throw new \Exception('画像の保存に失敗しました。やり直してください。', 500);
+	    }
+	    update_post_meta($attachment_id, $this->post_meta_key, 1);
+	    $this->assign_user_pic($user_id, $attachment_id);
     }
+
+	/**
+	 * ユーザーのプロフィール写真を全部取得する
+	 *
+	 * @param int $user_id
+	 * @param string $size
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function get_profile_pic($user_id, $size = 'pinky', array $args = []){
+		$pictures = [];
+		$query = new \WP_Query(wp_parse_args($args, [
+			'post_type' => 'attachment',
+			'author' => $user_id,
+			'post_mime_type' => 'image',
+			'posts_per_page' => -1,
+			'post_status' => 'inherit',
+			'meta_query' => [[
+				'key' => $this->post_meta_key,
+				'value' => 1
+			]],
+		]));
+		if( $query->have_posts() ){
+			while( $query->have_posts() ){
+				$query->the_post();
+				$img = wp_get_attachment_image(get_the_ID(), $size);
+				$guid = get_the_guid();
+				$pictures[] = [
+					'attachment_id' => get_the_ID(),
+					'guid' =>  $guid,
+					'img' => $img,
+					'src' => preg_match('/src="([^"]+)"/u', $img, $match) ? $match[1] : $guid,
+				];
+			}
+			wp_reset_postdata();
+		}
+		return $pictures;
+	}
+
+	/**
+	 * ユーザーのプロフィール写真を更新する
+	 *
+	 * @param int $user_id
+	 * @param int $attachment_id
+	 *
+	 * @return bool|int
+	 */
+	public function assign_user_pic($user_id, $attachment_id){
+		return update_user_meta($user_id, $this->user_meta_key, $attachment_id);
+	}
+
+	/**
+	 * ユーザーのプロフィール写真を外す
+	 *
+	 * @param int $user_id
+	 *
+	 * @return bool
+	 */
+	public function detach_user_pic($user_id){
+		return delete_user_meta($user_id, $this->user_meta_key);
+	}
 
     /**
      * アバターをフィルタリングする
      *
      * @param string $avatar
-     * @param string|int $id_or_email
+     * @param string|int|\WP_User $id_or_email
      * @param int $size
      * @param string $default
      * @param string $alt
@@ -151,20 +219,15 @@ class Picture extends Singleton
         }else{
             $user_id = email_exists($id_or_email);
         }
-        if( file_exists($this->get_user_dir($user_id)) ){
-            //オリジナルファイルの取得
-            $file_lists = glob($this->get_user_dir($user_id)."profile.*");
-            if( !empty($file_lists) ){
-                $orig_file = current($file_lists);
-                $ext = preg_replace("/^.*\.(jpe?g|gif|png)$/i", '$1', $orig_file);
-                if( !file_exists($this->get_user_dir($user_id)."profile-{$size}x{$size}.{$ext}") ){
-                    //指定サイズがないので作る
-                    $this->image->trim($orig_file, $size, $size, true, null);
-                }
-                //指定サイズのファイルが存在するので書き換え
-                $avatar = preg_replace('/src=\'.*?\'/', 'src="'.$this->get_user_url($user_id)."profile-{$size}x{$size}.{$ext}\"", $avatar);
-            }
-        }
+	    // ユーザーメタを取得
+	    if( $this->has_profile_pic($user_id) ){
+		    $attachment_id = get_user_meta($user_id, $this->user_meta_key, true);
+		    $size = max(160, $size);
+		    $img_tag = wp_get_attachment_image($attachment_id, [$size, $size]);
+		    if( preg_match('/src="([^"]+)"/u', $img_tag, $src) ){
+			    $avatar = $this->image->replace_url($avatar, $src[1]);
+		    }
+	    }
         return $avatar;
     }
 
@@ -172,10 +235,37 @@ class Picture extends Singleton
      * ユーザーが削除された時のフィルター
      *
      * @param int $user_id
+     * @param int $attachment_id
+     * @return bool
      */
-    public function delete_user($user_id){
-        $this->remove_dir($this->get_user_dir($user_id));
+    public function delete_user_pic($user_id, $attachment_id){
+	    if( !$this->is_available_for($user_id, $attachment_id) ){
+		    return false;
+	    }
+	    if( $this->has_profile_pic($user_id) ){
+		    delete_user_meta($user_id, $this->user_meta_key, $attachment_id);
+	    }
+	    return delete_post_meta($attachment_id, $this->post_meta_key, 1);
     }
+
+
+
+	/**
+	 * ユーザーが画像を利用できるか
+	 *
+	 * @param int $user_id
+	 * @param int $attachment_id
+	 *
+	 * @return bool
+	 */
+	public function is_available_for($user_id, $attachment_id){
+		$post = get_post($attachment_id);
+		if( !$post || $post->post_author != $user_id || !get_post_meta($attachment_id, $this->post_meta_key, true) ){
+			return false;
+		}else{
+			return true;
+		}
+	}
 
     /**
      * 許可されたファイルサイズを指定する
@@ -194,8 +284,6 @@ class Picture extends Singleton
         static $hooked = false;
         if( !$hooked ){
             $instance = self::get_instance();
-            //ユーザーが削除されたとき
-            add_action('delete_user', [$instance, 'delete_user']);
             //avatarのフィルター
             add_filter('get_avatar', [$instance, 'get_avatar'], 10, 5);
             $hooked = true;

@@ -1,3 +1,16 @@
 .post-state-format{
   display: none;
 }
+
+.image-picker{
+  p.image-holder{
+    margin-bottom: 1em;
+    max-width: 200px;
+    img, span{
+      vertical-align: middle;
+    }
+    .dashicons{
+      color: #ccc;
+    }
+  }
+}
