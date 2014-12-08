@@ -37,7 +37,6 @@
                     // アタッチメントの情報を取得
                     var attachment = haMediaFrame.state().get('selection').first().toJSON(),
                         src;
-                    console.log(attachment.sizes);
                     // 画像のSRCを取得&設定。小さいサイズがあれば取得し、なければフルサイズ
                     // pinkyは add_image_size で追加したオリジナルサイズ
                     src = attachment.sizes.pinky ? attachment.sizes.pinky.url : attachment.sizes.full.url;

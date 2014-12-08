@@ -59,8 +59,7 @@ add_action('edit_user_profile', function( \WP_User $user ){
 	$src = get_template_directory_uri().'/assets/img/mystery-man.png';
 
 	$avatar = get_avatar($user->ID, 80);
-	$new_img = preg_replace('/class="[^"]+"/', 'class="new-img" data-src="'.$src.'"', $avatar);
-
+	$new_img = preg_replace('/class=\'[^\']+\'/u', 'class="new-img" data-src="'.$src.'"', $avatar);
 	?>
 	<hr />
 
