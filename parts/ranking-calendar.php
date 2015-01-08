@@ -1,4 +1,13 @@
-<?php if( is_ranking('yearly') || is_ranking('top') ): ?>
+<?php if( is_ranking('best') ): ?>
+
+    <ul class="nav nav-pills">
+        <li class="<?= !get_query_var('category_name') ? ' active' : '' ?>"><a href="<?= home_url('/best/', 'http'); ?>">全体ランキング</a></li>
+        <?php foreach( get_categories() as $cat ){
+            printf('<li class="%s"><a href="%s">%s部門</a></li>', get_query_var('category_name') == $cat->slug ? 'active' : '' ,home_url('/best/'.$cat->slug.'/', 'http'), esc_html($cat->name));
+        } ?>
+    </ul>
+
+<?php elseif( is_ranking('yearly') || is_ranking('top') ): ?>
     <?php $year = is_ranking('top') ? date_i18n('Y') : get_query_var('year'); ?>
 
     <table class="calendar-year">
@@ -38,9 +47,11 @@
         $year = get_query_var('year');
         $month = get_query_var('monthnum');
         $day = get_query_var('day');
-        $monthnum = $year * 12 + $month;
+        $monthnum = ($year * 12) + $month;
         $prev = $monthnum - 1;
         $next = $monthnum + 1;
+        $prev_year = $prev % 12 ? $year : $year - 1;
+        $next_year = $next % 12 ? $year + 1 : $year;
         $calc_starts = strtotime('2014-08-23 00:00:00');
         $week = ['月', '火', '水', '木', '金', '土', '日', '週間'];
         $start_of_month = sprintf('%d-%02d-01 00:00:00', $year, $month);
@@ -73,21 +84,30 @@
                     }elseif( $starting && $out_date >= $limit_of_month ){
                         $ended = true;
                     }
+                    $unfixed = true;
                 ?>
                 <td>
-                    <?php $unfixed = true; if( $starting && !$ended ): $out_date++; ?>
                         <?php
-                            $calc_date = current_time('timestamp') - 60 * 60 * 72;
-                            $date_to_ouput = strtotime(sprintf('%d/%02d/%02d', $year, $month, $out_date));
-                            if( $date_to_ouput > $calc_date || $date_to_ouput < $calc_starts ) :
-                        ?>
-                            <span><?= $out_date ?></span>
-                        <?php else: $unfixed = false; ?>
-                            <a href="<?= home_url(sprintf('/ranking/%d/%02d/%02d/', $year, $month, $out_date)) ?>"><?= $out_date ?></a>
+                            if( $starting && !$ended ):
+                                $out_date++;
+                                $calc_date = current_time('timestamp') - 60 * 60 * 72;
+                                $date_to_ouput = strtotime(sprintf('%d/%02d/%02d', $year, $month, $out_date));
+                                if( $out_date == get_query_var('day') ):
+                                    ?>
+                                    <span class="on"><?= $out_date ?></span>
+                                    <?php
+                                elseif( $date_to_ouput > $calc_date || $date_to_ouput < $calc_starts ) :
+                                    ?>
+                                    <span><?= $out_date ?></span>
+                                <?php
+                                    else:
+                                    $unfixed = false;
+                                ?>
+                                    <a href="<?= home_url(sprintf('/ranking/%d/%02d/%02d/', $year, $month, $out_date)) ?>"><?= $out_date ?></a>
+                                <?php endif; ?>
+                        <?php else: ?>
+                            &nbsp;
                         <?php endif; ?>
-                    <?php else: ?>
-                        &nbsp;
-                    <?php endif; ?>
                 </td>
                 <?php if( $l == 7 ): ?>
                     <?php if( !$unfixed ): ?>
@@ -105,14 +125,14 @@
 
     <ul class="pager post-pager">
         <li class="previous">
-            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $prev / 12 ), ($prev % 12 ?: 12))) ?>">
-                &laquo; <?= floor( $prev / 12 ) ?>年<?= $prev % 12 ?: 12 ?>月
+            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', $prev_year, ($prev % 12 ?: 12))) ?>">
+                &laquo; <?= $prev_year ?>年<?= $prev % 12 ?: 12 ?>月
             </a>
         </li>
         <li class="next">
             <?php if( $next <= ((int)date_i18n('Y') * 12) + (int)date_i18n('n')  ): ?>
-            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', floor( $next / 12 ), ($next % 12 ?: 12))) ?>">
-                <?= floor( $next / 12 ) ?>年<?= $next % 12 ?: 12 ?>月 &raquo;
+            <a href="<?= home_url(sprintf('/ranking/%d/%02d/', $next_year, ($next % 12 ?: 12))) ?>">
+                <?= $next_year ?>年<?= $next % 12 ?: 12 ?>月 &raquo;
             </a>
             <?php endif; ?>
         </li>

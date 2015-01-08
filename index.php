@@ -28,10 +28,9 @@
                 <?php get_template_part('parts/author') ?>
             <?php endif; ?>
 
-            <?php if( is_ranking() ): ?>
-                <?php get_template_part('parts/jumbotron', 'ranking') ?>
-            <?php endif; ?>
-
+            <?php if( is_ranking() ){
+                get_template_part('parts/jumbotron', 'ranking');
+            } ?>
 
 
 	        <?php if( is_post_type_archive('lists') ): ?>
@@ -123,13 +122,15 @@
 
             <?php endif; wp_reset_postdata(); ?>
 
-            <?php if( is_ranking() ): ?>
-                <?php get_template_part('parts/ranking', 'calendar') ?>
-            <?php elseif( is_singular('lists') || is_post_type_archive('lists') ): ?>
-	            <?php get_template_part('parts/nav', 'lists') ?>
-            <?php elseif( !hametuha_is_profile_page() ): ?>
-                <?php get_search_form() ?>
-            <?php endif; ?>
+            <?php
+                if( is_ranking() ){
+                    get_template_part('parts/ranking', 'calendar');
+                }elseif( is_singular('lists') || is_post_type_archive('lists') ){
+	                get_template_part('parts/nav', 'lists');
+                }elseif( !hametuha_is_profile_page() ){
+                    get_search_form();
+                }
+            ?>
 
         </div><!-- //.main-container -->
 

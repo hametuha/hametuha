@@ -36,6 +36,7 @@ function is_ranking($type = ''){
             case 'daily':
             case 'weekly':
             case 'top':
+            case 'best':
                 return $type == $ranking;
                 break;
             default:
@@ -114,7 +115,13 @@ function ranking_title(){
         case 'weekly':
             return sprintf('%d年%d月%d日までの週間ランキング', get_query_var('year'), get_query_var('monthnum'), get_query_var('day'));
             break;
-        case '':
+        case 'best':
+            $title = '歴代ベスト';
+            if( $slug = get_query_var('category_name') ){
+                $cat = get_category_by_slug($slug);
+                $title .= sprintf('（%s部門）', esc_html($cat->name));
+            }
+            return $title;
             break;
         default:
             return 'ランキング';

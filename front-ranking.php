@@ -91,6 +91,30 @@
                 <hr />
             <?php endif; ?>
 
+            <!-- 歴代ベスト -->
+            <?php
+                $bests = new WP_Query([
+                    'ranking' => 'best',
+                    'post_type' => 'post',
+                    'post_status' => 'publish',
+                    'posts_per_page' => 3
+                ]);
+                if( $bests->have_posts() ):
+                ?>
+                <h2><i class="icon-crown"></i> 歴代ランキング</h2>
+                <ol class="archive-container media-list">
+                    <?php while( $bests->have_posts() ): $bests->the_post(); ?>
+                        <?php get_template_part('parts/loop', 'ranking') ?>
+                    <?php endwhile; wp_reset_postdata() ?>
+                </ol>
+                <p>
+                    <a class="btn btn-default btn-lg btn-block" href="<?= home_url('/best/', 'http') ?>">
+                        歴代ランキングを見る
+                    </a>
+                </p>
+
+                <hr />
+            <?php endif; ?>
             <?php get_template_part('parts/ranking', 'calendar') ?>
 
         </div><!-- //.main-container -->

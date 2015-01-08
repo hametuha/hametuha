@@ -15,7 +15,13 @@
 
 <?php elseif( is_ranking() ): ?>
 
-    <?php if( !is_fixed_ranking() ): ?>
+    <?php if( is_ranking('best') ):  ?>
+        <p>
+            <span class="text-info">
+                <i class="icon-info"></i> このランキングは2008年から現在までのものを毎日集計しています。
+            </span>
+        </p>
+    <?php elseif( !is_fixed_ranking() ): ?>
         <p>
             <span class="text-warning">
                 <i class="icon-info"></i> このランキングは現在集計中です。順位は変動する可能性があります。

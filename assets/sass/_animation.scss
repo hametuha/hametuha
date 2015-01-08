@@ -5,18 +5,9 @@
 
 
 // ボタンの背景色が明滅
-@include keyframes( blinker ){
-  0%, 100% {
-    background-color: $footer-navbar-bg;
-  }
-  50% {
-    background-color: $brand-danger;
-  }
-}
-
+@include bg-blink(blinker, $footer-navbar-bg, $brand-danger);
 
 // 背景色が点滅
-
 @include keyframes( ranker ){
   0%, 100%{
     color: yellow;
@@ -25,3 +16,5 @@
     color: orange;
   }
 }
+
+

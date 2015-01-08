@@ -31,6 +31,7 @@ if( hametuha_is_profile_page() ){
     single_term_title('掲示板トピック: ');
 
 }elseif( is_tax() ){
+
 	single_term_title();
 
 }elseif( is_search() ){

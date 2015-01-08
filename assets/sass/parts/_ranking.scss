@@ -69,6 +69,8 @@
   }
 }
 
+@include bg-blink(cell-blink, white, yellow);
+
 // カレンダー
 .calendar-year{
   width: 100%;
@@ -96,6 +98,10 @@
       display: block;
       padding: 0.5em;
       color: $more-shade-font;
+      &.on{
+        color: $link-color;
+        @include animation(cell-blink 3s linear infinite);
+      }
     }
   }
 }

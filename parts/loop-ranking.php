@@ -14,7 +14,7 @@ $rank = get_the_ranking();
     <span class="pull-left" >
         <i class="icon-circle2"></i>
         <strong><?= $rank ?></strong>
-        <?php if( is_null($post->transition) ): ?>
+        <?php if( is_null( $post->transition ) ): ?>
             <i class="rank-status icon-new"></i>
         <?php else: ?>
             <?php switch( $post->transition ): case 0: ?>
