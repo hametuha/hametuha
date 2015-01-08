@@ -47,7 +47,7 @@ if( hametuha_is_profile_page() ){
 
 }elseif( is_singular('series') ){
 
-	echo '<span>シリーズ</span>';
+	echo '<small>シリーズ</small> ';
 	the_title();
 
 }elseif( is_post_type_archive('thread') ){

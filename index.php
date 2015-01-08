@@ -32,11 +32,14 @@
                 get_template_part('parts/jumbotron', 'ranking');
             } ?>
 
-
 	        <?php if( is_post_type_archive('lists') ): ?>
 		        <?php get_template_part('parts/jumbotron', 'lists') ?>
 	        <?php endif; ?>
 
+            <?php if( is_singular('series') ){
+                the_post();
+                get_template_part('parts/meta', 'thumbnail');
+            } ?>
 
 	        <?php if( is_singular('lists') ): ?>
 	            <?php get_template_part('parts/meta', 'lists') ?>

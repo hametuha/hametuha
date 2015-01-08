@@ -45,8 +45,9 @@
 
 <?php elseif( is_singular('series') ): ?>
 
-	<?php get_template_part('parts/meta', 'single'); ?>
-
+    <?php get_template_part('parts/meta', 'single'); ?>
+    <?php the_excerpt() ?>
+    
 <?php elseif(is_post_type_archive('announcement') || is_post_type_archive('faq') || is_post_type_archive('info') || is_post_type_archive('news') || is_post_type_archive('thread')): ?>
 
 	<?= wpautop(get_post_type_object(get_post_type())->description) ?>

@@ -4,7 +4,7 @@
 		<!-- 作成者 -->
 		<li>
 			<i class="icon-user"></i>
-			<?php if( author_can($post, 'edit_post') ): ?>
+			<?php if( author_can($post, 'edit_posts') ): ?>
 				<a href="<?= get_author_posts_url(get_the_author_meta('ID')) ?>"><?php the_author() ?></a> 編
 			<?php else: ?>
 				<?php the_author() ?>
