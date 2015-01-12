@@ -44,10 +44,10 @@ add_action('init', function(){
     wp_register_script('font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false);
 
     // メインJS
-    wp_register_script('hametuha-common', get_template_directory_uri().'/assets/js/common'.hametuha_min_ext(), ['twitter-bootstrap', 'backbone', 'modernizr', 'font-plus', 'jsrender'], hametuha_version(), true);
+    wp_register_script('hametuha-common', get_template_directory_uri().'/assets/js/common.min.js', ['twitter-bootstrap', 'backbone', 'modernizr', 'font-plus', 'jsrender'], hametuha_version(), true);
 
     // シングルページ用JS
-    wp_register_script('hametuha-single', get_template_directory_uri().'/assets/js/single-post'.hametuha_min_ext(), ['hametuha-common', 'chart-js', 'jquery-form', 'jquery-touch-punch', 'jquery-ui-slider'], hametuha_version(), true);
+    wp_register_script('hametuha-single', get_template_directory_uri().'/assets/js/single-post.min.js', ['hametuha-common', 'chart-js', 'jquery-form', 'jquery-touch-punch', 'jquery-ui-slider'], hametuha_version(), true);
 
     // 告知ページ用JS
     wp_register_script('hametuha-announcement', get_template_directory_uri().'/assets/js/single-announcement'.hametuha_min_ext(), ['jquery', 'gmap'], hametuha_version(), true);

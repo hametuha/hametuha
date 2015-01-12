@@ -1,3 +1,13 @@
+/*!
+ * Admin file for Hametuha
+ *
+ * @package hametuha
+ */
+
+@import "compass";
+@import "animation";
+@import "admin/stats";
+
 .post-state-format{
   display: none;
 }

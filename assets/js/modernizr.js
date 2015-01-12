@@ -1,4 +1,4 @@
-/* Modernizr 2.8.2 (Custom Build) | MIT & BSD
+/*! Modernizr 2.8.2 (Custom Build) | MIT & BSD
  * Build: http://modernizr.com/download/#-canvas-canvastext-history-websockets-geolocation-touch-shiv-cssclasses-teststyles-hasevent-prefixes-domprefixes-load
  */
 ;

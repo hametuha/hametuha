@@ -1,4 +1,12 @@
+/*!
+ * 告知ページのヘルパースクリプト
+ *
+ *
+ */
 jQuery(document).ready(function($){
+
+	'use strict';
+
 	//TimePickerの設定
 	if($('.timepicker').length > 0){
 		$('.timepicker').datetimepicker({

@@ -4,9 +4,6 @@
 // Original animations
 
 
-// ボタンの背景色が明滅
-@include bg-blink(blinker, $footer-navbar-bg, $brand-danger);
-
 // 背景色が点滅
 @include keyframes( ranker ){
   0%, 100%{

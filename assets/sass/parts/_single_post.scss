@@ -254,6 +254,8 @@ body.single-post{
     }
   }
 }
+// ボタンの背景色が明滅
+@include bg-blink(blinker, $footer-navbar-bg, $brand-danger);
 .finish-reading .finished-container a{
   @include animation(blinker 1.5s linear infinite );
 }

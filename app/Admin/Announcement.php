@@ -67,7 +67,7 @@ class Announcement extends Singleton
     public function admin_enqueue_scripts( $page ){
         $screen = get_current_screen();
         if( 'post' == $screen->base && 'announcement' == $screen->post_type ){
-            wp_enqueue_script('announcement-helper', get_template_directory_uri().'/assets/js/announcement-helper.js', array('gmap'), $this->version, false);
+            wp_enqueue_script('announcement-helper', get_template_directory_uri().'/assets/js/admin/announcement.min.js', array('gmap'), $this->version, false);
             wp_enqueue_style('jquery-ui-smoothness');
         }
     }

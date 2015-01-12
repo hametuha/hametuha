@@ -1,0 +1,68 @@
+/*
+ * アクセス解析表示用スタイル
+ *
+ *
+ */
+
+.analytics-date-changer{
+  text-align: right;
+  margin: 0.5em 0 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.stat{
+  margin: 1em 0;
+  min-height: 200px;
+  position: relative;
+  &.col2{
+    width: 50%;
+    float: left;
+  }
+  canvas{
+//    height: 200px !important;
+  }
+  // Loading icons
+  $dashicon-width: 80px;
+  .dashicons{
+    display: none;
+    color: #ddd;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: $dashicon-width;
+    width: $dashicon-width;
+    height: $dashicon-width;
+    margin-left: $dashicon-width / -2;
+    margin-top: $dashicon-width / -2;
+  }
+  &.loading{
+    .dashicons{
+      display: block;
+      @include animation(rotation 2s linear infinite);
+    }
+  }
+  // Error message
+  &.no-data{
+    p.error,
+    canvas{
+      display: block;
+    }
+  }
+  p.error{
+    display: none;
+    height: 200px;
+    line-height: 200px;
+    color: red;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (max-width: 768px){
+  .stat.col2{
+    width: auto;
+    float: none;
+  }
+}
