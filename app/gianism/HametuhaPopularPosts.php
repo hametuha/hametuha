@@ -57,12 +57,12 @@ class HametuhaPopularPosts extends Gabstract
 		];
 		$dataset = [
 			'label' => "人気の投稿",
-			'fillColor' => "rgba(220,220,220,0.2)",
-			'strokeColor' => "rgba(220,220,220,1)",
-			'pointColor' => "rgba(220,220,220,1)",
+			'fillColor' => "rgba(0,116,162,0.2)",
+			'strokeColor' => "rgba(0,116,162,1)",
+			'pointColor' => "rgba(0,116,162,1)",
 			'pointStrokeColor' => "#fff",
 			'pointHighlightFill' => "#fff",
-			'pointHighlightStroke' => "rgba(220,220,220,1)",
+			'pointHighlightStroke' => "rgba(0,116,162,1)",
 			'data' => [],
 		];
 		foreach( $result as $row ){

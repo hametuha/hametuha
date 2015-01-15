@@ -56,13 +56,13 @@ class HametuhaReaderSegment extends Gabstract
 		foreach( $result as $row ){
 			list($sex, $age, $pv) = $row;
 			$female = 'female' == $sex;
-			$hue = $female ? 0 : 240;
+			$hue = $female ? 13 : 197;
 			$age = explode('-', $age);
 			$saturation = 100 - ($age[0] * 2);
-			$color = sprintf('hsl(%d, %d%%, 60%%)', $hue, $saturation);
-			$highlight = sprintf('hsl(%d, %d%%, 80%%)', $hue, $saturation);
+			$color = sprintf('hsl(%d, %d%%, 50%%)', $hue, $saturation);
+			$highlight = sprintf('hsl(%d, %d%%, 70%%)', $hue, $saturation);
 			$data[] = [
-				'value' => $pv,
+				'value' => intval($pv),
 		        'color' => $color,
 		        'highlight' => $highlight,
 		        'label' => sprintf('%s（%d〜%d歳）', ( $female ? '女性' : '男性' ), $age[0], $age[1]),

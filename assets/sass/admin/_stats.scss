@@ -16,15 +16,18 @@
   min-height: 200px;
   position: relative;
   &.col2{
-    width: 50%;
+    width: 45%;
     float: left;
+    &.gap{
+      margin-right: 10%;
+    }
   }
   canvas{
 //    height: 200px !important;
   }
   // Loading icons
   $dashicon-width: 80px;
-  .dashicons{
+  & > .dashicons{
     display: none;
     color: #ddd;
     position: absolute;
@@ -37,7 +40,7 @@
     margin-top: $dashicon-width / -2;
   }
   &.loading{
-    .dashicons{
+    & > .dashicons{
       display: block;
       @include animation(rotation 2s linear infinite);
     }
@@ -58,11 +61,20 @@
     font-weight: bold;
     font-size: 1.5em;
   }
+  .male{
+    color: #47bceb;
+  }
+  .female{
+    color: #eb6b47;
+  }
 }
 
 @media only screen and (max-width: 768px){
   .stat.col2{
     width: auto;
     float: none;
+    &.gap{
+      margin-right: 0;
+    }
   }
 }
