@@ -22,8 +22,8 @@
       margin-right: 10%;
     }
   }
-  canvas{
-//    height: 200px !important;
+  div{
+    height: 400px;
   }
   // Loading icons
   $dashicon-width: 80px;
@@ -57,6 +57,7 @@
     height: 200px;
     line-height: 200px;
     color: red;
+    border-color: rgba(0,116,162,0.2);
     text-align: center;
     font-weight: bold;
     font-size: 1.5em;

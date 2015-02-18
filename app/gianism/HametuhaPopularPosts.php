@@ -51,26 +51,60 @@ class HametuhaPopularPosts extends Gabstract
 	 * @return array
 	 */
 	protected function parse_result( array $result ) {
-		$data = [
-			'labels' => [],
-			'datasets' => [],
-		];
-		$dataset = [
-			'label' => "人気の投稿",
-			'fillColor' => "rgba(0,116,162,0.2)",
-			'strokeColor' => "rgba(0,116,162,1)",
-			'pointColor' => "rgba(0,116,162,1)",
-			'pointStrokeColor' => "#fff",
-			'pointHighlightFill' => "#fff",
-			'pointHighlightStroke' => "rgba(0,116,162,1)",
-			'data' => [],
+		$json = [
+			'options' => [
+				'legend' => [
+					'position' => 'none',
+				],
+				'backgroundColor' => '#f1f1f1',
+				'animation' => [
+					'duration' => 300,
+					'easing' => 'out',
+				],
+				'bars' => 'horizontal',
+				'axes' => [
+					'x' => [
+						'0' => [
+							'side' => 'top',
+							'label' => 'Percentage',
+						]
+					]
+	            ],
+				'colors' => [
+					'#0074A2', // Blue
+				]
+			],
+			'data' => [
+				'cols' => [
+					[
+						'label' => 'タイトル',
+						'id' => 'title',
+						'type' => 'string',
+					],
+					[
+						'label' => 'ページビュー',
+						'id' => 'pv',
+						'type' => 'number',
+						'pattern' => '##.#pv',
+					],
+				],
+				'rows' => []
+			]
 		];
 		foreach( $result as $row ){
 			list($title, $pv) = $row;
-			$data['labels'][] = trim(explode('|', $title)[0]);
-			$dataset['data'][] = intval($pv);
+			$json['data']['rows'][] = [
+				'c' => [
+					[
+						'v' => trim(explode('|', $title)[0]),
+					],
+					[
+						'v' => intval($pv),
+						'f' => sprintf('%sPV', number_format_i18n($pv)),
+					],
+				]
+			];
 		}
-		$data['datasets'][] = $dataset;
-		return $data;
+		return $json;
 	}
 }

@@ -26,7 +26,7 @@ class Stats extends Screen
 	 */
 	protected function enqueueScript() {
 		wp_enqueue_script('hametu-analytics', get_stylesheet_directory_uri().'/assets/js/admin/analytics.min.js',
-			array('chart-js', 'jquery-ui-datepicker-i18n', 'modernizr'), hametuha_version(), true);
+			['google-jsapi', 'jquery-ui-datepicker-i18n'], hametuha_version(), true);
 	}
 
 	/**

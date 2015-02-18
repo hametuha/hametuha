@@ -52,23 +52,35 @@ class HametuhaReaderSegment extends Gabstract
 	 * @return array
 	 */
 	protected function parse_result( array $result ) {
-		$data = [];
+		$json = [
+			'options' => [
+				'legend' => [
+					'position' => 'none',
+				],
+				'backgroundColor' => '#f1f1f1',
+				'colors' => [],
+			],
+			'data' => [
+				['属性', '割合']
+			]
+		];
 		foreach( $result as $row ){
 			list($sex, $age, $pv) = $row;
 			$female = 'female' == $sex;
-			$hue = $female ? 13 : 197;
+			$hue = $female ? 5 : 140;
 			$age = explode('-', $age);
-			$saturation = 100 - ($age[0] * 2);
-			$color = sprintf('hsl(%d, %d%%, 50%%)', $hue, $saturation);
-			$highlight = sprintf('hsl(%d, %d%%, 70%%)', $hue, $saturation);
-			$data[] = [
-				'value' => intval($pv),
-		        'color' => $color,
-		        'highlight' => $highlight,
-		        'label' => sprintf('%s（%d〜%d歳）', ( $female ? '女性' : '男性' ), $age[0], $age[1]),
+			$saturation = 255 - ($age[0] * 2);
+			$lightness = 150 - $age[0] * 2;
+			$json['options']['colors'][] = $this->hsl2hex([$hue / 255, $saturation / 255, round($lightness / 255, 2)]);
+			if( !isset($age[1]) ){
+				$age[1] = '';
+			}
+			$json['data'][] = [
+				sprintf('%s（%d〜%s歳）', ( $female ? '女性' : '男性' ), $age[0], $age[1]),
+				intval($pv),
 			];
 		}
-		return $data;
+		return $json;
 	}
 
 }
