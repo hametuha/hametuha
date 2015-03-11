@@ -28,7 +28,7 @@ class PostFormatMetabox extends EditMetaBox
             'required' => true,
             'description' => 'この作品のジャンルを選んでください。',
         ],
-        'series' => [
+        'post_parent' => [
             'class' => TokenInputPost::class,
             'label' => '作品集',
             'description' => 'この作品が作品集に所属する場合、該当するものを選んでください。',
