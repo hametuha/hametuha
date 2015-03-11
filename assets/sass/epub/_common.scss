@@ -1,0 +1,150 @@
+$link-color: #588cbc;
+$active-color: #ca4944;
+
+// Link
+a{
+  @include transition(
+          background-color 0.5s ease-in-out 0,
+          color 0.5s ease-in-out 0,
+          text-decoration 0.5s ease-in-out 0
+  );
+  &:link, &:visited{
+    color: $link-color;
+    text-decoration: underline;
+  }
+  &:hover{
+    color: lighten($link-color, 10);
+    text-decoration: underline;
+  }
+  &:active{
+    color: $active-color;
+    text-decoration: none;
+  }
+}
+
+// Font
+%serif{
+  font-family: YuMincho, '游明朝', serif;
+}
+%sans{
+  font-family : YuGothic, '游ゴシック', sans-serif;
+}
+
+
+// Border
+$thic-border: 10px solid #444;
+
+
+body{
+  @extend %sans;
+}
+
+// Header
+.header {
+  .title {
+    small {
+      display: block;
+      font-size: 0.6em;
+      color: #888;
+    }
+  }
+  .meta {
+    text-align: right;
+    color: #888;
+  }
+}
+
+// content
+.rtl{
+  .content{
+    padding-left: 2em;
+  }
+}
+
+.ltr {
+  .content{
+    padding-bottom: 2em;
+  }
+}
+
+// Footer
+.footer{
+  color: #aaa;
+}
+
+// 縦書き
+.rtl{
+  -webkit-writing-mode: vertical-rl;
+  .tcy{
+    display: inline-block;
+    -webkit-writing-mode: horizontal-tb;
+    text-align: center;
+  }
+  // Header
+  .header{
+    .title{
+      margin: 0 0.67em;
+      padding: 2em 1em;
+      border-left: $thic-border;
+      small{
+        padding-right: 0.5em;
+      }
+    }
+    .meta{
+      padding: 2em 0;
+    }
+
+  }
+
+  article{
+    margin: 2em 1em;
+  }
+
+  // Footer
+  .footer{
+    padding: 2em 1em;
+    border-right: $thic-border;
+    text-align: right;
+  }
+
+}
+
+
+
+// 横書き
+.ltr{
+
+  .header, .content, .footer{
+    max-width: $screen-desktop;
+    margin: 0 auto;
+  }
+
+
+  // Header
+  .header{
+    .title{
+      padding: 1em 2em;
+      border-bottom: $thic-border;
+      small{
+        padding-top: 0.5em;
+      }
+    }
+    .meta{
+      padding: 0 2em;
+    }
+
+  }
+
+  // Footer
+  .footer{
+    padding: 1em 2em;
+    border-top: $thic-border;
+    text-align: center;
+  }
+
+  // Table
+  table{
+    width: 100%;
+  }
+
+}

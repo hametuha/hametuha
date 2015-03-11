@@ -14,7 +14,7 @@ function hametuha_version(){
     return $theme->get('Version');
 }
 
-
+require '/Users/guy/Documents/Vagrant/hamepub/www/HamePub/vendor/autoload.php';
 
 
 

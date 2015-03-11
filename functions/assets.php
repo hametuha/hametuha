@@ -8,12 +8,18 @@
 
 
 
-
-//画像のサイズ（小さい）を追加
+//
+// 画像サイズ
+//
+// -------------------------------------
+//
+// 画像のサイズ（小さい）を追加
 add_image_size('pinky', 160, 160, true);
-
 // プロフィール写真を追加
 add_image_size('profile', 300, 300, true);
+// 表紙画像
+// @see http://takahashifumiki.com/web/design/2334/
+add_image_size('epub-cover', 1536, 2048, true);
 
 /**
  * 選択できる画像サイズを追加
@@ -54,6 +60,9 @@ add_action('init', function(){
     wp_localize_script('hametuha-announcement', 'HametuhaAnnouncement', [
         'icon' => get_template_directory_uri().'/assets/img/facebook-logo.png',
     ]);
+
+	// 投稿
+	wp_register_script('hametuha-edit', get_template_directory_uri().'/assets/js/admin/editor'.hametuha_min_ext(), ['jquery'], hametuha_version(), true);
 
     // ログイン名変更用JS
     wp_register_script('hametuha-login-changer', get_template_directory_uri().'/assets/js/components/login-change-helper'.hametuha_min_ext(), ['jquery-form', 'hametuha-common']);
@@ -137,6 +146,7 @@ add_action('wp_enqueue_scripts', function(){
  * 管理画面でアセットを読み込む
  */
 add_action("admin_enqueue_scripts", function( $page = '' ){
+	$screen = get_current_screen();
 
     wp_enqueue_style('hametuha-admin');
 
@@ -144,11 +154,18 @@ add_action("admin_enqueue_scripts", function( $page = '' ){
 
 	}
 
+	// 編集画面
+	if( 'post' == $screen->base ){
+		wp_enqueue_script('hametuha-edit');
+	}
+
+
 	// プロフィール編集画面
 	if( 'user-edit.php' == $page ){
 		wp_enqueue_media();
 		wp_enqueue_script('hametuha-user-edit');
 	}
+
 }, 200);
 
 

@@ -298,16 +298,15 @@ function prev_series_link($before = '<li>', $after = '</li>', $post = null){
  * @param int $id
  * @return string
  */
-function _hametuha_faq_title($title, $id = 0){
-	if(!is_admin()){
+add_filter('the_title', function($title, $id = 0){
+	if( !is_admin() ){
 		$post = get_post($id);
-		if($post->post_type == 'faq'){
+		if( $post && $post->post_type == 'faq' ){
 			$title = 'Q. '.$title;
 		}
 	}
 	return $title;
-}
-add_filter('the_title', '_hametuha_faq_title', 10, 2);
+}, 10, 2);
 
 
 /**

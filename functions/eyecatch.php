@@ -43,6 +43,9 @@ function has_pixiv($post = null){
  * @return string
  */
 add_filter('admin_post_thumbnail_html', function($content, $post_id){
+	if( 'post' !== get_post_type($post_id) ){
+		return $content;
+	}
     $help_url = home_url('/faq/pixiv-embed/');
     $nonce = wp_create_nonce('pixiv_embed_nonce');
     $embed = esc_textarea(get_post_meta($post_id, '_pixiv_embed', true));

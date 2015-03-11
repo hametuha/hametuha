@@ -1,0 +1,61 @@
+$toc-link-border: 1px solid $link-color;
+
+.content--toc{
+  ol{
+    margin: 0;
+    padding: 0;
+    li{
+      list-style-type: none;
+      margin: 0;
+    }
+    ol{
+      margin: 1em ;
+    }
+  }
+  a{
+    display: block;
+    padding: 2em;
+    border: $toc-link-border;
+    &:link, &:visited{
+      text-decoration: none;
+    }
+    &:hover, &:active{
+      background-color: $link-color;
+      text-decoration: none;
+      color: #fff;
+    }
+  }
+}
+
+// 縦書きの場合
+.rtl{
+  .content--toc{
+    ol{
+      li{
+        a{
+          border-left: none;
+        }
+        &:last-child a{
+          border-left: $toc-link-border;
+        }
+      }
+    }
+  }
+}
+
+// 横書きの場合
+.ltr{
+  .content--toc{
+    padding-bottom: 2em;
+    ol{
+      li{
+        a{
+          border-bottom: none;
+        }
+        &:last-child a{
+          border-bottom: $toc-link-border;
+        }
+      }
+    }
+  }
+}

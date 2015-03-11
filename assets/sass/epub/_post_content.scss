@@ -1,0 +1,121 @@
+.content--script{
+
+  // Basic Typography
+  @extend %serif;
+  line-height: 2;
+  text-align: justify;
+  text-justify: inter-ideograph;
+
+  // Tate-Chu-Yoko
+  .tcy{
+    line-height: 1;
+  }
+
+  // Paragraph
+  p{
+    margin: 0;
+  }
+
+  p.indent{
+    text-indent: 1em;
+  }
+
+  // Blockquote
+  blockquote{
+    color: #444;
+    cite{
+      display: block;
+      text-align: right;
+    }
+  }
+
+  del, strike{
+    color: #aaa;
+  }
+
+  table{
+    border-collapse: collapse;;
+    th, td{
+      border: 1px solid #ddd;
+      padding: 1em;
+    }
+    th{
+      font-weight: bold;
+    }
+  }
+
+  img{
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  // Headers
+  h1, h2, h3, h4, h5, h6{
+    clear: both;
+  }
+
+  // WP Required
+  .alignright{
+    float: right;
+  }
+  .alignleft{
+    float: left;
+  }
+  .alignnone{
+    float: none;
+  }
+  .aligncenter{
+    float: none;
+  }
+}
+
+
+
+// 縦書きの場合
+.rtl{
+  .content--script{
+    .alignleft, .alignright{
+      max-height: 50%;
+    }
+    .alignleft, .alignright, .alignnone, .aligncenter{
+      margin: 1em;
+    }
+    .alignleft{
+      margin-top: 0;
+    }
+    .alignright{
+      margin-bottom: 0;
+    }
+  }
+  pre{
+    -webkit-writing-mode: horizontal-tb;
+  }
+  q{
+    &:before{
+      content: "";
+    }
+    &:after{
+      content: "";
+    }
+  }
+  sup{
+    top: 0;
+    right: -0.5em;
+  }
+  sub{
+    bottom: 0;
+    left: -0.25em;
+  }
+}
+
+// 横書きの場合
+.ltr{
+  .content--script{
+    padding-bottom: 2em;
+    .alignleft, .alignright{
+      float: none;
+    }
+  }
+}

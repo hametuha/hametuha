@@ -1,0 +1,46 @@
+.epub-colophon{
+
+  -webkit-writing-mode: horizontal-tb;
+
+
+  table.colophon{
+    $border-color: #ddd;
+    $border: 1px solid $border-color;
+
+    margin: 2em 0;
+
+    caption{
+      background-color: $border-color;
+      padding: 1em 2em;
+      color: darken($border-color, 30);
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
+    }
+
+
+    th, td{
+      padding: 1em 1.5em;
+      border-bottom: $border;
+    }
+
+    th{
+      white-space: nowrap;
+      text-align: right;
+      width: 5em;
+    }
+    a.url{
+      display: block;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    tr:first-child{
+      th, td{
+        border-top: $border;
+      }
+    }
+    address{
+      font-style: normal;
+    }
+  }
+
+
+}

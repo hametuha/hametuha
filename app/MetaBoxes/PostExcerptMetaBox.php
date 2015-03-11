@@ -10,7 +10,7 @@ use WPametu\UI\Field\Select;
 class PostExcerptMetaBox extends LeadMetaBox
 {
 
-    protected $post_types = ['post', 'series'];
+    protected $post_types = ['post'];
 
     protected $name = 'hametuha_post_helper';
 
