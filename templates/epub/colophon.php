@@ -68,15 +68,11 @@
 		</tr>
 		<tr>
 			<th>メール</th>
-			<td><a href="malto:info@hametuha.co.jp">info@hametuha.co.jp</a></td>
+			<td><a href="mailto:info@hametuha.co.jp">info@hametuha.co.jp</a></td>
 		</tr>
 		<tr>
 			<th>住所</th>
-			<td>
-				<address>
-					〒262-0019 東京都港区南青山2-11-13 南青山ビル4F
-				</address>
-			</td>
+			<td>〒262-0019 東京都港区南青山2-11-13 南青山ビル4F</td>
 		</tr>
 	</table>
 </article>

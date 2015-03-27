@@ -7,6 +7,11 @@ use Hametuha\HamePub\Factory;
 use WPametu\API\Rest\RestTemplate;
 
 
+/**
+ * EPub generator
+ *
+ * @package Hametuha\Rest
+ */
 class EPub extends RestTemplate
 {
 	/**
@@ -114,7 +119,7 @@ class EPub extends RestTemplate
 			if( !empty($series->post_content) ){
 				$html['afterwords'] = [
 					'label' => 'あとがき',
-					'html'  => $this->get_content($series_id, $series, 'afterwords', $direction),
+					'html'  => $this->get_content($series_id, $series, 'afterword', $direction),
 				];
 			}
 			// Authors, colophon
@@ -127,8 +132,82 @@ class EPub extends RestTemplate
 					'html'  => $this->get_content($series_id, $series, $key, 'ltr'),
 				];
 			}
+			// Create Toc
+			foreach( $html as $key => $h ){
+				$factory->toc->addChild($h['label'], $key.'.xhtml');
+			}
+			$html['toc']['html'] = $factory->toc->getHTML();
+			// Create content
+			foreach( $html as $key => $h ){
+				$property = [];
+				switch( $key ){
+					case 'toc':
+						$property[] = 'nav';
+						break;
+					case 'cover':
+						$property[] = 'cover';
+						break;
+					default:
+						// Do nothing
+						break;
+				}
+				// Fix some html
+				$html = str_replace('&nbsp;', '&#38;', $h['html']);
+				$html = preg_replace('/srcset=\'[^\']*\'/', '', $html);
+				$dom = $factory->registerHTML($key, $html, $property);
+				$src = $key.'.xhtml';
+				if( !$dom ){
+					throw new \Exception('EPubの生成に失敗しました', 500);
+				}
+				foreach([
+					'img' => 'src',
+					'link' => 'href',
+					'script' => 'src',
+				] as $tag => $attr){
+					foreach([
+						home_url('/'), home_url('/', 'http'), 'https://s.hametuha.info/', 'http://s.hametuha.info', 'http://hametuha.local/'
+					] as $url){
+						foreach( $factory->parser->extractAssets($dom, $tag, $attr, $url, ABSPATH) as $path ){
+							$factory->opf->addItem($path, '');
+							// If this is css, load all assets
+							if( false !== strpos($path, '.css') ){
+								$css_path = $factory->distributor->oebps.DIRECTORY_SEPARATOR.$path;
 
-			var_dump($html);
+								var_dump($css_path);
+							}
+						}
+					}
+				}
+				$factory->parser->saveDom($dom, $src);
+				// Assign properties
+				$property = [];
+				if( false !== strpos($h['html'], '<script') ){
+					$property[] = 'scripted';
+				}
+				if( false !== strpos($h['html'], 'epub:type="toc"') ){
+					$property[] = 'nav';
+				}
+				$factory->opf->addItem('Text/'.$src, $src, $property);
+				// Add Cover Image
+				if( has_post_thumbnail($series->ID) ){
+
+				}
+				// Create TOC
+				$factory->toc->addChild($h['label'], $src);
+			}
+
+			$factory->opf->setIdentifier($series->guid);
+			$factory->opf->setLang('ja');
+			$factory->opf->setTitle(get_the_title($series), 'main-title');
+			if( $subtitle = get_post_meta($series->ID, 'subtitle', true) ){
+				$factory->opf->setTitle($subtitle, 'sub-title', 'subtitle', 2);
+			}
+			$factory->opf->setModifiedDate(strtotime($series->post_modified_gmt));
+			$factory->opf->direction = 'rtl';
+			$factory->opf->putXML();
+			$factory->container->putXML();
+			$factory->compile(ABSPATH.'wp-content/epub/'.$series->post_name.'.epub');
+
 			exit;
 
 			throw new \Exception('あなたはバカです。');
