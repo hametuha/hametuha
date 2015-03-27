@@ -73,6 +73,9 @@ add_action('init', function(){
 	// プロフィール変更用JS
 	wp_register_script('hametuha-user-edit', get_template_directory_uri().'/assets/js/components/edit-profile-helper'.hametuha_min_ext(), ['jquery-effects-highlight']);
 
+	// 投稿編集画面
+	wp_register_script('hametuha-edit-form', get_template_directory_uri().'/assets/js/admin/author'.hametuha_min_ext(), ['jquery-cookie'], hametuha_version(), true);
+
 });
 
 
@@ -91,7 +94,7 @@ add_action('wp_enqueue_scripts', function(){
 		wp_dequeue_style('admin-bar');
 	}
 	//投稿を読み込んでいるページ
-	if(is_singular('post')){
+	if( is_singular('post') ){
 		wp_dequeue_style('contact-form-7');
 		wp_dequeue_style('wp-tmkm-amazon');
 	}
@@ -138,10 +141,17 @@ add_action('wp_enqueue_scripts', function(){
  */
 add_action("admin_enqueue_scripts", function( $page = '' ){
 
+	$screen = get_current_screen();
+
     wp_enqueue_style('hametuha-admin');
 
 	if( current_user_can('edit_posts') ){
 
+	}
+
+	// 編集画面
+	if( 'post' == $screen->base ){
+		wp_enqueue_script('hametuha-edit-form');
 	}
 
 	// プロフィール編集画面
