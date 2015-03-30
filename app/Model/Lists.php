@@ -104,6 +104,7 @@ class Lists extends Model
 					'rel_type' => 'list',
 					'subject_id' => $list_id,
 					'object_id' => $post_id,
+					'created' => current_time('timestamp'),
 				]);
 				$added++;
 			}
@@ -131,6 +132,7 @@ class Lists extends Model
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
+					'created' => current_time('timestamp'),
 				] );
 			}
 		}

@@ -273,10 +273,10 @@ function next_series_link($before = '<li>', $after = '</li>', $post = null, $nex
 	$sql .= ($next) ? " AND post_date > %s ORDER BY post_date ASC"
 			: " AND post_date < %s ORDER BY post_date DESC";
 	$post = $wpdb->get_row($wpdb->prepare($sql, $post->post_parent, $post->post_date));
-    $label = $next ? apply_filters('the_title', $post->post_title).' &raquo;'
-                   : '&laquo; '.apply_filters('the_title', $post->post_title);
     if( $post ){
-        printf('%s<a href="%s">%s</a>%s', $before, get_permalink($post->ID), $label, $after);
+	    $label = $next ? apply_filters('the_title', $post->post_title).' &raquo;'
+	                   : '&laquo; '.apply_filters('the_title', $post->post_title);
+        printf('%s<a href="%s">%s</a>%s', $before, get_permalink($post), $label, $after);
     }
 }
 

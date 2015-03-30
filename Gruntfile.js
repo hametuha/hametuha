@@ -4,16 +4,23 @@ module.exports = function (grunt) {
 
         pkg: grunt.file.readJSON('package.json'),
 
-        compass: {
-
+        sass: {
+            options: {
+                includePaths: ['assets/vendor/bootstrap-sass/assets/stylesheets'],
+                sourceMap: true
+            },
             dist: {
                 options: {
-                    config: 'assets/config.rb',
-                    basePath: 'assets',
-                    sourcemap: true
-                }
+                    outputStyle: 'compressed'
+                },
+                files: [{
+                    expand: true,
+                    cwd: './assets/sass/',
+                    src: ['**/*.scss', '!**/_*.scss'],
+                    dest: './assets/css/',
+                    ext: '.css'
+                }]
             }
-
         },
 
         jshint: {
@@ -49,25 +56,28 @@ module.exports = function (grunt) {
 
         watch: {
 
+            grunt: { files: ['Gruntfile.js'] },
+
             js: {
                 files: ['assets/js/**/*.js', '!assets/js/**/*.min.js'],
                 tasks: ['jshint', 'uglify']
             },
 
-            compass: {
+            sass: {
                 files: ['assets/sass/**/*.scss'],
-                tasks: ['compass']
+                tasks: ['sass']
             }
         }
     });
 
     // Load plugins
-    grunt.loadNpmTasks('grunt-contrib-compass');
+    grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Register tasks
-    grunt.registerTask('default', ['jshint', 'uglify', 'compass']);
+    grunt.registerTask('build', ['jshint', 'uglify', 'sass']);
+    grunt.registerTask('default', ['watch']);
 
 };
