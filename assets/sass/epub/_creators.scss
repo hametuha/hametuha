@@ -7,6 +7,7 @@
 .author-box{
   padding: 1.5em 2em;
   border-bottom: 3px dashed #ddd;
+  @include clearfix();
   .avatar{
     width: auto;
     height: auto;

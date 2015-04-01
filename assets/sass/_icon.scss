@@ -1,10 +1,16 @@
+$hash: ci89x7;
+$is-epub: false !default;
 @font-face {
   font-family: 'hameticon';
-  src:url('../fonts/hameticon.eot?ci89x7');
-  src:url('../fonts/hameticon.eot?#iefixci89x7') format('embedded-opentype'),
-  url('../fonts/hameticon.woff?ci89x7') format('woff'),
-  url('../fonts/hameticon.ttf?ci89x7') format('truetype'),
-  url('../fonts/hameticon.svg?ci89x7#hameticon') format('svg');
+  @if $is-epub{
+    src: url('../fonts/hameticon.woff') format('woff');
+  } @else{
+    src:url('../fonts/hameticon.eot?#{$hash}');
+    src:url('../fonts/hameticon.eot?##{$hash}') format('embedded-opentype'),
+    url('../fonts/hameticon.woff?#{$hash}') format('woff'),
+    url('../fonts/hameticon.ttf?#{$hash}') format('truetype'),
+    url('../fonts/hameticon.svg?#{$hash}#hameticon') format('svg');
+  }
   font-weight: normal;
   font-style: normal;
 }

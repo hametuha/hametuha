@@ -75,6 +75,8 @@ class EPub extends RestTemplate
 	public function get_publish($series_id = 0){
 		$series = get_post($series_id);
 		try{
+			// Avoid time out
+			set_time_limit(0);
 			// Check capability
 			if( !$series || 'series' != $series->post_type || !current_user_can('edit_post', $series->ID) ){
 				throw new \Exception('あなたにはePubを取得する権利がありません。');
@@ -152,31 +154,32 @@ class EPub extends RestTemplate
 						break;
 				}
 				// Fix some html
-				$html = str_replace('&nbsp;', '&#38;', $h['html']);
-				$html = preg_replace('/srcset=\'[^\']*\'/', '', $html);
-				$dom = $factory->registerHTML($key, $html, $property);
+				$dom = $factory->registerHTML($key, $h['html'], $property);
 				$src = $key.'.xhtml';
 				if( !$dom ){
 					throw new \Exception('EPubの生成に失敗しました', 500);
 				}
+				// Copy local files
 				foreach([
 					'img' => 'src',
 					'link' => 'href',
 					'script' => 'src',
 				] as $tag => $attr){
 					foreach([
-						home_url('/'), home_url('/', 'http'), 'https://s.hametuha.info/', 'http://s.hametuha.info', 'http://hametuha.local/'
+						home_url('/', 'https'), home_url('/', 'http'), 'https://s.hametuha.info/', 'http://s.hametuha.info', 'http://hametuha.local/', 'https://s.hametuha.com', 'https://s.hametuha.com'
 					] as $url){
 						foreach( $factory->parser->extractAssets($dom, $tag, $attr, $url, ABSPATH) as $path ){
 							$factory->opf->addItem($path, '');
 							// If this is css, load all assets
 							if( false !== strpos($path, '.css') ){
 								$css_path = $factory->distributor->oebps.DIRECTORY_SEPARATOR.$path;
-
-								var_dump($css_path);
 							}
 						}
 					}
+				}
+				// Handle remote files
+				foreach( $factory->parser->pullRemoteAssets($dom) as $path ){
+					$factory->opf->addItem($path, '');
 				}
 				$factory->parser->saveDom($dom, $src);
 				// Assign properties
@@ -188,15 +191,22 @@ class EPub extends RestTemplate
 					$property[] = 'nav';
 				}
 				$factory->opf->addItem('Text/'.$src, $src, $property);
-				// Add Cover Image
-				if( has_post_thumbnail($series->ID) ){
-
-				}
 				// Create TOC
 				$factory->toc->addChild($h['label'], $src);
 			}
+			// Add Cover Image
+			if( has_post_thumbnail($series->ID) ){
+				$dir = wp_upload_dir();
+				$thumb = get_post_thumbnail_id($series->ID);
+				$src = wp_get_attachment_image_src($thumb, 'epub-cover');
+				$url = preg_replace('/(https?):\/\/(s\.)?/', '$1://', $src[0]);
+				$path = str_replace(home_url('/'), ABSPATH, $url);
+				if( file_exists($path) ){
+					$factory->addCover($path);
+				}
+			}
 
-			$factory->opf->setIdentifier($series->guid);
+			$factory->opf->setIdentifier(get_permalink($series));
 			$factory->opf->setLang('ja');
 			$factory->opf->setTitle(get_the_title($series), 'main-title');
 			if( $subtitle = get_post_meta($series->ID, 'subtitle', true) ){
@@ -208,9 +218,7 @@ class EPub extends RestTemplate
 			$factory->container->putXML();
 			$factory->compile(ABSPATH.'wp-content/epub/'.$series->post_name.'.epub');
 
-			exit;
-
-			throw new \Exception('あなたはバカです。');
+			throw new \Exception('ePubの出力が終わりました。');
 		}catch (\Exception $e){
 			// Show message with alert
 			$message = esc_js($e->getMessage());
