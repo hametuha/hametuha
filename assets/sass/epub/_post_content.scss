@@ -6,26 +6,61 @@
   text-align: justify;
   text-justify: inter-ideograph;
 
-  // Tate-Chu-Yoko
-  .tcy{
-    line-height: 1;
+  strong{
+    font-family: sans-serif;
+    font-weight: bold;
   }
 
   // Paragraph
   p{
     margin: 0;
+    text-indent: 1em;
+    &.no-indent{
+      text-indent: 0;
+    }
   }
 
-  p.indent{
-    text-indent: 1em;
+  .text{
+    &-center{
+      text-align: center;
+    }
+    &-right{
+      text-align: right;
+    }
+    &-left{
+      text-align: left;
+    }
+  }
+
+  // Divider
+  hr{
+    $border: 6px double #ddd;
+    -moz-margin-before: 2em;
+    -webkit-margin-before: 2em;
+    -moz-margin-after: 2em;
+    -webkit-margin-after: 2em;
+    border: none;
+    border-top: $border;
+    .rtl &{
+      width: 0;
+      height: 100%;
+      border-top: none;
+      border-right: $border;
+    }
   }
 
   // Blockquote
   blockquote{
-    color: #444;
+    color: #666;
+    margin: 0;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-padding-start: 2em;
+    -moz-padding-start: 2em;
     cite{
       display: block;
       text-align: right;
+      font-style: normal;
     }
   }
 
@@ -34,7 +69,13 @@
   }
 
   table{
-    border-collapse: collapse;;
+    border-collapse: collapse;
+    .rtl &{
+      height: 100%;
+    }
+    .ltr &{
+      width: 100%;
+    }
     th, td{
       border: 1px solid #ddd;
       padding: 1em;
@@ -69,13 +110,23 @@
   .aligncenter{
     float: none;
   }
-}
-
-
-
-// 縦書きの場合
-.rtl{
-  .content--script{
+  .wp-caption-text{
+    color: #888;
+    font-size: 0.85em;
+  }
+  .ltr &{
+    padding-bottom: 2em;
+    .wp-caption, img{
+      max-width: 100%;
+    }
+    .alignleft, .alignright{
+      max-width: 50%;
+    }
+  }
+  .rtl &{
+    .wp-caption, img{
+      max-height: 100%;
+    }
     .alignleft, .alignright{
       max-height: 50%;
     }
@@ -89,25 +140,41 @@
       margin-bottom: 0;
     }
   }
-  pre{
-    -webkit-writing-mode: horizontal-tb;
-  }
-  q{
-    &:before{
-      content: "";
+
+}
+
+
+
+// 縦書きの場合
+.rtl{
+  .content--script{
+
+    pre{
+      //    -webkit-writing-mode: horizontal-tb;
     }
-    &:after{
-      content: "";
+    q{
+      &:before{
+        content: "";
+      }
+      &:after{
+        content: "";
+      }
+    }
+    sup{
+      top: 0;
+      right: -0.5em;
+    }
+    sub{
+      bottom: 0;
+      left: -0.25em;
+    }
+
+    .wp-caption{
+      -webkit-writing-mode: horizontal-tb;
+      text-align: center;
     }
   }
-  sup{
-    top: 0;
-    right: -0.5em;
-  }
-  sub{
-    bottom: 0;
-    left: -0.25em;
-  }
+
 }
 
 // 横書きの場合

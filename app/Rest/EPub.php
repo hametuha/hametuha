@@ -48,7 +48,7 @@ class EPub extends RestTemplate
 		$post = get_post($series_id);
 
 		if( 'series' != $post->post_type || !current_user_can('edit_post', $post->ID)){
-			throw new \Exception('あなたにはプレビューする権利がありません。');
+			throw new \Exception('あなたにはプレビューする権利がありません。', 403);
 		}
 
 		$id = 'preview';
@@ -79,7 +79,7 @@ class EPub extends RestTemplate
 			set_time_limit(0);
 			// Check capability
 			if( !$series || 'series' != $series->post_type || !current_user_can('edit_post', $series->ID) ){
-				throw new \Exception('あなたにはePubを取得する権利がありません。');
+				throw new \Exception('あなたにはePubを取得する権利がありません。', 403);
 			}
 			// Check ePub is published
 			$factory = $this->factory($series->ID);
@@ -138,7 +138,7 @@ class EPub extends RestTemplate
 			foreach( $html as $key => $h ){
 				$factory->toc->addChild($h['label'], $key.'.xhtml');
 			}
-			$html['toc']['html'] = $factory->toc->getHTML();
+			$html['toc']['html'] = $this->get_content($series->ID, 'toc', $direction);
 			// Create content
 			foreach( $html as $key => $h ){
 				$property = [];
@@ -257,6 +257,7 @@ HTML;
 			add_filter('body_class', [$this, 'body_class']);
 		}
 		remove_action('epub_body_attr', [$this, 'epub_attr']);
+		$post->post_content = $this->page_break($post->post_content);
 		setup_postdata($post);
 		$this->set_data(get_series_authors($post), 'authors');
 		$this->set_data($post, 'post');
@@ -282,17 +283,19 @@ HTML;
 				break;
 			case 'toc':
 				$this->title = '目次';
-				$this->factory($id)->toc->init($id, '目次');
-				foreach( get_posts([
-					'post_type' => 'post',
-					'post_parent' => $post->ID,
-					'posts_per_page' => -1,
-					'orderby' => [
-						'menu_order' => 'DESC',
-						'post_date' => 'ASC',
-					]
-				]) as $p ){
-					$this->factory($id)->toc->addChild($p->post_title, get_permalink($p));
+				if( !$this->factory($id)->toc->length() ){
+					foreach( get_posts([
+						'post_parent' => $post->ID,
+						'post_type' => 'post',
+						'post_status' => 'publish',
+						'posts_per_page' => -1,
+						'orderby' => [
+							'date' => 'ASC',
+							'ID' => 'ASC',
+						]
+					]) as $post){
+						$this->factory($id)->toc->addChild(get_the_title($post), get_permalink($post));
+					}
 				}
 				$this->set_data($this->factory($id)->toc->getNavHTML(), 'toc');
 				break;
@@ -304,8 +307,10 @@ HTML;
 				break;
 		}
 		ob_start();
+		add_filter('the_content', [$this->factory($id)->parser, 'format'], 99999);
 		$this->load_template("templates/epub/{$template}");
 		$content = ob_get_contents();
+		remove_filter('the_content', [$this->factory($id)->parser, 'format'], 99999);
 		ob_end_clean();
 		return $content;
 	}
@@ -338,10 +343,21 @@ HTML;
 	}
 
 	/**
+	 * Convert page break
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	public function page_break($content){
+		return str_replace('<!--nextpage-->', '<div class="pagebreak"></div>', $content);
+	}
+
+	/**
 	 * Add epub:type to body
 	 */
 	public function epub_attr(){
-		echo' epub:type="cover"';
+		echo ' epub:type="cover"';
 	}
 
 }

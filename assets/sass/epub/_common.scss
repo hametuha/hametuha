@@ -1,7 +1,49 @@
 $link-color: #588cbc;
 $active-color: #ca4944;
+$thic-border: 10px solid #444;
 
+//
+// Typography
+//
+// -----------------------------------
+//
+%serif{
+  font-family: YuMincho, '游明朝', serif;
+}
+%sans{
+  font-family : YuGothic, '游ゴシック', sans-serif;
+}
+
+body{
+  @extend %sans;
+}
+
+//
+// Writing Mode
+//
+// -----------------------------------
+//
+// 縦書き
+.rtl{
+  -webkit-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  // 縦中横
+  .tcy{
+    -webkit-text-combine:horizontal;
+    text-combine: horizontal;
+  }
+}
+// 圏点
+.text-emphasis{
+  text-emphasis: dot filled;
+}
+
+
+
+//
 // Link
+// ----------------
+//
 a{
   @include transition(
           background-color 0.5s ease-in-out 0,
@@ -20,27 +62,28 @@ a{
     color: $active-color;
     text-decoration: none;
   }
+  .rtl &{
+    &:link, &:visited{
+      text-decoration: overline;
+    }
+    &:hover{
+      text-decoration: overline;
+    }
+    &:active{
+      text-decoration: none;
+    }
+  }
 }
 
-// Font
-%serif{
-  font-family: YuMincho, '游明朝', serif;
-}
-%sans{
-  font-family : YuGothic, '游ゴシック', sans-serif;
-}
 
 
-// Border
-$thic-border: 10px solid #444;
 
-
-body{
-  @extend %sans;
-}
-
+//
 // Header
+// ----------------
+//
 .header {
+
   .title {
     small {
       display: block;
@@ -52,36 +95,21 @@ body{
     text-align: right;
     color: #888;
   }
-}
 
-// content
-.rtl{
-  .content{
-    padding-left: 2em;
+  .ltr &{
+    .title{
+      padding: 1em 2em;
+      border-bottom: $thic-border;
+      small{
+        padding-top: 0.5em;
+      }
+    }
+    .meta{
+      padding: 0 2em;
+    }
   }
-}
 
-.ltr {
-  .content{
-    padding-bottom: 2em;
-  }
-}
-
-// Footer
-.footer{
-  color: #aaa;
-}
-
-// 縦書き
-.rtl{
-  -webkit-writing-mode: vertical-rl;
-  .tcy{
-    display: inline-block;
-    -webkit-writing-mode: horizontal-tb;
-    text-align: center;
-  }
-  // Header
-  .header{
+  .rtl &{
     .title{
       margin: 0 0.67em;
       padding: 2em 1em;
@@ -93,58 +121,69 @@ body{
     .meta{
       padding: 2em 0;
     }
-
   }
-
-  article{
-    margin: 2em 1em;
-  }
-
-  // Footer
-  .footer{
-    padding: 2em 1em;
-    border-right: $thic-border;
-    text-align: right;
-  }
-
 }
 
 
 
-// 横書き
-.ltr{
-
-  .header, .content, .footer{
-    max-width: $screen-desktop;
-    margin: 0 auto;
+//
+// Main Content
+// ----------------
+//
+article{
+  .rtl &{
+    margin: 2em 1em;
   }
 
-
-  // Header
-  .header{
-    .title{
-      padding: 1em 2em;
-      border-bottom: $thic-border;
-      small{
-        padding-top: 0.5em;
-      }
-    }
-    .meta{
-      padding: 0 2em;
-    }
-
+}
+.content{
+  .rtl &{
+    padding-left: 2em;
   }
+  .ltr &{
+  padding-bottom: 2em;
+  }
+}
+// 改ページ
+.pagebreak{
+  page-break-after: always;
+}
 
-  // Footer
-  .footer{
+
+//
+// Footer
+// ----------------
+//
+.footer{
+  color: #aaa;
+  .ltr &{
     padding: 1em 2em;
     border-top: $thic-border;
     text-align: center;
   }
+  .rtl &{
+    padding: 2em 1em;
+    border-right: $thic-border;
+    text-align: right;
+  }
+}
 
+
+
+
+
+
+//
+// 横書き
+// ----------------
+//
+.ltr{
+  .header, .content, .footer{
+    max-width: $screen-desktop;
+    margin: 0 auto;
+  }
   // Table
   table{
     width: 100%;
   }
-
 }
