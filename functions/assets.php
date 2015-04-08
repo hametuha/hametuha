@@ -8,18 +8,12 @@
 
 
 
-//
-// 画像サイズ
-//
-// -------------------------------------
-//
-// 画像のサイズ（小さい）を追加
+
+//画像のサイズ（小さい）を追加
 add_image_size('pinky', 160, 160, true);
+
 // プロフィール写真を追加
 add_image_size('profile', 300, 300, true);
-// 表紙画像
-// @see http://takahashifumiki.com/web/design/2334/
-add_image_size('epub-cover', 1536, 2048, true);
 
 /**
  * 選択できる画像サイズを追加
@@ -61,9 +55,6 @@ add_action('init', function(){
         'icon' => get_template_directory_uri().'/assets/img/facebook-logo.png',
     ]);
 
-	// 投稿
-	wp_register_script('hametuha-edit', get_template_directory_uri().'/assets/js/admin/editor'.hametuha_min_ext(), ['jquery'], hametuha_version(), true);
-
     // ログイン名変更用JS
     wp_register_script('hametuha-login-changer', get_template_directory_uri().'/assets/js/components/login-change-helper'.hametuha_min_ext(), ['jquery-form', 'hametuha-common']);
 
@@ -81,6 +72,9 @@ add_action('init', function(){
 
 	// プロフィール変更用JS
 	wp_register_script('hametuha-user-edit', get_template_directory_uri().'/assets/js/components/edit-profile-helper'.hametuha_min_ext(), ['jquery-effects-highlight']);
+
+	// 投稿編集画面
+	wp_register_script('hametuha-edit-form', get_template_directory_uri().'/assets/js/admin/author'.hametuha_min_ext(), ['jquery-cookie'], hametuha_version(), true);
 
 });
 
@@ -100,7 +94,7 @@ add_action('wp_enqueue_scripts', function(){
 		wp_dequeue_style('admin-bar');
 	}
 	//投稿を読み込んでいるページ
-	if(is_singular('post')){
+	if( is_singular('post') ){
 		wp_dequeue_style('contact-form-7');
 		wp_dequeue_style('wp-tmkm-amazon');
 	}
@@ -146,6 +140,7 @@ add_action('wp_enqueue_scripts', function(){
  * 管理画面でアセットを読み込む
  */
 add_action("admin_enqueue_scripts", function( $page = '' ){
+
 	$screen = get_current_screen();
 
     wp_enqueue_style('hametuha-admin');
@@ -156,16 +151,14 @@ add_action("admin_enqueue_scripts", function( $page = '' ){
 
 	// 編集画面
 	if( 'post' == $screen->base ){
-		wp_enqueue_script('hametuha-edit');
+		wp_enqueue_script('hametuha-edit-form');
 	}
-
 
 	// プロフィール編集画面
 	if( 'user-edit.php' == $page ){
 		wp_enqueue_media();
 		wp_enqueue_script('hametuha-user-edit');
 	}
-
 }, 200);
 
 

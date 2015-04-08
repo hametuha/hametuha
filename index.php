@@ -85,43 +85,48 @@
                 }
                 if( $query->have_posts() ):
 					/* get_template_part('parts/sort-order') */
-            ?>
+	            ?>
 
-            <ol class="archive-container media-list">
-            <?php
-                $counter = 0;
-                while( $query->have_posts() ){
-                    $query->the_post();
-                    $counter++;
-                    $even = ($counter % 2 == 0) ? ' even' : ' odd';
-                    if( is_ranking() ){
-                        get_template_part('parts/loop', 'ranking');
-                    }else{
-                        get_template_part('parts/loop', get_post_type());
-                    }
-                }
-            ?>
-            </ol>
+	            <ol class="archive-container media-list">
+	            <?php
+	                $counter = 0;
+	                while( $query->have_posts() ){
+	                    $query->the_post();
+	                    $counter++;
+	                    $even = ($counter % 2 == 0) ? ' even' : ' odd';
+	                    if( is_ranking() ){
+	                        get_template_part('parts/loop', 'ranking');
+	                    }else{
+	                        get_template_part('parts/loop', get_post_type());
+	                    }
+	                }
+	            ?>
+	            </ol>
 
-            <?php if( is_tax('topic') ): ?>
+	            <?php if( is_tax('topic') ): ?>
 
-                <?php get_template_part('parts/nav', 'thread') ?>
+	                <?php get_template_part('parts/nav', 'thread') ?>
 
-            <?php endif; ?>
+	            <?php endif; ?>
 
-            <?php wp_pagenavi(array('query' => $query)); ?>
+                <?php if( get_query_var('reviewed_as') ): ?>
+	                <?php get_template_part('parts/nav', 'review') ?>
+                <?php endif; ?>
+
+	            <?php wp_pagenavi(['query' => $query]); ?>
+
 
             <?php else: ?>
 
-            <div class="nocontents-found alert alert-warning">
-                <p>該当するコンテンツがありませんでした。以下の方法をお試しください。</p>
-                <ul>
-                    <li>検索ワードを変えてみる</li>
-                    <li>カテゴリー、タグから探す</li>
-                    <li>検索ワードの数を減らして、絞り込み検索と組み合せる</li>
-                </ul>
-                <p>改善要望などありましたら、<a class="alert-link" href="<?php echo home_url('/inquiry/'); ?>">お問い合わせ</a>からお願いいたします。</p>
-            </div>
+	            <div class="nocontents-found alert alert-warning">
+	                <p>該当するコンテンツがありませんでした。以下の方法をお試しください。</p>
+	                <ul>
+	                    <li>検索ワードを変えてみる</li>
+	                    <li>カテゴリー、タグから探す</li>
+	                    <li>検索ワードの数を減らして、絞り込み検索と組み合せる</li>
+	                </ul>
+	                <p>改善要望などありましたら、<a class="alert-link" href="<?php echo home_url('/inquiry/'); ?>">お問い合わせ</a>からお願いいたします。</p>
+	            </div>
 
             <?php endif; wp_reset_postdata(); ?>
 

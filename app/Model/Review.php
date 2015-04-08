@@ -220,10 +220,9 @@ SQL;
                     }
                 }
                 $score = min($score * 20, 100);
-                /* TODO: 投稿数が少な過ぎてたぶん意味ないので、平均は取らない
-                $avg = get_review_average($val[$i]);
-                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
-                 */
+                // TODO: 投稿数が少な過ぎてたぶん意味ないので、平均は取らない
+//                $avg = get_review_average($val[$i]);
+//                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
                 $data['datasets'][$i]['data'][] = $score;
                 $data['datasets'][$i]['label_set'][] = $val[$i];
             }
@@ -262,5 +261,4 @@ SQL;
         }
         return $this->result();
     }
-
 }

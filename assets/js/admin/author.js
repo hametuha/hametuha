@@ -3,6 +3,4 @@
  */
 jQuery(document).ready(function($){
 
-
-
 });

@@ -47,7 +47,7 @@ class Profile extends PostHelper
      */
     public function registered_date($format = true){
         $date = get_the_author_meta('user_registered', $this->post->post_author);
-        if($format){
+        if( $format ){
             return mysql2date(get_option('date_format'), $date);
         }else{
             return $date;
@@ -71,8 +71,9 @@ class Profile extends PostHelper
                 return get_the_author_meta($name, $this->post->post_author);
                 break;
             case 'work_count':
-                return (int)$this->post->work_count;
-                break;
+	        case 'score':
+		        return (int)$this->post->{$name};
+		        break;
             case 'role':
                 return hametuha_user_role($this->post->post_author);
                 break;
