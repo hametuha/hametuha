@@ -1,12 +1,15 @@
 <?php
 /** @var WP_Post $series */
-/** @var bool $drop_title */
+/** @var bool $show_title */
 ?>
 <?php get_template_part('templates/epub/header') ?>
 
-<?php if( !$drop_title ): ?>
+<?php if( $show_title ): ?>
 <header class="header header--afterwords">
 	<h1 class="title"><?php the_title() ?></h1>
+	<?php if( $show_title > 1 ): ?>
+		<p class="header__author"><?php the_author() ?></p>
+	<?php endif; ?>
 </header>
 <?php endif; ?>
 

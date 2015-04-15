@@ -6,6 +6,7 @@ namespace Hametuha\MetaBoxes;
 use WPametu\UI\Admin\LeadMetaBox;
 use WPametu\UI\Field\Text;
 use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Radio;
 
 class SeriesEPubMetaBox extends LeadMetaBox
 {
@@ -43,13 +44,7 @@ class SeriesEPubMetaBox extends LeadMetaBox
 			'label' => '序文',
 			'required' => false,
 			'rows' => 10,
-			'description' => '入力した場合、序文としてePubの先頭に挿入されます。',
-		],
-		'asin' => [
-			'class' => Text::class,
-			'label' => 'ASIN',
-			'required' => false,
-			'description' => '任意（Kindle Direct Publishingなどで発行すると発行されます）。破滅派編集部が設定します。',
+			'description' => '入力した場合、序文としてePubの先頭に挿入されます。HTMLを使用することができます。',
 		],
 	];
 

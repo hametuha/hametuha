@@ -3,7 +3,7 @@
  * シリーズに関する処理／関数群
  */
 
-
+use Hametuha\Model\Series;
 
 /**
  * シリーズに属しているか否かを返す。属している場合は親ID
@@ -40,22 +40,9 @@ function the_series($pre = '', $after = '', $post = null){
  * @return array
  */
 function get_series_authors($post = null){
-	global $wpdb;
 	$post = get_post($post);
-	$query = <<<SQL
-		SELECT u.* FROM {$wpdb->users} AS u
-		LEFT JOIN {$wpdb->posts} AS p
-		ON u.ID = p.post_author
-		WHERE p.post_parent = %d
-		GROUP BY u.ID
-SQL;
-	$users = [];
-	foreach( $wpdb->get_results($wpdb->prepare($query, $post->ID)) as $row ){
-		$users[] = new WP_User($row);
-	}
-	return $users;
+	return Series::get_instance()->get_authors($post->ID);
 }
-
 
 /**
  * リダイレクトされるのを防ぐ
@@ -71,138 +58,85 @@ add_filter('redirect_canonical', function($redirect_url){
     }
 } );
 
-/**
- * 序文・あとがきの表示を出す
- */
-add_action('edit_form_after_title', function(WP_Post $post){
-	if( 'series' == $post->post_type ){
 
-		echo <<<HTML
-<h2><i class="dashicons dashicons-edit"></i> あとがき</h2>
-<p class="description">
-ePubにした際のあとがきとして表示されます。<strong>空白の場合、あとがきは表示されません。</strong>
-</p>
-HTML;
-	}
-}, 1000);
+
 
 /**
- * エディターの設定を変更する
+ * シリーズをみられないようにする
  *
- * @param array $settings
- * @param string $editor_id
+ * @param string $content
+ *
+ * @return string
  */
-add_filter('wp_editor_settings', function( array $settings, $editor_id ){
-	$screen = get_current_screen();
-	if( 'series' == $screen->post_type ){
-		$settings['media_buttons'] = false;
+function hametuha_series_hide($content){
+	// DOMの一部を切り出す
+	$dom = \WPametu\Utility\Formatter::get_dom($content);
+	$body = $dom->getElementsByTagName('body')->item(0);
+	$dom_count = $body->childNodes->length;
+	$limit = floor( $dom_count / 4 );
+	for( $i = $dom_count - 1; $i >= 0; $i-- ){
+		if( $i > $limit ){
+			$body->removeChild($body->childNodes->item($i));
+		}
 	}
-	return $settings;
+	$content = \WPametu\Utility\Formatter::to_string($dom);
+	$content .= "\n<div class=\"content-hide-cover\"></div>";
+	remove_filter('the_content', 'hametuha_series_hide');
+	return $content;
+}
+
+/**
+ * カラムを追加
+ */
+add_filter('manage_posts_columns', function($columns, $post_type){
+	if( 'series' == $post_type ){
+		$new_columns = [];
+		foreach( $columns as $key => $val ){
+			if( 'author' == $key){
+				$val = '編集者';
+			}
+			$new_columns[$key] = $val;
+			if( 'title' == $key ){
+				$new_columns['count'] = '作品数';
+				$new_columns['sales_status'] = '販売状況';
+			}
+		}
+		$columns = $new_columns;
+	}
+	return $columns;
 }, 10, 2);
 
-/**
- * ePub設定のメタボックスを追加
- */
-add_action('add_meta_boxes', function($post_type){
-	if( 'series' == $post_type ){
 
-		//
-		// シリーズ詳細情報
-		//
-		add_meta_box('series-epub', 'シリーズ詳細', function( WP_Post $post){
-			wp_nonce_field('edit_epub', '_seriesepubnonce');
-			$_old_post = $post;
-			$users = get_series_authors($post);
-			$editor = new WP_User($post->post_author);
-			$series_query = new WP_Query(   [
-				'post_type' => 'post',
-				'post_parent' => $post->ID,
-				'posts_per_page' => -1,
-				'orderby' => [
-					'menu_order' => 'DESC',
-					'post_date' => 'ASC',
-				]
-			]);
-			if( $series_query->have_posts() ){
-				?>
-				<p class="description">現在登録されているシリーズです。投稿は日付の遅い順に並びます。</p>
-				<ol>
-					<?php while( $series_query->have_posts() ): $series_query->the_post(); ?>
-						<li><a href="<?php the_permalink() ?>" target="epub-preview"><?php the_title() ?></a></li>
-					<?php endwhile; setup_postdata($_old_post); wp_reset_postdata(); ?>
-				</ol>
-				<hr />
-				<p>
-					<strong>著者　：</strong> <?= implode(', ', array_map(function( WP_User $user ){
-						return sprintf('<a href="%s">%s</a>', esc_url(get_author_posts_url($user->ID, $user->user_nicename)), $user->display_name);
-					}, $users)) ?><br />
-					<strong>編集者：</strong> <?= esc_html($editor->display_name) ?>
-				</p>
-				<?php
+add_action('manage_series_posts_custom_column', function($column, $post_id){
+	switch( $column ){
+		case 'count':
+			$total = Series::get_instance()->get_total($post_id);
+			if( $total ){
+				printf('%s作品', number_format($total));
 			}else{
-				echo <<<HTML
-				<p class="description">まだ投稿が追加されていません。</p>
-HTML;
+				echo '<span style="color: lightgrey;">登録なし</span>';
 			}
-		}, 'series', 'normal', 'high');
-
-
-		//
-		// ePub用プレビューリンク
-		//
-		add_meta_box('series-epub-preview', 'ePubプレビュー', function( WP_Post $post ){
-			?>
-			<ol>
-				<li><a href="<?= home_url("epub/preview/cover/{$post->ID}", 'https') ?>" target="epub-preview">表紙</a></li>
-				<li><a href="<?= home_url("epub/preview/toc/{$post->ID}", 'https') ?>" target="epub-preview">目次</a></li>
-				<li><a href="<?= home_url("epub/preview/preface/{$post->ID}", 'https') ?>" target="epub-preview">序文</a></li>
-				<li><a href="<?= home_url("epub/preview/afterword/{$post->ID}", 'https') ?>" target="epub-preview">あとがき</a></li>
-				<li><a href="<?= home_url("epub/preview/creators/{$post->ID}", 'https') ?>" target="epub-preview">著者一覧</a></li>
-				<li><a href="<?= home_url("epub/preview/colophon/{$post->ID}", 'https') ?>" target="epub-preview">奥付</a></li>
-			</ol>
-			<hr />
-			<?php
-				$sub_query = new WP_Query([
-					'post_type' => 'post',
-					'post_parent' => $post->ID,
-					'posts_per_page' => -1,
-					'orderby' => [
-						'menu_order' => 'DESC',
-						'post_date' => 'ASC',
-					]
-				]);
-				if( $sub_query->have_posts() ){
-					$_old_post = $post;
-					$endpoint = home_url("epub/preview/content/{$post->ID}/", 'https');
-					echo <<<HTML
-					<select id="epub-previewer" data-endpoint="{$endpoint}">
-						<option value="">本文をプレビュー</option>
-HTML;
-					while( $sub_query->have_posts() ){
-						$sub_query->the_post();
-						?>
-						<option value="<?php the_ID() ?>"><?php the_title() ?></option>
-						<?php
-					}
-					echo <<<HTML
-					</select>
-HTML;
-					setup_postdata($_old_post);
-					$post = $_old_post;
-					$GLOBALS['post'] = $_old_post;
-					wp_reset_postdata();
-					?>
-					<div class="epub-publish-action">
-<!--						<a class="button-primary" target="epub-publisher" href="--><?//= home_url("epub/publish/{$post->ID}", 'https') ?><!--">書き出し</a>-->
-						<a class="button-primary" target="_blank" href="<?= home_url("epub/publish/{$post->ID}", 'https') ?>">書き出し</a>						<iframe name="epub-publisher" style="display: none"></iframe>
-					</div>
-					<?php
-				}
-			?>
-			<?php ?>
-			<?php
-		}, 'series', 'side', 'low');
+			break;
+		case 'sales_status':
+			$status = Series::get_instance()->get_status($post_id);
+			switch($status){
+				case 2:
+					$color = 'green';
+					break;
+				case 1:
+					$color = 'orange';
+					break;
+				default:
+					$color = 'lightgrey';
+					break;
+			}
+			printf("<span style='color: %s'>%s</span>", $color, Series::get_instance()->status_label[$status]);
+			if( $asin = Series::get_instance()->get_asin($post_id) ){
+				echo "<code>{$asin}</code>";
+			}
+			break;
+		default:
+			// Do nothing.
+			break;
 	}
-});
-
-
+}, 10, 2);

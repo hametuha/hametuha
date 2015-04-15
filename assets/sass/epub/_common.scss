@@ -35,7 +35,7 @@ body{
 }
 // 圏点
 .text-emphasis{
-  text-emphasis: dot filled;
+  text-emphasis: sesame filled;
 }
 
 
@@ -53,6 +53,7 @@ a{
   &:link, &:visited{
     color: $link-color;
     text-decoration: underline;
+
   }
   &:hover{
     color: lighten($link-color, 10);
@@ -122,6 +123,12 @@ a{
       padding: 2em 0;
     }
   }
+
+  &__author{
+    text-align: right;
+    font-size: 2em;
+    @include logical-property(0 1em 0 0);
+  }
 }
 
 
@@ -141,7 +148,7 @@ article{
     padding-left: 2em;
   }
   .ltr &{
-  padding-bottom: 2em;
+    padding-bottom: 2em;
   }
 }
 // 改ページ

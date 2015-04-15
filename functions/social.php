@@ -14,7 +14,7 @@ function hametuha_share($post = null){
     $hash_tag = rawurlencode('#破滅派');
     $data_title = esc_attr($title);
     foreach( [
-        ['facebook', '#', '4'],
+        ['facebook', $url, '4'],
         ['twitter', "https://twitter.com/home?status={$encoded_title}%20{$encoded_url}%20{$hash_tag}", '3'],
         ['googleplus', "https://plus.google.com/share?url={$encoded_url}", '4'],
         ['hatebu', "http://b.hatena.ne.jp/add?title={$encoded_title}&amp;url={$encoded_url}", ''],
@@ -52,13 +52,6 @@ EOS;
     }
 }
 
-/**
- * Facebook用のスクリプトを書き出す
- */
-function hametuha_fb_root(){
-	?>
-	<?php
-}
 
 
 
@@ -70,7 +63,7 @@ function hametuha_fb_root(){
  */
 function _hametuha_publish_tweet($new_status, $old_status, $post){
 	//はじめて公開にしたときだけ
-	if($new_status == 'publish' && function_exists('update_twitter_status')){
+	if( !WP_DEBUG && $new_status == 'publish' && function_exists('update_twitter_status') ){
 		switch($old_status){
 			case 'new':
 			case 'draft':

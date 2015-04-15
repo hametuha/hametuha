@@ -5,8 +5,14 @@ namespace Hametuha\MetaBoxes;
 
 use WPametu\UI\Admin\EditMetaBox;
 use WPametu\UI\Field\Radio;
+use WPametu\UI\Field\Text;
+use WPametu\UI\Field\Number;
 
-
+/**
+ * Meta box for ePub
+ *
+ * @package Hametuha\MetaBoxes
+ */
 class SeriesLayoutMetaBox extends EditMetaBox
 {
 	protected $post_types = ['series'];
@@ -29,15 +35,25 @@ class SeriesLayoutMetaBox extends EditMetaBox
 			],
 			'default' => 'vertical',
 		],
-		'downloadable' => [
+		'_show_title' => [
 			'class' => Radio::class,
-			'label' => 'ダウンロード設定',
-			'options' => [
-				0 => '不可（本人のみ）',
-				1 => '誰でも可能'
-			],
-			'default' => 0,
-		]
+		    'label' => '本文のタイトル',
+		    'options' => [
+			    2 => 'タイトルと筆名',
+			    1 => 'タイトルのみ表示',
+		        0 => '表示しない',
+		    ],
+		    'default' => 0,
+		    'description' => 'それぞれの作品のタイトルを表示するか否か。連載作品の場合、タイトルはなくてもよいかもしれません。',
+		],
+		'_visibility' => [
+			'class' => Number::class,
+		    'label' => '閲覧設定',
+		    'require' => true,
+		    'min' => 0,
+		    'default' => 0,
+		    'description' => '1以上の値に設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。',
+		],
 	];
 
 }

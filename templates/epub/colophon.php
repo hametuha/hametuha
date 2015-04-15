@@ -16,8 +16,17 @@
 </header>
 
 <article class="content content--colophon">
+
+	<p class="text-center">
+		<img src="<?= get_template_directory_uri() ?>/assets/img/hametuha-logo.png" alt="破滅派" width="150" height="75">
+	</p>
+
 	<table class="colophon">
 		<caption>書誌情報</caption>
+		<tr>
+			<th>書名</th>
+			<td><?php the_title() ?></td>
+		</tr>
 		<tr>
 			<th>初出</th>
 			<td>

@@ -1,5 +1,9 @@
 .content--script{
 
+  $text-base: #242424;
+
+  color: $text-base;
+
   // Basic Typography
   @extend %serif;
   line-height: 2;
@@ -9,6 +13,41 @@
   strong{
     font-family: sans-serif;
     font-weight: bold;
+  }
+
+  em{
+    font-style: normal;
+    font-family: sans-serif;
+  }
+
+  del, strike{
+    color: #999;
+  }
+
+  cite{
+
+  }
+
+  ins{
+    text-decoration: none;
+    color: lighten($text-base, 20);
+    &:before{
+      content: "〔";
+      color: lighten($text-base, 40);
+    }
+    &:after{
+      content: "〕";
+      color: lighten($text-base, 40);
+    }
+  }
+
+  big{
+    font-size: 4em;
+  }
+
+  address{
+    font-style: normal;
+    font-family: sans-serif;
   }
 
   // Paragraph
@@ -35,10 +74,7 @@
   // Divider
   hr{
     $border: 6px double #ddd;
-    -moz-margin-before: 2em;
-    -webkit-margin-before: 2em;
-    -moz-margin-after: 2em;
-    -webkit-margin-after: 2em;
+    @include logical-property(2em 0);
     border: none;
     border-top: $border;
     .rtl &{
@@ -49,20 +85,34 @@
     }
   }
 
+  dl{
+    dt{
+      @extend %sans;
+      @include logical-property(0 0 0 1em);
+    }
+    dd{
+      @include logical-property(0 0 0 2em);
+    }
+  }
+
   // Blockquote
   blockquote{
     color: #666;
     margin: 0;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-padding-start: 2em;
-    -moz-padding-start: 2em;
+    @include logical-property(1em 0);
+    @include logical-property(0 0 0 2em, false);
     cite{
       display: block;
       text-align: right;
       font-style: normal;
     }
   }
+
+  pre {
+    line-height: 1.2;
+    overflow: auto;
+  }
+
 
   del, strike{
     color: #aaa;

@@ -119,7 +119,7 @@ class UserTag extends RestJSON
      */
     protected function lazy_scripts(){
         // タグのJS
-        wp_enqueue_script('hametuha-user-tag', $this->get_theme_uri().'/assets/js/components/user-tag'.hametuha_min_ext(), ['backbone', 'jquery-ui-autocomplete'], hametuha_version(), true);
+        wp_enqueue_script('hametuha-user-tag', $this->get_theme_uri().'/assets/js/dist/components/user-tag.js', ['backbone', 'jquery-ui-autocomplete'], hametuha_version(), true);
         wp_localize_script('hametuha-user-tag', 'HametuhaUserTag', [
             'tagSearch' => $this->url('search'),
             'tagAdd' => $this->url('add/'.get_the_ID()),

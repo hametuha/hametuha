@@ -24,11 +24,11 @@ add_action('init', function(){
 		'label' => '作品集',
 		'description' => '著者によってまとめられた作品集です。特定のテーマに基づいた連作や長編小説などがあります。近々ePubなどの形式に書き出せるようになる予定（2012年9月現在）です。',
 		'public' => true,
-		'menu_position' => 25,
+		'menu_position' => 5,
+		'menu_icon' => 'dashicons-book-alt',
 		'supports' => array('title', 'editor', 'author', 'slug', 'thumbnail', 'excerpt'),
 		'has_archive' => true,
 		'capability_type' => 'post',
-		'show_in_menu' => 'edit.php',
 		'rewrite' => array('slug' => $series)
 	);
 	register_post_type($series, $args);
@@ -253,41 +253,6 @@ function is_recommended($post = null){
 	/** @var Hametuha\Model\Lists $lists */
 	$lists = Hametuha\Model\Lists::get_instance();
 	return $lists->is_recommended($post->ID);
-}
-
-/**
- * 次のシリーズ作品へのリンクを返す
- *
- * @global wpdb $wpdb
- * @global object $post
- * @param string $before
- * @param string $after
- * @param object $post
- * @param boolean $next falseにすると前の作品
- */
-function next_series_link($before = '<li>', $after = '</li>', $post = null, $next = true){
-	global $wpdb;
-    $post = get_post($post);
-
-	$sql = "SELECT ID, post_title FROM {$wpdb->posts} WHERE post_type = 'post' AND post_status = 'publish' AND post_parent = %d";
-	$sql .= ($next) ? " AND post_date > %s ORDER BY post_date ASC"
-			: " AND post_date < %s ORDER BY post_date DESC";
-	$post = $wpdb->get_row($wpdb->prepare($sql, $post->post_parent, $post->post_date));
-    if( $post ){
-	    $label = $next ? apply_filters('the_title', $post->post_title).' &raquo;'
-	                   : '&laquo; '.apply_filters('the_title', $post->post_title);
-        printf('%s<a href="%s">%s</a>%s', $before, get_permalink($post), $label, $after);
-    }
-}
-
-/**
- * 前の投稿へのリンクを出力する
- * @param string $before
- * @param string $after
- * @param object $post 
- */
-function prev_series_link($before = '<li>', $after = '</li>', $post = null){
-	next_series_link($before, $after, $post, false);
 }
 
 

@@ -28,7 +28,7 @@
 			<?= wpautop($author->user_description) ?>
 		</div>
 		<dl class="contact clearfix">
-			<dt><i class="icon-globe"></i> Webサイト</dt>
+			<dt>Webサイト</dt>
 			<dd><?php
 				if( $author->user_url ){
 					$site_name = get_user_meta($author->ID, 'aim', true) ?: $author->user_url;

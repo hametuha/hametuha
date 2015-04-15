@@ -4,16 +4,21 @@ namespace Hametuha\Rest;
 
 
 use Hametuha\HamePub\Factory;
+use Hametuha\Model\Series;
 use WPametu\API\Rest\RestTemplate;
-
 
 /**
  * EPub generator
  *
  * @package Hametuha\Rest
+ * @property-read Series $series
  */
-class EPub extends RestTemplate
-{
+class EPub extends RestTemplate {
+
+	protected $models = [
+		'series' => Series::class,
+	];
+
 	/**
 	 * @var string
 	 */
@@ -25,7 +30,7 @@ class EPub extends RestTemplate
 	/**
 	 * @var array
 	 */
-	protected $additional_class = [];
+	protected $additional_class = [ ];
 
 	/**
 	 * @var bool
@@ -35,7 +40,7 @@ class EPub extends RestTemplate
 	/**
 	 * @var array
 	 */
-	protected $factories = [];
+	protected $factories = [ ];
 
 	/**
 	 * @param string $template
@@ -43,25 +48,26 @@ class EPub extends RestTemplate
 	 *
 	 * @throws \Exception
 	 */
-	public function get_preview($template, $series_id = 0){
+	public function get_preview( $template, $series_id = 0 ) {
 		global $post;
-		$post = get_post($series_id);
+		$post = get_post( $series_id );
 
-		if( 'series' != $post->post_type || !current_user_can('edit_post', $post->ID)){
-			throw new \Exception('あなたにはプレビューする権利がありません。', 403);
+		if ( 'series' != $post->post_type || ! current_user_can( 'edit_post', $post->ID ) ) {
+			throw new \Exception( 'あなたにはプレビューする権利がありません。', 403 );
 		}
 
-		$id = 'preview';
-		$dir = isset($_GET['direction']) && 'rtl' == $_GET['direction'] ? 'rtl' : 'ltr';
+		$id  = 'preview';
+		$dir = 'rtl' == $this->input->get( 'direction' ) ? 'rtl' : 'ltr';
 
 		nocache_headers();
-		if( 'content' == $template ){
-			if( isset($_GET['post_id']) ){
-				$post = get_post($_GET['post_id']);
+		if ( 'content' == $template ) {
+			$post = get_post( $this->input->get('post_id') );
+			if( !$post || !current_user_can('edit_post', $post->ID) ){
+				throw new \Exception( 'あなたにはプレビューする権利がありません。', 403 );
 			}
-			echo $this->get_content($id, $post, $template, $dir);
-		}else{
-			echo $this->get_content($id, $post, $template, $dir);
+			echo $this->get_content( $id, $post, $template, $dir );
+		} else {
+			echo $this->get_content( $id, $post, $template, $dir );
 		}
 	}
 
@@ -72,77 +78,81 @@ class EPub extends RestTemplate
 	 *
 	 * @throws \Exception
 	 */
-	public function get_publish($series_id = 0){
-		$series = get_post($series_id);
-		try{
+	public function get_publish( $series_id = 0 ) {
+		$series = get_post( $series_id );
+		try {
 			// Avoid time out
-			set_time_limit(0);
+			set_time_limit( 0 );
 			// Check capability
-			if( !$series || 'series' != $series->post_type || !current_user_can('edit_post', $series->ID) ){
-				throw new \Exception('あなたにはePubを取得する権利がありません。', 403);
+			if ( ! $series || 'series' != $series->post_type || ! current_user_can( 'edit_others_posts') ) {
+				throw new \Exception( 'あなたにはePubを取得する権利がありません。', 403 );
 			}
 			// Check ePub is published
-			$factory = $this->factory($series->ID);
+			$factory = $this->factory( $series->ID );
 			// Set direction
-			$direction = 'vertical' == get_post_meta($series->ID, 'orientation', true) ? 'rtl' : 'ltr';
+			$direction = 'vertical' == $this->series->get_direction( $series->ID );
 			// Get HTMLs
-			$html = [];
+			$html          = [ ];
 			$html['cover'] = [
 				'label' => '表紙',
-				'html' => $this->get_content($series_id, $series, 'cover', $direction)
+				'html'  => $this->get_content( $series_id, $series, 'cover', $direction )
 			];
-			$html['toc'] = [
+			$html['toc']   = [
 				'label' => '目次',
-				'html' => '',
+				'html'  => '',
 			];
 			// Add preface if exists
-			if( $preface = get_post_meta($series_id, '_preface', true) ){
+			if ( $preface = $this->series->get_subtitle($series->ID) ) {
 				$html['preface'] = [
 					'label' => '序文',
-					'html' => $this->get_content($series_id, $series, 'preface', $direction)
+					'html'  => $this->get_content( $series_id, $series, 'preface', $direction )
 				];
 			}
 			// Add children
-			foreach( get_posts([
-				'post_type' => 'post',
-				'post_parent' => $series->ID,
-				'posts_per_page' => -1,
-				'orderby' => [
-					'menu_order' => 'DESC',
-					'post_date' => 'ASC',
-				]
-			]) as $p ){
-				$html['post-'.$p->ID] = [
-					'label' => get_the_title($p),
-					'html' => $this->get_content($series_id, $p, 'content', $direction),
+			foreach (
+				get_posts( [
+					'post_type'      => 'post',
+					'post_parent'    => $series->ID,
+					'posts_per_page' => - 1,
+					'orderby'        => [
+						'menu_order' => 'DESC',
+						'post_date'  => 'ASC',
+					]
+				] ) as $p
+			) {
+				$html[ 'post-' . $p->ID ] = [
+					'label' => get_the_title( $p ),
+					'html'  => $this->get_content( $series_id, $p, 'content', $direction ),
 				];
 			}
 			// Add afterwords
-			if( !empty($series->post_content) ){
+			if ( ! empty( $series->post_content ) ) {
 				$html['afterwords'] = [
 					'label' => 'あとがき',
-					'html'  => $this->get_content($series_id, $series, 'afterword', $direction),
+					'html'  => $this->get_content( $series_id, $series, 'afterword', $direction ),
 				];
 			}
 			// Authors, colophon
-			foreach([
-				'creators' => '著者一覧',
-				'colophon' => '書誌情報',
-			] as $key => $title){
-				$html[$key] = [
+			foreach (
+				[
+					'creators' => '著者一覧',
+					'colophon' => '書誌情報',
+				] as $key => $title
+			) {
+				$html[ $key ] = [
 					'label' => $title,
-					'html'  => $this->get_content($series_id, $series, $key, 'ltr'),
+					'html'  => $this->get_content( $series_id, $series, $key, 'ltr' ),
 				];
 			}
 			// Create Toc
-			foreach( $html as $key => $h ){
-				$factory->toc->addChild($h['label'], $key.'.xhtml');
+			foreach ( $html as $key => $h ) {
+				$factory->toc->addChild( $h['label'], $key . '.xhtml' );
 			}
-			$html['toc']['html'] = $this->get_content($series->ID, 'toc', $direction);
+			$html['toc']['html'] = $this->get_content( $series->ID, $series, 'toc', $direction );
 			// Create content
-			foreach( $html as $key => $h ){
-				$property = [];
-				switch( $key ){
+			foreach ( $html as $key => $h ) {
+				$property = [ ];
+				switch ( $key ) {
 					case 'toc':
 						$property[] = 'nav';
 						break;
@@ -154,74 +164,72 @@ class EPub extends RestTemplate
 						break;
 				}
 				// Fix some html
-				$dom = $factory->registerHTML($key, $h['html'], $property);
-				$src = $key.'.xhtml';
-				if( !$dom ){
-					throw new \Exception('EPubの生成に失敗しました', 500);
+				$dom = $factory->registerHTML( $key, $h['html'], $property );
+				$src = $key . '.xhtml';
+				if ( ! $dom ) {
+					throw new \Exception( 'EPubの生成に失敗しました', 500 );
 				}
 				// Copy local files
-				foreach([
-					'img' => 'src',
-					'link' => 'href',
-					'script' => 'src',
-				] as $tag => $attr){
-					foreach([
-						home_url('/', 'https'), home_url('/', 'http'), 'https://s.hametuha.info/', 'http://s.hametuha.info', 'http://hametuha.local/', 'https://s.hametuha.com', 'https://s.hametuha.com'
-					] as $url){
-						foreach( $factory->parser->extractAssets($dom, $tag, $attr, $url, ABSPATH) as $path ){
-							$factory->opf->addItem($path, '');
-							// If this is css, load all assets
-							if( false !== strpos($path, '.css') ){
-								$css_path = $factory->distributor->oebps.DIRECTORY_SEPARATOR.$path;
-							}
+				foreach (
+					[
+						'img'    => 'src',
+						'link'   => 'href',
+						'script' => 'src',
+					] as $tag => $attr
+				) {
+					foreach ( $factory->parser->extractAssets( $dom, $tag, $attr, '#https?://(s\.)hametuha\.(com|info|local)/#', ABSPATH ) as $path ) {
+						$factory->opf->addItem( $path, '' );
+						// If this is css, load all assets
+						if ( false !== strpos( $path, '.css' ) ) {
+							$css_path = $factory->distributor->oebps . DIRECTORY_SEPARATOR . $path;
 						}
 					}
 				}
 				// Handle remote files
-				foreach( $factory->parser->pullRemoteAssets($dom) as $path ){
-					$factory->opf->addItem($path, '');
+				foreach ( $factory->parser->pullRemoteAssets( $dom ) as $path ) {
+					$factory->opf->addItem( $path, '' );
 				}
-				$factory->parser->saveDom($dom, $src);
+				$factory->parser->saveDom( $dom, $src );
 				// Assign properties
-				$property = [];
-				if( false !== strpos($h['html'], '<script') ){
+				$property = [ ];
+				if ( false !== strpos( $h['html'], '<script' ) ) {
 					$property[] = 'scripted';
 				}
-				if( false !== strpos($h['html'], 'epub:type="toc"') ){
+				if ( false !== strpos( $h['html'], 'epub:type="toc"' ) ) {
 					$property[] = 'nav';
 				}
-				$factory->opf->addItem('Text/'.$src, $src, $property);
+				$factory->opf->addItem( 'Text/' . $src, $src, $property );
 				// Create TOC
-				$factory->toc->addChild($h['label'], $src);
+				$factory->toc->addChild( $h['label'], $src );
 			}
 			// Add Cover Image
-			if( has_post_thumbnail($series->ID) ){
-				$dir = wp_upload_dir();
-				$thumb = get_post_thumbnail_id($series->ID);
-				$src = wp_get_attachment_image_src($thumb, 'epub-cover');
-				$url = preg_replace('/(https?):\/\/(s\.)?/', '$1://', $src[0]);
-				$path = str_replace(home_url('/'), ABSPATH, $url);
-				if( file_exists($path) ){
-					$factory->addCover($path);
+			if ( has_post_thumbnail( $series->ID ) ) {
+				$dir   = wp_upload_dir();
+				$thumb = get_post_thumbnail_id( $series->ID );
+				$src   = wp_get_attachment_image_src( $thumb, 'epub-cover' );
+				$url   = preg_replace( '/(https?):\/\/(s\.)?/', '$1://', $src[0] );
+				$path  = str_replace( home_url( '/' ), ABSPATH, $url );
+				if ( file_exists( $path ) ) {
+					$factory->addCover( $path );
 				}
 			}
 
-			$factory->opf->setIdentifier(get_permalink($series));
-			$factory->opf->setLang('ja');
-			$factory->opf->setTitle(get_the_title($series), 'main-title');
-			if( $subtitle = get_post_meta($series->ID, 'subtitle', true) ){
-				$factory->opf->setTitle($subtitle, 'sub-title', 'subtitle', 2);
+			$factory->opf->setIdentifier( get_permalink( $series ) );
+			$factory->opf->setLang( 'ja' );
+			$factory->opf->setTitle( get_the_title( $series ), 'main-title' );
+			if ( $subtitle = $this->series->get_subtitle($series->ID) ) {
+				$factory->opf->setTitle( $subtitle, 'sub-title', 'subtitle', 2 );
 			}
-			$factory->opf->setModifiedDate(strtotime($series->post_modified_gmt));
-			$factory->opf->direction = 'rtl';
+			$factory->opf->setModifiedDate( strtotime( $series->post_modified_gmt ) );
+			$factory->opf->direction = $direction;
 			$factory->opf->putXML();
 			$factory->container->putXML();
-			$factory->compile(ABSPATH.'wp-content/epub/'.$series->post_name.'.epub');
+			$factory->compile( ABSPATH . 'wp-content/epub/' . $series->post_name . '.epub' );
 
-			throw new \Exception('ePubの出力が終わりました。');
-		}catch (\Exception $e){
+			throw new \Exception( 'ePubの出力が終わりました。' );
+		} catch ( \Exception $e ) {
 			// Show message with alert
-			$message = esc_js($e->getMessage());
+			$message = esc_js( $e->getMessage() );
 			echo <<<HTML
 <!DOCTYPE html>
 <html>
@@ -248,23 +256,24 @@ HTML;
 	 * @param string $template
 	 * @param string $direction 'ltr' or 'rtl'
 	 * @param \WP_User $user
+	 *
 	 * @return string
 	 */
-	protected function get_content($id, \WP_Post $post, $template = 'content', $direction = 'ltr', $user = null){
-		$this->additional_class = ["epub-{$template}", $direction];
-		if( !$this->did_body_class ){
+	protected function get_content( $id, \WP_Post $post, $template = 'content', $direction = 'ltr', $user = null ) {
+		$this->additional_class = [ "epub-{$template}", $direction ];
+		if ( ! $this->did_body_class ) {
 			$this->did_body_class = true;
-			add_filter('body_class', [$this, 'body_class']);
+			add_filter( 'body_class', [ $this, 'body_class' ] );
 		}
-		remove_action('epub_body_attr', [$this, 'epub_attr']);
-		$post->post_content = $this->page_break($post->post_content);
-		setup_postdata($post);
-		$this->set_data(get_series_authors($post), 'authors');
-		$this->set_data($post, 'post');
-		switch( $template ){
+		remove_action( 'epub_body_attr', [ $this, 'epub_attr' ] );
+		$post->post_content = $this->page_break( $post->post_content );
+		setup_postdata( $post );
+		$this->set_data( get_series_authors( $post ), 'authors' );
+		$this->set_data( $post, 'post' );
+		switch ( $template ) {
 			case 'cover':
 				$this->title = '表紙';
-				add_action('epub_body_attr', [$this, 'epub_attr']);
+				add_action( 'epub_body_attr', [ $this, 'epub_attr' ] );
 				break;
 			case 'colophon':
 				$this->title = '書誌情報';
@@ -274,44 +283,53 @@ HTML;
 				break;
 			case 'preface':
 				$this->title = '序文';
+				if( !$this->series->get_preface($post->ID) ){
+					throw new \Exception('序文は設定されていません。', 403);
+				}
 				break;
 			case 'content':
-				$this->set_data([
-					'drop_title' => false,
-				]);
-				$this->title = get_the_title($post);
+				$this->set_data( [
+					'show_title' => $this->series->get_title_visibility($post->post_parent),
+				] );
+				$this->title = get_the_title( $post );
 				break;
 			case 'toc':
 				$this->title = '目次';
-				if( !$this->factory($id)->toc->length() ){
-					foreach( get_posts([
-						'post_parent' => $post->ID,
-						'post_type' => 'post',
-						'post_status' => 'publish',
-						'posts_per_page' => -1,
-						'orderby' => [
-							'date' => 'ASC',
-							'ID' => 'ASC',
-						]
-					]) as $post){
-						$this->factory($id)->toc->addChild(get_the_title($post), get_permalink($post));
+				if ( ! $this->factory( $id )->toc->length() ) {
+					foreach (
+						get_posts( [
+							'post_parent'    => $post->ID,
+							'post_type'      => 'post',
+							'post_status'    => 'publish',
+							'posts_per_page' => - 1,
+							'orderby'        => [
+								'date' => 'ASC',
+								'ID'   => 'ASC',
+							]
+						] ) as $post
+					) {
+						$this->factory( $id )->toc->addChild( get_the_title( $post ), get_permalink( $post ) );
 					}
 				}
-				$this->set_data($this->factory($id)->toc->getNavHTML(), 'toc');
+				$this->set_data( $this->factory( $id )->toc->getNavHTML(), 'toc' );
 				break;
 			case 'afterword':
 				$this->title = 'あとがき';
+				if( empty( $post->post_content ) ){
+					throw new \Exception('あとがきは設定されていません。', 403);
+				}
 				break;
 			default:
 				// Do nothing
 				break;
 		}
 		ob_start();
-		add_filter('the_content', [$this->factory($id)->parser, 'format'], 99999);
-		$this->load_template("templates/epub/{$template}");
+		add_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
+		$this->load_template( "templates/epub/{$template}" );
 		$content = ob_get_contents();
-		remove_filter('the_content', [$this->factory($id)->parser, 'format'], 99999);
+		remove_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		ob_end_clean();
+
 		return $content;
 	}
 
@@ -324,11 +342,12 @@ HTML;
 	 * @throws \Hametuha\HamePub\Exception\EnvironmentException
 	 * @throws \Hametuha\HamePub\Exception\SettingException
 	 */
-	public function factory($id){
-		if( !isset($this->factories[$id]) ){
-			$this->factories[$id] = Factory::init($id, ABSPATH.'wp-content/uploads/hamepub');
+	public function factory( $id ) {
+		if ( ! isset( $this->factories[ $id ] ) ) {
+			$this->factories[ $id ] = Factory::init( $id, ABSPATH . 'wp-content/uploads/hamepub' );
 		}
-		return $this->factories[$id];
+
+		return $this->factories[ $id ];
 	}
 
 	/**
@@ -338,8 +357,8 @@ HTML;
 	 *
 	 * @return array
 	 */
-	public function body_class($classes){
-		return array_merge($classes, $this->additional_class);
+	public function body_class( $classes ) {
+		return array_merge( $classes, $this->additional_class );
 	}
 
 	/**
@@ -349,14 +368,14 @@ HTML;
 	 *
 	 * @return string
 	 */
-	public function page_break($content){
-		return str_replace('<!--nextpage-->', '<div class="pagebreak"></div>', $content);
+	public function page_break( $content ) {
+		return str_replace( '<!--nextpage-->', '<div class="pagebreak"></div>', $content );
 	}
 
 	/**
 	 * Add epub:type to body
 	 */
-	public function epub_attr(){
+	public function epub_attr() {
 		echo ' epub:type="cover"';
 	}
 

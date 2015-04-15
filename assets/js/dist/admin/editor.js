@@ -1,0 +1,2 @@
+!function(t){"use strict";t("#epub-previewer").change(function(){var e=t(this).val(),i=t('<form target="epub-preview"><input type="hidden" name="direction" /><input type="hidden" name="post_id" /></form>');e.length&&(i.attr("action",t(this).attr("data-endpoint")),i.find("input[name=direction]").val("vertical"==t("input[name=orientation]:checked").val()?"rtl":"ltr"),i.find("input[name=post_id]").val(e),i.submit())})}(jQuery);
+//# sourceMappingURL=../map/admin/editor.js.map

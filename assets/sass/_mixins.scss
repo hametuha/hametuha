@@ -1,0 +1,58 @@
+//
+// Typography
+//-------------------
+//
+@mixin logical-property($values, $is-margin: true){
+  @if ($is-margin) {
+    $property: margin;
+  }
+  $property: padding !default;
+  @each $vendor in (-moz-, -webkit-, '' ) {
+    @if (4 == length($values))  {
+      #{$vendor}#{$property}-before: nth($values, 1);
+      #{$vendor}#{$property}-end: nth($values, 2);
+      #{$vendor}#{$property}-after: nth($values, 3);
+      #{$vendor}#{$property}-start: nth($values, 4);
+    } @else if( 3 == length($values) ){
+      #{$vendor}#{$property}-before: nth($values, 1);
+      #{$vendor}#{$property}-end: nth($values, 2);
+      #{$vendor}#{$property}-after: nth($values, 3);
+      #{$vendor}#{$property}-start: nth($values, 2);
+    } @else if( 2 == length($values) ){
+      #{$vendor}#{$property}-before: nth($values, 1);
+      #{$vendor}#{$property}-end: nth($values, 2);
+      #{$vendor}#{$property}-after: nth($values, 1);
+      #{$vendor}#{$property}-start: nth($values, 2);
+    } @else{
+      #{$vendor}#{$property}-before: nth($values, 1);
+      #{$vendor}#{$property}-end: nth($values, 1);
+      #{$vendor}#{$property}-after: nth($values, 1);
+      #{$vendor}#{$property}-start: nth($values, 1);
+    }
+  }
+}
+
+
+//
+// Backward compats
+//-------------------
+//
+@mixin border-radius($radius){
+  border-radius: $radius;
+}
+
+@mixin inline-block(){
+  display: inline-block;
+}
+
+@mixin ellipsis(){
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin background-size($size){
+  background-size: $size;
+}
+
+
