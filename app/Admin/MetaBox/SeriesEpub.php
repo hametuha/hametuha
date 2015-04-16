@@ -133,7 +133,7 @@ TEXT;
 
 		<?php if( current_user_can('edit_others_posts') ): ?>
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">
-				<a class="button" target="epub-publisher" href=<?= home_url("epub/publish/{$post->ID}", 'https') ?>">書き出し</a>
+				<a class="button" target="epub-publisher" href="<?= home_url("epub/publish/{$post->ID}", 'https') ?>">書き出し</a>
 				<iframe name="epub-publisher" style="display: none"></iframe>
 			</div>
 		<?php endif; ?>

@@ -38,7 +38,7 @@ class SeriesPreview extends SeriesBase
 		]);
 		if( $sub_query->have_posts() ){
 			$_old_post = $post;
-			$endpoint = home_url("epub/preview/content/{$post->ID}/", 'https');
+			$endpoint = home_url("epub/preview/content/{$post->ID}", 'https');
 			echo <<<HTML
 					<select id="epub-previewer" data-endpoint="{$endpoint}">
 						<option value="">本文をプレビュー</option>

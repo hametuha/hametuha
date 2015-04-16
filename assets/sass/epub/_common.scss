@@ -45,15 +45,9 @@ body{
 // ----------------
 //
 a{
-  @include transition(
-          background-color 0.5s ease-in-out 0,
-          color 0.5s ease-in-out 0,
-          text-decoration 0.5s ease-in-out 0
-  );
   &:link, &:visited{
     color: $link-color;
     text-decoration: underline;
-
   }
   &:hover{
     color: lighten($link-color, 10);
@@ -65,12 +59,15 @@ a{
   }
   .rtl &{
     &:link, &:visited{
+      color: $link-color;
       text-decoration: overline;
     }
     &:hover{
+      color: lighten($link-color, 10);
       text-decoration: overline;
     }
     &:active{
+      color: $active-color;
       text-decoration: none;
     }
   }

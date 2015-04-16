@@ -90,7 +90,7 @@ class EPub extends RestTemplate {
 			// Check ePub is published
 			$factory = $this->factory( $series->ID );
 			// Set direction
-			$direction = 'vertical' == $this->series->get_direction( $series->ID );
+			$direction = $this->series->get_direction( $series->ID );
 			// Get HTMLs
 			$html          = [ ];
 			$html['cover'] = [
@@ -258,6 +258,8 @@ HTML;
 	 * @param \WP_User $user
 	 *
 	 * @return string
+	 *
+	 * @throws \Exception
 	 */
 	protected function get_content( $id, \WP_Post $post, $template = 'content', $direction = 'ltr', $user = null ) {
 		$this->additional_class = [ "epub-{$template}", $direction ];
