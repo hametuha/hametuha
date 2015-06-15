@@ -51,15 +51,25 @@
       padding-bottom: $avatar-pad;
       // ログインボタン
       &.login-btn{
-        margin-top: 5px;
+        margin-right: 10px;
+        margin-top: 8px;
         background-color: transparent;
         @include border-radius(3px);
+        padding: 9px 4px;
+        border: 1px solid $btn-primary-bg;
+        font-size: 14px;
+        line-height: 1;
         &:link, &:visited{
           color: $btn-primary-bg;
         }
-        &:hover, &:active{
+        &:hover{
           color: $btn-primary-color;
           background-color: $btn-primary-bg;
+        }
+        &:active{
+          color: $btn-danger-color;
+          border-color:  $btn-danger-bg;
+          background-color: $btn-danger-bg;
         }
       }
     }
@@ -100,7 +110,7 @@
       left: auto;
       background-color: $navbar-default-bg;
       border: 1px solid $navbar-default-border;
-      @include box-shadow($float-elements);
+      @include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.8));
     }
   }
 }

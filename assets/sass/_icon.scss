@@ -1,10 +1,16 @@
+$hash: ci89x8;
+$is-epub: false !default;
 @font-face {
   font-family: 'hameticon';
-  src:url('../fonts/hameticon.eot?ci89x7');
-  src:url('../fonts/hameticon.eot?#iefixci89x7') format('embedded-opentype'),
-  url('../fonts/hameticon.woff?ci89x7') format('woff'),
-  url('../fonts/hameticon.ttf?ci89x7') format('truetype'),
-  url('../fonts/hameticon.svg?ci89x7#hameticon') format('svg');
+  @if $is-epub{
+    src: url('../fonts/hameticon.woff') format('woff');
+  } @else{
+    src:url('../fonts/hameticon.eot?#{$hash}');
+    src:url('../fonts/hameticon.eot?##{$hash}') format('embedded-opentype'),
+    url('../fonts/hameticon.woff?#{$hash}') format('woff'),
+    url('../fonts/hameticon.ttf?#{$hash}') format('truetype'),
+    url('../fonts/hameticon.svg?#{$hash}#hameticon') format('svg');
+  }
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +29,30 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-minicome:before {
+  content: "\e606";
+}
+.icon-pocket:before {
+  content: "\e605";
+}
+.icon-feedly:before {
+  content: "\e607";
+}
+.icon-ha:before {
+  content: "\e600";
+}
+.icon-hametuha:before {
+  content: "\e601";
+}
+.icon-hatena:before {
+  content: "\e602";
+}
+.icon-line:before {
+  content: "\e603";
+}
+.icon-ustream:before {
+  content: "\e604";
+}
 .icon-home:before {
   content: "\e000";
 }
@@ -730,9 +760,6 @@
 }
 .icon-envelop:before {
   content: "\e0eb";
-}
-.icon-envelop2:before {
-  content: "\e0ec";
 }
 .icon-mail-send:before {
   content: "\e0ed";
@@ -3537,7 +3564,7 @@
   content: "\e492";
 }
 .icon-googleplus:before {
-  content: "\e610";
+  content: "\e493";
 }
 .icon-googleplus2:before {
   content: "\e494";
@@ -3552,7 +3579,7 @@
   content: "\e497";
 }
 .icon-facebook:before {
-  content: "\e611";
+  content: "\e498";
 }
 .icon-facebook2:before {
   content: "\e499";
@@ -3567,7 +3594,7 @@
   content: "\e49c";
 }
 .icon-twitter:before {
-  content: "\e612";
+  content: "\e49d";
 }
 .icon-twitter2:before {
   content: "\e49e";
@@ -3823,22 +3850,4 @@
 }
 .icon-IcoMoon:before {
   content: "\e4f2";
-}
-.icon-ustream:before {
-  content: "\e605";
-}
-.icon-minicome:before {
-  content: "\e604";
-}
-.icon-hatebu:before {
-  content: "\e602";
-}
-.icon-line:before {
-  content: "\e603";
-}
-.icon-hametuha:before {
-  content: "\e601";
-}
-.icon-ha:before {
-  content: "\e600";
 }

@@ -1,0 +1,27 @@
+{
+  "name": "hametuha",
+  "version": "4.0.1",
+  "homepage": "https://github.com/hametuha/hametuha",
+  "authors": [
+    "Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>"
+  ],
+  "description": "Theme for hametuha.",
+  "main": "index.php",
+  "keywords": [
+    "WordPress"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "~3.3.4",
+    "respond": "~1.4.2",
+    "html5shiv": "~3.7.2",
+    "modernizr": "~2.8.3"
+  }
+}

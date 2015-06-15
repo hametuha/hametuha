@@ -1,5 +1,5 @@
 // Load wpametu's animation
-@import "../../wpametu/assets/scss/animations";
+@import "wpametu/assets/scss/animations";
 
 // Original animations
 
@@ -12,23 +12,4 @@
   50%{
     color: orange;
   }
-}
-
-
-@mixin border-radius($radius){
-  border-radius: $radius;
-}
-
-@mixin inline-block(){
-  display: inline-block;
-}
-
-@mixin ellipsis(){
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-@mixin background-size($size){
-  background-size: $size;
 }

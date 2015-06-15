@@ -104,7 +104,7 @@ if( is_search() ){
                 <?php else: ?>
                     <div class="form-group">
                         <label for="recaptcha_response_field">スパム確認 by reCaptcha <span class="label label-danger">必須</span></label>
-                        <?= wpametu_recaptcha('clean', 'ja') ?>
+                        <?= WPametu::recaptcha('clean', 'ja') ?>
                         <?php if( ($message = get_thread_error('recaptcha')) ): ?>
                             <p class="text-danger">※Googleはあなたがロボットではないかと疑っているようです。やりなおしてください。</p>
                         <?php endif; ?>

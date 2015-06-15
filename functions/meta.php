@@ -98,12 +98,12 @@ add_action('wp_head', function(){
             $type = "website";
             $desc = str_replace("\n", "", get_bloginfo('description'));
             $author = '';
-        }elseif(is_post_type_archive()){
-            $post_obj = get_post_type_object(get_post_type());
+        }elseif( is_post_type_archive() ){
+            $post_obj = get_post_type_object(get_query_var('post_type'));
             $title = wp_title('|', false, "right").get_bloginfo('name');
             $url = get_post_type_archive_link(get_post_type());
             $type = 'article';
-            $desc = $post_obj->description;
+            $desc = $post_obj->description ?: '';
             $author = '';
             switch(get_post_type()){
                 case 'anpi':

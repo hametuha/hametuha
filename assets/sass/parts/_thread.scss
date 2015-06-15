@@ -56,6 +56,19 @@ $carret-size: 20px;
   }
 }
 
+@media only screen and (max-width: $screen-sm-max){
+  .g-recaptcha{
+    margin-left: -30px;
+    margin-right: -30px;
+    text-align: center;
+    margin-bottom: 15px;
+    & > div > div{
+      margin: 0 auto;
+    }
+  }
+}
+
+
 @media only screen and (max-width: $screen-xs-max) {
   .thread-body{
     h1{

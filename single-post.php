@@ -1,4 +1,6 @@
-<?php get_header(); ?>
+<?php
+$series = Hametuha\Model\Series::get_instance();
+get_header(); ?>
 
 <?php if(have_posts()): while(have_posts()): the_post(); ?>
 
@@ -27,7 +29,7 @@
 
                     <h1 itemprop="name"><?php the_title(); ?></h1>
 
-                    <?php the_series('<p class="series">', '</p>'); ?>
+                    <?php the_series('<p class="series">', sprintf('（全%s話）</p>', $series->get_total($post->post_parent))); ?>
 
                     <p class="author">
                         <a href="#post-author"><?php the_author(); ?></a>
@@ -50,8 +52,23 @@
 
             </div><!-- //.post-meta-single -->
 
+            <?php if( ($should_hide = $series->should_hide()) ){
+		        if( !current_user_can('edit_post', get_the_ID()) ){
+		            add_filter('the_content', 'hametuha_series_hide', 100);
+		        }else{
+			        echo <<<HTML
+					<div class="alert alert-info">
+						<p>
+			                この投稿は販売中のため閲覧制限がかかっていますが、あなたには編集権限があるので表示しています。
+						</p>
+					</div>
+HTML;
+		        }
+            } ?>
 
             <div class="work-content row" itemprop="text">
+
+
                 <?php the_content(); ?>
 
                 <?php if( is_last_page() ):?>
@@ -59,7 +76,10 @@
                 <?php endif; ?>
 
                 <?php wp_link_pages(array('before' => '<p class="link-pages">ページ: ', 'after' => '</p>', 'link_before' => '<span>', 'link_after' => '</span>')); ?>
+
             </div><!-- //.single-post-content -->
+
+	        <?php get_template_part('parts/alert', 'kdp'); ?>
 
             <p class="text-center pub-date">
                 <span itemprop="dateCreated"><?php the_time('Y年n月j日') ?></span>公開
@@ -67,11 +87,11 @@
 
             <?php if( is_series() ): ?>
                 <p class="series-pager-title text-center">
-                    作品集『<?php the_series(); ?>』より
+                    作品集『<?php the_series(); ?>』<?= $series->index_label() ?>（全<?= $series->get_total($post->post_parent) ?>話）
                 </p>
                 <ul class="pager post-pager">
-                    <?php prev_series_link('<li class="previous">'); ?>
-                    <?php next_series_link('<li class="next">'); ?>
+                    <?= $series->prev('<li class="previous">'); ?>
+                    <?= $series->next('<li class="next">'); ?>
                 </ul>
             <?php endif; ?>
 
@@ -83,21 +103,7 @@
                 <?php get_template_part('parts/author') ?>
             </div>
 
-	        <div id="post-share" class="share-panel text-center">
-		        <h4>この作品をシェアする</h4>
-		        <?php hametuha_share( get_the_title(), get_permalink() ) ; ?>
-		        <div class="input-group">
-			        <span class="input-group-addon">URL</span>
-			        <input class="form-control" id="post-short-link" type="text" value="<?= esc_attr(wp_get_shortlink()); ?>" onclick="this.select();" />
-		        </div>
-		        <?php if( get_current_user_id() == get_the_author_meta('ID') ):?>
-			        <div class="alert alert-info">
-				        これはあなたの作品です。積極的に宣伝し、たくさんの読者に読んでもらいましょう。
-				        いいねやTwitterでの宣伝など、周囲に疎まれる限界まで宣伝してください。
-			        </div>
-		        <?php endif; ?>
-	        </div><!-- #post-share -->
-
+	        <?php get_template_part('parts/share') ?>
 
 	        <p class="finish-nav">
 		        読み終えたらレビューしてください<br />

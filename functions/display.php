@@ -158,8 +158,11 @@ function hametuha_format_pagination($pagination, $size = ''){
 function hametuha_commment_display( $comment, $args, $depth ) {
     $GLOBALS['comment'] = $comment;
     $class_name = [$comment->comment_type, 'media'];
-    $class_name[] = ($is_author = get_the_author_meta('ID') == $comment->user_id)
-        ? 'author' : 'commentor';
+	$is_author = get_the_author_meta('ID') == $comment->user_id;
+	if( get_anonymous_user()->ID == $comment->user_id ){
+		$is_author = false;
+	}
+    $class_name[] = $is_author ? 'author' : 'commentor';
     $pull = $is_author ? 'pull-right' : 'pull-left';
     switch( get_post_type($comment->comment_post_ID) ){
         case 'thread':

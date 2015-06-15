@@ -1,0 +1,220 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "f8ad6ada04c06d7a5a5fa0562c35b810",
+    "packages": [
+        {
+            "name": "google/recaptcha",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/recaptcha.git",
+                "reference": "090585935d95ebdf2d16dd071b10c9179a94da47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/090585935d95ebdf2d16dd071b10c9179a94da47",
+                "reference": "090585935d95ebdf2d16dd071b10c9179a94da47",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ReCaptcha\\": "src/ReCaptcha"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
+            "homepage": "http://www.google.com/recaptcha/",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "recaptcha",
+                "spam"
+            ],
+            "time": "2015-03-16 13:45:08"
+        },
+        {
+            "name": "hametuha/hamepub",
+            "version": "1.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/hamepub.git",
+                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/04d891aec08cc61086ede9a8ccf81a7eb538bc03",
+                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03",
+                "shasum": ""
+            },
+            "require": {
+                "masterminds/html5": "2.*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "d11wtq/boris": "1.0.8",
+                "phpunit/phpunit": "4.4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Hametuha\\HamePub": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Takahashi Fumiki",
+                    "email": "takahashi.fumiki@hametuha.co.jp"
+                }
+            ],
+            "description": "PHP Library to handle ePub 3.0",
+            "homepage": "https://github.com/hametuha/hamepub",
+            "keywords": [
+                "epub",
+                "wordpress"
+            ],
+            "time": "2015-06-15 10:57:37"
+        },
+        {
+            "name": "hametuha/wpametu",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/wpametu.git",
+                "reference": "57a649b37e5a8d0279ed510323c89db629fd1cee"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/57a649b37e5a8d0279ed510323c89db629fd1cee",
+                "reference": "57a649b37e5a8d0279ed510323c89db629fd1cee",
+                "shasum": ""
+            },
+            "require": {
+                "google/recaptcha": "~1.1",
+                "masterminds/html5": "~2.1",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "2.*",
+                "phpunit/phpunit": ">=4.6",
+                "wp-coding-standards/wpcs": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "WPametu": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hametuha INC.",
+                    "email": "info@hametuha.co.jp"
+                }
+            ],
+            "description": "A WordPress Theme FrameWork",
+            "time": "2015-06-13 16:44:25"
+        },
+        {
+            "name": "masterminds/html5",
+            "version": "2.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "8f782e0f01a6e33a319bdc8f6de9cfd6569979a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/8f782e0f01a6e33a319bdc8f6de9cfd6569979a4",
+                "reference": "8f782e0f01a6e33a319bdc8f6de9cfd6569979a4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-libxml": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "sami/sami": "~2.0",
+                "satooshi/php-coveralls": "0.6.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "time": "2015-06-07 08:43:18"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "hametuha/wpametu": 20,
+        "hametuha/hamepub": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

@@ -114,7 +114,7 @@
                             </p>
                         <?php endif;  ?>
                         <div class="thread-inner">
-                            <?= wpautop(wpametu()->str->auto_link(strip_tags(get_the_content()))) ?>
+                            <?= wpautop(WPametu::helper()->str->auto_link(strip_tags(get_the_content()))) ?>
                         </div><!-- //.thread-inner -->
 
                     <?php endif; ?>
