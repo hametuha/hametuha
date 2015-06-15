@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hamepub.git",
-                "reference": "cfffb96ae197f1ad5ad777cab53b324fd6437716"
+                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/cfffb96ae197f1ad5ad777cab53b324fd6437716",
-                "reference": "cfffb96ae197f1ad5ad777cab53b324fd6437716",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/04d891aec08cc61086ede9a8ccf81a7eb538bc03",
+                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 "epub",
                 "wordpress"
             ],
-            "time": "2015-06-01 08:31:32"
+            "time": "2015-06-15 10:57:37"
         },
         {
             "name": "hametuha/wpametu",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "c7174414e6eefe96dff7e0e96eae91808738055d"
+                "reference": "57a649b37e5a8d0279ed510323c89db629fd1cee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/c7174414e6eefe96dff7e0e96eae91808738055d",
-                "reference": "c7174414e6eefe96dff7e0e96eae91808738055d",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/57a649b37e5a8d0279ed510323c89db629fd1cee",
+                "reference": "57a649b37e5a8d0279ed510323c89db629fd1cee",
                 "shasum": ""
             },
             "require": {
@@ -138,20 +138,20 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2015-06-01 08:05:25"
+            "time": "2015-06-13 16:44:25"
         },
         {
             "name": "masterminds/html5",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "28490e9e0caea10f5ca09ab68f88d1f26e80ff9d"
+                "reference": "8f782e0f01a6e33a319bdc8f6de9cfd6569979a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/28490e9e0caea10f5ca09ab68f88d1f26e80ff9d",
-                "reference": "28490e9e0caea10f5ca09ab68f88d1f26e80ff9d",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/8f782e0f01a6e33a319bdc8f6de9cfd6569979a4",
+                "reference": "8f782e0f01a6e33a319bdc8f6de9cfd6569979a4",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,7 @@
                 "serializer",
                 "xml"
             ],
-            "time": "2015-03-23 22:56:43"
+            "time": "2015-06-07 08:43:18"
         }
     ],
     "packages-dev": [],
