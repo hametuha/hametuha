@@ -384,5 +384,41 @@ jQuery(document).ready(function($){
         });
     });
 
+    $('.share--facebook').click(function(e){
+        e.preventDefault();
+        var target = $(this).attr('data-target');
+        FB.ui({
+            method: 'share',
+            href: $(this).attr('href')
+        }, function(response){
+            try{
+                ga.send({
+                    'hitType': 'social',
+                    'socialNetwork': 'facebook',
+                    'socialAction': 'share',
+                    'socialTarget': target
+                });
+            }catch(err){}
+        });
+    });
+
+    $('.share--line').click(function(e){
+        try{
+            var href = $(this).attr('href');
+            ga.send({
+                'hitType': 'social',
+                'socialNetwork': 'line',
+                'socialAction': 'share',
+                'socialTarget': $(this).attr('date-target'),
+                hitCallback: function(){
+                    window.location.href = href;
+                }
+            });
+            e.preventDefault();
+        }catch(err){}
+    });
+
+
+
 
 });
