@@ -11,7 +11,7 @@ get_template_part('parts/bar', 'posttype');
 	</div>
 	<?php endif; ?>
 
-	<div class="col-xs-12<?php if( has_excerpt() ) echo ' col-sm-9'; ?>">
+	<div class="col-xs-12<?php if( has_post_thumbnail() ) echo ' col-sm-9'; ?>">
 
 		<!-- title -->
 		<div class="page-header">
