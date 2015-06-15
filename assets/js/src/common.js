@@ -380,7 +380,7 @@ jQuery(document).ready(function($){
         }).fail(function(){
             // Do nothing
         }).always(function(){
-
+            // Do nothing
         });
     });
 
