@@ -1,0 +1,21 @@
+{
+  "name": "hametuha/hametuha",
+  "description": "A WordPress theme for hametuha",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Hametuha INC.",
+      "email": "info@hametuha.co.jp"
+    }
+  ],
+  "require": {
+    "hametuha/wpametu": "dev-master",
+    "hametuha/hamepub": "1.0.*@dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "Hametuha": "src"
+    }
+  }
+}

@@ -86,7 +86,7 @@ function _hametuha_thread_add(){
 				$user = ( $input->post('anonymous') ) ? get_anonymous_user() : get_userdata( get_current_user_id() );
 			} else {
 				//キャプチャをチェックする
-				if ( wpametu()->recaptcha->validate() ) {
+				if ( WPametu::validate_recaptcha() ) {
 					$user = get_anonymous_user();
 				} else {
 					$_hametuha_thread_error['recaptcha'] = 'reCaptchaがエラーを返しました。';
@@ -210,7 +210,7 @@ function _hametuha_anonymous_comment(){
 	if( is_singular('thread') && isset($_REQUEST['_anonymous_comment_nonce']) && wp_verify_nonce($_REQUEST['_anonymous_comment_nonce'], 'thread_anonymous_reply') ){
 		global $_hametuha_thread_error;
 		//キャプチャのチェック
-		if( !wpametu()->recaptcha->validate() ){
+		if( !WPametu::validate_recaptcha() ){
 			$_hametuha_thread_error[] = 'キャプチャの文字がまちがっています。';
 		}
 		//コメントのチェック

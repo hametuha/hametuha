@@ -1,4 +1,4 @@
-$hash: ci89x7;
+$hash: ci89x8;
 $is-epub: false !default;
 @font-face {
   font-family: 'hameticon';
@@ -29,6 +29,30 @@ $is-epub: false !default;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-minicome:before {
+  content: "\e606";
+}
+.icon-pocket:before {
+  content: "\e605";
+}
+.icon-feedly:before {
+  content: "\e607";
+}
+.icon-ha:before {
+  content: "\e600";
+}
+.icon-hametuha:before {
+  content: "\e601";
+}
+.icon-hatena:before {
+  content: "\e602";
+}
+.icon-line:before {
+  content: "\e603";
+}
+.icon-ustream:before {
+  content: "\e604";
+}
 .icon-home:before {
   content: "\e000";
 }
@@ -736,9 +760,6 @@ $is-epub: false !default;
 }
 .icon-envelop:before {
   content: "\e0eb";
-}
-.icon-envelop2:before {
-  content: "\e0ec";
 }
 .icon-mail-send:before {
   content: "\e0ed";
@@ -3543,7 +3564,7 @@ $is-epub: false !default;
   content: "\e492";
 }
 .icon-googleplus:before {
-  content: "\e610";
+  content: "\e493";
 }
 .icon-googleplus2:before {
   content: "\e494";
@@ -3558,7 +3579,7 @@ $is-epub: false !default;
   content: "\e497";
 }
 .icon-facebook:before {
-  content: "\e611";
+  content: "\e498";
 }
 .icon-facebook2:before {
   content: "\e499";
@@ -3573,7 +3594,7 @@ $is-epub: false !default;
   content: "\e49c";
 }
 .icon-twitter:before {
-  content: "\e612";
+  content: "\e49d";
 }
 .icon-twitter2:before {
   content: "\e49e";
@@ -3829,22 +3850,4 @@ $is-epub: false !default;
 }
 .icon-IcoMoon:before {
   content: "\e4f2";
-}
-.icon-ustream:before {
-  content: "\e605";
-}
-.icon-minicome:before {
-  content: "\e604";
-}
-.icon-hatebu:before {
-  content: "\e602";
-}
-.icon-line:before {
-  content: "\e603";
-}
-.icon-hametuha:before {
-  content: "\e601";
-}
-.icon-ha:before {
-  content: "\e600";
 }

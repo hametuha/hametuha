@@ -279,10 +279,14 @@
             </p>
         </div>
 
-        <div class="col-xs-12 col-sm-4 twitter-widget">
+        <div class="col-xs-12 col-sm-4 widget-twitter">
             <a class="twitter-timeline" href="https://twitter.com/hametuha" data-widget-id="344868919800111104">@hametuha からのツイート</a>
             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         </div>
+
+	    <div class="col-xs-12 col-sm-4 widget-facebook">
+		    <div class="fb-page" data-href="https://www.facebook.com/hametuha.inc" data-height="230" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true" data-show-posts="false"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/hametuha.inc"><a href="https://www.facebook.com/hametuha.inc">株式会社破滅派</a></blockquote></div></div>
+	    </div>
 
     </div>
 
@@ -338,21 +342,19 @@
 
     <?php if( is_user_logged_in() ): ?>
         <?php if( current_user_can('edit_posts') ): ?>
-            <a class="btn btn-lg btn-block btn-primary" href="<?= admin_url('post-new.php') ?>" >作品を書く</a>
+            <a class="btn btn-lg btn-block btn-primary btn--joinus" href="<?= admin_url('post-new.php') ?>" >作品を書く</a>
         <?php else: ?>
-            <a class="btn btn-lg btn-block btn-primary" href="<?= admin_url('post-new.php') ?>" >執筆者になる</a>
+            <a class="btn btn-lg btn-block btn-primary btn--joinus" href="<?= admin_url('post-new.php') ?>" >執筆者になる</a>
         <?php endif; ?>
     <?php else: ?>
         <p>
-            <a class="btn btn-lg btn-block btn-primary" href="<?= wp_login_url() ?>" >破滅派にログイン</a>
+            <a class="btn btn-lg btn-block btn-primary btn--joinus" href="<?= wp_login_url() ?>" >破滅派にログイン</a>
         </p>
     <?php endif; ?>
 
 
 
-    <p class="text-center share-panel">
-        <?php hametuha_share() ?>
-    </p>
+    <?php get_template_part('parts/share') ?>
 
 
 </div><!-- front-container -->

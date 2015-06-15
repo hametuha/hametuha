@@ -46,6 +46,16 @@ class SeriesLayoutMetaBox extends EditMetaBox
 		    'default' => 0,
 		    'description' => 'それぞれの作品のタイトルを表示するか否か。連載作品の場合、タイトルはなくてもよいかもしれません。',
 		],
+		'_series_type' => [
+			'class' => Radio::class,
+		    'label' => '連載のタイプ',
+		    'options' => [
+			    1 => '一話完結',
+		        0 => '連載'
+		    ],
+		    'default' => 0,
+		    'description' => '一話完結型の場合、各話に著作権表示がされます。',
+		],
 		'_visibility' => [
 			'class' => Number::class,
 		    'label' => '閲覧設定',

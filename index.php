@@ -36,15 +36,14 @@
 		        <?php get_template_part('parts/jumbotron', 'lists') ?>
 	        <?php endif; ?>
 
-            <?php if( is_singular('series') ){
-                the_post();
-                get_template_part('parts/meta', 'thumbnail');
-            } ?>
-
-	        <?php if( is_singular('lists') ): ?>
-	            <?php get_template_part('parts/meta', 'lists') ?>
-			<?php else: ?>
-
+            <?php
+				if( is_singular('series') ) {
+					the_post();
+					get_template_part( 'parts/meta', 'series' );
+				}elseif( is_singular( 'lists' ) ){
+		            get_template_part( 'parts/meta', 'lists' );
+				}else{
+			?>
 	            <div class="archive-meta">
 	                <h1>
 	                    <?php get_template_part('parts/h1'); ?>
@@ -60,7 +59,7 @@
 	                <?php endif; ?>
 
 	            </div>
-	        <?php endif; ?>
+	        <?php } ?>
 
 
             <?php
@@ -70,6 +69,11 @@
 		                'post_type'   => 'post',
 		                'post_status' => 'publish',
 		                'post_parent' => get_the_ID(),
+		                'posts_per_page' => -1,
+		                'orderby' => [
+			                'menu_order' => 'ASC',
+		                    'date' => 'DESC',
+		                ],
 		                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
 	                ]);
                 }elseif( is_singular('lists') ){

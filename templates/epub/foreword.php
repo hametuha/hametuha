@@ -3,11 +3,11 @@
 ?>
 <?php get_template_part('templates/epub/header') ?>
 
-<header class="header header--preface">
+<div class="header header--preface">
 	<h1 class="title">
-		序文
+		はじめに
 	</h1>
-</header>
+</div>
 
 <article class="content content--script content--preface clearfix">
 

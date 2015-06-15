@@ -1,34 +1,13 @@
 // Cover Image
 
 // Fit height
-html.epub-cover{
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  body, section.cover, .cover-image {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-  }
-  body img{
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 100%;
-  }
+html.epub-titlepage{
+  -webkit-writing-mode: horizontal-tb;
+  writing-mode: horizontal-tb;
 }
 
-section.cover{
-  margin: 0;
-  padding: 0;
-  .cover-image{
-    margin: 0;
-    padding: 0;
-    text-align: center;
-  }
-  .no-cover{
+.titlepage{
+  &__title{
     text-align: center;
     margin-top: 0;
     padding-top: 3em;

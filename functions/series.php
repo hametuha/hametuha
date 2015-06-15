@@ -16,6 +16,22 @@ function is_series( $post = null ){
     return 'series' == get_post_type($post->post_parent) ? $post->post_parent : 0;
 }
 
+/**
+ * シリーズが終了しているか
+ *
+ * @param null $post
+ *
+ * @return bool
+ */
+function is_series_finished( $post = null ){
+	$post = get_post($post);
+	if( 'series' == $post->post_type ){
+		$series_id = $post->ID;
+	}else{
+		$series_id = $post->post_parent;
+	}
+	return Series::get_instance()->is_finished($series_id);
+}
 
 /**
  * シリーズに属している場合にシリーズページへのリンクを返す
@@ -42,6 +58,21 @@ function the_series($pre = '', $after = '', $post = null){
 function get_series_authors($post = null){
 	$post = get_post($post);
 	return Series::get_instance()->get_authors($post->ID);
+}
+
+/**
+ * Show series range
+ *
+ * @param null|WP_Post|int $post
+ * @param string $format
+ */
+function the_series_range($post = null, $format = ''){
+	$post = get_post($post);
+	$format = $format ?: get_option('date_format');
+	$range = Series::get_instance()->get_series_range($post->ID);
+	if( $range && $range->start_date){
+		echo mysql2date($format, $range->start_date).'〜'.mysql2date($format, $range->last_date);
+	}
 }
 
 /**
@@ -85,29 +116,47 @@ function hametuha_series_hide($content){
 	return $content;
 }
 
+
+
 /**
- * カラムを追加
+ * 投稿リストにカラムを追加
  */
 add_filter('manage_posts_columns', function($columns, $post_type){
-	if( 'series' == $post_type ){
-		$new_columns = [];
-		foreach( $columns as $key => $val ){
-			if( 'author' == $key){
-				$val = '編集者';
-			}
-			$new_columns[$key] = $val;
-			if( 'title' == $key ){
-				$new_columns['count'] = '作品数';
-				$new_columns['sales_status'] = '販売状況';
-			}
+	$new_columns = [];
+	foreach( $columns as $key => $val ){
+		switch( $post_type ){
+			case 'series':
+				if( 'author' == $key){
+					$val = '編集者';
+				}
+				$new_columns[$key] = $val;
+				if( 'title' == $key ){
+					$new_columns['count'] = '作品数';
+					$new_columns['sales_status'] = '販売状況';
+				}
+				break;
+			case 'post':
+				$new_columns[$key] = $val;
+				if( 'title' == $key ){
+					$new_columns['series'] = '作品集';
+				}
+				break;
+			default:
+				// Do nothing
+				break;
 		}
+	}
+	if( $new_columns ){
 		$columns = $new_columns;
 	}
 	return $columns;
 }, 10, 2);
 
 
-add_action('manage_series_posts_custom_column', function($column, $post_id){
+/**
+ * 投稿リストのカラムを出力
+ */
+add_action('manage_posts_custom_column', function($column, $post_id){
 	switch( $column ){
 		case 'count':
 			$total = Series::get_instance()->get_total($post_id);
@@ -133,6 +182,21 @@ add_action('manage_series_posts_custom_column', function($column, $post_id){
 			printf("<span style='color: %s'>%s</span>", $color, Series::get_instance()->status_label[$status]);
 			if( $asin = Series::get_instance()->get_asin($post_id) ){
 				echo "<code>{$asin}</code>";
+			}
+			break;
+		case 'series':
+			$post = get_post($post_id);
+			if( $post->post_parent && ($parent = get_post($post->post_parent)) ){
+				// 親がある
+				if( current_user_can('edit_post', $parent->ID) ){
+					$url = admin_url("post.php?post={$parent->ID}&action=edit");
+				}else{
+					$url = get_permalink($parent);
+				}
+				printf('<a href="%s">%s</a>', esc_url($url), get_the_title($parent));
+			}else{
+				// なし
+				echo '<span style="color: #d3d3d3">--</span>';
 			}
 			break;
 		default:

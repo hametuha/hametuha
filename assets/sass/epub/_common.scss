@@ -1,5 +1,5 @@
-$link-color: #588cbc;
-$active-color: #ca4944;
+$link-color: #2e455d;
+$active-color: #b4423d;
 $thic-border: 10px solid #444;
 
 //
@@ -16,6 +16,24 @@ $thic-border: 10px solid #444;
 
 body{
   @extend %sans;
+}
+
+// alignment
+.text{
+  &-left{
+    text-align: left;
+  }
+  &-text-right{
+    text-align: right;
+  }
+  &-text-center{
+    text-align: center;
+  }
+}
+
+// Visibility
+.hidden{
+  display: none;
 }
 
 //
@@ -82,7 +100,11 @@ a{
 //
 .header {
 
+  @extend %sans;
+
   .title {
+    font-size: 2.4em;
+    line-height: 1.1;
     small {
       display: block;
       font-size: 0.6em;
@@ -98,6 +120,9 @@ a{
     .title{
       padding: 1em 2em;
       border-bottom: $thic-border;
+      @media only screen and (max-width: $screen-sm-max){
+        padding: 1em 0.5em;
+      }
       small{
         padding-top: 0.5em;
       }
@@ -112,7 +137,10 @@ a{
       margin: 0 0.67em;
       padding: 2em 1em;
       border-left: $thic-border;
-      small{
+      @media only screen and (max-width: $screen-sm-max) {
+        padding: 0.5em 1em;
+      }
+        small{
         padding-right: 0.5em;
       }
     }
@@ -148,6 +176,7 @@ article{
     padding-bottom: 2em;
   }
 }
+
 // 改ページ
 .pagebreak{
   page-break-after: always;
@@ -159,7 +188,7 @@ article{
 // ----------------
 //
 .footer{
-  color: #aaa;
+  color: #6e6e6e;
   .ltr &{
     padding: 1em 2em;
     border-top: $thic-border;
@@ -171,6 +200,7 @@ article{
     text-align: right;
   }
 }
+
 
 
 

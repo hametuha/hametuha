@@ -30,15 +30,27 @@
         case 'anpi':
             the_terms(get_the_ID(), 'anpi_cat', $before, $after);
             break;
+	    default:
+			// Do nothing
+		    break;
     }
     ?>
 
     <!-- Date -->
     <li class="date">
-        <i class="icon-clock"></i>
-        <span itemprop="datePublished"><?php the_date('Y年m月d日（D）'); ?></span>
-        <small><?= hametuha_passed_time($post->post_date) ?></small>
-        <meta itemprop="dateModified" content="<?= $post->post_modified ?>">
+	    <?php switch( get_post_type() ): case 'series':?>
+	        <i class="icon-calendar"></i>
+		    <span class="hidden" itemprop="datePublished"><?php the_date('Y年m月d日（D）'); ?></span>
+			<?php the_series_range() ?>
+		    <?php if( \Hametuha\Model\Series::get_instance()->is_finished(get_the_ID()) ): ?>
+			    <span class="label label-danger">完結済み</span>
+		    <?php endif; ?>
+	    <?php break; default: ?>
+	        <i class="icon-clock"></i>
+	        <span itemprop="datePublished"><?php the_date('Y年m月d日（D）'); ?></span>
+	        <small><?= hametuha_passed_time($post->post_date) ?></small>
+	        <meta itemprop="dateModified" content="<?= $post->post_modified ?>">
+	    <?php endswitch; ?>
     </li>
 
     <!-- Comments -->

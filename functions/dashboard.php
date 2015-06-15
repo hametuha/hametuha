@@ -69,14 +69,16 @@ add_action('do_meta_boxes', '_hametuha_remove_metabox', 100000, 3);
 
 /**
  * 投稿画面におけるユーザーの表示項目を上書きする
+ *
  * @param array $result
  * @param string $option
  * @param WP_User $user 
  */
 add_filter('get_user_option_metaboxhidden_post', function ($result, $option, $user = null){
+	$result = (array)$result;
 	$box_to_hide_from_author = array('authordiv');
-	foreach($box_to_hide_from_author as $option){
-		if(!current_user_can('edit_others_posts') && false === array_search($option, $result)){
+	foreach( $box_to_hide_from_author as $option ){
+		if( !current_user_can('edit_others_posts') && false === array_search($option, $result) ){
 			$result[] = $option;
 		}
 	}

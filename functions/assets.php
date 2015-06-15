@@ -112,32 +112,28 @@ add_action('wp_enqueue_scripts', function(){
  *
  */
 add_action('wp_enqueue_scripts', function(){
-
 	//共通
 	wp_enqueue_script('hametuha-common');
-
 	//投稿の場合
 	if( is_singular('post') ){
 		wp_dequeue_script('contact-form-7');
         wp_enqueue_script('hametuha-single');
 	}
-
     // トップページ
     if( is_front_page() ){
         wp_enqueue_script('hametuha-front');
     }
-
 	//コメント用
 	if( is_singular() && !is_page() ){
         wp_enqueue_script( 'comment-reply' );
 	}
-
     // 告知用JS
     if( is_singular('announcement') ){
         wp_enqueue_script('hametuha-announcement');
     }
-
 }, 1000);
+
+
 
 /**
  * 管理画面でアセットを読み込む

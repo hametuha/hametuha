@@ -52,12 +52,22 @@ get_header(); ?>
 
             </div><!-- //.post-meta-single -->
 
+            <?php if( ($should_hide = $series->should_hide()) ){
+		        if( !current_user_can('edit_post', get_the_ID()) ){
+		            add_filter('the_content', 'hametuha_series_hide', 100);
+		        }else{
+			        echo <<<HTML
+					<div class="alert alert-info">
+						<p>
+			                この投稿は販売中のため閲覧制限がかかっていますが、あなたには編集権限があるので表示しています。
+						</p>
+					</div>
+HTML;
+		        }
+            } ?>
 
             <div class="work-content row" itemprop="text">
 
-	            <?php if( ($should_hide = $series->should_hide()) ): ?>
-			        <?php add_filter('the_content', 'hametuha_series_hide', 100);  ?>
-				<?php endif; ?>
 
                 <?php the_content(); ?>
 
@@ -69,39 +79,7 @@ get_header(); ?>
 
             </div><!-- //.single-post-content -->
 
-	        <?php
-	        $limit = $series->get_visibiity($post->post_parent);
-	        if( $limit ){
-		        $asin = $series->get_asin($post->post_parent);
-		        $permalink = get_permalink($post->post_parent);
-		        $title = get_the_title($post->post_parent);
-		        $msg = <<<HTML
-		        	<a class="alert-link" href="{$permalink}">{$title}</a>は{$limit}話まで無料で読むことができます。
-HTML;
-		        switch( $series->get_status($post->post_parent) ){
-			        case 2:
-				        $msg .= '続きはAmazon Kindleで入手可能です。ぜひご利用ください。';
-						$msg2 = do_shortcode("[tmkm-amazon asin='{$asin}'][/tmkm-amazon]");
-				        $class_name = 'success';
-				        break;
-			        case 1:
-				        $msg .= '続きは現在販売準備中です。乞うご期待。';
-						$msg2 = '';
-				        $class_name = 'danger';
-				        break;
-			        default:
-						$msg = false;
-				        break;
-		        }
-		        if( $msg ){
-			        echo  <<<HTML
-				<div class="alert alert-{$class_name} text-center">
-					<p>{$msg}</p>
-					{$msg2}
-				</div>
-HTML;
-		        }
-	        } ?>
+	        <?php get_template_part('parts/alert', 'kdp'); ?>
 
             <p class="text-center pub-date">
                 <span itemprop="dateCreated"><?php the_time('Y年n月j日') ?></span>公開
@@ -125,15 +103,7 @@ HTML;
                 <?php get_template_part('parts/author') ?>
             </div>
 
-	        <div id="post-share" class="share-panel text-center">
-		        <h4>この作品をシェアする</h4>
-		        <?php hametuha_share() ; ?>
-		        <div class="input-group">
-			        <span class="input-group-addon">URL</span>
-			        <input class="form-control" id="post-short-link" type="text" value="<?= esc_attr(wp_get_shortlink()); ?>" onclick="this.select();" />
-		        </div>
-	        </div><!-- #post-share -->
-
+	        <?php get_template_part('parts/share') ?>
 
 	        <p class="finish-nav">
 		        読み終えたらレビューしてください<br />

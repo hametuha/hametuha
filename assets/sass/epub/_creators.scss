@@ -9,14 +9,16 @@
   border-bottom: 3px dashed #ddd;
   @include clearfix();
   .avatar{
-    width: auto;
-    height: auto;
-    max-width: 200px;
+    width: 150px;
+    height: 150px;
+    max-width: 150px;
     float: right;
     margin: 0.5em 0 1.5em 1.5em;
     border-radius: 50%;
     @media only screen and (max-width: $screen-sm-max) {
-      max-width: 100px;
+      max-width: 80px;
+      width: 80px;
+      height: 80px;
     }
   }
   dl{

@@ -1,7 +1,4 @@
 <?php
-/**
- * テーマ用ブートストラップ
- */
 
 
 /**
@@ -14,9 +11,6 @@ function hametuha_version(){
     return $theme->get('Version');
 }
 
-require '/Users/guy/Documents/Vagrant/hamepub/www/HamePub/vendor/autoload.php';
-
-
 
 
 /**
@@ -28,19 +22,14 @@ define('HAMETUHA_THEME_VERSION', hametuha_version());
 
 
 /**
- * Name space for theme
- *
+ * Bootstrap for theme
  */
-define('WPAMETU_NAMESPACE_ROOT', 'Hametuha');
 
-/**
- * Name space root directory
- */
-define('WPAMETU_NAMESPACE_ROOT_DIR', __DIR__.'/app');
-
-
-// Load WPametu
-get_template_part('wpametu/bootstrap');
+if( file_exists(__DIR__.'/vendor/autoload.php') ){
+	require_once __DIR__.'/vendor/autoload.php';
+	// Load WPametu
+	WPametu::entry('Hametuha', __DIR__.'/src');
+}
 
 
 

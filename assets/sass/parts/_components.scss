@@ -292,16 +292,33 @@ ul.metadata{
       &:first-child{
         padding-top: 2em;
         margin-top: 2em;
-        border-top: 3px double $thin-border;
+        border-top: $divide-border;
       }
       &:last-child{
         padding-bottom: 2em;
         margin-bottom: 2em;
-        border-bottom: 3px double $thin-border;
+        border-bottom: $divide-border;
       }
     }
   }
 }
+.meta{
+  &--series{
+    margin-bottom: 1em;
+    border-bottom: $divide-border;
+    padding-bottom: 1em;
+  }
+  &__thumbnail{
+    padding-top: 0.5em;
+    text-align: center;
+    img{
+      max-width: 100%;
+      height: auto;
+      width: auto;
+    }
+  }
+}
+
 
 //
 // 一覧ページのリスト
@@ -313,10 +330,30 @@ ul.metadata{
   border-top: 1px solid $thin-border;
   & > li{
     margin-top: 0;
-    padding: 1em;
+    padding: 0;
     border-bottom: 1px solid $thin-border;
     &:nth-child(even){
       background-color: $zebra-bg;
+    }
+    .media__link{
+      @extend .clearfix;
+      display: block;
+      padding: 1em;
+      &:link{
+        text-decoration: none;
+      }
+      &:visited{
+        text-decoration: none;
+      }
+      &:hover{
+        background: $link-active-bg;
+        text-decoration: none;
+      }
+      &:active{
+        color: $link-active;
+        background: #fffecc;
+        text-decoration: none;
+      }
     }
   }
   // 見出し
@@ -335,6 +372,12 @@ ul.metadata{
       height: 80px;
       @extend .img-circle;
     }
+  }
+  .pull-left{
+    margin-right: 1em;
+  }
+  .pull-right{
+    margin-left: 1em;
   }
   .author-info .avatar{
     width: 20px;
@@ -409,37 +452,63 @@ ul.metadata{
 // ---------------
 //
 
-.share-panel{
+.row--share{
+
+  // ボタンの後
+  .btn--joinus + &{
+    margin: 10px 0;
+  }
+
+  .col-xs-4, .col-sm-2{
+    padding: 0;
+  }
+
+  .secondary{
+    height: 40px;
+    line-height: 40px;
+    color: $hametuha-color;
+  }
   a{
+    display: block;
+    height: 40px;
+    line-height: 40px;
     &:link, &:visited{
+      color: #fff;
       text-decoration: none;
     }
     &:hover{
+      color: #fff;
       opacity: 0.8;
     }
     &:active{
-      opacity: 1;
+      color: #fff;
+      opacity: 6;
     }
-    margin-right: 20px;
-    margin-left: 20px;
+    @each $var in (
+      facebook $facebook-color,
+      twitter $twitter-color,
+      googleplus $google-color,
+      hatena $hatena-color,
+      line $line-color,
+      pocket $pocket-color,
+    ){
+      $brand: nth($var, 1);
+      $color: nth($var, 2);
+      &.share--#{$brand}{
+        background-color: $color;
+      }
+    }
+    span{
+      margin-left: 0.5em;
+    }
   }
   i{
-    font-size: 40px;
+    color: #fff !important;
+    line-height: 1;
+    font-size: 24px;
+    vertical-align: middle;
   }
 }
-
-@media only screen and (max-width: $screen-xs-max) {
-  .share-panel{
-    a{
-      margin-right: 10px;
-      margin-left: 10px;
-    }
-    i{
-      font-size: 30px;
-    }
-  }
-}
-
 
 //
 // イベント情報

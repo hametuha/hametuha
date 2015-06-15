@@ -3,6 +3,7 @@
 namespace Hametuha\Admin\MetaBox;
 
 
+use Hametuha\Model\CompiledFiles;
 use Hametuha\Model\Series;
 use WPametu\UI\Admin\EmptyMetaBox;
 
@@ -11,6 +12,7 @@ use WPametu\UI\Admin\EmptyMetaBox;
  *
  * @package Hametuha\Admin\MetaBox
  * @property-read Series $series
+ * @property-read CompiledFiles $files
  */
 abstract class SeriesBase extends EmptyMetaBox
 {
@@ -31,10 +33,16 @@ abstract class SeriesBase extends EmptyMetaBox
 	 * @return mixed
 	 */
 	public function __get($name){
-		if( 'series' === $name ){
-			return Series::get_instance();
-		}else{
-			return parent::__get($name);
+		switch( $name ){
+			case 'series':
+				return Series::get_instance();
+				break;
+			case 'files':
+				return CompiledFiles::get_instance();
+				break;
+			default:
+				return parent::__get($name);
+				break;
 		}
 	}
 

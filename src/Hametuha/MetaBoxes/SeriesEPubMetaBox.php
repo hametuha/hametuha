@@ -41,10 +41,10 @@ class SeriesEPubMetaBox extends LeadMetaBox
 		],
 		'_preface' => [
 			'class' => TextArea::class,
-			'label' => '序文',
+			'label' => 'はじめに',
 			'required' => false,
 			'rows' => 10,
-			'description' => '入力した場合、序文としてePubの先頭に挿入されます。HTMLを使用することができます。',
+			'description' => '入力した場合、本文の前に挿入されます。序文や献辞としてお使いください。HTMLを使用することができます。',
 		],
 	];
 

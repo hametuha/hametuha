@@ -3,13 +3,13 @@
 ?>
 <?php get_template_part('templates/epub/header') ?>
 
-<header class="header header--afterwords">
+<div class="header header--afterwords">
 	<h1 class="title">
 		あとがき
 	</h1>
-</header>
+</div>
 
-<article class="content content--script content--afterwords clearfix">
+<article class="content content--script content--afterwords clearfix" epub:type="afterword">
 
 	<?php the_content() ?>
 

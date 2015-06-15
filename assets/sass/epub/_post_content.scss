@@ -10,6 +10,8 @@
   text-align: justify;
   text-justify: inter-ideograph;
 
+  // Text decoration
+
   strong{
     font-family: sans-serif;
     font-weight: bold;
@@ -18,14 +20,6 @@
   em{
     font-style: normal;
     font-family: sans-serif;
-  }
-
-  del, strike{
-    color: #999;
-  }
-
-  cite{
-
   }
 
   ins{
@@ -41,14 +35,30 @@
     }
   }
 
-  big{
+  big, .big{
     font-size: 4em;
+  }
+  small{
+    font-size: 1em;
+    color: #666;
+    &:before{
+      content: "〔";
+    }
+    &:after{
+      content: "〕";
+    }
+  }
+
+  del, strike, .strike{
+    color: #aaa;
+    text-decoration: line-through;
   }
 
   address{
     font-style: normal;
     font-family: sans-serif;
   }
+
 
   // Paragraph
   p{
@@ -85,17 +95,22 @@
     }
   }
 
+  // Lists
   dl{
+    @include logical-property(1em 0 1em 0);
     dt{
       @extend %sans;
       @include logical-property(0 0 0 1em);
     }
     dd{
       @include logical-property(0 0 0 2em);
+      & + dt{
+        @include logical-property(1em 0 0 1em);
+      }
     }
   }
 
-  // Blockquote
+  // Quotation
   blockquote{
     color: #666;
     margin: 0;
@@ -103,21 +118,54 @@
     @include logical-property(0 0 0 2em, false);
     cite{
       display: block;
-      text-align: right;
       font-style: normal;
+      font-size: 0.85em;
+      @include logical-property(0 0 0 3em, false);
+    }
+  }
+  cite{
+    font-style: italic;
+  }
+  q{
+    &:before{
+      content: "“";
+    }
+    &:after{
+      content: "”";
+    }
+    .rtl &{
+        &:before{
+          content: "〝";
+        }
+        &:after{
+          content: "〟";
+        }
     }
   }
 
+
+
+  // Code format
   pre {
-    line-height: 1.2;
+    line-height: 1.1;
     overflow: auto;
   }
-
-
-  del, strike{
-    color: #aaa;
+  code, tt, .tt{
+    font-family: monospace;
+    border: 1px solid $active-color;
+    color: $active-color;
+    border-radius: 2px;
+    padding: 2px;
+  }
+  var{
+    font-family: monospace;
+    font-style: normal;
+    background: #ccc;
+    border-radius: 2px;
+    padding: 2px;
   }
 
+  // table
   table{
     border-collapse: collapse;
     .rtl &{
@@ -135,6 +183,7 @@
     }
   }
 
+  // Image
   img{
     max-height: 100%;
     max-width: 100%;
@@ -145,6 +194,52 @@
   // Headers
   h1, h2, h3, h4, h5, h6{
     clear: both;
+    margin: 1.5em 0 0.5em;
+    line-height: 1.1;
+    font-weight: bold;
+    .rtl &{
+      margin: 0 1.5em 0 0.5em;
+    }
+  }
+  h1{
+    font-size: 2.4em;
+    padding: 0.25em;
+    background: #444;
+    color: #fff;
+  }
+  h2{
+    $h2-border: 1px dotted #444;
+    font-size: 2.2em;
+    border-bottom: $h2-border;
+    padding-bottom: 0.5em;
+    .rtl &{
+      padding-bottom: 0;
+      padding-left: 0.5em;
+      border-bottom: none;
+      border-left: $h2-border;
+    }
+  }
+  h3{
+    $h3-border:  5px #666 solid;
+    font-size: 1.8em;
+    border-left: $h3-border;
+    padding-left: 0.25em;
+    .rtl &{
+      border-left: none;
+      padding-left: 0;
+      padding-top: 0.25em;
+      border-top: $h3-border;
+    }
+  }
+  h4{
+    font-size: 1.8em;
+    color: #666;
+  }
+  h5{
+    font-size: 1.4em;
+  }
+  h6{
+    font-size: 1.2em;
   }
 
   // WP Required
@@ -189,6 +284,9 @@
     .alignright{
       margin-bottom: 0;
     }
+    .aligncenter{
+      margin: 1em auto;
+    }
   }
 
 }
@@ -202,21 +300,13 @@
     pre{
       //    -webkit-writing-mode: horizontal-tb;
     }
-    q{
-      &:before{
-        content: "";
-      }
-      &:after{
-        content: "";
-      }
-    }
     sup{
       top: 0;
       right: -0.5em;
     }
     sub{
       bottom: 0;
-      left: -0.25em;
+      left: -0.5em;
     }
 
     .wp-caption{

@@ -14,6 +14,8 @@ class Stats extends Screen
 
 	protected $position = 3;
 
+	protected $template = 'stats';
+
 	/**
 	 * Executed on admin_init
 	 */
@@ -29,10 +31,4 @@ class Stats extends Screen
 			['google-jsapi', 'jquery-ui-datepicker-i18n'], hametuha_version(), true);
 	}
 
-	/**
-	 * Load templates
-	 */
-	protected function content() {
-		$this->load('stats');
-	}
 }

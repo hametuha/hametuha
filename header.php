@@ -93,7 +93,7 @@
                     <ul class="dropdown-menu">
                         <li class="greeting">
                             <strong><?= hametuha_user_name() ?></strong>さん<br />
-                            <span class="role"><?= hametuha_user_role() ?></span><br />
+                            <span class="role"><?= hametuha_user_role() ?></span>
                         </li>
                         <li class="divider"></li>
                         <?php /*
@@ -102,7 +102,9 @@
                         <li><a href="<?= home_url('/your/comments/', 'http') ?>"><i class="icon-bubble-dots"></i> あなたのコメント</a></li>
 	                    <li><a href="<?= home_url('/your/lists/', 'http') ?>"><i class="icon-drawer3"></i> あなたのリスト</a></li>
                         <li><a href="<?= home_url('/your/reviews/', 'http') ?>"><i class="icon-star2"></i> レビューした作品</a></li>
+	                    <?php if( current_user_can('edit_posts') ): ?>
                         <li><a href="<?= admin_url('admin.php?page=hametu-stats') ?>"><i class="icon-chart"></i> アクセス解析</a></li>
+	                    <?php endif; ?>
                         <li class="divider"></li>
                         <li><a href="<?= admin_url('profile.php') ?>"><i class="icon-profile"></i> プロフィール</a></li>
                         <?php if( current_user_can('edit_posts') ): ?>
@@ -112,7 +114,7 @@
                     </ul>
                 </li>
             <?php else: ?>
-                <li><a class="login-btn" href="<?= wp_login_url('/') ?>"><i class="icon-key"></i> ログイン</a></li>
+                <li><a class="login-btn" href="<?= wp_login_url('/') ?>">ログイン</a></li>
             <?php endif; ?>
         </ul>
     </div>

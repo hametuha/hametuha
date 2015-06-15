@@ -87,6 +87,17 @@ class Series extends Model
 	}
 
 	/**
+	 * Get series type
+	 *
+	 * @param int $post_id
+	 *
+	 * @return int 1 or 0
+	 */
+	public function get_series_type($post_id){
+		return (int)get_post_meta($post_id, '_series_type', true);
+	}
+
+	/**
 	 * Get subtitle
 	 *
 	 * @param int $post_id
@@ -95,6 +106,23 @@ class Series extends Model
 	 */
 	public function get_subtitle($post_id){
 		return (string) get_post_meta( $post_id, 'subtitle', true );
+	}
+
+	/**
+	 * Get series range
+	 *
+	 * @param int $post_id
+	 *
+	 * @return mixed|null
+	 */
+	public function get_series_range($post_id){
+		return $this->select("MAX(post_date) AS last_date, MIN(post_date) AS start_date")
+			->from($this->db->posts)
+			->wheres([
+				"post_type = %s" => 'post',
+				"post_status = %s" => 'publish',
+				"post_parent = %d" => $post_id,
+			])->get_row();
 	}
 
 	/**
@@ -254,7 +282,6 @@ SQL;
 	 */
 	public function next($before = '<li>', $after = '</li>', $post = null){
 		return $this->prev($before, $after, $post, true);
-
 	}
 
 	/**
@@ -279,5 +306,21 @@ SQL;
 			return '';
 		}
 		return sprintf('%s'.$link.'%s', $before, get_permalink($prev->ID), $index + $operand, $after);
+	}
+
+	/**
+	 * Update posts order
+	 *
+	 * @param int $post_id
+	 * @param int $order
+	 *
+	 * @return bool
+	 */
+	public function update_order($post_id, $order){
+		return (bool) $this->update([
+			'menu_order' => $order,
+		], [
+			'ID' => $post_id
+		], ['%d'], ['%d'], $this->db->posts);
 	}
 }

@@ -34,7 +34,7 @@ endif;
 		    <?php wp_list_comments([
                 'type' => 'comment',
                 'callback' => 'hametuha_commment_display'
-            ]);?>
+            ]); ?>
 		</ul>
 
 		<?php if( get_comment_pages_count() > 1 ): ?>
@@ -109,7 +109,7 @@ endif;
 
 			<?php if( !is_user_logged_in() ): ?>
 				<div class="comment-as clearfix">
-					<?= wpametu_recaptcha('clean', 'ja') ?>
+					<?= WPametu::recaptcha('clean', 'ja') ?>
 					<div class="alert alert-warning">
                         <p>
                             あなたはログインしていないので、匿名でコメントを行います。スパムロボットによるコメント投稿を防ぐため、キャプチャを入力してください。

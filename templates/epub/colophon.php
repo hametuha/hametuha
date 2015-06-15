@@ -1,21 +1,23 @@
 <?php
 /** @var WP_Post $series */
+/** @var bool $is_vertical */
+/** @var \Hametuha\Rest\EPub $this */
 ?>
 <?php get_template_part('templates/epub/header') ?>
 
-<header class="header header--colophon">
+<div class="header header--colophon">
 	<h1 class="title">
 		書誌情報
 	</h1>
 	<div class="meta">
 		<div class="date">
-			<?php the_date() ?>発行<br />
-			<?php the_modified_date() ?>更新
+			<?php the_date('Y年m月d日') ?>発行<br />
+			<?php the_modified_date('Y年m月d日') ?>更新
 		</div>
 	</div>
-</header>
+</div>
 
-<article class="content content--colophon">
+<article class="content content--colophon" epub:type="colophon">
 
 	<p class="text-center">
 		<img src="<?= get_template_directory_uri() ?>/assets/img/hametuha-logo.png" alt="破滅派" width="150" height="75">
@@ -30,7 +32,7 @@
 		<tr>
 			<th>初出</th>
 			<td>
-				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>
+				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>（<?php the_time('Y年m月d日') ?>）
 			</td>
 		</tr>
 		<tr>
@@ -52,7 +54,7 @@
 		<tr>
 			<th>発行所</th>
 			<td>
-				<?php bloginfo('name') ?>
+				<a href="<?= home_url('', 'http') ?>"><?php bloginfo('name') ?></a>
 			</td>
 		</tr>
 		<?php foreach( [
@@ -65,6 +67,36 @@
 		<?php endforeach; ?>
 	</table>
 
+
+	<table class="colophon">
+		<caption>初出一覧</caption>
+		<?php
+		$series_query = new \WP_Query(   [
+			'post_type' => 'post',
+			'post_parent' => get_the_ID(),
+			'posts_per_page' => -1,
+			'orderby' => [
+				'menu_order' => 'DESC',
+				'post_date' => 'ASC',
+			]
+		]);
+		if( $series_query->have_posts() ):
+		?>
+			<?php $counter = 0; while( $series_query->have_posts() ): $series_query->the_post(); $counter++; ?>
+			<tr>
+				<th><?= number_format($counter) ?></th>
+				<td>
+					<a href="<?php the_permalink() ?>">
+						<?php the_title() ?>
+					</a>
+					<br />
+					<small><?php the_time('Y年m月d日') ?></small>
+				</td>
+			</tr>
+			<?php endwhile; wp_reset_postdata(); ?>
+		<?php endif; ?>
+	</table>
+
 	<table class="colophon">
 		<caption>連絡先</caption>
 		<tr>
@@ -73,7 +105,7 @@
 		</tr>
 		<tr>
 			<th>電話</th>
-			<td><a href="tel:05055328327">050-5532-8327</a></td>
+			<td>050-5532-8327</td>
 		</tr>
 		<tr>
 			<th>メール</th>

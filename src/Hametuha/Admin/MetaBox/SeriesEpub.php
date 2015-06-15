@@ -43,6 +43,7 @@ TEXT;
 			// Author
 			if( $this->input->post('pleaser-publish') ){
 				update_post_meta($post->ID, '_kdp_status', 1);
+				$url = get_edit_post_link($post->ID, 'mail');
 				$body = <<<TEXT
 破滅派編集部
 
@@ -53,8 +54,8 @@ TEXT;
 TEXT;
 				wp_mail(get_option('admin_email'), "【破滅派】 電子書籍申請", $body);
 			}
-			update_post_meta($post->ID, '_series_finished', (bool)$this->input->post('is_finished'));
 		}
+		update_post_meta($post->ID, '_series_finished', (bool)$this->input->post('is_finished'));
 	}
 
 
@@ -87,7 +88,7 @@ TEXT;
 		</div>
 
 		<?php if( current_user_can('edit_others_posts') ): ?>
-			<div class="misc-pub-section misc-pub-section--epub, misc-pub-section--status">
+			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--status">
 				<label>
 					<span class="dashicons dashicons-admin-settings"></span> ステータス変更:
 					<select name="publishing_status">
@@ -98,7 +99,7 @@ TEXT;
 				</label>
 			</div>
 
-			<div  class="misc-pub-section misc-pub-section--epub, misc-pub-section--asin">
+			<div  class="misc-pub-section misc-pub-section--epub misc-pub-section--asin">
 				<label>
 					<span class="dashicons dashicons-cart"></span> ASIN:
 					<input type="text" name="asin" class="regular-text" value="<?= esc_attr($this->series->get_asin($post->ID)) ?>" />
@@ -107,7 +108,7 @@ TEXT;
 		<?php endif; ?>
 
 
-		<div  class="misc-pub-section misc-pub-section--epub, misc-pub-section--asin">
+		<div  class="misc-pub-section misc-pub-section--epub misc-pub-section--enroll">
 			<?php if( current_user_can('edit_post', $post->ID) && !$status ): ?>
 				<label>
 					<input type="checkbox" name="pleaser-publish" value="1" > 販売申請する
@@ -130,8 +131,17 @@ TEXT;
 			</p>
 		</div>
 
-
 		<?php if( current_user_can('edit_others_posts') ): ?>
+			<div  class="misc-pub-section misc-pub-section--epub misc-pub-section--files">
+				<label>
+					<span class="dashicons dashicons-format-aside"></span> ファイル:
+					<?php if( $this->files->record_exists($post->ID) ): ?>
+					<a href="<?php echo admin_url('edit.php?post_type=series&page=hamepub-files&p='.$post->ID) ?>">一覧</a>
+					<?php else: ?>
+					なし
+					<?php endif; ?>
+				</label>
+			</div>
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">
 				<a class="button" target="epub-publisher" href="<?= home_url("epub/publish/{$post->ID}", 'https') ?>">書き出し</a>
 				<iframe name="epub-publisher" style="display: none"></iframe>

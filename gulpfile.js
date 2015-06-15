@@ -19,6 +19,7 @@ gulp.task('sass',function(){
             sourcemap: true,
             includePaths: [
                 './assets/sass',
+                './vendor',
                 './bower_components/bootstrap-sass/assets/stylesheets'
             ]
         }))

@@ -5,6 +5,7 @@
 //
 // ----------------------
 //
+$base-color: #444;
 
 $thin-border: #ddd;
 $zebra-bg: #f9f9f9;
@@ -22,6 +23,8 @@ $start-font: #ffff00;
 
 // リンク
 $link-active: red;
+$link-hover-bg: #fffcde;
+$link-active-bg: #fffecc;
 
 // ソーシャルアイコンの色
 $hametuha-color: #000000;
@@ -34,14 +37,30 @@ $hatena-color: #576CEA;
 $github-color: #333333;
 $minicome-color: #252525;
 $ustream-color: #2F7BFF;
+$pocket-color: #F04057;
 
 // アイコンの色を決める
-@each $brand in facebook $facebook-color, twitter $twitter-color, google $google-color, line $line-color, ha $hametuha-color, hatebu $hatena-color, github $github-color, minicome $minicome-color, youtube $youtube-color, ustream $ustream-color{
+@each $brand in (
+  facebook $facebook-color,
+  twitter $twitter-color,
+  google $google-color,
+  line $line-color,
+  ha $hametuha-color, hatebu
+  $hatena-color,
+  github $github-color,
+  minicome $minicome-color,
+  youtube $youtube-color,
+  ustream $ustream-color,
+  pocket $pocket-color,
+  hatena $hatena-color,
+){
   [class^="icon-#{nth($brand, 1)}"]{
     color: nth($brand, 2) !important;
   }
 }
 
+// ボーダー
+$divide-border: 3px double $thin-border;
 
 // アイコンを読み込む
 @mixin hameticon(){

@@ -3,11 +3,11 @@
 ?>
 <?php get_template_part('templates/epub/header') ?>
 
-<header class="header header--creators">
+<div class="header header--creators">
 	<h1 class="title">
 		執筆者一覧
 	</h1>
-</header>
+</div>
 
 <article class="content content--creators">
 

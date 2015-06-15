@@ -18,11 +18,11 @@ class SeriesPreview extends SeriesBase
 			申請前に必ずプレビューを行ってください。
 		</p>
 		<ol>
-			<li><a href="<?= home_url("epub/preview/cover/{$post->ID}", 'https') ?>" target="epub-preview">表紙</a></li>
+			<li><a href="<?= home_url("epub/preview/titlepage/{$post->ID}", 'https') ?>" target="epub-preview">扉</a></li>
 			<li><a href="<?= home_url("epub/preview/toc/{$post->ID}", 'https') ?>" target="epub-preview">目次</a></li>
-			<li><a href="<?= home_url("epub/preview/preface/{$post->ID}", 'https') ?>" target="epub-preview">序文</a></li>
+			<li><a href="<?= home_url("epub/preview/foreword/{$post->ID}", 'https') ?>" target="epub-preview">序文</a></li>
 			<li><a href="<?= home_url("epub/preview/afterword/{$post->ID}", 'https') ?>" target="epub-preview">あとがき</a></li>
-			<li><a href="<?= home_url("epub/preview/creators/{$post->ID}", 'https') ?>" target="epub-preview">著者一覧</a></li>
+			<li><a href="<?= home_url("epub/preview/contributors/{$post->ID}", 'https') ?>" target="epub-preview">著者一覧</a></li>
 			<li><a href="<?= home_url("epub/preview/colophon/{$post->ID}", 'https') ?>" target="epub-preview">奥付</a></li>
 		</ol>
 		<hr />
