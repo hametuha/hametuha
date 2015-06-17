@@ -8,7 +8,7 @@
 		<?php endif; ?>
 	</p>
 	<p>
-		リストへの作品追加は、個別の作品ページから行えます。
+		リストへの作品追加は、個別の作品ページから行えます。<a class="alert-link" href="<?= home_url('/faq/how-to-make-list/', 'http') ?>">詳しいやり方を見る&raquo;</a>
 	</p>
 </div>
 

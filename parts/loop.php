@@ -21,11 +21,20 @@
 	        <!-- Post Data -->
 	        <ul class="list-inline">
 	            <?php switch(get_post_type()): case 'faq': ?>
-	                <?php the_terms(get_the_ID(), 'faq_cat', '<li><i class="icon-tags"></i> ', ', ', '</li>') ?>
+		            <li>
+			            <i class="icon-tags"></i>
+			            <?php if( ( $terms = get_the_terms(get_the_ID(), 'faq_cat') ) && !is_wp_error($terms) ): ?>
+		                    <?= implode(', ', array_map(function($term){
+			                    return esc_html($term->name);
+		                    }, $terms)); ?>
+			            <?php else: ?>
+			            <span class="text-muted">分類なし</span>
+			            <?php endif; ?>
+		            </li>
 	            <?php break; case 'info': ?>
 	            <?php break; default: ?>
 	                <li class="author-info">
-	                    <?php echo get_avatar(get_the_author_meta('ID'), 40); ?>
+	                    <?= get_avatar(get_the_author_meta('ID'), 40); ?>
 	                    <?php the_author(); ?>
 	                </li>
 	            <?php break; endswitch; ?>

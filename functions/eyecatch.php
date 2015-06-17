@@ -63,25 +63,29 @@ HTML;
 			break;
 		case 'series':
 			$help_url = home_url('/fat/ebook-cover-regulation');
-			$content .= <<<HTML
-				<p class="description">
-					アイキャッチ画像は電子書籍の表紙として利用されます。サイズは次の通りです（<a href="{$help_url}" target="_blank">もっと詳しく</a>）。
-				</p>
-				<table class="sidemeta__table sidemeta__table--regulation">
-					<tr>
-						<th>横幅</th>
-						<td>1200px</td>
-					</tr>
-					<tr>
-						<th>高さ</th>
-						<td>1920px</td>
-					</tr>
-					<tr>
-						<th>解像度</th>
-						<td>72ppi</td>
-					</tr>
-				</table>
+			// イメージサイズを取得
+			global $_wp_additional_image_sizes;
+			if( isset($_wp_additional_image_sizes['kindle-cover']) ){
+				$content .= <<<HTML
+					<p class="description">
+						アイキャッチ画像は電子書籍の表紙として利用されます。サイズは次の通りです（<a href="{$help_url}" target="_blank">もっと詳しく</a>）。
+					</p>
+					<table class="sidemeta__table sidemeta__table--regulation">
+						<tr>
+							<th>横幅</th>
+							<td>{$_wp_additional_image_sizes['kindle-cover']['width']}px</td>
+						</tr>
+						<tr>
+							<th>高さ</th>
+							<td>{$_wp_additional_image_sizes['kindle-cover']['height']}px</td>
+						</tr>
+						<tr>
+							<th>解像度</th>
+							<td>72ppi</td>
+						</tr>
+					</table>
 HTML;
+			}
 			break;
 		default:
 			// Do nothing.

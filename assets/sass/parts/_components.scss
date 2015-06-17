@@ -144,13 +144,18 @@
 .jumbotron{
   position: relative;
   overflow: hidden;
-  img{
+  background-position: center center;
+  background-size: cover;
+  &:after{
     z-index: 1;
     position: absolute;
+    display: block;
+    content: "";
     width: 100%;
-    height: auto;
+    height: 100%;
     top: 0;
     left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
   }
   h1, p{
     position: relative;
@@ -166,15 +171,11 @@
     &:hover{
       background-color: #000;
     }
+
   }
 }
 @media only screen and (max-width: $screen-sm-max) {
   .jumbotron{
-    img{
-      width: auto;
-      height: 100%;
-      min-width: 100%;
-    }
     h1{
       font-size: 48px;
     }

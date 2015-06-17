@@ -220,13 +220,15 @@ class Picture extends Singleton
             $user_id = email_exists($id_or_email);
         }
 	    // ユーザーメタを取得
-	    if( $this->has_profile_pic($user_id) ){
+	    if( $user_id && $this->has_profile_pic($user_id) ){
 		    $attachment_id = get_user_meta($user_id, $this->user_meta_key, true);
 		    $size = max(160, $size);
 		    $img_tag = wp_get_attachment_image($attachment_id, [$size, $size]);
-		    if( preg_match('/src="([^"]+)"/u', $img_tag, $src) ){
+		    if( preg_match('#src="([^"]+)"#u', $img_tag, $src) ){
 			    $avatar = $this->image->replace_url($avatar, $src[1]);
 		    }
+		    // srcsetを取り除く
+		    $avatar = preg_replace('#srcset=["\'][^"\']+["\']#u', '', $avatar);
 	    }
         return $avatar;
     }
@@ -285,7 +287,7 @@ class Picture extends Singleton
         if( !$hooked ){
             $instance = self::get_instance();
             //avatarのフィルター
-            add_filter('get_avatar', [$instance, 'get_avatar'], 10, 5);
+            add_filter('get_avatar', [$instance, 'get_avatar'], 11, 5);
             $hooked = true;
         }
     }

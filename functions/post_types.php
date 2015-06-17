@@ -65,7 +65,7 @@ add_action('init', function(){
 	$faq_post_type = 'faq';
 	$args = array(
 		'label' => 'よくある質問',
-		'description' => '破滅派に寄せられた質問です。みなさんの疑問を解決します。',
+		'description' => '破滅派に寄せられた質問です。みなさんの疑問を解決します。わからないことはお問い合わせください。',
 		'public' => true,
 		'menu_position' => 20,
 		'menu_icon' => 'dashicons-editor-help',

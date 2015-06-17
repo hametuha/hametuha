@@ -2,12 +2,11 @@
 
 <div class="container front-container">
 
-    <?php if(have_posts()): while(have_posts()): the_post(); ?>
+    <?php if( have_posts() ): while(have_posts()): the_post(); ?>
 
-        <?php if( has_post_thumbnail() ): ?>
+        <?php if( has_post_thumbnail() && ($thumbnail = wp_get_attachment_image_src(get_post_thumbnail_id(), 'full')) ): ?>
             <div class="row">
-                <div class="jumbotron">
-                    <?php the_post_thumbnail('full') ?>
+                <div class="jumbotron" style="background-image: url('<?= $thumbnail[0] ?>')">
                     <h1>後ろ向きのまま前へ進め！</h1>
                     <?php the_excerpt() ?>
                     <p><a class="btn btn-success btn-lg" href="#about-us">破滅派とは？</a></p>
