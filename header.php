@@ -20,22 +20,6 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-ha"></i> <span>移動</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a rel="home" href="<?= home_url('', 'http') ?>"><i class="icon-home"></i>トップページ</a></li>
-                        <li class="divider"></li>
-                        <li><a rel="home" href="<?= home_url('announcement', 'http') ?>"><i class="icon-bullhorn"></i> 告知</a></li>
-                        <li class="divider"></li>
-                        <li><a href="<?= home_url('/thread/', 'http'); ?>"><i class="icon-stack-list"></i> 掲示板トップ</a></li>
-                        <li class="divider"></li>
-                        <li><a href="<?= home_url('/about/', 'http'); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
-	                    <li><a href="<?= home_url('/authors/', 'http'); ?>"><i class="icon-users"></i> 執筆者一覧</a></li>
-                        <li><a href="<?= home_url('/faq/', 'http'); ?>"><i class="icon-question2"></i> よくある質問</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-book"></i> <span>読む</span>
                     </a>
                     <ul class="dropdown-menu">
@@ -82,7 +66,29 @@
                            <a href="<?= home_url('/become-author/', 'https') ?>"><i class="icon-graduation"></i> 同人になる</a>
                         </li>
                     <?php endif; ?>
+                <?php else: ?>
+
+	                <li class="active">
+		                <a href="<?= wp_registration_url() ?>"><i class="icon-user-plus3"></i> 登録</a>
+	                </li>
+
                 <?php endif; ?>
+	            <li class="dropdown">
+		            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+			            <i class="icon-menu2"></i> その他
+		            </a>
+		            <ul class="dropdown-menu">
+			            <li><a rel="home" href="<?= home_url('', 'http') ?>"><i class="icon-home"></i> ホーム</a></li>
+			            <li class="divider"></li>
+			            <li><a rel="home" href="<?= home_url('announcement', 'http') ?>"><i class="icon-bullhorn"></i> 告知</a></li>
+			            <li class="divider"></li>
+			            <li><a href="<?= home_url('/thread/', 'http'); ?>"><i class="icon-stack-list"></i> 掲示板トップ</a></li>
+			            <li class="divider"></li>
+			            <li><a href="<?= home_url('/about/', 'http'); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
+			            <li><a href="<?= home_url('/authors/', 'http'); ?>"><i class="icon-users"></i> 執筆者一覧</a></li>
+			            <li><a href="<?= home_url('/faq/', 'http'); ?>"><i class="icon-question2"></i> よくある質問</a></li>
+		            </ul>
+	            </li>
             </ul>
         </div><!-- // .navbar-collapse -->
 
