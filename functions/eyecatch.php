@@ -62,7 +62,7 @@ add_filter('admin_post_thumbnail_html', function($content, $post_id){
 HTML;
 			break;
 		case 'series':
-			$help_url = home_url('/fat/ebook-cover-regulation');
+			$help_url = home_url('/faq/ebook-cover-regulation');
 			// イメージサイズを取得
 			global $_wp_additional_image_sizes;
 			if( isset($_wp_additional_image_sizes['kindle-cover']) ){
