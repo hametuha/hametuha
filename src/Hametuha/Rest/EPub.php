@@ -217,7 +217,7 @@ HTML;
 				'html'  => '',
 			];
 			// Add preface if exists
-			if ( $preface = $this->series->get_subtitle($series->ID) ) {
+			if ( $preface = $this->series->get_preface($series->ID) ) {
 				$html['foreword'] = [
 					'label' => 'はじめに',
 					'html'  => $this->get_content( $series_id, $series, 'foreword', $direction )
