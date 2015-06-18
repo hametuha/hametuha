@@ -204,30 +204,7 @@ jQuery(document).ready(function($){
         container: 'body'
     });
 
-    // シェアボタン
-    $(document).on('click', 'a.share', function(e){
-        var ga = window.Hametuha.ga,
-            brand = $(this).attr('data-medium'),
-            href = $(this).attr('href'),
-            target = $(this).attr('data-target');
-        switch(brand){
-            case 'facebook':
-                try{
-                    FB.ui({
-                        method: 'share',
-                        href: href
-                    }, function(response){
-                        if(response){
-                            ga.hitEvent('share', brand, target);
-                        }
-                    });
-                }catch(err){}
-                break;
-            default:
-                ga.eventOutbound(e, href, 'share', brand, target);
-                break;
-        }
-    });
+
 
     // プロフィールナビ
     var profileNav = $('#profile-navi');
@@ -384,39 +361,33 @@ jQuery(document).ready(function($){
         });
     });
 
-    $('.share--facebook').click(function(e){
-        e.preventDefault();
-        var target = $(this).attr('data-target');
-        FB.ui({
-            method: 'share',
-            href: $(this).attr('href')
-        }, function(response){
-            try{
-                ga.send({
-                    'hitType': 'social',
-                    'socialNetwork': 'facebook',
-                    'socialAction': 'share',
-                    'socialTarget': target
-                });
-            }catch(err){}
-        });
+    // シェアボタンクリック
+    $(document).on('click', 'a.share', function(e){
+        var ga = window.Hametuha.ga,
+            brand = $(this).attr('data-medium'),
+            href = $(this).attr('href'),
+            target = $(this).attr('data-target');
+        switch(brand){
+            case 'facebook':
+                try{
+                    e.preventDefault();
+                    FB.ui({
+                        method: 'share',
+                        href: href
+                    }, function(response){
+                        if(response){
+                            ga.hitEvent('share', brand, target);
+                        }
+                    });
+                }catch(err){}
+                break;
+            default:
+                ga.eventOutbound(e, href, 'share', brand, target);
+                break;
+        }
     });
 
-    $('.share--line').click(function(e){
-        try{
-            var href = $(this).attr('href');
-            ga.send({
-                'hitType': 'social',
-                'socialNetwork': 'line',
-                'socialAction': 'share',
-                'socialTarget': $(this).attr('date-target'),
-                hitCallback: function(){
-                    window.location.href = href;
-                }
-            });
-            e.preventDefault();
-        }catch(err){}
-    });
+
 
 
 
