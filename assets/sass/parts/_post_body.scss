@@ -236,6 +236,14 @@
         text-indent: -1em;
       }
     }
+    q{
+      &:before{
+        content: "“";
+      }
+      &:after{
+        content: "”";
+      }
+    }
 
     // テーブル
     table{
@@ -247,7 +255,7 @@
         th{
           color: $shade-font;
           border-bottom: 3px double $shade-font;
-          font-family: san-serif;
+          font-family: sans-serif;
           font-weight: bold;
         }
       }
@@ -295,7 +303,7 @@
       color: $more-shade-font;
       text-decoration: line-through;
     }
-    ins{
+    ins, small{
       color: $shade-font;
       text-decoration: none;
       &:before{

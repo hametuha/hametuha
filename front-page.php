@@ -65,6 +65,7 @@
 			        'post_type' => 'in_list',
 			        'post_status' => 'publish',
 			        'post_parent' => get_the_ID(),
+		            'posts_per_page' => '3',
 		        ]);
 		        while( $sub_query->have_posts() ){
 			        $sub_query->the_post();
@@ -95,6 +96,18 @@
                 <a href="<?= home_url('/latest/', 'http') ?>" class="btn btn-default btn-block">すべての新着投稿</a>
             </p>
         </div>
+
+
+
+	    <div class="col-xs-12 col-sm-4">
+		    <h2>検索</h2>
+		    <p class="text-muted">
+			    よくわからなかったら検索してみよう！
+		    </p>
+		    <?php get_search_form() ?>
+	    </div>
+
+
 
         <div class="col-xs-12 col-sm-4">
             <h2>掲示板</h2>
@@ -151,6 +164,8 @@
                 <a href="<?= get_post_type_archive_link('announcement') ?>" class="btn btn-default btn-block">お知らせ一覧</a>
             </p>
         </div>
+
+
         
         <div class="col-xs-12 col-sm-4">
             <h2>統計情報</h2>
@@ -182,6 +197,8 @@
                 <a href="<?= get_post_type_archive_link('series')?>" class="btn btn-default btn-block">シリーズ一覧</a>
             </p>
         </div>
+
+
 
 
 

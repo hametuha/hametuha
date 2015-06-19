@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+@import "variables";
+
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+@import "parts/post_body";
+
+body{
+  margin: 20px;
+  line-height: 1.8;
+  font-family: %serif;
+  @include post-style(true);
+}

@@ -110,6 +110,41 @@ HTML;
 		        <i class="icon-point-down"></i>
 	        </p>
 
+	        <hr />
+
+	        <?php get_template_part('parts/list', 'author') ?>
+
+	        <?php
+	            // Yarpp関連記事
+		        if( function_exists('related_posts') ){
+			        related_posts();
+		        }
+	        ?>
+
+	        <div class="row row--recommend row--catNav">
+		        <h3 class="recommend__header recommend_header--catNav">
+			        <i class="icon-folder"></i><br />
+			        ジャンルごとに見てみよう<br />
+			        <small>どれも面白いよ</small>
+		        </h3>
+		        <?php $counter = 0; foreach( get_categories(['parent' => 0]) as $cat ): $counter++; ?>
+		        <div class="col-xs-4 col-sm-2 recommend__item--catNav">
+			        <a href="<?= get_category_link($cat) ?>" class="recommend__link--catNav<?php if( in_category($cat->term_id) ) echo ' current' ?>">
+				        <?= esc_html($cat->name) ?><span class="badge"><?= $cat->count > 100 ? '99<sup>+</sup>' : intval($cat->count) ?></span>
+			        </a>
+		        </div>
+		        <?php if( $counter >= 6 ) break; endforeach; ?>
+	        </div>
+
+	        <div class="row row--recommend row--search">
+		        <h3 class="recommend__header recommend_header--catNav">
+			        <i class="icon-search3"></i><br />
+			        検索してみよう<br />
+			        <small>どんな言葉があるかな？</small>
+		        </h3>
+		        <?php get_search_form() ?>
+	        </div>
+
         </div><!-- // .work-wrapper -->
 
 

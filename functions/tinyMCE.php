@@ -8,7 +8,7 @@
 add_action( 'admin_head', function() {
     $screen = get_current_screen();
     if( $screen && $screen->post_type == 'post' ){
-
+	    add_editor_style('assets/css/editor-style-post.css');
     }else{
         add_editor_style('assets/css/editor-style.css');
     }
@@ -21,7 +21,7 @@ add_action( 'admin_head', function() {
  * @param array $initArray
  * @return array
  */
-function _hametuha_tinyMCE($initArray) {
+add_filter('tiny_mce_before_init', function ($initArray) {
      //選択できるブロック要素を変更
     $initArray['theme_advanced_blockformats'] = 'p,h2,h3,h4,h5,dt,dd';
 	//使用できるタグを指定
@@ -46,8 +46,9 @@ function _hametuha_tinyMCE($initArray) {
 		)
 	));
     return $initArray;
-}
-add_filter('tiny_mce_before_init', '_hametuha_tinyMCE', 10001);
+}, 10001);
+
+
 
 add_action('edit_form_after_title', function($post){
     if( 'post' == $post->post_type ){

@@ -1,0 +1,148 @@
+.row{
+
+  &--catNav, &--search{
+    padding-bottom: 2em;
+  }
+
+  &--recommend{
+
+    margin-top: 3em;
+
+    .recommend{
+
+      &__header{
+        font-weight: normal;
+        color: $more-shade-font;
+        font-size: 1.4em;
+        text-align: center;
+        margin: 0.25em 0;
+        &--catNav{
+          margin-bottom: 10px;
+        }
+        i{
+          font-size: 1.8em;
+        }
+      }
+      &__list{
+        height: 160px;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        white-space: nowrap;
+        border-top: 3px double $thin-border;
+        border-bottom: 3px double $thin-border;
+        background: $zebra-bg;
+        padding: 0;
+      }
+
+      &__item{
+        display: inline-block;
+        vertical-align: top;
+        width: 240px;
+        height: 100%;
+        padding: 0;
+        border-right: 1px solid $thin-border;
+        &--catNav{
+          padding: 0;
+          &:first-child{
+            .recommend__link--catNav{
+              border-left: none;
+            }
+          }
+        }
+      }
+
+      &__link{
+        padding: 10px 20px;
+        white-space: normal;
+        font-weight: normal;
+        display: block;
+        height: 100%;
+        position: relative;
+        &:link, &:visited{
+          color: $little-shade-font;
+          text-decoration: none;
+        }
+        &:hover, &:active{
+          background: $hover-bg;
+          text-decoration: none;
+        }
+
+        &--catNav{
+          display: block;
+          text-align: center;
+          padding: 0.5em 0;
+          border-left: 1px dashed #fff;
+          &:link, &:visited{
+            background: $brand-primary;
+            text-decoration: none;
+            color: #fff;
+          }
+          &:hover, &:active{
+            background: lighten($brand-primary, 10);
+            text-decoration: none;
+          }
+          &.current{
+            background: $brand-danger;
+          }
+          .badge{
+            background: #fff;
+            margin-left: 5px;
+            color: $brand-primary;
+          }
+        }
+
+      }
+
+      &__title{
+        position: relative;
+        font-size: 1.2em;
+        line-height: 1.1;
+        height: 2.4em;
+        overflow: hidden;
+        color: $base-color;
+        margin: 0 0 0.5em;
+        z-index: 2;
+        small{
+          font-size: 0.85em;
+        }
+      }
+      &__meta{
+        font-size: 0.9em;
+        img{
+          border-radius: 50%;
+        }
+        i{
+          color: $shade-font;
+          margin-right: 0.25em;
+          margin-left: 1em;
+        }
+      }
+
+      &__excerpt{
+        font-size: 0.9em;
+        color: $more-shade-font;
+        padding: 0.5em 0;
+        line-height: 1.2;
+        height: 4em;
+        overflow: hidden;
+      }
+
+      &__score{
+        z-index: 1;
+        position: absolute;
+        display: block;
+        text-align: right;
+        top: 30px;
+        right: 10px;
+        color: $base-color;
+        //background: $base-color;
+        opacity: .3;
+        font-family: monospace;
+        font-weight: bold;
+        font-size: 2em;
+      }
+
+    }
+
+  }
+}
