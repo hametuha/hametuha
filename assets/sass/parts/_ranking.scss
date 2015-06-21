@@ -1,5 +1,17 @@
 // ランキング用
 
+
+// 背景色が点滅
+@include keyframes( ranker ){
+  0%, 100%{
+    color: yellow;
+  }
+  50%{
+    color: orange;
+  }
+}
+
+
 // リスト
 .rank-list{
   position: relative;

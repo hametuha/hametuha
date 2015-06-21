@@ -125,7 +125,7 @@ HTML;
 		        <h3 class="recommend__header recommend_header--catNav">
 			        <i class="icon-folder"></i><br />
 			        ジャンルごとに見てみよう<br />
-			        <small>どれも面白いよ</small>
+			        <small>新着順で表示されます</small>
 		        </h3>
 		        <?php $counter = 0; foreach( get_categories(['parent' => 0]) as $cat ): $counter++; ?>
 		        <div class="col-xs-4 col-sm-2 recommend__item--catNav">
@@ -298,6 +298,11 @@ HTML;
                 <a href="#comments-wrapper">
                     <i class="icon-bubbles"></i><br />
                     <span>コメント</span>
+	                <?php if( $count = get_comments_number() ): ?>
+	                <small class="comment-count badge">
+		                <?= $count > 100 ? '99+' : $count ?>
+	                </small>
+	                <?php endif; ?>
                 </a>
             </li>
             <li>

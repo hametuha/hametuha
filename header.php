@@ -92,9 +92,11 @@
             </ul>
         </div><!-- // .navbar-collapse -->
 
-        <ul id="user-info" class="navbar-nav navbar-right nav nav-pills col-sm-4">
+
+        <ul id="user-info" class="navbar-nav navbar-right navbar-login navbar-login--user nav nav-pills col-sm-1">
             <?php if( is_user_logged_in() && current_user_can('read') ): ?>
-                <li class="dropdown">
+
+	            <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?= get_avatar(get_current_user_id(), 60) ?></a>
                     <ul class="dropdown-menu">
                         <li class="greeting">
@@ -119,10 +121,22 @@
                         <li><a href="<?= wp_logout_url() ?>"><i class="icon-exit4"></i> ログアウト</a></li>
                     </ul>
                 </li>
+	            <li class="dropdown">
+		            <a id="notification-link" href="#" class="dropdown-toggle dropdown--notify" data-toggle="dropdown"><i class="icon-earth"></i></a>
+		            <ul id="notification-container" class="dropdown-menu notification__container">
+			            
+			            <li class="divider"></li>
+			            <li class="text-center notification__more">
+				            <a href="<?= home_url('/msg/', 'https') ?>"><i class=""></i> 通知一覧へ</a>
+			            </li>
+		            </ul>
+	            </li>
             <?php else: ?>
                 <li><a class="login-btn" href="<?= wp_login_url('/') ?>">ログイン</a></li>
             <?php endif; ?>
         </ul>
+
+
     </div>
 </header>
 

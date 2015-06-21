@@ -1,3 +1,19 @@
+
+//
+// アイコンの点滅
+//
+@include keyframes( icon-blink ){
+  0%{
+    color: $navbar-default-link-color;
+    background-color: $navbar-default-bg;
+  }
+  100%{
+    color: $brand-danger;
+    background-color: lighten($brand-danger, 30);
+  }
+}
+
+
 // ヘッダーのトグルボタンを左にする
 .navbar-toggle {
   position: relative;
@@ -6,6 +22,9 @@
   margin-left: $navbar-padding-horizontal;
 }
 
+//
+// ロゴマーク
+//
 .logo{
   $logo-width: $navbar-height;
   position: absolute;
@@ -25,7 +44,7 @@
   &:active{
     text-decoration: none;
     i{
-      color: red !important;
+      color: $brand-danger !important;
     }
   }
   span{
@@ -37,18 +56,34 @@
 }
 
 // ユーザー情報は右
-#user-info{
+.navbar-login{
   $avatar-size: 30px;
-  .avatar{
+  width: 120px;
+  & > li:first-child .avatar{
     width: $avatar-size;
     height: $avatar-size;
+    border-radius: 4px;
   }
+
   &.navbar-right > li{
     float: right;
     & > a{
       $avatar-pad: ($navbar-height - $avatar-size) / 2;
-      padding-top: $avatar-pad;
-      padding-bottom: $avatar-pad;
+      padding: $avatar-pad $avatar-pad / 2;
+      line-height: 1;
+      &.dropdown--notify{
+        height: $navbar-height;
+        vertical-align: middle;
+      }
+      & > i{
+        $icon-pad: 4px;
+        font-size: $avatar-size - (2 * $icon-pad);
+        line-height: $avatar-size;
+        vertical-align: middle;
+      }
+      &.has-notify{
+        @include animation(icon-blink 1s linear 0 infinite alternate);
+      }
       // ログインボタン
       &.login-btn{
         margin-right: 10px;
@@ -73,9 +108,9 @@
         }
       }
     }
-  }
-  .dropdown-menu{
-    min-width: 240px;
+    .dropdown-menu{
+      min-width: 240px;
+    }
   }
   .greeting{
     padding: 10px 20px;
@@ -96,21 +131,74 @@
 }
 
 
+// 通知エリア
+.notification{
+  &__container{
+    width: 320px;
+  }
+  &__link{
+    &--new{
+      &:link, &:visited{
+        background-color: $hover-bg;
+      }
+      &:hover, &:active{
+        background-color: darken($hover-bg, 10);
+      }
+    }
+    img{
+      width: auto;
+      height: auto;
+      max-width: 48px;
+      float: left;
+      margin-right: 12px;
+    }
+  }
+  &__text{
+    white-space: normal;
+    img + &{
+      margin-left: 60px;
+    }
+  }
+  &__time{
+    color: $shade-font;
+  }
+  &__more{
+    font-weight: bold;
+    a{
+      &:link, &:visited{
+        color: $brand-primary !important;
+        background-color: darken($navbar-default-bg, 10);
+      }
+      &:hover, &:active{
+        color: $brand-danger !important;
+        background-color: $navbar-default-bg;
+      }
+    }
+  }
+}
+
+
 // スマートフォンのときの挙動
 @media only screen and (max-width: $screen-xs-max){
-  #user-info{
+  .navbar-login{
     position: absolute;
-    right: 0;
     top: 0;
     margin-top: 0;
     margin-bottom: 0;
-    .dropdown-menu{
-      position: absolute;
-      right: 0;
-      left: auto;
-      background-color: $navbar-default-bg;
-      border: 1px solid $navbar-default-border;
-      @include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.8));
+    right: 0;
+    & > li.open{
+      .dropdown-menu{
+        position: absolute;
+        right: 0;
+        &.notification__container{
+          right: -40px;
+          width: 320px;
+        }
+        left: auto;
+        background-color: $navbar-default-bg;
+        border: 1px solid $navbar-default-border;
+        @include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+      }
     }
   }
 }

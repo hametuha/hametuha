@@ -136,6 +136,26 @@ function _hametuha_reply_cancel_link($html){
 add_filter('cancel_comment_reply_link', '_hametuha_reply_cancel_link');
 
 /**
+ * コメントカウント数をコメントに限定
+ */
+add_filter( 'get_comments_number', function($count, $post_id){
+	if( !is_admin() && ($post = get_post($post_id)) ){
+		/** @var wpdb $wpdb */
+		global $wpdb;
+		$query = <<<SQL
+			SELECT COUNT(comment_ID) FROM {$wpdb->comments}
+			WHERE comment_post_ID = %d
+			  AND comment_approved = '1'
+			  AND comment_type = ''
+SQL;
+		$count = (int) $wpdb->get_var($wpdb->prepare($query, $post_id));
+	}
+	return $count;
+}, 10, 2);
+
+
+
+/**
  * コメント返信ボタンにクラスを付与
  * @param string $html
  * @param object $comment

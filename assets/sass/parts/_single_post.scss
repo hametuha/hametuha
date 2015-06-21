@@ -233,9 +233,9 @@ body.single-post{
         height: $single-footer-height;
         padding: 4px 0;
         display: block;
-        height: $single-footer-height;
         text-align: center;
         font-size: 11px;
+        position: relative;
         &:link, &:visited{
           color: $inverse-body;
           text-decoration: none;
@@ -249,6 +249,11 @@ body.single-post{
         }
         i{
           font-size: 20px;
+        }
+        .badge{
+          position: absolute;
+          right: 4px;
+          top: 4px;
         }
       }
     }
