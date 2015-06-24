@@ -51,7 +51,7 @@
         $prev = $monthnum - 1;
         $next = $monthnum + 1;
         $prev_year = $prev % 12 ? $year : $year - 1;
-        $next_year = $next % 12 ? $year + 1 : $year;
+        $next_year = $monthnum % 12 ? $year : $year + 1;
         $calc_starts = strtotime('2014-08-23 00:00:00');
         $week = ['月', '火', '水', '木', '金', '土', '日', '週間'];
         $start_of_month = sprintf('%d-%02d-01 00:00:00', $year, $month);

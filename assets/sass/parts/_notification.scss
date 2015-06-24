@@ -1,0 +1,66 @@
+
+// 通知エリア
+.notification{
+  // ヘッダーにあるとき
+  &__container{
+    width: 320px;
+  }
+  // メインカラムに表示される時
+  &__item{
+    .notification__link{
+      padding: 1em;
+      display: block;
+      @extend .clearfix;
+      &:link, &:visited{
+        text-decoration: none;
+      }
+      &:hover{
+        text-decoration: none;
+        background-color: $hover-bg;
+      }
+      &:active {
+        text-decoration: none;
+        background-color: darken($hover-bg, 10);
+      }
+    }
+  }
+  &__link{
+    &--new{
+      &:link, &:visited{
+        background-color: $hover-bg;
+      }
+      &:hover, &:active{
+        background-color: darken($hover-bg, 10);
+      }
+    }
+    img{
+      width: auto;
+      height: auto;
+      max-width: 48px;
+      float: left;
+      margin-right: 12px;
+    }
+  }
+  &__text{
+    white-space: normal;
+    img + &{
+      margin-left: 60px;
+    }
+  }
+  &__time{
+    color: $shade-font;
+  }
+  &__more{
+    font-weight: bold;
+    a{
+      &:link, &:visited{
+        color: $brand-primary !important;
+        background-color: darken($navbar-default-bg, 10);
+      }
+      &:hover, &:active{
+        color: $brand-danger !important;
+        background-color: $navbar-default-bg;
+      }
+    }
+  }
+}

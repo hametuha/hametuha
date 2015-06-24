@@ -2,6 +2,7 @@
 
 <header id="header" class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
+
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#header-navigation">
                 <span class="sr-only">Toggle navigation</span>
@@ -16,7 +17,7 @@
         </a>
 
 
-        <div class="collapse navbar-collapse col-sm-8" id="header-navigation">
+        <nav class="collapse navbar-collapse col-sm-8" id="header-navigation">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -90,7 +91,7 @@
 		            </ul>
 	            </li>
             </ul>
-        </div><!-- // .navbar-collapse -->
+        </nav><!-- // .navbar-collapse -->
 
 
         <ul id="user-info" class="navbar-nav navbar-right navbar-login navbar-login--user nav nav-pills col-sm-1">
@@ -121,13 +122,19 @@
                         <li><a href="<?= wp_logout_url() ?>"><i class="icon-exit4"></i> ログアウト</a></li>
                     </ul>
                 </li>
-	            <li class="dropdown">
-		            <a id="notification-link" href="#" class="dropdown-toggle dropdown--notify" data-toggle="dropdown"><i class="icon-earth"></i></a>
+	            <li class="dropdown" id="notification-link">
+		            <?php
+	                    $notification = \Hametuha\Rest\Notification::get_instance();
+		                $latest = $notification->last_checked();
+		            ?>
+		            <a href="#" class="dropdown-toggle dropdown--notify" data-toggle="dropdown" data-last-checked="<?= $latest ?>"><i class="icon-earth"></i></a>
 		            <ul id="notification-container" class="dropdown-menu notification__container">
-			            
+						<?php if( !$notification->recent_blocks() ): ?>
+							<li><span>お知らせはなにもありません。</span></li>
+			            <?php endif; ?>
 			            <li class="divider"></li>
 			            <li class="text-center notification__more">
-				            <a href="<?= home_url('/msg/', 'https') ?>"><i class=""></i> 通知一覧へ</a>
+				            <a href="<?= home_url('/notification/all/', 'https') ?>"><i class=""></i> 通知一覧へ</a>
 			            </li>
 		            </ul>
 	            </li>
@@ -137,6 +144,6 @@
         </ul>
 
 
-    </div>
+    </div><!-- .navbar -->
 </header>
 

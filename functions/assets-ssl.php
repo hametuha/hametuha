@@ -40,6 +40,7 @@ add_filter('the_content', function($content){
  * Image widgetのURLをSSLに変更
  */
 add_filter('wp_get_attachment_url', 'hametuha_cdnfy');
+add_filter('image_widget_image_url', 'hametuha_cdnfy');
 
 /**
  * テーマディレクトリのURLをCDN対応にする

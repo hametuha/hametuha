@@ -24,7 +24,7 @@ endif;
 	<h2 id="comments">
 		<i class="icon-bubbles2"></i> &quot;<?php the_title(); ?>&quot;へのコメント
 		<small>
-			<?= number_format_i18n(get_comments_number()); ?>件
+			<span itemprop="commentCount"><?= number_format_i18n(get_comments_number()); ?></span>件
 		</small>
 	</h2>
 	<?php if ( have_comments() ) : ?>

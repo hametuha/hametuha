@@ -23,6 +23,12 @@
       font-size: 20px;
       @include ellipsis();
       text-align: center;
+      & + small{
+        display: block;
+        text-align: center;
+        color: $more-shade-font;
+        margin: 0.25em 0;
+      }
     }
     img{
       width: auto;

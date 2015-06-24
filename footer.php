@@ -33,7 +33,7 @@
 	</div>
 
     <p class="copy-right text-center">
-        &copy; 2007 破滅派
+        &copy; <span itemprop="copyrightYear">2007</span> 破滅派
     </p>
 </footer>
 <?php get_template_part('parts/modal') ?>

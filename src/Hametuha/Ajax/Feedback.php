@@ -50,16 +50,19 @@ class Feedback extends AjaxForm
             $this->review->clear_user_review($user_id, $post->ID);
         }
         // データを挿入
+	    $reviewed_terms = [];
         foreach( $this->review->feedback_tags as $key => $terms ){
             $index = $this->input->post($key) - 1;
             if( $index > -1 && $index < 2 ){
                 $term = get_term_by('name', $terms[$index], $this->review->taxonomy);
                 if( $term && !is_wp_error($term) ){
                     $this->review->add_review($user_id, $post->ID, $term->term_taxonomy_id);
+	                $reviewed_terms[] = $term;
                 }
             }
         }
         // レビューがあれば保存
+	    $rank = 0;
         if( $user_id ){
             $rank = $this->input->post('rating');
             if( is_numeric($rank) ){
@@ -67,6 +70,18 @@ class Feedback extends AjaxForm
                 $this->rating->update_rating($rank, $user_id, $post->ID);
             }
         }
+	    $this->review->update_review_count($post->ID);
+	    /**
+	     * hametuha_post_reviewed
+	     *
+	     * Fired when review is saved
+	     *
+	     * @param \WP_Post $post
+	     * @param int $user_id
+	     * @param array $reviewed_terms
+	     * @param int $rank
+	     */
+	    do_action('hametuha_post_reviewed', $post, $user_id, $reviewed_terms, (int) $rank);
         return [
             'success' => true,
             'message' => 'レビューを保存しました。ありがとうございました。',

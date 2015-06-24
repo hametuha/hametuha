@@ -173,7 +173,7 @@ function hametuha_commment_display( $comment, $args, $depth ) {
             break;
     }
     ?>
-<li id="comment-<?php comment_ID(); ?>" <?php comment_class(implode(' ', $class_name)) ?> data-depth="<?= $depth ?>">
+<li id="comment-<?php comment_ID(); ?>" <?php comment_class(implode(' ', $class_name)) ?> data-depth="<?= $depth ?>" itemprop="comment" itemscope itemtype="http://schema.org/Comment">
     <?php switch($comment->comment_type):
         case "pingback":
         case "trackback":
@@ -188,7 +188,7 @@ function hametuha_commment_display( $comment, $args, $depth ) {
 
         <div class="comment-author vcard">
             <h4>
-                <?= get_comment_author_link(); ?>
+                <span itemprop="author"><?= get_comment_author_link(); ?></span>
                 <small><?php
                     switch($comment->comment_type){
                         case "pingback":
@@ -203,7 +203,7 @@ function hametuha_commment_display( $comment, $args, $depth ) {
             </h4>
         </div><!-- .comment-author .vcard -->
 
-        <div class="comment-content">
+        <div class="comment-content" itemprop="text">
             <?php
             if( $comment->comment_approved == '0' ){
                 echo '<em class="comment-awaiting-moderation">このコメントは承認待ちです。</em>';
@@ -212,6 +212,8 @@ function hametuha_commment_display( $comment, $args, $depth ) {
             }
             ?>
         </div>
+
+	    <div class="hidden" itemprop="url"><?= get_comment_link($comment) ?></div>
 
         <div class="reply right">
             <?php if( $comment->comment_type == 'comment' || $comment->comment_type === '' ): ?>
@@ -229,42 +231,6 @@ function hametuha_commment_display( $comment, $args, $depth ) {
 <?php
 }
 
-
-/**
- * @param null $rank
- * @param int $total
- */
-function the_post_rank($rank = null, $total = 0){
-    if( is_null($rank) ){
-        printf('<div class="alert alert-warning"><p>この作品にはまだレビューがありません。ぜひレビューを残してください。</p></div>');
-    }else{
-        $star = round($rank * 2) / 2;
-        ?>
-        <p class="post-rank-counter">
-        <span class="back-ground">
-            <?php for($i = 0; $i < 5; $i++){
-                echo '<i class="icon-star6"></i>';
-            } ?>
-        </span>
-        <span class="fore-ground">
-            <?php while( $star > 0 ){
-                if( $star > 0.5 ){
-                    $star_class = 6;
-                }else{
-                    $star_class = 5;
-                }
-                printf('<i class="icon-star%d"></i>', $star_class);
-                $star -= 1;
-            } ?>
-        </span>
-            <strong><?= (number_format_i18n($rank, 1)); ?></strong>
-            <?php if($total): ?>
-                <small>(<?= number_format_i18n($total);?>件の評価)</small>
-            <?php endif; ?>
-        </p><!-- //.post-rank-counter -->
-        <?php
-    }
-}
 
 
 

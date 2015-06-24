@@ -7,7 +7,7 @@
     <div class="row row-offcanvas row-offcanvas-right">
         <?php if( have_posts() ): while( have_posts() ): the_post(); ?>
 
-        <article itemscope itemtype="http://schema.org/Article" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
+        <article itemscope itemtype="http://schema.org/BlogPosting" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
 
             <?php if( get_post_type() == 'faq' ): ?>
                 <?php get_template_part('parts/jumbotron', 'help'); ?>
@@ -20,10 +20,9 @@
             <!-- title -->
             <div class="page-header">
 
-                <h1 class="post-title" itemprop="name">
+                <h1 class="post-title" itemprop="headline">
                     <?php the_title(); ?>
                 </h1>
-
             </div><!-- //.page-header -->
 
 
@@ -36,7 +35,7 @@
 
 
             <?php if( has_excerpt() ): ?>
-                <div class="excerpt">
+                <div class="excerpt" itemprop="description">
                     <?php the_excerpt(); ?>
                 </div><!-- //.excerpt -->
             <?php endif; ?>

@@ -72,8 +72,15 @@ add_action('wp_head', '_hametuha_favicon');
  */
 function hametuha_get_ogp_type(){
     // TODO: 投稿タイプや条件によってOGPを変更する
-    return 'og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#';
+	if( is_front_page() ){
+		return 'og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#';
+	}else{
+		return 'og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#';
+	}
 }
+
+
+
 
 /**
  * JetpackのOGPを消す
@@ -84,15 +91,17 @@ add_action('wp_head', function(){
     remove_action('wp_head','jetpack_og_tags');
 }, 1);
 
+
+
 /**
  * OGPを出力する
  */
 add_action('wp_head', function(){
-    if(is_front_page() || is_singular() || is_post_type_archive() || is_author()){
+    if( is_front_page() || is_singular() || is_post_type_archive() || is_author() ){
         //画像の初期値を設定
-        $image = get_template_directory_uri()."/assets/img/facebook-logo.jpg";
+        $image = get_template_directory_uri()."/assets/img/facebook-logo.png";
         //個別設定
-        if(is_front_page()){
+        if( is_front_page() ){
             $title = get_bloginfo('name');
             $url = trailingslashit(get_bloginfo('url'));
             $type = "website";
@@ -105,7 +114,7 @@ add_action('wp_head', function(){
             $type = 'article';
             $desc = $post_obj->description ?: '';
             $author = '';
-            switch(get_post_type()){
+            switch( get_post_type() ){
                 case 'anpi':
                     $image = get_template_directory_uri().'/assets/img/banner-anpi-about.jpg';
                     break;
@@ -113,35 +122,35 @@ add_action('wp_head', function(){
                     $image = get_template_directory_uri().'/assets/img/facebook-logo-bbs.jpg';
                     break;
             }
-        }elseif(is_author()){
+        }elseif( is_author() ){
             global $wp_query;
             $user = get_userdata($wp_query->query_vars['author']);
             $title = $user->display_name;
             $type = 'profile';
             $url = get_author_posts_url($user->ID, $user->user_nice_name);
-            $image = preg_replace("/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar($user->ID, 150));
+            $image = preg_replace("/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar($user->ID, 300));
             $desc = str_replace("\n", "", get_user_meta($user->ID, 'description', true));
             $author = '<meta property="profile:username" content="'.$user->user_login.'" />';
         }else{
-            the_post();
             $title = wp_title('|', false, "right").get_bloginfo('name');
             $url =  get_permalink();
             $type =  'article';
             $desc = str_replace("\n", "", get_the_excerpt());
             $author = '<meta property="article:author" content="'.  get_author_posts_url(get_the_author_meta('ID')).'" />';
-            if(is_singular('thread')){
-                $image = preg_replace("/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar(get_the_author_meta('ID'), 150));
-            }elseif(has_post_thumbnail()){
-                $image = wp_get_attachment_image_src(get_post_thumbnail_id(), 'large');
-                $image = $image[0];
+            if( is_singular('thread') ){
+                $image = preg_replace("/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar(get_the_author_meta('ID'), 300));
+            }elseif( has_post_thumbnail() ){
+                if( $src= wp_get_attachment_image_src(get_post_thumbnail_id(), 'large') ){
+	                $image = $src[0];
+                }
             }else{
                 $images = get_children("post_parent=".get_the_ID()."&post_mime_type=image&orderby=menu_order&order=ASC&posts_per_page=1");
-                if(!empty($images)){
-                    $image = wp_get_attachment_image_src(current($images)->ID, 'large');
-                    $image = $image[0];
+                if( !empty($images) ){
+                    if( $src = wp_get_attachment_image_src(current($images)->ID, 'large') ){
+	                    $image = $src[0];
+	                }
                 }
             }
-            rewind_posts();
         }
         echo <<<EOS
 <meta name="twitter:card" content="summary">
@@ -153,7 +162,7 @@ add_action('wp_head', function(){
 <meta name="description" content="{$desc}" />
 <meta property="og:type" content="{$type}" />
 {$author}
-<meta property="article:publisher" content="https://www.facebook.com/cnn" />
+<meta property="article:publisher" content="https://www.facebook.com/hametuha.inc" />
 <meta property="og:site_name" content="破滅派｜オンライン文芸誌" />
 <meta property="og:locale" content="ja_jp" />
 <meta property="fb:app_id" content="196054397143922" />
@@ -163,25 +172,46 @@ EOS;
 }, 1);
 
 
+
+
 /**
- * サイト内検索ボックスをGoogleに表示
+ * リッチスニペット
  */
 add_action('wp_head', function(){
-    if( is_front_page() ){
-        $url = home_url();
-        echo <<<HTML
+    $url = home_url('', 'http');
+    $name = get_bloginfo('name');
+    if( is_front_page() ) {
+	    echo <<<HTML
 <script type="application/ld+json">
 {
    "@context": "http://schema.org",
    "@type": "WebSite",
+   "name": "{$name}",
    "url": "{$url}",
    "potentialAction": {
      "@type": "SearchAction",
-     "target": "{$url}?s={search_term}",
-     "query-input": "required name=search_term"
+     "target": "{$url}?s={search_term_string}",
+     "query-input": "required name=search_term_string"
    }
 }
 </script>
 HTML;
     }
+	$css_dir = get_template_directory_uri();
+	echo <<<HTML
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "Organization",
+	"name": "破滅派",
+	"url": "{$url}",
+	"logo": "{$css_dir}/assets/img/hametuha-logo.png",
+	"sameAs" : [
+		"https://www.facebook.com/hametuha.inc",
+		"http://www.twitter.com/hametuha",
+		"http://plus.google.com/+HametuhaCom"
+	]
+}
+</script>
+HTML;
 });

@@ -14,7 +14,7 @@
 	<title><?php wp_title("|", true, 'right'); bloginfo('name'); ?></title>
     <?php wp_head(); ?>
 </head>
-<body <?php body_class() ?>>
+<body<?php if( !is_singular('post') ) echo ' itemscope itemtype="http://schema.org/WebPage"'; ?> <?php body_class() ?>>
 <div id="fb-root"></div>
 <script>
 	window.fbAsyncInit = function() {

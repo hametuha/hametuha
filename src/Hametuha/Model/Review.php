@@ -88,6 +88,32 @@ class Review extends TermUserRelationships
             ])->get_var();
     }
 
+	/**
+	 * レビュー数を取得する
+	 *
+	 * @param int $post_id
+	 *
+	 * @return int
+	 */
+	public function get_review_count($post_id){
+		return (int) get_post_meta($post_id, '_review_count', true);
+	}
+
+	/**
+	 * レビュー数を更新する
+	 *
+	 * @param int $post_id
+	 * @param int $increment
+	 *
+	 * @return int
+	 */
+	public function update_review_count($post_id, $increment = 1){
+		$count = $this->get_review_count($post_id);
+		$count += $increment;
+		update_post_meta($post_id, '_review_count', $count);
+		return $count;
+	}
+
     /**
      * ユーザーがつけたレビュータグのリストを返す
      *

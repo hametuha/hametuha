@@ -5,6 +5,11 @@ namespace Hametuha\QueryHighJack;
 
 use WPametu\API\QueryHighJack;
 
+/**
+ * Class CommentsQuery
+ *
+ * @package Hametuha\QueryHighJack
+ */
 class CommentsQuery extends QueryHighJack
 {
 

@@ -4,8 +4,8 @@ get_header(); ?>
 
 <?php if(have_posts()): while(have_posts()): the_post(); ?>
 
-<article id="viewing-content" <?php post_class() ?> itemscope itemtype="http://schema.org/Article">
-
+<article id="viewing-content" <?php post_class() ?> itemscope itemtype="http://schema.org/BlogPosting">
+	<span class="hidden" itemprop="url"><?= the_permalink() ?></span>
     <div id="content-wrapper">
         <?php if( has_post_thumbnail() ): ?>
 
@@ -27,7 +27,7 @@ get_header(); ?>
 
                 <div class="inner">
 
-                    <h1 itemprop="name"><?php the_title(); ?></h1>
+                    <h1 itemprop="headline"><?php the_title(); ?></h1>
 
                     <?php the_series('<p class="series">', sprintf('（全%s話）</p>', $series->get_total($post->post_parent))); ?>
 
@@ -36,15 +36,17 @@ get_header(); ?>
                     </p>
 
                     <p class="genre">
-                        <?php the_category(' ');?>
+                        <?= implode(' ', array_map(function($cat){
+	                        return sprintf('<a href="%s" itemprop="genre">%s</a>', get_category_link($cat), esc_html($cat->name));
+                        }, get_the_category())) ?>
                     </p>
 
                     <p class="length">
-                        <?php the_post_length('<span>', '</span>', '-');?>文字
+                        <?php the_post_length('<span itemprop="wordCount">', '</span>', '-');?>文字
                     </p>
 
                     <?php if( has_excerpt() ): ?>
-                        <div class="desc">
+                        <div class="desc" itemprop="description">
                             <?php the_excerpt(); ?>
                         </div>
                     <?php endif; ?>
@@ -66,7 +68,7 @@ HTML;
 		        }
             } ?>
 
-            <div class="work-content row" itemprop="text">
+            <div class="work-content row" itemprop="articleBody">
 
 
                 <?php the_content(); ?>
@@ -82,7 +84,7 @@ HTML;
 	        <?php get_template_part('parts/alert', 'kdp'); ?>
 
             <p class="text-center pub-date">
-                <span itemprop="dateCreated"><?php the_time('Y年n月j日') ?></span>公開
+                <span itemprop="datePublished"><?php the_time('Y年n月j日') ?></span>公開
             </p>
 
             <?php if( is_series() ): ?>
@@ -247,6 +249,7 @@ HTML;
 	        <hr />
 
             <?php Hametuha\Ajax\Feedback::all_review(get_the_ID()) ?>
+
         </div>
     </div>
 

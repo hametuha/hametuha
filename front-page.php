@@ -26,7 +26,10 @@
 
 
         <div class="col-xs-12 col-sm-4">
-            <h2>人気の投稿</h2>
+            <h2>
+	            人気の投稿
+            </h2>
+            <small><?= get_latest_ranking_day(get_option('date_format')) ?>更新</small>
             <ul class="post-list">
                 <?php
                 $ranking_query = new WP_Query([
@@ -58,7 +61,10 @@
 	        $url = get_permalink();
         ?>
         <div class="col-xs-12 col-sm-4">
-	        <h2>編集部オススメ</h2>
+	        <h2>
+		        編集部オススメ
+	        </h2>
+	        <small><?= the_date() ?>更新</small>
 	        <ul class="post-list">
 		        <?php
 		        $sub_query = new WP_Query([

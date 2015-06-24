@@ -2,6 +2,23 @@
 
 use \Hametuha\QueryHighJack\RankingQuery;
 
+
+/**
+ * ランキングURLのショートコード
+ * @param array $atts
+ * @param string $content
+ * @return string
+ */
+add_shortcode('ranking_url', function($atts = [], $content = ''){
+	foreach( [
+		'url'  => home_url('/ranking/weekly/'.get_latest_ranking_day('Ymd/'), 'http'),
+	    'date' => get_latest_ranking_day(get_option('date_format')),
+	] as $key => $repl){
+		$content = str_replace('%'.$key.'%', $repl, $content);
+	}
+	return $content;
+});
+
 /**
  * ランキングを出力する
  *
@@ -9,6 +26,19 @@ use \Hametuha\QueryHighJack\RankingQuery;
  */
 function the_ranking( \WP_Post $post = null){
     echo number_format(get_the_ranking($post));
+}
+
+/**
+ * 最新の週間ランキング日を取得する
+ *
+ * @param string $format
+ *
+ * @return string
+ */
+function get_latest_ranking_day($format = ''){
+	$thursday = date_i18n('N')  == 4 ? current_time('timestamp') : strtotime("Previous Thursday", current_time('timestamp'));
+	$sunday = strtotime('Previous Sunday', $thursday);
+	return date_i18n($format, $sunday);
 }
 
 /**

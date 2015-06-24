@@ -44,7 +44,7 @@ function the_series($pre = '', $after = '', $post = null){
     $series = is_series($post);
     if( $series ){
         $series = get_post($series);
-        echo $pre.'<a href="'.get_permalink($series->ID).'">'.apply_filters("the_title", $series->post_title).'</a>'.$after;
+        echo $pre.'<a href="'.get_permalink($series->ID).'" itemprop="isPartOf">'.apply_filters("the_title", $series->post_title).'</a>'.$after;
     }
 }
 

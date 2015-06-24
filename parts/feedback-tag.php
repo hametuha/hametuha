@@ -44,8 +44,10 @@ $tags = $this->user_tag->get_post_tags(get_the_ID(), get_current_user_id());
 <div class="author-tags">
     <h4 class="container-subtitle"><i class="icon-graduation"></i> 作者がつけたタグ<?php help_tip('作者が自らつけたタグです。古い作品は編集部がつけた場合があります。');?></h4>
     <p class="tag-container">
-        <?php if( get_the_tags() ): ?>
-            <?php the_tags('', ' '); ?>
+        <?php if( $tags = get_the_tags() ): ?>
+            <?= implode(' ', array_map(function($tag){
+		        return sprintf('<a href="%s"><span itemprop="keywords">%s</span></a>', get_tag_link($tag), esc_html($tag->name));
+	        }, $tags)) ?>
         <?php else: ?>
             ---
         <?php endif; ?>

@@ -1,9 +1,16 @@
-<li class="notification__item">
-	<a class="notification__link<? if(!$i) echo ' notification__link--new' ?> clearfix" href="#">
-		<?= get_avatar(3, 98) ?>
+<?php
+/** @var string $message */
+/** @var string $url */
+/** @var bool $new */
+/** @var string $url */
+/** @var string $img */
+?>
+<li class="notification__item" data-time="<?= $time ?>">
+	<a class="notification__link<? if($new) echo ' notification__link--new' ?> clearfix" href="<?= $url ?>">
+		<?= $img ?>
 		<p class="notification__text">
-			<strong>〇〇さん</strong>があなたの事を殺すといっています。<br />
-			<small class="notification__time"><?= $i ?>日前</small>
+			<?= wp_kses($message, ['strong' => []]) ?><br />
+			<small class="notification__time"><?= hametuha_passed_time($time, true) ?></small>
 		</p>
 	</a>
 </li>
