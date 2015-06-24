@@ -455,6 +455,10 @@ ul.metadata{
 
 .row--share{
 
+  & + .nav{
+    margin-top: 20px;
+  }
+
   // ボタンの後
   .btn--joinus + &{
     margin: 10px 0;
