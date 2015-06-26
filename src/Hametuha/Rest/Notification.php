@@ -274,7 +274,7 @@ class Notification extends RestTemplate
 	 */
 	public function daily_notice(){
 		switch( date_i18n('N') ){
-			case '4': // 金曜日（週間ランキング発表）
+			case '5': // 金曜日（週間ランキング発表）
 				$message = '【お知らせ】おめでとうございます。%s付の週間ランキングで%d位になりました。';
 				list($year, $month, $day) = explode('/', get_latest_ranking_day('Y/m/d'));
 				$query = new \WP_Query([
@@ -289,7 +289,7 @@ class Notification extends RestTemplate
 					$this->notifications->add_general(
 						get_the_author_meta('ID'),
 						get_the_ID(),
-						sprintf($message,  get_latest_ranking_day(get_option('date_format'), get_the_ranking())),
+						sprintf($message,  get_latest_ranking_day(get_option('date_format')), get_the_ranking()),
 						'info@hametuha.com');
 				}
 				break;
