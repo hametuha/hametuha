@@ -1,6 +1,57 @@
 <?php
 
 /**
+ * フッターにJS SDKを読み込む
+ */
+add_action("admin_footer", function(){
+	echo <<<HTML
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.3&appId=196054397143922";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+HTML;
+});
+
+
+/**
+ * 短いURLを取得する
+ *
+ * @param string $url
+ * @param array $args
+ *
+ * @return bool|string
+ */
+function hametuha_short_links($url, $args = []){
+	$links = \Hametuha\Model\ShortLinks::get_instance();
+	return $links->get_shorten(add_query_arg($args, $url)) ;
+}
+
+/**
+ * キャンペーンを開始する
+ *
+ * @param string $url
+ * @param string $label
+ * @param string $source
+ * @param null|int $author
+ *
+ * @return mixed
+ */
+function hametuha_user_link($url, $label, $source, $author = null){
+	if( is_null($author) ){
+		$author = get_current_user_id();
+	}
+	return hametuha_short_links($url, [
+		'utm_source' => $source,
+	    'utm_campaign' => $label,
+	    'utm_medium' => $author
+	]);
+}
+
+/**
  * シェア数カウント用のAPIを設定する
  */
 add_action("admin_init", function(){
@@ -150,12 +201,41 @@ function hametuha_share($post = null){
     $data_title = esc_attr($title);
 	$links = [];
     foreach( [
-        ['facebook', $url, '4', false],
-        ['twitter', "https://twitter.com/home?status={$encoded_title}%20{$encoded_url}%20{$hash_tag}&amp;via=@hametuha", '3', true],
-        ['googleplus', "https://plus.google.com/share?url={$encoded_url}", '4', true],
-        ['hatena', "http://b.hatena.ne.jp/add?title={$encoded_title}&amp;url={$encoded_url}", '', true],
-        ['pocket', "http://getpocket.com/edit?url={$encoded_url}&amp;title={$encoded_title}", '', true],
-        ['line', "line://msg/text/{$encoded_title}%20{$encoded_url}", '', false],
+        [
+	        'facebook',
+	        hametuha_user_link($url, 'share-single', 'Facebook'),
+	        '4',
+	        false
+        ],
+        [
+	        'twitter',
+	        "https://twitter.com/home?status={$encoded_title}%20".rawurlencode(hametuha_user_link($url, 'share-single', 'Twitter '))."%20{$hash_tag}&amp;via=@hametuha",
+	        '3',
+	        true
+        ],
+        [
+	        'googleplus',
+	        "https://plus.google.com/share?url=".rawurlencode(hametuha_user_link($url, 'share-single', 'Google+')),
+	        '4',
+	        true],
+        [
+	        'hatena',
+	        "http://b.hatena.ne.jp/add?title={$encoded_title}&amp;url={$encoded_url}",
+	        '',
+	        true
+        ],
+        [
+	        'pocket',
+	        "http://getpocket.com/edit?url={$encoded_url}&amp;title={$encoded_title}",
+	        '',
+	        true
+        ],
+        [
+	        'line',
+	        "line://msg/text/{$encoded_title}%20".rawurlencode(hametuha_user_link($url, 'share-single', 'Line')),
+	        '',
+	        false
+        ],
     ] as list($brand, $href, $suffix, $blank) ){
 	    $links[$brand] = sprintf(
 		    '<a class="share share--%1$s share-retrieve" data-medium="%1$s" data-target="%2$d" href="%3$s"%5$s>
@@ -198,8 +278,29 @@ EOS;
     }
 }
 
-
-
+/**
+ * テスト
+ */
+add_action('admin_notices', function(){
+	$screen = get_current_screen();
+	if( 'post' == $screen->base && 'post' == $screen->post_type ){
+		global $post;
+		if( 'publish' != $post->post_status ){
+			return;
+		}
+		$args = [];
+		?>
+		<div class="admin-notice admin-notice--info">
+			<p>
+				<span class="dashicons dashicons-info"></span> この投稿は<strong>公開済み</strong>です。
+				投稿を宣伝してみんなに読んでもらいましょう。
+			</p>
+			<div class="fb-share-button" data-href="<?= hametuha_user_link(get_permalink($post), 'share-dashboard', 'Facebook') ?>" data-layout="button_count"></div>
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="<?= hametuha_user_link(get_permalink($post), 'share-dashboard', 'Twitter') ?>" data-text="<?= get_the_title($post) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		</div>
+		<?php
+	}
+});
 
 /**
  * 投稿が公開されたときにつぶやく
@@ -219,36 +320,39 @@ add_action('transition_post_status', function($new_status, $old_status, $post){
 			case 'future':
 				switch($post->post_type){
 					case 'post':
-						$url = wp_get_shortlink($post->ID);
+						$url = hametuha_user_link(get_permalink($post), 'share-auto', 'Twitter', 1);
 						$author = get_the_author_meta('display_name', $post->post_author);
 						$string = "{$author}さんが新作「{$post->post_title}」を投稿しました {$url}";
-						update_twitter_status($string);
 						break;
 					case 'announcement':
-						$url = home_url()."?p={$post->ID}";
+						$url = hametuha_user_link(get_permalink($post), 'share-auto', 'Twitter', 1);
 						if(user_can($post->post_author, 'edit_others_posts')){
 							$string = "破滅派編集部からのお知らせです > {$post->post_title} {$url}";
 						}else{
 							$author = get_the_author_meta('display_name', $post->post_author);
 							$string = "{$author}さんから告知があります > {$post->post_title} {$url}";
 						}
-						update_twitter_status($string);
 						break;
 					case 'anpi':
-						$url = home_url()."?p={$post->ID}";
+						$url = hametuha_user_link(get_permalink($post), 'share-auto', 'Twitter', 1);
 						$author = get_the_author_meta('display_name', $post->post_author);
 						$string = "{$author}さんの安否です。「{$post->post_title}」 {$url}";
-						update_twitter_status($string);
 						break;
 					case 'info':
-						$url = home_url()."?p={$post->ID}";
-						update_twitter_status("お知らせ > {$post->post_title} {$url}");
+						$url = hametuha_user_link(get_permalink($post), 'share-auto', 'Twitter', 1);
+						$string = "お知らせ > {$post->post_title} {$url}";
 						break;
 					case 'thread':
-						$url = home_url()."?p={$post->ID}";
+						$url = hametuha_user_link(get_permalink($post), 'share-auto', 'Twitter', 1);
 						$author = get_the_author_meta('display_name', $post->post_author);
-						update_twitter_status("{$author}さんがBBSにスレッドを立てました > {$post->post_title} {$url}");
+						$string = "{$author}さんがBBSにスレッドを立てました > {$post->post_title} {$url}";
 						break;
+					default:
+						$string = false;
+						break;
+				}
+				if( $string ){
+					update_twitter_status($string);
 				}
 				break;
 		}

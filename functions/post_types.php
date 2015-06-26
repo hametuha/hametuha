@@ -133,6 +133,7 @@ add_filter('rewrite_rules_array', function(array $rules){
 	return array_merge([
 		'^lists/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists',
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
+
 	], $rules);
 });
 

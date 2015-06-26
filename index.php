@@ -116,7 +116,6 @@
 				            </ol>
 				        </div><!-- //.tab-pane -->
 			        </div><!-- //.tab-content -->
-                </div>
 
 	            <?php
 	            // Load navigation
@@ -155,6 +154,7 @@
                     get_search_form();
                 }
             ?>
+	        </div>
 
         </div><!-- //.main-container -->
 

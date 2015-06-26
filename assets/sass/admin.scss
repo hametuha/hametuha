@@ -35,6 +35,23 @@
   }
 }
 
+div.admin-notice{
+  margin: 10px 20px 0 2px;
+  .wrap &{
+    margin:5px 0 15px;
+  }
+  background: #fff;
+  border-left: 4px solid #fff;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
+  padding: 1px 12px;
+  &--info{
+    border-left-color: #7090ff;
+    .dashicons{
+      color: #7090ff;
+    }
+  }
+}
+
 // Sortable
 #series-posts-list{
   padding: 0;
