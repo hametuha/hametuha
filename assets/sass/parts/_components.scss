@@ -274,12 +274,10 @@ ul.metadata{
 //
 .archive-meta{
   h1{
-    font-size: 20px;
+    font-size: 28px;
     font-family: $work-title;
-    padding-left: 1em;
-    padding-right: 1em;
     .label{
-      font-family: san-serif;
+      font-family: sans-serif;
       margin-left: 0.5em;
     }
   }
@@ -326,9 +324,52 @@ ul.metadata{
 //
 // --------------------
 //
+// タブ
+.nav-tabs--archive{
+  li{
+    .icon-arrow-up{
+      display: none;
+    }
+    &.active{
+      a:hover{
+        cursor: pointer;
+        .icon-arrow-up{
+          display: inline-block;
+        }
+        .icon-arrow-down{
+          display: none;
+        }
+      }
+    }
+    &.asc{
+      .icon-arrow-up{
+        display: inline-block;
+      }
+      .icon-arrow-down{
+        display: none;
+      }
+      &.active{
+        a:hover{
+          .icon-arrow-down{
+            display: inline-block;
+          }
+          .icon-arrow-up{
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+// コンテナ
 .archive-container{
   margin: 20px 0;
   border-top: 1px solid $thin-border;
+  // タブが上にある場合はマージンなし
+  .nav-tabs--archive + .tab-content &{
+    border-top: none;
+    margin-top: 0;
+  }
   & > li{
     margin-top: 0;
     padding: 0;
@@ -340,7 +381,10 @@ ul.metadata{
       @extend .clearfix;
       display: block;
       padding: 1em;
-      &:link{
+      @media only screen and (max-width: $screen-sm-max) {
+        padding: 1em 0.5em;
+      }
+        &:link{
         text-decoration: none;
       }
       &:visited{
@@ -367,6 +411,9 @@ ul.metadata{
       height: auto;
       width: auto;
       max-width: 160px;
+      @media only screen and (max-width: $screen-sm-max){
+        max-width: 80px;
+      }
     }
     .avatar{
       width: 80px;

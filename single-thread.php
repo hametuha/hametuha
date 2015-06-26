@@ -8,7 +8,7 @@
 
         <?php if( have_posts() ): while( have_posts() ): the_post(); ?>
 
-        <article itemscope itemtype="http://schema.org/Article" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
+        <article itemscope itemtype="http://schema.org/Question" <?php post_class('col-xs-12 col-sm-9 main-container')?>>
 
 
             <?php get_template_part('parts/bar', 'posttype') ?>
@@ -18,11 +18,11 @@
                 <div class="thread-info col-sm-3 col-xs-12 text-center clearfix">
                     <div class="col-xs-6 col-sm-12">
                         <p>
-                            <?= get_avatar(get_the_author_meta('ID'), 160) ?>
+                            <?= get_avatar(get_the_author_meta('ID'), 160, '', esc_attr(get_the_author()), ['extra_attr' => 'itemprop="image"']) ?>
                         </p>
                         <p class="author">
                             <small class="text-muted"><?= hametuha_user_role(get_the_author_meta('ID')) ?></small><br />
-                            <span><?php the_author(); ?></span>
+                            <span itemprop="author"><?php the_author(); ?></span>
                         </p>
                     </div>
                     <div class="col-xs-6 col-sm-12">
@@ -50,7 +50,7 @@
 
                     <h1 itemprop="name"><?php the_title(); ?></h1>
 
-                    <?php get_template_part('parts/metadata') ?>
+                    <?php get_template_part('parts/meta', 'single') ?>
 
                     <?php if( isset($_GET['action']) && $_GET['action'] == 'edit' && current_user_can('edit_posts', get_the_ID()) ): ?>
 
@@ -113,7 +113,7 @@
                                 <a class="btn btn-sm btn-primary" href="<?php the_permalink() ?>?action=edit"><i class="icon-pencil5"></i> このスレッドを編集</a>
                             </p>
                         <?php endif;  ?>
-                        <div class="thread-inner">
+                        <div class="thread-inner" itemprop="text">
                             <?= wpautop(WPametu::helper()->str->auto_link(strip_tags(get_the_content()))) ?>
                         </div><!-- //.thread-inner -->
 

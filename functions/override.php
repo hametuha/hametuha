@@ -54,6 +54,28 @@ if( is_admin() ){
 
 }
 
+
+/**
+ * クエリバーのうち、メタキーを使えるようにする
+ */
+add_action('pre_get_posts', function( WP_Query &$wp_query ){
+	if( $orderby = $wp_query->get('orderby') ){
+		switch( $orderby ){
+			case 'popular':
+				$wp_query->set('orderby', 'meta_value_num');
+				$wp_query->set('meta_key', '_current_pv');
+				break;
+			case 'social':
+				$wp_query->set('orderby', 'meta_value_num');
+				$wp_query->set('meta_key', '_sns_count_facebook');
+				break;
+			default:
+				// Do nothing
+				break;
+		}
+	}
+});
+
 /**
  * Theme My Loginにno cache headersを吐かせる
  */

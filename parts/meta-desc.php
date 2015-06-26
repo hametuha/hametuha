@@ -1,7 +1,6 @@
 
 <?php if( is_category() ): ?>
 
-
     <?= wpautop(category_description()) ?>
 
 

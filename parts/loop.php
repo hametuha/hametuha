@@ -11,11 +11,27 @@
 	        <!-- Title -->
 	        <h2>
 	            <?php the_title(); ?>
-	            <?php if( 'post' == get_post_type() && ($terms = get_the_category()) ): ?>
-	                <?php foreach($terms as $category): ?>
-	                    <small><?= esc_html($category->name) ?></small>
-	                <?php endforeach; ?>
-	            <?php endif; ?>
+		        <?php switch( get_post_type() ){
+			        case 'post':
+						echo implode(' ', array_map(function($term){
+		                    printf('<small>%s</small>', esc_html($term->name));
+						}, get_the_category()));
+				        break;
+		            case 'anpi':
+						if( is_search() ){
+							echo '<small>安否情報</small>';
+						}else{
+							if( $terms = get_the_terms(null, 'anpi_cat') ){
+								echo implode(' ', array_map(function($term){
+									printf('<small>%s</small>', esc_html($term->name));
+								}, $terms));
+							}
+			            }
+			            break;
+		            default:
+						// Do nothing
+			            break;
+		        } ?>
 	        </h2>
 
 	        <!-- Post Data -->

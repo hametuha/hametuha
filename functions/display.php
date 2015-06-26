@@ -172,8 +172,15 @@ function hametuha_commment_display( $comment, $args, $depth ) {
             $author_label = '著者';
             break;
     }
+	if( is_singular('thread') ){
+		$prop = 'suggestedAnswer';
+		$type = 'http://schema.org/Answer';
+	}else{
+		$prop = 'comment';
+		$type = 'http://schema.org/Comment';
+	}
     ?>
-<li id="comment-<?php comment_ID(); ?>" <?php comment_class(implode(' ', $class_name)) ?> data-depth="<?= $depth ?>" itemprop="comment" itemscope itemtype="http://schema.org/Comment">
+<li id="comment-<?php comment_ID(); ?>" <?php comment_class(implode(' ', $class_name)) ?> data-depth="<?= $depth ?>" itemprop="<?= $prop ?>" itemscope itemtype="<?= $type ?>">
     <?php switch($comment->comment_type):
         case "pingback":
         case "trackback":
@@ -199,7 +206,7 @@ function hametuha_commment_display( $comment, $args, $depth ) {
                             echo hametuha_user_role($comment->user_id);
                             break;
                     }
-                    ?> | <i class="icon-clock"></i> <?php echo get_comment_date('Y-m-d H:i'); ?></small>
+                    ?> | <i class="icon-clock"></i> <span itemprop=""><?php echo get_comment_date('Y-m-d H:i'); ?></span></small>
             </h4>
         </div><!-- .comment-author .vcard -->
 

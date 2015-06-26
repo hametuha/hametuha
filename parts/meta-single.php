@@ -67,7 +67,7 @@
 	    <?php if( 'lists' == get_post_type() ): ?>
 		    <a class="list-creator btn btn-primary btn-sm" title="リストを編集する" href="<?= esc_url(\Hametuha\Rest\ListCreator::form_link(get_the_ID())) ?>"><i class="icon-pencil5"></i> 編集</a>
 		    <a class="list-eraser btn btn-danger btn-sm" title="このリストを削除します。よろしいですか？　この操作は取り消せません" href="<?= esc_url(\Hametuha\Rest\ListCreator::delete_link(get_the_ID())) ?>"><i class="icon-close3"></i> 削除</a>
-		<?php else: ?>
+		<?php elseif( !is_singular('thread') ): ?>
             <i class="icon-pen3"></i> <?php edit_post_link() ?>
 		<?php endif; ?>
         </li>

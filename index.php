@@ -61,61 +61,73 @@
 	            </div>
 	        <?php } ?>
 
+	        <div>
 
-            <?php
-                if( is_singular('series') ) {
-	                // 親投稿の場合はリストを変更
-	                $query = new WP_Query([
-		                'post_type'   => 'post',
-		                'post_status' => 'publish',
-		                'post_parent' => get_the_ID(),
-		                'posts_per_page' => -1,
-		                'orderby' => [
-			                'menu_order' => 'ASC',
-		                    'date' => 'DESC',
-		                ],
-		                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
-	                ]);
-                }elseif( is_singular('lists') ){
-	                $query = new WP_Query([
-		                'post_type' => 'in_list',
-		                'post_status' => 'publish',
-		                'post_parent' => get_the_ID(),
-		                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
-	                ]);
-                }else{
-                    global $wp_query;
-                    $query = $wp_query;
-                }
-                if( $query->have_posts() ):
-					/* get_template_part('parts/sort-order') */
-	            ?>
-
-	            <ol class="archive-container media-list">
 	            <?php
-	                $counter = 0;
-	                while( $query->have_posts() ){
-	                    $query->the_post();
-	                    $counter++;
-	                    $even = ($counter % 2 == 0) ? ' even' : ' odd';
-	                    if( is_ranking() ){
-	                        get_template_part('parts/loop', 'ranking');
-	                    }else{
-	                        get_template_part('parts/loop', get_post_type());
-	                    }
+	                if( is_singular('series') ) {
+		                // 親投稿の場合はリストを変更
+		                $query = new WP_Query([
+			                'post_type'   => 'post',
+			                'post_status' => 'publish',
+			                'post_parent' => get_the_ID(),
+			                'posts_per_page' => -1,
+			                'orderby' => [
+				                'menu_order' => 'ASC',
+			                    'date' => 'DESC',
+			                ],
+			                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
+		                ]);
+	                }elseif( is_singular('lists') ){
+		                $query = new WP_Query([
+			                'post_type' => 'in_list',
+			                'post_status' => 'publish',
+			                'post_parent' => get_the_ID(),
+			                'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
+		                ]);
+	                }else{
+	                    global $wp_query;
+	                    $query = $wp_query;
 	                }
+	                if( $query->have_posts() ):
+
+	                    if( !is_ranking() && !get_query_var('reviewed_as')  && !hametuha_is_profile_page() ){
+							get_template_part('parts/sort-order');
+	                    }
+
+		            ?>
+
+			        <!-- Tab panes -->
+			        <div class="tab-content">
+				        <div class="tab-pane active">
+				            <ol class="archive-container media-list">
+				            <?php
+				                $counter = 0;
+				                while( $query->have_posts() ){
+				                    $query->the_post();
+				                    $counter++;
+				                    $even = ($counter % 2 == 0) ? ' even' : ' odd';
+				                    if( is_ranking() ){
+				                        get_template_part('parts/loop', 'ranking');
+				                    }else{
+				                        get_template_part('parts/loop', get_post_type());
+				                    }
+				                }
+				            ?>
+				            </ol>
+				        </div><!-- //.tab-pane -->
+			        </div><!-- //.tab-content -->
+                </div>
+
+	            <?php
+	            // Load navigation
+	            if( is_tax('topic') ){
+		            get_template_part('parts/nav', 'thread');
+	            }elseif( get_query_var('reviewed_as') ){
+		            get_template_part('parts/nav', 'review');
+	            }elseif( ( (!is_ranking() || !get_query_var('reviewed_as') )&& is_home() ) || is_post_type_archive('post') || is_category() || is_tag() || is_search() ){
+		            get_template_part('parts/nav');
+	            }
 	            ?>
-	            </ol>
-
-	            <?php if( is_tax('topic') ): ?>
-
-	                <?php get_template_part('parts/nav', 'thread') ?>
-
-	            <?php endif; ?>
-
-                <?php if( get_query_var('reviewed_as') ): ?>
-	                <?php get_template_part('parts/nav', 'review') ?>
-                <?php endif; ?>
 
 	            <?php wp_pagenavi(['query' => $query]); ?>
 
