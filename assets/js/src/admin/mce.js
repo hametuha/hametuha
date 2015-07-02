@@ -20,7 +20,6 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
             style.id = 'hametuha-mce';
             d.getElementsByTagName('head')[0].appendChild(style);
         }
-        console.log(style);
         style.innerHTML = css;
     }
 
