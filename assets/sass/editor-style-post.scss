@@ -11,5 +11,12 @@ body{
   margin: 20px;
   line-height: 1.8;
   font-family: %serif;
+  & > p,
+  blockquote p{
+    text-indent: 1em;
+    &[style]{
+      text-indent: 0;
+    }
+  }
   @include post-style(true);
 }

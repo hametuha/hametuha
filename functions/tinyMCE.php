@@ -49,9 +49,24 @@ add_filter('tiny_mce_before_init', function ($initArray) {
 }, 10001);
 
 
-
-add_action('edit_form_after_title', function($post){
+/**
+ * タイトルを出す
+ *
+ * @param WP_Post $post
+ */
+add_action('edit_form_after_title', function(WP_Post $post){
     if( 'post' == $post->post_type ){
         echo '<h3>本文</h3>';
     }
 }, 10000);
+
+/**
+ * プラグイン用JSを登録する
+ *
+ * @param array $plugin_array
+ * @return array
+ */
+add_filter( "mce_external_plugins", function( array $plugin_array ) {
+	$plugin_array['hametuha'] = get_stylesheet_directory_uri().'/assets/js/dist/admin/mce.js';
+	return $plugin_array;
+});

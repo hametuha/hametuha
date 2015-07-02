@@ -178,7 +178,7 @@ Chart.defaults.global.responsive = true;
 
         // 段落の行頭揃え
         $('.work-content p').each(function(index, elt){
-            if( !(Hametuha.str.startYakumono($(elt).text())) && !$(elt).hasClass('wp-caption-text') ){
+            if( !(Hametuha.str.startYakumono($(elt).text())) && !$(elt).hasClass('wp-caption-text') && !$(elt).attr('style') ){
                 $(elt).addClass('indent');
             }
         });
