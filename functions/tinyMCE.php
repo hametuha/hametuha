@@ -22,6 +22,8 @@ add_action( 'admin_head', function() {
  * @return array
  */
 add_filter('tiny_mce_before_init', function ($initArray) {
+	$css_dir = get_stylesheet_directory().'/assets/css';
+	$initArray['cache_suffix'] .= sprintf('&hametuha-%s', date_i18n('Ymd', max(filemtime($css_dir.'/editor-style.css'), filemtime($css_dir.'/editor-style-post.css'))));
      //選択できるブロック要素を変更
     $initArray['theme_advanced_blockformats'] = 'p,h2,h3,h4,h5,dt,dd';
 	//使用できるタグを指定
