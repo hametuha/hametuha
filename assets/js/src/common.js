@@ -389,6 +389,13 @@ jQuery(document).ready(function($){
 
 
 
+    // サムネイルクリック
+    $(document).on('click', 'a', function(e){
+        var $thumb = $(this).find('.pseudo-thumbnail');
+        if( $thumb.length ){
+            Hametuha.ga.eventOutbound(e, $(this).attr('href'), 'thumb-score', $thumb.attr('data-action'), $thumb.attr('data-label'));
+        }
+    });
 
 
 
