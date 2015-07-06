@@ -1,10 +1,36 @@
+<?php
+
+if( 'post' == get_post_type() ){
+	$thumbnail = get_pseudo_thumbnail();
+	$class = $thumbnail['url'] ? '' : ' media__link--nopad';
+}else{
+	$class = '';
+}
+
+?>
 <li data-post-id="<?php the_ID() ?>" <?php post_class('media') ?>>
-	<a href="<?php the_permalink() ?>" class="media__link">
-	    <?php if( has_post_thumbnail() ): ?>
-	        <div class="pull-right">
-	            <?= get_the_post_thumbnail(null, 'thumbnail', array('class' => 'media-object')) ?>
-	        </div>
-	    <?php endif; ?>
+	<a href="<?php the_permalink() ?>" class="media__link<?= $class ?>">
+
+		<?php
+		if( 'post' == get_post_type() ){
+			// 投稿の場合はサムネ出力実験
+			$style = $thumbnail['url'] ? "background-image: url('{$thumbnail['url']}')" : "";
+			echo <<<HTML
+			<div class="pseudo-thumbnail" data-category="thumb-score" data-label="{$thumbnail['label']}" data-action="{$thumbnail['action']}" style="{$style}">
+			</div>
+HTML;
+
+		}else{
+			// それ以外は今まで通り
+			if( has_post_thumbnail() ){
+				?>
+		        <div class="pull-right">
+		            <?= get_the_post_thumbnail(null, 'thumbnail', array('class' => 'media-object')) ?>
+		        </div>
+				<?php
+			}
+		}
+		?>
 
 	    <div class="media-body">
 

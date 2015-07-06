@@ -1,5 +1,15 @@
 <li class="recommend__item">
 	<a class="recommend__link" href="<?php the_permalink() ?>">
+		<?php
+		if( 'post' == get_post_type() ) {
+			$thumbnail = get_pseudo_thumbnail();
+			$style = $thumbnail['url'] ? "background-image: url('{$thumbnail['url']}')" : "";
+			echo <<<HTML
+			<div class="pseudo-thumbnail" data-category="thumb-score" data-label="{$thumbnail['label']}" data-action="{$thumbnail['action']}" style="{$style}">
+			</div>
+HTML;
+		}
+		?>
 		<h4 class="recommend__title">
 			<?php the_title() ?>
 			<small><?= implode(', ', array_map(function($cat){

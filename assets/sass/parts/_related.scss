@@ -24,7 +24,7 @@
         }
       }
       &__list{
-        height: 160px;
+        height: 280px;
         overflow-x: scroll;
         overflow-y: hidden;
         white-space: nowrap;
@@ -48,6 +48,10 @@
               border-left: none;
             }
           }
+        }
+        .pseudo-thumbnail{
+          height: 120px;
+          margin-bottom: 10px;
         }
       }
 
@@ -97,7 +101,7 @@
         position: relative;
         font-size: 1.2em;
         line-height: 1.1;
-        height: 2.4em;
+        height: 2.2em;
         overflow: hidden;
         color: $base-color;
         margin: 0 0 0.5em;

@@ -234,3 +234,55 @@ function has_image_attachment($post = null){
 	return (boolean)$wpdb->get_var($wpdb->prepare($sql, $post->ID));
 }
 
+/**
+ * 仮のサムネイルを取得する
+ *
+ * @param null|int|WP_Post $post
+ *
+ * @return array
+ */
+function get_pseudo_thumbnail($post = null){
+	static $thumbnails = array();
+	static $index = 0;
+	$post = get_post($post);
+	if( has_post_thumbnail($post->ID) ){
+		$src = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'medium');
+		return [
+			'action' => 'original',
+			'label'  => 'original',
+		    'url'    => $src[0],
+			'value'  => 1,
+		];
+	}else{
+		if( rand(1, 10) < 6 ){
+			// サムネイルをあえて出さない
+			return [
+				'action' => 'no-thumb',
+				'label' => 'no-thumb',
+				'url' => '',
+				'value' => 1,
+			];
+		}else{
+			// 仮のサムネイルを出す
+			if( !$thumbnails ){
+				$files = array_filter(scandir(get_stylesheet_directory().'/assets/img/thumbs'), function($file){
+					return 0 !== strpos($file, '.');
+				});
+				shuffle($files);
+				$thumbnails = $files;
+			}
+			// インデックスをリセット
+			if( $index >= count($thumbnails) ){
+				$index = 0;
+			}
+			$src = $thumbnails[$index];
+			$index++;
+			return [
+				'action' => 'pseudo',
+				'label' => $src,
+				'url' => get_stylesheet_directory_uri().'/assets/img/thumbs/'.$src,
+				'value' => 1,
+			];
+		}
+	}
+}

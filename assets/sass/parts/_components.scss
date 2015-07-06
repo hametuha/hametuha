@@ -12,6 +12,13 @@
   @include animation(rotation 1.5s linear infinite);
 }
 
+// サムネイル
+.pseudo-thumbnail{
+  background-size: cover;
+  background-color: #737373;
+  background-position: center center;
+}
+
 .pager{
   a{
     max-width: 45%;
@@ -503,6 +510,10 @@ ul.metadata{
 .row--share{
 
   & + .nav{
+    margin-top: 20px;
+  }
+
+  & + div{
     margin-top: 20px;
   }
 
