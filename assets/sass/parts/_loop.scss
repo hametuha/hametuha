@@ -9,6 +9,11 @@
   }
   // 投稿
   &.type-post{
+    &.rank-list{
+      & > a{
+        padding-left: 1em !important;
+      }
+    }
     & > a{
       &.media__link--nopad{
         padding-left: 1em !important;

@@ -6,7 +6,7 @@
 $rank = get_the_ranking();
 
 ?>
-<li <?php post_class('media rank-list'.ranking_class($rank)) ?>>
+<li <?php post_class('media rank-list') ?>>
 
 	<?php if( 1 === $rank ): ?>
         <i class="rank-icon icon-trophy2"></i>
