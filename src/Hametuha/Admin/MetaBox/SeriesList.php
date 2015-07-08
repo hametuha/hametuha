@@ -141,6 +141,7 @@ HTML;
 		$series = get_posts(   [
 			'post_type' => 'post',
 			'post_parent' => $post->ID,
+			'post_status' => ['publish', 'future', 'draft', 'pending'],
 			'posts_per_page' => -1,
 			'orderby' => [
 				'menu_order' => 'DESC',

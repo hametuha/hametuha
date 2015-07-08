@@ -29,7 +29,7 @@ get_header(); ?>
 
                     <h1 itemprop="headline"><?php the_title(); ?></h1>
 
-                    <?php the_series('<p class="series">', sprintf('（全%s話）</p>', $series->get_total($post->post_parent))); ?>
+                    <?php the_series('<p class="series">', sprintf('（第%s話）</p>', $series->get_index())); ?>
 
                     <p class="author">
                         <a href="#post-author"><?php the_author(); ?></a>

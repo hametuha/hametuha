@@ -167,23 +167,12 @@ class Series extends Model
 	 */
 	public function should_hide( $post = null ){
 		$post = get_post($post);
-		$index = $this->get_visibiity($post->post_parent);
-		if( !$index ){
+		$limit_index = $this->get_visibiity($post->post_parent);
+		if( !$limit_index ){
 			return false;
 		}
-		$where = <<<SQL
-			post_parent = %d
-			AND (
-				( menu_order > %d )
-				OR
-				( post_date < %s  )
-			)
-SQL;
-
-		$count = (int) $this->select('COUNT(ID)')
-			->from($this->db->posts)
-			->where($where, [$post->post_parent, $post->menu_order, $post->post_date])->get_var();
-		return $count >= $index;
+		$cur_index = $this->get_index($post);
+		return $cur_index > $limit_index;
 	}
 
 	/**
@@ -221,18 +210,27 @@ SQL;
 	 * @return int
 	 */
 	public function get_index($post = null){
+		static $store = [];
 		$post = get_post($post);
+		if( !isset($store[$post->ID]) ){
+
 		$query = <<<SQL
-			post_type = 'post' AND post_status = 'publish'
+			post_type = 'post'
+			AND post_status = 'publish'
 			AND post_parent = %d
 			AND (
 				menu_order > %d
 				OR
-				post_date < %s
+				( post_date < %s AND menu_order = %d )
 			)
 SQL;
-		return 1 + (int)$this->select('COUNT(ID)')->from($this->db->posts)
-		                   ->where($query, [$post->post_parent, $post->menu_order, $post->post_date])->get_var();
+			$index = (int)$this->select('COUNT(ID)')
+							->from($this->db->posts)
+			                ->where($query, [$post->post_parent, $post->menu_order, $post->post_date, $post->menu_order])
+							->get_var();
+			$store[$post->ID] = $index;
+		}
+		return 1 + $store[$post->ID];
 	}
 
 	/**
@@ -267,7 +265,7 @@ SQL;
 			->where("post_type = 'post' AND post_status = 'publish' AND post_parent = %d", $post->post_parent)
 			->order_by('menu_order', 'DESC')
 			->order_by('post_date')
-			->limit(1, $offset)
+			->limit(1, $offset - 1)
 			->get_row();
 	}
 
@@ -295,6 +293,7 @@ SQL;
 	 * @return string
 	 */
 	public function prev($before = '<li>', $after = '</li>', $post = null, $next = false){
+		$post = get_post($post);
 		$index = $this->get_index($post);
 		if( $next ){
 			$link = '<a href="%s">第%s話 &raquo;</a>';
@@ -302,10 +301,11 @@ SQL;
 			$link = '<a href="%s">&laquo; 第%s話</a>';
 		}
 		$operand = $next ? 1 : -1;
-		if( !$index || ($index < 2 && !$next) || !($prev = $this->get_sibling($index - 1 + $operand, $post)) ){
+		$target = $this->get_sibling($index + $operand, $post);
+		if( !$index || ($index < 2 && !$next) || !$target ){
 			return '';
 		}
-		return sprintf('%s'.$link.'%s', $before, get_permalink($prev->ID), $index + $operand, $after);
+		return sprintf('%s'.$link.'%s', $before, get_permalink($target), $index + $operand, $after);
 	}
 
 	/**
