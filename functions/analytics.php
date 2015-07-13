@@ -27,7 +27,7 @@ ga('require', 'linkid', 'linkid.js');
 <?php endif; ?>
 <?php if( is_singular() && !is_preview() ): ?>
     ga('set', 'dimension1', '<?= get_post_type() ?>');
-    ga('set', 'dimension2', '<?= get_the_author_meta('ID') ?>');
+    ga('set', 'dimension2', '<?= get_post()->post_author ?>');
     <?php
         $cat = false;
         foreach( get_the_category(get_the_ID()) as $c ){
