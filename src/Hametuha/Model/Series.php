@@ -302,7 +302,7 @@ SQL;
 		}
 		$operand = $next ? 1 : -1;
 		$target = $this->get_sibling($index + $operand, $post);
-		if( !$index || ($index < 2 && !$next) || !$target ){
+		if( ($index < 0) || !$index || ($index < 2 && !$next) || !$target ){
 			return '';
 		}
 		return sprintf('%s'.$link.'%s', $before, get_permalink($target), $index + $operand, $after);
