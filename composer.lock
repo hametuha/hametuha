@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hamepub.git",
-                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03"
+                "reference": "0723a08f399f52a570e644b004f59b1797450e69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/04d891aec08cc61086ede9a8ccf81a7eb538bc03",
-                "reference": "04d891aec08cc61086ede9a8ccf81a7eb538bc03",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/0723a08f399f52a570e644b004f59b1797450e69",
+                "reference": "0723a08f399f52a570e644b004f59b1797450e69",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 "epub",
                 "wordpress"
             ],
-            "time": "2015-06-15 10:57:37"
+            "time": "2015-07-13 11:25:40"
         },
         {
             "name": "hametuha/wpametu",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "4c45a48488e540c5c8e6c9e388e56c88766f7dc0"
+                "reference": "a82d482864162ceb666368bf5d54b2e7bada7610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/4c45a48488e540c5c8e6c9e388e56c88766f7dc0",
-                "reference": "4c45a48488e540c5c8e6c9e388e56c88766f7dc0",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/a82d482864162ceb666368bf5d54b2e7bada7610",
+                "reference": "a82d482864162ceb666368bf5d54b2e7bada7610",
                 "shasum": ""
             },
             "require": {
@@ -138,7 +138,7 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2015-06-15 16:42:04"
+            "time": "2015-06-15 16:58:17"
         },
         {
             "name": "masterminds/html5",

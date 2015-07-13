@@ -278,7 +278,7 @@ HTML;
 				if( false !== strpos($key, 'post-') ){
 					// This is post. So grab all headers
 					$dom = $factory->parser->html5->loadHTML($h['html']);
-					$factory->parser->grabHeaders($page_toc, $dom, true, 3);
+					$factory->parser->grabHeaders($page_toc, $dom, true, 3, 2);
 					$html[$key]['html'] = $factory->parser->convertToString($dom);
 				}
 			}
@@ -462,7 +462,7 @@ HTML;
 						$toc = $this->factory( $id )->toc->addChild( $title, $permalink );
 						$content = apply_filters('the_content', strip_shortcodes($post->post_content));
 						$dom = $this->factory($id)->parser->getDomFromString($content);
-						$this->factory($id)->parser->grabHeaders($toc, $dom);
+						$this->factory($id)->parser->grabHeaders($toc, $dom, true, 3, 2);
 					}
 				}
 				$this->set_data( $this->factory( $id )->toc->getNavHTML('本文'), 'toc' );
