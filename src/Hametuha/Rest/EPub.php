@@ -96,7 +96,8 @@ class EPub extends RestTemplate {
 			if( !defined('EPUB_PATH') ){
 				throw new \Exception('ePubチェッカーがありません', 500);
 			}
-			$tmp = tempnam(sys_get_temp_dir(), "epubCheck");
+			// アップロードディレクトリを取得
+			$tmp = tempnam(ABSPATH.'wp-content/hamepub/', "epubCheck");
 
 			$path = $this->files->build_file_path($file);
 			$command = sprintf("%s %s -out %s", EPUB_PATH, $path, $tmp);
