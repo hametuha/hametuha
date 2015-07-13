@@ -103,15 +103,24 @@ class EPub extends RestTemplate {
 			$command = sprintf("%s %s -out %s", EPUB_PATH, $path, $tmp);
 			$result = exec($command, $output);
 			$lines = implode("<br />", array_map('esc_html', $output));
-			$xml = simplexml_load_file($tmp);
-			unlink($tmp);
 			$messages = [];
-			if( $xml->repInfo->messages->count() ){
-				foreach( $xml->repInfo->messages->message as $message ){
-					$messages[] = (string) $message;
+			try{
+				$xml = simplexml_load_file($tmp);
+				if( $xml->repInfo->messages->count() ){
+					foreach( $xml->repInfo->messages->message as $message ){
+						$messages[] = (string) $message;
+					}
+				}else{
+					$messages[] = 'SUCCESS: This ePub is valid!';
 				}
-			}else{
-				$messages[] = 'SUCCESS: This ePub is valid!';
+			}catch ( \Exception $e ){
+				$messages[] = 'Error: '.$e->getMessage();
+			}finally{
+				if( file_exists($tmp) ){
+					unlink($tmp);
+				}else{
+					$messages[] = sprintf('Error: Temp file %s doesn\'t exist', $tmp);
+				}
 			}
 			$messages = implode(' ', array_map(function($message){
 				$message = esc_html($message);
