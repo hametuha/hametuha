@@ -106,12 +106,14 @@ class EPub extends RestTemplate {
 			$messages = [];
 			try{
 				$xml = simplexml_load_file($tmp);
-				if( $xml->repInfo->messages->count() ){
+				if( $xml && $xml->repInfo->messages->count() ){
 					foreach( $xml->repInfo->messages->message as $message ){
 						$messages[] = (string) $message;
 					}
-				}else{
+				}elseif( $xml ){
 					$messages[] = 'SUCCESS: This ePub is valid!';
+				}else{
+					$messages[] = 'Error: XML invalid.';
 				}
 			}catch ( \Exception $e ){
 				$messages[] = 'Error: '.$e->getMessage();
