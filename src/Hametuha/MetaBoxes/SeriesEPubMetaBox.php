@@ -5,7 +5,7 @@ namespace Hametuha\MetaBoxes;
 
 use WPametu\UI\Admin\LeadMetaBox;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Textarea;
 use WPametu\UI\Field\Radio;
 
 class SeriesEPubMetaBox extends LeadMetaBox
@@ -30,7 +30,7 @@ class SeriesEPubMetaBox extends LeadMetaBox
 			'description' => 'サブタイトルがあればつけてください。',
 		],
 		'excerpt' => [
-			'class' => TextArea::class,
+			'class' => Textarea::class,
 			'label' => 'リード',
 			'required' => true,
 			'rows' => 5,
@@ -40,7 +40,7 @@ class SeriesEPubMetaBox extends LeadMetaBox
 			'placeholder' => 'ex. この作品はほんとうに素晴らしいんです。読んでください！'
 		],
 		'_preface' => [
-			'class' => TextArea::class,
+			'class' => Textarea::class,
 			'label' => 'はじめに',
 			'required' => false,
 			'rows' => 10,

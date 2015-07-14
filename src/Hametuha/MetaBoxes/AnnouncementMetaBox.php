@@ -9,7 +9,7 @@ use WPametu\UI\Field\DateTime;
 use WPametu\UI\Field\GeoChecker;
 use WPametu\UI\Field\Number;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Textarea;
 use WPametu\UI\Field\Radio;
 
 /**
@@ -30,7 +30,7 @@ class AnnouncementMetaBox extends EditMetaBox
 
     protected $fields = [
         'excerpt' => [
-            'class' => TextArea::class,
+            'class' => Textarea::class,
             'label' => 'キャッチコピー',
             'rows' => 5,
             'max' => 200,
@@ -90,7 +90,7 @@ class AnnouncementMetaBox extends EditMetaBox
 		    'suffix' => '人',
 	    ],
         Announcement::NOTICE => [
-            'class' => TextArea:: class,
+            'class' => Textarea:: class,
             'label' => '備考',
             'placeholder' => 'ex. 開場時間の注意点、持ち物など',
             'rows' => 5,

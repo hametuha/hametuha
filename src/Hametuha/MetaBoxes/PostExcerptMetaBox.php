@@ -4,7 +4,7 @@ namespace Hametuha\MetaBoxes;
 
 
 use WPametu\UI\Admin\LeadMetaBox;
-use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Textarea;
 use WPametu\UI\Field\Select;
 
 class PostExcerptMetaBox extends LeadMetaBox
@@ -18,7 +18,7 @@ class PostExcerptMetaBox extends LeadMetaBox
 
     protected $fields = [
         'excerpt' => [
-            'class' => TextArea::class,
+            'class' => Textarea::class,
             'label' => 'リード',
             'required' => true,
             'rows' => 5,
