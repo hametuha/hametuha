@@ -7,6 +7,11 @@
   &__rating{
     margin-bottom: 0.5em;
   }
+  &-body{
+    &__title{
+      color: #000;
+    }
+  }
   // 投稿
   &.type-post{
     &.rank-list{

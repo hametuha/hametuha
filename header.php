@@ -26,6 +26,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="<?= get_permalink(get_option('page_for_posts')) ?>"><i class="icon-books"></i> 作品新着</a></li>
 	                    <li><a href="<?= get_post_type_archive_link('series') ?>"><i class="icon-stack"></i> 連載</a></li>
+                        <li><a href="<?= home_url('kdp/') ?>"><i class="icon-html5"></i> Kindle本</a></li>
                         <li class="divider"></li>
                         <li><span class="text-muted"><i class="icon-tags"></i> ジャンル</span></li>
                         <?php foreach( get_categories(['parent' => 0, 'number' => 6]) as $cat): ?>

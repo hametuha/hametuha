@@ -35,10 +35,13 @@ HTML;
 	    <div class="media-body">
 
 	        <!-- Title -->
-	        <h2>
+	        <h2 class="media-body__title">
 	            <?php the_title(); ?>
 		        <?php switch( get_post_type() ){
 			        case 'post':
+						if( $post->post_parent ){
+							printf('<small class="media-title-label">%s</small> | ', get_the_title($post->post_parent));
+						}
 						echo implode(' ', array_map(function($term){
 		                    printf('<small>%s</small>', esc_html($term->name));
 						}, get_the_category()));

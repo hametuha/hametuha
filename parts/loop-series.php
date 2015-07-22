@@ -37,6 +37,9 @@
 
 	        <!-- Excerpt -->
 	        <div class="archive-excerpt">
+		        <?php if( 2 == get_post_meta(get_the_ID(), '_kdp_status', true) ): ?>
+			        <span class="label label-warning">Amazonで販売中！</span>
+		        <?php endif; ?>
 	            <p class="text-muted"><?= trim_long_sentence(get_the_excerpt(), 98); ?></p>
 	        </div>
 	    </div>

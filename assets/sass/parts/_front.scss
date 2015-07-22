@@ -152,6 +152,24 @@
   }
 }
 
+// Carousel
+.carousel{
+  margin-bottom: 20px;
+  .item{
+    height: 400px;
+    background-position: center center;
+    -webkit-background-size: cover;
+    background-size: cover;
+    @media only screen and (max-width: $screen-sm-max ){
+      height: 300px;
+    }
+  }
+  .carousel-control span:first-child{
+    top:50%;
+    position: absolute;
+  }
+}
+
 // レーダー
 #genre-context{
   height: 300px;

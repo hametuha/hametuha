@@ -18,12 +18,11 @@ HTML;
 	switch( $series->get_status($series_id) ){
 		case 2:
 			$msg .= '続きはAmazon Kindleで入手可能です。ぜひご利用ください。';
-			$msg2 = do_shortcode("[tmkm-amazon asin='{$asin}'][/tmkm-amazon]");
+			$msg = do_shortcode(sprintf("[tmkm-amazon asin='{$asin}']%s[/tmkm-amazon]", $msg));
 			$class_name = 'success';
 			break;
 		case 1:
-			$msg .= '続きは現在販売準備中です。乞うご期待。';
-			$msg2 = '';
+			$msg = "<p>{$msg}続きは現在販売準備中です。乞うご期待。</p>";
 			$class_name = 'danger';
 			break;
 		default:
@@ -34,8 +33,7 @@ HTML;
 	if( $msg ){
 		echo  <<<HTML
 				<div class="alert alert-{$class_name} text-center">
-					<p>{$msg}</p>
-					{$msg2}
+					{$msg}
 				</div>
 HTML;
 	}

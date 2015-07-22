@@ -63,7 +63,7 @@ switch( $orderby ){
 	</li>
 	<li role="presentation" class="<?= implode(' ', $current['social'] )  ?>">
 		<a href="<?= add_query_arg($args['social'], $base) ?>" aria-controls="socail">
-			ソーシャル人気
+			SNS人気
 			<i class="icon-arrow-down"></i>
 			<i class="icon-arrow-up"></i>
 		</a>
