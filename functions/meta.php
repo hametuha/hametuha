@@ -106,11 +106,11 @@ add_action( 'wp_head', function () {
 	$author = '';
 	//個別設定
 	if ( is_front_page() ) {
-		$url  = trailingslashit( get_bloginfo( 'url' ) );
-		$type = 'website';
-		$page = get_post(get_option('page_on_front'));
-		$desc = $page->post_excerpt;
-		$image = wp_get_attachment_image_src(get_post_thumbnail_id($page->ID), 'full')[0];
+		$url   = trailingslashit( get_bloginfo( 'url' ) );
+		$type  = 'website';
+		$page  = get_post( get_option( 'page_on_front' ) );
+		$desc  = $page->post_excerpt;
+		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $page->ID ), 'full' )[0];
 	} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
 		$url   = home_url( '/kdp/' );
 		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。プライム会員は月1冊まで無料！';
@@ -140,11 +140,11 @@ add_action( 'wp_head', function () {
 		setup_postdata( $post );
 		$desc = get_the_excerpt();
 		wp_reset_postdata();
-		$author = '<meta property="article:author" content="' . get_author_posts_url( get_the_author_meta( 'ID' ) ) . '" />';
+		$author = '<meta property="article:author" content="' . get_author_posts_url( $post->post_author ) . '" />';
 		if ( is_singular( 'thread' ) ) {
 			$image = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $post->post_author, 300 ) );
 		} elseif ( has_post_thumbnail() ) {
-			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'large' ) ) {
+			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
 				$image = $src[0];
 				$card  = 'summary_large_image';
 			}

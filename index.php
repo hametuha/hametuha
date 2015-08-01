@@ -33,10 +33,7 @@
 
 
 				<?php
-				if ( is_singular( 'series' ) ) {
-					the_post();
-					get_template_part( 'parts/meta', 'series' );
-				} elseif ( is_singular( 'lists' ) ) {
+				if ( is_singular( 'lists' ) ) {
 					get_template_part( 'parts/meta', 'lists' );
 				} else {
 					?>
@@ -50,7 +47,7 @@
 							<?php get_template_part( 'parts/meta-desc' ); ?>
 						</div>
 
-						<?php if ( hametuha_is_profile_page() ): ?>
+						<?php if ( hametuha_is_profile_page() ) : ?>
 							<?php get_template_part( 'parts/search', 'author' ) ?>
 						<?php endif; ?>
 
@@ -60,31 +57,18 @@
 				<div>
 
 					<?php
-					if ( is_singular( 'series' ) ) {
-						// 親投稿の場合はリストを変更
-						$query = new WP_Query( [
-							'post_type'      => 'post',
-							'post_status'    => 'publish',
-							'post_parent'    => get_the_ID(),
-							'posts_per_page' => - 1,
-							'orderby'        => [
-								'menu_order' => 'ASC',
-								'date'       => 'DESC',
-							],
-							'paged'          => max( 1, intval( get_query_var( 'paged' ) ) )
-						] );
-					} elseif ( is_singular( 'lists' ) ) {
+					if ( is_singular( 'lists' ) ) {
 						$query = new WP_Query( [
 							'post_type'   => 'in_list',
 							'post_status' => 'publish',
 							'post_parent' => get_the_ID(),
-							'paged'       => max( 1, intval( get_query_var( 'paged' ) ) )
+							'paged'       => max( 1, intval( get_query_var( 'paged' ) ) ),
 						] );
 					} else {
 						global $wp_query;
 						$query = $wp_query;
 					}
-					if ( $query->have_posts() ):
+					if ( $query->have_posts() ) :
 
 						if ( ! is_ranking() && ! get_query_var( 'reviewed_as' ) && ! hametuha_is_profile_page() ) {
 							get_template_part( 'parts/sort-order' );
@@ -101,7 +85,7 @@
 									while ( $query->have_posts() ) {
 										$query->the_post();
 										$counter ++;
-										$even = ( $counter % 2 == 0 ) ? ' even' : ' odd';
+										$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
 										if ( is_ranking() ) {
 											get_template_part( 'parts/loop', 'ranking' );
 										} else {
@@ -128,18 +112,9 @@
 						<?php wp_pagenavi( [ 'query' => $query ] ); ?>
 
 
-					<?php else: ?>
+					<?php else : ?>
 
-						<div class="nocontents-found alert alert-warning">
-							<p>該当するコンテンツがありませんでした。以下の方法をお試しください。</p>
-							<ul>
-								<li>検索ワードを変えてみる</li>
-								<li>カテゴリー、タグから探す</li>
-								<li>検索ワードの数を減らして、絞り込み検索と組み合せる</li>
-							</ul>
-							<p>改善要望などありましたら、<a class="alert-link"
-											   href="<?php echo home_url( '/inquiry/' ); ?>">お問い合わせ</a>からお願いいたします。</p>
-						</div>
+						<?php get_template_part( 'parts/no', 'content' ) ?>
 
 					<?php endif;
 					wp_reset_postdata(); ?>

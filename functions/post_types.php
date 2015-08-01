@@ -184,7 +184,7 @@ add_action('delete_post', function($post_id){
  * アーカイブ系シングルの表示を変更する
  */
 add_filter('single_template', function($template){
-	if( is_singular('lists') || is_singular('series') ){
+	if( is_singular('lists') ){
 		$template = get_template_directory().'/index.php';
 	}
 	return $template;

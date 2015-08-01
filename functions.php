@@ -6,11 +6,11 @@
  *
  * @return bool|string
  */
-function hametuha_version(){
-    $theme = wp_get_theme();
-    return $theme->get('Version');
-}
+function hametuha_version() {
+	$theme = wp_get_theme();
 
+	return $theme->get( 'Version' );
+}
 
 
 /**
@@ -18,20 +18,18 @@ function hametuha_version(){
  *
  * @deprecated
  */
-define('HAMETUHA_THEME_VERSION', hametuha_version());
+define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 
 
 /**
  * Bootstrap for theme
  */
 
-if( file_exists(__DIR__.'/vendor/autoload.php') ){
-	require_once __DIR__.'/vendor/autoload.php';
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
 	// Load WPametu
-	WPametu::entry('Hametuha', __DIR__.'/src');
+	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
 }
-
-
 
 
 /**
@@ -40,30 +38,31 @@ if( file_exists(__DIR__.'/vendor/autoload.php') ){
  */
 $script_flg = array();
 
-get_template_part('functions/utility');
-get_template_part('functions/display');
-get_template_part('functions/ranking');
-get_template_part('functions/meta');
-get_template_part('functions/post_types');
-get_template_part('functions/post_list');
-get_template_part('functions/post_list_admin');
-get_template_part('functions/series');
-get_template_part('functions/dashboard');
-get_template_part('functions/assets');
-get_template_part('functions/assets', 'ssl');
-get_template_part('functions/analytics');
-get_template_part('functions/override');
-get_template_part('functions/social');
-get_template_part('functions/user');
-get_template_part('functions/user_content');
-get_template_part('functions/user_change_login');
-get_template_part('functions/user_profile_picture');
-get_template_part('functions/widget');
-get_template_part('functions/menu');
-get_template_part('functions/error');
-get_template_part('functions/tinyMCE');
-get_template_part('functions/hamazon');
-get_template_part('functions/eyecatch');
-get_template_part('functions/bulletin-board');
-get_template_part('functions/device');
-get_template_part('functions/lwp');
+get_template_part( 'functions/utility' );
+get_template_part( 'functions/display' );
+get_template_part( 'functions/ranking' );
+get_template_part( 'functions/meta' );
+get_template_part( 'functions/post_types' );
+get_template_part( 'functions/post_list' );
+get_template_part( 'functions/post_list_admin' );
+get_template_part( 'functions/series' );
+get_template_part( 'functions/dashboard' );
+get_template_part( 'functions/assets' );
+get_template_part( 'functions/assets', 'ssl' );
+get_template_part( 'functions/analytics' );
+get_template_part( 'functions/override' );
+get_template_part( 'functions/social' );
+get_template_part( 'functions/user' );
+get_template_part( 'functions/user_content' );
+get_template_part( 'functions/user_change_login' );
+get_template_part( 'functions/user_profile_picture' );
+get_template_part( 'functions/widget' );
+get_template_part( 'functions/menu' );
+get_template_part( 'functions/error' );
+get_template_part( 'functions/tinyMCE' );
+get_template_part( 'functions/hamazon' );
+get_template_part( 'functions/eyecatch' );
+get_template_part( 'functions/bulletin-board' );
+get_template_part( 'functions/device' );
+get_template_part( 'functions/lwp' );
+get_template_part( 'functions/feed' );

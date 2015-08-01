@@ -3,6 +3,7 @@
 if( 'post' == get_post_type() ){
 	$thumbnail = get_pseudo_thumbnail();
 	$class = $thumbnail['url'] ? '' : ' media__link--nopad';
+
 }else{
 	$class = '';
 }
