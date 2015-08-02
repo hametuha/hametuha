@@ -168,6 +168,9 @@
     top:50%;
     position: absolute;
   }
+  &-inner{
+    -webkit-transform-style: preserve-3d;
+  }
 }
 
 // レーダー
