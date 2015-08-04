@@ -39,15 +39,14 @@
 
 	<!-- Date -->
 	<li class="date">
-		<?php switch ( get_post_type() ): case 'series': ?>
+		<?php switch ( get_post_type() ) : case 'series': ?>
 			<i class="icon-calendar"></i>
 			<span class="hidden" itemprop="datePublished"><?php the_time( 'Y-m-dTH:i:s+09:00' ) ?></span>
 			<?php the_series_range() ?>
 			<?php if ( \Hametuha\Model\Series::get_instance()->is_finished( get_the_ID() ) ) : ?>
 				<span class="label label-danger">完結済み</span>
 			<?php endif; ?>
-			<?php break;
-			default: ?>
+			<?php break; default: ?>
 				<i class="icon-clock"></i>
 				<span itemprop="datePublished"><?php the_date( 'Y年m月d日（D）' ); ?></span>
 				<small><?= hametuha_passed_time( $post->post_date ) ?></small>

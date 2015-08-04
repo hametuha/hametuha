@@ -8,14 +8,12 @@ get_template_part( 'parts/bar', 'posttype' );
 	<?php if ( has_post_thumbnail() ) : ?>
 		<div class="col-xs-12 col-sm-3 meta__thumbnail">
 			<?php the_post_thumbnail( 'medium', [
-				'itemprop' => 'image'
+				'itemprop' => 'image',
 			] ) ?>
 		</div>
 	<?php endif; ?>
 
-	<div class="col-xs-12<?php if ( has_post_thumbnail() ) {
-		echo ' col-sm-9';
-	} ?>">
+	<div class="col-xs-12<?= has_post_thumbnail() ? ' col-sm-9' : '' ?>">
 
 		<!-- title -->
 		<div class="page-header">
