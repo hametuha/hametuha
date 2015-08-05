@@ -19,22 +19,22 @@
         padding-left: 1em !important;
       }
     }
-    & > a{
-      &.media__link--nopad{
-        padding-left: 1em !important;
-        .pseudo-thumbnail{
-          display: none;
-        }
-      }
-      position: relative;
-      padding-left: 215px;
+  }
+  & > a.media__link{
+    &.media__link--nopad{
+      padding-left: 1em !important;
       .pseudo-thumbnail{
-        position: absolute;
-        width: 200px;
-        height: 100%;
-        left: 0;
-        top: 0;
+        display: none;
       }
+    }
+    position: relative;
+    padding-left: 215px;
+    .pseudo-thumbnail{
+      position: absolute;
+      width: 200px;
+      height: 100%;
+      left: 0;
+      top: 0;
     }
   }
 }
@@ -58,7 +58,7 @@
         height: 40px;
       }
     }
-    &.type-post > a{
+    & > a.media__link{
       padding-left: 110px;
       .pseudo-thumbnail{
         width: 100px;

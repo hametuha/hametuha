@@ -24,7 +24,7 @@
         }
       }
       &__list{
-        height: 280px;
+        height: 200px;
         overflow-x: scroll;
         overflow-y: hidden;
         white-space: nowrap;
@@ -48,10 +48,6 @@
               border-left: none;
             }
           }
-        }
-        .pseudo-thumbnail{
-          height: 120px;
-          margin-bottom: 10px;
         }
       }
 
@@ -127,7 +123,7 @@
         color: $more-shade-font;
         padding: 0.5em 0;
         line-height: 1.2;
-        height: 4em;
+        height: 5.2em;
         overflow: hidden;
       }
 
@@ -136,9 +132,9 @@
         position: absolute;
         display: block;
         text-align: right;
-        top: 30px;
+        bottom: 5px;
         right: 10px;
-        color: $base-color;
+        color: #ccc;
         //background: $base-color;
         opacity: .3;
         font-family: monospace;

@@ -264,6 +264,7 @@ function has_image_attachment( $post = null ) {
  * 仮のサムネイルを取得する
  *
  * @param null|int|WP_Post $post
+ * @deprecated
  *
  * @return array
  */

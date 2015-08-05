@@ -1,11 +1,14 @@
 <li <?php post_class( 'media loop-series' ) ?>>
-	<a class="media__link clearfix" href="<?php the_permalink(); ?>">
+	<a class="media__link<?= !has_post_thumbnail() ? ' media__link--nopad' : '' ?>" href="<?php the_permalink(); ?>">
 
-		<?php if ( has_post_thumbnail() ): ?>
-			<div class="pull-right">
-				<?= get_the_post_thumbnail( null, 'thumbnail', array( 'class' => 'media-object' ) ) ?>
-			</div>
-		<?php endif; ?>
+		<?php
+		if ( has_post_thumbnail() ) {
+			$style = sprintf("background-image: url('%s')", wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium')[0]);
+			echo <<<HTML
+				<div class="pseudo-thumbnail" style="{$style}"></div>
+HTML;
+		}
+		?>
 
 		<div class="media-body">
 
