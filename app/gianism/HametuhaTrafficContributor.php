@@ -2,13 +2,13 @@
 
 use Hametuha\Admin\Gabstract;
 
-class HametuhaReaderSegment extends Gabstract {
+class HametuhaTrafficContributor extends Gabstract {
 
 
 	/**
 	 * Action
 	 */
-	const ACTION = 'hametuha_ga_reader_segment';
+	const ACTION = 'hametuha_ga_traffic_contributor';
 
 	/**
 	 * Nonce Action
@@ -35,8 +35,8 @@ class HametuhaReaderSegment extends Gabstract {
 	protected function get_params() {
 		return [
 			'max-results' => 10,
-			'dimensions'  => 'ga:userGender, ga:userAgeBracket',
-			'filters'     => sprintf( 'ga:dimension2==%d', get_current_user_id() ),
+			'dimensions'  => 'ga:medium',
+			'filters'     => sprintf( 'ga:dimension2==%d;ga:campaign=~^share', get_current_user_id() ),
 			'sort'        => '-ga:pageviews',
 		];
 	}
@@ -52,34 +52,32 @@ class HametuhaReaderSegment extends Gabstract {
 	protected function parse_result( array $result ) {
 		$json = [
 			'options' => [
+				'backgroundColor' => '#fff',
 				'legend'          => [
 					'position' => 'none',
 				],
-				'backgroundColor' => '#fff',
-				'colors'          => [ ],
 			],
 			'data'    => [
-				[ '属性', '割合' ]
-			]
+				[ '名前', 'PV', [ 'role' => 'style' ] ],
+			],
 		];
 		foreach ( $result as $row ) {
-			list( $sex, $age, $pv ) = $row;
-			$female                      = 'female' == $sex;
-			$hue                         = $female ? 5 : 140;
-			$age                         = explode( '-', $age );
-			$saturation                  = 255 - ( $age[0] * 2 );
-			$lightness                   = 150 - $age[0] * 2;
-			$json['options']['colors'][] = $this->hsl2hex( [
-				$hue / 255,
-				$saturation / 255,
-				round( $lightness / 255, 2 )
-			] );
-			if ( ! isset( $age[1] ) ) {
-				$age[1] = '';
+			$color = 'blue';
+			list( $user_id, $pv ) = $row;
+			if ( ! $user_id ) {
+				$label = 'ゲスト';
+			} elseif ( '1' === $user_id ) {
+				$label = '破滅派自動';
+			} elseif ( get_current_user_id() == $user_id ) {
+				$label = 'あなた';
+				$color = 'red';
+			} else {
+				$label = get_the_author_meta( 'display_name', $user_id );
 			}
 			$json['data'][] = [
-				sprintf( '%s（%d〜%s歳）', ( $female ? '女性' : '男性' ), $age[0], $age[1] ),
+				$label,
 				intval( $pv ),
+				$color,
 			];
 		}
 

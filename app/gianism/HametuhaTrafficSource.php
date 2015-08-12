@@ -2,13 +2,13 @@
 
 use Hametuha\Admin\Gabstract;
 
-class HametuhaReaderSegment extends Gabstract {
+class HametuhaTrafficSource extends Gabstract {
 
 
 	/**
 	 * Action
 	 */
-	const ACTION = 'hametuha_ga_reader_segment';
+	const ACTION = 'hametuha_ga_traffic_source';
 
 	/**
 	 * Nonce Action
@@ -34,10 +34,10 @@ class HametuhaReaderSegment extends Gabstract {
 	 */
 	protected function get_params() {
 		return [
-			'max-results' => 10,
-			'dimensions'  => 'ga:userGender, ga:userAgeBracket',
+			'max-results' => 100,
+			'dimensions'  => 'ga:channelGrouping',
 			'filters'     => sprintf( 'ga:dimension2==%d', get_current_user_id() ),
-			'sort'        => '-ga:pageviews',
+			'sort'        => 'ga:channelGrouping',
 		];
 	}
 
@@ -52,33 +52,43 @@ class HametuhaReaderSegment extends Gabstract {
 	protected function parse_result( array $result ) {
 		$json = [
 			'options' => [
-				'legend'          => [
-					'position' => 'none',
-				],
+				'pieHole'         => 0.4,
 				'backgroundColor' => '#fff',
-				'colors'          => [ ],
+				'legend' => [
+					'position' => 'top',
+				],
 			],
 			'data'    => [
-				[ '属性', '割合' ]
-			]
+				[ '参照元', 'PV' ],
+			],
 		];
 		foreach ( $result as $row ) {
-			list( $sex, $age, $pv ) = $row;
-			$female                      = 'female' == $sex;
-			$hue                         = $female ? 5 : 140;
-			$age                         = explode( '-', $age );
-			$saturation                  = 255 - ( $age[0] * 2 );
-			$lightness                   = 150 - $age[0] * 2;
-			$json['options']['colors'][] = $this->hsl2hex( [
-				$hue / 255,
-				$saturation / 255,
-				round( $lightness / 255, 2 )
-			] );
-			if ( ! isset( $age[1] ) ) {
-				$age[1] = '';
+			list( $channel, $pv ) = $row;
+			switch ( strtolower( $channel ) ) {
+				case '(other)':
+					$label = 'その他';
+					break;
+				case 'social':
+					$label = 'SNS';
+					break;
+				case 'referral':
+					$label = '被リンク';
+					break;
+				case 'organic search':
+					$label = '検索エンジン';
+					break;
+				case 'direct':
+					$label = '直接訪問';
+					break;
+				case 'display':
+					$label = 'ディスプレイ広告';
+					break;
+				default:
+					$label = $channel;
+					break;
 			}
 			$json['data'][] = [
-				sprintf( '%s（%d〜%s歳）', ( $female ? '女性' : '男性' ), $age[0], $age[1] ),
+				$label,
 				intval( $pv ),
 			];
 		}

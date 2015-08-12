@@ -2,13 +2,13 @@
 
 use Hametuha\Admin\Gabstract;
 
-class HametuhaPopularPosts extends Gabstract {
+class HametuhaTrafficKeyword extends Gabstract {
 
 
 	/**
 	 * Action
 	 */
-	const ACTION = 'hametuha_ga_popular';
+	const ACTION = 'hametuha_ga_traffic_keyword';
 
 	/**
 	 * Nonce Action
@@ -34,9 +34,9 @@ class HametuhaPopularPosts extends Gabstract {
 	 */
 	protected function get_params() {
 		return [
-			'max-results' => 100,
-			'dimensions'  => 'ga:pageTitle',
-			'filters'     => sprintf( 'ga:dimension1==post;ga:dimension2==%d', get_current_user_id() ),
+			'max-results' => 1000,
+			'dimensions'  => 'ga:pageTitle, ga:keyword',
+			'filters'     => sprintf( 'ga:dimension1!=page;ga:dimension2==%d;ga:keyword!~not (set|provided);ga:pageviews>0', get_current_user_id() ),
 			'sort'        => '-ga:pageviews',
 		];
 	}
@@ -58,37 +58,20 @@ class HametuhaPopularPosts extends Gabstract {
 				'pageSize'        => 12,
 			],
 			'data'    => [
-				'cols' => [
-					[
-						'label' => 'タイトル',
-						'id'    => 'title',
-						'type'  => 'string',
-					],
-					[
-						'label'   => 'ページビュー',
-						'id'      => 'pv',
-						'type'    => 'number',
-						'pattern' => '##.#pv',
-					],
-				],
-				'rows' => [],
+				[ 'キーワード', '作品', 'PV' ],
 			],
 		];
 		foreach ( $result as $row ) {
-			list( $title, $pv ) = $row;
-			$json['data']['rows'][] = [
-				'c' => [
-					[
-						'v' => trim( explode( '|', $title )[0] ),
-					],
-					[
-						'v' => intval( $pv ),
-						'f' => sprintf( '%sPV', number_format_i18n( $pv ) ),
-					],
-				],
+			list( $page_title, $keyword, $pv ) = $row;
+			list( $title ) = array_map( 'trim', preg_split( '/[|｜]/u', $page_title ) );
+			$json['data'][] = [
+				$keyword,
+				$title,
+				intval( $pv ),
 			];
 		}
 
 		return $json;
 	}
+
 }

@@ -1,6 +1,6 @@
 <li data-post-id="<?php the_ID() ?>" <?php post_class('media loop-lists') ?>>
 
-	<a class="media__link" href="<?php the_permalink() ?>">
+	<a class="media__link media__link--nopad" href="<?php the_permalink() ?>">
 
 
 		<?php if( has_post_thumbnail() ): ?>

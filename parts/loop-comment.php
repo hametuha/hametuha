@@ -1,6 +1,6 @@
 <li <?php post_class('media media--pad') ?>>
 
-	<a class="media__link" href="<?= get_comment_link($post->ID) ?>">
+	<a class="media__link media__link--nopad" href="<?= get_comment_link($post->ID) ?>">
 
 
 	    <div class="pull-left comment-face">

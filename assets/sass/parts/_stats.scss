@@ -4,7 +4,16 @@
  *
  */
 
-@import "bootstrap/mixins";
+
+.statistics{
+  &--main{
+    padding: 0.5em;
+  }
+  &__form{
+    margin: 1em 0;
+    text-align: right;
+  }
+}
 
 .analytics-date-changer{
   text-align: right;
@@ -24,11 +33,23 @@
       margin-right: 10%;
     }
   }
-  div{
-    height: 400px;
+  $inner-height: 400px;
+  &__coming{
+    height: $inner-height;
+    background: #f1f1f1;
+    line-height: $inner-height;
+    text-align: center;
+    color: #ddd;
+    text-shadow: 1px 1px 3px #fff;
+    font-size: 2em;
+  }
+  &__container{
+    height: $inner-height;
+    background: url("../img/ajax-loader-stats.gif") center center no-repeat;
   }
   // Loading icons
   $dashicon-width: 80px;
+
   & > .dashicons{
     display: none;
     color: #ddd;
@@ -41,6 +62,7 @@
     margin-left: $dashicon-width / -2;
     margin-top: $dashicon-width / -2;
   }
+
   &.loading{
     & > .dashicons{
       display: block;

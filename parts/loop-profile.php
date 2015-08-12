@@ -4,7 +4,7 @@ $profile = $post->helper;
 ?>
 <li <?php post_class('media media--profile') ?>>
 
-	<a class="media__link" href="<?= $profile->permalink() ?>">
+	<a class="media__link media__link--nopad" href="<?= $profile->permalink() ?>">
 
 	    <div class="pull-left comment-face">
 	        <?= $profile->avatar(120) ?>

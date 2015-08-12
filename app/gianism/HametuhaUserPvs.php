@@ -6,8 +6,7 @@ use Hametuha\Admin\Gabstract;
  * Get author's PV
  *
  */
-class HametuhaUserPvs extends Gabstract
-{
+class HametuhaUserPvs extends Gabstract {
 
 	/**
 	 * Action
@@ -37,10 +36,11 @@ class HametuhaUserPvs extends Gabstract
 	 */
 	protected function get_params() {
 		$date_metrics = $this->properMetrics();
+
 		return [
 			'dimensions' => $date_metrics,
-			'filters' => sprintf('ga:dimension2==%d', get_current_user_id()),
-			'sort' => $date_metrics,
+			'filters'    => sprintf( 'ga:dimension2==%d', get_current_user_id() ),
+			'sort'       => $date_metrics,
 		];
 	}
 
@@ -57,98 +57,99 @@ class HametuhaUserPvs extends Gabstract
 
 		$json = [
 			'options' => [
-				'seriesType' => 'area',
-				'series' => [
+				'seriesType'      => 'line',
+				'series'          => [
 					'1' => [
-						'type' => 'line'
+						'type' => 'line',
 					],
 				],
-				'legend' => [
+				'legend'          => [
 					'position' => 'none',
 				],
-				'backgroundColor' => '#f1f1f1',
-				'curveType' => 'functions',
-				'animation' => [
+				'backgroundColor' => '#fff',
+				'curveType'       => 'function',
+				'animation'       => [
 					'duration' => 300,
-		            'easing' => 'out',
+					'easing'   => 'out',
 				],
-	            'vAxis' =>  [
-		            'minValue' =>  0
+				'vAxis'           => [
+					'minValue' => 0,
 				],
-				'colors' => [
+				'colors'          => [
 					'#0074A2', // Blue
-					'#eb6b47' // Red
-				]
+					'#eb6b47', // Red
+				],
 			],
-			'data' => [
+			'data'    => [
 				'cols' => [
 					[
 						'label' => '経過月',
-						'id' => 'date',
-						'type' => 'string',
+						'id'    => 'date',
+						'type'  => 'string',
 					],
 					[
-						'label' => 'ページビュー',
-						'id' => 'pv',
-						'type' => 'number',
+						'label'   => 'ページビュー',
+						'id'      => 'pv',
+						'type'    => 'number',
 						'pattern' => '##.#pv',
 					],
 					[
 						'label' => null,
-						'type' => 'string',
-						'role' => 'annotation',
+						'type'  => 'string',
+						'role'  => 'annotation',
 					],
 					[
 						'label' => null,
-						'type' => 'string',
-						'role' => 'annotationText',
+						'type'  => 'string',
+						'role'  => 'annotationText',
 					],
 					[
-						'label' => '平均',
-						'id' => 'avg',
-						'type' => 'number',
+						'label'   => '平均',
+						'id'      => 'avg',
+						'type'    => 'number',
 						'pattern' => '##.#pv',
-					]
+					],
 				],
-				'rows' => []
+				'rows' => [],
 			],
 		];
-		$avg = 0;
-		foreach( $result as $row ){
-			$avg += intval($row[1]);
+		$avg  = 0;
+		foreach ( $result as $row ) {
+			$avg += intval( $row[1] );
 		}
-		$avg = $avg / count($result);
-		foreach( $result as $row ){
-			list($date, $pv) = $row;
-			if( $pv > 2 * $avg ){
-				$annotation = [
-					'v' => '★'
+		$avg = $avg / count( $result );
+		foreach ( $result as $row ) {
+			list( $date, $pv ) = $row;
+			if ( $pv > 2 * $avg ) {
+				$annotation      = [
+					'v' => '★',
 				];
 				$annotation_text = [
-					'v' => '平均の倍以上！'
+					'v' => '平均の倍以上！',
 				];
-			}else{
+			} else {
 				$annotation = $annotation_text = null;
 			}
 			$json['data']['rows'][] = [
 				'c' => [
 					[
 						'v' => $date,
-						'f' => $this->properLabel($date, $metrics),
+						'f' => $this->properLabel( $date, $metrics ),
 					],
 					[
-						'v' => intval($pv),
-						'f' => sprintf('%sPV', number_format_i18n($pv)),
+						'v' => intval( $pv ),
+						'f' => sprintf( '%sPV', number_format_i18n( $pv ) ),
 					],
 					$annotation,
 					$annotation_text,
 					[
 						'v' => $avg,
-						'f' => sprintf('%sPV', number_format_i18n($avg)),
-					]
+						'f' => sprintf( '%sPV', number_format_i18n( $avg ) ),
+					],
 				],
 			];
 		}
+
 		return $json;
 	}
 

@@ -91,39 +91,48 @@ abstract class Gabstract extends Ga {
 		}
 	}
 
+
+
 	/**
 	 * Function Name: HSLtoHex( Mixed(Hue), Mixed(Saturation), Mixed(Luminance) )
 	 *
 	 * @see https://github.com/mpbzh/PHP-RGB-HSL-Converter/blob/master/rgb_hsl_converter.inc.php
+	 *
 	 * @param array $hsl
 	 *
 	 * @return string
 	 */
 	protected function  hsl2rgb( $hsl ) {
 		// Fill variables $h, $s, $l by array given.
-		list($h, $s, $l) = $hsl;
+		list( $h, $s, $l ) = $hsl;
 
 		// If saturation is 0, the given color is grey and only
 		// lightness is relevant.
-		if ($s == 0 ) {
-			$rgb = array($l, $l, $l);
+		if ( 0 == $s ) {
+			$rgb = array( $l, $l, $l );
 		}
 
 		// Else calculate r, g, b according to hue.
 		// Check http://en.wikipedia.org/wiki/HSL_and_HSV#From_HSL for details
-		else
-		{
-			$chroma = (1 - abs(2*$l - 1)) * $s;
+		else {
+			$chroma = ( 1 - abs( 2 * $l - 1 ) ) * $s;
 			$h_     = $h * 6;
-			$x         = $chroma * (1 - abs((fmod($h_,2)) - 1)); // Note: fmod because % (modulo) returns int value!!
-			$m = $l - round($chroma/2, 10); // Bugfix for strange float behaviour (e.g. $l=0.17 and $s=1)
+			$x      = $chroma * ( 1 - abs( ( fmod( $h_, 2 ) ) - 1 ) ); // Note: fmod because % (modulo) returns int value!!
+			$m      = $l - round( $chroma / 2, 10 ); // Bugfix for strange float behaviour (e.g. $l=0.17 and $s=1)
 
-			if($h_ >= 0 && $h_ < 1) $rgb = array(($chroma + $m), ($x + $m), $m);
-			else if($h_ >= 1 && $h_ < 2) $rgb = array(($x + $m), ($chroma + $m), $m);
-			else if($h_ >= 2 && $h_ < 3) $rgb = array($m, ($chroma + $m), ($x + $m));
-			else if($h_ >= 3 && $h_ < 4) $rgb = array($m, ($x + $m), ($chroma + $m));
-			else if($h_ >= 4 && $h_ < 5) $rgb = array(($x + $m), $m, ($chroma + $m));
-			else if($h_ >= 5 && $h_ < 6) $rgb = array(($chroma + $m), $m, ($x + $m));
+			if ( $h_ >= 0 && $h_ < 1 ) {
+				$rgb = array( ( $chroma + $m ), ( $x + $m ), $m );
+			} else if ( $h_ >= 1 && $h_ < 2 ) {
+				$rgb = array( ( $x + $m ), ( $chroma + $m ), $m );
+			} else if ( $h_ >= 2 && $h_ < 3 ) {
+				$rgb = array( $m, ( $chroma + $m ), ( $x + $m ) );
+			} else if ( $h_ >= 3 && $h_ < 4 ) {
+				$rgb = array( $m, ( $x + $m ), ( $chroma + $m ) );
+			} else if ( $h_ >= 4 && $h_ < 5 ) {
+				$rgb = array( ( $x + $m ), $m, ( $chroma + $m ) );
+			} else if ( $h_ >= 5 && $h_ < 6 ) {
+				$rgb = array( ( $chroma + $m ), $m, ( $x + $m ) );
+			}
 		}
 
 		return $rgb;
@@ -136,22 +145,26 @@ abstract class Gabstract extends Ga {
 	 *
 	 * @return string
 	 */
-	protected function rgb2hex($rgb) {
-		list($r,$g,$b) = $rgb;
-		$r = round(255 * $r);
-		$g = round(255 * $g);
-		$b = round(255 * $b);
-		return "#".sprintf("%02X",$r).sprintf("%02X",$g).sprintf("%02X",$b);
+	protected function rgb2hex( $rgb ) {
+		list( $r, $g, $b ) = $rgb;
+		$r = round( 255 * $r );
+		$g = round( 255 * $g );
+		$b = round( 255 * $b );
+
+		return '#' . sprintf( '%02X', $r ) . sprintf( '%02X', $g ) . sprintf( '%02X', $b );
 	}
 
 	/**
 	 * Converts HSL color to RGB hex code
+	 *
 	 * @param array $hsl
+	 *
 	 * @return array
 	 */
-	protected function hsl2hex($hsl) {
-		$rgb = $this->hsl2rgb($hsl);
-		return $this->rgb2hex($rgb);
+	protected function hsl2hex( $hsl ) {
+		$rgb = $this->hsl2rgb( $hsl );
+
+		return $this->rgb2hex( $rgb );
 	}
 
 }

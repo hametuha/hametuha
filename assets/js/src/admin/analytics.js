@@ -20,6 +20,7 @@
         });
     });
 
+
     // Callback after chart is ready
     google.setOnLoadCallback(function(){
 
@@ -27,18 +28,11 @@
         var stats = {};
 
         // Bind ajax event
-        $('.stat').bind('update.analytics.hametuha', function(e, url, from, to){
+        $('.stat').on('update.analytics.hametuha', function(e, url, from, to){
             var $stat = $(this),
-                id = $stat.attr('id'),
-                action = $stat.attr('data-action'),
-                nonce = $stat.attr('data-nonce');
-            if( !action || !nonce ){
-                return;
-            }
+                id = $stat.attr('id');
             $stat.removeClass('no-data').addClass('loading');
-            $.get(url, {
-                action: action,
-                _wpnonce: nonce,
+            $.get($stat.attr('data-endpoint'), {
                 from: from,
                 to: to
             }).done(function(result){
@@ -46,7 +40,7 @@
                     if( !stats[id] ){
                         stats[id] = new google.visualization.ChartWrapper({
                             chartType: $stat.attr('data-type'),
-                            containerId: $stat.find('div').attr('id')
+                            containerId: $stat.find('.stat__container').attr('id')
                         });
                     }
                     stats[id].setOptions(result.options);
@@ -71,8 +65,11 @@
         // Bind form event and trigger immediately
         $('#analytics-date-form').submit(function(e){
             e.preventDefault();
-            var $form = $(this);
-            $('.stat').trigger('update.analytics.hametuha', [$form.attr('action'), $form.find("input[name=from]").val(), $form.find("input[name=to]").val()]);
+            $('.stat').trigger('update.analytics.hametuha', [
+                $(this).attr('action'),
+                $(this).find("input[name=from]").val(),
+                $(this).find("input[name=to]").val()
+            ]);
         }).trigger('submit');
 
 

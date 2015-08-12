@@ -114,7 +114,7 @@
 	                    <li><a href="<?= home_url('/your/lists/', 'http') ?>"><i class="icon-drawer3"></i> あなたのリスト</a></li>
                         <li><a href="<?= home_url('/your/reviews/', 'http') ?>"><i class="icon-star2"></i> レビューした作品</a></li>
 	                    <?php if( current_user_can('edit_posts') ): ?>
-                        <li><a href="<?= admin_url('admin.php?page=hametu-stats') ?>"><i class="icon-chart"></i> アクセス解析</a></li>
+                        <li><a href="<?= home_url('/statistics/', 'https') ?>"><i class="icon-chart"></i> 統計情報</a></li>
 	                    <?php endif; ?>
                         <li class="divider"></li>
                         <li><a href="<?= admin_url('profile.php') ?>"><i class="icon-profile"></i> プロフィール</a></li>

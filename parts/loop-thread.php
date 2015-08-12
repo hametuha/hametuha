@@ -1,5 +1,5 @@
 <li <?php post_class('media') ?>>
-	<a class="media__link" href="<?php the_permalink() ?>">
+	<a class="media__link media__link--nopad" href="<?php the_permalink() ?>">
 
 	    <div class="pull-left">
 	        <?= get_avatar(get_the_author_meta('ID'), 160); ?>
