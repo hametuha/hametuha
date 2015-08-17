@@ -83,6 +83,9 @@ class HametuhaTrafficSource extends Gabstract {
 				case 'display':
 					$label = 'ディスプレイ広告';
 					break;
+				case 'email':
+					$label = 'メルマガ';
+					break;
 				default:
 					$label = $channel;
 					break;
