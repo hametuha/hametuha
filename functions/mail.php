@@ -51,7 +51,7 @@ add_filter( 'alo_easymail_newsletter_content', function ( $html, WP_Post $post, 
 	$html = preg_replace_callback( '@href="(http://hametuha\.(info|com)([^"]+))"@u', function ( $matches ) use ( $post ) {
 		$url = add_query_arg( [
 			'utm_source'   => 'Email',
-			'umt_medium'   => 0,
+			'utm_medium'   => 0,
 			'utm_campaign' => 'NewsLetter-' . $post->ID,
 		], $matches[1] );
 		return "href=\"{$url}\"";
