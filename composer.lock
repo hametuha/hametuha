@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "9733d8054da20d14d9a36970711516ec81260503"
+                "reference": "8219da1a4462e03d06dcccdfe8583a92b0242438"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/9733d8054da20d14d9a36970711516ec81260503",
-                "reference": "9733d8054da20d14d9a36970711516ec81260503",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/8219da1a4462e03d06dcccdfe8583a92b0242438",
+                "reference": "8219da1a4462e03d06dcccdfe8583a92b0242438",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2015-08-17 08:57:36"
+            "time": "2015-08-23 06:34:49"
         },
         {
             "name": "masterminds/html5",
