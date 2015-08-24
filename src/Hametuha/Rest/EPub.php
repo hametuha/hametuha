@@ -478,11 +478,27 @@ HTML;
 				break;
 		}
 		ob_start();
+		add_filter( 'the_content', [ $this, 'fix_wptexturize' ], 99998 );
 		add_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		$this->load_template( "templates/epub/{$template}" );
 		$content = ob_get_contents();
+		remove_filter( 'the_content', [ $this, 'fix_wptexturize' ], 99998 );
 		remove_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		ob_end_clean();
+		return $content;
+	}
+
+	/**
+	 * fix wptexturize's behavior
+	 *
+	 * @see wptexturize
+	 * @param string $content
+	 *
+	 * @return mixed
+	 */
+	public function fix_wptexturize( $content ){
+		// Fix apostorophy problem.
+		$content = str_replace('&#8217;', '\'', $content);
 		return $content;
 	}
 
