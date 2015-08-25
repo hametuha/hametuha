@@ -9,7 +9,7 @@ Theme My Login will always look in your theme's directory first, before using th
 
     <p class="alert alert-info">
 		登録したメールアドレスを入力してください。パスワード再設定用のURLが送信されます。
-		メールアドレスも何もかも忘れてしまった方は<a class="alert-link" href="<?= home_url('/inquiry/', 'https') ?>'">お問い合わせ</a>よりご連絡ください。
+		メールアドレスも何もかも忘れてしまった方は<a class="alert-link" href="<?= home_url('/inquiry/', 'https') ?>">お問い合わせ</a>よりご連絡ください。
 	</p>
 
 	<?php $template->the_errors(); ?>
