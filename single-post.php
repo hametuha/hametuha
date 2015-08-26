@@ -75,36 +75,37 @@ HTML;
 
 					<?php the_content(); ?>
 
-					<?php if ( is_last_page() ): ?>
+					<?php if ( is_last_page() ) : ?>
 						<p id="work-end-ranker" class="text-center" data-post="<?php the_ID() ?>"><i
 								class="icon-ha"></i></p>
 					<?php endif; ?>
 
-					<?php wp_link_pages( array( 'before'      => '<p class="link-pages">ページ: ',
-												'after'       => '</p>',
-												'link_before' => '<span>',
-												'link_after'  => '</span>'
+					<?php wp_link_pages( array(
+						'before'      => '<p class="link-pages">ページ: ',
+						'after'       => '</p>',
+						'link_before' => '<span>',
+						'link_after'  => '</span>',
 					) ); ?>
 
 				</div>
 				<!-- //.single-post-content -->
 
-				<?php get_template_part( 'parts/alert', 'kdp' ); ?>
-
 				<p class="text-center pub-date">
 					<span itemprop="datePublished"><?php the_time( 'Y年n月j日' ) ?></span>公開
 				</p>
 
-				<?php if ( is_series() ): ?>
+				<?php if ( is_series() ) : ?>
 					<p class="series-pager-title text-center">
 						作品集『<?php the_series(); ?>』<?= $series->index_label() ?>
 						（全<?= $series->get_total( $post->post_parent ) ?>話）
 					</p>
+					<?php get_template_part( 'parts/alert', 'kdp' ); ?>
 					<ul class="pager post-pager">
 						<?= $series->prev( '<li class="previous">' ); ?>
 						<?= $series->next( '<li class="next">' ); ?>
 					</ul>
 				<?php endif; ?>
+
 
 				<div id="single-post-footernote" class="row">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
@@ -114,14 +115,16 @@ HTML;
 					<?php get_template_part( 'parts/author' ) ?>
 				</div>
 
-				<?php get_template_part( 'parts/share' ) ?>
-
 				<p class="finish-nav">
 					読み終えたらレビューしてください<br/>
 					<i class="icon-point-down"></i>
 				</p>
 
-				<hr/>
+			</div><!-- //.work-wrapper -->
+
+			<?php get_template_part( 'parts/share', 'big' ) ?>
+
+			<div class="container">
 
 				<?php get_template_part( 'parts/list', 'author' ) ?>
 
@@ -139,7 +142,7 @@ HTML;
 						<small>新着順で表示されます</small>
 					</h3>
 					<?php $counter = 0;
-					foreach ( get_categories( [ 'parent' => 0 ] ) as $cat ): $counter ++; ?>
+					foreach ( get_categories( [ 'parent' => 0 ] ) as $cat ) : $counter ++; ?>
 						<div class="col-xs-4 col-sm-2 recommend__item--catNav">
 							<a href="<?= get_category_link( $cat ) ?>"
 							   class="recommend__link--catNav<?php if ( in_category( $cat->term_id ) )
@@ -162,9 +165,14 @@ HTML;
 					<?php get_search_form() ?>
 				</div>
 
+				<hr />
+
 			</div>
 			<!-- // .work-wrapper -->
 
+
+
+			<?php get_template_part( 'parts/share', 'follow' ) ?>
 
 		</div>
 		<!-- //#content-wrapper -->
@@ -189,7 +197,7 @@ HTML;
 
 				<hr/>
 
-				<?php if ( is_user_logged_in() ): ?>
+				<?php if ( is_user_logged_in() ) : ?>
 
 					<form class="list-save-manager" method="post"
 						  action="<?= esc_url( Hametuha\Rest\ListCreator::save_link( get_the_ID() ) ) ?>">
@@ -247,7 +255,7 @@ HTML;
 
 					</form>
 
-				<?php else: ?>
+				<?php else : ?>
 
 					<p class="alert alert-warning">
 						リスト機能を利用するには<a class="alert-link" href="<?= wp_login_url( get_permalink() ) ?>">ログイン</a>する必要があります。
@@ -321,7 +329,7 @@ HTML;
 					<a href="#comments-wrapper">
 						<i class="icon-bubbles"></i><br/>
 						<span>コメント</span>
-						<?php if ( $count = get_comments_number() ): ?>
+						<?php if ( $count = get_comments_number() ) : ?>
 							<small class="comment-count badge">
 								<?= $count > 100 ? '99+' : $count ?>
 							</small>

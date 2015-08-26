@@ -20,53 +20,7 @@
 
 		<?php endwhile; endif; ?>
 
-		<?php
 
-		$kdp_query = new WP_Query( [
-			'post_type' => 'series',
-			'post_status' => 'publish',
-			'meta_filter' => 'kdp',
-			'posts_per_page' => 6,
-		] );
-		if ( $kdp_query->have_posts() ):
-			?>
-			<div class="row">
-				<div id="carousel-generic" class="carousel slide" data-ride="carousel" data-slide="next">
-					<!-- Indicators -->
-					<ol class="carousel-indicators">
-						<?php for( $i = 0, $l = $kdp_query->post_count; $i < $l; $i++ ) : ?>
-						<li data-target="#carousel-generic" data-slide-to="<?= $i ?>" class="<?= $i ? '' : 'active' ?>"></li>
-						<?php endfor; ?>
-					</ol>
-
-					<!-- Wrapper for slides -->
-					<div class="carousel-inner" role="listbox">
-						<?php $activated = false; while ( $kdp_query->have_posts() ): $kdp_query->the_post(); ?>
-
-						<a href="<?php the_permalink() ?>" class="item<?= $activated ? '' : ' active' ?>" style="background-image: url('<?php if( has_post_thumbnail() ) echo wp_get_attachment_image_src(get_post_thumbnail_id(), 'large')[0] ?>');">
-							<div class="carousel-caption">
-								<h2 class="carousel-caption__title">
-									<?php the_title() ?>
-								</h2>
-								<p class="carousel-caption__lead"><?php the_author() ?></p>
-							</div>
-						</a>
-						<?php $activated = true; endwhile; wp_reset_postdata(); ?>
-
-					</div><!-- //.carousel-inner -->
-
-					<!-- Controls -->
-					<a class="left carousel-control" href="#carousel-generic" role="button" data-slide="prev">
-						<span class="icon-arrow-left" aria-hidden="true"></span>
-						<span class="sr-only">Previous</span>
-					</a>
-					<a class="right carousel-control" href="#carousel-generic" role="button" data-slide="next">
-						<span class="icon-arrow-right2" aria-hidden="true"></span>
-						<span class="sr-only">Next</span>
-					</a>
-				</div><!-- //.carousel -->
-			</div><!-- //.row -->
-		<?php endif; ?>
 
 
 		<div class="frontpage-widget clearfix">
@@ -375,17 +329,9 @@
 			</div>
 
 			<div class="col-xs-12 col-sm-4 widget-twitter">
-				<a class="twitter-timeline" href="https://twitter.com/hametuha" data-widget-id="344868919800111104">@hametuha
-					からのツイート</a>
-				<script>!function (d, s, id) {
-						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-						if (!d.getElementById(id)) {
-							js = d.createElement(s);
-							js.id = id;
-							js.src = p + "://platform.twitter.com/widgets.js";
-							fjs.parentNode.insertBefore(js, fjs);
-						}
-					}(document, "script", "twitter-wjs");</script>
+				<a class="twitter-timeline" href="https://twitter.com/hametuha" data-widget-id="344868919800111104">
+					@hametuhaからのツイート
+				</a>
 			</div>
 
 			<div class="col-xs-12 col-sm-4 widget-facebook">

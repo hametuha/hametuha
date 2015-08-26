@@ -3,6 +3,14 @@
  * メール関係の関数
  */
 
+/**
+ * メルマガ購読ページはno cache headers
+ */
+add_action('template_redirect', function(){
+	if ( is_page( 'merumaga' ) ) {
+		nocache_headers();
+	}
+});
 
 /**
  * FromがWordPressにならないように
@@ -11,7 +19,6 @@ add_filter( 'wp_mail_from_name', function ( $from_name ) {
 	if ( 'WordPress' == $from_name ) {
 		$from_name = get_bloginfo( 'name' );
 	}
-
 	return $from_name;
 } );
 
@@ -22,7 +29,6 @@ add_filter( 'wp_mail_from', function ( $from_mail ) {
 	if ( 0 === strpos( $from_mail, 'wordpress@' ) ) {
 		$from_mail = 'no-reply@hametuha.com';
 	}
-
 	return $from_mail;
 } );
 

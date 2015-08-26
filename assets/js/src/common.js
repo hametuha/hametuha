@@ -4,6 +4,7 @@
 
 /*global ga: true*/
 /*global FB: true*/
+/*global twttr: true*/
 
 (function($){
 
@@ -17,8 +18,8 @@
              * @param {String} category
              * @param {String} action
              * @param {String} label
-             * @param {...Number} value
-             * @param {...Boolean} nonInteraction
+             * @param {...Number} value Default 1
+             * @param {...Boolean} nonInteraction Default false
              */
             hitEvent: function(category, action, label, value, nonInteraction){
                 try{
@@ -44,15 +45,20 @@
              * @param {String} category
              * @param {String} action
              * @param {String} label
+             * @param {...Number} value
              */
-            eventOutbound: function(event, url, category, action, label){
+            eventOutbound: function(event, url, category, action, label, value){
                 try{
+                    if( 'undefined' === typeof value){
+                        value = 1;
+                    }
                     // Send event
                     ga('send', {
                         hitType: 'event',
                         eventCategory: category,
                         eventAction: action,
                         eventLabel: label,
+                        eventValue: value,
                         hitCallback: function(){
                             window.location.href = url;
                         }
@@ -386,5 +392,68 @@ jQuery(document).ready(function($){
                 break;
         }
     });
+
+    // アウトバウンドを記録
+    $(document).on('click', 'a[data-outbound]', function(e){
+        var url = $(this).attr('href'),
+            category = $(this).attr('data-outbound'),
+            action = $(this).attr('data-action'),
+            label = $(this).attr('data-label'),
+            value = $(this).attr('data-value') || 1;
+        if( category && action && label ){
+            Hametuha.ga.eventOutbound(event, url, category, action, label, value);
+        }
+    });
+
+    // いいねを集計
+    var fbTimer = setInterval(function(){
+        if( window.FB && window.FB.Event ){
+            clearInterval(fbTimer);
+            var actions = {
+                create: 'like',
+                remove: 'dislike'
+            };
+            for( var prop in actions ){
+                if( !actions.hasOwnProperty(prop) ){
+                    continue;
+                }
+                (function(p, action){
+                    FB.Event.subscribe('edge.' + p, function(url) {
+                        try{
+                            ga('send', {
+                                hitType: 'social',
+                                socialNetwork: 'facebook',
+                                socialAction: action,
+                                socialTarget: url.replace(/^https?:\/\/hametuha\.(com|info)/, '')
+                            });
+                        }catch( err ){}
+                    });
+                })(prop, actions[prop]);
+            }
+        }
+    }, 100);
+
+    // つぶやきを集計
+    var twTimer = setInterval(function(){
+        if(window.twttr && window.twttr.events){
+            clearInterval(twTimer);
+            var events = ['follow', 'tweet', 'retweet', 'click', 'favorite'];
+            for( var i = 0; i < events.length; i++ ){
+                (function(key){
+                    window.twttr.events.bind(key, function (event) {
+                        try{
+                            ga('send', {
+                                hitType:'social',
+                                socialNetwork: 'twitter',
+                                socialAction: key,
+                                socialTarget: window.location.pathname
+                            });
+                        } catch ( err ){}
+                    });
+                })(events[i]);
+            }
+        }
+    }, 100);
+
 
 });

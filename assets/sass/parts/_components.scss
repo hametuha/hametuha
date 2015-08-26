@@ -7,6 +7,24 @@
   margin-left: 1em;
 }
 
+// 半透明のボタン
+.btn-trans{
+  background-color: rgba(0, 0, 0, .4);
+  @include border-radius(0);
+  border: 2px solid $inverse-body;
+  color: $inverse-body;
+  &:hover{
+    color: $inverse-body;
+    background-color: #000;
+  }
+}
+
+.btn-amazon{
+  i{
+    color: orange;
+  }
+}
+
 // 回転
 .rotation{
   @include animation(rotation 1.5s linear infinite);
@@ -171,14 +189,7 @@
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   }
   .btn{
-    background-color: rgba(0, 0, 0, .4);
-    @include border-radius(0);
-    border: 2px solid $inverse-body;
-    color: $inverse-body;
-    &:hover{
-      background-color: #000;
-    }
-
+    @extend .btn-trans;
   }
 }
 @media only screen and (max-width: $screen-sm-max) {

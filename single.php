@@ -87,4 +87,8 @@
     </div><!-- //.row-offcanvas -->
 </div><!-- //.container -->
 
+<hr />
+
+<?php get_template_part('parts/share', 'follow') ?>
+
 <?php get_footer(); ?>

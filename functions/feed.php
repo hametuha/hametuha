@@ -31,10 +31,11 @@ XML;
 		if ( 2 === $series->get_status( get_the_ID() ) ) {
 			$asin     = $series->get_asin( get_the_ID() );
 			$subtitle = esc_html( $series->get_subtitle( get_the_ID() ) );
+			$url      = $series->get_kdp_url( get_the_ID() );
 			echo <<<XML
 				<category>{$subtitle}</category>
 				<dc:identifier>{$asin}</dc:identifier>
-				<dc:relation>http://www.amazon.co.jp/dp/{$asin}/?t=hametuha-22</dc:relation>
+				<dc:relation>{$url}</dc:relation>
 XML;
 		}
 	}

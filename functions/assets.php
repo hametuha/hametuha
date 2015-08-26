@@ -77,20 +77,25 @@ add_action( 'init', function () {
 	wp_register_script( 'hametuha-login-changer', get_template_directory_uri() . '/assets/js/dist/components/login-change-helper.js', [
 		'jquery-form',
 		'hametuha-common',
-	] );
+	], hametuha_version(), true );
 
 	// 同人になる用JS
 	wp_register_script( 'hametuha-become-author', get_template_directory_uri() . '/assets/js/dist/components/become-author.js', [
 		'jquery-form',
 		'hametuha-common',
-	] );
+	], hametuha_version(), true );
 
 	// フロントページ用JS
 	wp_register_script( 'hametuha-front', get_template_directory_uri() . '/assets/js/dist/components/front-helper.js', [
 		'jquery-masonry',
 		'imagesloaded',
 		'chart-js',
-	] );
+	], hametuha_version(), true );
+
+	// シリーズ用JS
+	wp_register_script( 'hametuha-series', get_template_directory_uri() . '/assets/js/dist/components/series-helper.js', [
+		'jquery-masonry',
+	], hametuha_version(), true );
 
 	// メインCSS
 	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', null, hametuha_version() );
@@ -146,6 +151,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	// トップページ
 	if ( is_front_page() ) {
 		wp_enqueue_script( 'hametuha-front' );
+	}
+	// シリーズ
+	if( is_singular( 'series' ) ){
+		wp_enqueue_script('hametuha-series');
 	}
 	//コメント用
 	if ( is_singular() && ! is_page() ) {
