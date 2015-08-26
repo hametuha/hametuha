@@ -46,6 +46,21 @@ class Series extends Model {
 	}
 
 	/**
+	 * Get social score
+	 *
+	 * @param int $post_id
+	 *
+	 * @return int
+	 */
+	public function social_score( $post_id ) {
+		return (int) $this->select( 'SUM( CAST(pm.meta_value AS SIGNED))' )
+						  ->from( "{$this->db->postmeta} as pm" )
+						  ->join( "{$this->db->posts} AS p", 'p.iD = pm.post_id' )
+						  ->where( 'p.post_parent = %d', $post_id )
+						  ->where_like( 'meta_key', '_feedback_' )->get_var();
+	}
+
+	/**
 	 * Get selling status
 	 *
 	 * @param int $post_id
@@ -64,6 +79,19 @@ class Series extends Model {
 	 */
 	public function get_asin( $post_id ) {
 		return (string) get_post_meta( $post_id, '_asin', true );
+	}
+
+	/**
+	 * Get amazon URL
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public function get_kdp_url( $post_id ) {
+		$asin = $this->get_asin( $post_id );
+
+		return $asin ? sprintf( 'http://www.amazon.co.jp/dp/%s/?t=hametuha-22', $asin ) : '';
 	}
 
 	/**
@@ -287,7 +315,9 @@ SQL;
 	 */
 	public function get_sibling( $offset = 0, $post = null ) {
 		$post = get_post( $post );
-
+		if( 1 > $offset ){
+			return null;
+		}
 		return $this->select( '*' )->from( $this->db->posts )
 					->where( "post_type = 'post' AND post_status = 'publish' AND post_parent = %d", $post->post_parent )
 					->order_by( 'menu_order', 'DESC' )

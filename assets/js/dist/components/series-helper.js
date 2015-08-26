@@ -1,0 +1,2 @@
+!function(e){"use strict";e(document).ready(function(){var i=e(".series__list");i.imagesLoaded(function(){i.masonry({itemSelector:".series__item"})})})}(jQuery);
+//# sourceMappingURL=../map/components/series-helper.js.map

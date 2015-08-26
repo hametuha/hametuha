@@ -1,0 +1,223 @@
+.series{
+  &__inner{
+  }
+  &__row{
+    padding: 2em 0;
+    &--cover{
+      background-color: $brand-primary;
+      color: #fff;
+      text-shadow: 0 0 3px rgba(0, 0, 0, .8);
+    }
+    &--author{
+      background-color: #ebebeb;
+    }
+    &--children{
+      background-color: #f9f9f9;
+    }
+    &--share{
+      background: #ebebeb;
+    }
+    &--amazon,
+    &--single{
+      .btn-amazon{
+        &:link, &:visited{
+          background-color: #000;
+        }
+        &:hover, &:active{
+          background-color: darken(orange, 20);
+        }
+      }
+    }
+    &--single{
+      margin: 1em 0;
+      img{
+        margin-bottom: 1em;
+        max-width: 200px;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
+
+  // メタ情報
+  &__meta{
+    &--thumbnail{
+      max-height: 200px;
+      overflow: visible;
+      @media (max-width: $screen-xs-max) {
+        max-height: none;
+      }
+      img{
+        max-width: 240px;
+        width: auto;
+        height: auto;
+        @include box-shadow(0 0 5px rgba(0, 0, 0, 0.6));
+      }
+    }
+  }
+
+  // 題字
+  &__title{
+    span{
+      display: block;
+      padding-bottom: 0.25em;
+      border-bottom: 3px double #fff;
+    }
+    small{
+      color: #fff;
+      display: block;
+      padding-top: 0.25em;
+    }
+    &--author,
+    &--share{
+      color: #aaa;
+      text-shadow: 1px 1px 2px #fff;
+    }
+    &--list {
+      color: #aaa;
+      padding-bottom: 1.5em;
+      margin-bottom: 1.5em;
+      border-bottom: 3px double #ddd;
+    }
+    &--caption{
+      display: block;
+      color: inherit;
+      font-size: 0.5em;
+      margin-bottom: 0.25em;
+    }
+  }
+  &__excerpt{
+    margin: 2em 0;
+  }
+
+  &__link{
+    a:nth-child(2){
+      margin-left: 1em;
+    }
+  }
+
+  // 値段
+  &__price{
+    color: #ef9936;
+    font-size: 1.4em;
+    strong{
+      font-size: 1.4em;
+    }
+  }
+
+  // ステータス
+  &__status{
+    padding-left: 0;
+    li{
+      list-style: none;
+      color: #666;
+    }
+    i.ok{
+      color: $line-color;
+    }
+    i.ng{
+      color: $brand-danger;
+    }
+  }
+
+  // 著者
+  &__author{
+    padding: 1em 0;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #fff;
+    .avatar{
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
+    .row:first-child + &{
+      border-top: none;
+    }
+    &:last-child{
+      border-bottom: none;
+    }
+    &--desc{
+      margin: 1em 0;
+    }
+  }
+
+
+  // 作品一覧
+  &__list{
+    padding-left: 0;
+  }
+  &__item{
+    list-style:none;
+    margin-bottom: 30px;
+    &--counter{
+      display: block;
+      color: #aaa;
+      text-shadow: 1px 1px 2px #fff;
+      font-size: 1.2em;
+      text-align: center;
+      padding-bottom: 5px;
+      font-family: $work-title;
+    }
+    &--link{
+      display: block;
+      border: 1px solid #ddd;
+      border-radius: 2px;
+      position: relative;
+      @include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.2));
+      @include transition(background-color 1s 0 linear);
+      &:link{
+        color: #000;
+        text-decoration: none;
+        background: #fff;
+      }
+      &:visited{
+        color: #393977;
+        text-decoration: none;
+        background: #fff;
+      }
+      &:hover, &:active{
+        text-decoration: none;
+        background: #fffabf;
+      }
+    }
+    &--thumbnail{
+      height: 150px;
+      background: transparent center center no-repeat;
+      -webkit-background-size: cover;
+      background-size: cover;
+
+      @media (max-width: $screen-xs-max) {
+        height: 120px;
+      }
+    }
+    &--body{
+      padding: 10px;
+    }
+    &--title{
+      font-family: $work-title;
+      small{
+        font-family: $work-body;
+      }
+    }
+    &--info{
+      color: #888;
+      .avatar{
+        border-radius: 50%;
+      }
+      i{
+        color: #aaa;
+      }
+    }
+    &--excerpt{
+      z-index: 2;
+      margin-top: 10px;
+      font-family: $work-body;
+    }
+  }
+
+  &__follow{
+    text-align: center;
+  }
+
+
+}
