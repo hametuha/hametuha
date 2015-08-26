@@ -12,6 +12,7 @@ add_action( 'admin_head', function () {
 	}
 	switch ( $screen->post_type ) {
 		case 'post':
+		case 'series':
 			add_editor_style( 'assets/css/editor-style-post.css' );
 			break;
 		case 'newsletter':
