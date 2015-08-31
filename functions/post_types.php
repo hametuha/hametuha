@@ -123,6 +123,7 @@ add_action('init', function(){
         ),
         'rewrite' => array('slug' => 'review')
     ));
+
 });
 
 /**
