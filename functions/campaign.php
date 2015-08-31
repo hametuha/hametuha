@@ -13,6 +13,7 @@ add_action( 'init', function () {
 		'hierarchical' => true,
 		'public'       => false,
 		'show_ui'      => true,
+		'show_admin_column' => true,
 		'capabilities' => array(
 			'manage_terms' => 'manage_categories',
 			'edit_terms'   => 'manage_categories',
