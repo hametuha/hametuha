@@ -132,8 +132,7 @@
 
 
 		<ul id="user-info" class="navbar-nav navbar-right navbar-login navbar-login--user nav nav-pills col-sm-1">
-			<?php if ( is_user_logged_in() && current_user_can( 'read' ) ): ?>
-
+			<?php if ( is_user_logged_in() && current_user_can( 'read' ) ) : ?>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle"
 					   data-toggle="dropdown"><?= get_avatar( get_current_user_id(), 60 ) ?></a>
@@ -146,22 +145,59 @@
 						<?php /*
                         <li><a href="<?= home_url('/your/favorites/', 'http') ?>"><i class="icon-highlight"></i> 保存したフレーズ</a></li>
                         */ ?>
-						<li><a href="<?= home_url( '/your/comments/', 'http' ) ?>"><i class="icon-bubble-dots"></i>
-								あなたのコメント</a></li>
-						<li><a href="<?= home_url( '/your/lists/', 'http' ) ?>"><i class="icon-drawer3"></i> あなたのリスト</a>
+						<li>
+							<a href="<?= home_url( '/your/comments/', 'http' ) ?>">
+								<i class="icon-bubble-dots"></i>
+								あなたのコメント
+							</a>
 						</li>
-						<li><a href="<?= home_url( '/your/reviews/', 'http' ) ?>"><i class="icon-star2"></i>
-								レビューした作品</a></li>
-						<?php if ( current_user_can( 'edit_posts' ) ): ?>
-							<li><a href="<?= home_url( '/statistics/', 'https' ) ?>"><i class="icon-chart"></i> 統計情報</a>
+						<li>
+							<a href="<?= home_url( '/your/lists/', 'http' ) ?>">
+								<i class="icon-drawer3"></i>
+								あなたのリスト
+							</a>
+						</li>
+						<li>
+							<a href="<?= home_url( '/your/reviews/', 'http' ) ?>">
+								<i class="icon-star2"></i>
+								レビューした作品
+							</a>
+						</li>
+						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+							<li>
+								<a href="<?= home_url( '/statistics/', 'https' ) ?>">
+									<i class="icon-chart"></i>
+									統計情報
+								</a>
+							</li>
+							<li>
+								<a href="<?= home_url( '/sales/', 'https' ) ?>">
+									<i class="icon-coins"></i>
+									売上管理
+								</a>
 							</li>
 						<?php endif; ?>
 						<li class="divider"></li>
-						<li><a href="<?= admin_url( 'profile.php' ) ?>"><i class="icon-profile"></i> プロフィール</a></li>
-						<?php if ( current_user_can( 'edit_posts' ) ): ?>
-							<li><a href="<?= admin_url() ?>"><i class="icon-dashboard"></i> ダッシュボード</a></li>
+						<li>
+							<a href="<?= admin_url( 'profile.php' ) ?>">
+								<i class="icon-profile"></i>
+								プロフィール
+							</a>
+						</li>
+						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+							<li>
+								<a href="<?= admin_url() ?>">
+									<i class="icon-dashboard"></i>
+									ダッシュボード
+								</a>
+							</li>
 						<?php endif; ?>
-						<li><a href="<?= wp_logout_url() ?>"><i class="icon-exit4"></i> ログアウト</a></li>
+						<li>
+							<a href="<?= wp_logout_url() ?>">
+								<i class="icon-exit4"></i>
+								ログアウト
+							</a>
+						</li>
 					</ul>
 				</li>
 				<li class="dropdown" id="notification-link">
@@ -172,16 +208,21 @@
 					<a href="#" class="dropdown-toggle dropdown--notify" data-toggle="dropdown"
 					   data-last-checked="<?= $latest ?>"><i class="icon-earth"></i></a>
 					<ul id="notification-container" class="dropdown-menu notification__container">
-						<?php if ( ! $notification->recent_blocks() ): ?>
-							<li><span>お知らせはなにもありません。</span></li>
+						<?php if ( ! $notification->recent_blocks() ) : ?>
+							<li>
+								<span>お知らせはなにもありません。</span>
+							</li>
 						<?php endif; ?>
 						<li class="divider"></li>
 						<li class="text-center notification__more">
-							<a href="<?= home_url( '/notification/all/', 'https' ) ?>"><i class=""></i> 通知一覧へ</a>
+							<a href="<?= home_url( '/notification/all/', 'https' ) ?>">
+								通知一覧へ
+								<i class="icon-arrow-right4"></i>
+							</a>
 						</li>
 					</ul>
 				</li>
-			<?php else: ?>
+			<?php else : ?>
 				<li><a class="login-btn" href="<?= wp_login_url( '/' ) ?>">ログイン</a></li>
 			<?php endif; ?>
 		</ul>
