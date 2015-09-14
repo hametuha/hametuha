@@ -30,7 +30,7 @@ class Series extends Model {
 	 * @return array
 	 */
 	public function get_authors( $post_id ) {
-		$users = [ ];
+		$users = [];
 		foreach (
 			$this->select( "{$this->db->users}.*" )
 				 ->from( $this->db->users )
@@ -43,6 +43,22 @@ class Series extends Model {
 		}
 
 		return $users;
+	}
+
+	/**
+	 * Get owning count
+	 *
+	 * @param int $author_id
+	 *
+	 * @return int
+	 */
+	public function get_owning_series($author_id){
+		return (int) $this->select("COUNT({$this->db->posts}.ID)")
+			->from($this->db->posts)
+			->join($this->db->postmeta, "{$this->db->postmeta}.meta_key = '_kdp_status' AND {$this->db->postmeta}.post_id = {$this->db->posts}.ID")
+			->where("{$this->db->postmeta}.meta_value = %s", 2)
+			->where("{$this->db->posts}.post_author = %d", $author_id)
+			->get_var();
 	}
 
 	/**

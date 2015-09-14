@@ -63,9 +63,7 @@ class Sales extends Model {
 			'store'  => '',
 			'type'   => '',
 		] );
-		$this->join( "{$this->db->postmeta} AS pm", "pm.meta_key = '_asin' AND pm.meta_value = {$this->table}.asin" )
-			 ->join( "{$this->db->posts} AS p", 'p.ID = pm.post_id' )
-			 ->where_not_null( 'pm.meta_value' );
+		$this->where_not_null( 'pm.meta_value' );
 		if ( $args['author'] ) {
 			$this->where( 'p.post_author = %d', $args['author'] );
 		}
@@ -81,6 +79,82 @@ class Sales extends Model {
 					->order_by( "{$this->table}.date", 'DESC' )
 					->result();
 	}
+
+	/**
+	 * Get detailed result
+	 *
+	 * @param $from
+	 * @param $to
+	 * @param int $author_id
+	 *
+	 * @return array|mixed|null
+	 */
+	public function get_royalty_report( $from, $to, $author_id = 0 ) {
+		if ( $author_id ) {
+			$this->where( 'p.post_author = %d', $author_id );
+		}
+		$rows    = $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
+						->select( "p.*, {$this->table}.*" )
+						->order_by( "{$this->table}.date", 'DESC' )
+						->result();
+		$results = [];
+		$from_ts = strtotime( $from );
+		$to_ts   = strtotime( $to );
+		$diff    = ceil( ( $to_ts - $from_ts ) / ( 60 * 60 * 24 ) );
+		for ( $i = 0; $i <= $diff; $i ++ ) {
+			$results[ date_i18n( 'Y-m-d', $from_ts + ( $i * 60 * 60 * 24 ) ) ] = [
+				'free'     => 0,
+				'paid'     => 0,
+				'royalty'  => 0,
+				'currency' => 'JPY',
+			];
+		}
+		foreach ( $rows as $row ) {
+			if ( isset( $results[ $row->date ] ) ) {
+				$results[ $row->date ]['royalty'] += (float) $row->royalty;
+				switch ( $row->type ) {
+					case '標準':
+						$results[ $row->date ]['paid'] += $row->unit;
+						break;
+					default:
+						$results[ $row->date ]['free'] += $row->unit;
+						break;
+				}
+				$results[ $row->date ]['currency'] = $row->currency;
+			}
+		}
+
+		return $results;
+	}
+
+	/**
+	 * Get detailed result
+	 *
+	 * @param $from
+	 * @param $to
+	 * @param int $author_id
+	 *
+	 * @return array|mixed|null
+	 */
+	public function get_title_report( $from, $to, $author_id = 0 ) {
+		if ( $author_id ) {
+			$this->where( 'p.post_author = %d', $author_id );
+		}
+
+		return $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
+					->select( "p.*, {$this->table}.*" )
+					->order_by( "{$this->table}.date", 'DESC' )
+					->result();
+	}
+
+
+	protected function default_join() {
+		return [
+			[ "{$this->db->postmeta} AS pm", "pm.meta_key = '_asin' AND pm.meta_value = {$this->table}.asin", 'left' ],
+			[ "{$this->db->posts} AS p", 'p.ID = pm.post_id', 'left' ],
+		];
+	}
+
 
 	/**
 	 * Validate value
