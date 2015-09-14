@@ -45,12 +45,12 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 						</li>
 						<li role="presentation" class="<?= 'payment' == $current ? 'active' : '' ?>">
 							<a href="<?= home_url( '/sales/payment/', 'https' ) ?>" aria-controls="readers">
-								入金情報
+								入金履歴
 							</a>
 						</li>
 						<li role="presentation" class="<?= 'account' == $current ? 'active' : '' ?>">
 							<a href="<?= home_url( '/sales/account/', 'https' ) ?>" aria-controls="readers">
-								支払先
+								支払い先
 							</a>
 						</li>
 					</ul>

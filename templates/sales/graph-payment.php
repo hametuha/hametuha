@@ -4,7 +4,7 @@
 ?>
 <div id="kdp-reward" class="stat">
 
-	<h3><i class="icon-calculate2"></i> 入金情報</h3>
+	<h3><i class="icon-calculate2"></i> <?= $breadcrumb ?></h3>
 
 	<p class="text-muted">あなたがこれまで受けとった金額についての情報です。</p>
 

@@ -161,7 +161,7 @@ class Sales extends RestTemplate {
 	public function get_reward( $page = '', $paged = 1 ) {
 		$this->auth_redirect();
 		// Top page
-		$this->title .= ' | 報酬';
+		$this->title .= ' | 確定報酬';
 		$this->set_data( [
 			'breadcrumb' => '報酬',
 			'current'    => 'reward',
@@ -179,9 +179,9 @@ class Sales extends RestTemplate {
 	public function get_payment( $page = '', $paged = 1 ) {
 		$this->auth_redirect();
 		// Top page
-		$this->title .= ' | 入金情報';
+		$this->title .= ' | 入金履歴';
 		$this->set_data( [
-			'breadcrumb' => '入金情報',
+			'breadcrumb' => '入金履歴',
 			'current'    => 'payment',
 			'graph'      => 'payment',
 		] );
@@ -206,7 +206,10 @@ class Sales extends RestTemplate {
 		$this->response();
 	}
 
-	public function post_account(){
+	/**
+	 *
+	 */
+	public function post_account() {
 		$this->auth_redirect();
 		exit;
 	}

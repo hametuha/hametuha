@@ -4,9 +4,12 @@
 ?>
 <div id="kdp-reward" class="stat">
 
-	<h3><i class="icon-credit2"></i> 支払い先</h3>
+	<h3><i class="icon-credit2"></i> <?= $breadcrumb ?></h3>
 
-	<p class="text-muted">入金先情報を入力してください。</p>
+	<p class="text-muted">
+		入金先情報を入力してください。
+		東京三菱UFJ銀行だと振り込み手数料が安くなります。
+	</p>
 
 	<div class="alert alert-warning">
 		<p>

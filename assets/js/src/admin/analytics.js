@@ -63,13 +63,23 @@
 
 
         // Bind form event and trigger immediately
+        var initialized = false;
         $('#analytics-date-form').submit(function(e){
             e.preventDefault();
-            $('.stat').trigger('update.analytics.hametuha', [
-                $(this).attr('action'),
-                $(this).find("input[name=from]").val(),
-                $(this).find("input[name=to]").val()
-            ]);
+            var from = $(this).find("input[name=from]").val(),
+                to =  $(this).find("input[name=to]").val();
+            $('.stat').trigger('update.analytics.hametuha', [$(this).attr('action'), from, to]);
+            // Push state( So you can reload)
+            if (window.history && window.history.pushState){
+                if(!initialized){
+                    initialized = true;
+                }else{
+                    history.pushState({
+                        from: from,
+                        to: to
+                    }, document.title, window.location.pathname + '?from=' + from + '&to=' + to);
+                }
+            }
         }).trigger('submit');
 
 

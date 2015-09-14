@@ -4,7 +4,7 @@
 ?>
 <div id="kdp-reward" class="stat">
 
-	<h3><i class="icon-coins"></i> 確定報酬</h3>
+	<h3><i class="icon-coins"></i> <?= $breadcrumb ?></h3>
 
 	<p class="text-muted">あなたが受け取ることのできる報酬です。</p>
 
