@@ -550,13 +550,9 @@ ul.metadata{
       color: #fff;
       text-decoration: none;
     }
-    &:hover{
-      color: #fff;
-      opacity: 0.8;
-    }
     &:active{
       color: #fff;
-      opacity: 6;
+      opacity: .8;
     }
     @each $var in (
       facebook $facebook-color,
