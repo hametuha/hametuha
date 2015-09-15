@@ -62,7 +62,7 @@
 					<div class="series__link text-center">
 						<?php switch ( $series->get_status( get_the_ID() ) ) :
 							case 2 : ?>
-								<a href="<?= $series->get_kdp_url( get_the_ID() ); ?>" class="btn btn-trans btn-lg"
+								<a href="<?= $series->get_kdp_url( get_the_ID() ); ?>" class="btn btn-trans btn-lg btn-amazon"
 								   data-outbound="kdp"
 								   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 								   data-label="<?php the_ID() ?>"
@@ -264,7 +264,7 @@
 					</p>
 
 					<p class="text-center">
-						<a href="<?= $url ?>" class="btn btn-trans btn-lg"
+						<a href="<?= $url ?>" class="btn btn-trans btn-lg btn-amazon"
 						   data-outbound="kdp"
 						   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 						   data-label="<?php the_ID() ?>"
