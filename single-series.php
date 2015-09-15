@@ -77,7 +77,8 @@
 								<?php break;
 							default : ?>
 								<?php break; endswitch; ?>
-						<a href="#series-children" class="btn btn-trans btn-lg">
+						<span class="series__link--divider"></span>
+						<a href="#series-children" class="btn btn-trans">
 							<i class="icon-books"></i> 掲載作一覧
 						</a>
 					</div>

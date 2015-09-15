@@ -91,8 +91,18 @@
   }
 
   &__link{
-    a:nth-child(2){
+    a:nth-child(3){
       margin-left: 1em;
+      @media only screen and (max-width: #{$screen-sm-max}) {
+        margin-top: 0.5em;
+        margin-left: 0;
+      }
+    }
+    &--divider{
+      display: none;
+      @media only screen and (max-width: #{$screen-sm-max}){
+        display: block;
+      }
     }
   }
 
