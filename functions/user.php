@@ -230,6 +230,8 @@ add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	$contact_methods['twitter'] = '<i class="icon-twitter"></i> twitterアカウント';
 	$contact_methods['location'] = '<i class="icon-location4"></i> 場所';
 	$contact_methods['birth_place'] = '<i class="icon-compass"></i> 出身地';
+	$contact_methods['favorite_authors'] = '<i class="icon-reading"></i> 好きな作家';
+	$contact_methods['favorite_words'] = '<i class="icon-pen5"></i> 好きな言葉';
 	return $contact_methods;
 }, '_hide_profile_fields', 10, 1 );
 

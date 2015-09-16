@@ -79,7 +79,22 @@
 								<?php endif; ?>
 							</li>
 						</ul>
+						<hr/>
 						<!-- //.doujin__links -->
+						<dl class="doujin__favorites">
+							<dt><i class="icon-reading"></i> 好きな作家</dt>
+							<dd>
+								<?= $this->doujin->favorite_authors ? esc_html( $this->doujin->favorite_authors ) : '<span class="text-muted">登録なし</span>' ?>
+							</dd>
+							<dt><i class="icon-pen5"></i> 好きな言葉</dt>
+							<dd>
+								<?php if ( $this->doujin->favorite_words ): ?>
+									<?= wpautop( esc_html( $this->doujin->favorite_words ) ) ?>
+								<?php else: ?>
+									<p class="text-muted">登録なし</p>
+								<?php endif; ?>
+							</dd>
+						</dl>
 
 					</div>
 				</div>
@@ -137,7 +152,8 @@
 									?>
 									<a href="<?= esc_url( $url ) ?>">
 										<span><?= esc_html( $title ) ?></span>
-										<small class="label label-default"><?= hametuha_passed_time( $activity->date ) ?></small>
+										<small
+											class="label label-default"><?= hametuha_passed_time( $activity->date ) ?></small>
 									</a>
 								</li>
 							<?php endforeach; ?>
@@ -247,16 +263,16 @@
 				<div class="row">
 					<h2 class="doujin__title--major text-center">リスト</h2>
 					<?php if ( $query->have_posts() ) : ?>
-					<ol class="archive-container media-list">
-						<?php
-						while ( $query->have_posts() ) {
-							$query->the_post();
-							get_template_part( 'parts/loop', get_post_type() );
-						}
-						?>
-					</ol>
-					<a class="btn btn-primary btn-lg btn-block"
-					   href="<?= get_author_posts_url( $this->doujin->ID ) ?>?post_type=lists">もっと見る</a>
+						<ol class="archive-container media-list">
+							<?php
+							while ( $query->have_posts() ) {
+								$query->the_post();
+								get_template_part( 'parts/loop', get_post_type() );
+							}
+							?>
+						</ol>
+						<a class="btn btn-primary btn-lg btn-block"
+						   href="<?= get_author_posts_url( $this->doujin->ID ) ?>?post_type=lists">もっと見る</a>
 					<?php else : ?>
 						<div class="alert alert-warning">
 							投稿がありません

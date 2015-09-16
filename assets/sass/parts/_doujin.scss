@@ -25,6 +25,12 @@
     }
   }
 
+  &__favorites{
+    dd{
+      margin-bottom: 0.5em;
+    }
+  }
+
   &__item{
     &--title{
       font-size: 18px;

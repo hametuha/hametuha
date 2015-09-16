@@ -191,6 +191,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 					$placeholder = '';
 					$instruction = '';
 					$class_names = [ 'form-control' ];
+                    $textarea = false;
 					switch ( $name ) {
 						case 'aim':
 							$placeholder = ' placeholder="ex. 私のブログ"';
@@ -207,6 +208,15 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 							$placeholder = ' placeholder="ex. 東京都千代田区"';
 							$instruction = '自分のアイデンティティが育まれた場所を入力してください。';
 							break;
+                        case 'favorite_authors':
+                            $placeholder = ' placeholder="ex. 夏目漱石,チャールズ・ディケンズ"';
+                            $instruction = '好きな作家をカンマ区切りで入力してください。';
+                            break;
+                        case 'favorite_words':
+                            $textarea = true;
+                            $placeholder = ' placeholder="ex. 人生は一行のボオドレウヱルに如かない——芥川龍之介"';
+                            $instruction = '好きな言葉を出店付きで入力してください。';
+                            break;
 						default:
 							// Do nothing
 							break;
@@ -215,10 +225,18 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 					<div class="form-group">
 						<label
 							for="<?php echo $name; ?>"><?php echo apply_filters( 'user_' . $name . '_label', $desc ); ?></label>
+                        <?php if( $textarea ): ?>
+
+                        <textarea <?php echo $placeholder; ?>
+                            name="<?php echo $name; ?>" rows="5"
+                                                          id="<?php echo $name; ?>"
+                                                          class="<?= implode( ' ', $class_names ) ?>"><?= esc_textarea( $profileuser->$name ) ?></textarea>
+                        <?php else: ?>
 						<input<?php echo $placeholder; ?> type="<?= $type ?>" name="<?php echo $name; ?>"
 														  id="<?php echo $name; ?>"
 														  value="<?php echo esc_attr( $profileuser->$name ) ?>"
 														  class="<?= implode( ' ', $class_names ) ?>"/>
+                        <?php endif; ?>
 						<?php if ( $instruction ) : ?>
 							<p class="description text-muted"><?= $instruction ?></p>
 						<?php endif ?>
