@@ -35,6 +35,10 @@ HTML;
 							}
 						}
 						break;
+					case 'newsletter':
+					case 'announcement':
+						printf( '<small>%s</small>', get_post_type_object(get_post_type())->label );
+						break;
 					default:
 						// Do nothing
 						break;

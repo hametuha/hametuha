@@ -1,0 +1,60 @@
+.doujin{
+
+  &__row{
+    margin: 20px 0;
+    padding: 20px 0;
+    &--activity,
+    &--kdp{
+      background: #f9f9f9;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+
+  &__img{
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  &__links{
+    padding-left: 0;
+    li{
+      margin: 0.5em 0;
+      list-style: none;
+    }
+  }
+
+  &__item{
+    &--title{
+      font-size: 18px;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px dotted #ddd;
+    }
+    &--chart{
+      height: 300px;
+    }
+  }
+
+  &__activities{
+    padding-left: 0;
+  }
+  &__activity{
+    list-style: none;
+    border-bottom: 1px dotted #ddd;
+    a{
+      margin: 5px 0;
+      padding: 10px;
+      display: block;
+      &:link, &:visited{
+        text-decoration: none;
+      }
+      &:active{
+        text-decoration: none;
+        background: #fff;
+        border-radius: 3px;
+      }
+    }
+  }
+}

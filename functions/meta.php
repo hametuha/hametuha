@@ -104,6 +104,9 @@ add_action( 'wp_head', function () {
 	$desc   = '';
 	$card   = 'summary';
 	$author = '';
+
+	global $wp_query;
+
 	//個別設定
 	if ( is_front_page() ) {
 		$url   = trailingslashit( get_bloginfo( 'url' ) );
@@ -116,15 +119,6 @@ add_action( 'wp_head', function () {
 		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。プライム会員は月1冊まで無料！';
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/kdp.jpg';
 		$card  = 'summary_large_image';
-	} elseif ( is_post_type_archive() || is_home() ) {
-		$post_obj = get_post_type_object( get_query_var( 'post_type' ) ?: 'post' );
-		$url      = get_post_type_archive_link( get_post_type() );
-		$desc     = $post_obj->description ?: '';
-		$path     = '/assets/img/jumbotron/' . get_post_type() . '.jpg';
-		if ( file_exists( get_stylesheet_directory() . $path ) ) {
-			$image = get_stylesheet_directory_uri() . $path;
-			$card  = 'summary_large_image';
-		}
 	} elseif ( is_author() ) {
 		global $wp_query;
 		$user   = get_userdata( $wp_query->query_vars['author'] );
@@ -163,6 +157,23 @@ add_action( 'wp_head', function () {
 		$url   = home_url( $_SERVER['REQUEST_URI'] );
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/ranking.jpg';
 		$card  = 'summary_large_image';
+	} elseif ( is_post_type_archive() ) {
+		$post_obj = get_post_type_object( get_query_var( 'post_type' ) ?: 'post' );
+		$url      = get_post_type_archive_link( get_post_type() );
+		$desc     = $post_obj->description ?: '';
+		$path     = '/assets/img/jumbotron/' . get_post_type() . '.jpg';
+		if ( file_exists( get_stylesheet_directory() . $path ) ) {
+			$image = get_stylesheet_directory_uri() . $path;
+			$card  = 'summary_large_image';
+		}
+	} elseif ( ( $class_name = get_query_var( 'api_class' ) ) ) {
+		$class_name = str_replace('\\\\', '\\', $class_name);
+		if ( class_exists( $class_name ) && method_exists( $class_name::get_instance(), 'ogp' ) ) {
+			extract( $class_name::get_instance()->ogp( compact( 'image', 'title', 'url', 'type', 'desc', 'card', 'author' ) ) );
+		}
+	} elseif ( is_home() ) {
+		$url  = get_permalink( get_option( 'page_for_posts' ) );
+		$desc = '破滅派の新着投稿一覧です。';
 	}
 	$desc  = esc_attr( str_replace( "\n", '', $desc ) );
 	$image = str_replace( '://s.', '://', $image );

@@ -64,7 +64,8 @@ class KdpQuery extends QueryHighJack {
 		if ( $this->is_valid_query( $wp_query ) ) {
 			$this->add_meta_query( $wp_query, [
 				'key'   => '_kdp_status',
-				'value' => 2,
+				'value' => [ 1, 2 ],
+				'compare' => 'IN',
 			] );
 		}
 	}
