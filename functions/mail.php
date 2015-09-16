@@ -43,7 +43,8 @@ add_filter( 'wp_mail_from', function ( $from_mail ) {
  *
  */
 add_filter( 'alo_easymail_newsletter_content', function ( $html, WP_Post $post, $recipient ) {
-	if ( ! ( is_singular( 'newsletter' ) || is_post_type_archive( 'series' ) ) ) {
+
+	if ( ! ( is_singular( 'newsletter' ) || is_post_type_archive( 'series' ) || is_home() ) ) {
 
 		// Apply CSS style
 		$parser = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles();

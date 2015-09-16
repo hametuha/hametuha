@@ -40,10 +40,22 @@ if( hametuha_is_profile_page() ){
 	the_search_query();
 	echo '」の検索結果';
 
-}elseif(is_author()){
-
-	$author = get_queried_object();
-	echo $author->display_name.'の作品一覧';
+}elseif( is_author() ){
+	$author_nice_name = get_query_var('author_name');
+	$author_name = '';
+	if( ( $author = \Hametuha\Model\Author::get_instance()->get_by_nice_name($author_nice_name) ) ){
+		$author_name = esc_html( $author->display_name ).'の';
+	}
+	if( $post_type = get_query_var('post_type') ){
+		if( 'post' === $post_type ){
+			$type = '作品';
+		}else{
+			$type = get_post_type_object($post_type)->label;
+		}
+	}else{
+		$type = '投稿';
+	}
+	echo $author_name.$type.'一覧';
 
 }elseif( is_singular('series') ){
 

@@ -49,14 +49,14 @@ function hametuha_user_link( $url, $label, $source, $author = null ) {
 	return hametuha_short_links( $url, [
 		'utm_source'   => $source,
 		'utm_campaign' => $label,
-		'utm_medium'   => $author
+		'utm_medium'   => $author,
 	] );
 }
 
 /**
  * シェア数カウント用のAPIを設定する
  */
-add_action( "admin_init", function () {
+add_action( 'admin_init', function () {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		foreach ( [ 'wp_ajax_', 'wp_ajax_nopriv_' ] as $action ) {
 			add_action( "{$action}hametuha_share_count", '_hametuha_share_count' );
@@ -73,7 +73,7 @@ add_action( "admin_init", function () {
 function _hametuha_share_count() {
 	$json = [
 		'success' => false,
-		'result'  => [ ]
+		'result'  => [],
 	];
 	try {
 		$post_id = isset( $_GET['post_id'] ) ? (int) $_GET['post_id'] : 0;
@@ -88,7 +88,7 @@ function _hametuha_share_count() {
 				}
 				$permalink = get_permalink( $post );
 			}
-			$result = [ ];
+			$result = [];
 			$url    = rawurlencode( $permalink );
 			foreach (
 				[

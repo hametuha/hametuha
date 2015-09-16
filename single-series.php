@@ -186,7 +186,9 @@
 						</div>
 
 						<div class="series__authorLink">
-							<a class="btn btn-default" href="<?= get_author_posts_url( $author->ID ) ?>">詳しいプロフィール</a>
+							<a class="btn btn-default" href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) ) ) ?>">
+								詳しいプロフィール
+							</a>
 						</div>
 					</div>
 					<!-- //.series__author -->
