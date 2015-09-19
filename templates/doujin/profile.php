@@ -15,7 +15,7 @@
 					<div class="col-xs-3">
 						<?= get_avatar( $this->doujin->ID, 300, '', $this->doujin->display_name, [
 							'itemprop' => 'image',
-							'class'    => 'doujin__img img-circle avatar'
+							'class'    => 'doujin__img img-circle avatar',
 						] ) ?>
 					</div>
 
@@ -88,9 +88,9 @@
 							</dd>
 							<dt><i class="icon-pen5"></i> 好きな言葉</dt>
 							<dd>
-								<?php if ( $this->doujin->favorite_words ): ?>
+								<?php if ( $this->doujin->favorite_words ) : ?>
 									<?= wpautop( esc_html( $this->doujin->favorite_words ) ) ?>
-								<?php else: ?>
+								<?php else : ?>
 									<p class="text-muted">登録なし</p>
 								<?php endif; ?>
 							</dd>

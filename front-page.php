@@ -2,9 +2,9 @@
 
 	<div class="container front-container">
 
-		<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
+		<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-			<?php if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ): ?>
+			<?php if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ) : ?>
 				<div class="row">
 					<div class="jumbotron" style="background-image: url('<?= $thumbnail[0] ?>')">
 						<h1>後ろ向きのまま前へ進め！</h1>
@@ -25,7 +25,7 @@
 
 		<div class="frontpage-widget clearfix">
 
-			<?php dynamic_sidebar( "frontpage-sidebar" ); ?>
+			<?php dynamic_sidebar( 'frontpage-sidebar' ); ?>
 
 
 			<div class="col-xs-12 col-sm-4">
@@ -54,12 +54,12 @@
 
 			<?php
 			$query = new WP_Query( [
-				"my-content"     => "recommends",
-				"posts_per_page" => 1,
-				"post_type"      => "lists",
-				"post_status"    => "publish"
+				'my-content'     => 'recommends',
+				'posts_per_page' => 1,
+				'post_type'      => 'lists',
+				'post_status'    => 'publish',
 			] );
-			if ( $query->have_posts() ): $query->the_post();
+			if ( $query->have_posts() ) : $query->the_post();
 				$url = get_permalink();
 				?>
 				<div class="col-xs-12 col-sm-4">
@@ -110,7 +110,7 @@
 					みんなのレビュー
 				</h2>
 				<ul class="post-list">
-					<?php foreach ( get_terms( 'review', [ 'hide_empty' => false ] ) as $term ): ?>
+					<?php foreach ( get_terms( 'review', [ 'hide_empty' => false ] ) as $term ) : ?>
 						<li>
 							<a href="<?= home_url( "/reviewed/{$term->term_id}/" ) ?>"><?= esc_html( $term->name ) ?></a>
 						</li>
@@ -137,18 +137,18 @@
 							'post_type'      => 'thread',
 							'posts_per_page' => 3,
 						] ) as $post
-					): setup_postdata( $post ); ?>
+					) : setup_postdata( $post ); ?>
 						<a class="list-group-item" href="<?php the_permalink(); ?>">
 							<h3 class="list-group-item-heading">
 								<?php the_title(); ?>
 								<span class="badge"><?php comments_number( '0', '1', '%' ); ?></span>
-								<?php if ( is_new_post( 7, $post ) ): ?>
+								<?php if ( is_new_post( 7, $post ) ) : ?>
 									<span class="label label-danger">New</span>
 								<?php endif; ?>
 							</h3>
 
 							<p class="list-group-item-text">
-								<?php foreach ( get_the_terms( $post, 'topic' ) as $term ): ?>
+								<?php foreach ( get_the_terms( $post, 'topic' ) as $term ) : ?>
 									<span class="label label-info"><?= esc_html( $term->name ) ?></span>
 								<?php endforeach; ?>
 								<?php the_author() ?>
@@ -168,19 +168,21 @@
 				<h2>お知らせ</h2>
 
 				<div class="list-group">
-					<?php $announcement = new WP_Query( [
+					<?php
+					$announcement = new WP_Query( [
 						'post_type'      => 'announcement',
 						'posts_per_page' => 3,
 						'post_status'    => 'publish',
 					] );
-					while ( $announcement->have_posts() ): $announcement->the_post();
+					while ( $announcement->have_posts() ) :
+						$announcement->the_post();
 						?>
 						<a class="list-group-item" href="<?php the_permalink() ?>">
 							<h3 class="list-group-item-heading"><?php the_title() ?></h3>
 
 							<p>
 								<?php the_date() ?>
-								<?php if ( is_new_post( 7 ) ): ?>
+								<?php if ( is_new_post( 7 ) ) : ?>
 									<span class="label label-danger">New</span>
 								<?php endif; ?>
 							</p>
@@ -197,7 +199,7 @@
 			<div class="col-xs-12 col-sm-4">
 				<h2>統計情報</h2>
 				<script>
-					window.HametuhaGenreStatic = <?= json_encode(hametuha_genre_static()) ?>;
+					window.HametuhaGenreStatic = <?= json_encode( hametuha_genre_static() ) ?>;
 				</script>
 				<canvas id="genre-context" width="300" height="300"></canvas>
 				<p class="list-excerpt">
@@ -231,21 +233,23 @@
 				<h2>新人さん</h2>
 				<ul class="user-list">
 					<?php $counter = 0;
-					foreach ( get_recent_authors( 3 ) as $user ): $counter ++; ?>
+					foreach ( get_recent_authors( 3 ) as $user ) : $counter ++; ?>
 						<li class="clearfix">
-							<a href="<?= get_author_posts_url( $user->ID ); ?>">
 								<?php echo get_avatar( $user->ID, 80 ); ?>
 								<div class="user-info">
+									<a href="<?= home_url( sprintf( '/doujin/detail/%s/', $user->user_nicename ) ); ?>">
 									<h3>
 										<?= esc_html( $user->display_name ); ?>
 										<small><?php echo mysql2date( 'Y/m/d', $user->user_registered ); ?>登録</small>
 									</h3>
+									</a>
 								</div>
 								<p class="list-excerpt">
-									最新投稿: <a
-										href="<?php echo get_permalink( $user->post_id ); ?>"><?php echo $user->post_title; ?></a>
+									最新投稿:
+									<a href="<?php echo get_permalink( $user->post_id ); ?>">
+										<?php echo $user->post_title; ?>
+									</a>
 								</p>
-							</a>
 						</li>
 					<?php endforeach; ?>
 				</ul>
@@ -257,31 +261,33 @@
 				<?php $counter     = 0;
 				$activity_interval = 7;
 				$vigorous          = get_vigorous_author( $activity_interval, 3 );
-				if ( empty( $vigorous ) ): ?>
+				if ( empty( $vigorous ) ) : ?>
 					<div class="alert alert-danger">
 						<p>ここ<?php echo number_format( $activity_interval ); ?>日間というもの、誰も活動していません！　あなたの力が必要です。</p>
 
 						<p>
 
-							<?php if ( ! is_user_logged_in() ): ?>
+							<?php if ( ! is_user_logged_in() ) : ?>
 								<a class="btn btn-danger btn-block" href="<?= wp_login_url() ?>">ログインして書く</a>
-							<?php elseif ( current_user_can( 'edit_posts' ) ): ?>
+							<?php elseif ( current_user_can( 'edit_posts' ) ) : ?>
 								<a class="btn btn-danger btn-block" href="<?= admin_url( 'post-new.php' ) ?>">作品を書く</a>
 							<?php endif; ?>
 						</p>
 					</div>
-				<?php else: ?>
+				<?php else : ?>
 					<ul class="user-list">
-						<?php foreach ( $vigorous as $user ): $counter ++; ?>
+						<?php foreach ( $vigorous as $user ) : $counter ++; ?>
 							<li class="clearfix">
-								<?php if ( $counter == 1 ): ?>
+								<?php if ( 1 === $counter ) : ?>
 									<i class="icon-crown"></i>
 								<?php endif; ?>
 
 								<?= get_avatar( $user->ID, 80 ); ?>
 								<div class="user-info">
 									<h3>
-										<a href="<?= get_author_posts_url( $user->ID ); ?>"><?= esc_html( $user->display_name ); ?></a>
+										<a href="<?= home_url( sprintf( '/doujin/detail/%s', $user->user_nicename ) ); ?>">
+											<?= esc_html( $user->display_name ); ?>
+										</a>
 										<small><?php echo mysql2date( 'Y/m/d', $user->user_registered ); ?>登録</small>
 									</h3>
 								</div>
@@ -298,16 +304,18 @@
 				<h2>一番投稿した</h2>
 				<ul class="user-list">
 					<?php $counter = 0;
-					foreach ( get_vigorous_author( 0, 3 ) as $user ): $counter ++; ?>
+					foreach ( get_vigorous_author( 0, 3 ) as $user ) : $counter ++; ?>
 						<li class="clearfix">
-							<?php if ( $counter == 1 ): ?>
+							<?php if ( 1 === $counter ) : ?>
 								<i class="icon-crown"></i>
 							<?php endif; ?>
 
 							<?= get_avatar( $user->ID, 80 ); ?>
 							<div class="user-info">
 								<h3>
-									<a href="<?= get_author_posts_url( $user->ID ); ?>"><?= esc_html( $user->display_name ); ?></a>
+									<a href="<?= home_url( sprintf( '/doujin/detail/%s', $user->user_nicename ) ); ?>">
+										<?= esc_html( $user->display_name ); ?>
+									</a>
 									<small><?php echo mysql2date( 'Y/m/d', $user->user_registered ); ?>登録</small>
 								</h3>
 							</div>
@@ -404,15 +412,15 @@
 
 		</div>
 
-		<?php if ( is_user_logged_in() ): ?>
-			<?php if ( current_user_can( 'edit_posts' ) ): ?>
+		<?php if ( is_user_logged_in() ) : ?>
+			<?php if ( current_user_can( 'edit_posts' ) ) : ?>
 				<a class="btn btn-lg btn-block btn-primary btn--joinus"
 				   href="<?= admin_url( 'post-new.php' ) ?>">作品を書く</a>
-			<?php else: ?>
+			<?php else : ?>
 				<a class="btn btn-lg btn-block btn-primary btn--joinus"
 				   href="<?= admin_url( 'post-new.php' ) ?>">執筆者になる</a>
 			<?php endif; ?>
-		<?php else: ?>
+		<?php else : ?>
 			<p>
 				<a class="btn btn-lg btn-block btn-primary btn--joinus" href="<?= wp_login_url() ?>">破滅派にログイン</a>
 			</p>
