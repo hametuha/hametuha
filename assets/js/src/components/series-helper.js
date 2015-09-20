@@ -19,6 +19,12 @@
             });
         });
 
+        // more
+        $('a[href="#series-testimonials-list"]').click(function(e){
+            e.preventDefault();
+            $($(this).attr('href')).find('.hidden').removeClass('hidden');
+        });
+
     });
 
 })(jQuery);

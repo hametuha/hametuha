@@ -202,6 +202,85 @@
 	<!-- //.series__row--author -->
 
 
+	<div class="series__row series__row--testimonials">
+
+		<div class="container series__inner">
+
+			<div class="row">
+				<div class="col-xs-12">
+					<h2 class="series__title--testimonials text-center">
+						<small class="series__title--caption">How people say</small>
+						みんなの反応
+					</h2>
+				</div>
+			</div>
+			<!-- //.series__title--testimonials -->
+
+			<div class="row series__testimonials--container">
+				<hr />
+				<ol id="series-testimonials-list" class="col-xs-12 serires__testimonials--list">
+					<?php for ( $i = 0; $i < 8; $i ++ ) : ?>
+						<li class="series__testimonials--item col-sm-4 col-xs-12<?php if ($i > 2) echo ' hidden'  ?>">
+							<?php if ( 2 === $i % 3 ) : ?>
+								<?php
+								$url = 'https://twitter.com/takahashifumiki/status/644922477408219136';
+								/** @var WP_Embed $wp_embed */
+								global $wp_embed;
+								echo $wp_embed->autoembed( $url );
+								?>
+							<?php else : ?>
+								<?php if ( $i === 1 ) : ?>
+									<p class="series__testimonials--rating text-center">
+										<?php for($j = 0; $j < 4; $j++): ?>
+										<i class="icon-star6"></i>
+										<?php endfor; ?>
+									</p>
+								<?php endif; ?>
+								<blockquote>
+									<i class="icon-quotes-left"></i>
+									<?php
+									switch ( $i % 3 ) :
+										case 1: ?>
+										<p>
+											東京、精神病院、海へ至るまで。巡礼は行われ、ついにまとめられた。<br/>
+											文章にはピリリとスパイスが効いている。言葉はすうっと胸に入ってくる滑らかさ。<br/>
+											魂はお布団から何処へ向かうのだろう。
+										</p>
+										<?php break;
+										default: ?>
+										<p>
+											最高だった！
+										</p>
+										<?php
+										break;
+									endswitch; ?>
+									<cite>
+										<?php if ( 0 === $i % 2 ) : ?>
+											<a href="#" target="_blank">バカなあいつ</a>
+										<?php else : ?>
+											大江健三郎
+										<?php endif; ?>
+									</cite>
+								</blockquote>
+							<?php endif; ?>
+						</li>
+					<?php endfor ?>
+				</ol>
+				<?php if( true ) : ?>
+				<p class="text-center">
+					<a class="btn btn-warning btn-lg" href="#series-testimonials-list">
+						<i class="icon-folder-plus4"></i> もっと見る
+					</a>
+				</p>
+				<?php endif; ?>
+			</div>
+
+		</div>
+		<!-- //.container -->
+	</div>
+	<!-- //.series__row--testimonials -->
+
+
 	<div class="series__row series__row--children" id="series-children">
 
 		<div class="container series__inner">
@@ -234,7 +313,8 @@
 			<?php else : ?>
 
 				<div class="alert alert-warning">
-					<p>まだ作品が登録されていません。<a class="alert-link" href="#series-notification">破滅派をフォロー</a>して、作者の活躍に期待してください。</p>
+					<p>まだ作品が登録されていません。<a class="alert-link" href="#series-notification">破滅派をフォロー</a>して、作者の活躍に期待してください。
+					</p>
 				</div>
 
 			<?php endif;
@@ -244,6 +324,23 @@
 
 	</div>
 	<!-- series_row--children -->
+
+	<div class="series__row series__row--review">
+
+		<div class="container series__inner">
+
+			<div class="row">
+				<div class="col-xs-12">
+					<h2 class="series__title--review text-center">
+						<small class="series__title--caption">Reviews</small>
+						レビュー
+					</h2>
+				</div>
+			</div>
+		</div>
+		<!-- //.container -->
+	</div>
+	<!-- //.series__row--review -->
 
 	<?php if ( $url = $series->get_kdp_url( get_the_ID() ) ) : ?>
 		<div class="series__row series__row--amazon">

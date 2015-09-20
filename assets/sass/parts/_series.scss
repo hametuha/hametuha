@@ -63,13 +63,16 @@
       padding-bottom: 0.25em;
       border-bottom: 3px double #fff;
     }
+
     small{
       color: #fff;
       display: block;
       padding-top: 0.25em;
     }
     &--author,
-    &--share{
+    &--share,
+    &--review,
+    &--testimonials{
       color: #aaa;
       text-shadow: 1px 1px 2px #fff;
     }
@@ -219,5 +222,44 @@
     text-align: center;
   }
 
+  &__testimonials{
+    &--list{
+      padding-left: 0;
+    }
+    &--item{
+      list-style: none;
+      &:nth-child(3n+1){
+        clear: left;
+      }
+      blockquote{
+        border-left: none;
+        i{
+          position: absolute;
+          top: 0;
+          left: 0;
+          font-size: 64px;
+          color: #f0f0f0;
+          z-index: 1;
+        }
+        & > p{
+          font-family: $work-body;
+          position: relative;
+          z-index: 2;
+        }
+        cite{
+          display: block;
+          font-family: $work-title;
+          text-align: center;
+          color: #888;
+        }
+      }
+    }
+    &--rating{
+      -webkit-text-stroke: 1px #888;
+      text-stroke: 1px #888;
+      color: yellow;
+      font-size: 1.2em;
+    }
+  }
 
 }

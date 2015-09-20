@@ -1,2 +1,2 @@
-!function(e){"use strict";e(document).ready(function(){var i=e(".series__list");i.imagesLoaded(function(){i.masonry({itemSelector:".series__item"})})})}(jQuery);
+!function(e){"use strict";e(document).ready(function(){var i=e(".series__list");i.imagesLoaded(function(){i.masonry({itemSelector:".series__item"})}),e('a[href="#series-testimonials-list"]').click(function(i){i.preventDefault(),e(e(this).attr("href")).find(".hidden").removeClass("hidden")})})}(jQuery);
 //# sourceMappingURL=../map/components/series-helper.js.map
