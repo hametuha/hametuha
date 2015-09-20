@@ -229,13 +229,6 @@
 								echo $wp_embed->autoembed( $url );
 								?>
 							<?php else : ?>
-								<?php if ( $i === 1 ) : ?>
-									<p class="series__testimonials--rating text-center">
-										<?php for($j = 0; $j < 4; $j++): ?>
-										<i class="icon-star6"></i>
-										<?php endfor; ?>
-									</p>
-								<?php endif; ?>
 								<blockquote>
 									<i class="icon-quotes-left"></i>
 									<?php
@@ -254,25 +247,49 @@
 										<?php
 										break;
 									endswitch; ?>
+									<p class="series__testimonials--rating text-center">
+										<?php for ( $j = 0; $j < 4; $j++ ) : ?>
+										<i class="icon-star6"></i>
+										<?php endfor; ?>
+									</p>
 									<cite>
 										<?php if ( 0 === $i % 2 ) : ?>
-											<a href="#" target="_blank">バカなあいつ</a>
+											<a href="#" rel="nofollow" target="_blank">バカなあいつ</a>
 										<?php else : ?>
 											大江健三郎
 										<?php endif; ?>
 									</cite>
+									<i class="icon-quotes-right"></i>
 								</blockquote>
 							<?php endif; ?>
 						</li>
 					<?php endfor ?>
 				</ol>
-				<?php if( true ) : ?>
 				<p class="text-center">
-					<a class="btn btn-warning btn-lg" href="#series-testimonials-list">
-						<i class="icon-folder-plus4"></i> もっと見る
-					</a>
+					<?php if( true ) : ?>
+						<a class="btn btn-warning btn-lg" href="#series-testimonials-list">
+							<i class="icon-folder-plus4"></i> もっと見る
+						</a>
+					<?php endif; ?>
+
+					<?php if ( is_user_logged_in() ) : ?>
+						<a class="review-creator btn btn-primary btn-lg" rel="nofollow"
+						   href="<?= home_url( '/testimonials/add/'.get_the_ID().'/', 'http' ) ?>"
+						   data-title="<?= sprintf( '%sのレビュー', esc_attr( get_the_title() ) ) ?>">
+							<i class="icon-bubble6"></i> レビューを投稿
+						</a>
+						<?php if ( current_user_can( 'edit_post', get_the_ID() ) ) : ?>
+							<a class="btn btn-default btn-lg" rel="nofollow"
+							   href="<?= home_url( '/testimonials/manage/'.get_the_ID().'/', 'https' ) ?>">
+								<i class="icon-bubble6"></i> 管理
+							</a>
+						<?php endif; ?>
+					<?php else : ?>
+						<a class="btn btn-primary btn-lg" href="<?= wp_login_url( get_permalink() ) ?>">
+							<i class="icon-enter3"></i> ログインしてレビュー
+						</a>
+					<?php endif; ?>
 				</p>
-				<?php endif; ?>
 			</div>
 
 		</div>

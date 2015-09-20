@@ -232,14 +232,21 @@
         clear: left;
       }
       blockquote{
+        padding: 20px;
         border-left: none;
-        i{
+        & > i{
           position: absolute;
-          top: 0;
-          left: 0;
           font-size: 64px;
           color: #f0f0f0;
           z-index: 1;
+          &:first-child{
+            top: -10px;
+            left: 10px;
+          }
+          &:last-child{
+            bottom: 0;
+            right: 10px;
+          }
         }
         & > p{
           font-family: $work-body;
@@ -247,10 +254,13 @@
           z-index: 2;
         }
         cite{
+          position: relative;
+          z-index: 2;
           display: block;
           font-family: $work-title;
           text-align: center;
           color: #888;
+          font-size: 0.9em;
         }
       }
     }
