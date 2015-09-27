@@ -30,7 +30,7 @@ class Series extends Model {
 	 * @return array
 	 */
 	public function get_authors( $post_id ) {
-		$users = [];
+		$users = [ ];
 		foreach (
 			$this->select( "{$this->db->users}.*" )
 				 ->from( $this->db->users )
@@ -52,13 +52,13 @@ class Series extends Model {
 	 *
 	 * @return int
 	 */
-	public function get_owning_series($author_id){
-		return (int) $this->select("COUNT({$this->db->posts}.ID)")
-			->from($this->db->posts)
-			->join($this->db->postmeta, "{$this->db->postmeta}.meta_key = '_kdp_status' AND {$this->db->postmeta}.post_id = {$this->db->posts}.ID")
-			->where("{$this->db->postmeta}.meta_value = %s", 2)
-			->where("{$this->db->posts}.post_author = %d", $author_id)
-			->get_var();
+	public function get_owning_series( $author_id ) {
+		return (int) $this->select( "COUNT({$this->db->posts}.ID)" )
+						  ->from( $this->db->posts )
+						  ->join( $this->db->postmeta, "{$this->db->postmeta}.meta_key = '_kdp_status' AND {$this->db->postmeta}.post_id = {$this->db->posts}.ID" )
+						  ->where( "{$this->db->postmeta}.meta_value = %s", 2 )
+						  ->where( "{$this->db->posts}.post_author = %d", $author_id )
+						  ->get_var();
 	}
 
 	/**
@@ -331,9 +331,10 @@ SQL;
 	 */
 	public function get_sibling( $offset = 0, $post = null ) {
 		$post = get_post( $post );
-		if( 1 > $offset ){
+		if ( 1 > $offset ) {
 			return null;
 		}
+
 		return $this->select( '*' )->from( $this->db->posts )
 					->where( "post_type = 'post' AND post_status = 'publish' AND post_parent = %d", $post->post_parent )
 					->order_by( 'menu_order', 'DESC' )
@@ -396,5 +397,106 @@ SQL;
 		], [
 			'ID' => $post_id
 		], [ '%d' ], [ '%d' ], $this->db->posts );
+	}
+
+	/**
+	 * レビューを取得する
+	 *
+	 * @param int $series_id
+	 * @param bool|true $only_public
+	 * @param int $paged
+	 * @param int $per_page
+	 *
+	 * @return array|null|object
+	 */
+	public function get_reviews( $series_id, $only_public = true, $paged = 1, $per_page = 20 ) {
+		if ( $only_public ) {
+			$where1 = "AND pm.meta_value = '1'";
+			$where2 = "AND comment_approved = '1'";
+		} else {
+			$where1 = '';
+			$where2 = '';
+		}
+		$query  = <<<SQL
+        SELECT SQL_CALC_FOUND_ROWS
+        cs.*, cm2.meta_value AS rank, cm.meta_value AS priority FROM (
+            (
+              SELECT *
+              FROM {$this->db->comments}
+              WHERE comment_post_ID = %d
+                AND comment_type = 'review'
+                {$where2}
+            )
+            UNION ALL
+            (
+              SELECT c.*
+              FROM {$this->db->comments} AS c
+              LEFT JOIN {$this->db->posts} AS p
+              ON c.comment_post_ID = p.ID
+              LEFT JOIN {$this->db->commentmeta} AS pm
+              ON c.comment_ID = pm.comment_id AND pm.meta_key = 'as_testimonial'
+              WHERE p.post_parent = %d
+                AND c.comment_type = ''
+                {$where1}
+            )
+        ) AS cs
+        LEFT JOIN {$this->db->commentmeta} AS cm
+        ON cs.comment_ID = cm.comment_id AND cm.meta_key = 'testimonial_order'
+        LEFT JOIN {$this->db->commentmeta} AS cm2
+        ON cs.comment_ID = cm2.comment_id AND cm2.meta_key = 'testimonial_rank'
+        ORDER BY CAST( cm.meta_value AS SIGNED) DESC,
+                 cs.comment_date DESC
+        LIMIT %d, %d
+SQL;
+		$return = [
+			'rows'     => $this->db->get_results( $this->db->prepare(
+				$query, $series_id, $series_id,
+				( $paged - 1 ) * $per_page, $per_page
+			) ),
+			'total'    => (int) $this->db->get_var( 'SELECT FOUND_ROWS()' ),
+			'cur_page'    => $paged,
+			'per_page' => $per_page,
+		];
+		$return['total_page'] = ceil( $return['total'] / $per_page );
+		foreach ( $return['rows'] as &$row ) {
+			$row->twitter = $this->is_service( $row->comment_author_url, 'twitter' );
+			$row->amazon  = $this->is_service( $row->comment_author_url, 'amazon' );
+			if ( preg_match( '#^https?://([^/]+)#u', $row->comment_author_url, $match ) ) {
+				$row->domain = $match[1];
+			} else {
+				$row->domain = false;
+			}
+			if ( $row->comment_post_ID != $series_id ) {
+				// 子投稿へのコメント
+				$row->display = ( ( '1' === $row->comment_approved ) && (bool) get_comment_meta( $row->comment_ID, 'as_testimonial', true ) );
+			} else {
+				// レビュー
+				$row->display = '1' === $row->comment_approved;
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * 指定したURLが特定のサービスのものか
+	 *
+	 * @param string $url
+	 * @param string $service
+	 *
+	 * @return bool
+	 */
+	public function is_service( $url, $service ) {
+		switch ( $service ) {
+			case 'twitter':
+				return (bool) preg_match( '#^https?://(www\.)?twitter\.com/[^/]+/status/[0-9]+/?#u', $url );
+				break;
+			case 'amazon':
+				return (bool) preg_match( '#^https?://([a-z0-9\-\.].*\.)?amazon.(co\.jp|com)#u', $url );
+				break;
+			default:
+				return false;
+				break;
+		}
 	}
 }

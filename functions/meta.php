@@ -234,7 +234,7 @@ HTML;
 	"logo": "{$css_dir}/assets/img/hametuha-logo.png",
 	"sameAs" : [
 		"https://www.facebook.com/hametuha.inc",
-		"http://www.twitter.com/hametuha",
+		"https://www.twitter.com/hametuha",
 		"http://plus.google.com/+HametuhaCom"
 	]
 }

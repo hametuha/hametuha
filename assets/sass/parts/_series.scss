@@ -63,13 +63,16 @@
       padding-bottom: 0.25em;
       border-bottom: 3px double #fff;
     }
+
     small{
       color: #fff;
       display: block;
       padding-top: 0.25em;
     }
     &--author,
-    &--share{
+    &--share,
+    &--review,
+    &--testimonials{
       color: #aaa;
       text-shadow: 1px 1px 2px #fff;
     }
@@ -229,5 +232,113 @@
     text-align: center;
   }
 
+  &__testimonials{
+    &--stars{
+      i{
+        font-size: 3em;
+        margin: 0 0.2em;
 
+      }
+      strong{
+        font-size: 1.5em;
+      }
+      small{
+        font-size: 1.2em;
+        color: #888;
+      }
+    }
+    &--list{
+      padding-left: 0;
+    }
+    &--item{
+      list-style: none;
+      &:nth-child(3n+1){
+        clear: left;
+      }
+      blockquote{
+        padding: 20px;
+        border-left: none;
+        & > i{
+          position: absolute;
+          font-size: 64px;
+          color: #f0f0f0;
+          z-index: 1;
+          &:first-child{
+            top: -10px;
+            left: 10px;
+          }
+          &:last-child{
+            bottom: 0;
+            right: 10px;
+          }
+        }
+        div p{
+          font-family: $work-body;
+          position: relative;
+          z-index: 2;
+        }
+        cite{
+          position: relative;
+          z-index: 2;
+          display: block;
+          font-family: $work-title;
+          text-align: center;
+          color: #888;
+          font-size: 0.9em;
+        }
+      }
+    }
+    &--rating{
+      -webkit-text-stroke: 1px #888;
+      text-stroke: 1px #888;
+      color: yellow;
+      font-size: 1.2em;
+    }
+  }
+
+}
+
+i.icon-star6, i.icon-star5{
+  color: yellow;
+  -webkit-text-stroke: 1px #ddd;
+  text-stroke: 1px #ddd
+}
+
+.testimonialList{
+  padding: 0;
+
+  &__item{
+    list-style: none;
+    border-bottom: 1px solid #ddd;
+    &:first-child{
+      border-top: 1px solid #ddd;
+    }
+    padding: 10px;
+  }
+  &__meta{
+    margin-bottom: 10px;
+    .ok{
+      color: $brand-success;
+    }
+    .ng{
+      color: $brand-danger
+    }
+    strong{
+      color: $shade-font;
+      margin-left: 0.5em;
+      padding-left: 0.5em;
+      border-left: #ddd solid 1px;
+      &.name{
+        color: #000;
+      }
+    }
+  }
+  &__content{
+    &--inner{
+      border-top: 1px dotted #ddd;
+      padding-top: 10px;
+      line-height: 1.2;
+      font-size: 1.2em;
+    }
+  }
 }

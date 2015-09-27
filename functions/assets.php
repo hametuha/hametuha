@@ -95,6 +95,7 @@ add_action( 'init', function () {
 	// シリーズ用JS
 	wp_register_script( 'hametuha-series', get_template_directory_uri() . '/assets/js/dist/components/series-helper.js', [
 		'jquery-masonry',
+		'jquery-form',
 	], hametuha_version(), true );
 
 	// メインCSS
