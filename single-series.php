@@ -2,11 +2,13 @@
 
 <?php get_header( 'breadcrumb' ) ?>
 
-<div class="series__wrap" itemscope itemtype="http://schema.org/Book">
+<div class="series__wrap" itemprop="mainEntity"  itemscope itemtype="http://schema.org/Book">
 
-	<?php the_post();
-	$series = \Hametuha\Model\Series::get_instance();
-	$query  = new WP_Query( [
+	<?php
+	the_post();
+	$series      = \Hametuha\Model\Series::get_instance();
+	$rating      = \Hametuha\Model\Rating::get_instance();
+	$query       = new WP_Query( [
 		'post_type'      => 'post',
 		'post_status'    => 'publish',
 		'post_parent'    => get_the_ID(),
@@ -17,6 +19,25 @@
 		],
 		'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
 	] );
+	$all_reviews = $series->get_reviews( get_the_ID(), true, 1, 12 );
+	$ratings     = [ ];
+	// Calc rating
+	if ( $query->have_posts() ) {
+		foreach ( $query->posts as $p ) {
+			$avg        = $rating->get_post_rating( $p );
+			$rate_count = $rating->get_post_rating_count( $p );
+			if ( $rate_count ) {
+				for ( $i = 0; $i < $rate_count; $i ++ ) {
+					$ratings[] = $avg;
+				}
+			}
+		}
+	}
+	foreach ( $all_reviews['rows'] as $review ) {
+		if ( $review->rank ) {
+			$ratings[] = (int) $review->rank;
+		}
+	}
 	?>
 
 	<div class="series__row series__row--cover">
@@ -217,56 +238,94 @@
 			<!-- //.series__title--testimonials -->
 
 			<div class="row series__testimonials--container">
-				<hr />
+				<hr/>
+				<?php
+				if ( $ratings ) :
+					?>
+					<p class="series__testimonials--stars text-center" itemprop="aggregateRating" itemscope
+					   itemtype="http://schema.org/AggregateRating">
+						<?php
+						$avg = number_format( array_sum( $ratings ) / count( $ratings ), 2 );
+						$avg = 4.5;
+						for ( $i = 1; $i <= $avg; $i ++ ) {
+							echo '<i class="icon-star6"></i>';
+							if ( $i + 1 > $avg && $i + 0.5 <= $avg ) {
+								echo '<i class="icon-star5"></i>';
+							}
+						}
+						?><br/>
+						<strong itemprop="ratingValue"><?= $avg ?></strong><br/>
+						<small>（<span itemprop="reviewCount"><?= count( $ratings ) ?></span>件の評価）</small>
+						<meta itemprop="worstRating" content="1">
+						<meta itemprop="bestRating" content="5">
+					</p>
+					<hr/>
+				<?php endif; ?>
 				<ol id="series-testimonials-list" class="col-xs-12 serires__testimonials--list">
-					<?php for ( $i = 0; $i < 8; $i ++ ) : ?>
-						<li class="series__testimonials--item col-sm-4 col-xs-12<?php if ($i > 2) echo ' hidden'  ?>">
-							<?php if ( 2 === $i % 3 ) : ?>
-								<?php
-								$url = 'https://twitter.com/takahashifumiki/status/644922477408219136';
-								/** @var WP_Embed $wp_embed */
-								global $wp_embed;
-								echo $wp_embed->autoembed( $url );
-								?>
+					<?php $i = 0;
+					foreach ( $all_reviews['rows'] as $review ) :
+						?>
+						<li itemprop="review" itemscope itemtype="http://schema.org/Review"
+							class="series__testimonials--item col-sm-4 col-xs-12<?php
+							if ( $i > 2 ) {
+								echo ' hidden';
+							} ?>">
+							<meta itemprop="datePublished" content="<?= $review->comment_date ?>">
+							<?php if ( $review->twitter ) : ?>
+								<?php show_twitter_status( $review->comment_author_url ) ?>
+								<meta itemprop="author" content="<?= preg_replace('@https://twitter.com/([^/]+)/.+@u', '@$1', $review->comment_author_url) ?>">
 							<?php else : ?>
 								<blockquote>
 									<i class="icon-quotes-left"></i>
+
+									<div itemprop="description">
+										<?= wpautop( apply_filters( 'get_comment_text', ( get_comment_meta( $review->comment_ID, 'comment_excerpt', true ) ?: $review->comment_content ), $review ) ); ?>
+									</div>
+									<?php if ( $review->rank ) : ?>
+										<p class="series__testimonials--rating text-center" itemprop="reviewRating"
+										   itemscope itemtype="http://schema.org/Rating">
+											<?php for ( $j = 0; $j < $review->rank; $j ++ ) : ?>
+												<i class="icon-star6"></i>
+											<?php endfor; ?>
+											<meta itemprop="ratingValue" content="<?= esc_attr( $review->rank ) ?>">
+											<meta itemprop="worstRating" content="1">
+											<meta itemprop="bestRating" content="5">
+										</p>
+									<?php endif; ?>
 									<?php
-									switch ( $i % 3 ) :
-										case 1: ?>
-										<p>
-											東京、精神病院、海へ至るまで。巡礼は行われ、ついにまとめられた。<br/>
-											文章にはピリリとスパイスが効いている。言葉はすうっと胸に入ってくる滑らかさ。<br/>
-											魂はお布団から何処へ向かうのだろう。
-										</p>
-										<?php break;
-										default: ?>
-										<p>
-											最高だった！
-										</p>
-										<?php
-										break;
-									endswitch; ?>
-									<p class="series__testimonials--rating text-center">
-										<?php for ( $j = 0; $j < 4; $j++ ) : ?>
-										<i class="icon-star6"></i>
-										<?php endfor; ?>
-									</p>
+									$icon = '';
+									if ( $review->amazon ) {
+										$url  = $series->get_kdp_url( get_the_ID() );
+										$icon = '<i class="icon-amazon"></i> Amazonレビュー';
+									} elseif ( $review->comment_post_ID != get_the_ID() ) {
+										$url  = get_comment_link( $review );
+										$icon = 'from 破滅派';
+									} elseif ( preg_match( '#^https?://.+#u', $review->comment_author_url ) ) {
+										$url  = $review->comment_author_url;
+										$icon = 'from ' . esc_html( $review->domain );
+									} else {
+										$url = '';
+									}
+									?>
 									<cite>
-										<?php if ( 0 === $i % 2 ) : ?>
-											<a href="#" rel="nofollow" target="_blank">バカなあいつ</a>
+										<?php if ( $url ) : ?>
+											<a href="<?= esc_url( $url ) ?>" rel="nofollow" target="_blank"
+											   itemprop="author">
+												<?= esc_html( $review->comment_author ) ?>
+											</a>
+											<small><?= $icon ?></small>
 										<?php else : ?>
-											大江健三郎
+											<span itemprop="author"><?= esc_html( $review->comment_author ) ?></span>
 										<?php endif; ?>
 									</cite>
 									<i class="icon-quotes-right"></i>
 								</blockquote>
 							<?php endif; ?>
 						</li>
-					<?php endfor ?>
+						<?php $i ++; endforeach; ?>
 				</ol>
 				<p class="text-center">
-					<?php if( true ) : ?>
+					<?php if ( count( $all_reviews['rows'] ) > 3 ) : ?>
 						<a class="btn btn-warning btn-lg" href="#series-testimonials-list">
 							<i class="icon-folder-plus4"></i> もっと見る
 						</a>
@@ -274,13 +333,13 @@
 
 					<?php if ( is_user_logged_in() ) : ?>
 						<a class="review-creator btn btn-primary btn-lg" rel="nofollow"
-						   href="<?= home_url( '/testimonials/add/'.get_the_ID().'/', 'http' ) ?>"
+						   href="<?= home_url( '/testimonials/add/' . get_the_ID() . '/', is_ssl() ? 'https' : 'http' ) ?>"
 						   data-title="<?= sprintf( '%sのレビュー', esc_attr( get_the_title() ) ) ?>">
-							<i class="icon-bubble6"></i> レビューを投稿
+							<i class="icon-bubble6"></i> レビュー追加
 						</a>
 						<?php if ( current_user_can( 'edit_post', get_the_ID() ) ) : ?>
 							<a class="btn btn-default btn-lg" rel="nofollow"
-							   href="<?= home_url( '/testimonials/manage/'.get_the_ID().'/', 'https' ) ?>">
+							   href="<?= home_url( '/testimonials/manage/' . get_the_ID() . '/', 'https' ) ?>">
 								<i class="icon-bubble6"></i> 管理
 							</a>
 						<?php endif; ?>
@@ -311,11 +370,7 @@
 				</div>
 			</div>
 
-			<?php
-			if ( $query->have_posts() ) :
-
-				?>
-
+			<?php if ( $query->have_posts() ) : ?>
 				<ol class="series__list row masonry-list">
 					<?php
 					$counter = 0;
@@ -342,25 +397,8 @@
 	</div>
 	<!-- series_row--children -->
 
-	<div class="series__row series__row--review">
-
-		<div class="container series__inner">
-
-			<div class="row">
-				<div class="col-xs-12">
-					<h2 class="series__title--review text-center">
-						<small class="series__title--caption">Reviews</small>
-						レビュー
-					</h2>
-				</div>
-			</div>
-		</div>
-		<!-- //.container -->
-	</div>
-	<!-- //.series__row--review -->
-
 	<?php if ( $url = $series->get_kdp_url( get_the_ID() ) ) : ?>
-		<div class="series__row series__row--amazon">
+		<div class="series__row series__row--amazon" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 			<div class="row">
 				<div class="col-xs-12">
 
@@ -369,7 +407,8 @@
 						購入する
 					</h2>
 					<p class="series__price text-center">
-						&yen; <strong><?php the_series_price() ?></strong>
+						&yen; <strong itemprop="price"><?php the_series_price() ?></strong>
+						<meta itemprop="priceCurrency" content="JPY" />
 					</p>
 
 					<p class="text-muted text-center">
@@ -378,6 +417,7 @@
 
 					<p class="text-center">
 						<a href="<?= $url ?>" class="btn btn-trans btn-lg"
+						   itemprop="availability"
 						   data-outbound="kdp"
 						   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 						   data-label="<?php the_ID() ?>"

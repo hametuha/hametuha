@@ -117,6 +117,7 @@ class Rating extends Model
      * @return null|float
      */
     function get_post_rating( \WP_Post $post = null){
+        $post = get_post($post);
         $this->select("AVG({$this->table}.location)")
              ->where("{$this->table}.rel_type = %s", $this->type);
         if( $this->is_series($post) ){

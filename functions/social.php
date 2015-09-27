@@ -385,3 +385,13 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 	}
 }, 10, 3 );
 
+/**
+ * twitterのつぶやきを表示する
+ *
+ * @param string $url
+ */
+function show_twitter_status( $url ){
+	/** @var WP_Embed $wp_embed */
+	global $wp_embed;
+	echo $wp_embed->autoembed( $url );
+}

@@ -288,3 +288,4 @@ SQL;
         return $this->result();
     }
 }
+

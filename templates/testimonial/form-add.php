@@ -8,7 +8,7 @@
 	<div class="form-group">
 		<label for="testimonial-source">
 			名前または引用元
-			<small class="label label-danger">必須</small>
+			<small class="label label-danger">twitter以外必須</small>
 		</label>
 		<input type="text" class="form-control" id="testimonial-source" name="testimonial-source"
 			   value="<?= esc_attr( get_userdata( get_current_user_id() )->display_name ) ?>" placeholder="ex. 破滅太郎"/>
@@ -21,6 +21,9 @@
 		</label>
 		<input type="text" class="form-control" id="testimonial-url" name="testimonial-url" value=""
 			   placeholder="ex. http://example.jp/review/1234"/>
+		<p class="help-block">twitterの場合はURLを入れるだけで大丈夫です。
+			<a href="<?= home_url( '/faq/how-to-get-twitter-url/', 'http' ) ?>">詳しく&raquo;</a>
+		</p>
 	</div>
 
 	<div class="form-group">
@@ -42,7 +45,7 @@
 	<div class="form-group">
 		<label for="testimonial-text">
 			レビュー本文
-			<small class="label label-danger">必須</small>
+			<small class="label label-danger">twitter以外必須</small>
 		</label>
 		<textarea rows="5" class="form-control" id="testimonial-text" name="testimonial-text"></textarea>
 	</div>
