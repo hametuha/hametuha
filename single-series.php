@@ -83,7 +83,7 @@
 					<div class="series__link text-center">
 						<?php switch ( $series->get_status( get_the_ID() ) ) :
 							case 2 : ?>
-								<a href="<?= $series->get_kdp_url( get_the_ID() ); ?>" class="btn btn-trans btn-lg"
+								<a href="<?= $series->get_kdp_url( get_the_ID() ); ?>" class="btn btn-trans btn-lg btn-amazon"
 								   data-outbound="kdp"
 								   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 								   data-label="<?php the_ID() ?>"
@@ -98,7 +98,8 @@
 								<?php break;
 							default : ?>
 								<?php break; endswitch; ?>
-						<a href="#series-children" class="btn btn-trans btn-lg">
+						<span class="series__link--divider"></span>
+						<a href="#series-children" class="btn btn-trans">
 							<i class="icon-books"></i> 掲載作一覧
 						</a>
 					</div>
@@ -207,7 +208,7 @@
 						</div>
 
 						<div class="series__authorLink">
-							<a class="btn btn-default" href="<?= get_author_posts_url( $author->ID ) ?>">詳しいプロフィール</a>
+							<a class="btn btn-default" href="<?= home_url( '/doujin/detail/'.$author->user_nicename.'/', 'http' ); ?>">詳しいプロフィール</a>
 						</div>
 					</div>
 					<!-- //.series__author -->
@@ -278,7 +279,7 @@
 								<blockquote>
 									<i class="icon-quotes-left"></i>
 
-									<div itemprop="description">
+									<div itemprop="reviewBody">
 										<?= wpautop( apply_filters( 'get_comment_text', ( get_comment_meta( $review->comment_ID, 'comment_excerpt', true ) ?: $review->comment_content ), $review ) ); ?>
 									</div>
 									<?php if ( $review->rank ) : ?>
@@ -416,7 +417,7 @@
 					</p>
 
 					<p class="text-center">
-						<a href="<?= $url ?>" class="btn btn-trans btn-lg"
+						<a href="<?= $url ?>" class="btn btn-trans btn-lg btn-amazon"
 						   itemprop="availability"
 						   data-outbound="kdp"
 						   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"

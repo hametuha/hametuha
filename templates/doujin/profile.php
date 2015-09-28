@@ -115,10 +115,20 @@
 									<?php
 									switch ( $activity->type ) {
 										case 'comment':
-											$url   = get_comment_link( $activity->post_id );
-											$title = sprintf( '%s「%s」にコメントしました',
+											switch ( get_comment_type( $activity->post_id ) ) {
+												case 'review':
+													$url = get_permalink( $activity->parent_id );
+													$verb = 'レビューを送りました';
+													break;
+												default:
+													$url   = get_comment_link( $activity->post_id );
+													$verb = 'コメントしました';
+													break;
+											}
+											$title = sprintf( '%s「%s」に%s',
 												get_post_type_object( get_post_type( $activity->parent_id ) )->label,
-												get_the_title( $activity->parent_id )
+												get_the_title( $activity->parent_id ),
+												$verb
 											);
 											break;
 										case 'review':

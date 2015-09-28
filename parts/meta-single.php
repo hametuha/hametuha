@@ -6,7 +6,7 @@
 			<i class="icon-user"></i>
 			<?php if ( author_can( $post, 'edit_posts' ) ) : ?>
 				<a itemprop="editor"
-				   href="<?= get_author_posts_url( get_the_author_meta( 'ID' ) ) ?>"><?php the_author() ?></a> 編
+				   href="<?= home_url('/doujin/detail/'.get_the_author_meta('nicename').'/', 'http') ?>"><?php the_author() ?></a> 編
 			<?php else: ?>
 				<span itemprop="editor"><?php the_author() ?></span>
 			<?php endif; ?>
