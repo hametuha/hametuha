@@ -256,3 +256,20 @@ function trim_long_sentence($sentence, $length = 100, $elipsis = '…'){
 		return mb_substr($sentence, 0, $length - 1, 'utf-8').$elipsis;
 	}
 }
+
+if( !function_exists('login_header') ){
+    function login_header(){
+        get_header('login');
+        ?>
+        <p class="catch-copy text-center">
+            <?php bloginfo('description') ?>
+        </p>
+
+        <div id="login-body">
+        <?php
+    }
+    function login_footer(){
+        echo '</div>';
+        get_footer('login');
+    }
+}

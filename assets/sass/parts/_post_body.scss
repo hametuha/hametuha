@@ -41,6 +41,13 @@
     font-size: 0.8em;
     @extend .text-muted;
   }
+  aside{
+    margin: 1em 0;
+    padding: 1em;
+    background: #f9f9f9;
+    color: #000;
+    font-size: 0.85em;
+  }
 
   // 普通の投稿
   @if( $book == false){
@@ -221,13 +228,14 @@
     // 引用
     blockquote{
       margin: 1em 0 1em 2em;
-      color: #666;
+      color: #444;
       border-left: none;
       padding: 0;
       font-size: inherit;
       cite{
         display: block;
         font-size: 0.85em;
+       text-align: right;
         &:before{
           content: '“';
         }

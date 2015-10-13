@@ -31,6 +31,15 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
 }
 
+/**
+ * Allowed sites for API callback
+ */
+add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
+	return false !== array_search($host, [
+		'local.hametuha.top',
+		'hametuha.top',
+	]);
+}, 10, 3 );
 
 /**
  * 読み込むべきスクリプトのフラグ
