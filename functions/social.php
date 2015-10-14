@@ -211,13 +211,13 @@ function hametuha_share( $post = null ) {
 				'facebook',
 				hametuha_user_link( $url, 'share-single', 'Facebook' ),
 				'4',
-				false
+				false,
 			],
 			[
 				'twitter',
-				"https://twitter.com/home?status={$encoded_title}%20" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Twitter ' ) ) . "%20{$hash_tag}&amp;via=@hametuha",
+				"https://twitter.com/share?url=" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Twitter ' ) ) . "&amp;text={$encoded_title}%20{$hash_tag}&amp;via=hametuha",
 				'3',
-				true
+				true,
 			],
 			[
 				'googleplus',
