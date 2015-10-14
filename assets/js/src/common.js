@@ -374,19 +374,6 @@ jQuery(document).ready(function($){
             href = $(this).attr('href'),
             target = $(this).attr('data-target');
         switch(brand){
-            case 'facebook':
-                try{
-                    e.preventDefault();
-                    FB.ui({
-                        method: 'share',
-                        href: href
-                    }, function(response){
-                        if(response){
-                            ga.hitEvent('share', brand, target);
-                        }
-                    });
-                }catch(err){}
-                break;
             default:
                 ga.eventOutbound(e, href, 'share', brand, target);
                 break;

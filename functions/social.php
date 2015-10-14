@@ -209,9 +209,9 @@ function hametuha_share( $post = null ) {
 		[
 			[
 				'facebook',
-				hametuha_user_link( $url, 'share-single', 'Facebook' ),
+				'https://www.facebook.com/sharer.php?u=' . rawurlencode(hametuha_user_link( $url, 'share-single', 'Facebook' )),
 				'4',
-				false,
+				true,
 			],
 			[
 				'twitter',
