@@ -311,7 +311,7 @@ HTML;
 						'script' => 'src',
 					] as $tag => $attr
 				) {
-					foreach ( $factory->parser->extractAssets( $dom, $tag, $attr, '#https?://(s\.)hametuha\.(com|info|local)/#u', ABSPATH ) as $path ) {
+					foreach ( $factory->parser->extractAssets( $dom, $tag, $attr, '#https?://(s\.hametuha|hametuha)\.(com|info|local)/#u', ABSPATH ) as $path ) {
 						$factory->opf->addItem( $path, '' );
 						// If this is css, load all assets
 						if ( false !== strpos( $path, '.css' ) ) {
