@@ -10,7 +10,7 @@ add_action( 'admin_footer', function () {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.3&appId=196054397143922";
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.4&appId=196054397143922";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 HTML;
@@ -247,8 +247,15 @@ function hametuha_share( $post = null ) {
 		$brand, $href, $suffix, $blank
 	)
 	) {
+		if( 'hatena' === $brand ){
+			$additional_class = ' hatena-bookmark-button';
+			$data = ' data-hatena-bookmark-layout="simple"';
+		}else{
+			$data = '';
+			$additional_class = '';
+		}
 		$links[ $brand ] = sprintf(
-			'<a class="share share--%1$s share-retrieve" data-medium="%1$s" data-target="%2$d" href="%3$s"%5$s>
+			'<a class="share share--%1$s share-retrieve%8$s" data-medium="%1$s" data-target="%2$d" href="%3$s"%5$s%7$s>
 				<i class="icon-%1$s%4$s"></i>
 				%6$s
 			</a>',
@@ -257,7 +264,9 @@ function hametuha_share( $post = null ) {
 			$href,
 			$suffix,
 			( $blank ? ' target="_blank"' : '' ),
-			( 'line' != $brand ? '<span>---</span>' : '<span>送る</span>' )
+			( 'line' != $brand ? '<span>---</span>' : '<span>送る</span>' ),
+			$data,
+			$additional_class
 		);
 	}
 

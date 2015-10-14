@@ -60,7 +60,11 @@
                         eventLabel: label,
                         eventValue: value,
                         hitCallback: function(){
-                            window.location.href = url;
+                            if( Modernizr.touch ){
+                                window.location.href = url;
+                            }else{
+                                window.open(url, 'outbount', "width=520, height=350");
+                            }
                         }
                     });
                     // stopEvent
@@ -374,6 +378,22 @@ jQuery(document).ready(function($){
             href = $(this).attr('href'),
             target = $(this).attr('data-target');
         switch(brand){
+            case 'facebook':
+                try{
+                    FB.ui({
+                        method: 'share',
+                        href: href
+                    }, function(response){
+                        if( response ){
+                            ga.hitEvent('share', brand, target);
+                        }
+                    });
+                    e.preventDefault();
+                }catch(err){}
+                break;
+            case 'hatena':
+                // Do noghing
+                break;
             default:
                 ga.eventOutbound(e, href, 'share', brand, target);
                 break;
