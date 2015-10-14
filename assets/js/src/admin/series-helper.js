@@ -8,7 +8,29 @@
 (function ($) {
     'use strict';
 
+    // 本文プレビュー
+    $('#epub-previewer').change(function(e){
+        var val = $(this).val(),
+            $form = $('<form target="epub-preview">' +
+                '<input type="hidden" name="direction" />' +
+                '<input type="hidden" name="post_id" />' +
+                '</form>');
+        if( val.length ){
+            $form.attr('action', $(this).attr('data-endpoint'));
+            $form.find('input[name=direction]').val( $('input[name=orientation]:checked').val() == 'vertical' ? 'rtl' : 'ltr' );
+            $form.find('input[name=post_id]').val(val);
+            $form.submit();
+        }
+    });
 
+    // その他のプレビュー
+    $('#series-additons-list').on('click', 'a', function(e){
+        var url = $(this).attr('href') + '?direction=' + ( 'vertical' === $('input[name="orientation"]:checked').val() ? 'rtl' : 'ltr' )
+        e.preventDefault();
+        window.open(url, $(this).attr('target'));
+    });
+
+    // 並び順
     $(document).ready(function(){
         var $sorter = $('#series-posts-list');
         $sorter.sortable({

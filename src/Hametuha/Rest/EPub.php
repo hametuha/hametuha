@@ -482,6 +482,12 @@ HTML;
 		add_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		$this->load_template( "templates/epub/{$template}" );
 		$content = ob_get_contents();
+		if( 'rtl' === $direction ){
+			// Fix style="padding-left: npx"
+			$content = preg_replace_callback('#style="padding-left: ([0-9]+)px;"#u', function ( array $match ) {
+				return sprintf('style="padding-top: %dpx;"', $match[1]);
+			}, $content );
+		}
 		remove_filter( 'the_content', [ $this, 'fix_wptexturize' ], 99998 );
 		remove_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		ob_end_clean();

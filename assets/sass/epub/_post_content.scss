@@ -112,7 +112,7 @@
 
   // Quotation
   blockquote{
-    color: #666;
+    color: #444;
     margin: 0;
     @include logical-property(1em 0);
     @include logical-property(0 0 0 2em, false);
@@ -120,11 +120,35 @@
       display: block;
       font-style: normal;
       font-size: 0.85em;
-      @include logical-property(0 0 0 3em, false);
+      .ltr &{
+        text-align: right;
+      }
+      .rtl &{
+        @include logical-property(0 0 0 3em, false);
+      }
+
     }
   }
   cite{
     font-style: italic;
+  }
+  aside{
+    padding: 1em;
+    background: #f9f9f9;
+    color: #000;
+    font-size: 0.85em;
+    font-family: sans-serif;
+    .ltr &{
+      margin: 1em 0;
+    }
+    .rtl & {
+      margin: 0 1em;
+    }
+    h1, h2, h3, h4, h5, h6{
+      &:first-child{
+        margin-top: 0;
+      }
+    }
   }
   q{
     &:before{
@@ -264,6 +288,10 @@
     .wp-caption, img{
       max-width: 100%;
     }
+    .aligncenter{
+      display: block;
+      margin: 1em auto;
+    }
     .alignleft, .alignright{
       max-width: 50%;
     }
@@ -271,6 +299,9 @@
   .rtl &{
     .wp-caption, img{
       max-height: 100%;
+    }
+    .aligncenter{
+      margin: auto 1em;
     }
     .alignleft, .alignright{
       max-height: 50%;
@@ -285,7 +316,7 @@
       margin-bottom: 0;
     }
     .aligncenter{
-      margin: 1em auto;
+      margin: auto 1em;
     }
   }
 

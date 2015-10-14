@@ -17,7 +17,7 @@ class SeriesPreview extends SeriesBase
 		<p class="description">
 			申請前に必ずプレビューを行ってください。
 		</p>
-		<ol>
+		<ol id="series-additons-list">
 			<li><a href="<?= home_url("epub/preview/titlepage/{$post->ID}", 'https') ?>" target="epub-preview">扉</a></li>
 			<li><a href="<?= home_url("epub/preview/toc/{$post->ID}", 'https') ?>" target="epub-preview">目次</a></li>
 			<li><a href="<?= home_url("epub/preview/foreword/{$post->ID}", 'https') ?>" target="epub-preview">序文</a></li>
