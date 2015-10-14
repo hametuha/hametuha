@@ -41,6 +41,19 @@
     font-size: 0.8em;
     @extend .text-muted;
   }
+  aside{
+    margin: 1em 0;
+    padding: 1em;
+    background: #f9f9f9;
+    color: #000;
+    font-size: 0.85em;
+    h1, h2, h3, h4, h5, h6{
+      &:first-child{
+        margin-top: 0;
+      }
+    }
+  }
+
 
   // 普通の投稿
   @if( $book == false){
@@ -189,6 +202,7 @@
 
     h1, h2, h3, h4, h5, h6{
       margin: 1.5em 0 0.5em;
+      font-weight: normal;
       font-family: $work-bold;
     }
 
@@ -221,13 +235,14 @@
     // 引用
     blockquote{
       margin: 1em 0 1em 2em;
-      color: #666;
+      color: #444;
       border-left: none;
       padding: 0;
       font-size: inherit;
       cite{
         display: block;
         font-size: 0.85em;
+        text-align: right;
         &:before{
           content: '“';
         }
@@ -245,6 +260,14 @@
       }
       &:after{
         content: "”";
+      }
+    }
+
+    // コラム
+    aside{
+      font-family: $work-body-sans;
+      h1, h2, h3, h4, h5, h6{
+        font-family: $work-bold-sans;
       }
     }
 

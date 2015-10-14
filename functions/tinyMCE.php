@@ -49,26 +49,45 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 		$elements[]                           = 'iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]';
 		$initArray['extended_valid_elements'] = implode( ',', $elements );
 	}
-	//スタイル
-	$styles = [
-		[
-			'title'   => '圏点',
-			'inline'  => 'span',
-			'classes' => 'text-emphasis',
-
+	// 独自スタイル
+	$styles = [];
+	// 装飾
+	$styles[] = [
+		'title' => '文字装飾',
+		'items' => [
+			[
+				'title'   => '圏点',
+				'inline'  => 'span',
+				'classes' => 'text-emphasis',
+			],
+			[
+				'title'   => '太字+圏点',
+				'inline'  => 'strong',
+				'classes' => 'text-emphasis',
+			],
 		],
-		[
-			'title'   => '太字+圏点',
-			'inline'  => 'strong',
-			'classes' => 'text-emphasis',
-
+	];
+	// ブロック
+	$styles[] = [
+		'title' => 'ブロック',
+		'items' => [
+			[
+				'title' => 'コラム',
+				'block' => 'aside',
+				'wrapper' => true,
+			],
 		],
 	];
 	if ( $screen && 'newsletter' == $screen->post_type ) {
 		$styles[] = [
-			'title'    => 'ボタン',
-			'selector' => 'a',
-			'classes'  => 'btn',
+			'title' => 'ボタン',
+			'items' => [
+				[
+					'title'    => 'リンクボタン',
+					'selector' => 'a',
+					'classes'  => 'btn',
+				],
+			],
 		];
 	}
 
