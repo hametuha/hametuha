@@ -3,6 +3,7 @@
  */
 
 /*global HametuhaReviews: true*/
+/*global google: true*/
 
 (function ($) {
     'use strict';

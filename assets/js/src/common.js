@@ -63,7 +63,12 @@
                             if( Modernizr.touch ){
                                 window.location.href = url;
                             }else{
-                                window.open(url, 'outbount', "width=520, height=350");
+
+                                if( 'share' === category ){
+                                    window.open(url, 'outbound', "width=520, height=350");
+                                }else{
+                                    window.open(url, 'outbound');
+                                }
                             }
                         }
                     });

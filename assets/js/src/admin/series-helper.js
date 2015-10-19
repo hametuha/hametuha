@@ -25,7 +25,7 @@
 
     // その他のプレビュー
     $('#series-additons-list').on('click', 'a', function(e){
-        var url = $(this).attr('href') + '?direction=' + ( 'vertical' === $('input[name="orientation"]:checked').val() ? 'rtl' : 'ltr' )
+        var url = $(this).attr('href') + '?direction=' + ( 'vertical' === $('input[name="orientation"]:checked').val() ? 'rtl' : 'ltr' );
         e.preventDefault();
         window.open(url, $(this).attr('target'));
     });
@@ -59,7 +59,7 @@
                     if( result.success ){
                         $li.remove();
                     }else{
-                        alert(result.message);
+                        window.alert(result.message);
                     }
                 }).fail(function(){
                     // Do nothing
