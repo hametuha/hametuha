@@ -42,4 +42,17 @@
 
     });
 
+
+    // 新しいフォームのサポート
+    var inputEvent;
+    if ( 'oninput' in document.createElement( 'input' ) ) {
+        inputEvent = 'input';
+    } else {
+        inputEvent = 'keyup';
+    }
+    // wp-admin/js/user-profile.js
+    setTimeout(function(){
+        $('#pass2').unbind(inputEvent);
+    }, 10)
+
 })(jQuery);

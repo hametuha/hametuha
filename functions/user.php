@@ -373,7 +373,15 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 		$total  = 1;
 		$filled = 1;
 		//メタキーを数える
-		$meta_keys    = array( 'last_name', 'description' );
+		$meta_keys    = [
+			'last_name',
+			'description',
+			'location',
+			'birth_place',
+			'favorite_words',
+			'favorite_authors',
+			'twitter',
+		];
 		$placeholders = array();
 		foreach ( $meta_keys as $key ) {
 			$placeholders[] = '%s';
