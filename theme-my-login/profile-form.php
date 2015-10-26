@@ -4,6 +4,8 @@ If you would like to edit this file, copy it to your current theme's directory a
 Theme My Login will always look in your theme's directory first, before using this default template.
 */
 
+/** @var Theme_My_Login_Template $template */
+
 $GLOBALS['current_user'] = $current_user = wp_get_current_user();
 $GLOBALS['profileuser']  = $profileuser = get_user_to_edit( $current_user->ID );
 
@@ -38,7 +40,11 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 
 <div class="login profile" id="theme-my-login<?php $template->the_instance(); ?>">
 	<?php $template->the_action_template_message( 'profile' ); ?>
-	<?php $template->the_errors(); ?>
+	<?php if( $error = $template->get_errors() ): ?>
+		<div class="alert alert-danger">
+			<?= $error; ?>
+		</div>
+	<?php endif; ?>
 	<form id="your-profile" action="<?php $template->the_action_url( 'profile' ); ?>" method="post" class="validator">
 		<?php wp_nonce_field( 'update-user_' . $current_user->ID ) ?>
 		<input type="hidden" name="from" value="profile"/>

@@ -31,6 +31,22 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
 }
 
+/**
+ * Allowed sites for API callback
+ */
+add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
+	return false !== array_search($host, [
+		'local.hametuha.top',
+		'hametuha.pics',
+	]);
+}, 10, 3 );
+
+
+$oauth_mo = WP_LANG_DIR . "/oauth-server-$locale.mo";
+if( file_exists($oauth_mo) ){
+	load_textdomain( 'default', $oauth_mo );
+}
+
 
 /**
  * 読み込むべきスクリプトのフラグ

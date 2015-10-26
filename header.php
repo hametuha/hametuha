@@ -223,7 +223,7 @@
 					</ul>
 				</li>
 			<?php else : ?>
-				<li><a class="login-btn" href="<?= wp_login_url( '/' ) ?>">ログイン</a></li>
+				<li><a class="login-btn" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>">ログイン</a></li>
 			<?php endif; ?>
 		</ul>
 

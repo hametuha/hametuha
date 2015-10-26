@@ -56,6 +56,7 @@
             $picker.find('p').effect('highlight');
         });
 
+
     });
 
 })(jQuery);
