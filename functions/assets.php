@@ -25,7 +25,6 @@ add_image_size( 'kindle-cover', 1200, 1920, true );
  */
 add_filter( 'image_size_names_choose', function ( $sizes ) {
 	$sizes['pinky'] = '小型正方形';
-
 	return $sizes;
 } );
 
@@ -45,6 +44,9 @@ add_action( 'init', function () {
 
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
+
+	// Angular
+	wp_register_script( 'angular', get_template_directory_uri() . '/bower_components/angular/angular.min.js', null, '1.4.7', true );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [

@@ -12,6 +12,7 @@ use WPametu\DB\Model;
  * @method bool add_comment(int $recipient, int $object_id, string $message, string $avatar)
  * @method bool add_review(int $recipient, int $object_id, string $message, string $avatar)
  * @method bool add_hot(int $recipient, int $object_id, string $message, string $avatar)
+ * @method bool add_follow(int $recipient, int $object_id, string $message, string $avatar)
  * @method bool add_general(int $recipient, int $object_id, string $message, string $avatar)
  */
 class Notifications extends Model
@@ -37,7 +38,10 @@ class Notifications extends Model
 
 	const TYPE_GENERAL = 'general';
 
+	const TYPE_FOLLOW = 'follow';
+
 	const USER_KEY = 'last_notification_checked';
+
 
     /**
      * 通知確認時間を更新
@@ -168,6 +172,7 @@ class Notifications extends Model
 				case static::TYPE_HOT:
 				case static::TYPE_REVIEW:
 				case static::TYPE_GENERAL:
+				case static::TYPE_FOLLOW:
 					array_unshift($arguments, $match[1]);
 					return call_user_func_array([$this, 'add_notification'], $arguments);
 					break;

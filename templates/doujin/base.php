@@ -2,7 +2,6 @@
 /** @var \Hametuha\Rest\Doujin $this */
 /** @var bool $breadcrumb */
 /** @var bool $current */
-/** @var string $graph */
 ?>
 <?php get_header(); ?>
 
@@ -11,7 +10,7 @@
 			<i class="icon-location5"></i>
 			<a href="<?= home_url( '', 'http' ) ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
 			&gt;
-			<a href="<?= home_url( '/authors/', 'http') ?>">執筆者</a>
+			<a href="<?= home_url( '/authors/', 'http' ) ?>">執筆者</a>
 			&gt;
 			<?php if ( $breadcrumb ) : ?>
 				<a href="<?= home_url( '/doujin/' . $this->doujin->user_nicename . '/', 'http' ) ?>">

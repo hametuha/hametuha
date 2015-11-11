@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "f8ad6ada04c06d7a5a5fa0562c35b810",
+    "content-hash": "3d570527386f4974bcd25c35b775d6d0",
     "packages": [
         {
             "name": "google/recaptcha",
@@ -103,12 +104,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "ebb7a17e5b1f0183e17a4d7f87e5d677d935d7cc"
+                "reference": "675f088825a0cf1f075928cad8844a34ab7617a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/ebb7a17e5b1f0183e17a4d7f87e5d677d935d7cc",
-                "reference": "ebb7a17e5b1f0183e17a4d7f87e5d677d935d7cc",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/675f088825a0cf1f075928cad8844a34ab7617a8",
+                "reference": "675f088825a0cf1f075928cad8844a34ab7617a8",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +140,7 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2015-09-13 07:13:38"
+            "time": "2015-11-10 11:52:08"
         },
         {
             "name": "masterminds/html5",
@@ -208,23 +209,20 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.7.5",
+            "version": "v2.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "abe19cc0429a06be0c133056d1f9859854860970"
+                "reference": "e1b865b26be4a56d22a8dee398375044a80c865b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/abe19cc0429a06be0c133056d1f9859854860970",
-                "reference": "abe19cc0429a06be0c133056d1f9859854860970",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/e1b865b26be4a56d22a8dee398375044a80c865b",
+                "reference": "e1b865b26be4a56d22a8dee398375044a80c865b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "symfony/phpunit-bridge": "~2.7"
             },
             "type": "library",
             "extra": {
@@ -257,7 +255,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2015-09-22 13:49:29"
+            "time": "2015-10-11 09:39:48"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

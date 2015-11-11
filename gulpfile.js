@@ -20,7 +20,8 @@ gulp.task('sass',function(){
             includePaths: [
                 './assets/sass',
                 './vendor',
-                './bower_components/bootstrap-sass/assets/stylesheets'
+                './bower_components/bootstrap-sass/assets/stylesheets',
+                './vendor/hametuha'
             ]
         }))
         .pipe($.sourcemaps.write('./map'))
@@ -80,7 +81,7 @@ gulp.task('watch',function(){
 gulp.task('bs-watch', function(){
     gulp.watch([
         './assets/css/**/*.css',
-        './assets/js/**/*.js', '!./assets/js/src/**/*',
+        './assets/js/dist/**/*.js', '!./assets/js/src/**/*',
         './assets/img/**/*', '!./assets/img/src/**/*'
     ], ['bs-reload'])
 });

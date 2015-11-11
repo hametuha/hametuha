@@ -19,9 +19,10 @@
     "tests"
   ],
   "dependencies": {
+    "angular": "~1.4.7",
     "bootstrap-sass": "~3.3.4",
-    "respond": "~1.4.2",
     "html5shiv": "~3.7.2",
-    "modernizr": "~2.8.3"
+    "modernizr": "~2.8.3",
+    "respond": "~1.4.2"
   }
 }

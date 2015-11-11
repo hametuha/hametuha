@@ -108,6 +108,12 @@
             window.alert(message);
         },
 
+        confirm: function( message, callback ){
+            if( window.confirm(message) ){
+                callback();
+            }
+        },
+
         /**
          * 投稿が縦書きかどうか
          *
@@ -466,6 +472,4 @@ jQuery(document).ready(function($){
             }
         }
     }, 100);
-
-
 });

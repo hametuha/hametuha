@@ -64,3 +64,18 @@
     }
   }
 }
+
+.btn-follow{
+  .remove{
+    display: none;
+  }
+  &.btn-following{
+    .remove{
+      display: inline;
+    }
+    .add{
+      display: none;
+    }
+  }
+}
+

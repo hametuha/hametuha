@@ -5,6 +5,8 @@ namespace Hametuha\Rest;
 
 use Hametuha\Interfaces\OgpCustomizer;
 use Hametuha\Model\Author;
+use Hametuha\Model\Follower;
+use Hametuha\Model\Notifications;
 use Hametuha\Model\Review;
 use Hametuha\Model\Series;
 use WPametu\API\Rest\RestTemplate;
@@ -15,6 +17,8 @@ use WPametu\API\Rest\RestTemplate;
  * @property-read Series $series
  * @property-read Author $author
  * @property-read Review $review
+ * @property-read Follower $follower
+ * @property-read Notifications $notifications
  */
 class Doujin extends RestTemplate implements OgpCustomizer {
 
@@ -35,7 +39,102 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		'series' => Series::class,
 		'author' => Author::class,
 		'review' => Review::class,
+	    'follower' => Follower::class,
+	    'notifications' => Notifications::class,
 	];
+
+	/**
+	 * Override this if you need rest API
+	 */
+	public function rest_api_init() {
+		register_rest_route( 'hametuha/v1', '/doujin/followers/(?P<id>\d+)', array(
+				'methods' => 'GET',
+				'callback' => [ $this, 'api_followers' ],
+				'args' => [
+					'id' => [
+						'validate_callback' => function(){
+
+						},
+					],
+				],
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
+		) );
+		// Follow/Unfollow.
+		register_rest_route( 'hametuha/v1', '/doujin/follow/(?P<id>\d+)/?', [
+			[
+				'methods'  => 'POST',
+				'callback' => [ $this, 'add_follower' ],
+				'args'     => [
+					'id' => [
+						'required' => true,
+						'validate_callback' => 'is_numeric',
+					],
+				],
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
+			],
+		    [
+			    'methods'  => 'DELETE',
+			    'callback' => [ $this, 'remove_follower' ],
+			    'args'     => [
+				    'id' => [
+					    'required' => true,
+					    'validate_callback' => 'is_numeric',
+				    ],
+			    ],
+			    'permission_callback' => function () {
+				    return current_user_can( 'read' );
+			    },
+		    ],
+		] );
+	}
+
+	/**
+	 * Add follower
+	 *
+	 * @param array $request
+	 *
+	 * @return bool|\WP_Error|\WP_REST_Response
+	 */
+	public function add_follower( $request ) {
+		$user_id   = get_current_user_id();
+		$target_id = $request['id'];
+		$error     = $this->follower->follow( $user_id, $target_id );
+		if ( is_wp_error( $error ) ) {
+			return $error;
+		} else {
+			$user = get_userdata( get_current_user_id() );
+			$msg = sprintf( '%sさんがあなたをフォローしました', $user->nickname );
+			$this->notifications->add_follow( $target_id, $user_id, $msg, $user_id );
+			return new \WP_REST_Response( [ 'success' => true ] );
+		}
+	}
+
+	/**
+	 * Unfollow
+	 *
+	 * @param array $request
+	 *
+	 * @return bool|\WP_Error|\WP_REST_Response
+	 */
+	public function remove_follower( $request ) {
+		$user_id   = get_current_user_id();
+		$target_id = $request['id'];
+		$error     = $this->follower->unfollow( $user_id, $target_id );
+		if ( is_wp_error( $error ) ) {
+			return $error;
+		} else {
+			return new \WP_REST_Response( [ 'success' => true ] );
+		}
+	}
+
+	public function api_followers( $request ){
+		return new \WP_REST_Response( [] );
+	}
+
 
 	/**
 	 * ポータルページ
@@ -56,6 +155,18 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			'template'   => '',
 			'reviews'    => $this->get_review_json(),
 		] );
+		$this->response();
+	}
+
+	public function get_follower(  ){
+		$this->auth_redirect();
+		$this->doujin = new \WP_User( get_current_user_id() );
+		$this->title = 'フォロワー | '.$this->title;
+		$this->set_data([
+			'breadcrumb' => false,
+			'current'    => false,
+			'template'   => 'follower',
+		]);
 		$this->response();
 	}
 
@@ -114,6 +225,12 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'google-jsapi',
 			], filemtime( get_stylesheet_directory() . $path ), true );
 			wp_localize_script( 'hametha-profile', 'HametuhaReviews', $data['reviews'] );
+		} elseif ( isset( $data['template'] ) && 'follower' == $data['template'] ) {
+			$path = '/assets/js/dist/components/followers.js';
+			wp_enqueue_script( 'hametuha-follower', get_stylesheet_directory_uri().$path, [
+				'angular',
+			    'wp-api',
+			], filemtime( get_stylesheet_directory() . $path ), true );
 		}
 		$this->load_template( 'templates/doujin/base' );
 	}
