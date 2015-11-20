@@ -143,9 +143,19 @@ add_action( 'wp_head', function () {
 				$card  = 'summary_large_image';
 			}
 		} else {
-			$images = get_posts( 'post_parent=' . get_the_ID() . '&post_mime_type=image&orderby=menu_order&order=ASC&posts_per_page=1' );
-			if ( ! empty( $images ) && ( $src = wp_get_attachment_image_src( current( $images )->ID, 'large' ) ) ) {
-				$image = $src[0];
+			// 先頭にあるものを表示する
+			$attachments = get_posts([
+				'post_parent' => $post->ID,
+				'post_type' => 'attachment',
+				'post_mime_type' => 'image',
+				'posts_per_page' => 1,
+				'orderby' => 'menu_order',
+				'order' => 'ASC',
+			]);
+			foreach ( $attachments as $attachment ) {
+				if ( $src = wp_get_attachment_image_src( $attachment->ID, 'full' ) ) {
+					$image = $src[0];
+				}
 			}
 		}
 	} elseif ( is_category() ) {
