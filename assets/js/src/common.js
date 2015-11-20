@@ -102,7 +102,7 @@
          * グローバルメッセージを表示する
          *
          * @param {String} message
-         * @param {Boolean} error
+         * @param {Boolean} [error]
          */
         alert: function(message, error){
             window.alert(message);

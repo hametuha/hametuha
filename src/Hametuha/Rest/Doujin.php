@@ -47,20 +47,25 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * Override this if you need rest API
 	 */
 	public function rest_api_init() {
-		register_rest_route( 'hametuha/v1', '/doujin/followers/(?P<id>\d+)', array(
-				'methods' => 'GET',
-				'callback' => [ $this, 'api_followers' ],
-				'args' => [
-					'id' => [
-						'validate_callback' => function(){
-
-						},
-					],
+		register_rest_route( 'hametuha/v1', '/doujin/followers/(?P<id>\\d+|me)/?', [
+			'methods' => 'GET',
+			'callback' => [ $this, 'api_followers' ],
+			'args' => [
+				'id' => [
+					'validate_callback' => function($var){
+						return 'me' === $var || is_numeric( $var );
+					},
+				    'default' => 0,
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-		) );
+			    'offset' => [
+				    'validate_callback' => 'is_numeric',
+			        'default' => 0,
+			    ],
+			],
+			'permission_callback' => function () {
+				return current_user_can( 'read' );
+			},
+		] );
 		// Follow/Unfollow.
 		register_rest_route( 'hametuha/v1', '/doujin/follow/(?P<id>\d+)/?', [
 			[
@@ -131,8 +136,37 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		}
 	}
 
-	public function api_followers( $request ){
-		return new \WP_REST_Response( [] );
+	/**
+	 * Get followers
+	 *
+	 * @param array $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function api_followers( $request ) {
+		$user_id = $request['id'];
+		if ( 'me' === $user_id ) {
+			$user_id = get_current_user_id();
+		}
+		if ( ! $user_id ) {
+			if ( is_user_logged_in() ) {
+				$user_id = get_current_user_id();
+			} else {
+				return new \WP_Error( 'no_user', '指定されたユーザーは存在しません。', [ 'response' => 404 ] );
+			}
+		}
+		$result = $this->follower->get_followers( $user_id, $request['offset'] );
+		foreach ( $result['users'] as &$user ) {
+			$user->isAuthor = user_can( $user->ID, 'edit_posts' );
+			$user->isEditor = user_can( $user->ID, 'edit_others_posts' );
+			$user->avatar = preg_replace( '#^.*src=[\'"]([^\'"]+)[\'"].*$#', '$1', get_avatar( $user->ID, 96 ) );
+			// Remove credentials.
+			unset( $user->user_email );
+			unset( $user->user_pass );
+			unset( $user->user_activation_key );
+		}
+
+		return new \WP_REST_Response( $result );
 	}
 
 

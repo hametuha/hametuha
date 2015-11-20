@@ -27,6 +27,7 @@
 								<rt><?= esc_html( $this->doujin->user_lastname ) ?></rt>
 							</ruby>
 							<small><?= hametuha_user_role( $this->doujin->ID ) ?></small>
+							<?php hametuha_follow_btn( $this->doujin->ID ) ?>
 						</h1>
 
 						<div class="doujin__desc">
