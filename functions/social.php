@@ -204,7 +204,7 @@ function hametuha_share( $post = null ) {
 	$encoded_title = rawurlencode( $title . ' | 破滅派' );
 	$hash_tag      = rawurlencode( '#破滅派' );
 	$data_title    = esc_attr( $title );
-	$links         = [ ];
+	$links         = [];
 	foreach (
 		[
 			[
@@ -215,7 +215,7 @@ function hametuha_share( $post = null ) {
 			],
 			[
 				'twitter',
-				"https://twitter.com/share?url=" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Twitter ' ) ) . "&amp;text={$encoded_title}%20{$hash_tag}&amp;via=hametuha",
+				"https://twitter.com/share?url=" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Twitter ' ) ) . '&amp;text='.rawurlencode( $title )."%20{$hash_tag}",
 				'3',
 				true,
 			],
@@ -357,30 +357,30 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					case 'post':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんが新作「{$post->post_title}」を投稿しました {$url}";
+						$string = "{$author}さんが #破滅派 に新作「{$post->post_title}」を投稿しました {$url}";
 						break;
 					case 'announcement':
 						$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
-							$string = "破滅派編集部からのお知らせです > {$post->post_title} {$url}";
+							$string = "#破滅派 編集部からのお知らせです > {$post->post_title} {$url}";
 						} else {
 							$author = get_the_author_meta( 'display_name', $post->post_author );
-							$string = "{$author}さんから告知があります > {$post->post_title} {$url}";
+							$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
 						}
 						break;
 					case 'anpi':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんの安否です。「{$post->post_title}」 {$url}";
+						$string = "{$author}さんの安否です。 #破滅派 「{$post->post_title}」 {$url}";
 						break;
 					case 'info':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = "お知らせ > {$post->post_title} {$url}";
+						$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
 						break;
 					case 'thread':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんがBBSにスレッドを立てました > {$post->post_title} {$url}";
+						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$post->post_title} {$url}";
 						break;
 					default:
 						$string = false;
