@@ -155,6 +155,7 @@ add_action( 'wp_head', function () {
 			foreach ( $attachments as $attachment ) {
 				if ( $src = wp_get_attachment_image_src( $attachment->ID, 'full' ) ) {
 					$image = $src[0];
+					$card  = 'summary_large_image';
 				}
 			}
 		}
