@@ -20,7 +20,7 @@
 		'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
 	] );
 	$all_reviews = $series->get_reviews( get_the_ID(), true, 1, 12 );
-	$ratings     = [ ];
+	$ratings     = [];
 	// Calc rating
 	if ( $query->have_posts() ) {
 		foreach ( $query->posts as $p ) {
@@ -175,19 +175,19 @@
 
 			<?php
 			$editor   = new WP_User( $post->post_author );
+			$editor->editor = true;
 			$authors  = $series->get_authors( get_the_ID() );
-			$existent = 0;
+			$authors_to_display = [];
 			foreach ( $authors as &$author ) {
 				if ( $author->ID != $editor->ID ) {
-					$existent ++;
+					$author->editor = false;
+					$authors_to_display[] = $author;
+				} else {
+					$editor->author = true;
 				}
-				$author->editor = false;
 			}
-			if ( count( $authors ) === $existent ) {
-				$editor->editor = true;
-				$authors[]      = $editor;
-			}
-			foreach ( $authors as $author ) :
+			$authors_to_display[] = $editor;
+			foreach ( $authors_to_display as $author ) :
 				?>
 
 				<div class="row series__author">
@@ -200,7 +200,7 @@
 					<div class="series__author--profile col-xs-8">
 						<h3>
 							<span><?= esc_html( $author->display_name ) ?></span>
-							<small><?= $author->editor ? '編集' : '執筆' ?></small>
+							<small><?= $author->editor ? ( $author->author ? '編集・執筆' : '編集' ) : '執筆' ?></small>
 						</h3>
 
 						<div class="series__author--desc">

@@ -30,7 +30,7 @@ class Series extends Model {
 	 * @return array
 	 */
 	public function get_authors( $post_id ) {
-		$users = [ ];
+		$users = [];
 		foreach (
 			$this->select( "{$this->db->users}.*" )
 				 ->from( $this->db->users )
