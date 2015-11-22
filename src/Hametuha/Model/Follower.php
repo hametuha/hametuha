@@ -106,8 +106,16 @@ class Follower extends Model
 				'offset' => $offset,
 				'users'  => [],
 		];
-		$result['users'] = $this->calc()->select( 'u.*' )
+		$sub_query = <<<SQL
+			(
+				SELECT user_id, 1 AS following
+				FROM {$this->table} WHERE target_id = %d
+			) AS r2
+SQL;
+		$sub_query = $this->db->prepare($sub_query, $user_id);
+		$result['users'] = $this->calc()->select( 'u.*, r2.following' )
 		                        ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
+								->join( $sub_query, "u.ID = r2.user_id", 'LEFT' )
 		                        ->wheres( [
 				                        "{$this->table}.target_id = %d" => $user_id,
 				                        "{$this->table}.status = %d"    => 1,

@@ -28,10 +28,19 @@
 						</div>
 						<ul ng-cloak ng-init="getFollowers(0)">
 							<li class="follower" ng-repeat="follower in followers">
-								{{ follower.display_name }}
-								{{ follower.ID }}
-								{{ follower.user_email }}
 								<img class="follower__avatar" ng-src="{{follower.avatar}}" />
+								<span>
+									{{ follower.display_name }}
+									<small ng-if="follower.isEditor">編集者</small>
+								</span>
+								<a href="#" data-follower-id="{{ follower.ID }}" ng-class="'btn btn-primary btn-follow' + (follower.following ? ' btn-following' : '')"
+								   rel="nofollow">
+									<span class="remove">フォロー中</span>
+									<span class="add">
+										<i class="icon-user-plus2"></i> フォローする
+									</span>
+								</a>
+								<a ng-if="follower.isAuthor" href="/doujin/detail/{{ follower.user_nicename }}/" class="btn btn-default">詳細を見る</a>
 							</li>
 						</ul>
 						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="next()" ng-if="more && total">さらに読み込む</a>

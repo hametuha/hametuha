@@ -109,6 +109,14 @@ add_action( 'init', function () {
 	// プロフィール変更用JS
 	wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/dist/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
 
+	// フォローボタン
+	$path = '/assets/js/dist/components/follow-toggle.js';
+	wp_register_script( 'hametu-follow', get_stylesheet_directory_uri() . $path, [
+			'twitter-bootstrap',
+			'wp-api',
+	], filemtime( get_stylesheet_directory() . $path ), true );
+
+
 	// 投稿編集画面
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery-cookie' ], hametuha_version(), true );
 

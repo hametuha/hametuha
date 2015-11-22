@@ -408,11 +408,7 @@ function show_twitter_status( $url ) {
 function hametuha_follow_btn( $author_id ) {
 	static $loaded = false;
 	if ( ! $loaded ) {
-		$path = '/assets/js/dist/components/follow-toggle.js';
-		wp_enqueue_script( 'hametu-follow', get_stylesheet_directory_uri() . $path, [
-			'twitter-bootstrap',
-			'wp-api',
-		], filemtime( get_stylesheet_directory() . $path ), true );
+		wp_enqueue_script( 'hametu-follow' );
 		$loaded = true;
 	}
 	if ( is_user_logged_in() ) :
