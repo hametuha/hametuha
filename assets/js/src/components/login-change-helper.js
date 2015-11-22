@@ -75,7 +75,7 @@
                         form.ajaxSubmit({
                             dataType: 'json',
                             success: function(result){
-                                Hametuha.alert(result.message);
+                                Hametuha.alert(result.message, false);
                                 setTimeout(function(){
                                     window.location.href = result.url;
                                 }, 5000);

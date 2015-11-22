@@ -178,7 +178,7 @@
 			$editor->editor = true;
 			$authors  = $series->get_authors( get_the_ID() );
 			$authors_to_display = [];
-			foreach ( $authors as &$author ) {
+			foreach ( $authors as $author ) {
 				if ( $author->ID != $editor->ID ) {
 					$author->editor = false;
 					$authors_to_display[] = $author;
