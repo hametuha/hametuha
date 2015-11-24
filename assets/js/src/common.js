@@ -108,6 +108,12 @@
             window.alert(message);
         },
 
+        /**
+         * Show confirm dialog
+         *
+         * @param {String} message
+         * @param {Function} [callback]
+         */
         confirm: function( message, callback ){
             if( window.confirm(message) ){
                 callback();

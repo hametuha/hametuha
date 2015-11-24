@@ -68,6 +68,7 @@
   }
 }
 
+// Button
 .btn-follow{
   .remove{
     display: none;
@@ -78,6 +79,42 @@
     }
     .add{
       display: none;
+    }
+  }
+}
+
+
+.follower{
+  &__alert{
+    margin: 2em 0;
+  }
+  &__container{
+    padding-top: 2em;
+    padding-bottom: 2em;
+  }
+  &__wrap{
+    padding: 2em 0;
+  }
+  &__item{
+    list-style: none;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid #ddd;
+    &:nth-child(even){
+      background-color: #f9f9f9;
+    }
+  }
+  &__name{
+
+  }
+  &__label{
+  }
+  &__avatar{
+    max-width: 96px;
+    width: auto;
+    height: auto;
+    @media only screen and (max-width: $screen-xs-max){
+      max-width: 100%;
     }
   }
 }

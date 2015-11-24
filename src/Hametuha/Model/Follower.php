@@ -128,6 +128,32 @@ SQL;
 	}
 
 	/**
+	 * Get followings
+	 *
+	 * @param int $user_id
+	 * @param int $offset
+	 * @return array
+	 */
+	public function get_following( $user_id, $offset = 0 ) {
+		$result          = [
+				'total'  => 0,
+				'offset' => $offset,
+				'users'  => [],
+		];
+		$result['users'] = $this->calc()->select( 'u.*' )
+		                        ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
+		                        ->wheres( [
+				                        "{$this->table}.user_id = %d" => $user_id,
+				                        "{$this->table}.status = %d"    => 1,
+		                        ] )
+		                        ->order_by( "{$this->table}.updated", 'DESC' )
+		                        ->limit( 20, $offset )
+		                        ->result();
+		$result['total'] = $this->found_count();
+		return $result;
+	}
+
+	/**
 	 * Detect if user is blocked.
 	 *
 	 * @param int $user_id

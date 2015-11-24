@@ -46,7 +46,12 @@ add_action( 'init', function () {
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
 
 	// Angular
-	wp_register_script( 'angular', get_template_directory_uri() . '/bower_components/angular/angular.min.js', null, '1.4.7', true );
+	$angular_path = get_template_directory_uri() . '/bower_components/angular/angular'.( WP_DEBUG ? '' : '.min' ).'.js';
+	wp_register_script( 'angular', $angular_path, null, '1.4.7', true );
+
+	// Angular Bootstrap
+	$angular_bs_path = get_template_directory_uri() . '/bower_components/angular-bootstrap/ui-bootstrap-tpls'.( WP_DEBUG ? '' : '.min' ).'.js';
+	wp_register_script( 'angular-bootstrap', $angular_bs_path, [ 'angular' ], '0.14.3', true );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [

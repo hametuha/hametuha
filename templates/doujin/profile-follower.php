@@ -8,53 +8,96 @@
 
 		<div class="row followers">
 
-			<div class="col-xs-12">
+			<div class="col-xs-12 follower__container" ng-controller="followed">
 
-				<!-- Nav tabs -->
-				<ul class="nav nav-tabs followers__tabs" role="tablist">
-					<li role="presentation" class="active">
-						<a href="#list-followers" aria-controls="list-followers" role="tab" data-toggle="tab">あなたのフォロワー</a>
-					</li>
-					<li role="presentation">
-						<a href="#list-following" aria-controls="list-following" role="tab" data-toggle="tab">あなたがフォロー</a>
-					</li>
-				</ul>
+				<uib-tabset justified="true" ng-init="detectTab()">
 
-				<!-- Tab panes -->
-				<div class="tab-content followers__tabPanel">
-					<div role="tabpanel" class="tab-pane active" id="list-followers" ng-controller="followed">
-						<div class="alert alert-warning" ng-if="total < 1">
+					<!-- Followed -->
+					<uib-tab active="tabs[0].active" select="initFollowers(0)">
+						<uib-tab-heading>
+							フォローされている
+							<small ng-if="tabs[0].init && followersTotal > 1">（{{ followersTotal }}人）</small>
+						</uib-tab-heading>
+						<div class="alert alert-warning follower__alert" ng-if="followersTotal < 1">
 							<p>フォロワーが一人もいません。頑張って増やしましょう。</p>
 						</div>
-						<ul ng-cloak ng-init="getFollowers(0)">
-							<li class="follower" ng-repeat="follower in followers">
-								<img class="follower__avatar" ng-src="{{follower.avatar}}" />
-								<span>
-									{{ follower.display_name }}
-									<small ng-if="follower.isEditor">編集者</small>
-								</span>
-								<a href="#" data-follower-id="{{ follower.ID }}" ng-class="'btn btn-primary btn-follow' + (follower.following ? ' btn-following' : '')"
-								   rel="nofollow">
-									<span class="remove">フォロー中</span>
+						<ul class="follower__wrap" ng-cloak>
+							<li class="follower__item row" ng-repeat="follower in followers">
+								<div class="col-xs-3 col-md-2 text-center">
+									<img class="follower__avatar img-circle" ng-src="{{follower.avatar}}"/>
+								</div>
+								<div class="col-xs-9 col-md-10">
+									<h3 class="follower__name">
+										{{ follower.display_name }}
+										<small class="follower__label" ng-if="follower.isEditor">編集者</small>
+										<small class="follower__label" ng-if="!follower.isEditor && follower.isAuthor">
+											投稿者
+										</small>
+										<small class="follower__label" ng-if="!follower.isAuthor">読者</small>
+									</h3>
+
+									<a href="#" data-follower-id="{{ follower.ID }}"
+									   ng-class="'btn btn-primary btn-follow' + (follower.following ? ' btn-following' : '')"
+									   rel="nofollow">
+										<span class="remove">フォロー中</span>
 									<span class="add">
 										<i class="icon-user-plus2"></i> フォローする
 									</span>
-								</a>
-								<a ng-if="follower.isAuthor" href="/doujin/detail/{{ follower.user_nicename }}/" class="btn btn-default">詳細を見る</a>
+									</a>
+									<a ng-if="follower.isAuthor" href="/doujin/detail/{{ follower.user_nicename }}/"
+									   class="btn btn-default">詳細を見る</a>
+								</div>
 							</li>
 						</ul>
-						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="next()" ng-if="more && total">さらに読み込む</a>
-					</div>
-					<div role="tabpanel" class="tab-pane" id="list-following">
-						<ul ng-cloak>
+						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="nextFollowers()"
+						   ng-if="followersMore && followersTotal">さらに読み込む</a>
+					</uib-tab>
 
+					<!-- Followers -->
+					<uib-tab active="tabs[1].active" select="initFollowers(1)">
+						<uib-tab-heading>
+							フォローしている
+							<small ng-if="tabs[1].init && followingTotal > 1">（{{ followingTotal }}人）</small>
+						</uib-tab-heading>
+						<div class="alert alert-warning follower__alert" ng-if="followingTotal < 1">
+							<p>誰もフォローしていません。一人ぐらいフォローしてみましょう。</p>
+						</div>
+						<ul class="follower__wrap" ng-cloak>
+							<li class="follower__item row clearfix" ng-repeat="follower in followings">
+								<div class="col-xs-3 col-md-2 text-center">
+									<img class="follower__avatar img-circle" ng-src="{{follower.avatar}}"/>
+
+								</div>
+								<div class="col-xs-9 col-md-10">
+
+									<h3 class="follower__name">
+										{{ follower.display_name }}
+										<small class="follower__label" ng-if="follower.isEditor">編集者</small>
+										<small class="follower__label" ng-if="!follower.isEditor && follower.isAuthor">
+											投稿者
+										</small>
+										<small class="follower__label" ng-if="!follower.isAuthor">読者</small>
+									</h3>
+									<a href="#" ng-click="removeFollowing(follower.ID)" ng-class="'btn btn-danger'"
+									   rel="nofollow">
+										フォロー解除
+									</a>
+									<a ng-if="follower.isAuthor" href="/doujin/detail/{{ follower.user_nicename }}/"
+									   class="btn btn-default">詳細を見る</a>
+								</div>
+							</li>
 						</ul>
-					</div>
-				</div>
+						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="nextFollowing()"
+						   ng-if="followingsMore && followingTotal">さらに読み込む</a>
 
-			</div>
 
-		</div>
+					</uib-tab>
+				</uib-tabset>
 
-	</div>
+
+			</div><!-- //hametuFollower -->
+
+		</div><!-- followers -->
+
+	</div><!-- #doujin-follower -->
 </section>

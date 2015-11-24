@@ -53,3 +53,6 @@
 // Utility classes
 @import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";
+
+// Bootstrap Override for Angular
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
