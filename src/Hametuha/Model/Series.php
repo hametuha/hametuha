@@ -79,9 +79,9 @@ class Series extends Model {
 	/**
 	 * Get selling status
 	 *
-	 * @param int $post_id
+	 * @param int $post_id ID of post.
 	 *
-	 * @return int
+	 * @return int 2 is selling, 1 is prepareing, 0 is not serring.
 	 */
 	public function get_status( $post_id ) {
 		return (int) get_post_meta( $post_id, '_kdp_status', true );

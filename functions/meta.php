@@ -97,13 +97,15 @@ add_action( 'wp_head', function () {
  */
 add_action( 'wp_head', function () {
 	//初期値を設定
-	$image  = get_template_directory_uri() . '/assets/img/facebook-logo.png';
-	$title  = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
-	$url    = false;
-	$type   = 'article';
-	$desc   = '';
-	$card   = 'summary';
-	$author = '';
+	$image    = get_template_directory_uri() . '/assets/img/facebook-logo.png';
+	$title    = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
+	$url      = false;
+	$type     = 'article';
+	$creator  = '@hametuha';
+	$desc     = '';
+	$card     = 'summary';
+	$author   = '';
+	$twitters = [ ];
 
 	global $wp_query;
 
@@ -114,6 +116,7 @@ add_action( 'wp_head', function () {
 		$page  = get_post( get_option( 'page_on_front' ) );
 		$desc  = $page->post_excerpt;
 		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $page->ID ), 'full' )[0];
+		$card  = 'summary_large_image';
 	} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
 		$url   = home_url( '/kdp/' );
 		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。プライム会員は月1冊まで無料！';
@@ -135,23 +138,43 @@ add_action( 'wp_head', function () {
 		$desc = get_the_excerpt();
 		wp_reset_postdata();
 		$author = '<meta property="article:author" content="' . get_author_posts_url( $post->post_author ) . '" />';
+		if ( $screen_name = get_user_meta( $post->post_author, 'twitter', true ) ) {
+			$creator = '@' . $screen_name;
+		}
 		if ( is_singular( 'thread' ) ) {
+			// Show avatar on thread.
 			$image = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $post->post_author, 300 ) );
 		} elseif ( has_post_thumbnail() ) {
+			// Show thumbnail if set.
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
 				$image = $src[0];
 				$card  = 'summary_large_image';
+				// If this is seris,
+				// Show product card
+				if ( is_singular( 'series' ) ) {
+					$series = \Hametuha\Model\Series::get_instance();
+					if ( 2 == $series->get_status( $post->ID ) ) {
+						// If this is e-book and sold...
+						$card               = 'product';
+						$twitters['label1'] = '価格';
+						$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
+						if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
+							$twitters['label2'] = 'ジャンル';
+							$twitters['data2']  = $subtitle;
+						}
+					}
+				}
 			}
 		} else {
 			// 先頭にあるものを表示する
-			$attachments = get_posts([
-				'post_parent' => $post->ID,
-				'post_type' => 'attachment',
+			$attachments = get_posts( [
+				'post_parent'    => $post->ID,
+				'post_type'      => 'attachment',
 				'post_mime_type' => 'image',
 				'posts_per_page' => 1,
-				'orderby' => 'menu_order',
-				'order' => 'ASC',
-			]);
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+			] );
 			foreach ( $attachments as $attachment ) {
 				if ( $src = wp_get_attachment_image_src( $attachment->ID, 'full' ) ) {
 					$image = $src[0];
@@ -178,7 +201,7 @@ add_action( 'wp_head', function () {
 			$card  = 'summary_large_image';
 		}
 	} elseif ( ( $class_name = get_query_var( 'api_class' ) ) ) {
-		$class_name = str_replace('\\\\', '\\', $class_name);
+		$class_name = str_replace( '\\\\', '\\', $class_name );
 		if ( class_exists( $class_name ) && method_exists( $class_name::get_instance(), 'ogp' ) ) {
 			extract( $class_name::get_instance()->ogp( compact( 'image', 'title', 'url', 'type', 'desc', 'card', 'author' ) ) );
 		}
@@ -191,15 +214,23 @@ add_action( 'wp_head', function () {
 	if ( ! $url ) {
 		return;
 	}
-	echo <<<EOS
-<meta name="twitter:card" content="{$card}" />
-<meta name="twitter:site" content="@hametuha" />
-<meta name="twitter:image" content="{$image}" />
+	$twitters = array_merge( [
+		'card'    => $card,
+		'site'    => '@hametuha',
+		'domain'  => 'hametuha.com',
+		'creator' => $creator,
+		'title'   => $title,
+		'desc'    => $desc,
+		'image'   => $image,
+	], $twitters );
+	echo <<<HTML
+<title>{$title}</title>
+<meta name="description" content="{$desc}" />
+<!-- OGP -->
 <meta property="og:title" content="{$title}"/>
 <meta property="og:url" content="{$url}" />
 <meta property="og:image" content="{$image}" />
 <meta property="og:description" content="{$desc}" />
-<meta name="description" content="{$desc}" />
 <meta property="og:type" content="{$type}" />
 {$author}
 <meta property="article:publisher" content="https://www.facebook.com/hametuha.inc" />
@@ -207,7 +238,12 @@ add_action( 'wp_head', function () {
 <meta property="og:locale" content="ja_jp" />
 <meta property="fb:app_id" content="196054397143922" />
 <meta property="fb:admins" content="1034317368" />
-EOS;
+<!-- twitter cards -->
+HTML;
+
+	foreach ( $twitters as $key => $content ) {
+		printf( '<meta name="twitter:%s" content="%s" />', $key, $content );
+	}
 }, 1 );
 
 
