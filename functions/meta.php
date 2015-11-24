@@ -155,7 +155,7 @@ add_action( 'wp_head', function () {
 					$series = \Hametuha\Model\Series::get_instance();
 					if ( 2 == $series->get_status( $post->ID ) ) {
 						// If this is e-book and sold...
-						$card               = 'product';
+						// $card               = 'product';
 						$twitters['label1'] = '価格';
 						$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
 						if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
