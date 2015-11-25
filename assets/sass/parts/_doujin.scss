@@ -70,7 +70,7 @@
 
 // Button
 .btn-follow{
-  .remove{
+  .remove, .loading{
     display: none;
   }
   &.btn-following{
@@ -79,6 +79,14 @@
     }
     .add{
       display: none;
+    }
+  }
+  &--loading{
+    .remove, .add{
+      display: none !important;
+    }
+    .loading{
+      display: inline !important;
     }
   }
 }
@@ -91,6 +99,35 @@
   &__container{
     padding-top: 2em;
     padding-bottom: 2em;
+    min-height: 300px;
+    &--loading{
+      &:before{
+        content: "";
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(255, 255, 255, .6);
+        z-index: 10;
+      }
+      &:after{
+        @extend .icon-spinner2:before;
+        @extend .rotation;
+        font-family: "hameticon";
+        display: inline-block;
+        $size: 100px;
+        font-size: $size;
+        position: absolute;
+        z-index: 11;
+        color: #ccc;
+        top: 50%;
+        left: 50%;
+        margin-top: -0.5 * $size;
+        margin-left: -0.5 * $size;
+      }
+    }
   }
   &__wrap{
     padding: 2em 0;

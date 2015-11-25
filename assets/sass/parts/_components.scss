@@ -29,6 +29,9 @@
 .rotation{
   @include animation(rotation 1.5s linear infinite);
 }
+i.rotation{
+  display: inline-block;
+}
 
 // サムネイル
 .pseudo-thumbnail{

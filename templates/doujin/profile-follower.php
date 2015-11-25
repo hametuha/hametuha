@@ -8,7 +8,8 @@
 
 		<div class="row followers">
 
-			<div class="col-xs-12 follower__container" ng-controller="followed">
+			<div class="col-xs-12 follower__container" ng-controller="followed"
+			     ng-class="(tabs[0].loading || tabs[1].loading ? 'follower__container--loading' : '')">
 
 				<uib-tabset justified="true" ng-init="detectTab()">
 
@@ -40,9 +41,12 @@
 									   ng-class="'btn btn-primary btn-follow' + (follower.following ? ' btn-following' : '')"
 									   rel="nofollow">
 										<span class="remove">フォロー中</span>
-									<span class="add">
-										<i class="icon-user-plus2"></i> フォローする
-									</span>
+										<span class="add">
+											<i class="icon-user-plus2"></i> フォローする
+										</span>
+										<span class="loading">
+											<i class="icon-spinner2 rotation"></i> 通信中……
+										</span>
 									</a>
 									<a ng-if="follower.isAuthor" href="/doujin/detail/{{ follower.user_nicename }}/"
 									   class="btn btn-default">詳細を見る</a>
@@ -50,7 +54,7 @@
 							</li>
 						</ul>
 						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="nextFollowers()"
-						   ng-if="followersMore && followersTotal">さらに読み込む</a>
+						   ng-if="(followersMore && followersTotal)">さらに読み込む</a>
 					</uib-tab>
 
 					<!-- Followers -->
@@ -88,7 +92,7 @@
 							</li>
 						</ul>
 						<a class="btn btn-default btn-block btn-lg" href="#" ng-click="nextFollowing()"
-						   ng-if="followingsMore && followingTotal">さらに読み込む</a>
+						   ng-if="( followingMore && followingTotal )">さらに読み込む</a>
 
 
 					</uib-tab>

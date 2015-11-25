@@ -65,8 +65,8 @@ gulp.task('imagemin', function(){
 });
 
 // Build modernizr
-gulp.task('modernizr', function(){
-    return gulp.src(['./bower_components/modernizr/modernizr.js'])
+gulp.task('copylib', function(){
+    return gulp.src(['./bower_components/modernizr/modernizr.js', './bower_components/bootbox.js/bootbox.js'])
         .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/dist/'));
 });
@@ -100,7 +100,7 @@ gulp.task('bs-reload', function(){
 });
 
 // Build
-gulp.task('build', ['modernizr', 'jshint', 'js', 'sass', 'imagemin']);
+gulp.task('build', ['copylib', 'jshint', 'js', 'sass', 'imagemin']);
 
 // Default Tasks
 gulp.task('default', ['watch']);

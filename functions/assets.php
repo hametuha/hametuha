@@ -42,6 +42,9 @@ add_action( 'init', function () {
 	// Twitter Bootstrap
 	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js', [ 'jquery' ], '3.3.3', true );
 
+	// Bootbox
+	wp_register_script( 'bootbox', get_template_directory_uri() . '/assets/js/dist/bootbox.js', [ 'twitter-bootstrap' ], '4.4.0', true );
+
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
 
@@ -56,6 +59,7 @@ add_action( 'init', function () {
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
 		'twitter-bootstrap',
+		'bootbox',
 		'backbone',
 		'modernizr',
 		'font-plus',

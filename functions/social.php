@@ -423,12 +423,15 @@ function hametuha_follow_btn( $author_id ) {
 				<span class="add">
 					<i class="icon-user-plus2"></i> フォローする
 				</span>
+				<span class="loading">
+					<i class="icon-spinner2 rotation"></i> 通信中……
+				</span>
 			</a>
 		<?php else : ?>
 			<a class="btn btn-primary" href="<?= home_url( '/doujin/follower/', 'https' ) ?>"><i class="icon-user"></i>
 				フォロワーを見る</a>
 		<?php endif;
-	else :
-
-	endif;
+	else : ?>
+		<a class="btn btn-primary" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">フォローする</a>
+	<?php endif;
 }

@@ -108,14 +108,14 @@ class Follower extends Model
 		];
 		$sub_query = <<<SQL
 			(
-				SELECT user_id, 1 AS following
-				FROM {$this->table} WHERE target_id = %d
+				SELECT target_id, 1 AS following
+				FROM {$this->table} WHERE user_id = %d
 			) AS r2
 SQL;
 		$sub_query = $this->db->prepare($sub_query, $user_id);
 		$result['users'] = $this->calc()->select( 'u.*, r2.following' )
 		                        ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
-								->join( $sub_query, "u.ID = r2.user_id", 'LEFT' )
+								->join( $sub_query, "u.ID = r2.target_id", 'LEFT' )
 		                        ->wheres( [
 				                        "{$this->table}.target_id = %d" => $user_id,
 				                        "{$this->table}.status = %d"    => 1,
@@ -165,8 +165,8 @@ SQL;
 		return (bool) $this->select( 'target_id' )
 		                   ->wheres( [
 			                   'user_id = %d' => $blocker_id,
-			                   'target_id'    => $user_id,
-			                   'status'       => 0,
+			                   'target_id = %d'    => $user_id,
+			                   'status = %d'       => 0,
 		                   ] )->get_var();
 	}
 

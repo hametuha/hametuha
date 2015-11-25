@@ -105,7 +105,20 @@
          * @param {Boolean} [error]
          */
         alert: function(message, error){
-            window.alert(message);
+            if(error){
+                bootbox.dialog({
+                    message: message,
+                    title: 'エラー！',
+                    buttons: {
+                        danger: {
+                            label: 'OK',
+                            className: 'btn-danger'
+                        }
+                    }
+                });
+            }else{
+                bootbox.alert(message);
+            }
         },
 
         /**
@@ -113,11 +126,24 @@
          *
          * @param {String} message
          * @param {Function} [callback]
+         * @param {Boolean} [deletable]
          */
-        confirm: function( message, callback ){
-            if( window.confirm(message) ){
-                callback();
-            }
+        confirm: function( message, callback, deletable ){
+            bootbox.dialog({
+                title: '確認',
+                message: message,
+                buttons: {
+                    cancel: {
+                        label: 'キャンセル',
+                        className: 'btn-default'
+                    },
+                    ok: {
+                        label: deletable ? '実行' : 'OK',
+                        className: deletable ? 'btn-danger' : 'btn-success',
+                        callback: callback
+                    }
+                }
+            });
         },
 
         /**

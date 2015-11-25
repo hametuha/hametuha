@@ -13,11 +13,13 @@ angular.module('hametuFollower', ['ui.bootstrap'])
         $scope.tabs = [
             {
                 active: false,
-                init  : false
+                init  : false,
+                loading: false
             },
             {
                 active: false,
-                init  : false
+                init  : false,
+                loading: false
             }
         ];
 
@@ -58,6 +60,7 @@ angular.module('hametuFollower', ['ui.bootstrap'])
 
         // Get followers
         $scope.getFollowers = function (offset) {
+            $scope.tabs[0].loading = true;
             $http({
                 method : 'GET',
                 url   : endpoint + 'followers/me/',
@@ -78,9 +81,11 @@ angular.module('hametuFollower', ['ui.bootstrap'])
                     } else {
                         $scope.followersMore = false;
                     }
+                    $scope.tabs[0].loading = false;
                 },
                 function (result) {
                     Hametuha.alert('フォロワーを取得できませんでした', true);
+                    $scope.tabs[0].loading = false;
                 }
             );
         };
@@ -99,6 +104,7 @@ angular.module('hametuFollower', ['ui.bootstrap'])
 
         // Get followings
         $scope.getFollowings = function (offset) {
+            $scope.tabs[1].loading = true;
             $http({
                 method : 'GET',
                 url   : endpoint + 'following/me/',
@@ -119,9 +125,11 @@ angular.module('hametuFollower', ['ui.bootstrap'])
                     } else {
                         $scope.followingMore = false;
                     }
+                    $scope.tabs[1].loading = false;
                 },
                 function (result) {
                     Hametuha.alert('フォローしている人を取得できませんでした', true);
+                    $scope.tabs[1].loading = false;
                 }
             );
         };
@@ -129,7 +137,6 @@ angular.module('hametuFollower', ['ui.bootstrap'])
         // Remove Follower
         $scope.removeFollowing = function (id) {
             Hametuha.confirm('フォローを解除してよろしいですか？', function () {
-
                 var indexToRemove = null;
 
                 for (var i = 0, l = $scope.followings.length; i < l; i++) {
@@ -141,6 +148,7 @@ angular.module('hametuFollower', ['ui.bootstrap'])
 
 
                 if (null !== indexToRemove) {
+                    $scope.tabs[1].loading = true;
                     $http({
                         method : 'DELETE',
                         url   : endpoint + 'follow/' + id + '/',
@@ -151,20 +159,23 @@ angular.module('hametuFollower', ['ui.bootstrap'])
                         function (result) {
                             if( result.data.success ){
                                 $scope.followings.splice(indexToRemove, 1);
+                                $scope.followingTotal--;
                             }
+                            $scope.tabs[1].loading = false;
                         },
                         function () {
-                            Hametuha.alert('削除できませんでした。', true)
+                            Hametuha.alert('削除できませんでした。', true);
+                            $scope.tabs[1].loading = false;
                         }
                     );
                 }
 
-            });
+            }, true);
 
         };
 
         // Get next followings
-        $scope.nextFollowers = function () {
+        $scope.nextFollowing = function () {
             $scope.getFollowings($scope.followingOffset + 20);
         };
 
