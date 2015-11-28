@@ -50,7 +50,7 @@ add_filter('image_widget_image_url', 'hametuha_cdnfy');
  */
 function _hametuha_cdn_url($url){
     if( !is_admin() ){
-        $url = preg_replace("/:\/\//", '://s.', $url);
+        $url = preg_replace("#://#", '://s.', $url);
     }
     return $url;
 }
@@ -81,7 +81,8 @@ add_filter('script_loader_src', function($src){
 add_filter('style_loader_tag', function($tag, $handle){
     switch( $handle ){
         case 'hametuha-app':
-            // メインのCSSは同じドメインに直す
+        case 'ligature-symbols':
+            // Webフォントを含むCSSは同じドメインに直す
             $tag = str_replace('://s.hametuha', '://hametuha', $tag);
             break;
         default:

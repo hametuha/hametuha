@@ -25,7 +25,6 @@ add_image_size( 'kindle-cover', 1200, 1920, true );
  */
 add_filter( 'image_size_names_choose', function ( $sizes ) {
 	$sizes['pinky'] = '小型正方形';
-
 	return $sizes;
 } );
 
@@ -43,16 +42,32 @@ add_action( 'init', function () {
 	// Twitter Bootstrap
 	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js', [ 'jquery' ], '3.3.3', true );
 
+	// Bootstrap Notify
+	wp_register_script( 'bootstrap-notify', get_template_directory_uri() . '/bower_components/remarkable-bootstrap-notify/bootstrap-notify.min.js', [ 'twitter-bootstrap' ], '3.1.3', true );
+
+	// Bootbox
+	wp_register_script( 'bootbox', get_template_directory_uri() . '/assets/js/dist/bootbox.js', [ 'twitter-bootstrap' ], '4.4.0', true );
+
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
+
+	// Angular
+	$angular_path = get_template_directory_uri() . '/bower_components/angular/angular'.( WP_DEBUG ? '' : '.min' ).'.js';
+	wp_register_script( 'angular', $angular_path, null, '1.4.7', true );
+
+	// Angular Bootstrap
+	$angular_bs_path = get_template_directory_uri() . '/bower_components/angular-bootstrap/ui-bootstrap-tpls'.( WP_DEBUG ? '' : '.min' ).'.js';
+	wp_register_script( 'angular-bootstrap', $angular_bs_path, [ 'angular' ], '0.14.3', true );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
 		'twitter-bootstrap',
+		'bootbox',
 		'backbone',
 		'modernizr',
 		'font-plus',
 		'jsrender',
+	    'bootstrap-notify',
 	], hametuha_version(), true );
 
 	// シングルページ用JS
@@ -106,6 +121,14 @@ add_action( 'init', function () {
 
 	// プロフィール変更用JS
 	wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/dist/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
+
+	// フォローボタン
+	$path = '/assets/js/dist/components/follow-toggle.js';
+	wp_register_script( 'hametu-follow', get_stylesheet_directory_uri() . $path, [
+			'twitter-bootstrap',
+			'wp-api',
+	], filemtime( get_stylesheet_directory() . $path ), true );
+
 
 	// 投稿編集画面
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery-cookie' ], hametuha_version(), true );

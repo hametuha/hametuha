@@ -12,14 +12,14 @@
 
 				<div class="row">
 
-					<div class="col-xs-3">
+					<div class="col-xs-12 col-sm-3 text-center">
 						<?= get_avatar( $this->doujin->ID, 300, '', $this->doujin->display_name, [
 							'itemprop' => 'image',
 							'class'    => 'doujin__img img-circle avatar',
 						] ) ?>
 					</div>
 
-					<div class="col-xs-9">
+					<div class="col-xs-12 col-sm-9">
 
 						<h1 class="doujin__name">
 							<ruby>
@@ -27,6 +27,7 @@
 								<rt><?= esc_html( $this->doujin->user_lastname ) ?></rt>
 							</ruby>
 							<small><?= hametuha_user_role( $this->doujin->ID ) ?></small>
+							<?php hametuha_follow_btn( $this->doujin->ID ) ?>
 						</h1>
 
 						<div class="doujin__desc">
@@ -293,5 +294,3 @@
 		</div>
 
 	</section><!-- //#doujin-detail -->
-
-<?php get_template_part( 'parts/share', 'follow' );

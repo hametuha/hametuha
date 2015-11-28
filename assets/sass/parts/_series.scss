@@ -17,17 +17,6 @@
     &--share{
       background: #ebebeb;
     }
-    &--amazon,
-    &--single{
-      .btn-amazon{
-        &:link, &:visited{
-          background-color: #000;
-        }
-        &:hover, &:active{
-          background-color: darken(orange, 20);
-        }
-      }
-    }
     &--single{
       margin: 1em 0;
       img{

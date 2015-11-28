@@ -59,7 +59,7 @@
                     if( result.success ){
                         $li.remove();
                     }else{
-                        window.alert(result.message);
+                        Hametuha.alert(result.message, true);
                     }
                 }).fail(function(){
                     // Do nothing

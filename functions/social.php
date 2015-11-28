@@ -25,7 +25,7 @@ HTML;
  *
  * @return bool|string
  */
-function hametuha_short_links( $url, $args = [ ] ) {
+function hametuha_short_links( $url, $args = [] ) {
 	$links = \Hametuha\Model\ShortLinks::get_instance();
 
 	return $links->get_shorten( add_query_arg( $args, $url ) );
@@ -192,12 +192,10 @@ function hametuha_share( $post = null ) {
 		$post    = get_post( $post );
 		$title   = get_the_title( $post );
 		$url     = get_permalink( $post );
-		$fb_url  = $url;
 		$post_id = $post->ID;
 	} else {
 		$title   = get_bloginfo( 'name' );
 		$url     = home_url( '/' );
-		$fb_url  = '';
 		$post_id = 0;
 	}
 	$encoded_url   = rawurlencode( $url );
@@ -221,37 +219,35 @@ function hametuha_share( $post = null ) {
 			],
 			[
 				'googleplus',
-				"https://plus.google.com/share?url=" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Google+' ) ),
+				'https://plus.google.com/share?url=' . rawurlencode( hametuha_user_link( $url, 'share-single', 'Google+' ) ),
 				'4',
-				true
+				true,
 			],
 			[
 				'hatena',
 				"http://b.hatena.ne.jp/add?title={$encoded_title}&amp;url={$encoded_url}",
 				'',
-				true
+				true,
 			],
 			[
 				'pocket',
 				"http://getpocket.com/edit?url={$encoded_url}&amp;title={$encoded_title}",
 				'',
-				true
+				true,
 			],
 			[
 				'line',
 				"line://msg/text/{$encoded_title}%20" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Line' ) ),
 				'',
-				false
+				false,
 			],
-		] as list(
-		$brand, $href, $suffix, $blank
-	)
+		] as list( $brand, $href, $suffix, $blank )
 	) {
-		if( 'hatena' === $brand ){
+		if ( 'hatena' === $brand ) {
 			$additional_class = ' hatena-bookmark-button';
-			$data = ' data-hatena-bookmark-layout="simple"';
-		}else{
-			$data = '';
+			$data             = ' data-hatena-bookmark-layout="simple"';
+		} else {
+			$data             = '';
 			$additional_class = '';
 		}
 		$links[ $brand ] = sprintf(
@@ -309,30 +305,30 @@ add_action( 'admin_notices', function () {
 		if ( 'publish' != $post->post_status ) {
 			return;
 		}
-		$args = [ ];
 		?>
-		<div class="admin-notice admin-notice--info">
-			<p>
-				<span class="dashicons dashicons-info"></span> この投稿は<strong>公開済み</strong>です。
-				投稿を宣伝してみんなに読んでもらいましょう。
-			</p>
-
-			<div class="fb-share-button"
-				 data-href="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ) ?>"
-				 data-layout="button_count"></div>
-			<a href="https://twitter.com/share" class="twitter-share-button"
-			   data-url="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ) ?>"
-			   data-text="<?= get_the_title( $post ) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
-			<script>!function (d, s, id) {
-					var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-					if (!d.getElementById(id)) {
-						js = d.createElement(s);
-						js.id = id;
-						js.src = p + '://platform.twitter.com/widgets.js';
-						fjs.parentNode.insertBefore(js, fjs);
-					}
-				}(document, 'script', 'twitter-wjs');</script>
-		</div>
+			<div class="admin-notice admin-notice--info">
+				<p>
+					<span class="dashicons dashicons-info"></span> この投稿は<strong>公開済み</strong>です。
+					投稿を宣伝してみんなに読んでもらいましょう。
+				</p>
+				<div class="fb-share-button"
+				     data-href="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ) ?>"
+				     data-layout="button_count"></div>
+				<a href="https://twitter.com/share" class="twitter-share-button"
+				   data-url="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ) ?>"
+				   data-text="<?= get_the_title( $post ) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
+				<script>
+					! function (d, s, id) {
+						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+						if (!d.getElementById(id)) {
+							js = d.createElement(s);
+							js.id = id;
+							js.src = p + '://platform.twitter.com/widgets.js';
+							fjs.parentNode.insertBefore(js, fjs);
+						}
+					}(document, 'script', 'twitter-wjs');
+				</script>
+			</div>
 		<?php
 	}
 } );
@@ -346,7 +342,7 @@ add_action( 'admin_notices', function () {
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	//はじめて公開にしたときだけ
-	if ( ! WP_DEBUG && $new_status == 'publish' && function_exists( 'update_twitter_status' ) ) {
+	if ( ! WP_DEBUG && 'publish' === $new_status && function_exists( 'update_twitter_status' ) ) {
 		switch ( $old_status ) {
 			case 'new':
 			case 'draft':
@@ -399,8 +395,48 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
  *
  * @param string $url
  */
-function show_twitter_status( $url ){
+function show_twitter_status( $url ) {
 	/** @var WP_Embed $wp_embed */
 	global $wp_embed;
 	echo $wp_embed->autoembed( $url );
+}
+
+/**
+ * フォローボタンを出す
+ *
+ * @param int $author_id
+ * @param bool $block
+ */
+function hametuha_follow_btn( $author_id, $block = false ) {
+	static $loaded = false;
+	if ( ! $loaded ) {
+		wp_enqueue_script( 'hametu-follow' );
+		$loaded = true;
+	}
+	if ( is_user_logged_in() ) :
+		if ( get_current_user_id() != $author_id ) :
+			$class_name = \Hametuha\Model\Follower::get_instance()->is_following( get_current_user_id(), $author_id )
+				? ' btn-following'
+				: '';
+			if ( $block ) {
+				$class_name .= ' btn-block';
+			}
+			?>
+			<a href="#" data-follower-id="<?= $author_id ?>" class="btn btn-primary btn-follow<?= $class_name ?>"
+			   rel="nofollow">
+				<span class="remove">フォロー中</span>
+				<span class="add">
+					<i class="icon-user-plus2"></i> フォローする
+				</span>
+				<span class="loading">
+					<i class="icon-spinner2 rotation"></i> 通信中……
+				</span>
+			</a>
+		<?php else : ?>
+			<a class="btn btn-primary" href="<?= home_url( '/doujin/follower/', 'https' ) ?>"><i class="icon-user"></i>
+				フォロワー確認</a>
+		<?php endif;
+	else : ?>
+		<a class="btn btn-primary" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">フォローする</a>
+	<?php endif;
 }

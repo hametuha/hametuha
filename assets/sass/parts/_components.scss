@@ -20,6 +20,14 @@
 }
 
 .btn-amazon{
+  &:link, &:visited{
+    color: #fff;
+    background-color: #000;
+  }
+  &:hover, &:active{
+    color: #fff;
+    background-color: darken(orange, 20);
+  }
   i{
     color: orange;
   }
@@ -28,6 +36,9 @@
 // 回転
 .rotation{
   @include animation(rotation 1.5s linear infinite);
+}
+i.rotation{
+  display: inline-block;
 }
 
 // サムネイル
@@ -241,11 +252,30 @@
     margin-top: 0;
   }
   .avatar{
-    position: absolute;
     @extend .img-circle;
-    top: 50%;
   }
-  @include author-profile(80px);
+  padding-top: 20px;
+  padding-bottom: 20px;
+  .author-desc{
+    margin-bottom: 1em;
+    line-height: 1.2;
+    &--long{
+      max-height: 6em;
+      overflow: hidden;
+      z-index: 2;
+      position: relative;
+      &:after{
+        position: absolute;
+        content: "";
+        display: block;
+        height: 2em;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        @include gradient-vertical(transparentize($navbar-default-bg, 1), $navbar-default-bg );
+      }
+    }
+  }
 }
 
 // スマートフォン
@@ -254,7 +284,6 @@
     h3 small{
       display: block;
     }
-    @include author-profile(60px);
   }
 }
 

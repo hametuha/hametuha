@@ -449,8 +449,6 @@
 
 	<?php get_template_part( 'parts/share', 'big' ) ?>
 
-	<?php get_template_part( 'parts/share', 'follow' ) ?>
-
 </div><!-- //.series__wrap -->
 
 <?php get_footer(); ?>

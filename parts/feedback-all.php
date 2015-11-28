@@ -8,7 +8,7 @@
 	} else {
 		$star = round( $all_rating * 2 ) / 2;
 		?>
-		<p class="post-rank-counter" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+		<p class="post-rank-counter text-center" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
 	        <span class="back-ground">
 	            <?php
 				for ( $i = 0; $i < 5; $i ++ ) {

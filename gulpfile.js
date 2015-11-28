@@ -20,7 +20,8 @@ gulp.task('sass',function(){
             includePaths: [
                 './assets/sass',
                 './vendor',
-                './bower_components/bootstrap-sass/assets/stylesheets'
+                './bower_components/bootstrap-sass/assets/stylesheets',
+                './vendor/hametuha'
             ]
         }))
         .pipe($.sourcemaps.write('./map'))
@@ -64,8 +65,8 @@ gulp.task('imagemin', function(){
 });
 
 // Build modernizr
-gulp.task('modernizr', function(){
-    return gulp.src(['./bower_components/modernizr/modernizr.js'])
+gulp.task('copylib', function(){
+    return gulp.src(['./bower_components/modernizr/modernizr.js', './bower_components/bootbox.js/bootbox.js'])
         .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/dist/'));
 });
@@ -80,7 +81,7 @@ gulp.task('watch',function(){
 gulp.task('bs-watch', function(){
     gulp.watch([
         './assets/css/**/*.css',
-        './assets/js/**/*.js', '!./assets/js/src/**/*',
+        './assets/js/dist/**/*.js', '!./assets/js/src/**/*',
         './assets/img/**/*', '!./assets/img/src/**/*'
     ], ['bs-reload'])
 });
@@ -99,7 +100,7 @@ gulp.task('bs-reload', function(){
 });
 
 // Build
-gulp.task('build', ['modernizr', 'jshint', 'js', 'sass', 'imagemin']);
+gulp.task('build', ['copylib', 'jshint', 'js', 'sass', 'imagemin']);
 
 // Default Tasks
 gulp.task('default', ['watch']);

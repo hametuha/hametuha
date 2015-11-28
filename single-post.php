@@ -111,7 +111,7 @@ HTML;
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
 				</div>
 
-				<div id="post-author" class="row author-container">
+				<div id="post-author" class="author-container">
 					<?php get_template_part( 'parts/author' ) ?>
 				</div>
 
@@ -127,6 +127,7 @@ HTML;
 			<div class="container">
 
 				<?php get_template_part( 'parts/list', 'author' ) ?>
+				<a href="<?= home_url('/doujin/detail/'.get_the_author_meta('nicename').'/', 'http') ?>" class="btn btn-default btn-lg btn-block">もっと見る</a>
 
 				<?php
 				// Yarpp関連記事
@@ -165,14 +166,10 @@ HTML;
 					<?php get_search_form() ?>
 				</div>
 
-				<hr />
 
 			</div>
 			<!-- // .work-wrapper -->
 
-
-
-			<?php get_template_part( 'parts/share', 'follow' ) ?>
 
 		</div>
 		<!-- //#content-wrapper -->
@@ -347,4 +344,4 @@ HTML;
 		<!-- //.container -->
 	</footer>
 
-<?php get_footer( 'single' ); ?>
+<?php get_footer();

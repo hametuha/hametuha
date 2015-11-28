@@ -9,10 +9,11 @@ use WPametu\DB\Model;
  * 通知のモデルクラス
  *
  * @package Hametuha\Model
- * @method bool add_comment(int $recipient, int $object_id, string $message, string $avatar)
- * @method bool add_review(int $recipient, int $object_id, string $message, string $avatar)
- * @method bool add_hot(int $recipient, int $object_id, string $message, string $avatar)
- * @method bool add_general(int $recipient, int $object_id, string $message, string $avatar)
+ * @method bool add_comment($recipient, $object_id, $message, $avatar)
+ * @method bool add_review($recipient, $object_id, $message, $avatar)
+ * @method bool add_hot($recipient, $object_id, $message, $avatar)
+ * @method bool add_follow($recipient, $object_id, $message, $avatar)
+ * @method bool add_general($recipient, $object_id, $message, $avatar)
  */
 class Notifications extends Model
 {
@@ -37,7 +38,10 @@ class Notifications extends Model
 
 	const TYPE_GENERAL = 'general';
 
+	const TYPE_FOLLOW = 'follow';
+
 	const USER_KEY = 'last_notification_checked';
+
 
     /**
      * 通知確認時間を更新
@@ -74,6 +78,9 @@ class Notifications extends Model
 		switch( $type ){
 			case static::TYPE_COMMENT:
 				$url = get_comment_link($object_id);
+				break;
+			case static::TYPE_FOLLOW:
+				$url = home_url( '/doujin/follower/', 'https' );
 				break;
 			default:
 				$url = get_permalink($object_id);
@@ -163,13 +170,15 @@ class Notifications extends Model
 	 */
 	public function __call($name, array $arguments = []){
 		if( preg_match('/^add_([a-z]+)$/', $name, $match) ){
-			switch( $match[1] ){
+			switch ( $match[1] ) {
 				case static::TYPE_COMMENT:
 				case static::TYPE_HOT:
 				case static::TYPE_REVIEW:
 				case static::TYPE_GENERAL:
-					array_unshift($arguments, $match[1]);
-					return call_user_func_array([$this, 'add_notification'], $arguments);
+				case
+					static::TYPE_FOLLOW:
+					array_unshift( $arguments, $match[1] );
+					return call_user_func_array( [ $this, 'add_notification' ], $arguments );
 					break;
 				default:
 					// Do nothing

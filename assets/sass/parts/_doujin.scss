@@ -15,6 +15,9 @@
     max-width: 100%;
     width: auto;
     height: auto;
+    @media only screen and (max-width: $screen-xs-max){
+      max-width: 150px;
+    }
   }
 
   &__links{
@@ -64,3 +67,92 @@
     }
   }
 }
+
+// Button
+.btn-follow{
+  .remove, .loading{
+    display: none;
+  }
+  &.btn-following{
+    .remove{
+      display: inline;
+    }
+    .add{
+      display: none;
+    }
+  }
+  &--loading{
+    .remove, .add{
+      display: none !important;
+    }
+    .loading{
+      display: inline !important;
+    }
+  }
+}
+
+
+.follower{
+  &__alert{
+    margin: 2em 0;
+  }
+  &__container{
+    padding-top: 2em;
+    padding-bottom: 2em;
+    min-height: 300px;
+    &--loading{
+      &:before{
+        content: "";
+        display: block;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(255, 255, 255, .6);
+        z-index: 10;
+      }
+      &:after{
+        @extend .icon-spinner2:before;
+        @extend .rotation;
+        font-family: "hameticon";
+        display: inline-block;
+        $size: 100px;
+        font-size: $size;
+        position: absolute;
+        z-index: 11;
+        color: #ccc;
+        top: 50%;
+        left: 50%;
+        margin-top: -0.5 * $size;
+        margin-left: -0.5 * $size;
+      }
+    }
+  }
+  &__wrap{
+    padding: 2em 0;
+  }
+  &__item{
+    list-style: none;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid #ddd;
+    &:nth-child(even){
+      background-color: #f9f9f9;
+    }
+  }
+  &__name{
+
+  }
+  &__label{
+  }
+  &__avatar{
+    max-width: 96px;
+    width: auto;
+    height: auto;
+    @media only screen and (max-width: $screen-xs-max){
+      max-width: 100%;
+    }
+  }
+}
+

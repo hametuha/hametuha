@@ -164,6 +164,9 @@
 							</a>
 						</li>
 						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+
+							<li class="divider"></li>
+							<li><span class="text-muted">管理</span></li>
 							<li>
 								<a href="<?= home_url( '/statistics/', 'https' ) ?>">
 									<i class="icon-chart"></i>
@@ -176,6 +179,14 @@
 									売上管理
 								</a>
 							</li>
+							<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+								<li>
+									<a href="<?= admin_url() ?>">
+										<i class="icon-dashboard"></i>
+										ダッシュボード
+									</a>
+								</li>
+							<?php endif; ?>
 						<?php endif; ?>
 						<li class="divider"></li>
 						<li>
@@ -185,12 +196,12 @@
 							</a>
 						</li>
 						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-							<li>
-								<a href="<?= admin_url() ?>">
-									<i class="icon-dashboard"></i>
-									ダッシュボード
-								</a>
-							</li>
+						<li>
+							<a href="<?= home_url('/doujin/follower/', 'https') ?>">
+								<i class="icon-heart5"></i>
+								フォロワー
+							</a>
+						</li>
 						<?php endif; ?>
 						<li>
 							<a href="<?= wp_logout_url() ?>">
@@ -231,4 +242,3 @@
 	</div>
 	<!-- .navbar -->
 </header>
-
