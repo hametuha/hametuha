@@ -42,6 +42,9 @@ add_action( 'init', function () {
 	// Twitter Bootstrap
 	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js', [ 'jquery' ], '3.3.3', true );
 
+	// Bootstrap Notify
+	wp_register_script( 'bootstrap-notify', get_template_directory_uri() . '/bower_components/remarkable-bootstrap-notify/bootstrap-notify.min.js', [ 'twitter-bootstrap' ], '3.1.3', true );
+
 	// Bootbox
 	wp_register_script( 'bootbox', get_template_directory_uri() . '/assets/js/dist/bootbox.js', [ 'twitter-bootstrap' ], '4.4.0', true );
 
@@ -64,6 +67,7 @@ add_action( 'init', function () {
 		'modernizr',
 		'font-plus',
 		'jsrender',
+	    'bootstrap-notify',
 	], hametuha_version(), true );
 
 	// シングルページ用JS

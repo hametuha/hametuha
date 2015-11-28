@@ -1,0 +1,68 @@
+// eBookList
+.ebookList {
+  &__wrap {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    // Front page
+    .ebookList--front &{
+      padding-bottom: 3em;
+      overflow-y: hidden;
+      overflow-x: scroll;
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+  &__item {
+    float: left;
+    text-align: center;
+    @media only screen and (max-width: $screen-xs-max) {
+      &:nth-child(3n+1) {
+        clear: left;
+      }
+    }
+    @media only screen and (max-width: $screen-md-max) and (min-width: $screen-sm-min) {
+      &:nth-child(4n+1) {
+        clear: left;
+      }
+    }
+    @media only screen and (min-width: $screen-lg) {
+      &:nth-child(6n+1) {
+        clear: left;
+      }
+    }
+    // Front page
+    .ebookList--front &{
+      float: none !important;
+      display: inline-block;
+    }
+  }
+  // フロントページ
+  &--front{
+    // 横スクロール
+    position: relative;
+    background: #f9f9f9;
+    border-top: 3px double #ddd;
+    border-bottom: 3px double #ddd;
+    padding-bottom: 4em;
+    .container{
+      width: 100%;
+    }
+    &:after, &:before{
+      z-index: 10;
+      position: absolute;
+      color: #ccc;
+      font-size: 40px;
+      top: 50%;
+      margin-top: -20px;
+      font-family: "hameticon";
+    }
+    &:after{
+      @extend .icon-arrow-left16:before;
+      left: 5px;
+    }
+    &:before {
+      @extend .icon-arrow-right17:before;
+      right: 5px;
+    }
+  }
+}

@@ -80,6 +80,7 @@ angular.module('hametuFollower', ['ui.bootstrap'])
                         });
                     } else {
                         $scope.followersMore = false;
+                        Hametuha.alert('フォロワーはこれ以上いません');
                     }
                     $scope.tabs[0].loading = false;
                 },
@@ -124,6 +125,7 @@ angular.module('hametuFollower', ['ui.bootstrap'])
                         });
                     } else {
                         $scope.followingMore = false;
+                        Hametuha.alert('フォロワーしている人はもういません');
                     }
                     $scope.tabs[1].loading = false;
                 },

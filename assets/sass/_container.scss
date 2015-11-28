@@ -44,7 +44,7 @@ body {
  */
 @media only screen and (max-width: $screen-xs-max) {
 
-  $offcanvas-width: 75%;
+  $offcanvas-width: 85%;
 
   .row-offcanvas {
     position: relative;
@@ -67,19 +67,24 @@ body {
     }
   }
 
+  // トグルボタン
   #offcanvas-toggle{
-    position: absolute;
-    left: -40px;
-    top: $canvas-pad / 2;
+    position: fixed;
+    right: 0;
+    top: 50%;
+    width: 1em;
+    padding: 3em 1em;
     @include border-radius(0);
-    i{
-      margin-right: 0.5em;
+    opacity: 0.8;
+    .open{
+      display: inline;
     }
-    .icon-arrow-right2{
+    .toggle{
       display: none;
     }
   }
 
+  // オフキャンバスがオンになったとき
   .offcanvas-on{
     .row-offcanvas-right{
       right: $offcanvas-width; /* 6 columns */
@@ -97,11 +102,13 @@ body {
       @include box-shadow(-5px 0 20px 20px rgba(0, 0, 0, .2));
     }
     #offcanvas-toggle{
-      .icon-arrow-left{
+      right: auto;
+      left: 0;
+      .open{
         display: none;
       }
-      .icon-arrow-right2{
-        @include inline-block();
+      .toggle{
+        display: inline;
       }
     }
   }

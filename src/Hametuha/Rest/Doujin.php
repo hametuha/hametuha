@@ -250,6 +250,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 
 	public function get_follower() {
 		$this->auth_redirect();
+		nocache_headers();
 		$this->doujin = new \WP_User( get_current_user_id() );
 		$this->title  = 'フォロワー | ' . $this->title;
 		$this->set_data( [

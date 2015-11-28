@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
     }
     if ($('input[name=commit_type]').length > 0) {
         $('input[name=commit_type]').click(function (e) {
-            for ( var i = 0, l = $('input[name=commit_type]').length; i < l; i++) {
+            for (var i = 0, l = $('input[name=commit_type]').length; i < l; i++) {
                 if ($(this).val() != i + 1) {
                     $('#commit_' + (i + 1)).css('display', 'none');
                 } else {
@@ -69,46 +69,48 @@ jQuery(document).ready(function ($) {
         marker,
         corrds = {
 
-        geocoder: new google.maps.Geocoder(),
+            geocoder: new google.maps.Geocoder(),
 
-        /**
-         * @return {LatLng}
-         */
-        get: function () {
-            var latlng = $('input[name=announcement_latlng]').val().split(':');
-            if (latlng.length > 1) {
-                var lat = latlng[0];
-                var lng = latlng[1];
-                if (lat.match(/^[0-9\-\.]+$/) && lng.match(/^[0-9\-\.]+$/)) {
-                    return new google.maps.LatLng(lat, lng);
+            /**
+             * @return {LatLng}
+             */
+            get: function () {
+                var latlng = $('input[name=announcement_latlng]').val().split(':');
+                if (latlng.length > 1) {
+                    var lat = latlng[0];
+                    var lng = latlng[1];
+                    if (lat.match(/^[0-9\-\.]+$/) && lng.match(/^[0-9\-\.]+$/)) {
+                        return new google.maps.LatLng(lat, lng);
+                    } else {
+                        return null;
+                    }
                 } else {
                     return null;
                 }
-            } else {
-                return null;
+            },
+
+            /**
+             * Set latlng
+             *
+             * @param {google.maps.LatLng} latLng
+             * @return {undefined}
+             */
+            set: function (latLng) {
+                $('input[name=announcement_latlng]').val(latLng.lat() + ':' + latLng.lng());
+            },
+
+            toLatLng: function (address, callback) {
+                this.geocoder.geocode({'address': address}, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        map.setCenter(results[0].geometry.location);
+                        marker.setPosition(results[0].geometry.location);
+                        corrds.set(results[0].geometry.location);
+                    } else {
+                        callback("住所の取得に失敗しました: ", status);
+                    }
+                });
             }
-        },
-
-        /**
-         * @param {google.maps.LatLng}
-         * @return {undefined}
-         */
-        set: function (latLng) {
-            $('input[name=announcement_latlng]').val(latLng.lat() + ':' + latLng.lng());
-        },
-
-        toLatLng: function (address, callback) {
-            this.geocoder.geocode({'address': address}, function (results, status) {
-                if (status == google.maps.GeocoderStatus.OK) {
-                    map.setCenter(results[0].geometry.location);
-                    marker.setPosition(results[0].geometry.location);
-                    corrds.set(results[0].geometry.location);
-                } else {
-                    callback("住所の取得に失敗しました: ", status);
-                }
-            });
-        }
-    };
+        };
 
     // Google Mapの描画（管理画面）
     if ($('#announcement_map').length > 0) {

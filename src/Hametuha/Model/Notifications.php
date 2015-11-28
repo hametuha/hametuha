@@ -79,6 +79,9 @@ class Notifications extends Model
 			case static::TYPE_COMMENT:
 				$url = get_comment_link($object_id);
 				break;
+			case static::TYPE_FOLLOW:
+				$url = home_url( '/doujin/follower/', 'https' );
+				break;
 			default:
 				$url = get_permalink($object_id);
 				break;

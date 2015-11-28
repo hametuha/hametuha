@@ -294,5 +294,3 @@
 		</div>
 
 	</section><!-- //#doujin-detail -->
-
-<?php get_template_part( 'parts/share', 'follow' );

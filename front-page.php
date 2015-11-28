@@ -19,10 +19,12 @@
 			</div>
 
 		<?php endwhile; endif; ?>
+	</div><!-- //.front-container -->
+
+<?php get_template_part( 'parts/list', 'kdp' ) ?>
 
 
-
-
+	<div class="container front-container">
 		<div class="frontpage-widget clearfix">
 
 			<?php dynamic_sidebar( 'frontpage-sidebar' ); ?>
@@ -235,21 +237,21 @@
 					<?php $counter = 0;
 					foreach ( get_recent_authors( 3 ) as $user ) : $counter ++; ?>
 						<li class="clearfix">
-								<?php echo get_avatar( $user->ID, 80 ); ?>
-								<div class="user-info">
-									<a href="<?= home_url( sprintf( '/doujin/detail/%s/', $user->user_nicename ) ); ?>">
+							<?php echo get_avatar( $user->ID, 80 ); ?>
+							<div class="user-info">
+								<a href="<?= home_url( sprintf( '/doujin/detail/%s/', $user->user_nicename ) ); ?>">
 									<h3>
 										<?= esc_html( $user->display_name ); ?>
 										<small><?php echo mysql2date( 'Y/m/d', $user->user_registered ); ?>登録</small>
 									</h3>
-									</a>
-								</div>
-								<p class="list-excerpt">
-									最新投稿:
-									<a href="<?php echo get_permalink( $user->post_id ); ?>">
-										<?php echo $user->post_title; ?>
-									</a>
-								</p>
+								</a>
+							</div>
+							<p class="list-excerpt">
+								最新投稿:
+								<a href="<?php echo get_permalink( $user->post_id ); ?>">
+									<?php echo $user->post_title; ?>
+								</a>
+							</p>
 						</li>
 					<?php endforeach; ?>
 				</ul>

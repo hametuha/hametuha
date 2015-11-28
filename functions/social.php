@@ -404,8 +404,9 @@ function show_twitter_status( $url ) {
  * フォローボタンを出す
  *
  * @param int $author_id
+ * @param bool $block
  */
-function hametuha_follow_btn( $author_id ) {
+function hametuha_follow_btn( $author_id, $block = false ) {
 	static $loaded = false;
 	if ( ! $loaded ) {
 		wp_enqueue_script( 'hametu-follow' );
@@ -416,6 +417,9 @@ function hametuha_follow_btn( $author_id ) {
 			$class_name = \Hametuha\Model\Follower::get_instance()->is_following( get_current_user_id(), $author_id )
 				? ' btn-following'
 				: '';
+			if ( $block ) {
+				$class_name .= ' btn-block';
+			}
 			?>
 			<a href="#" data-follower-id="<?= $author_id ?>" class="btn btn-primary btn-follow<?= $class_name ?>"
 			   rel="nofollow">
@@ -429,7 +433,7 @@ function hametuha_follow_btn( $author_id ) {
 			</a>
 		<?php else : ?>
 			<a class="btn btn-primary" href="<?= home_url( '/doujin/follower/', 'https' ) ?>"><i class="icon-user"></i>
-				フォロワーを見る</a>
+				フォロワー確認</a>
 		<?php endif;
 	else : ?>
 		<a class="btn btn-primary" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">フォローする</a>
