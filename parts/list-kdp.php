@@ -16,6 +16,15 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 	<div class="container">
 		<div class="row ebookList__wrap">
 			<?php
+			if ( !is_front_page() ) {
+				echo <<<HTML
+			<h3 class="text-center ebookList__title">
+				<small>e Book of Hametuha</small><br />
+				破滅派の電子書籍
+			</h3>
+HTML;
+
+			}
 			while ( $query->have_posts() ) {
 				$query->the_post();
 				?>
