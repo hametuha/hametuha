@@ -56,12 +56,14 @@ class Sales extends Model {
 	 *
 	 * @return array|mixed|null
 	 */
-	public function get_records( array $args = [ ] ) {
+	public function get_records( array $args = [] ) {
 		$args = wp_parse_args( $args, [
-			'author' => 0,
-			'asin'   => '',
-			'store'  => '',
-			'type'   => '',
+			'author'   => 0,
+			'asin'     => '',
+			'store'    => '',
+			'type'     => '',
+			'per_page' => 20,
+		    'page'   => 0,
 		] );
 		$this->where_not_null( 'pm.meta_value' );
 		if ( $args['author'] ) {
@@ -73,11 +75,11 @@ class Sales extends Model {
 		if ( $args['type'] ) {
 			$this->where( "{$this->table}.type = %s", $args['type'] );
 		}
-
 		return $this->select( "{$this->table}.*, p.*" )
-					->calc()
-					->order_by( "{$this->table}.date", 'DESC' )
-					->result();
+		            ->calc()
+		            ->order_by( "{$this->table}.date", 'DESC' )
+		            ->limit( $args['per_page'], $args['page'] )
+		            ->result();
 	}
 
 	/**

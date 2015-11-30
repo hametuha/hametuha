@@ -49,11 +49,14 @@ class SalesReportTable extends \WP_List_Table {
 		//Set column header
 		$this->_column_headers = [
 			$this->get_columns(),
-			[ ],
+			[],
 			$this->get_sortable_columns(),
 		];
 
-		$this->items = $this->sales->get_records();
+		$this->items = $this->sales->get_records( [
+			'per_page' => 20,
+			'page'   => max( 0, $this->get_pagenum() - 1 ),
+		] );
 
 		$this->set_pagination_args( [
 			'total_items' => $this->sales->total(),

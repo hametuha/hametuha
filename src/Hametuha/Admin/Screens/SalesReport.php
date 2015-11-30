@@ -54,7 +54,7 @@ class SalesReport extends Screen {
 				// Validate rows
 				$handle  = fopen( $csv, 'r' );
 				$counter = 0;
-				$values  = [ ];
+				$values  = [];
 				$errors  = 0;
 				while ( $line = fgetcsv( $handle ) ) {
 					if ( $counter > 0 ) {
