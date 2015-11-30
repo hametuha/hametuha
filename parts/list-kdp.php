@@ -27,7 +27,7 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 
 						<div class="caption">
 							<p class="text-center">
-								<a class="btn btn-primary btn-sm" href="<?php the_permalink() ?>">詳しく</a>
+								<a class="btn btn-primary btn-sm hidden-xs" href="<?php the_permalink() ?>">詳しく</a>
 								<a data-outbound="kdp"
 								   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 								   data-label="<?php the_ID() ?>" data-value="<?= get_series_price() ?>"
