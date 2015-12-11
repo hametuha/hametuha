@@ -190,7 +190,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 1000 );
 
-
 /**
  * 管理画面でアセットを読み込む
  */

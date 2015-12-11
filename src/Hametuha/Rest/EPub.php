@@ -43,7 +43,7 @@ class EPub extends RestTemplate {
 	/**
 	 * @var array
 	 */
-	protected $factories = [ ];
+	protected $factories = [];
 
 	/**
 	 * ファイルが正しく存在することを確認

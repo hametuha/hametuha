@@ -17,13 +17,29 @@ add_action( 'rss2_item', function () {
 	$series = \Hametuha\Model\Series::get_instance();
 	// サムネイル
 	if ( has_post_thumbnail() ) {
-		$src   = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' )[0];
-		$title = get_the_title_rss();
+		$thum_id = get_post_thumbnail_id();
+		$full    = wp_get_attachment_image_src( $thum_id, 'full' );
+		$title   = esc_attr( apply_filters( 'the_title_rss', get_the_title( $thum_id ) ) );
 		echo <<<XML
-		<media:thumbnail url="{$src}" />
-		<media:content url="{$src}" medium="image">
-			<media:title type="html">{$title}</media:title>
-		</media:content>
+		<media:thumbnail url="{$full[0]}" />
+		<media:group>
+			<media:content size="full" url="{$full[0]}" medium="image" width="{$full[1]}" height="{$full[2]}">
+				<media:title type="plain">{$title}</media:title>
+			</media:content>
+XML;
+		foreach ( [ 'large', 'medium', 'thumbnail' ] as $size ) {
+			$image = wp_get_attachment_image_src( $thum_id, $size );
+			if ( ! $image ) {
+				continue;
+			}
+			echo <<<XML
+				<media:content size="{$size}" url="{$image[0]}" medium="image" width="{$image[1]}" height="{$image[2]}">
+					<media:title type="plain">{$title}</media:title>
+				</media:content>
+XML;
+		}
+		echo <<<XML
+		</media:group>
 XML;
 	}
 	if ( 'series' == get_post_type() ) {
