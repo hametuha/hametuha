@@ -3,6 +3,7 @@
 
 namespace Hametuha\Commands;
 
+use Hametuha\Model\Notifications;
 use WPametu\Service\Akismet;
 use WPametu\Utility\Command;
 
@@ -47,6 +48,30 @@ TEXT;
 	}
 
 	/**
+	 * Send notification
+	 *
+	 * <message>
+	 * : Message to send.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *  wp test notification 'こんにちは！'
+	 *
+	 * @synopsis <message>
+	 *
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function notification( $args, $assoc_args ) {
+		list( $msg ) = $args;
+		if ( Notifications::get_instance()->add_general( 0, 0, $msg, get_option( 'admin_email' ) ) ) {
+			$this->s( 'メッセージを送信しました。' );
+		} else {
+			$this->e( '送信に失敗しました。' );
+		}
+	}
+
+	/**
 	 * Check if mail user is spam
 	 *
 	 * ## EXAMPLES
@@ -66,7 +91,7 @@ TEXT;
 			ON s.email = u.user_email
 			ORDER BY s.ID ASC
 SQL;
-		$subscriber_to_delete = [ ];
+		$subscriber_to_delete = [];
 		$users                = $wpdb->get_results( $query );
 		static::l( sprintf( 'Checking %d users...', count( $users ) ) );
 

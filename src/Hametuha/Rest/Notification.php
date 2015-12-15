@@ -184,7 +184,7 @@ class Notification extends RestTemplate {
 	 * @param array $reviewed_terms
 	 * @param int $rank
 	 */
-	public function review_updated( \WP_Post $post, $user_id = 0, $reviewed_terms = [ ], $rank = 0 ) {
+	public function review_updated( \WP_Post $post, $user_id = 0, $reviewed_terms = [], $rank = 0 ) {
 		$count = $this->review->get_review_count( $post->ID );
 		for ( $i = 4; $i >= 0; $i -- ) {
 			$step = pow( 10, $i );
