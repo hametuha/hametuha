@@ -20,6 +20,35 @@
 		<nav class="collapse navbar-collapse col-sm-8" id="header-navigation">
 			<ul class="nav navbar-nav">
 				<li class="dropdown">
+					<a href="#" class="dropdown-togglen " data-toggle="dropdown">
+						<i class="icon-menu2"></i> メニュー
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a rel="home" href="<?= home_url( '', 'http' ) ?>">
+								<i class="icon-home"></i> ホーム
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a rel="home" href="<?= home_url( 'announcement', 'http' ) ?>">
+								<i class="icon-bullhorn"></i> 告知
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="<?= home_url( '/thread/', 'http' ); ?>">
+								<i class="icon-stack-list"></i> 掲示板トップ
+							</a>
+						</li>
+						<li class="divider"></li>
+						<li><a href="<?= home_url( '/about/', 'http' ); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
+						<li><a href="<?= home_url( '/merumaga/', 'http' ); ?>"><i class="icon-mail"></i> メルマガ購読</a></li>
+						<li><a href="<?= home_url( '/authors/', 'http' ); ?>"><i class="icon-users"></i> 執筆者一覧</a></li>
+						<li><a href="<?= home_url( '/faq/', 'http' ); ?>"><i class="icon-question2"></i> よくある質問</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-book"></i> <span>読む</span>
 					</a>
@@ -78,8 +107,9 @@
 						</li>
 						<?php if ( is_singular() && current_user_can( 'edit_post', get_the_ID() ) ) : ?>
 							<li class="active">
-								<a href="<?= get_edit_post_link( get_the_ID(), 'display' ) ?>"><i
-										class="icon-pencil5"></i> このページを編集</a>
+								<a href="<?= get_edit_post_link( get_the_ID(), 'display' ) ?>">
+									<i class="icon-pencil5"></i> 編集
+								</a>
 							</li>
 						<?php endif; ?>
 					<?php else : ?>
@@ -88,44 +118,24 @@
 								同人になる</a>
 						</li>
 					<?php endif; ?>
-				<?php else : ?>
+				<?php endif; ?>
 
+				<li>
+					<a href="#" data-toggle="modal" data-target="#searchBox">
+						<i class="icon-search2"></i> 探す
+					</a>
+
+				</li>
+
+
+				<?php if ( ! is_user_logged_in() ) : ?>
 					<li class="active">
 						<a href="<?= wp_registration_url() ?>">
 							<i class="icon-user-plus3"></i> 登録
 						</a>
 					</li>
-
 				<?php endif; ?>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<i class="icon-menu2"></i> その他
-					</a>
-					<ul class="dropdown-menu">
-						<li>
-							<a rel="home" href="<?= home_url( '', 'http' ) ?>">
-								<i class="icon-home"></i> ホーム
-							</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a rel="home" href="<?= home_url( 'announcement', 'http' ) ?>">
-								<i class="icon-bullhorn"></i> 告知
-							</a>
-						</li>
-						<li class="divider"></li>
-						<li>
-							<a href="<?= home_url( '/thread/', 'http' ); ?>">
-								<i class="icon-stack-list"></i> 掲示板トップ
-							</a>
-						</li>
-						<li class="divider"></li>
-						<li><a href="<?= home_url( '/about/', 'http' ); ?>"><i class="icon-ha"></i> 破滅派について</a></li>
-						<li><a href="<?= home_url( '/merumaga/', 'http' ); ?>"><i class="icon-mail"></i> メルマガ購読</a></li>
-						<li><a href="<?= home_url( '/authors/', 'http' ); ?>"><i class="icon-users"></i> 執筆者一覧</a></li>
-						<li><a href="<?= home_url( '/faq/', 'http' ); ?>"><i class="icon-question2"></i> よくある質問</a></li>
-					</ul>
-				</li>
+
 			</ul>
 		</nav>
 		<!-- // .navbar-collapse -->
@@ -196,12 +206,12 @@
 							</a>
 						</li>
 						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-						<li>
-							<a href="<?= home_url('/doujin/follower/', 'https') ?>">
-								<i class="icon-heart5"></i>
-								フォロワー
-							</a>
-						</li>
+							<li>
+								<a href="<?= home_url( '/doujin/follower/', 'https' ) ?>">
+									<i class="icon-heart5"></i>
+									フォロワー
+								</a>
+							</li>
 						<?php endif; ?>
 						<li>
 							<a href="<?= wp_logout_url() ?>">
@@ -242,3 +252,47 @@
 	</div>
 	<!-- .navbar -->
 </header>
+
+
+<div class="modal fade" id="searchBox" tabindex="-1" role="dialog" aria-labelledby="searchBox">
+	<div class="modal-dialog">
+		<form action="<?= home_url( '/', 'http' ) ?>" data-action="<?= home_url( '/', 'http' ) ?>">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"><i class="icon-search2"></i>検索フォーム</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="searchBoxS">キーワード</label>
+					<input class="form-control" type="text" name="s" id="searchBoxS" value="<?php the_search_query() ?>" placeholder="ex. 面白い小説" />
+				</div>
+				<div class="form-group">
+					<label class="radio-inline">
+						<input type="radio" name="post_type" value="any" <?php checked( in_array( get_query_var( 'post_type' ), [ '', 'any' ] ) ) ?>/> すべて
+					</label>
+					<?php
+					foreach ( [
+						'post' => '作品',
+						'thread' => '掲示板',
+					    'anpi' => '安否',
+					    'faq' => 'よくある質問',
+					] as $post_type => $label ) :
+					?>
+					<label class="radio-inline">
+						<input type="radio" name="post_type" value="<?= $post_type ?>" <?php checked( get_query_var( 'post_type' ) === $post_type ) ?>/> <?= $label ?>
+					</label>
+					<?php endforeach; ?>
+					<label class="radio-inline">
+						<input type="radio" name="post_type" value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
+					</label>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+				<input type="submit" class="btn btn-primary" value="検索" />
+			</div>
+		</div><!-- /.modal-content -->
+		</form>
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
