@@ -37,7 +37,6 @@
     "html5shiv": "^3.7.3",
     "imagemin-pngquant": "^4.0.0",
     "jshint-stylish": "^1.0.1",
-    "modernizr": "^3.2.0",
     "node-sass": "^2.1.1",
     "respond.js": "^1.4.2"
   }

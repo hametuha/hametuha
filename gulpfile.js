@@ -22,7 +22,7 @@ gulp.task('sass',function(){
             includePaths: [
                 './assets/sass',
                 './vendor',
-                './bower_components/bootstrap-sass/assets/stylesheets',
+                './node_modules/bootstrap-sass/assets/stylesheets',
                 './vendor/hametuha'
             ]
         }))
@@ -172,19 +172,19 @@ gulp.task('imagemin', function(){
 gulp.task('copylib', function(){
     // Build Bootstrap
     gulp.src([
-        './bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-        './bower_components/bootbox.js/bootbox.js'
+        './node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+        './node_modules/bootbox/bootbox.js'
     ])
         .pipe($.concat('bootstrap.js'))
         .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/dist'));
     // Build unpacked Libraries.
     return gulp.src([
-        './bower_components/modernizr/modernizr.js',
-        './bower_components/html5shiv/dist/html5shiv.js',
-        './bower_components/respond/dest/respond.src.js',
-        './bower_components/angular/angular.min.js',
-        './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+        './node_modules/modernizr/modernizr.js',
+        './node_modules/html5shiv/dist/html5shiv.js',
+        './node_modules/respond.js/dest/respond.src.js',
+        './node_modules/angular/angular.js',
+        './node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js'
     ])
         .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/dist/'));

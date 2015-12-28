@@ -46,10 +46,10 @@ add_action( 'init', function () {
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
 
 	// Angular
-	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.min.js', null, '1.4.7', true );
+	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.7', true );
 
 	// Angular Bootstrap
-	wp_register_script( 'angular-bootstrap', get_template_directory_uri().'/assets/js/dist/ui-bootstrap-tpls.min.js', [ 'angular' ], '0.14.3', true );
+	wp_register_script( 'angular-bootstrap', get_template_directory_uri().'/assets/js/dist/ui-bootstrap-tpls.js', [ 'angular' ], '0.14.3', true );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
