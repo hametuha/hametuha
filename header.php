@@ -1,5 +1,4 @@
 <?php get_header( 'meta' ); ?>
-
 <header id="header" class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
 
@@ -85,10 +84,21 @@
 										<i class="icon-quill3"></i>作品を書く
 									</a>
 								</li>
-								<li class="divider"></li>
 								<li>
 									<a href="<?= admin_url( 'edit.php' ) ?>">
 										<i class="icon-books"></i>自分の作品一覧
+									</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<span class="text-muted"><i class="icon-lamp4"></i> アイデア</span>
+								</li>
+								<li>
+									<a href="<?= get_post_type_archive_link( 'ideas' ) ?>">
+										アイデアを探す
+									</a>
+									<a href="<?= home_url( '/my/ideas/new/' ) ?>" data-action="post-idea">
+										アイデアを投稿する
 									</a>
 								</li>
 								<li class="divider"></li>
@@ -105,7 +115,7 @@
 								</li>
 							</ul>
 						</li>
-						<?php if ( is_singular() && current_user_can( 'edit_post', get_the_ID() ) ) : ?>
+						<?php if ( is_singular() && ! in_array( get_post_type(), [ 'ideas', 'thread' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) : ?>
 							<li class="active">
 								<a href="<?= get_edit_post_link( get_the_ID(), 'display' ) ?>">
 									<i class="icon-pencil5"></i> 編集
@@ -171,6 +181,12 @@
 							<a href="<?= home_url( '/your/reviews/', 'http' ) ?>">
 								<i class="icon-star2"></i>
 								レビューした作品
+							</a>
+						</li>
+						<li>
+							<a href="<?= home_url( '/my/ideas/', 'https' ) ?>">
+								<i class="icon-lamp4"></i>
+								アイデア帳
 							</a>
 						</li>
 						<?php if ( current_user_can( 'edit_posts' ) ) : ?>
@@ -252,47 +268,3 @@
 	</div>
 	<!-- .navbar -->
 </header>
-
-
-<div class="modal fade" id="searchBox" tabindex="-1" role="dialog" aria-labelledby="searchBox">
-	<div class="modal-dialog">
-		<form action="<?= home_url( '/', 'http' ) ?>" data-action="<?= home_url( '/', 'http' ) ?>">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title"><i class="icon-search2"></i>検索フォーム</h4>
-			</div>
-			<div class="modal-body">
-				<div class="form-group">
-					<label for="searchBoxS">キーワード</label>
-					<input class="form-control" type="text" name="s" id="searchBoxS" value="<?php the_search_query() ?>" placeholder="ex. 面白い小説" />
-				</div>
-				<div class="form-group">
-					<label class="radio-inline">
-						<input type="radio" name="post_type" value="any" <?php checked( in_array( get_query_var( 'post_type' ), [ '', 'any' ] ) ) ?>/> すべて
-					</label>
-					<?php
-					foreach ( [
-						'post' => '作品',
-						'thread' => '掲示板',
-					    'anpi' => '安否',
-					    'faq' => 'よくある質問',
-					] as $post_type => $label ) :
-					?>
-					<label class="radio-inline">
-						<input type="radio" name="post_type" value="<?= $post_type ?>" <?php checked( get_query_var( 'post_type' ) === $post_type ) ?>/> <?= $label ?>
-					</label>
-					<?php endforeach; ?>
-					<label class="radio-inline">
-						<input type="radio" name="post_type" value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
-					</label>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-				<input type="submit" class="btn btn-primary" value="検索" />
-			</div>
-		</div><!-- /.modal-content -->
-		</form>
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->

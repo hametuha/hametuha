@@ -1,0 +1,23 @@
+extends _layout
+
+block vars
+
+block content
+    .container
+        .page-header
+            h1 バッジ
+        p
+            a(href='#')
+                |メール
+                span.badge 32
+        ul.nav.nav-pills(role='tablist')
+            li.active(role='presentation')
+                a(href='#')
+                    |メール
+                    span.badge 32
+            li(role='presentation')
+                a(href='#') プロフィール
+            li(role='presentation')
+                a(href='#')
+                    |メッセージ
+                    span.badge 3

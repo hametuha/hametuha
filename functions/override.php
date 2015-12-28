@@ -100,6 +100,13 @@ HTML;
 });
 
 /**
+ * タイトルに「非公開」がつくのを防ぐ
+ */
+add_filter('private_title_format', function($title, $post){
+	return '%s';
+}, 10, 2);
+
+/**
  * 画像ファイルを表示していたページにおける後方置換
  * @param array $atts
  * @param string $content

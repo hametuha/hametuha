@@ -1,0 +1,17 @@
+extends _layout
+
+block vars
+
+block content
+    .container
+        .page-header
+            h1 メディアオブジェクト
+        ul.media-list
+            for index in [1, 2, 3]
+                li.media
+                    a(href='#')
+                        .media-left
+                            img.media-object(src='../assets/img/thumbnail.jpg' width='80' height='80')
+                        .media-body
+                            h4.media-heading メディアのタイトルだよ
+                            p メディアの本文です。なにか面白いことを書くと読んでもらえる可能性があります。

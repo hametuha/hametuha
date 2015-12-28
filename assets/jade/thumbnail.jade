@@ -1,0 +1,15 @@
+extends _layout
+
+block vars
+    - var title = 'Thumbnails';
+
+block content
+    .container
+        .row
+            for type in ['img-thumbnail', 'img-circle', 'img-rounded']
+                .col-sm-4
+                    .thumbnail(href='#')
+                        img(class='#{type}' src='./img/dammy/300.png')
+                        .caption
+                            h3.thumbnail-label=type
+                            p これはサムネイルのキャプションです。

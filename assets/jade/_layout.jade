@@ -1,0 +1,30 @@
+doctype html
+html
+    block vars
+    head
+        meta(charset='utf8')
+        title #{title} | Kitchen Sink
+        link(rel='stylesheet' href='./css/app.css')
+        if scripts
+            for s in scripts
+                script(src=s)
+
+    body
+        .navbar.navbar-default.navbar-fixed-top
+            .container
+                .navbar-header
+                    a.navbar-brand(href='./index.html') Kitchen Sink
+
+        #breadcrumb
+            .container
+                i.icon-location5
+                a(href='./index.html') Top
+                |  &gt;
+                span=title
+
+        .container
+            .page-header
+                h1=title
+
+        block content
+

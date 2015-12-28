@@ -1,0 +1,43 @@
+extends _layout
+
+block vars
+    - var title = 'Lists';
+
+block content
+    .container
+        .row
+            for type in ['ol', 'ul']
+                .col-sm-6
+                    #{type}
+                        for item in lists
+                            li=item.body
+        hr
+
+        .row
+            for type in ['', 'dl-horizontal']
+                .col-sm-6
+                    dl(class='#{type}')
+                        for item in lists
+                            dt=item.title
+                            dd=item.body
+
+        hr
+
+        for tableClass in [['', 'table-striped'], ['table-bordered', 'table-condensed']]
+            .row
+                for tc in tableClass
+                    .col-md-6
+                        table(class="table #{tc}")
+                            thead
+                                tr
+                                    th #
+                                    th 姓
+                                    th 名
+                                    th ユーザー名
+                            tbody
+                                for user, index in [{sei: '車', mei: 'だん吉', at: 'dankichi'}, {sei: '川島', mei: 'なお美', at: 'lovewine'}, {sei: '富永', mei: '一朗', at: 'oppai'}, {sei: '鈴木', mei: '義司', at: 'dokan'}]
+                                    tr
+                                        td=1 + index
+                                        td=user.sei
+                                        td=user.mei
+                                        td @#{user.at}

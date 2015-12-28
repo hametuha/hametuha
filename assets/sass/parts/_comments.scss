@@ -41,7 +41,13 @@
         display: block;
         text-align: center;
         position: absolute;
-        right: 15px;
+        right: 0;
+      }
+    }
+    li.deep-enough ul.children{
+      padding-left: 0;
+      li{
+        padding: 15px 0;
       }
     }
     @include comment-avatar(60px);
@@ -49,8 +55,10 @@
     ul.children{
       margin-top: 15px;
       border-top: 1px solid $thin-border;
+      padding-left: 15px;
       li{
         overflow: visible;
+        padding: 15px 0;
         &:before{
           position: absolute;
           font-family: hameticon;

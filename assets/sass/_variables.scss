@@ -40,6 +40,11 @@ $minicome-color: #252525;
 $ustream-color: #2F7BFF;
 $pocket-color: #F04057;
 
+// Button colors
+$border-radius-base: 2px;
+$border-radius-large: 3px;
+$border-radius-small: 3px;
+
 // アイコンの色を決める
 @each $brand in (
   facebook $facebook-color,

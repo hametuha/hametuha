@@ -1,0 +1,18 @@
+extends _layout
+
+block vars
+
+block content
+    .container
+        .page-header
+            h1 埋め込み動画
+        .row
+            .col-sm-6
+                h2 16:9
+                .embed-responsive.embed-responsive-16by9
+                    iframe.embed-responsive-item(src="https://www.youtube.com/embed/nfNjb2V-IQA" allowfullscreen)
+            .col-sm-6
+                h2 4:3
+                .embed-responsive.embed-responsive-4by3
+                    iframe.embed-responsive-item(src="https://www.youtube.com/embed/317EgE-Z9V8" allowfullscreen)
+

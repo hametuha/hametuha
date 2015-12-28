@@ -5,6 +5,7 @@
 /*global wp: true*/
 
 (function ($) {
+
     'use strict';
 
     $(document).ready(function(){

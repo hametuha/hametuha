@@ -1,0 +1,12 @@
+extends _layout
+
+block vars
+    - var title = 'TOC of Kitchen Sink';
+
+block content
+    .container
+        ul.nav.nav-pills.nav-stacked
+            for file in list
+                if 'index.html' != file
+                    li
+                        a(href='./#{file}') #{file}

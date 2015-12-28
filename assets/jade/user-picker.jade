@@ -1,0 +1,42 @@
+extends _layout
+
+block vars
+    - var title = 'User Pickers';
+
+block content
+    .container
+        form
+            h2 初期状態
+            .form-group
+                label(for='recommend_to') ユーザーを選択
+                input.form-control.user-picker#recommend_to(type='text' placeholder='名前を入力して選択してください')
+                ul.user-picker__placeholder.loading
+                .user-picker__loader.text-center
+                .helper-block フォローしているユーザーが表示されます。
+
+            h2 空っぽの時
+            .form-group
+                label(for='recommend_to') ユーザーを選択
+                input.form-control.user-picker#recommend_to(type='text' placeholder='名前を入力して選択してください')
+                ul.user-picker__placeholder.empty
+                .user-picker__loader.text-center
+                .helper-block フォローしているユーザーが表示されます。
+
+            h2 選択状態
+            .form-group.user-picker.filled
+                label(for='recommend_to') ユーザーを選択
+                input.form-control.user-picker__input.active#recommend_to(type='text' placeholder='名前を入力して選択してください')
+                ul.user-picker__placeholder
+                    li.user-picker__item
+                        a.active(href='#')
+                            img(src='../img/dammy/300.png')
+                            | 山田太郎
+                            i.icon-close
+                    for i in [0,1,2]
+                        li.user-picker__item
+                            a(href='#')
+                                img(src='../img/dammy/300.png')
+                                | 山田太郎
+                                i.icon-close
+                .user-picker__loader.text-center
+                .helper-block フォローしているユーザーが表示されます。

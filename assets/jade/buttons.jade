@@ -1,0 +1,30 @@
+extends _layout
+
+block vars
+    - var title = 'Buttons';
+
+block content
+    .container
+        .page-header
+            h2 ボタン
+
+        for size in ['btn-lg', '', 'btn-sm', 'btn-xs']
+            p
+                each val, key in labels
+                    button(class="btn #{size} btn-#{key}", type="button")=val
+                    |&nbsp;
+
+        .page-header
+            h2 アラート
+        p
+            - var msg = '';
+            for val, key in labels
+                button(class="btn btn-#{key} btn-alert" data-type='#{key}' type="button" data-text="これはアラートメッセージの#{val}です。") アラート
+
+    script.
+        jQuery(document).on('click', '.btn-alert', function(e){
+            var type = $(this).attr('data-type'),
+                msg  = $(this).attr('data-text');
+            e.preventDefault();
+            Hametuha.alert(msg, type);
+        });

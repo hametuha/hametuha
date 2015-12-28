@@ -40,34 +40,24 @@ add_action( 'init', function () {
 	wp_register_script( 'modernizr', get_template_directory_uri() . '/assets/js/dist/modernizr.js', null, '2.8.3', false );
 
 	// Twitter Bootstrap
-	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js', [ 'jquery' ], '3.3.3', true );
-
-	// Bootstrap Notify
-	wp_register_script( 'bootstrap-notify', get_template_directory_uri() . '/bower_components/remarkable-bootstrap-notify/bootstrap-notify.min.js', [ 'twitter-bootstrap' ], '3.1.3', true );
-
-	// Bootbox
-	wp_register_script( 'bootbox', get_template_directory_uri() . '/assets/js/dist/bootbox.js', [ 'twitter-bootstrap' ], '4.4.0', true );
+	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/js/dist/bootstrap.js', [ 'jquery' ], '3.3.4', true );
 
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
 
 	// Angular
-	$angular_path = get_template_directory_uri() . '/bower_components/angular/angular'.( WP_DEBUG ? '' : '.min' ).'.js';
-	wp_register_script( 'angular', $angular_path, null, '1.4.7', true );
+	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.min.js', null, '1.4.7', true );
 
 	// Angular Bootstrap
-	$angular_bs_path = get_template_directory_uri() . '/bower_components/angular-bootstrap/ui-bootstrap-tpls'.( WP_DEBUG ? '' : '.min' ).'.js';
-	wp_register_script( 'angular-bootstrap', $angular_bs_path, [ 'angular' ], '0.14.3', true );
+	wp_register_script( 'angular-bootstrap', get_template_directory_uri().'/assets/js/dist/ui-bootstrap-tpls.min.js', [ 'angular' ], '0.14.3', true );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
 		'twitter-bootstrap',
-		'bootbox',
-		'backbone',
+		'wp-api',
 		'modernizr',
 		'font-plus',
 		'jsrender',
-	    'bootstrap-notify',
 	], hametuha_version(), true );
 
 	// シングルページ用JS
@@ -129,7 +119,6 @@ add_action( 'init', function () {
 			'wp-api',
 	], filemtime( get_stylesheet_directory() . $path ), true );
 
-
 	// 投稿編集画面
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery-cookie' ], hametuha_version(), true );
 
@@ -156,7 +145,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_dequeue_style( 'wp-tmkm-amazon' );
 	}
 	//wp-pagenaviのCSSを打ち消し
-	wp_dequeue_style( "wp-pagenavi" );
+	wp_dequeue_style( 'wp-pagenavi' );
 }, 1000 );
 
 
@@ -177,8 +166,8 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_script( 'hametuha-front' );
 	}
 	// シリーズ
-	if( is_singular( 'series' ) ){
-		wp_enqueue_script('hametuha-series');
+	if ( is_singular( 'series' ) ) {
+		wp_enqueue_script( 'hametuha-series' );
 	}
 	//コメント用
 	if ( is_singular() && ! is_page() ) {
@@ -222,8 +211,8 @@ add_action( "admin_enqueue_scripts", function ( $page = '' ) {
  * @action wp_head
  */
 add_action( 'wp_head', function () {
-	$shiv = get_template_directory_uri() . '/bower_components/html5shiv/dist/html5shiv.min.js';
-	$respond = get_template_directory_uri() . '/bower_components/respond/dest/respond.min.js';
+	$shiv = get_template_directory_uri() . '/assets/js/dist/html5shiv.js';
+	$respond = get_template_directory_uri() . '/assets/js/dist/respond.src.js';
 	echo <<<EOS
 <!--[if lt IE 9]>
   <script src="{$shiv}?ver=3.7.0"></script>
@@ -265,7 +254,7 @@ function get_current_post_type_label() {
 			return $post_type->labels->singular_name;
 			break;
 		default:
-			return "作品";
+			return '作品';
 			break;
 	}
 }
@@ -338,60 +327,4 @@ function hametuha_sideload_image( $file, $post_id, $desc = null ) {
 		unlink( $file_array['tmp_name'] );
 	}
 	return $id;
-}
-
-/**
- * 仮のサムネイルを取得する
- *
- * @param null|int|WP_Post $post
- * @deprecated
- *
- * @return array
- */
-function get_pseudo_thumbnail( $post = null ) {
-	static $thumbnails = array();
-	static $index = 0;
-	$post = get_post( $post );
-	if ( has_post_thumbnail( $post->ID ) ) {
-		$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'medium' );
-
-		return [
-			'action' => 'original',
-			'label'  => 'original',
-			'url'    => $src[0],
-			'value'  => 1,
-		];
-	} else {
-		if ( rand( 1, 10 ) < 6 ) {
-			// サムネイルをあえて出さない
-			return [
-				'action' => 'no-thumb',
-				'label'  => 'no-thumb',
-				'url'    => '',
-				'value'  => 1,
-			];
-		} else {
-			// 仮のサムネイルを出す
-			if ( ! $thumbnails ) {
-				$files = array_filter( scandir( get_stylesheet_directory() . '/assets/img/thumbs' ), function ( $file ) {
-					return 0 !== strpos( $file, '.' );
-				} );
-				shuffle( $files );
-				$thumbnails = $files;
-			}
-			// インデックスをリセット
-			if ( $index >= count( $thumbnails ) ) {
-				$index = 0;
-			}
-			$src = $thumbnails[ $index ];
-			$index ++;
-
-			return [
-				'action' => 'pseudo',
-				'label'  => $src,
-				'url'    => get_stylesheet_directory_uri() . '/assets/img/thumbs/' . $src,
-				'value'  => 1,
-			];
-		}
-	}
 }

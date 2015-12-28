@@ -1,0 +1,23 @@
+extends _layout
+
+block vars
+
+
+-
+    var headers = {};
+    for(var i = 1; i <= 6; i++ ){
+        headers['h' + i] = '見出し' + i;
+    };
+    headers.p = '段落';
+
+
+section
+    .container
+        .page-header
+            h1 ラベル
+        for label, tag in headers
+            #{tag}
+                |#{label}
+                for l, k in labels
+                    |&nbsp;
+                    span(class="label label-#{k}")=l

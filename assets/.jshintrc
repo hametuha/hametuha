@@ -6,5 +6,16 @@
   "browser" : true,
   "devel" : false,
   "debug"    : true,
-  "jquery": true
+  "jquery": true,
+  "globals": {
+    "angular": false,
+    "Hametuha": true,
+    "google": false,
+    "WP_API_Settings": false,
+    "Modernizr": false,
+    "bootbox": false,
+    "ga": false,
+    "FB": false
+  }
+
 }

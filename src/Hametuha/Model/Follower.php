@@ -96,15 +96,16 @@ class Follower extends Model
 	/**
 	 * Get followers
 	 *
-	 * @param int $user_id
-	 * @param int $offset
+	 * @param int    $user_id
+	 * @param int    $offset
+	 * @param string $query
 	 * @return array
 	 */
-	public function get_followers( $user_id, $offset = 0 ) {
-		$result          = [
-				'total'  => 0,
-				'offset' => $offset,
-				'users'  => [],
+	public function get_followers( $user_id, $offset = 0, $query = '' ) {
+		$result    = [
+			'total'  => 0,
+			'offset' => $offset,
+			'users'  => [],
 		];
 		$sub_query = <<<SQL
 			(
@@ -112,44 +113,53 @@ class Follower extends Model
 				FROM {$this->table} WHERE user_id = %d
 			) AS r2
 SQL;
-		$sub_query = $this->db->prepare($sub_query, $user_id);
-		$result['users'] = $this->calc()->select( 'u.*, r2.following' )
-		                        ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
-								->join( $sub_query, "u.ID = r2.target_id", 'LEFT' )
-		                        ->wheres( [
-				                        "{$this->table}.target_id = %d" => $user_id,
-				                        "{$this->table}.status = %d"    => 1,
-		                        ] )
-		                        ->order_by( "{$this->table}.updated", 'DESC' )
-		                        ->limit( 20, $offset )
-								->result();
+		$sub_query = $this->db->prepare( $sub_query, $user_id );
+		$this->calc()->select( 'u.*, r2.following' )
+		     ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
+		     ->join( $sub_query, 'u.ID = r2.target_id', 'LEFT' )
+		     ->wheres( [
+			     "{$this->table}.target_id = %d" => $user_id,
+			     "{$this->table}.status = %d"    => 1,
+		     ] )
+		     ->order_by( "{$this->table}.updated", 'DESC' )
+		     ->limit( 20, $offset );
+		if ( $query ) {
+			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
+		}
+		$result['users'] = $this->result();
 		$result['total'] = $this->found_count();
+
 		return $result;
 	}
 
 	/**
 	 * Get followings
 	 *
-	 * @param int $user_id
-	 * @param int $offset
+	 * @param int    $user_id
+	 * @param int    $offset
+	 * @param string $query
 	 * @return array
 	 */
-	public function get_following( $user_id, $offset = 0 ) {
-		$result          = [
-				'total'  => 0,
-				'offset' => $offset,
-				'users'  => [],
+	public function get_following( $user_id, $offset = 0, $query = '' ) {
+		$result = [
+			'total'  => 0,
+			'offset' => $offset,
+			'users'  => [],
 		];
-		$result['users'] = $this->calc()->select( 'u.*' )
-		                        ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
-		                        ->wheres( [
-				                        "{$this->table}.user_id = %d" => $user_id,
-				                        "{$this->table}.status = %d"    => 1,
-		                        ] )
-		                        ->order_by( "{$this->table}.updated", 'DESC' )
-		                        ->limit( 20, $offset )
-		                        ->result();
+		$this->calc()->select( 'u.*' )
+		     ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
+		     ->wheres( [
+			     "{$this->table}.user_id = %d" => $user_id,
+			     "{$this->table}.status = %d"  => 1,
+		     ] )
+		     ->order_by( "{$this->table}.updated", 'DESC' )
+		     ->limit( 20, $offset );
+		if ( $query ) {
+			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
+		}
+		$result['users'] = $this->result();
 		$result['total'] = $this->found_count();
+
 		return $result;
 	}
 

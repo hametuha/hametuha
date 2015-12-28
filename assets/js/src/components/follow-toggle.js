@@ -2,6 +2,7 @@
  * Description
  */
 
+/*global Hametuha: true*/
 /*global WP_API_Settings: true*/
 
 (function ($) {

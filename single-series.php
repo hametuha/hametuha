@@ -203,16 +203,24 @@
 							<small><?= $author->editor ? ( $author->author ? '編集・執筆' : '編集' ) : '執筆' ?></small>
 						</h3>
 
-						<div class="series__author--desc">
-							<?= wpautop( get_user_meta( $author->ID, 'description', true ) ) ?>
+						<?php $desc = get_user_meta( $author->ID, 'description', true ); ?>
+						<div class="series__author--desc<?= 100 < mb_strlen( $desc, 'utf-8' ) ? ' series__author--longdesc' : '' ?>">
+							<?= wpautop( $desc ) ?>
 						</div>
 
-						<div class="series__authorLink">
-							<a class="btn btn-default" href="<?= home_url( '/doujin/detail/'.$author->user_nicename.'/', 'http' ); ?>">詳しいプロフィール</a>
-						</div>
 					</div>
 					<!-- //.series__author -->
 
+					<div class="col-xs-5 text-center">
+						<a class="btn btn-default btn--author"
+						   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) ), 'http' ) ?>"
+						   itemprop="url">
+							詳しく見る
+						</a>
+					</div>
+					<div class="col-xs-7 text-center">
+						<?php hametuha_follow_btn( $author->ID, true ); ?>
+					</div>
 				</div><!-- //.row -->
 
 			<?php endforeach; ?>

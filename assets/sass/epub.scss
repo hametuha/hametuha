@@ -11,10 +11,4 @@
 //@import "icon";
 
 @import "mixins";
-@import "epub/common";
-@import "epub/toc";
-@import "epub/creators";
-@import "epub/colophon";
-@import "epub/cover";
-
-@import "epub/post_content";
+@import "epub/*";

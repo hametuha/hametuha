@@ -12,7 +12,6 @@ function hametuha_version() {
 	return $theme->get( 'Version' );
 }
 
-
 /**
  * Version Number for Hametuha Theme
  *

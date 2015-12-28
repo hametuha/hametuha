@@ -6,6 +6,8 @@
 
 tinymce.PluginManager.add('hametuha', function(editor, url) {
 
+    "use strict";
+
     /**
      * Apply CSS to TinyMCE editor
      *
@@ -42,30 +44,29 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
         var dom = editor.dom,
             selectors = [],
             nodes = dom.doc.body.childNodes;
-        for( var i = 0, l = nodes.length; i < l; i++ ){
-            switch( nodes[i].nodeName ){
+        jQuery.each(nodes, function(i, node){
+            switch( node.nodeName ){
                 case 'P':
-                    if( !needIndent(nodes[i]) ){
-                        selectors.push('body > p:nth-child(' + (i + 1) + ')')
+                    if( !needIndent(node) ){
+                        selectors.push('body > p:nth-child(' + (i + 1) + ')');
                     }
                     break;
                 case 'BLOCKQUOTE':
-                    (function(node, index){
-                        var children = node.childNodes;
-                        for( var j = 0, k = children.length; j < k; j++ ){
-                            if( 'P' === children[j].nodeName && !needIndent(children[j]) ){
-                                selectors.push('body > blockquote:nth-child(' + (index + 1) + ') > p:nth-child(' + ( j + 1 ) + ')');
-                            }
+                    var children = node.childNodes;
+                    for (var j = 0, k = children.length; j < k; j++) {
+                        if ('P' === children[j].nodeName && !needIndent(children[j])) {
+                            selectors.push('body > blockquote:nth-child(' + (i + 1) + ') > p:nth-child(' + ( j + 1 ) + ')');
                         }
-                    })(nodes[i], i);
+                    }
                     break;
                 default:
                     // Do nothing
                     break;
             }
-        }
+
+        });
         if( selectors.length ){
-            applyStyle(dom.doc, selectors.join(',') + '{text-indent: 0;}')
+            applyStyle(dom.doc, selectors.join(',') + '{text-indent: 0;}');
         }
     }
 

@@ -1,0 +1,16 @@
+extends _layout
+
+block vars
+
+block content
+    .container
+        .page-header
+            h1 プログレスバー
+        for value, type in { 'default': 60, success: 40, info: 20,  warning: 60, danger: 80, striped: 60}
+            .progress
+                div(class="progress-bar progress-bar-#{type}" role='progressbar' aria-valuenow='#{value}' style='width: #{value}%')
+                    span.sr-only #{value}% 完了
+        .progress
+            for value, type in { success: 35, warning: 20, danger: 10 }
+                div(class="progress-bar progress-bar-#{type}" role='progressbar' aria-valuenow='#{value}' style='width: #{value}%')
+                    span.sr-only #{value}% 完了(#{type})

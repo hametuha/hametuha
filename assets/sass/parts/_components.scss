@@ -1,5 +1,13 @@
 @import "amazon";
 
+body.modal-open{
+  padding-right: 0 !important;
+}
+
+a[disabled], input[disabled]{
+  cursor: not-allowed;
+}
+
 // ヘルプボタン
 .help-tip{
   padding: 1px 5px;
@@ -18,7 +26,6 @@
     background-color: #000;
   }
 }
-
 .btn-amazon{
   &:link, &:visited{
     color: #fff;
@@ -41,6 +48,12 @@ i.rotation{
   display: inline-block;
 }
 
+// ハイライト
+@include bg-blink(highlight, #fff, #fff7ab);
+.highlighting{
+  @include animation(highlight 1.5s linear infinite);
+}
+
 // サムネイル
 .pseudo-thumbnail{
   background-size: cover;
@@ -53,11 +66,13 @@ i.rotation{
     max-width: 45%;
   }
 }
-@media only screen and (max-width: $screen-xs-max) {
+@include mq-max($screen-xs-max){
   .pager{
     font-size: 12px;
   }
 }
+
+
 .has-feedback{
   .icon-checkmark,
   .icon-spam,
@@ -162,6 +177,35 @@ i.rotation{
     @include inline-block();
   }
 }
+// インジケーター
+%loading-indicator{
+  &:before{
+    content: "";
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(255, 255, 255, .6);
+    z-index: 10;
+  }
+  &:after{
+    @extend .icon-spinner2:before;
+    @extend .rotation;
+    font-family: "hameticon";
+    display: inline-block;
+    $size: 100px;
+    font-size: $size;
+    position: absolute;
+    z-index: 11;
+    color: #ccc;
+    top: 50%;
+    left: 50%;
+    margin-top: -0.5 * $size;
+    margin-left: -0.5 * $size;
+  }
+}
 
 .container-subtitle{
   font-size: 14px;
@@ -241,6 +285,23 @@ i.rotation{
   }
 }
 
+@mixin long-desc($color){
+  max-height: 6em;
+  overflow: hidden;
+  z-index: 2;
+  position: relative;
+  &:after{
+    position: absolute;
+    content: "";
+    display: block;
+    height: 2em;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    @include gradient-vertical(transparentize($color, 1), $color );
+  }
+}
+
 // 共通
 .author-profile{
   $border: 1px solid $navbar-default-border;
@@ -260,20 +321,7 @@ i.rotation{
     margin-bottom: 1em;
     line-height: 1.2;
     &--long{
-      max-height: 6em;
-      overflow: hidden;
-      z-index: 2;
-      position: relative;
-      &:after{
-        position: absolute;
-        content: "";
-        display: block;
-        height: 2em;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        @include gradient-vertical(transparentize($navbar-default-bg, 1), $navbar-default-bg );
-      }
+      @include long-desc($navbar-default-bg);
     }
   }
 }
@@ -690,3 +738,20 @@ form{
   }
 }
 
+// アラート
+.alert-sticky{
+  border-radius: 0;
+  position: fixed;
+  opacity: 0;
+  top: $navbar-height;
+  margin-top: -1 * $navbar-height;
+  left: 0;
+  right: 0;
+  height: auto;
+  z-index: $zindex-navbar-fixed - 1;
+  @include transition( margin-top .5s ease-out 0, opacity .5s ease-out 0);
+  &-on{
+    margin-top: 0;
+    opacity: 1;
+  }
+}

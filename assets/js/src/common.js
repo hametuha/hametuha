@@ -2,10 +2,6 @@
  * 破滅派サイト全体で共通して読み込まれるファイル
  */
 
-/*global ga: true*/
-/*global FB: true*/
-/*global twttr: true*/
-
 (function ($) {
 
     "use strict";
@@ -64,7 +60,6 @@
                             if (Modernizr.touch) {
                                 window.location.href = url;
                             } else {
-
                                 if ('share' === category) {
                                     window.open(url, 'outbound', "width=520, height=350");
                                 } else {
@@ -104,19 +99,36 @@
          * グローバルメッセージを表示する
          *
          * @param {String} message
-         * @param {Boolean} [error]
+         * @param {String} [type]
          */
-        alert: function (message, error) {
-            $.notify({
-                // options
-                message: message
-            }, {
-                // settings
-                type     : error ? 'danger' : 'success',
-                placement: {
-                    align: 'center'
-                }
-            });
+        alert: function (message, type) {
+            var typeName, body, $alert;
+            switch( type ){
+                case 'info':
+                case 'danger':
+                case 'warning':
+                    typeName = type;
+                    break;
+                case true: // Backward compats
+                case 'error':
+                    typeName = 'danger';
+                    break;
+                default:
+                    typeName = 'success';
+                    break;
+            }
+            body = '<div class="alert alert-' + typeName + ' alert-dismissible alert-sticky" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                    message +
+                '</div>';
+            $alert = $(body);
+            $('body').append($alert);
+            setTimeout(function(){
+                $alert.addClass('alert-sticky-on');
+            }, 10);
+            setTimeout(function(){
+                $alert.remove();
+            }, 7000);
         },
 
         /**
@@ -180,31 +192,41 @@
              * @param {String|Function} body
              */
             open : function (title, body) {
-                var box = $('#hametu-modal');
-                box.find('.modal-title').html(title);
+                this.reset();
+                var $box = $('#hametu-modal');
+                $box.find('.modal-title').html(title);
                 if (typeof body === 'function') {
                     //
-                    box.addClass('loading');
-                    body(box);
+                    $box.addClass('loading');
+                    body($box);
                 } else {
                     // 追加して開く
-                    box.find('.modal-body').html(body);
+                    $box.find('.modal-body').html(body);
                 }
-                box.modal('show');
+                $box.modal('show');
             },
             /**
              * モーダルボックスを閉じる
              */
             close: function () {
-                var box = $('#hametu-modal');
-                box.find('.modal-title').html('');
-                box.find('.modal-body').html('');
-                box.modal('hide');
+                var $box = $('#hametu-modal');
+                this.reset();
+                $box.modal('hide');
+            },
+
+            reset: function (){
+                var $box = $('#hametu-modal');
+                $box.find('.modal-title').html('');
+                $box.find('.modal-body').html('');
             }
+
         }
     };
 })(jQuery);
 
+/**
+ * フォームの処理を行う
+ */
 
 jQuery(document).ready(function ($) {
 
@@ -243,34 +265,6 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    // Off canvas
-    $('[data-toggle=offcanvas]').click(function () {
-        $('body').toggleClass('offcanvas-on');
-    });
-
-    // ツールチップ
-    $('.help-tip').tooltip({
-        trigger  : 'hover focus click',
-        container: 'body'
-    });
-
-
-    // プロフィールナビ
-    var profileNav = $('#profile-navi');
-    if (profileNav.length) {
-        var profileNavs = {};
-        $('section', '#your-profile').each(function (index, section) {
-            var id = 'profile-section-' + (index + 1);
-            $(section).attr('id', id);
-            profileNavs[id] = $(section).find('h2, h3:first-child').text();
-        });
-        for (var id in profileNavs) {
-            if (profileNavs.hasOwnProperty(id)) {
-                profileNav.append('<li><a href="#' + id + '">' + profileNavs[id] + '</a></li>');
-            }
-        }
-    }
-
     // フォームバリデーション
     $('.validator').submit(function (e) {
         $(this).find('runtime-error').remove();
@@ -288,6 +282,200 @@ jQuery(document).ready(function ($) {
             e.preventDefault();
         }
     });
+
+    // 検索フォーム
+    $(document).on('submit', '#searchBox form', function(){
+        var $checked = $(this).find('input[name=post_type]:checked');
+        switch( $checked.val() ){
+            case 'any':
+                // Remove radio
+                $checked.attr('checked', false);
+                break;
+            case 'author':
+                $(this).attr('action', $checked.attr('data-search-action'));
+                $checked.attr('checked', false);
+                break;
+            default:
+                // Do nothing
+                break;
+        }
+    });
+});
+
+/**
+ * アイデアを表示するボタン
+ */
+
+/*global Hametuha: true*/
+/*global WP_API_Settings: true*/
+
+(function ($) {
+
+    'use strict';
+
+    // ストックボタン
+    $(document).on('click', 'a[data-stock]', function (e) {
+        var $button = $(this),
+            post_id = $button.attr('data-stock');
+        e.preventDefault();
+        $button.attr('disabled', true);
+        $.ajax({
+            url       : WP_API_Settings.root + 'hametuha/v1/idea/' + post_id + '/',
+            method    : 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+            }
+        }).done(function (response) {
+            $button.attr('data-stock', null).text('ストック済み');
+            Hametuha.alert('このアイデアをストックしました。');
+        }).fail(function (response) {
+            var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+            Hametuha.alert(message, true);
+            $button.attr('disabled', false);
+        });
+    });
+
+    // 薦めるボタン
+    $(document).on('click', 'a[data-recommend]', function (e) {
+        var $button = $(this),
+            ideaId  = $button.attr('data-recommend');
+        e.preventDefault();
+        Hametuha.modal.open('アイデアを薦める', function ($box) {
+            // フォームを取得して表示する
+            $.post($button.attr('href')).done(function (response) {
+                $box.removeClass('loading').find('.modal-body').append(response.html);
+            }).fail(function (response) {
+                var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+                Hametuha.alert(message, true);
+                Hametuha.modal.close();
+            });
+        });
+    });
+
+    // 薦めるフォーム
+    $(document).on('submit', '#recommend-idea-form', function (e) {
+        e.preventDefault();
+        $.ajax({
+            method    : 'PUT',
+            url       : WP_API_Settings.root + 'hametuha/v1/idea/' + $(this).attr('data-post-id') + '/',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+            },
+            data      : {
+                user_id: $(this).find("#recommend_to").val()
+            }
+        }).done(function (response) {
+            Hametuha.alert(response.message);
+            Hametuha.modal.close();
+        }).fail(function (response) {
+            var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+            Hametuha.alert(message, true);
+        });
+    });
+
+    // アイデアを投稿する
+    $(document).on('click', 'a[data-action="post-idea"]', function (e) {
+        e.preventDefault();
+        var $button = $(this);
+        Hametuha.modal.open('アイデアを投稿する', function ($box) {
+            $.post($button.attr('href')).done(function (response) {
+                $box.removeClass('loading').find('.modal-body').append(response.html);
+            }).fail(function (response) {
+                var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+                Hametuha.alert(message, true);
+                Hametuha.modal.close();
+            });
+        });
+    });
+
+    // アイデアを保存する
+    $(document).on('submit', '#new-idea-form', function (e) {
+        e.preventDefault();
+        var endpoint     = 'hametuha/v1/idea/mine/',
+            $idContainer = $(this).find('#new-idea-id'),
+            method, data;
+        data = {
+            title  : $('#new-idea-name').val(),
+            content: $('#new-idea-content').val(),
+            status : $('#new-idea-privacy').attr('checked') ? 'private' : 'publish',
+            genre  : $('#new-idea-genre').val()
+        };
+        if ($idContainer.length) {
+            method = 'PUT';
+            data.post_id = $idContainer.val();
+        } else {
+            method = 'POST';
+        }
+        $.ajax({
+            method    : method,
+            url       : WP_API_Settings.root + endpoint,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+            },
+            data      : data
+        }).done(function (response) {
+            Hametuha.modal.close();
+            if (window.location.href === response.url) {
+                Hametuha.alert(response.message + '3秒後にページを更新します……');
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            } else {
+                Hametuha.alert(response.message + '<a class="alert-link" href="' + response.url + '">アイデアのページヘ移動する</a>');
+            }
+        }).fail(function (response) {
+            var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+            Hametuha.alert(message, true);
+        });
+    });
+
+    // アイデアを削除する
+    $(document).on('click', 'a[data-action="delete-idea"]', function (e) {
+        e.preventDefault();
+        var postId = $(this).attr('data-post-id');
+        Hametuha.confirm('このアイデアを削除してよろしいですか？', function () {
+            $.ajax({
+                method    : 'DELETE',
+                url       : WP_API_Settings.root + 'hametuha/v1/idea/mine/?post_id=' + postId,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                }
+            }).done(function (response) {
+                Hametuha.alert(response.message);
+            }).fail(function (response) {
+                var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+                Hametuha.alert(message, 'danger');
+            });
+        }, true);
+    });
+
+    // アイデアを編集する
+    $(document).on('click', 'a[data-action="edit-idea"]', function (e) {
+        var endpoint = $(this).attr('href');
+        e.preventDefault();
+        Hametuha.modal.open('アイデアを編集する', function ($box) {
+            $.post(endpoint).done(function (response) {
+                $box.removeClass('loading').find('.modal-body').append(response.html);
+            }).fail(function (response) {
+                var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+                Hametuha.alert(message, 'danger');
+                Hametuha.modal.close();
+            });
+        });
+    });
+
+
+})(jQuery);
+
+/**
+ * リスト作成用のフォーム
+ */
+
+/*global Hametuha: true*/
+
+jQuery(document).ready( function ($) {
+
+    'use strict';
 
     // リスト作成用モーダル
     $(document).on('click', 'a.list-creator', function (e) {
@@ -392,6 +580,20 @@ jQuery(document).ready(function ($) {
         });
     }
 
+
+});
+
+/**
+ * Social related functions
+ */
+
+/*global Hametuha: true*/
+/*global FB:false*/
+
+jQuery(document).ready(function ($) {
+
+    'use strict';
+
     // ソーシャルカウント
     $('.row--share').each(function (index, elt) {
         var $box = $(this);
@@ -454,30 +656,25 @@ jQuery(document).ready(function ($) {
 
     // いいねを集計
     var fbTimer = setInterval(function () {
-        if (window.FB && window.FB.Event) {
+        if ( window.FB && window.FB.Event ) {
             clearInterval(fbTimer);
             var actions = {
                 create: 'like',
                 remove: 'dislike'
             };
-            for (var prop in actions) {
-                if (!actions.hasOwnProperty(prop)) {
-                    continue;
-                }
-                (function (p, action) {
-                    FB.Event.subscribe('edge.' + p, function (url) {
-                        try {
-                            ga('send', {
-                                hitType      : 'social',
-                                socialNetwork: 'facebook',
-                                socialAction : action,
-                                socialTarget : url.replace(/^https?:\/\/hametuha\.(com|info)/, '')
-                            });
-                        } catch (err) {
-                        }
-                    });
-                })(prop, actions[prop]);
-            }
+            $.each(actions, function(prop, action){
+                FB.Event.subscribe('edge.' + prop, function (url) {
+                    try {
+                        ga('send', {
+                            hitType      : 'social',
+                            socialNetwork: 'facebook',
+                            socialAction : action,
+                            socialTarget : url.replace(/^https?:\/\/hametuha\.(com|info)/, '')
+                        });
+                    } catch (err) {
+                    }
+                });
+            });
         }
     }, 100);
 
@@ -485,22 +682,171 @@ jQuery(document).ready(function ($) {
     var twTimer = setInterval(function () {
         if (window.twttr && window.twttr.events) {
             clearInterval(twTimer);
-            var events = ['follow', 'tweet', 'retweet', 'click', 'favorite'];
-            for (var i = 0; i < events.length; i++) {
-                (function (key) {
-                    window.twttr.events.bind(key, function (event) {
-                        try {
-                            ga('send', {
-                                hitType      : 'social',
-                                socialNetwork: 'twitter',
-                                socialAction : key,
-                                socialTarget : window.location.pathname
-                            });
-                        } catch (err) {
-                        }
-                    });
-                })(events[i]);
-            }
+            $.each( ['follow', 'tweet', 'retweet', 'click', 'favorite'], function(index, key){
+                window.twttr.events.bind(key, function (event) {
+                    try {
+                        ga('send', {
+                            hitType      : 'social',
+                            socialNetwork: 'twitter',
+                            socialAction : key,
+                            socialTarget : window.location.pathname
+                        });
+                    } catch (err) {
+                    }
+                });
+            });
         }
     }, 100);
+
 });
+
+/**
+ * Common UI Parts
+ */
+
+/*global Hametuha: true*/
+
+jQuery(document).ready(function ($) {
+
+    'use strict';
+
+    // Off canvas
+    $('[data-toggle=offcanvas]').click(function () {
+        $('body').toggleClass('offcanvas-on');
+    });
+
+    // ツールチップ
+    $('.help-tip').tooltip({
+        trigger  : 'hover focus click',
+        container: 'body'
+    });
+
+    // プロフィールページのナビ
+    var profileNav = $('#profile-navi');
+    if (profileNav.length) {
+        var profileNavs = {};
+        $('section', '#your-profile').each(function (index, section) {
+            var id = 'profile-section-' + (index + 1);
+            $(section).attr('id', id);
+            profileNavs[id] = $(section).find('h2, h3:first-child').text();
+        });
+        for (var id in profileNavs) {
+            if (profileNavs.hasOwnProperty(id)) {
+                profileNav.append('<li><a href="#' + id + '">' + profileNavs[id] + '</a></li>');
+            }
+        }
+    }
+
+});
+
+/**
+ * ユーザーをピックアップするボックス
+ */
+
+/*global Hametuha: true*/
+/*global WP_API_Settings: true */
+
+(function ($) {
+
+    'use strict';
+
+    /**
+     * Get parent container
+     *
+     * @param {Object} element
+     * @returns {jQuery}
+     */
+    function getParent(element) {
+        return $(element).parents('.user-picker');
+    }
+
+    /*
+     * Avoid Enter
+     */
+    $(document).on('keydown', '.user-picker__input', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    /*
+     * Incremental Search
+     */
+    var userPickerTimer, userPicking = false, tpl = {};
+    $(document).on('keyup', '.user-picker__input', function (e) {
+        if (userPicking) {
+            return;
+        }
+        // If timer is set, clear.
+        if (userPickerTimer) {
+            clearTimeout(userPickerTimer);
+        }
+        var $input     = $(this),
+            $container = $input.parents('.user-picker'),
+            $lists = $input.next('.user-picker__placeholder'),
+            templates  = {};
+
+        userPickerTimer = setTimeout(function () {
+            userPicking = true;
+            $lists.removeClass('empty').addClass('loading');
+            $lists.find('.user-picker__item').each(function(index, li){
+                if( ! $(li).find('.user-picker__link.active').length ){
+                    $(li).remove();
+                }
+            });
+            $.ajax({
+                url       : WP_API_Settings.root + 'hametuha/v1/doujin/following/me/?s=' + $input.val(),
+                method    : 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                }
+            }).done(function (response) {
+                if (response.users.length) {
+                    var id = $container.attr('data-target');
+                    if( ! templates.hasOwnProperty(id) ){
+                        templates[id] = $.templates(id + '-template');
+                    }
+                    $.each(response.users, function (index, user) {
+                        $lists.append(templates[id].render(user));
+                    });
+                }
+            }).fail(function (response) {
+                var message = response.responseJSON ? response.responseJSON.message : '失敗しました。';
+                Hametuha.alert(message, true);
+            }).always(function () {
+                $lists.removeClass('loading');
+                if ( ! $lists.find('.user-picker__item').length ) {
+                    $lists.addClass('empty');
+                }
+                userPickerTimer = null;
+                userPicking = false;
+            });
+        }, 1000);
+    });
+
+    $(document).on('click', '.user-picker__link', function (e) {
+        e.preventDefault();
+        $(this).toggleClass('active');
+        var $container = $(this).parents('.user-picker'),
+            ids = [],
+            max = parseInt($container.attr('data-max'), 10);
+        if ($(this).hasClass('active')) {
+        } else {
+            $(this).parent('li').remove();
+            $container.removeClass('filled');
+        }
+        $container.find('.user-picker__link.active').each(function(index, a){
+            ids.push($(a).attr('data-user-id'));
+        });
+        if (max <= ids.length) {
+            $container.addClass('filled');
+            $container.find('.user-picker__link:not(.active)').each(function(i, notActive){
+                $(notActive).parent('li').remove();
+            });
+        }
+        $($container.attr('data-target')).val(ids.join(','));
+    });
+
+
+})(jQuery);

@@ -2,6 +2,54 @@
 	get_template_part( 'parts/list', 'kdp' );
 } ?>
 
+
+
+
+<div class="modal fade" id="searchBox" tabindex="-1" role="dialog" aria-labelledby="searchBox">
+	<div class="modal-dialog">
+		<form action="<?= home_url( '/', 'http' ) ?>" data-action="<?= home_url( '/', 'http' ) ?>">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title"><i class="icon-search2"></i>検索フォーム</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="searchBoxS">キーワード</label>
+						<input class="form-control" type="text" name="s" id="searchBoxS" value="<?php the_search_query() ?>" placeholder="ex. 面白い小説" />
+					</div>
+					<div class="form-group">
+						<label class="radio-inline">
+							<input type="radio" name="post_type" value="any" <?php checked( false !== array_search( get_query_var( 'post_type' ), [ '', 'any' ] ) ) ?>/> すべて
+						</label>
+						<?php
+						foreach ( [
+							'post' => '作品',
+							'thread' => '掲示板',
+							'anpi' => '安否',
+							'faq' => 'よくある質問',
+						] as $post_type => $label ) :
+							?>
+							<label class="radio-inline">
+								<input type="radio" name="post_type" value="<?= $post_type ?>" <?php checked( get_query_var( 'post_type' ) === $post_type ) ?>/> <?= $label ?>
+							</label>
+						<?php endforeach; ?>
+						<label class="radio-inline">
+							<input type="radio" name="post_type" data-search-action="<?= home_url( 'authors/', 'http' ) ?>" value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
+						</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+					<input type="submit" class="btn btn-primary" value="検索" />
+				</div>
+			</div><!-- /.modal-content -->
+		</form>
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
 <footer id="footer">
 	<div id="footer-sidebar" class="container">
 		<div class="col-sm-4 text-center">

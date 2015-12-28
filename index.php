@@ -24,6 +24,8 @@
 					get_template_part( 'parts/jumbotron', 'lists' );
 				} elseif ( is_ranking() ) {
 					get_template_part( 'parts/jumbotron', 'ranking' );
+				} elseif( is_post_type_archive('ideas') ){
+					get_template_part( 'parts/jumbotron', 'ideas' );
 				}
 				?>
 

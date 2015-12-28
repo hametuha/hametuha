@@ -32,6 +32,24 @@
   }
 }
 
+@mixin mq-max($screen){
+  @media only screen and (max-width: $screen){
+    @content;
+  }
+}
+
+@mixin mq-min($screen){
+  @media only screen and (min-width: $screen){
+    @content;
+  }
+}
+
+@mixin mq($screen-min, $screen-max){
+  @media only screen and (min-width: $screen-sm-min) and (max-width: $screen-max){
+    @content;
+  }
+}
+
 
 //
 // Backward compats

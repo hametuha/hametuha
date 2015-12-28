@@ -1,6 +1,64 @@
 <?php
 
 /**
+ * A template loader which accepts arguments.
+ *
+ * @param string       $slug
+ * @param string|array $name
+ * @param array        $args Arguments to pass.
+ * @param bool         $echo If false, return string.
+ * @param string       $glue Default is '-'. You can specify '/' which means directory separator.
+ *
+ * @return null|string
+ */
+function hameplate( $slug, $name = '', $args = [], $echo = true, $glue = '-' ) {
+	$file = [];
+	if ( ! $name ) {
+		$file[] = $slug;
+	} elseif ( is_array( $name ) ) {
+		for ( $i = count( $name ); $i > 0; $i -- ) {
+			$file[] = $slug . $glue . implode( $glue, array_slice( $name, 0, $i ) );
+		}
+		$file[] = $slug;
+	} else {
+		$file[] = $slug . $glue . $name;
+		$file[] = $slug;
+	}
+	$dirs = [ get_stylesheet_directory() ];
+	if ( is_child_theme() ) {
+		$dirs[] = get_template_directory();
+	}
+	$path = '';
+	foreach ( $file as $f ) {
+		foreach ( $dirs as $dir ) {
+			$p = $dir . DIRECTORY_SEPARATOR . $f . '.php';
+			if ( file_exists( $p ) ) {
+				$path = $p;
+				break 2;
+			}
+		}
+	}
+	if ( ! $path ) {
+		return $echo ? null : '';
+	}
+	// Enable vars.
+	global $posts, $post, $wp_query, $wp_rewrite, $wpdb;
+	if ( $args ) {
+		extract( $args );
+	}
+	if ( $echo ) {
+		include $path;
+	} else {
+		ob_start();
+		include $path;
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		return $output;
+	}
+}
+
+/**
  * アドミンバーを常に非表示
  *
  * @filter show_admin_bar
@@ -9,7 +67,6 @@
 add_filter( 'show_admin_bar', function () {
 	return false;
 }, 1000 );
-
 
 /**
  * コンテキストに応じたサイドバーを読み込む
@@ -24,6 +81,8 @@ function contextual_sidebar() {
 			$sidebar = 'thread';
 		} elseif ( is_singular( 'faq' ) || is_post_type_archive( 'faq' ) || is_tax( 'faq_cat' ) ) {
 			$sidebar = 'faq';
+		} elseif ( is_post_type_archive( 'ideas' ) ) {
+			$sidebar = 'ideas';
 		} else {
 			$sidebar = '';
 		}
@@ -50,6 +109,18 @@ function contextual_sidebar() {
 function help_tip( $string, $place = null ) {
 	printf( '<a href="#" class="btn btn-xs btn-default help-tip" data-toggle="tooltip" data-original-title="%s"%s><i class="icon-question5"></i></a>',
 		esc_attr( $string ), ( $place ? 'data-placement="' . esc_attr( $place ) . '"' : '' ) );
+}
+
+/**
+ * リンクを出力する
+ *
+ * @param string $url
+ */
+function linkify($url) {
+	if ( preg_match( '#^https?://#', $url ) ) {
+		list( $link ) = explode( '/', preg_replace( '#https?://#', '', $url ) );
+		printf( '<a href="%s" rel="nofollow">%s</a>', esc_url( $url ), $link );
+	}
 }
 
 /**
@@ -156,7 +227,6 @@ function hametuha_format_pagination( $pagination, $size = '' ) {
 	if ( $size ) {
 		$size = ' pagination-' . $size;
 	}
-
 	return '<ul class="pagination pagination-centered' . $size . '">' . implode( "\n", $out ) . '</ul>';
 }
 
@@ -177,6 +247,9 @@ function hametuha_commment_display( $comment, $args, $depth ) {
 	}
 	$class_name[] = $is_author ? 'author' : 'commentor';
 	$pull         = $is_author ? 'pull-right' : 'pull-left';
+	if ( 2 < $depth ) {
+		$class_name[] = 'deep-enough';
+	}
 	switch ( get_post_type( $comment->comment_post_ID ) ) {
 		case 'thread':
 			$author_label = 'スレ主';
@@ -275,6 +348,10 @@ function trim_long_sentence( $sentence, $length = 100, $elipsis = '…' ) {
 	}
 }
 
+//
+// Theme My Loginを使っているときに
+// REST APIプラグインがこけないようにする
+//
 if ( ! function_exists( 'login_header' ) ) {
 	function login_header() {
 		get_header( 'login' );

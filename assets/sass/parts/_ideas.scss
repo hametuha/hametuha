@@ -1,0 +1,134 @@
+
+// アイデアシングル
+.ideas{
+
+  &__row{
+    padding-top: 20px;
+  }
+
+  &__title{
+    font-family: $work-bold;
+    font-weight: normal;
+    font-size: 2.2em;
+  }
+
+  &__meta{
+    .avatar{
+      @extend .img-circle;
+    }
+  }
+
+  &__list{
+    padding: 0;
+    margin: 20px 0 40px;
+  }
+
+  &__item{
+    list-style: none;
+    display: inline-block;
+    margin-right: 1em;
+    i{
+      color: #888;
+    }
+  }
+
+  &__owning{
+     margin-bottom: 20px;
+  }
+
+  &__body{
+    margin: 0 0 40px;
+    font-family: $work-body;
+    font-size: 2em;
+    position: relative;
+    @media only screen and (max-width: $screen-xs-max){
+      font-size: 1.6em;
+    }
+    .alert{
+      font-family: $work-body-sans;
+      font-size: 0.65em;
+      width: 90%;
+      height: 80%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 5px 10px rgba(0, 0, 0, .2);
+    }
+    &--hide{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, .8);
+    }
+  }
+
+  &__actions{
+    margin-bottom: 20px;
+    @media only screen and ( max-width: $screen-xs-max ) {
+      .col-xs-12{
+        margin: 10px 0;
+      }
+    }
+  }
+
+  &__statictic{
+    margin-bottom: 40px;
+  }
+
+  &__stockers{
+    padding: 0;
+  }
+  &__stocker{
+    display: inline-block;
+    margin-right: 1.5em;
+    list-style: none;
+    margin-bottom: 20px;
+    img{
+      @extend .img-circle;
+    }
+  }
+}
+
+
+.ideaList{
+  &__alert{
+    margin: 2em 0;
+  }
+  &__form{
+    margin-bottom: 2em;
+  }
+  &__list{
+    padding-left: 0;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+    min-height: 300px;
+    &--loading{
+      @extend %loading-indicator;
+    }
+  }
+  &__item{
+    list-style: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: 1px solid #ddd;
+    &:nth-child(odd){
+      background: $zebra-bg;
+    }
+    &--recommended{
+      @extend .highlighting;
+    }
+  }
+  &__avatar{
+    max-width: 96px;
+    width: auto;
+    height: auto;
+    margin-bottom: 10px;
+    @include mq-max($screen-xs-max){
+      max-width: 100%;
+    }
+  }
+
+}

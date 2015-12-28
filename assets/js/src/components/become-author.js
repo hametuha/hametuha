@@ -53,6 +53,6 @@
     // wp-admin/js/user-profile.js
     setTimeout(function(){
         $('#pass2').unbind(inputEvent);
-    }, 10)
+    }, 10);
 
 })(jQuery);

@@ -1,0 +1,44 @@
+extends _layout
+
+block vars
+
+block content
+    .container
+        .page-header
+            h1 ナブバー
+        each label, type in {'default': 'デフォルト', inverse: '反転'}
+            h3=label
+            nav(class="navbar navbar-#{type}")
+                .container
+                    .navbar-header
+                        button(type="button",class="navbar-toggle collapsed",data-toggle="collapse",data-target="#navbar" aria-expanded="false" aria-controls="navbar")
+                            span.sr-only Toggle navigation
+                            span.icon-bar
+                            span.icon-bar
+                            span.icon-bar
+                        a.navbar-brand(href="#") サイトタイトル
+                    .navbar-collapse.collapse
+                        ul.nav.navbar-nav
+                            li.active
+                                a(href='#') ホーム
+                            li
+                                a(href='#about') アバウト
+                            li
+                                a(href='#contact') 問い合わせ
+                            li.dropdown
+                                a(href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false")
+                                    | ドロップダウン
+                                    span.caret
+                                ul.dropdown-menu
+                                    li
+                                        a(href='#') アクション
+                                    li
+                                        a(href='#') アクションその２
+                                    li
+                                        a(href='#') その他のアクション
+                                    li.divider(role='separator')
+                                    li.dropdown-header ナビのヘッダー
+                                    li
+                                        a(href='#') 分割されたリンク
+                                    li
+                                        a(href='#') さらに分割

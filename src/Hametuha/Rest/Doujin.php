@@ -61,6 +61,9 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 					'validate_callback' => 'is_numeric',
 					'default'           => 0,
 				],
+				's' => [
+					'default'           => '',
+				],
 			],
 			'permission_callback' => function () {
 				return current_user_can( 'read' );
@@ -79,6 +82,9 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'offset' => [
 					'validate_callback' => 'is_numeric',
 					'default'           => 0,
+				],
+				's' => [
+					'default'           => '',
 				],
 			],
 			'permission_callback' => function () {
@@ -174,7 +180,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				return new \WP_Error( 'no_user', '指定されたユーザーは存在しません。', [ 'response' => 404 ] );
 			}
 		}
-		$result = $this->follower->get_followers( $user_id, $request['offset'] );
+		$result = $this->follower->get_followers( $user_id, $request['offset'], $request['s'] );
 		foreach ( $result['users'] as &$user ) {
 			$user = $this->sanitize_user( $user );
 		}
@@ -194,7 +200,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		if ( 'me' === $user_id ) {
 			$user_id = get_current_user_id();
 		}
-		$result = $this->follower->get_following( $user_id, $request['offset'] );
+		$result = $this->follower->get_following( $user_id, $request['offset'], $request['s'] );
 		foreach ( $result['users'] as &$user ) {
 			$user = $this->sanitize_user( $user );
 		}

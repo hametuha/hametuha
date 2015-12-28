@@ -2,11 +2,10 @@
  * Follower application
  */
 
-/*global WP_API_Settings: true*/
-/*global Hametuha: true*/
-
 angular.module('hametuFollower', ['ui.bootstrap'])
     .controller('followed', ['$scope', '$http', function ($scope, $http) {
+
+        'use strict';
 
         var endpoint = WP_API_Settings.root + 'hametuha/v1/doujin/';
 

@@ -7,27 +7,8 @@
 
 @import "mixins";
 
-@import "parts/post_body";
+@import "post_body";
 
 @import "container";
 
-@import "parts/components";
-@import "parts/header";
-@import "parts/footer";
-@import "parts/sidebar";
-@import "parts/search";
-@import "parts/loop";
-@import "parts/single_post";
-@import "parts/comments";
-@import "parts/thread";
-@import "parts/front";
-@import "parts/tml";
-@import "parts/error";
-@import "parts/ranking";
-@import "parts/modal";
-@import "parts/related";
-@import "parts/notification";
-@import "parts/stats";
-@import "parts/series";
-@import "parts/doujin";
-@import "parts/block/ebook";
+@import "parts/*";

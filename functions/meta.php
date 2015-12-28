@@ -36,6 +36,10 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		$title .= "安否情報 {$sep} ";
 	} elseif ( is_singular( 'series' ) ) {
 		$title .= "作品集 {$sep} ";
+	} elseif( is_singular('ideas') ) {
+		$title .= "アイデア {$sep} ";
+	} elseif ( is_post_type_archive('ideas') ) {
+		$title = "アイデア {$sep}";
 	} elseif ( is_singular( 'thread' ) ) {
 		$title .= "BBS {$sep} ";
 	} elseif ( is_category() ) {
@@ -105,7 +109,7 @@ add_action( 'wp_head', function () {
 	$desc     = '';
 	$card     = 'summary';
 	$author   = '';
-	$twitters = [ ];
+	$twitters = [];
 
 	global $wp_query;
 
@@ -205,6 +209,7 @@ add_action( 'wp_head', function () {
 		if ( class_exists( $class_name ) && method_exists( $class_name::get_instance(), 'ogp' ) ) {
 			extract( $class_name::get_instance()->ogp( compact( 'image', 'title', 'url', 'type', 'desc', 'card', 'author' ) ) );
 		}
+		$url = home_url( trailingslashit( explode( '?', $_SERVER['REQUEST_URI'] )[0] ) );
 	} elseif ( is_home() ) {
 		$url  = get_permalink( get_option( 'page_for_posts' ) );
 		$desc = '破滅派の新着投稿一覧です。';

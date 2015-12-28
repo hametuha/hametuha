@@ -10,6 +10,8 @@ use WPametu\DB\Model;
  *
  * @package Hametuha\Model
  * @method bool add_comment( $recipient, $object_id, $message, $avatar )
+ * @method bool add_idea_stocked( $recipient, $object_id, $message, $avatar )
+ * @method bool add_idea_written( $recipient, $object_id, $message, $avatar )
  * @method bool add_review( $recipient, $object_id, $message, $avatar )
  * @method bool add_hot( $recipient, $object_id, $message, $avatar )
  * @method bool add_follow( $recipient, $object_id, $message, $avatar )
@@ -38,8 +40,11 @@ class Notifications extends Model {
 
 	const TYPE_FOLLOW = 'follow';
 
-	const USER_KEY = 'last_notification_checked';
+	const TYPE_IDEA_STOCKED  = 'idea_stocked';
 
+	const TYPE_IDEA_WRITTEN  = 'idea_written';
+
+	const USER_KEY = 'last_notification_checked';
 
 	/**
 	 * 通知確認時間を更新
@@ -81,6 +86,9 @@ class Notifications extends Model {
 				break;
 			case static::TYPE_FOLLOW:
 				$url = home_url( '/doujin/follower/', 'https' );
+				break;
+			case 'idea_recommended':
+				$url = home_url('/my/ideas/', 'https');
 				break;
 			default:
 				$url = get_permalink( $object_id );
@@ -171,10 +179,7 @@ class Notifications extends Model {
 	 * @return bool
 	 */
 	public function add_notification( $type, $recipient, $object_id, $message, $avatar ) {
-		if ( $recipient ) {
-			wp_cache_delete( $recipient, 'hametuha_notifications' );
-		}
-
+		wp_cache_delete( $recipient, 'hametuha_notifications' );
 		return (bool) $this->insert( [
 			'recipient_id' => $recipient,
 			'type'         => $type,
@@ -194,13 +199,15 @@ class Notifications extends Model {
 	 * @return mixed
 	 */
 	public function __call( $name, array $arguments = [] ) {
-		if ( preg_match( '/^add_([a-z]+)$/', $name, $match ) ) {
+		if ( preg_match( '/^add_([a-z_]+)$/', $name, $match ) ) {
 			switch ( $match[1] ) {
 				case static::TYPE_COMMENT:
 				case static::TYPE_HOT:
 				case static::TYPE_REVIEW:
 				case static::TYPE_GENERAL:
 				case static::TYPE_FOLLOW:
+				case static::TYPE_IDEA_STOCKED:
+				case static::TYPE_IDEA_WRITTEN:
 					array_unshift( $arguments, $match[1] );
 					return call_user_func_array( [ $this, 'add_notification' ], $arguments );
 					break;
