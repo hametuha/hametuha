@@ -107,13 +107,13 @@ body.single-post{
 .overlay-close{
   position: fixed;
   z-index: 20;
-  top: $navbar-height;
+  top: $navbar-height + $subnavbar-height;
   border: none;
   width: 100%;
   height: $single-footer-height;
   text-align: center;
   display: block;
-  background-color: $footer-navbar-bg;
+  background-color: $brand-warning;
   line-height: $single-footer-height;
   &:link, &:visited{
     color: $inverse-body;
