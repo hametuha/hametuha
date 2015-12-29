@@ -737,6 +737,17 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    $('.subnav__link--toggle').click(function(e){
+        var $target = $($(this).attr('data-target'));
+        e.preventDefault();
+        if( $target.hasClass('toggle') ){
+            $('.subnav__child').addClass('toggle');
+            $target.removeClass('toggle');
+        }else{
+            $('.subnav__child').addClass('toggle');
+        }
+    });
+
 });
 
 /**

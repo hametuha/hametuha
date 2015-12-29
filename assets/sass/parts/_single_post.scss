@@ -79,7 +79,7 @@ $single-footer-height: 40px;
 
 
 body.single-post{
-  padding: $navbar-height 0 $single-footer-height;
+  padding: $navbar-height + $subnavbar-height 0 $single-footer-height;
   article{
     min-height: 100%;
     overflow: hidden;
