@@ -208,19 +208,22 @@
 							<?= wpautop( $desc ) ?>
 						</div>
 
+
+						<div class="row">
+							<div class="col-sm-5 col-xs-12 text-center">
+								<a class="btn btn-default btn--author btn-block"
+								   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) ), 'http' ) ?>"
+								   itemprop="url">
+									詳しく見る
+								</a>
+							</div>
+							<div class="col-sm-7 col-xs-12 text-center">
+								<?php hametuha_follow_btn( $author->ID, true ); ?>
+							</div>
+						</div>
 					</div>
 					<!-- //.series__author -->
 
-					<div class="col-xs-5 text-center">
-						<a class="btn btn-default btn--author"
-						   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) ), 'http' ) ?>"
-						   itemprop="url">
-							詳しく見る
-						</a>
-					</div>
-					<div class="col-xs-7 text-center">
-						<?php hametuha_follow_btn( $author->ID, true ); ?>
-					</div>
 				</div><!-- //.row -->
 
 			<?php endforeach; ?>
