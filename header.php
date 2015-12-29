@@ -214,15 +214,9 @@
 					</a>
 				</div>
 				<div class="subnav__item">
-					<?php if ( current_user_can( 'read' ) ) : ?>
-						<a href="#" class="subnav__link subnav__link--toggle" data-target="#community-links">
-							<i class="icon-users"></i> SNS
-						</a>
-					<?php else : ?>
-						<a href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" class="subnav__link" rel="nofollow">
-							<i class="icon-users"></i> SNS
-						</a>
-					<?php endif; ?>
+					<a href="#" class="subnav__link subnav__link--toggle" data-target="#community-links">
+						<i class="icon-users"></i> SNS
+					</a>
 				</div>
 			</div><!-- //.subnav__list -->
 
@@ -323,7 +317,13 @@
 						</a>
 					</li>
 					<li>
-						<a href="<?= admin_url( 'post-new.php?post_type=anpi' ) ?>">
+						<?php
+						$url = admin_url( 'post-new.php?post_type=anpi' );
+						if ( ! current_user_can( 'read' ) ) {
+							$url = wp_login_url( $url );
+						}
+						?>
+						<a href="<?= esc_url( $url ) ?>" rel="nofollow">
 							 安否報告
 						</a>
 					</li>
