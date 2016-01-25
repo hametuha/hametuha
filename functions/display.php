@@ -124,6 +124,18 @@ function linkify($url) {
 }
 
 /**
+ * つぶやきを出力する
+ *
+ * @param null|WP_Post $post
+ */
+function the_tweet( $post = null ) {
+	$post = get_post( $post );
+	echo wpautop( preg_replace_callback( '@https?://[^ 　\\n\\r\\t\\z]+@', function( $match ) {
+		return sprintf( '<a href="%s" rel="nofollow">%s</a>', esc_url( $match[0] ), $match[0] );
+	}, esc_html( $post->post_excerpt ) ) );
+}
+
+/**
  * ヴァリデーション用アイコンを出力する
  */
 function input_icon() {

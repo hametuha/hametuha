@@ -4,7 +4,7 @@
 
 /* global WP_API_Settings:false */
 
-angular.module('hametuIdeas', ['ui.bootstrap'])
+angular.module('hametuha', ['ui.bootstrap'])
     .controller('ideaList', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';

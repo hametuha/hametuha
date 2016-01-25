@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h4 class="modal-title">投稿を公開する</h4>
+</div>
+<div class="modal-body">
+
+    <p class="text-muted">いつ公開するかを選んでください。</p>
+
+
+
+    <div class="alert alert-danger" ng-if="errorMsg">
+        {{errorMsg}}
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="cancel()">やめる</button>
+    <button class="btn btn-primary" type="button" ng-click="ok()">公開</button>
+</div>
+

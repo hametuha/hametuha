@@ -2,6 +2,8 @@
  * 破滅派サイト全体で共通して読み込まれるファイル
  */
 
+/*global HametuhaGlobal:false */
+
 (function ($) {
 
     "use strict";
@@ -100,9 +102,13 @@
          *
          * @param {String} message
          * @param {String} [type]
+         * @param {Number} [delay]
          */
-        alert: function (message, type) {
+        alert: function (message, type, delay) {
             var typeName, body, $alert;
+            if( undefined === delay ){
+                delay = 7000;
+            }
             switch( type ){
                 case 'info':
                 case 'danger':
@@ -128,7 +134,7 @@
             }, 10);
             setTimeout(function(){
                 $alert.remove();
-            }, 7000);
+            }, delay);
         },
 
         /**
@@ -163,6 +169,16 @@
          */
         isTategaki: function () {
             return $('body').hasClass('tategaki');
+        },
+
+        /**
+         * Angularのtemplateを返す
+         *
+         * @param templateName
+         * @returns {*}
+         */
+        template: function(templateName){
+            return HametuhaGlobal.angularTemplateDir + templateName;
         },
 
         /**

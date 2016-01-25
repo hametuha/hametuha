@@ -1,6 +1,6 @@
 vendor
 node_modules
 bower_components
-assets/*.html
+assets/html/*.html
 .sass-cache
 .svn

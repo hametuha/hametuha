@@ -15,10 +15,12 @@
   "license": "MIT",
   "devDependencies": {
     "angular": "^1.4.8",
+    "angular-i18n": "^1.4.8",
     "angular-ui-bootstrap": "^0.14.3",
     "bootbox": "^4.4.0",
     "bootstrap-sass": "^3.3.6",
-    "browser-sync": "^2.5.3",
+    "browser-sync": "^2.11.0",
+    "event-stream": "^3.3.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.1.0",
     "gulp-concat": "^2.6.0",

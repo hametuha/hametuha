@@ -2,7 +2,7 @@
  * Follower application
  */
 
-angular.module('hametuFollower', ['ui.bootstrap'])
+angular.module('hametuha', ['ui.bootstrap'])
     .controller('followed', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';

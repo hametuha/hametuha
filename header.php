@@ -12,7 +12,7 @@
 			<?php if ( is_user_logged_in()
 			           && current_user_can( 'read' )
 			           && is_singular()
-			           && ! in_array( get_post_type(), [ 'ideas', 'thread' ] )
+			           && ! in_array( get_post_type(), [ 'ideas', 'thread', 'anpi' ] )
 			           && current_user_can( 'edit_post', get_the_ID() )
 			) : ?>
 				<a class="btn btn-default btn-sm navbar-edit-btn"
@@ -26,135 +26,24 @@
 			<i class="icon-hametuha"></i><span>破滅派</span>
 		</a>
 
+		<?php get_template_part( 'templates/header/user' ) ?>
 
-		<ul id="user-info" class="navbar-nav navbar-right navbar-login navbar-login--user nav nav-pills col-sm-1">
-			<?php if ( is_user_logged_in() && current_user_can( 'read' ) ) : ?>
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle"
-					   data-toggle="dropdown"><?= get_avatar( get_current_user_id(), 60 ) ?></a>
-					<ul class="dropdown-menu">
-						<li class="greeting">
-							<strong><?= hametuha_user_name() ?></strong>さん<br/>
-							<span class="role"><?= hametuha_user_role() ?></span>
-						</li>
-						<li class="divider"></li>
+		<nav class="collapse" id="header-navigation">
+			<ul class="nav">
 				<li>
-					<a href="<?= home_url( '/your/comments/', 'http' ) ?>">
-						<i class="icon-bubble-dots"></i>
-						あなたのコメント
+					<a rel="home" href="<?= home_url( '', 'http' ) ?>">
+						<i class="icon-home"></i> ホーム
 					</a>
 				</li>
 				<li>
-					<a href="<?= home_url( '/your/lists/', 'http' ) ?>">
-						<i class="icon-drawer3"></i>
-						あなたのリスト
+					<a rel="home" href="<?= home_url( 'announcement', 'http' ) ?>">
+						<i class="icon-bullhorn"></i> 告知
 					</a>
 				</li>
 				<li>
-					<a href="<?= home_url( '/your/reviews/', 'http' ) ?>">
-						<i class="icon-star2"></i>
-						レビューした作品
+					<a href="#" data-toggle="modal" data-target="#searchBox">
+						<i class="icon-search2"></i> 探す
 					</a>
-				</li>
-				<li>
-					<a href="<?= home_url( '/my/ideas/', 'https' ) ?>">
-						<i class="icon-lamp4"></i>
-						アイデア帳
-					</a>
-				</li>
-
-				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-
-					<li class="divider"></li>
-					<li><span class="text-muted">管理</span></li>
-					<li>
-						<a href="<?= home_url( '/statistics/', 'https' ) ?>">
-							<i class="icon-chart"></i>
-							統計情報
-						</a>
-					</li>
-					<li>
-						<a href="<?= home_url( '/sales/', 'https' ) ?>">
-							<i class="icon-coins"></i>
-							売上管理
-						</a>
-					</li>
-					<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-						<li>
-							<a href="<?= admin_url() ?>">
-								<i class="icon-dashboard"></i>
-								ダッシュボード
-							</a>
-						</li>
-					<?php endif; ?>
-				<?php endif; ?>
-				<li class="divider"></li>
-				<li>
-					<a href="<?= admin_url( 'profile.php' ) ?>">
-						<i class="icon-profile"></i>
-						プロフィール
-					</a>
-				</li>
-				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-					<li>
-						<a href="<?= home_url( '/doujin/follower/', 'https' ) ?>">
-							<i class="icon-heart5"></i>
-							フォロワー
-						</a>
-					</li>
-				<?php endif; ?>
-				<li>
-					<a href="<?= wp_logout_url() ?>">
-						<i class="icon-exit4"></i>
-						ログアウト
-					</a>
-				</li>
-			</ul>
-			</li>
-			<li class="dropdown" id="notification-link">
-				<?php
-				$notification = \Hametuha\Rest\Notification::get_instance();
-				$latest       = $notification->last_checked();
-				?>
-				<a href="#" class="dropdown-toggle dropdown--notify" data-toggle="dropdown"
-				   data-last-checked="<?= $latest ?>"><i class="icon-earth"></i></a>
-				<ul id="notification-container" class="dropdown-menu notification__container">
-					<?php if ( ! $notification->recent_blocks() ) : ?>
-						<li>
-							<span>お知らせはなにもありません。</span>
-						</li>
-					<?php endif; ?>
-					<li class="divider"></li>
-					<li class="text-center notification__more">
-						<a href="<?= home_url( '/notification/all/', 'https' ) ?>">
-							通知一覧へ
-							<i class="icon-arrow-right4"></i>
-						</a>
-					</li>
-				</ul>
-			</li>
-			<?php else : ?>
-			<li><a class="login-btn" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>">ログイン</a></li>
-			<?php endif; ?>
-			</ul><!-- //#user-info -->
-
-
-			<nav class="collapse" id="header-navigation">
-				<ul class="nav">
-					<li>
-						<a rel="home" href="<?= home_url( '', 'http' ) ?>">
-							<i class="icon-home"></i> ホーム
-						</a>
-					</li>
-					<li>
-						<a rel="home" href="<?= home_url( 'announcement', 'http' ) ?>">
-							<i class="icon-bullhorn"></i> 告知
-						</a>
-					</li>
-					<li>
-						<a href="#" data-toggle="modal" data-target="#searchBox">
-							<i class="icon-search2"></i> 探す
-						</a>
 				</li>
 				<li>
 					<a href="<?= home_url( '/about/', 'http' ); ?>">
@@ -187,27 +76,11 @@
 		<div class="subnav__nav">
 
 			<div class="subnav__list row">
-
-
-				<?php if ( ! is_user_logged_in() || ! current_user_can( 'read' ) ) : ?>
-					<div class="subnav__item">
-						<a href="<?= wp_registration_url() ?>" class="subnav__link" rel="nofollow">
-							<i class="icon-user-plus3"></i> 登録
-						</a>
-					</div>
-				<?php elseif ( ! current_user_can( 'edit_posts' ) ) : ?>
-					<div class="subnav__item">
-						<a class="subnav__link" href="<?= home_url( '/become-author/', 'https' ) ?>" rel="nofollow">
-							<i class="icon-graduation"></i> 同人になる
-						</a>
-					</div>
-				<?php else : ?>
-					<div class="subnav__item">
-						<a href="#" class="subnav__link subnav__link--toggle" data-target="#write-links">
-							<i class="icon-quill3"></i> 書く
-						</a>
-					</div>
-				<?php endif; ?>
+				<div class="subnav__item">
+					<a href="#" class="subnav__link subnav__link--toggle" data-target="#write-links">
+						<i class="icon-quill3"></i> 書く
+					</a>
+				</div>
 				<div class="subnav__item">
 					<a href="#" class="subnav__link subnav__link--toggle" data-target="#read-links">
 						<i class="icon-book"></i> 読む
@@ -223,6 +96,35 @@
 			<div class="subnav__wrap col-xs-12">
 
 				<ul id="write-links" class="subnav__child toggle clearfix">
+					<?php if ( ! is_user_logged_in() || ! current_user_can( 'read' ) ) : ?>
+						<li class="divider">
+							<i class="icon-enter"></i> 投稿には会員登録が必須です
+						</li>
+						<li>
+							<a href="<?= wp_registration_url() ?>" rel="nofollow">
+								新規登録
+							</a>
+						</li>
+						<li>
+							<a href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">
+								ログイン
+							</a>
+						</li>
+					<?php elseif ( ! current_user_can( 'edit_posts' ) ) : ?>
+						<li class="divider">
+							<i class="icon-graduation"></i>同人になる
+						</li>
+						<li>
+							<a href="<?= home_url( '/become-author/', 'https' ) ?>" rel="nofollow">
+								 同人になる
+							</a>
+						</li>
+						<li>
+							<a href="<?= home_url( '/faq/how-to-post/' ) ?>">
+								ヘルプ
+							</a>
+						</li>
+					<?php else : ?>
 					<li class="divider">
 						作品管理
 					</li>
@@ -236,6 +138,7 @@
 							<i class="icon-books"></i> 作品一覧
 						</a>
 					</li>
+					<?php endif; ?>
 					<li class="divider">
 						<i class="icon-lamp"></i> アイデア
 					</li>
@@ -317,15 +220,15 @@
 						</a>
 					</li>
 					<li>
-						<?php
-						$url = admin_url( 'post-new.php?post_type=anpi' );
-						if ( ! current_user_can( 'read' ) ) {
-							$url = wp_login_url( $url );
-						}
-						?>
-						<a href="<?= esc_url( $url ) ?>" rel="nofollow">
-							 安否報告
+						<?php if ( ! current_user_can( 'read' ) ) : ?>
+						<a href="<?= esc_url( wp_login_url( admin_url( 'post-new.php?post_type=anpi' ) ) ) ?>" rel="nofollow">
+							安否報告
 						</a>
+						<?php else : ?>
+						<a class="anpi-new" href="#">
+							安否報告
+						</a>
+						<?php endif; ?>
 					</li>
 
 					<li class="divider">

@@ -96,6 +96,8 @@ add_action( 'init', function () {
 		'supports'        => array( 'title', 'editor', 'author', 'thumbnail', 'comments' ),
 		'has_archive'     => true,
 		'capability_type' => 'post',
+		'show_in_rest'    => true,
+		'rest_controller_class' => 'WP_REST_Posts_Controller',
 		'rewrite'         => array( 'slug' => 'anpi/archives' ),
 	);
 	register_post_type( 'anpi', $args );

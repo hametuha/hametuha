@@ -15,28 +15,48 @@ a[disabled], input[disabled]{
   margin-left: 1em;
 }
 
-// 半透明のボタン
-.btn-trans{
-  background-color: rgba(0, 0, 0, .4);
-  @include border-radius(0);
-  border: 2px solid $inverse-body;
-  color: $inverse-body;
-  &:hover{
+.btn {
+  // 半透明のボタン
+  &-trans {
+    background-color: rgba(0, 0, 0, .4);
+    @include border-radius(0);
+    border: 2px solid $inverse-body;
     color: $inverse-body;
-    background-color: #000;
+    &:hover {
+      color: $inverse-body;
+      background-color: #000;
+    }
   }
-}
-.btn-amazon{
-  &:link, &:visited{
-    color: #fff;
-    background-color: #000;
+  // Amazon
+  &-amazon {
+    &:link, &:visited {
+      color: #fff;
+      background-color: #000;
+    }
+    &:hover, &:active {
+      color: #fff;
+      background-color: darken(orange, 20);
+    }
+    i {
+      color: orange;
+    }
   }
-  &:hover, &:active{
-    color: #fff;
-    background-color: darken(orange, 20);
-  }
-  i{
-    color: orange;
+  &-link{
+    @each $var in (danger $brand-danger, warning $brand-warning){
+      $name: nth($var, 1);
+      $color: nth($var, 2);
+      &--#{$name} {
+        color: $color;
+        &:link, &:visited {
+          color: $color;
+          text-decoration: none;
+        }
+        &:hover, &:active {
+          color: lighten($color, 10);
+          text-decoration: underline;
+        }
+      }
+    }
   }
 }
 

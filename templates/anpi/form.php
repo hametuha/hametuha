@@ -1,0 +1,26 @@
+<form id="new-tweet-form">
+	<?php if ( $id ) : ?>
+		<input type="hidden" name="post_id" id="new-tweet-id" value="<?= esc_attr( $id ) ?>"/>
+	<?php endif; ?>
+	<div class="form-group">
+		<textarea rows="5" class="form-control"
+		          placeholder="なにがしか訴えたいことを書いてください。"
+		          name="new-anpi-content" id="new-anpi-content"><?= esc_textarea( $content ) ?></textarea>
+	</div>
+	<div class="form-group">
+		<label for="recommend_to">通知を飛ばす</label>
+		<?php hameplate( 'parts/input', 'user', [
+			'id'  => 'mention',
+			'max' => 10,
+			'min' => 0,
+		] ); ?>
+	</div>
+	<div class="row">
+		<div class="col-xs-6">
+			<button type="button" class="btn btn-default btn-block" data-dismiss="modal">キャンセル</button>
+		</div>
+		<div class="col-xs-6">
+			<input type="submit" class="btn btn-primary btn-block" value="<?= $id ? '更新' : '報告' ?>"/>
+		</div>
+	</div>
+</form>

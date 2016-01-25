@@ -364,11 +364,6 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 							$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
 						}
 						break;
-					case 'anpi':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんの安否です。 #破滅派 「{$post->post_title}」 {$url}";
-						break;
 					case 'info':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
