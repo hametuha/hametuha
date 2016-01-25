@@ -615,6 +615,7 @@ HTML;
 				return sprintf( 'style="padding-top: %dpx;"', $match[1] );
 			}, $content );
 		}
+		$content = preg_replace( '# sizes="[^"]+"#u', '', $content );
 		remove_filter( 'the_content', [ $this, 'fix_wptexturize' ], 99998 );
 		remove_filter( 'the_content', [ $this->factory( $id )->parser, 'format' ], 99999 );
 		ob_end_clean();
