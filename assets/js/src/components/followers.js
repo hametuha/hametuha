@@ -2,12 +2,14 @@
  * Follower application
  */
 
+/* global wpApiSettings: false */
+
 angular.module('hametuha', ['ui.bootstrap'])
     .controller('followed', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';
 
-        var endpoint = WP_API_Settings.root + 'hametuha/v1/doujin/';
+        var endpoint = wpApiSettings.root + 'hametuha/v1/doujin/';
 
         $scope.tabs = [
             {
@@ -64,7 +66,7 @@ angular.module('hametuha', ['ui.bootstrap'])
                 method : 'GET',
                 url   : endpoint + 'followers/me/',
                 headers: {
-                    'X-WP-Nonce': WP_API_Settings.nonce
+                    'X-WP-Nonce': wpApiSettings.nonce
                 },
                 params : {
                     offset: offset
@@ -109,7 +111,7 @@ angular.module('hametuha', ['ui.bootstrap'])
                 method : 'GET',
                 url   : endpoint + 'following/me/',
                 headers: {
-                    'X-WP-Nonce': WP_API_Settings.nonce
+                    'X-WP-Nonce': wpApiSettings.nonce
                 },
                 params : {
                     offset: offset
@@ -154,7 +156,7 @@ angular.module('hametuha', ['ui.bootstrap'])
                         method : 'DELETE',
                         url   : endpoint + 'follow/' + id + '/',
                         headers: {
-                            'X-WP-Nonce': WP_API_Settings.nonce
+                            'X-WP-Nonce': wpApiSettings.nonce
                         }
                     }).then(
                         function (result) {

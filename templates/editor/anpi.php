@@ -23,7 +23,7 @@ hameplate( 'templates/editor/header', '', [
 			</div>
 
 			<div class="row" ng-cloak>
-				<div class="col-xs-6">
+				<div class="col-xs-8">
 					<p class="hameditor__meta">
 						<span class="hameditor__date">
 							<i class="icon-clock"></i> {{post.date | date: 'yyyy/MM/dd(EEE) HH:mm'}}
@@ -33,7 +33,7 @@ hameplate( 'templates/editor/header', '', [
 						</small>
 					</p>
 				</div>
-				<div class="col-xs-6 text-right">
+				<div class="col-xs-4 text-right">
 					<post-status status="{{post.status}}"></post-status>
 				</div>
 			</div>
@@ -50,12 +50,17 @@ hameplate( 'templates/editor/header', '', [
 
 	<footer class="hameditor__actions">
 
-		<div class="container" ng-cloak>
+		<div class="container">
+
 			<button class="btn btn-default" data-target="#hameditor" ng-click="save()">
 				<i class="icon-disk"></i> 保存
 			</button>
 
-			<post-publisher post-callback="publish" post-status="{{post.status}}" post-date="post.date"></post-publisher>
+			<button ng-if="'publish' != post.status" class="btn btn-primary" ng-click="publish()">公開</button>
+
+			<a class="btn btn-link" href="{{post.url}}" ng-if="'publish' == post.status" target="_blank">
+				表示
+			</a>
 
 			<button class="btn btn-link btn-link--danger" data-target="#hameditor"
 			        ng-click="private()"
@@ -67,6 +72,8 @@ hameplate( 'templates/editor/header', '', [
 			        ng-click="delete('<?= home_url( '/anpi/mine/' ) ?>')">
 				削除
 			</button>
+
+
 		</div>
 
 		<div class="indicator">

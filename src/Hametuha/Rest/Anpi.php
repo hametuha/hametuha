@@ -121,6 +121,44 @@ class Anpi extends RestTemplate
 		throw new \Exception( 'This is your anpi archive page.', 200 );
 	}
 
+	/**
+	 * 安否情報を作成する
+	 */
+	public function get_new() {
+		nocache_headers();
+		if ( ! current_user_can( 'edit_posts' ) || ! $this->verify_nonce() ) {
+			wp_die( 'あなたにはこのページにアクセスする権限がありません。', get_status_header_desc( 403 ), [
+				'back_link' => true,
+				'response'  => 403,
+			] );
+		}
+		$post = null;
+		foreach (
+			get_posts( [
+				'post_type'      => 'anpi',
+				'author'         => get_current_user_id(),
+				'post_status'    => 'auto-draft',
+				'posts_per_page' => 1,
+				'orderby'        => [ 'post_modified' => 'ASC' ],
+			] ) as $p
+		) {
+			$post = $p;
+		}
+		if ( ! $post ) {
+			$post_id = $this->anpis->create_base_anpi( get_current_user_id() );
+			if ( is_wp_error( $post_id ) ) {
+				wp_die( $post_id->get_error_message(), get_status_header_desc( 500 ), [
+					'response'  => 500,
+					'back_link' => true,
+				] );
+			} else {
+				$post = get_post( $post_id );
+			}
+		}
+		wp_redirect( home_url( "/anpi/mine/edit/{$post->ID}/", 'https' ) );
+		exit;
+	}
+
 
 	/**
 	 * Show edit screen
@@ -129,7 +167,7 @@ class Anpi extends RestTemplate
 	 */
 	public function get_edit( $post_id ) {
 		$post = get_post( $post_id );
-		if ( ! $post || 'anpi' !== $post->post_type || $this->is_tweet( $post ) ) {
+		if ( ! $post || 'anpi' !== $post->post_type || $this->anpis->is_tweet( $post ) ) {
 			wp_die('該当する安否情報は存在しません。', get_status_header_desc( 404 ), [
 				'back_link' => true,
 			    'response'    => 404,
@@ -142,9 +180,9 @@ class Anpi extends RestTemplate
 			]);
 		}
 		if ( 'trash' === $post->post_status ) {
-			wp_die('この投稿はゴミ箱に入っています。', get_status_header_desc(403), [
+			wp_die( 'この投稿はゴミ箱に入っています。', get_status_header_desc( 403 ), [
 				'back_link' => true,
-				'response' => 403
+				'response' => 403,
 			]);
 		}
 		$this->title = '安否情報編集';
@@ -166,9 +204,10 @@ class Anpi extends RestTemplate
 			'type'     => 'anpi',
 		    'status'   => $post->post_status,
 		    'title'    => $post->post_title,
+		    'url'      => get_permalink( $post ),
 		    'date'     => get_gmt_from_date( $post->post_date, DATE_ISO8601 ),
 		    'modified' => get_gmt_from_date( $post->post_modified, DATE_ISO8601 ),
-		    'category' => [ 'anpi_cat' => $terms ],
+		    'categories' => $terms,
 		    'content'  => $post->post_content,
 		]);
 		$this->load_template( 'templates/editor/anpi', '' );
@@ -244,17 +283,4 @@ class Anpi extends RestTemplate
 
 		return $posts;
 	}
-
-	/**
-	 * Detect if anpi is tweet
-	 *
-	 * @param null|\WP_Post $post
-	 *
-	 * @return bool
-	 */
-	public function is_tweet( $post = null ) {
-		$post = get_post( $post );
-		return empty( $post->post_content );
-	}
-
 }

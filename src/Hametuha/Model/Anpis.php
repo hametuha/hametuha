@@ -19,6 +19,7 @@ class Anpis extends Model {
 	 *
 	 * @param int    $user_id
 	 * @param string $content
+	 * @param array  $mention
 	 *
 	 * @return int|\WP_Error
 	 */
@@ -31,7 +32,7 @@ class Anpis extends Model {
 			'post_content' => '',
 			'post_excerpt' => $content,
 			'post_status'  => 'publish',
-		] );
+		], true );
 		if ( ! is_wp_error( $post_id ) ) {
 			wp_cache_delete( 'biggest_id', 'anpi' );
 			update_post_meta( $post_id, '_is_tweet', true );
@@ -48,6 +49,25 @@ class Anpis extends Model {
 			}
 		}
 		return $post_id;
+	}
+
+	/**
+	 * Create base anpi and returns it.
+	 *
+	 * @param int $user_id
+	 *
+	 * @return int|\WP_Error
+	 */
+	public function create_base_anpi( $user_id ) {
+		$id = $this->get_pseudo_name();
+		return wp_insert_post( [
+			'post_type'    => 'anpi',
+			'post_name'    => $id,
+			'post_title'   => 'ここにタイトルを入れてください',
+			'post_content' => '',
+			'post_author'  => $user_id,
+			'post_status'  => 'auto-draft',
+		], true );
 	}
 
 	/**
@@ -102,6 +122,18 @@ class Anpis extends Model {
 		}
 
 		return (int) $cache;
+	}
+
+	/**
+	 * Detect if post is tweet.
+	 *
+	 * @param null|int|\WP_Post $post
+	 *
+	 * @return bool
+	 */
+	public function is_tweet( $post = null ) {
+		$post = get_post( $post );
+		return 'anpi' == $post->post_type && get_post_meta( $post->ID, '_is_tweet', true );
 	}
 
 }

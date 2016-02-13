@@ -79,7 +79,7 @@ gulp.task('copylib', function(){
         gulp.src([
                 './node_modules/angular/angular.js',
                 './node_modules/angular-i18n/angular-locale_ja-jp.js',
-                './node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js'
+                './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
             ])
             .pipe($.concat('angular.js'))
             .pipe($.uglify())

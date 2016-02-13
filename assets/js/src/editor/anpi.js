@@ -2,7 +2,7 @@
  * Description
  */
 
-/*global WP_API_Settings: false*/
+/*global wpApiSettings: false*/
 
 (function ($) {
     'use strict';

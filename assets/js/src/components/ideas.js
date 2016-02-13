@@ -2,14 +2,14 @@
  * Follower application
  */
 
-/* global WP_API_Settings:false */
+/* global wpApiSettings:false */
 
 angular.module('hametuha', ['ui.bootstrap'])
     .controller('ideaList', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';
 
-        var endpoint = WP_API_Settings.root + 'hametuha/v1/idea/mine/';
+        var endpoint = wpApiSettings.root + 'hametuha/v1/idea/mine/';
 
         // ideas
         $scope.loading = false;
@@ -37,7 +37,7 @@ angular.module('hametuha', ['ui.bootstrap'])
                 method : 'GET',
                 url    : endpoint,
                 headers: {
-                    'X-WP-Nonce': WP_API_Settings.nonce
+                    'X-WP-Nonce': wpApiSettings.nonce
                 },
                 params : params
             }).then(
@@ -92,9 +92,9 @@ angular.module('hametuha', ['ui.bootstrap'])
                 $scope.loading = true;
                 $http({
                     method : 'POST',
-                    url    : WP_API_Settings.root + 'hametuha/v1/idea/' + id + '/',
+                    url    : wpApiSettings.root + 'hametuha/v1/idea/' + id + '/',
                     headers: {
-                        'X-WP-Nonce': WP_API_Settings.nonce
+                        'X-WP-Nonce': wpApiSettings.nonce
                     }
                 }).then(
                     function(response){
@@ -123,9 +123,9 @@ angular.module('hametuha', ['ui.bootstrap'])
                 Hametuha.confirm('このアイデアのストックを解除しますか？', function () {
                     $http({
                         method : 'DELETE',
-                        url    : WP_API_Settings.root + 'hametuha/v1/idea/' + id + '/',
+                        url    : wpApiSettings.root + 'hametuha/v1/idea/' + id + '/',
                         headers: {
-                            'X-WP-Nonce': WP_API_Settings.nonce
+                            'X-WP-Nonce': wpApiSettings.nonce
                         }
                     }).then(
                         function (response) {
@@ -167,7 +167,7 @@ angular.module('hametuha', ['ui.bootstrap'])
                         method : 'DELETE',
                         url    : endpoint + '?post_id=' + id,
                         headers: {
-                            'X-WP-Nonce': WP_API_Settings.nonce
+                            'X-WP-Nonce': wpApiSettings.nonce
                         }
                     }).then(
                         function (result) {

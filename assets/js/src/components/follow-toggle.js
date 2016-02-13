@@ -3,7 +3,7 @@
  */
 
 /*global Hametuha: true*/
-/*global WP_API_Settings: true*/
+/*global wpApiSettings: true*/
 
 (function ($) {
 
@@ -11,7 +11,7 @@
 
     // フォロー・アンフォロー
     $(document).on('click', 'a.btn-follow', function(e){
-        var endpoint = WP_API_Settings.root + 'hametuha/v1/doujin/follow/' + $(this).attr('data-follower-id') + '/',
+        var endpoint = wpApiSettings.root + 'hametuha/v1/doujin/follow/' + $(this).attr('data-follower-id') + '/',
             $btn = $(this),
             following = $(this).hasClass('btn-following');
         e.preventDefault();
@@ -25,7 +25,7 @@
                     url: endpoint,
                     method: 'DELETE',
                     beforeSend: function ( xhr ) {
-                        xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
+                        xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
                     },
                     data:{}
                 } ).done( function ( response ) {
@@ -42,7 +42,7 @@
                 url: endpoint,
                 method: 'POST',
                 beforeSend: function ( xhr ) {
-                    xhr.setRequestHeader( 'X-WP-Nonce', WP_API_Settings.nonce );
+                    xhr.setRequestHeader( 'X-WP-Nonce', wpApiSettings.nonce );
                 },
                 data:{}
             } ).done( function ( response ) {

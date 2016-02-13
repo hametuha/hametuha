@@ -221,7 +221,7 @@
 					</li>
 					<li>
 						<?php if ( ! current_user_can( 'read' ) ) : ?>
-						<a href="<?= esc_url( wp_login_url( admin_url( 'post-new.php?post_type=anpi' ) ) ) ?>" rel="nofollow">
+						<a href="<?= esc_url( wp_login_url( get_post_type_archive_link( 'anpi' ) ) ) ?>" rel="nofollow">
 							安否報告
 						</a>
 						<?php else : ?>

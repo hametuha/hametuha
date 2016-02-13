@@ -33,11 +33,11 @@ cd hametuha
 # npm をインストール
 npm install
 # ビルドを行うと、JSがnode_modulesからコピーされます。
-gulp build
+npm run build
 # ファイルを監視して、変更がある度にコンパイルします。
-gulp watch
+npm run watch
 # ブラウザに表示します。
-gulp bs
+npm run display
 ```
 
 これらのコマンドを発行すると、`hametuha/assets`フォルダにhtmlファイルがぶわーっと書きだされ、デザインの確認ができるようになります。
@@ -76,5 +76,3 @@ composer install
 - [Twitter](https://twitter.com/hametuha/)
 - [Facebook](https://www.facebook.com/hametuha.inc/)
 - [Slack](https://hametuha.slack.com/)
-
-

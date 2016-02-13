@@ -13,10 +13,6 @@
 			</a>
 		</div>
 
-
-		<?php get_template_part( 'templates/header/user' ) ?>
-
-
 	</div>
 	<!-- .navbar -->
 

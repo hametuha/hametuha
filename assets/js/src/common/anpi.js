@@ -3,7 +3,7 @@
  */
 
 /*global Hametuha: false*/
-/*global WP_API_Settings: true*/
+/*global wpApiSettings: true*/
 
 (function ($) {
     'use strict';
@@ -42,9 +42,9 @@
         }
         $.ajax({
             method: method,
-            url: WP_API_Settings.root + 'hametuha/v1/anpi/new/',
+            url: wpApiSettings.root + 'hametuha/v1/anpi/new/',
             beforeSend: function( xhr ){
-                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
             },
             data: data
         }).done(function(response){

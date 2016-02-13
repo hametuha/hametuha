@@ -14,7 +14,7 @@
 		</div>
 
 		<div class="tweet__content tweet__content--loop">
-			<?php if ( ! \Hametuha\Rest\Anpi::get_instance()->is_tweet() ) : ?>
+			<?php if ( ! \Hametuha\Model\Anpis::get_instance()->is_tweet() ) : ?>
 				<h2 class="tweet__content--title"><?php the_title() ?></h2>
 			<?php endif; ?>
 			<?php the_excerpt() ?>

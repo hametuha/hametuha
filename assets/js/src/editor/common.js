@@ -2,7 +2,7 @@
  * Description
  */
 
-/*global WP_API_Settings: false*/
+/*global wpApiSettings: false*/
 /*global Hametuha: false*/
 /*global HameditorPost: true*/
 /*global tinyMCE: false*/
@@ -131,7 +131,6 @@
                             });
                             modal.result.then(
                                 function(result){
-                                    console.log(result);
                                 },
                                 function(){
                                     // Do nothing.
@@ -170,9 +169,9 @@
                 function api(method, endpoint, data) {
                     var request = {
                         method : method,
-                        url    : WP_API_Settings.root + endpoint,
+                        url    : wpApiSettings.root + endpoint,
                         headers: {
-                            'X-WP-Nonce': WP_API_Settings.nonce
+                            'X-WP-Nonce': wpApiSettings.nonce
                         }
                     };
                     if (data) {
@@ -222,21 +221,33 @@
                     data.title = $scope.post.title;
                     tinyMCE.activeEditor.save();
                     data.content = $('#hamce').val();
+                    data.cat = {
+                        taxonomy: 'anpi_cat',
+                        term_id : $scope.post.cat
+                    };
                     return data;
                 }
 
                 $scope.post = HameditorPost;
+
+                HameditorPost.categories.forEach(function(option){
+                    if(option.active){
+                        $scope.post.cat = option.id;
+                    }
+                });
 
                 /**
                  * Save post
                  */
                 $scope.save = function () {
                     start();
+                    var now = (new Date()).toISOString();
                     api('POST', 'wp/v2/' + $scope.post.type + '/' + $scope.post.id, postData({
-                        modified: (new Date()).toISOString()
+                        modified: now
                     })).then(
                         function(response){
-                            $scope.post.modified = (new Date()).toISOString();
+                            $scope.post.modified = now;
+                            $scope.post.url = response.data.link;
                             Hametuha.alert('保存しました。', 'success', 2000);
                         },
                         errorHandler
@@ -248,15 +259,17 @@
                  */
                 $scope.publish = function () {
                     Hametuha.confirm('公開してよろしいですか？', function () {
-                        return;
                         start();
+                        var now = (new Date()).toISOString();
                         api('POST', 'wp/v2/' + $scope.post.type + '/' + $scope.post.id, postData({
                             status: 'publish',
-                            date  : (new Date()).toISOString()
+                            date  : now
                         })).then(
                             function (response) {
-                                console.log(response);
                                 $scope.post.status = 'publish';
+                                $scope.post.modified = now;
+                                $scope.post.date = now;
+                                $scope.post.url = response.data.link;
                                 Hametuha.alert('安否情報を公開しました！', 'success', 2000);
                             },
                             errorHandler
@@ -274,6 +287,7 @@
                     })).then(
                         function (response) {
                             $scope.post.status = 'private';
+                            $scope.post.url = response.data.link;
                             Hametuha.alert('投稿を非公開にしました。', 'warning', 2000);
                         },
                         errorHandler

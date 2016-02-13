@@ -6,6 +6,13 @@
 		<textarea rows="5" class="form-control"
 		          placeholder="なにがしか訴えたいことを書いてください。"
 		          name="new-anpi-content" id="new-anpi-content"><?= esc_textarea( $content ) ?></textarea>
+		<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+		<p class="help-block">
+			長々と書きたいことがある同人は
+			<a href="<?= wp_nonce_url( home_url( '/anpi/mine/new', 'https' ), 'my-anpi' ) ?>">こちら</a>
+			からたくさん書けます。
+		</p>
+		<?php endif; ?>
 	</div>
 	<div class="form-group">
 		<label for="recommend_to">通知を飛ばす</label>
