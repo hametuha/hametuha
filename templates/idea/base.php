@@ -16,7 +16,7 @@
 	</div>
 
 
-	<section id="doujin-ideas" ng-app="hametuIdeas">
+	<section id="doujin-ideas">
 
 		<div class="container">
 

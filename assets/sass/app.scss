@@ -1,5 +1,8 @@
 @charset "utf-8";
 
+[ng-cloak]{
+  opacity: 0;
+}
 
 @import "bootstrap";
 
@@ -12,3 +15,5 @@
 @import "container";
 
 @import "parts/*";
+
+

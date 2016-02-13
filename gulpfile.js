@@ -1,8 +1,9 @@
-var gulp = require('gulp'),
-    fs   = require('fs'),
-    $ = require('gulp-load-plugins')(),
+var gulp        = require('gulp'),
+    fs          = require('fs'),
+    $           = require('gulp-load-plugins')(),
     browserSync = require('browser-sync'),
-    pngquant = require('imagemin-pngquant');
+    pngquant    = require('imagemin-pngquant'),
+    eventStream = require('event-stream');
 
 
 // Sassのタスク
@@ -38,7 +39,7 @@ gulp.task('sass',function(){
 
 // Minify All
 gulp.task('js', function(){
-    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/common/*.js'])
+    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/common/*.js', '!./assets/js/src/common.js'])
         .pipe($.sourcemaps.init({
             loadMaps: true
         }))
@@ -52,14 +53,57 @@ gulp.task('js', function(){
 gulp.task('commonjs', function(){
     return gulp.src(['./assets/js/src/common/*.js'])
         .pipe($.concat('common.js'))
+        .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/src/'));
 });
 
 // JS Hint
 gulp.task('jshint', function(){
-    return gulp.src(['./assets/js/src/**/*.js'])
+    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/modernizr.js'])
         .pipe($.jshint('./assets/.jshintrc'))
         .pipe($.jshint.reporter('jshint-stylish'));
+});
+
+// Build modernizr
+gulp.task('copylib', function(){
+    return eventStream.merge(
+        // Build Bootstrap
+        gulp.src([
+                './node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+                './node_modules/bootbox/bootbox.js'
+            ])
+            .pipe($.concat('bootstrap.js'))
+            .pipe($.uglify())
+            .pipe(gulp.dest('./assets/js/dist')),
+        // Build Angular
+        gulp.src([
+                './node_modules/angular/angular.js',
+                './node_modules/angular-i18n/angular-locale_ja-jp.js',
+                './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+            ])
+            .pipe($.concat('angular.js'))
+            .pipe($.uglify())
+            .pipe(gulp.dest('./assets/js/dist')),
+        // Build unpacked Libraries.
+        gulp.src([
+                './node_modules/modernizr/modernizr.js',
+                './node_modules/html5shiv/dist/html5shiv.js',
+                './node_modules/respond.js/dest/respond.src.js',
+            ])
+            .pipe($.uglify())
+            .pipe(gulp.dest('./assets/js/dist/'))
+    );
+});
+
+// Image min
+gulp.task('imagemin', function(){
+    return gulp.src('./assets/img/src/**/*')
+        .pipe($.imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('./assets/img'));
 });
 
 // Jade
@@ -80,8 +124,8 @@ gulp.task('jade', function(){
                 list: list,
                 scripts: [
                     'https://code.jquery.com/jquery-1.11.3.min.js',
-                    './js/dist/bootstrap.js',
-                    './js/dist/common.js',
+                    '../js/dist/bootstrap.js',
+                    '../js/dist/common.js',
                 ],
 
                 labels: {
@@ -154,40 +198,7 @@ gulp.task('jade', function(){
                 ]
             }
         }))
-        .pipe(gulp.dest('./assets/'));
-});
-
-// Image min
-gulp.task('imagemin', function(){
-    return gulp.src('./assets/img/src/**/*')
-        .pipe($.imagemin({
-            progressive: true,
-            svgoPlugins: [{removeViewBox: false}],
-            use: [pngquant()]
-        }))
-        .pipe(gulp.dest('./assets/img'));
-});
-
-// Build modernizr
-gulp.task('copylib', function(){
-    // Build Bootstrap
-    gulp.src([
-        './node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
-        './node_modules/bootbox/bootbox.js'
-    ])
-        .pipe($.concat('bootstrap.js'))
-        .pipe($.uglify())
-        .pipe(gulp.dest('./assets/js/dist'));
-    // Build unpacked Libraries.
-    return gulp.src([
-        './node_modules/modernizr/modernizr.js',
-        './node_modules/html5shiv/dist/html5shiv.js',
-        './node_modules/respond.js/dest/respond.src.js',
-        './node_modules/angular/angular.js',
-        './node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js'
-    ])
-        .pipe($.uglify())
-        .pipe(gulp.dest('./assets/js/dist/'));
+        .pipe(gulp.dest('./assets/html/'));
 });
 
 // watch
@@ -211,7 +222,7 @@ gulp.task('bs-watch', function(){
         './assets/css/**/*.css',
         './assets/js/dist/**/*.js',
         './assets/img/**/*', '!./assets/img/src/**/*',
-        './assets/*.html'
+        './assets/html/*.html'
     ], ['bs-reload'])
 });
 
@@ -220,8 +231,9 @@ gulp.task('browser-sync', function() {
     browserSync({
         server: {
             baseDir: "./assets/"       //対象ディレクトリ
-            ,index  : "index.html"      //インデックスファイル
-        }
+            ,index  : "html/index.html"      //インデックスファイル
+        },
+        reloadDelay: 500
     });
 });
 

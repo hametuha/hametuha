@@ -3,7 +3,7 @@
  */
 
 /*global Hametuha: true*/
-/*global WP_API_Settings: true*/
+/*global wpApiSettings: true*/
 
 (function ($) {
 
@@ -16,10 +16,10 @@
         e.preventDefault();
         $button.attr('disabled', true);
         $.ajax({
-            url       : WP_API_Settings.root + 'hametuha/v1/idea/' + post_id + '/',
+            url       : wpApiSettings.root + 'hametuha/v1/idea/' + post_id + '/',
             method    : 'POST',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
             }
         }).done(function (response) {
             $button.attr('data-stock', null).text('ストック済み');
@@ -53,9 +53,9 @@
         e.preventDefault();
         $.ajax({
             method    : 'PUT',
-            url       : WP_API_Settings.root + 'hametuha/v1/idea/' + $(this).attr('data-post-id') + '/',
+            url       : wpApiSettings.root + 'hametuha/v1/idea/' + $(this).attr('data-post-id') + '/',
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
             },
             data      : {
                 user_id: $(this).find("#recommend_to").val()
@@ -104,9 +104,9 @@
         }
         $.ajax({
             method    : method,
-            url       : WP_API_Settings.root + endpoint,
+            url       : wpApiSettings.root + endpoint,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
             },
             data      : data
         }).done(function (response) {
@@ -132,9 +132,9 @@
         Hametuha.confirm('このアイデアを削除してよろしいですか？', function () {
             $.ajax({
                 method    : 'DELETE',
-                url       : WP_API_Settings.root + 'hametuha/v1/idea/mine/?post_id=' + postId,
+                url       : wpApiSettings.root + 'hametuha/v1/idea/mine/?post_id=' + postId,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
                 }
             }).done(function (response) {
                 Hametuha.alert(response.message);

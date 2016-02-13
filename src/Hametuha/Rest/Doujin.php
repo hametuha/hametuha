@@ -326,7 +326,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		} elseif ( isset( $data['template'] ) && 'follower' == $data['template'] ) {
 			$path = '/assets/js/dist/components/followers.js';
 			wp_enqueue_script( 'hametuha-follower', get_stylesheet_directory_uri() . $path, [
-				'angular-bootstrap',
+				'angular',
 				'hametu-follow',
 			], filemtime( get_stylesheet_directory() . $path ), true );
 		}

@@ -70,7 +70,7 @@ class Idea extends RestTemplate {
 	public function enqueue_assets( $page = '' ) {
 		$path = '/assets/js/dist/components/ideas.js';
 		wp_enqueue_script( 'hametuha-follower', get_stylesheet_directory_uri() . $path, [
-			'angular-bootstrap',
+			'angular',
 			'wp-api',
 		], filemtime( get_stylesheet_directory() . $path ), true );
 	}

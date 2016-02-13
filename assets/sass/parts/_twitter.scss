@@ -1,0 +1,95 @@
+.tweet{
+  &--big{
+    padding-top: $navbar-height + $subnavbar-height + 40;
+    padding-bottom: 40px;
+    background: #f9f9f9;
+  }
+
+  &__wrap{
+    max-width: $screen-sm-min;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius:10px;
+    margin-bottom: 40px;
+  }
+
+
+  &__link{
+    &--loop{
+      display: block;
+      padding: 20px;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+        background: transparent;
+      }
+      &:hover, &:active{
+        text-decoration: none;
+        color: $brand-primary;
+        background: #fffdd1;
+      }
+    }
+  }
+  &__author{
+    position: relative;
+    &--header{
+      font-size: 22px;
+    }
+    a{
+      display: block;
+      @extend .clearfix;
+      &:link, &:visited{
+        text-decoration: none;
+      }
+      &:hover, &:active{
+        text-decoration: none;
+      }
+    }
+    img{
+      max-width: 60px;
+      width: auto;
+      height: auto;
+      float: left;
+      margin-right: 1em;
+    }
+    &--name{
+      font-weight:bold;
+    }
+  }
+
+  &__action{
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  &__content{
+    font-size: 36px;
+    &--title{
+      font-weight: bold;
+    }
+  }
+
+  &__meta{
+    display: block;
+    padding: 10px;
+    color: #ddd;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+  }
+  &__comment{
+    margin-right: 2em;
+  }
+  &__mentions{
+    &--img{
+      width: 32px;
+      height: 32px;
+    }
+    .help-tip{
+      &:first-child{
+        margin-left: 0;
+      }
+    }
+  }
+}

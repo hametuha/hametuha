@@ -3,7 +3,7 @@
  */
 
 /*global Hametuha: true*/
-/*global WP_API_Settings: true */
+/*global wpApiSettings: true */
 
 (function ($) {
 
@@ -55,10 +55,10 @@
                 }
             });
             $.ajax({
-                url       : WP_API_Settings.root + 'hametuha/v1/doujin/following/me/?s=' + $input.val(),
+                url       : wpApiSettings.root + 'hametuha/v1/doujin/following/me/?s=' + $input.val(),
                 method    : 'GET',
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-WP-Nonce', WP_API_Settings.nonce);
+                    xhr.setRequestHeader('X-WP-Nonce', wpApiSettings.nonce);
                 }
             }).done(function (response) {
                 if (response.users.length) {

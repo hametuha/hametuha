@@ -95,3 +95,14 @@ add_filter('style_loader_tag', function($tag, $handle){
     }
     return $tag;
 }, 10, 2);
+
+/**
+ * srcset属性がSSL対応ではないので、SSL+CDNに対応する
+ */
+add_filter( 'wp_calculate_image_srcset', function( $sources, $size_array, $image_src, $image_meta, $attachment_id ){
+    foreach ( $sources as &$source ) {
+        $source['url'] = preg_replace( '#^(https?://)(hametuha)#', 'http'.(is_ssl() ? 's' : '').'://s.hametuha', $source['url'] );
+    }
+    return $sources;
+}, 10, 5);
+

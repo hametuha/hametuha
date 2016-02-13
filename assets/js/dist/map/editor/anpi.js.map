@@ -1,0 +1,1 @@
+{"version":3,"sources":["editor/anpi.js"],"names":["$","jQuery"],"mappings":"CAMA,SAAWA,GACP,cAEDC","file":"editor/anpi.js","sourcesContent":["/**\n * Description\n */\n\n/*global wpApiSettings: false*/\n\n(function ($) {\n    'use strict';\n\n})(jQuery);\n"],"sourceRoot":"/source/"}

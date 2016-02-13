@@ -3,7 +3,7 @@
 ?>
 
 
-<section id="doujin-follower" ng-app="hametuFollower">
+<section id="doujin-follower">
 	<div class="container">
 
 		<div class="row followers">

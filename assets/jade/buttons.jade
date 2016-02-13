@@ -19,7 +19,7 @@ block content
         p
             - var msg = '';
             for val, key in labels
-                button(class="btn btn-#{key} btn-alert" data-type='#{key}' type="button" data-text="これはアラートメッセージの#{val}です。") アラート
+                button(class="btn btn-#{key} btn-alert" data-type='#{key}' type="button" data-text="これは<a class=\"alert-link\" href='#'>アラートメッセージ</a>の#{val}です。") アラート
 
     script.
         jQuery(document).on('click', '.btn-alert', function(e){

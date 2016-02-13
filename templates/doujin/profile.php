@@ -138,6 +138,16 @@
 												get_the_title( $activity->post_id )
 											);
 											break;
+										case 'anpi':
+											$url = get_permalink( $activity->post_id );
+											if ( \Hametuha\Model\Anpis::get_instance()->is_tweet( $activity->post_id ) ) {
+												$anpi  = get_post( $activity->post_id );
+												$title = trim_long_sentence( $anpi->post_excerpt, 20 );
+											} else {
+												$title = get_the_title( $activity->post_id );
+											}
+											$title = sprintf( '安否報告しました： 「%s」', $title );
+											break;
 										default:
 											$url = get_permalink( $activity->post_id );
 											switch ( $activity->type ) {

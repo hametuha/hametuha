@@ -34,7 +34,7 @@ add_action( 'admin_head', function () {
  */
 add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 
-	$screen = get_current_screen();
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 
 	$css_dir = get_stylesheet_directory() . '/assets/css';
 	$initArray['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'Ymd', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
@@ -90,8 +90,11 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 			],
 		];
 	}
-
 	$initArray['style_formats'] = json_encode( $styles );
+
+	if( ! is_admin() ){
+		$initArray['menubar'] = false;
+	}
 
 	return $initArray;
 }, 10001, 2 );
