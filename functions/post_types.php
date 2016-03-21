@@ -391,3 +391,16 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 		update_term_meta( $term_id, 'tag_type', $_POST['tag_type'] );
 	}
 }, 10, 2 );
+
+/**
+ * 投稿本文をREST APIから削除
+ *
+ * @param WP_REST_Response $response
+ * @param WP_Post $post
+ * @param WP_REST_Request    $request    Request object.
+ * @return WP_REST_Response
+ */
+add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $request ) {
+	$response->data['content'] = $response->data['excerpt'];
+	return $response;
+} );

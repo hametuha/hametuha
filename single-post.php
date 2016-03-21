@@ -4,8 +4,9 @@ get_header(); ?>
 
 <?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-	<article id="viewing-content" <?php post_class() ?> itemscope itemtype="http://schema.org/BlogPosting">
+	<article id="viewing-content" <?php post_class() ?> itemscope itemtype="http://schema.org/BlogPosting" itemprop="mainEntityOfPage">
 		<span class="hidden" itemprop="url"><?= the_permalink() ?></span>
+		<span class="hidden" itemprop="publisher">破滅派</span>
 
 		<div id="content-wrapper">
 			<?php if ( has_post_thumbnail() ) : ?>
@@ -13,15 +14,16 @@ get_header(); ?>
 				<div class="single-post-thumbnail text-center">
 					<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
 				</div>
+			<?php else : ?>
+				<img class="hidden" src="<?= get_template_directory_uri() . '/assets/img/facebook-logo.png'; ?>" itemprop="image" width="300" height="300">
+				<?php if ( has_pixiv() ) : ?>
 
-			<?php elseif ( has_pixiv() ) : ?>
+					<div class="single-post-thumbnail pixiv text-center">
+						<?php pixiv_output(); ?>
+					</div>
 
-				<div class="single-post-thumbnail pixiv text-center">
-					<?php pixiv_output(); ?>
-				</div>
-
+				<?php endif; ?>
 			<?php endif; ?>
-
 			<div class="work-wrapper container">
 
 				<div class="work-meta row">
@@ -91,7 +93,9 @@ HTML;
 				<!-- //.single-post-content -->
 
 				<p class="text-center pub-date">
-					<span itemprop="datePublished"><?php the_time( 'Y年n月j日' ) ?></span>公開
+					<span><?php the_time( 'Y年n月j日' ) ?></span>公開
+					<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ) ?></span>
+					<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ) ?></span>
 				</p>
 
 				<?php if ( is_series() ) : ?>
