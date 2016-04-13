@@ -8,10 +8,10 @@ get_header('login');
 ?>
 
         <p class="catch-copy text-center">
-            <?php bloginfo('description') ?>
+            <?php bloginfo( 'description' ) ?>
         </p>
 
-		<?php if(have_posts()): while(have_posts()): the_post();?>
+		<?php if ( have_posts() ): while( have_posts() ): the_post();?>
             <div id="login-body">
                 <?php the_content(); ?>
             </div><!--  -->
