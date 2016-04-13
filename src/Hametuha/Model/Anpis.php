@@ -78,6 +78,9 @@ class Anpis extends Model {
 	 * @return array Array of WP_User
 	 */
 	public function get_mentioned( $post_ids ) {
+		if ( ! $post_ids ) {
+			return [];
+		}
 		$users  = $this->select( 'r.object_id, u.*' )
 		               ->from( "{$this->user_content_relationships} AS r" )
 		               ->join( "{$this->db->users} AS u" , 'u.ID = r.user_id', 'inner' )
