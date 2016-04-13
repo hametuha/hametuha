@@ -42,7 +42,7 @@ class Notification extends RestTemplate {
 	 *
 	 * @param array $setting
 	 */
-	protected function __construct( array $setting = [ ] ) {
+	protected function __construct( array $setting = [] ) {
 		parent::__construct( $setting );
 		add_action( 'hametuha_post_reviewed', [ $this, 'review_updated' ], 10, 4 );
 		add_action( 'wp_insert_comment', [ $this, 'comment_inserted' ], 11, 2 );
@@ -64,7 +64,7 @@ class Notification extends RestTemplate {
 		wp_localize_script( 'hametuha-notification', 'HametuhaNotification', [
 			'endpoint' => home_url( static::$prefix . "/update" ),
 			'retrieve' => home_url( static::$prefix . "/latest" ),
-			'nonce'    => wp_create_nonce( $this->action )
+			'nonce'    => wp_create_nonce( $this->action ),
 		] );
 	}
 
@@ -164,13 +164,18 @@ class Notification extends RestTemplate {
 		if ( ! is_user_logged_in() && ! $this->verify_nonce() ) {
 			throw new \Exception( 'ログインしてください。', 403 );
 		}
-		$notifications = [];
-		foreach ( $this->notifications->get_recent( get_current_user_id() ) as $notification ) {
-			ob_start();
-			$this->block( $notification );
-			$content = ob_get_contents();
-			ob_end_clean();
-			$notifications[] = $content;
+		$user_id = get_current_user_id();
+		$notifications = wp_cache_get( $user_id, 'latest_info' );
+		if ( false === $notifications ) {
+			$notifications = [];
+			foreach ( $this->notifications->get_recent( get_current_user_id() ) as $notification ) {
+				ob_start();
+				$this->block( $notification );
+				$content = ob_get_contents();
+				ob_end_clean();
+				$notifications[] = $content;
+			}
+			wp_cache_add( $user_id, $notifications, 'latest_info', 30 );
 		}
 		wp_send_json( $notifications );
 	}
