@@ -160,6 +160,7 @@ class Notification extends RestTemplate {
 	 * @throws \Exception
 	 */
 	public function get_latest() {
+		wp_send_json([]);
 		nocache_headers();
 		if ( ! is_user_logged_in() && ! $this->verify_nonce() ) {
 			throw new \Exception( 'ログインしてください。', 403 );
