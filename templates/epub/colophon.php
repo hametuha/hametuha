@@ -54,7 +54,7 @@
 		<tr>
 			<th>発行所</th>
 			<td>
-				<a href="<?= home_url('', 'http') ?>"><?php bloginfo('name') ?></a>
+				<a href="<?= home_url('') ?>"><?php bloginfo('name') ?></a>
 			</td>
 		</tr>
 		<?php foreach( [

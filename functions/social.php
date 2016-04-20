@@ -81,7 +81,7 @@ function _hametuha_share_count() {
 		$result  = get_transient( $key );
 		if ( '0' == $result ) {
 			if ( ! $post_id ) {
-				$permalink = home_url( '/', 'http' );
+				$permalink = home_url( '/');
 			} else {
 				if ( ! ( $post = get_post( $post_id ) ) ) {
 					throw new Exception( '投稿は存在しません', 404 );

@@ -5,7 +5,7 @@ $profile = $post->helper;
 <li <?php post_class( 'media media--profile' ) ?>>
 
 	<a class="media__link media__link--nopad"
-	   href="<?= home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ), 'http' ) ?>">
+	   href="<?= home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) )) ?>">
 
 		<div class="pull-left comment-face">
 			<?= $profile->avatar( 120 ) ?>

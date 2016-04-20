@@ -25,7 +25,7 @@ class Profile extends PostHelper
      */
     public function permalink(){
         // TODO: プロフィールページができるまでは投稿一覧
-        //return home_url(sprintf('/profile/%s/', $this->nicename), 'http');
+        //return home_url(sprintf('/profile/%s/', $this->nicename));
         return get_author_posts_url($this->post->post_author);
     }
 

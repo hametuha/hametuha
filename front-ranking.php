@@ -108,7 +108,7 @@
                     <?php endwhile; wp_reset_postdata() ?>
                 </ol>
                 <p>
-                    <a class="btn btn-default btn-lg btn-block" href="<?= home_url('/best/', 'http') ?>">
+                    <a class="btn btn-default btn-lg btn-block" href="<?= home_url('/best/') ?>">
                         歴代ランキングを見る
                     </a>
                 </p>

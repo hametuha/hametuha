@@ -22,7 +22,7 @@
 		<input type="text" class="form-control" id="testimonial-url" name="testimonial-url" value=""
 			   placeholder="ex. http://example.jp/review/1234"/>
 		<p class="help-block">twitterの場合はURLを入れるだけで大丈夫です。
-			<a href="<?= home_url( '/faq/how-to-get-twitter-url/', 'http' ) ?>">詳しく&raquo;</a>
+			<a href="<?= home_url( '/faq/how-to-get-twitter-url/') ?>">詳しく&raquo;</a>
 		</p>
 	</div>
 

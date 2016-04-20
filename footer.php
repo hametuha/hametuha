@@ -7,7 +7,7 @@
 
 <div class="modal fade" id="searchBox" tabindex="-1" role="dialog" aria-labelledby="searchBox">
 	<div class="modal-dialog">
-		<form action="<?= home_url( '/', 'http' ) ?>" data-action="<?= home_url( '/', 'http' ) ?>">
+		<form action="<?= home_url( '/') ?>" data-action="<?= home_url( '/') ?>">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -35,7 +35,7 @@
 							</label>
 						<?php endforeach; ?>
 						<label class="radio-inline">
-							<input type="radio" name="post_type" data-search-action="<?= home_url( 'authors/', 'http' ) ?>" value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
+							<input type="radio" name="post_type" data-search-action="<?= home_url( 'authors/') ?>" value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
 						</label>
 					</div>
 				</div>
@@ -67,7 +67,7 @@
 			<p class="text-muted">
 				月一（努力目標）で配信しています。
 			</p>
-			<a class="btn btn-primary" href="<?= home_url( '/merumaga/', 'http' ) ?>">
+			<a class="btn btn-primary" href="<?= home_url( '/merumaga/') ?>">
 				<i class="icon-mail"></i> 購読する
 			</a>
 

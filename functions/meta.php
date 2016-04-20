@@ -256,7 +256,7 @@ HTML;
  * リッチスニペット
  */
 add_action( 'wp_head', function () {
-	$url  = home_url( '', 'http' );
+	$url  = home_url( '');
 	$name = get_bloginfo( 'name' );
 	if ( is_front_page() ) {
 		echo <<<HTML

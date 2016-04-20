@@ -8,7 +8,7 @@
 		<?php endif; ?>
 	</p>
 	<p>
-		リストへの作品追加は、個別の作品ページから行えます。<a class="alert-link" href="<?= home_url('/faq/how-to-make-list/', 'http') ?>">詳しいやり方を見る&raquo;</a>
+		リストへの作品追加は、個別の作品ページから行えます。<a class="alert-link" href="<?= home_url('/faq/how-to-make-list/') ?>">詳しいやり方を見る&raquo;</a>
 	</p>
 </div>
 
@@ -17,11 +17,11 @@
 <?php endif; ?>
 
 <ul class="nav nav-pills">
-	<li><a href="<?= home_url('/recommends/', 'http'); ?>">編集部オススメ</a></li>
-	<li><a href="<?= get_post_type_archive_link('lists', 'http'); ?>">新着リスト</a></li>
+	<li><a href="<?= home_url('/recommends/'); ?>">編集部オススメ</a></li>
+	<li><a href="<?= get_post_type_archive_link('lists'); ?>">新着リスト</a></li>
 	<?php if( is_user_logged_in() ): ?>
 		<li><a href="<?= home_url('/your/lists/', 'https') ?>">あなたのリスト</a></li>
 		<li class="active"><a class="list-creator" title="リストを追加" href="<?= esc_url(\Hametuha\Rest\ListCreator::form_link()) ?>">リストを追加</a></li>
 	<?php endif; ?>
-	<li><a href="<?= home_url('/faq/how-to-make-list/', 'http'); ?>">作り方</a></li>
+	<li><a href="<?= home_url('/faq/how-to-make-list/'); ?>">作り方</a></li>
 </ul>

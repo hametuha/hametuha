@@ -11,7 +11,7 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '', 'http' ) ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
 			&gt;
 			<?php if ( $breadcrumb ) : ?>
 				<a href="<?= home_url( '/statistics/', 'https' ) ?>">統計情報</a>

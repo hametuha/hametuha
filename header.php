@@ -22,7 +22,7 @@
 			<?php endif; ?>
 		</div>
 
-		<a class="logo" rel="home" href="<?= home_url( '/', 'http' ); ?>">
+		<a class="logo" rel="home" href="<?= home_url( '/'); ?>">
 			<i class="icon-hametuha"></i><span>破滅派</span>
 		</a>
 
@@ -31,12 +31,12 @@
 		<nav class="collapse" id="header-navigation">
 			<ul class="nav">
 				<li>
-					<a rel="home" href="<?= home_url( '', 'http' ) ?>">
+					<a rel="home" href="<?= home_url( '') ?>">
 						<i class="icon-home"></i> ホーム
 					</a>
 				</li>
 				<li>
-					<a rel="home" href="<?= home_url( 'announcement', 'http' ) ?>">
+					<a rel="home" href="<?= home_url( 'announcement') ?>">
 						<i class="icon-bullhorn"></i> 告知
 					</a>
 				</li>
@@ -46,17 +46,17 @@
 					</a>
 				</li>
 				<li>
-					<a href="<?= home_url( '/about/', 'http' ); ?>">
+					<a href="<?= home_url( '/about/'); ?>">
 						<i class="icon-ha"></i> 破滅派について
 					</a>
 				</li>
 				<li>
-					<a href="<?= home_url( '/merumaga/', 'http' ); ?>">
+					<a href="<?= home_url( '/merumaga/'); ?>">
 						<i class="icon-mail"></i> メルマガ購読
 					</a>
 				</li>
 				<li>
-					<a href="<?= home_url( '/faq/', 'http' ); ?>">
+					<a href="<?= home_url( '/faq/'); ?>">
 						<i class="icon-question2"></i> よくある質問
 					</a>
 				</li>
@@ -199,7 +199,7 @@
 					</li>
 
 					<li>
-						<a href="<?= home_url( '/authors/', 'http' ); ?>">
+						<a href="<?= home_url( '/authors/'); ?>">
 							執筆者一覧
 						</a>
 					</li>
@@ -236,12 +236,12 @@
 					</li>
 
 					<li>
-						<a href="<?= home_url( '/thread/', 'http' ); ?>">
+						<a href="<?= home_url( '/thread/'); ?>">
 							掲示板トップ
 						</a>
 					</li>
 					<li>
-						<a href="<?= home_url( '/thread/#thread-add', 'http' ) ?>">
+						<a href="<?= home_url( '/thread/#thread-add') ?>">
 							スレたてする
 						</a>
 					</li>

@@ -12,7 +12,7 @@
 	}
 
 ?>
-<form method="get" action="<?= home_url('/', 'http') ?>" class="adv-search-form">
+<form method="get" action="<?= home_url('/') ?>" class="adv-search-form">
 
 	<?php if( $post_type ): ?>
 		<input type="hidden" name="post_type" value="<?= $post_type ?>" />

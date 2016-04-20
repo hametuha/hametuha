@@ -212,7 +212,7 @@
 						<div class="row">
 							<div class="col-sm-5 col-xs-12 text-center">
 								<a class="btn btn-default btn--author btn-block"
-								   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) ), 'http' ) ?>"
+								   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) )) ?>"
 								   itemprop="url">
 									詳しく見る
 								</a>

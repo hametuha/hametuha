@@ -11,7 +11,7 @@ use \Hametuha\QueryHighJack\RankingQuery;
  */
 add_shortcode('ranking_url', function($atts = [], $content = ''){
 	foreach( [
-		'url'  => home_url('/ranking/weekly/'.get_latest_ranking_day('Ymd/'), 'http'),
+		'url'  => home_url('/ranking/weekly/'.get_latest_ranking_day('Ymd/')),
 	    'date' => get_latest_ranking_day(get_option('date_format')),
 	] as $key => $repl){
 		$content = str_replace('%'.$key.'%', $repl, $content);

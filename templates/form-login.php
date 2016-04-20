@@ -33,7 +33,7 @@
 
 			<div class="input-group">
 				<span
-					class="input-group-addon"><?= str_replace( 'http://', '', home_url( '/author/', 'http' ) ) ?></span>
+					class="input-group-addon"><?= str_replace( 'http://', '', home_url( '/author/') ) ?></span>
 				<input type="text" class="form-control" id="login_nicename" readonly value="<?= $nicename ?>">
 			</div>
 			<p class="help-block">
@@ -49,9 +49,9 @@
 			</ul>
 
 			<p class="text-muted text-center">
-				<?= home_url( '/author/', 'http' ) ?><code>baudelaire</code>/<br/>
+				<?= home_url( '/author/') ?><code>baudelaire</code>/<br/>
 				↓<br/>
-				<?= home_url( '/author/', 'http' ) ?><code>rimbaud</code>/
+				<?= home_url( '/author/') ?><code>rimbaud</code>/
 			</p>
 
 		</div>

@@ -5,7 +5,7 @@
         <div class="alert alert-info">
             <p>
                 こんにちは、<strong><?= esc_html($name) ?></strong>さん。あなたは同人になろうとしています。<br />
-                以下の注意事項と<a class="alert-link" href="<?= home_url('/contract/', 'http') ?>" target="_blank">利用規約</a>をご覧になり、
+                以下の注意事項と<a class="alert-link" href="<?= home_url('/contract/') ?>" target="_blank">利用規約</a>をご覧になり、
                 同意の上で「同人になる」ボタンをクリックしてください。
             </p>
         </div>

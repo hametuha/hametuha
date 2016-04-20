@@ -49,7 +49,7 @@
 					?>
 				</ul>
 				<p>
-					<a href="<?= home_url( '/ranking/', 'http' ) ?>" class="btn btn-default btn-block">ランキング一覧</a>
+					<a href="<?= home_url( '/ranking/') ?>" class="btn btn-default btn-block">ランキング一覧</a>
 				</p>
 			</div>
 
@@ -103,7 +103,7 @@
 					?>
 				</ul>
 				<p>
-					<a href="<?= home_url( '/latest/', 'http' ) ?>" class="btn btn-default btn-block">すべての新着投稿</a>
+					<a href="<?= home_url( '/latest/') ?>" class="btn btn-default btn-block">すべての新着投稿</a>
 				</p>
 			</div>
 
@@ -206,7 +206,7 @@
 				<canvas id="genre-context" width="300" height="300"></canvas>
 				<p class="list-excerpt">
 					<?= date_i18n( 'Y年n月j日' ); ?>現在、破滅派には<a
-						href="<?= home_url( '/authors/', 'http' ); ?>"><?= number_format_i18n( get_author_count() ); ?>
+						href="<?= home_url( '/authors/'); ?>"><?= number_format_i18n( get_author_count() ); ?>
 						人</a>の同人が参加し、
 					<a href="<?php echo home_url( '/latest/' ); ?>"><?= number_format_i18n( get_current_post_count() ); ?>
 						作品</a>が登録されています。
@@ -374,8 +374,8 @@
 
 					<p>
 						破滅派は要するに<strong>オンライン文芸誌</strong>であり、文学作品を発表したり、読んだりできます。<br/>
-						<a href="<?= home_url( '/about/', 'http' ) ?>">設立の経緯</a>や<a
-							href="<?= home_url( '/history/', 'http' ) ?>">活動の記録</a>などをご覧頂き、
+						<a href="<?= home_url( '/about/') ?>">設立の経緯</a>や<a
+							href="<?= home_url( '/history/') ?>">活動の記録</a>などをご覧頂き、
 						恐れを消してください。
 					</p>
 				</div>

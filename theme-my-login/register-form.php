@@ -7,7 +7,7 @@ Theme My Login will always look in your theme's directory first, before using th
 <div class="login" id="theme-my-login<?php $template->the_instance(); ?>">
 
     <p class="alert alert-info">
-		<a class="alert-link" target="_blank" href="<?= home_url('/contract/', 'http') ?>">利用規約</a>にご同意頂いた上で登録していただくと、登録確認用のメールが送信されます。そのメールに記載されたURLへ移動すると登録完了です。
+		<a class="alert-link" target="_blank" href="<?= home_url('/contract/') ?>">利用規約</a>にご同意頂いた上で登録していただくと、登録確認用のメールが送信されます。そのメールに記載されたURLへ移動すると登録完了です。
 	</p>
 
 	<?php $template->the_errors(); ?>

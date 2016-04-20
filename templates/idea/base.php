@@ -8,7 +8,7 @@
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '', 'http' ) ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
 			&gt;
 			<a href="<?= get_post_type_archive_link( 'ideas' ) ?>">アイデア</a>
 			&gt; <?= $breadcrumb ?>

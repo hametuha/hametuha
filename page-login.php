@@ -19,7 +19,7 @@ get_header('login');
 
 
         <p class="text-center">
-            <a href="<?= home_url('/', 'http') ?>">破滅派トップに戻る</a>
+            <a href="<?= home_url() ?>">破滅派トップに戻る</a>
         </p>
 
 <?php get_footer('login') ?>

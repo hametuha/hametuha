@@ -45,7 +45,7 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 		</div><!-- //.row -->
 		<div class="row">
 			<p>
-				<a href="<?= home_url( '/kdp/', 'http' ) ?>" class="btn btn-amazon btn-lg btn-block">
+				<a href="<?= home_url( '/kdp/') ?>" class="btn btn-amazon btn-lg btn-block">
 					<i class="icon-amazon"></i> 電子書籍一覧を見る
 				</a>
 			</p>

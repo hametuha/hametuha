@@ -131,7 +131,7 @@ HTML;
 			<div class="container">
 
 				<?php get_template_part( 'parts/list', 'author' ) ?>
-				<a href="<?= home_url('/doujin/detail/'.get_the_author_meta('nicename').'/', 'http') ?>" class="btn btn-default btn-lg btn-block">もっと見る</a>
+				<a href="<?= home_url('/doujin/detail/'.get_the_author_meta('nicename').'/') ?>" class="btn btn-default btn-lg btn-block">もっと見る</a>
 
 				<?php
 				// Yarpp関連記事

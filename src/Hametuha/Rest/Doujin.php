@@ -300,7 +300,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @return array
 	 */
 	public function ogp( array $values ) {
-		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/', 'http' );
+		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/');
 		$values['image'] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
 		$values['desc']  = $this->doujin->user_description;
 

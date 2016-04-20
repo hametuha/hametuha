@@ -34,7 +34,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 
 <ul id="profile-navi" class="nav nav-pills">
 	<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-	<li><a href="<?= home_url( '/doujin/detail/'.esc_attr( $profileuser->user_nicename ).'/', 'http' ) ?>" target="_blank">確認</a></li>
+	<li><a href="<?= home_url( '/doujin/detail/'.esc_attr( $profileuser->user_nicename ).'/') ?>" target="_blank">確認</a></li>
 	<?php endif; ?>
 </ul>
 
@@ -156,7 +156,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 			<div class="alert alert-info">
 				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
 					この情報はあなたの
-					<a class="alert-link" href="<?= home_url( sprintf( '/doujin/detail/%s/', $profileuser->user_nicename ), 'http' ) ?>">プロフィールページ</a>
+					<a class="alert-link" href="<?= home_url( sprintf( '/doujin/detail/%s/', $profileuser->user_nicename )) ?>">プロフィールページ</a>
 					に表示されます。
 					読者があなたのことを知るきっかけになりますので、なるべく詳細に入力しましょう。
 					入力していない情報は表示されません。
