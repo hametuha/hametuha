@@ -81,7 +81,7 @@ function get_series_price( $post = null, $cache = true ) {
 	if ( false === $price || ! $cache ) {
 		$url      = $series->get_kdp_url( $post->ID );
 		$response = wp_remote_get( $url );
-		if ( is_wp_error( $response ) || ! preg_match( '#<(span|b)([^>]*?)class="priceLarge"([^>]*?)>([^<]+)</(span|b)>#', $response['body'], $match ) ) {
+		if ( is_wp_error( $response ) || ! preg_match( '#<(span|b)([^>]*?)class="a-color-price"([^>]*?)>([^<]+)</(span|b)>#', $response['body'], $match ) ) {
 			return false;
 		}
 		$price = preg_replace( '#[^0-9]#', '', $match[4] );

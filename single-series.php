@@ -440,10 +440,12 @@
 
 					<p class="text-muted text-center">
 						<strong>※ Kindle以外にもスマートフォンやPCの無料アプリで読めます。</strong><br/>
-						<iframe
-							src="//rcm-fe.amazon-adsystem.com/e/cm?t=hametuha-22&o=9&p=21&l=ur1&category=kindlerotate&f=ifr"
-							width="125" height="125" scrolling="no" border="0" marginwidth="0" style="border:none;"
-							frameborder="0"></iframe>
+						<a href="http://www.amazon.co.jp/gp/aw/rd.html?ie=UTF8&a=B00QJDOM6U&at=hametuha-22&dl=1&lc=msn&uid=NULLGWDOCOMO&url=%2Fgp%2Faw%2Fd.html" alt="Kindle Paperwhite (ニューモデル) Wi-Fi">
+							<img src="https://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00QJDOM6U&Format=_FMjpg_SL80_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=hametuha-22" style="vertical-align:middle;"/>
+						</a>
+						<img src="https://ir-jp.amazon-adsystem.com/e/ir?t=hametuha-22&l=msn&o=9&a=B00QJDOM6U" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+						
+
 						<br/>
 						<a href="http://www.amazon.co.jp/gp/feature.html?docId=3078592246">
 							Kindle for PC
