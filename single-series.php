@@ -441,7 +441,7 @@
 					<p class="text-muted text-center">
 						<strong>※ Kindle以外にもスマートフォンやPCの無料アプリで読めます。</strong><br/>
 						<iframe
-							src="http://rcm-fe.amazon-adsystem.com/e/cm?t=hametuha-22&o=9&p=21&l=ur1&category=kindlerotate&f=ifr"
+							src="//rcm-fe.amazon-adsystem.com/e/cm?t=hametuha-22&o=9&p=21&l=ur1&category=kindlerotate&f=ifr"
 							width="125" height="125" scrolling="no" border="0" marginwidth="0" style="border:none;"
 							frameborder="0"></iframe>
 						<br/>
