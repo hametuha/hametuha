@@ -1,93 +1,87 @@
 $nav-padding: 15px;
 
-// 共通
-#footer{
-  background-color: $navbar-default-bg;
-  padding: 20px 0;
-  border-top: 3px double $navbar-default-border;
-
-  .external-links{
-    $font-size: 32px;
-    li a{
-      padding-left: $font-size + $nav-padding + $nav-padding;
-    }
-    i{
-      position: absolute;
-      font-size: $font-size;
-      top: 50%;
-      left: $nav-padding;
-      margin-top: $font-size / -2;
-    }
+.footer {
+  &-wrapper {
+    background-color: $navbar-default-bg;
+    padding: 20px 0 0;
+    border-top: 3px double $navbar-default-border;
   }
-  .img-circle{
-    width: auto;
-    height: auto;
-    max-width: 100%;
-  }
-  .copy-right{
-    padding-top: 20px;
+  &-hametuha{
+    background: #2e2e2e;
+    font-size: 60px;
+    margin: 0 0 20px;
+    border-bottom: 1px solid #000;
+    -webkit-box-shadow: 0 1px 0 #444;
+    -moz-box-shadow: 0 1px 0 #444;
+    box-shadow: 0 1px 0 #444;
   }
 
-  // メルマガ
-  .alo_easymail_widget_form{
-    th, td{
-      padding: 0.5em;
+  // 購読エリア
+  &-subscription {
+    padding-bottom: 20px;
+    h3 {
+      margin-top: 0;
     }
-    .input-submit{
-      @extend .btn;
-      @extend .btn-block;
-      @extend .btn-primary;
+    .col-sm-4 {
+      @media only screen and (max-width: $screen-xs-max) {
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        &:last-child {
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+        border-bottom: 1px solid $navbar-default-border;
+      }
     }
   }
-  .mail-desc{
-    margin: 1em 0;
-    font-size: 0.85em;
-  }
-  .alo_em_widget_loading, .alo_easymail_widget_ok{
-    text-align: center;
-    margin: 1em 0;
-  }
-}
 
-
-@media only screen and (max-width: $screen-xs-max) {
-  #footer{
-    .col-sm-4{
+  &-links {
+    &-wrapper{
+      background: #2e2e2e;
+      padding-top: 20px;
       padding-bottom: 20px;
-      padding-right: 0;
-      padding-left: 0;
-      border-bottom: 1px solid $navbar-default-border;
     }
-    .external-links{
-      li{
-        $size: 40px;
-        width: $nav-padding + $size;
-        float: left;
-        margin-right: $nav-padding;
+    &-nav {
+      padding: 0;
+      margin: 0;
+      li {
+        display: inline-block;
+        padding: 0.25em 1em;
         a{
-          padding-left: $nav-padding;
-          padding-right: $nav-padding;
-          width: $size + $nav-padding * 2;
-        }
-        span{
-          display: none;
-        }
-        i{
-          position: relative;
-          top: 0;
-          left: 0;
-          margin-top: 0;
-          font-size: 40px;
+          &:link, &:visited{
+            color: #999;
+            text-decoration: underline;
+          }
+          &:hover, &:active{
+            color: #fefed4;
+            text-decoration: none;
+          }
         }
       }
     }
   }
+
+  // 著作権情報
+  &-copynote {
+    background: #2e2e2e;
+    color: #888;
+    border-top: 1px solid #444;
+    -webkit-box-shadow: 0 -1px 0 #000;
+    -moz-box-shadow: 0 -1px 0 #000;
+    box-shadow: 0 -1px 0 #000;
+    .copy-right {
+      margin: 0;
+      height: 60px;
+      line-height: 60px;
+      font-size: 11px;
+    }
+  }
+
 }
 
-
-
 // 投稿ページ
-#footer-single{
+#footer-single {
   background-color: $navbar-default-bg;
   border-top: $navbar-default-border;
 }
+

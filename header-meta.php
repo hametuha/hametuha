@@ -53,3 +53,4 @@
 	}(document, "script", "twitter-wjs"));
 </script>
 <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+<div id="whole-body">

@@ -1,74 +1,32 @@
 // eBookList
 .ebookList {
+  border-top: none;
+  background: #ddd;
+  padding-top: 20px;
+  padding-bottom: 20px;
   &__wrap {
-    padding-top: 2em;
-    padding-bottom: 2em;
-    // Front page
-    .ebookList--front &{
-      padding-bottom: 3em;
-      overflow-y: hidden;
-      overflow-x: scroll;
-      white-space: nowrap;
-      text-align: center;
+    margin-right: 20px;
+    margin-left: 20px;
+    height: 300px;
+    &.slick-initialized{
+      height: auto;
     }
   }
   &__item {
+    @include transition( opacity 1s linear );
+    opacity: 0;
+    max-width: 150px;
+    margin: 0 5px;
     float: left;
-    text-align: center;
-    @media only screen and (max-width: $screen-xs-max) {
-      &:nth-child(3n+1) {
-        clear: left;
-      }
-    }
-    @media only screen and (max-width: $screen-md-max) and (min-width: $screen-sm-min) {
-      &:nth-child(4n+1) {
-        clear: left;
-      }
-    }
-    @media only screen and (min-width: $screen-lg) {
-      &:nth-child(6n+1) {
-        clear: left;
-      }
-    }
-    // Front page
-    .ebookList--front &{
-      float: none !important;
-      display: inline-block;
+    .slick-initialized &{
+      opacity: 1;
     }
   }
-  // フロントページ
-  &--front{
-    // 横スクロール
-    position: relative;
-    background: #f9f9f9;
-    border-top: 3px double #ddd;
-    border-bottom: 3px double #ddd;
-    padding-bottom: 4em;
-    .container{
-      width: 100%;
-    }
-    &:after, &:before{
-      z-index: 10;
-      position: absolute;
-      color: #ccc;
-      font-size: 40px;
-      top: 50%;
-      margin-top: -20px;
-      font-family: "hameticon";
-    }
-    &:after{
-      @extend .icon-arrow-left16:before;
-      left: 5px;
-    }
-    &:before {
-      @extend .icon-arrow-right17:before;
-      right: 5px;
-    }
+  .caption {
+    padding-left: 0;
+    padding-right: 0;
   }
-  .caption{
-    @media only screen and (max-width: $screen-sm-max) {
-      padding-left: 0;
-      padding-right: 0;
-    }
+  &__button {
+    padding-top: 10px;
   }
 }

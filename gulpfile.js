@@ -39,7 +39,7 @@ gulp.task('sass',function(){
 
 // Minify All
 gulp.task('js', function(){
-    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/common/*.js', '!./assets/js/src/common.js'])
+    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/common/*.js'])
         .pipe($.sourcemaps.init({
             loadMaps: true
         }))
@@ -53,7 +53,6 @@ gulp.task('js', function(){
 gulp.task('commonjs', function(){
     return gulp.src(['./assets/js/src/common/*.js'])
         .pipe($.concat('common.js'))
-        .pipe($.uglify())
         .pipe(gulp.dest('./assets/js/src/'));
 });
 

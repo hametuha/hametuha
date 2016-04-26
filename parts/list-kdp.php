@@ -14,12 +14,12 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 ?>
 <div class="ebookList<?= is_front_page() ? ' ebookList--front' : '' ?>">
 	<div class="container">
-		<div class="row ebookList__wrap">
+		<div class="ebookList__wrap">
 			<?php
 			while ( $query->have_posts() ) {
 				$query->the_post();
 				?>
-				<div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 ebookList__item">
+				<div class="ebookList__item">
 					<div class="thumbnail ebookList__thumbnail">
 						<a href="<?php the_permalink() ?>">
 							<?php the_post_thumbnail( 'medium', [ 'alt' => get_the_title() ] ) ?>
@@ -27,7 +27,6 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 
 						<div class="caption">
 							<p class="text-center">
-								<a class="btn btn-primary btn-sm hidden-xs" href="<?php the_permalink() ?>">詳しく</a>
 								<a data-outbound="kdp"
 								   data-action="<?= esc_attr( $series->get_asin( get_the_ID() ) ) ?>"
 								   data-label="<?php the_ID() ?>" data-value="<?= get_series_price() ?>"
@@ -43,12 +42,12 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 			wp_reset_postdata();
 			?>
 		</div><!-- //.row -->
-		<div class="row">
-			<p>
-				<a href="<?= home_url( '/kdp/') ?>" class="btn btn-amazon btn-lg btn-block">
+		<div class="row ebookList__button">
+			<div class="col-xs-10 col-xs-offset-1">
+				<a href="<?= home_url( '/kdp/' ) ?>" class="btn btn-amazon btn-lg btn-block">
 					<i class="icon-amazon"></i> 電子書籍一覧を見る
 				</a>
-			</p>
+			</div>
 		</div>
 	</div>
 </div>
