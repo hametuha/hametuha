@@ -354,21 +354,39 @@ function hametuha_page_type() {
 add_action( 'post_tag_edit_form_fields', function ( $term, $taxonomy ) {
 	?>
 	<tr>
-		<script>
-			jQuery(document).ready(function($){
-				$('#my-color').wpColorPicker();
-			});
-		</script>
-		<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
-		<th><label for="tag-type">タグの種別</label></th>
+		<th><label for="tag-genre">タグの種別</label></th>
 		<td>
+			<select name="tag_genre" id="tag-genre">
+				<?php $genre = get_term_meta( $term->term_id, 'genre', true ); ?>
+				<option value="" <?php selected( ! $genre ) ?>>指定なし</option>
+				<?php
+				foreach ( [
+					'サブジャンル',
+				    '固有名詞',
+				    '印象',
+				    '一般名詞',
+				] as $val ) :
+					?>
+					<option value="<?= esc_attr( $val ) ?>" <?php selected( $val == $genre ) ?>><?= esc_html( $val ) ?></option>
+				<?php endforeach; ?>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th><label for="tag-type">オプション</label></th>
+		<td>
+			<script>
+				jQuery(document).ready(function ($) {
+					$('#my-color').wpColorPicker();
+				});
+			</script>
+			<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
 			<select name="tag_type" id="tag-type">
 				<option value="" <?php selected( ! get_term_meta($term->term_id, 'tag_type', true) ) ?>>指定しない</option>
 				<?php
-				foreach([
-					'genre' => 'ジャンル',
+				foreach( [
 				    'idea'  => 'アイデア募集中',
-				] as $key => $val) :
+				] as $key => $val ) :
 					?>
 				<option value="<?= esc_attr($key) ?>" <?php selected( $key == get_term_meta($term->term_id, 'tag_type', true) ) ?>><?= esc_html($val) ?></option>
 				<?php endforeach; ?>
@@ -389,6 +407,8 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 	if ( 'post_tag' == $taxonomy && isset( $_POST['_tagmetanonce'] ) && wp_verify_nonce( $_POST['_tagmetanonce'], 'edit_tag_meta' ) ) {
 		// Save term meta
 		update_term_meta( $term_id, 'tag_type', $_POST['tag_type'] );
+		update_term_meta( $term_id, 'genre', $_POST['tag_genre'] );
+		wp_cache_delete( 'tag_genre', 'tags' );
 	}
 }, 10, 2 );
 
