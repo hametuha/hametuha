@@ -370,9 +370,9 @@ SQL;
 		$post  = get_post( $post );
 		$index = $this->get_index( $post );
 		if ( $next ) {
-			$link = '<a href="%s">第%s話 &raquo;</a>';
+			$link = '<a href="%s">第%s話 <i class="icon-arrow-right2"></i></a>';
 		} else {
-			$link = '<a href="%s">&laquo; 第%s話</a>';
+			$link = '<a href="%s"><i class="icon-arrow-left"></i> 第%s話</a>';
 		}
 		$operand = $next ? 1 : - 1;
 		$target  = $this->get_sibling( $index + $operand, $post );

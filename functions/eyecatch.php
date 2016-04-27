@@ -5,7 +5,7 @@
 
 
 //投稿サムネイルを許可
-add_theme_support('post-thumbnails', array('post', 'page', 'series', 'announcement'));
+add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement' ] );
 set_post_thumbnail_size( 640, 480, false );
 
 

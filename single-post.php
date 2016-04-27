@@ -104,19 +104,16 @@ HTML;
 						（全<?= $series->get_total( $post->post_parent ) ?>話）
 					</p>
 					<?php get_template_part( 'parts/alert', 'kdp' ); ?>
-					<ul class="pager post-pager">
+					<ul class="series-pager">
 						<?= $series->prev( '<li class="previous">' ); ?>
 						<?= $series->next( '<li class="next">' ); ?>
 					</ul>
-				<?php endif; ?>
+				<?php else : ?>
 
+				<?php endif; ?>
 
 				<div id="single-post-footernote" class="row">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
-				</div>
-
-				<div id="post-author" class="author-container">
-					<?php get_template_part( 'parts/author' ) ?>
 				</div>
 
 				<p class="finish-nav">
@@ -130,8 +127,13 @@ HTML;
 
 			<div class="container">
 
+				<div id="post-author" class="author-container m20">
+					<?php get_template_part( 'parts/author' ) ?>
+				</div>
+
 				<?php get_template_part( 'parts/list', 'author' ) ?>
-				<a href="<?= home_url('/doujin/detail/'.get_the_author_meta('nicename').'/') ?>" class="btn btn-default btn-lg btn-block">もっと見る</a>
+				
+
 
 				<?php
 				// Yarpp関連記事
@@ -141,33 +143,66 @@ HTML;
 				?>
 
 				<div class="row row--recommend row--catNav">
-					<h3 class="recommend__header recommend_header--catNav">
-						<i class="icon-folder"></i><br/>
-						ジャンルごとに見てみよう<br/>
-						<small>新着順で表示されます</small>
-					</h3>
-					<?php $counter = 0;
-					foreach ( get_categories( [ 'parent' => 0 ] ) as $cat ) : $counter ++; ?>
-						<div class="col-xs-4 col-sm-2 recommend__item--catNav">
-							<a href="<?= get_category_link( $cat ) ?>"
-							   class="recommend__link--catNav<?php if ( in_category( $cat->term_id ) )
-								   echo ' current' ?>">
-								<?= esc_html( $cat->name ) ?><span
-									class="badge"><?= $cat->count > 100 ? '99<sup>+</sup>' : intval( $cat->count ) ?></span>
-							</a>
-						</div>
-						<?php if ( $counter >= 6 ) {
-							break;
-						} endforeach; ?>
-				</div>
 
-				<div class="row row--recommend row--search">
-					<h3 class="recommend__header recommend_header--catNav">
-						<i class="icon-search3"></i><br/>
-						検索してみよう<br/>
-						<small>どんな言葉があるかな？</small>
-					</h3>
-					<?php get_search_form() ?>
+					<div class="col-xs-12 col-sm-4">
+						<h3 class="list-title">オススメ</h3>
+						<ul class="post-list">
+							<?php
+								$lists = get_posts( [
+									'post_type' => 'lists',
+								    'meta_query' => [
+									    [
+										    'key'   => '_recommended_list',
+										    'value' => '1',
+									    ],
+								    ],
+								    'post_status' => 'publish',
+								    'posts_per_page' => 1,
+								    'orderby' => [ 'date' => 'DESC' ],
+								] );
+								foreach ( $lists as $list ) :
+									$sub_query = new WP_Query( [
+										'post_type'      => 'in_list',
+										'post_status'    => 'publish',
+										'post_parent'    => $list->ID,
+										'posts_per_page' => '3',
+									] );
+									while ( $sub_query->have_posts() ) {
+										$sub_query->the_post();
+										get_template_part( 'parts/loop', 'front' );
+									}
+									wp_reset_postdata();
+							?>
+							<?php endforeach; ?>
+						</ul>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-4">
+						<h3 class="list-title">新着</h3>
+						<ul class="post-list">
+							<?php
+							$recent = new WP_Query( [
+								'post_type' => 'post',
+							    'post_status' => 'publish',
+							    'posts_per_page' => 3,
+							] );
+							while ( $recent->have_posts() ) {
+								$recent->the_post();
+								get_template_part( 'parts/loop', 'front' );
+
+							}
+							wp_reset_postdata();
+							?>
+						</ul>
+					</div>
+
+					<div class="col-xs-12 col-sm-4">
+						<h3 class="list-title">タグ</h3>
+						<p class="tag-cloud">
+							<?php wp_tag_cloud(); ?>
+						</p>
+					</div>
 				</div>
 
 
@@ -284,6 +319,7 @@ HTML;
 
 		<div id="tags-wrapper" class="overlay-container">
 			<div id="post-tags" class="container">
+				<div class="alert alert-danger m20">この機能は廃止予定です。</div>
 				<?php Hametuha\Rest\UserTag::view( 'parts/feedback', 'tag' ) ?>
 			</div>
 			<!-- //#post-tags -->
@@ -310,8 +346,8 @@ HTML;
 			<ul class="clearfix">
 				<li>
 					<a href="#reading-nav">
-						<i class="icon-book"></i><br/>
-						<span>移動</span>
+						<i class="icon-cog"></i><br/>
+						<span>機能</span>
 					</a>
 				</li>
 				<li>

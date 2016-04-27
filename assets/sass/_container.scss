@@ -1,6 +1,6 @@
 // パディング
 $canvas-pad: 20px;
-$subnavbar-height: 32px;
+$subnavbar-height: 0;
 
 // メインコンテナの設定
 .container{
@@ -11,11 +11,7 @@ $subnavbar-height: 32px;
   .sidebar-offcanvas{
     padding-top: $canvas-pad;
   }
-  .row-offcanvas{
-    z-index: 1;
-  }
   .sidebar-offcanvas{
-    z-index: 2;
     background-color: #fff;
   }
 }

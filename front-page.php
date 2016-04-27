@@ -49,7 +49,7 @@
 					?>
 				</ul>
 				<p>
-					<a href="<?= home_url( '/ranking/') ?>" class="btn btn-default btn-block">ランキング一覧</a>
+					<a href="<?= home_url( '/ranking/' ) ?>" class="btn btn-default btn-block">ランキング一覧</a>
 				</p>
 			</div>
 
@@ -103,21 +103,8 @@
 					?>
 				</ul>
 				<p>
-					<a href="<?= home_url( '/latest/') ?>" class="btn btn-default btn-block">すべての新着投稿</a>
+					<a href="<?= home_url( '/latest/' ) ?>" class="btn btn-default btn-block">すべての新着投稿</a>
 				</p>
-			</div>
-
-			<div class="col-xs-12 col-sm-4">
-				<h2>
-					みんなのレビュー
-				</h2>
-				<ul class="post-list">
-					<?php foreach ( get_terms( 'review', [ 'hide_empty' => false ] ) as $term ) : ?>
-						<li>
-							<a href="<?= home_url( "/reviewed/{$term->term_id}/" ) ?>"><?= esc_html( $term->name ) ?></a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
 			</div>
 
 			<div class="col-xs-12 col-sm-4">

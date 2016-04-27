@@ -185,14 +185,11 @@ get_header();
 					<?php get_template_part( 'parts/share' ) ?>
 
 
-
 				</article><!-- //.single-container -->
 
 			<?php endwhile; endif; ?>
 
-			<div class="col-xs-12 col-sm-3" id="sidebar" role="navigation">
-				<?php get_sidebar( 'ideas' ) ?>
-			</div>
+			<?php get_sidebar( 'ideas' ) ?>
 
 		</div><!-- //.row-offcanvas -->
 	</div><!-- //.container -->

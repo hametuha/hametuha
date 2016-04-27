@@ -9,24 +9,6 @@ jQuery(document).ready(function ($) {
 
     'use strict';
 
-    // ソーシャルカウント
-    $('.row--share').each(function (index, elt) {
-        var $box = $(this);
-        $.get($box.attr('data-share-url')).done(function (result) {
-            if (result.success) {
-                for (var brand in result.result) {
-                    if (result.result.hasOwnProperty(brand)) {
-                        $box.find('a.share--' + brand + ' span').text(result.result[brand]);
-                    }
-                }
-            }
-        }).fail(function () {
-            // Do nothing
-        }).always(function () {
-            // Do nothing
-        });
-    });
-
     // シェアボタンクリック
     $(document).on('click', 'a.share', function (e) {
         var ga     = window.Hametuha.ga,

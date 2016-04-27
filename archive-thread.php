@@ -10,7 +10,7 @@ if( is_search() ){
 
 <div class="container archive">
 
-    <div class="row row-offcanvas row-offcanvas-right">
+    <div class="row">
 
         <div class="col-xs-12 col-sm-9 main-container">
 
@@ -121,7 +121,7 @@ if( is_search() ){
 
         </div><!-- //.main-container -->
 
-        <?php contextual_sidebar() ?>
+        <?php get_sidebar() ?>
 
     </div><!-- // .offcanvas -->
 

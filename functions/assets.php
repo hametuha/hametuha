@@ -6,6 +6,7 @@
  *
  */
 
+$content_width = 970;
 
 //画像のサイズ（小さい）を追加
 add_image_size( 'pinky', 160, 160, true );

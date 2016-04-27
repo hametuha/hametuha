@@ -4,7 +4,7 @@
 
 	<div class="container single">
 
-		<div class="row row-offcanvas row-offcanvas-right">
+		<div class="row">
 			<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
 
 				<article itemscope
@@ -84,9 +84,10 @@
 
 			<?php endwhile; endif; ?>
 
-			<?php contextual_sidebar() ?>
+			<?php get_sidebar() ?>
 
-		</div><!-- //.row-offcanvas -->
+		</div><!-- //.row -->
+
 	</div><!-- //.container -->
 
 <?php get_footer();

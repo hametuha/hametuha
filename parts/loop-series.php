@@ -3,7 +3,7 @@
 
 		<?php
 		if ( has_post_thumbnail() ) {
-			$style = sprintf("background-image: url('%s')", wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium')[0]);
+			$style = sprintf( "background-image: url('%s')", wp_get_attachment_image_src( get_post_thumbnail_id(), 'medium' )[0] );
 			echo <<<HTML
 				<div class="pseudo-thumbnail" style="{$style}"></div>
 HTML;

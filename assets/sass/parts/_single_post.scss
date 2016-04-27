@@ -127,16 +127,6 @@ body.single-post{
   display: none;
 }
 
-.finish-nav{
-  font-size: 1.4em;
-  color: $more-shade-font;
-  text-align: center;
-  margin: 1em 0;
-  i{
-    font-size: 1.8em;
-  }
-}
-
 %fix-overlay{
     position: relative;
     height: auto;
@@ -202,6 +192,26 @@ body.single-post{
 }
 .show-nav #reading-nav{
   display: block;
+  z-index: 10;
+  #slider{
+    position: relative;
+    display: block;
+    margin: 5px 35px;
+    height: 10px;
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    .ui-slider-handle{
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #000;
+      border: 1px solid #ddd;
+    }
+  }
 }
 
 // フッター
@@ -275,6 +285,10 @@ body.single-post{
 
 // シングルページサムネイル
 .single-post-thumbnail{
+  padding: 20px 0 20px;
+  @media only screen and (max-width: $screen-sm-max ) {
+    padding: 0;
+  }
   img{
     width: auto;
     height: auto;
@@ -461,8 +475,41 @@ p.pixiv-embed-illust{
 }
 
 // ナビゲーション
-.series-pager-title{
-  font-family: $work-title;
+.series-pager{
+  @include clearfix();
+  margin: 20px 0 0;
+  padding: 0;
+  border-top: $divide-border;
+  li{
+    width: 50%;
+    float: left;
+    list-style: none;
+    &.next{
+      text-align: right;
+      float: right;
+      border-left: 1px solid $thin-border;
+    }
+    a{
+      display: block;
+      font-size: 16px;
+      padding: 40px 20px;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover{
+        color: $brand-primary;
+        text-decoration: none;
+        background: #f9f9f9;
+      }
+      i{
+        color: #999;
+      }
+    }
+  }
+  &-title{
+    font-family: $work-title;
+  }
 }
 
 // コピーライト
@@ -470,12 +517,25 @@ p.pixiv-embed-illust{
   text-align: center;
   margin: 1em 0;
   padding-top: 1em;
-  border-top: 3px double $shade-font;
+  border-top: $divide-border;
   color: $shade-font;
   font-family: $work-title;
   font-size: 16px;
+  .series-pager + &{
+    margin-top: 0;
+  }
 }
 
+// 終わりを示すマーク
+.finish-nav{
+  font-size: 1.4em;
+  color: $more-shade-font;
+  text-align: center;
+  margin: 1em 0;
+  i{
+    font-size: 1.8em;
+  }
+}
 // シェア
 #post-share{
   margin-bottom: 1em;

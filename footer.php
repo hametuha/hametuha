@@ -2,61 +2,6 @@
 	get_template_part( 'parts/list', 'kdp' );
 } ?>
 
-
-<div class="modal fade" id="searchBox" tabindex="-1" role="dialog" aria-labelledby="searchBox">
-	<div class="modal-dialog">
-		<form action="<?= home_url( '/' ) ?>" data-action="<?= home_url( '/' ) ?>">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-							aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title"><i class="icon-search2"></i>検索フォーム</h4>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="searchBoxS">キーワード</label>
-						<input class="form-control" type="text" name="s" id="searchBoxS"
-						       value="<?php the_search_query() ?>" placeholder="ex. 面白い小説"/>
-					</div>
-					<div class="form-group">
-						<label class="radio-inline">
-							<input type="radio" name="post_type"
-							       value="any" <?php checked( false !== array_search( get_query_var( 'post_type' ), [
-									'',
-									'any'
-								] ) ) ?>/> すべて
-						</label>
-						<?php
-						foreach (
-							[
-								'post'   => '作品',
-								'thread' => '掲示板',
-								'anpi'   => '安否',
-								'faq'    => 'よくある質問',
-							] as $post_type => $label
-						) :
-							?>
-							<label class="radio-inline">
-								<input type="radio" name="post_type"
-								       value="<?= $post_type ?>" <?php checked( get_query_var( 'post_type' ) === $post_type ) ?>/> <?= $label ?>
-							</label>
-						<?php endforeach; ?>
-						<label class="radio-inline">
-							<input type="radio" name="post_type" data-search-action="<?= home_url( 'authors/' ) ?>"
-							       value="author" <?php checked( 'author' === get_query_var( 'post_type' ) ) ?> /> 著者
-						</label>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-					<input type="submit" class="btn btn-primary" value="検索"/>
-				</div>
-			</div><!-- /.modal-content -->
-		</form>
-	</div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-
 <footer id="footer" class="footer-wrapper">
 	<div id="footer-sidebar" class="container">
 
@@ -128,15 +73,14 @@
 								'googleplus3' => [
 									'https://plus.google.com/b/115001047459194790006/115001047459194790006/about/p/pub',
 									'Google+',
-									'rel="publisher"'
+									'rel="publisher"',
 								],
 								'youtube'     => [ 'https://www.youtube.com/user/hametuha', 'Youtube', '' ],
 								'minicome'    => [ 'http://minico.me', 'ミニコme!', '' ],
 								'github3'     => [ 'https://github.com/hametuha/', 'Github', '' ],
 							] as $icon => list(
 							$url, $label, $atts
-						)
-						) :
+							) ) :
 							?>
 							<li>
 								<a href="<?= $url ?>" <?= $atts ?>><?= esc_html( $label ) ?></a>
@@ -158,7 +102,32 @@
 
 </footer>
 
+<div id="write-panel" class="write-panel">
+	<div class="write-panel__inner">
+		<p class="text-right">
+			<button class="write-panel__close write-panel-btn btn btn-link"><i class="icon-cancel-circle"></i></button>
+		</p>
+		<ul class="write-panel__actions">
+			<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
+				<li class="write-panel__action">
+					<a class="write-panel__link <?= esc_attr( $class_name ) ?>" href="<?= $url ?>" <?= $data ?>>
+						<span class="write-panel__label">
+							<i class="icon-<?= $icon ?>"></i>
+							<?= esc_html( $label ) ?>
+						</span>
+						<?php if ( $desc ) : ?>
+							<p class="write-panel__desc"><?= esc_html( $desc ) ?></p>
+						<?php endif; ?>
+					</a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+</div>
+
 </div><!-- //#whole-body -->
+
+
 <?php
 if ( is_preview() ) {
 	echo '<div id="watermark">プレビュー</div>';

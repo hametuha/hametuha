@@ -6,27 +6,28 @@
 ?>
 <?php get_header(); ?>
 
-<?php get_header('breadcrumb') ?>
+<?php get_header( 'breadcrumb' ) ?>
 
-<div class="container profile-container">
+	<div class="container profile-container">
 
-<?php if(have_posts()): while(have_posts()): the_post(); ?>
-<article>
+		<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+			<article>
 
-    <div class="page-header">
+				<div class="page-header">
 
-        <h1 class="post-title text-center" itemprop="name">
-            <?php the_title(); ?>
-        </h1>
+					<h1 class="post-title text-center" itemprop="name">
+						<?php the_title(); ?>
+					</h1>
 
-    </div><!-- //.page-header -->
+				</div><!-- //.page-header -->
 
-    <?php the_content() ?>
+				<?php the_content() ?>
 
-</article>
+			</article>
 
-<?php endwhile; endif; ?>
+		<?php endwhile; endif; ?>
 
-</div><!-- //.container -->
+	</div><!-- //.container -->
 
 <?php get_footer(); ?>
+

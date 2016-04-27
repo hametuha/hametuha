@@ -16,6 +16,45 @@ function hametuha_user_name() {
 }
 
 /**
+ * ユーザーが可能なアクションを返す
+ *
+ * @return array
+ */
+function hametuha_user_write_actions() {
+	$actions = [
+		'fire' => [
+			get_post_type_archive_link( 'thread' ) . '#thread-add',
+			'掲示板にスレ立て',
+			'破滅派のなんでも相談掲示板です。ログイン有無にかぎらず匿名で投稿できます。',
+			'',
+			'',
+		],
+	];
+	if ( current_user_can( 'read' ) ) {
+		$actions = array_merge( [
+			'megaphone' => [ '#', '安否報告をする', '最近活動が滞っている人は同人諸氏に安否をお知らせしましょう。', 'anpi-new', '' ],
+			'lamp'      => [ home_url( 'my/ideas/new/' ), 'アイデアを投稿', false, '', ' data-action="post-idea"' ],
+		], $actions );
+	} else {
+		$actions = array_merge( [
+			'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', '' ],
+		    'key3' => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
+		], $actions );
+	}
+	if ( current_user_can( 'edit_posts' ) ) {
+		$actions = array_merge( [
+			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '' ],
+			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '' ],
+			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '' ],
+		], $actions );
+	} elseif ( current_user_can( 'read' ) ) {
+		$actions['unlocked'] = [ home_url( '/become-author/' ), '同人になる', '作品を登録して公開するには同人になる必要があります。', '', '' ];
+	}
+
+	return $actions;
+}
+
+/**
  * 管理画面でユーザーを探せるようにする
  *
  */
@@ -227,11 +266,12 @@ add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	$contact_methods['aim'] = '<i class="icon-tag"></i> Webサイト名';
 	unset( $contact_methods['jabber'] );
 	unset( $contact_methods['yim'] );
-	$contact_methods['twitter'] = '<i class="icon-twitter"></i> twitterアカウント';
-	$contact_methods['location'] = '<i class="icon-location4"></i> 場所';
-	$contact_methods['birth_place'] = '<i class="icon-compass"></i> 出身地';
+	$contact_methods['twitter']          = '<i class="icon-twitter"></i> twitterアカウント';
+	$contact_methods['location']         = '<i class="icon-location4"></i> 場所';
+	$contact_methods['birth_place']      = '<i class="icon-compass"></i> 出身地';
 	$contact_methods['favorite_authors'] = '<i class="icon-reading"></i> 好きな作家';
-	$contact_methods['favorite_words'] = '<i class="icon-pen5"></i> 好きな言葉';
+	$contact_methods['favorite_words']   = '<i class="icon-pen5"></i> 好きな言葉';
+
 	return $contact_methods;
 }, '_hide_profile_fields', 10, 1 );
 

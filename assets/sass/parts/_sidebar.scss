@@ -1,4 +1,7 @@
 #sidebar{
+  @media only screen and (max-width: $screen-xs-max) {
+    margin-top: 40px;
+  }
   .widget{
     padding-bottom: 20px;
     margin-bottom: 20px;

@@ -46,7 +46,7 @@ get_header();
 
         </div><!-- //.main-container -->
 
-        <?php contextual_sidebar() ?>
+        <?php get_sidebar() ?>
 
     </div><!-- // .offcanvas -->
 

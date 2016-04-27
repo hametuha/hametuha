@@ -43,7 +43,7 @@ add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
 
 
 $oauth_mo = WP_LANG_DIR . "/oauth-server-$locale.mo";
-if( file_exists($oauth_mo) ){
+if ( file_exists( $oauth_mo ) ) {
 	load_textdomain( 'default', $oauth_mo );
 }
 

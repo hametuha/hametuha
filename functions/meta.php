@@ -213,6 +213,8 @@ add_action( 'wp_head', function () {
 	} elseif ( is_home() ) {
 		$url  = get_permalink( get_option( 'page_for_posts' ) );
 		$desc = '破滅派の新着投稿一覧です。';
+	} else {
+		$url = home_url( trailingslashit( explode( '?', $_SERVER['REQUEST_URI'] )[0] ) );
 	}
 	$desc  = esc_attr( str_replace( "\n", '', $desc ) );
 	$image = str_replace( '://s.', '://', $image );

@@ -8,6 +8,11 @@ a[disabled], input[disabled]{
   cursor: not-allowed;
 }
 
+.m20{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 // ヘルプボタン
 .help-tip{
   padding: 1px 5px;
@@ -93,6 +98,11 @@ i.rotation{
 }
 
 
+.tag-cloud{
+  font-family: $work-title;
+}
+
+// フィードバック
 .has-feedback{
   .icon-checkmark,
   .icon-spam,
@@ -614,24 +624,14 @@ ul.metadata{
 //
 // ---------------
 //
+.shareContainer{
 
-.row--share{
+  padding-top: 20px;
+  padding-bottom: 20px;
 
-  & + .nav{
-    margin-top: 20px;
-  }
-
-  & + div{
-    margin-top: 20px;
-  }
-
-  // ボタンの後
-  .btn--joinus + &{
-    margin: 10px 0;
-  }
-
-  .col-xs-4, .col-sm-2{
-    padding: 0;
+  &__item{
+    width: 20%;
+    float: left;
   }
 
   .secondary{
@@ -667,6 +667,9 @@ ul.metadata{
     }
     span{
       margin-left: 0.5em;
+      @media only screen and (max-width: $screen-xs-max ) {
+        display: none;
+      }
     }
   }
   i{

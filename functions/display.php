@@ -1,6 +1,17 @@
 <?php
 
 /**
+ * ページテンプレートを差し替え
+ */
+add_filter( 'template_include', function( $path ) {
+	if ( is_singular( 'page' ) && ! is_home() && 'index.php' == basename( $path ) ) {
+		$path = get_template_directory().'/single.php';
+	}
+	return $path;
+} );
+
+
+/**
  * A template loader which accepts arguments.
  *
  * @param string       $slug
@@ -68,37 +79,6 @@ add_filter( 'show_admin_bar', function () {
 	return false;
 }, 1000 );
 
-/**
- * コンテキストに応じたサイドバーを読み込む
- */
-function contextual_sidebar() {
-	?>
-	<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
-
-		<?php
-		$sidebar = '';
-		if ( is_singular( 'thread' ) || is_post_type_archive( 'thread' ) || is_tax( 'topic' ) ) {
-			$sidebar = 'thread';
-		} elseif ( is_singular( 'faq' ) || is_post_type_archive( 'faq' ) || is_tax( 'faq_cat' ) ) {
-			$sidebar = 'faq';
-		} elseif ( is_post_type_archive( 'ideas' ) ) {
-			$sidebar = 'ideas';
-		} else {
-			$sidebar = '';
-		}
-		get_sidebar( $sidebar );
-		?>
-	</div><!-- //#sidebar -->
-	<div id="offcanvas-toggle" type="button" class="visible-xs btn btn-default btn-lg" data-toggle="offcanvas">
-        <span class="open">
-            <i class="icon-arrow-left2"></i>
-        </span>
-        <span class="toggle">
-            <i class="icon-arrow-right2"></i>
-        </span>
-	</div>
-	<?php
-}
 
 /**
  * ヘルプ用アイコンを出力する
@@ -209,6 +189,8 @@ add_filter( 'wp_pagenavi', function ( $html ) {
 
 		return "<li class=\"{$class_name}\">{$matches[0]}</li>";
 	}, $html );
+
+	$html = str_replace( 'ページ', '', $html );
 
 	// Wrap with ul as you like.
 	return <<<HTML

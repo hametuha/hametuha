@@ -142,7 +142,7 @@
 	
         <?php endwhile; endif; ?>
 
-        <?php contextual_sidebar() ?>
+        <?php get_sidebar() ?>
 
     </div><!-- //.row-offcanvas -->
 </div><!-- //.container -->

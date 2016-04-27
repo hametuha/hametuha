@@ -28,10 +28,15 @@
     position: relative;
     float: left;
     margin-right: 0;
-    margin-left: $navbar-padding-horizontal;
+    margin-left: 10px;
     @media (min-width: $grid-float-breakpoint) {
       display: block;
     }
+    border: none;
+  }
+  &-write{
+    line-height: 14px;
+    margin-left: 5px;
   }
   // ステータス表示
   &-status{
@@ -45,7 +50,127 @@
     font-weight: bold;
     color: #666;
   }
+
+  // ユーザー情報
+  &-login{
+    $avatar-size: 30px;
+    width: 120px;
+    & > li:first-child .avatar{
+      width: $avatar-size;
+      height: $avatar-size;
+      border-radius: 4px;
+    }
+
+    &.navbar-right > li{
+      float: right;
+      & > a{
+        $avatar-pad: ($navbar-height - $avatar-size) / 2;
+        padding: $avatar-pad $avatar-pad / 2;
+        line-height: 1;
+        &.dropdown--notify{
+          height: $navbar-height;
+          vertical-align: middle;
+        }
+        & > i{
+          $icon-pad: 4px;
+          font-size: $avatar-size - (2 * $icon-pad);
+          line-height: $avatar-size;
+          vertical-align: middle;
+        }
+        &.has-notify{
+          @include animation(icon-blink 1s linear 0 infinite alternate);
+        }
+        // ログインボタン
+        &.login-btn{
+          margin-right: 10px;
+          margin-top: 8px;
+          background-color: transparent;
+          @include border-radius(3px);
+          padding: 9px 4px;
+          border: 1px solid #000;
+          font-size: 14px;
+          line-height: 1;
+          &:link, &:visited{
+            color: #000;
+          }
+          &:hover{
+            color: $btn-primary-bg;
+            border-color: $btn-primary-bg;
+          }
+          &:active{
+            color: $btn-danger-bg;
+            border-color:  $btn-danger-bg;
+          }
+        }
+      }
+      .dropdown-menu{
+        min-width: 240px;
+      }
+    }
+    .greeting{
+      padding: 10px 20px;
+      strong{
+        font-size: 1.2em;
+        margin-right: 0.25em;
+      }
+      .role{
+        color: $shade-font;
+      }
+    }
+    @media only screen and (max-width: $screen-xs-max){
+      position: absolute;
+      top: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      right: 0;
+      & > li.open{
+        .dropdown-menu{
+          position: absolute;
+          right: 0;
+          width: 320px;
+          &.notification__container{
+            right: -40px;
+          }
+          left: auto;
+          background-color: $navbar-default-bg;
+          border: 1px solid $navbar-default-border;
+          @include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+        }
+      }
+    }
+  }
 }
+
+
+//
+// mmenu
+//
+#mm-blocker{
+  background: rgba(0, 0, 0, .8) !important;
+}
+#header-navigation{
+
+  li small{
+    color: #999;
+    &:before{
+      content: "（";
+    }
+    &:after{
+      content: "）";
+    }
+  }
+  .icon-lamp,
+  .icon-crown{
+    color: #d4d400;
+  }
+  .icon-amazon{
+    color: orange;
+  }
+  .icon-heart{
+    color: red;
+  }
+}
+
 
 //
 // ロゴマーク
@@ -80,77 +205,10 @@
   }
 }
 
-
+// メニューが有効でないときは隠す
 #header-navigation{
-  clear: both;
-}
-
-// ユーザー情報は右
-.navbar-login{
-  $avatar-size: 30px;
-  width: 120px;
-  & > li:first-child .avatar{
-    width: $avatar-size;
-    height: $avatar-size;
-    border-radius: 4px;
-  }
-
-  &.navbar-right > li{
-    float: right;
-    & > a{
-      $avatar-pad: ($navbar-height - $avatar-size) / 2;
-      padding: $avatar-pad $avatar-pad / 2;
-      line-height: 1;
-      &.dropdown--notify{
-        height: $navbar-height;
-        vertical-align: middle;
-      }
-      & > i{
-        $icon-pad: 4px;
-        font-size: $avatar-size - (2 * $icon-pad);
-        line-height: $avatar-size;
-        vertical-align: middle;
-      }
-      &.has-notify{
-        @include animation(icon-blink 1s linear 0 infinite alternate);
-      }
-      // ログインボタン
-      &.login-btn{
-        margin-right: 10px;
-        margin-top: 8px;
-        background-color: transparent;
-        @include border-radius(3px);
-        padding: 9px 4px;
-        border: 1px solid $btn-primary-bg;
-        font-size: 14px;
-        line-height: 1;
-        &:link, &:visited{
-          color: $btn-primary-bg;
-        }
-        &:hover{
-          color: $btn-primary-color;
-          background-color: $btn-primary-bg;
-        }
-        &:active{
-          color: $btn-danger-color;
-          border-color:  $btn-danger-bg;
-          background-color: $btn-danger-bg;
-        }
-      }
-    }
-    .dropdown-menu{
-      min-width: 240px;
-    }
-  }
-  .greeting{
-    padding: 10px 20px;
-    strong{
-      font-size: 1.2em;
-      margin-right: 0.25em;
-    }
-    .role{
-      color: $shade-font;
-    }
+  header + &{
+    display: none;
   }
 }
 
@@ -162,133 +220,6 @@
 
 
 
-// スマートフォンのときの挙動
-@media only screen and (max-width: $screen-xs-max){
-  .navbar-login{
-    position: absolute;
-    top: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-    right: 0;
-    & > li.open{
-      .dropdown-menu{
-        position: absolute;
-        right: 0;
-        width: 320px;
-        &.notification__container{
-          right: -40px;
-        }
-        left: auto;
-        background-color: $navbar-default-bg;
-        border: 1px solid $navbar-default-border;
-        @include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
-      }
-    }
-  }
-}
-
-
-//
-// サブナビゲーション
-//
-// ------------------
-//
-$subnavbar-bg: #000;
-.subnav{
-  position: fixed;
-  top: $navbar-height;
-  height: $subnavbar-height;
-  overflow: visible;
-  z-index: $zindex-navbar;
-  width: 100%;
-  background: $subnavbar-bg;
-  border-bottom: 1px solid $navbar-default-border;
-  &__list{
-
-  }
-  &__item{
-    float: left;
-    width: 33.333%;
-    &:first-child{
-      .subnav__link{
-        border-left: 1px solid #fff;
-      }
-    }
-  }
-  &__link{
-    display: block;
-    text-align: center;
-    height: $subnavbar-height;
-    line-height: $subnavbar-height;
-    font-size: 14px;
-    i{
-      margin-right: 0.5em;
-    }
-    span{
-      font-weight: bold;
-    }
-    &:link, &:visited{
-      color: #fff;
-      text-decoration: none;
-    }
-    &:hover, &:active{
-      color: $brand-danger;
-      text-decoration: none;
-    }
-    border-right: 1px solid #fff;
-  }
-  &__wrap{
-    max-height: 500px;
-    overflow-y: scroll;
-    @include mq-max($screen-xs-max){
-      max-height: 320px;
-    }
-  }
-  &__child{
-    &.toggle{
-      display: none;
-    }
-    padding: 0;
-    margin: 0;
-    background: $navbar-default-bg;
-    border: 1px solid $navbar-default-border;
-    li{
-      list-style: none;
-      border-bottom: 1px solid $navbar-default-border;
-      float: left;
-      width: 50%;
-      &:last-child{
-        border-bottom: none;
-      }
-      &.divider{
-        width: 100%;
-        padding: 0.5em;
-        font-size: 0.85em;
-        color: $more-shade-font;
-        text-align: center;
-        clear: left;
-      }
-      a{
-        display: block;
-        padding: 1em 0.25em;
-        text-align: center;
-        font-size: 14px;
-        i{
-          color: $shade-font;
-        }
-        &:link, &:visited{
-          color: #222;
-          text-decoration: none;
-        }
-        &:hover, &:active{
-          background: #fffcba;
-          color: $brand-primary;
-          text-decoration: none;
-        }
-      }
-    }
-  }
-}
 
 //
 // ぱんくずリスト
@@ -324,5 +255,81 @@ $subnavbar-bg: #000;
     &:active{
       color: $link-active;
     }
+  }
+}
+
+
+// 書くヤツ
+.write-panel{
+  position: fixed;
+  top: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .8);
+  z-index: 100;
+  display: none;
+  @include transition( top 0.3s ease-in-out );
+  &.open{
+    display: block;
+    top: $navbar-height;
+  }
+  &__inner{
+    width: 90%;
+    max-height: 90%;
+    overflow-y: scroll;
+    margin: 5% auto;
+    background: #fff;
+    padding: 10px;
+  }
+  &__close{
+    font-size: 32px;
+    &:hover{
+      text-decoration: none;
+    }
+  }
+  &__actions{
+    padding: 0;
+    margin: 20px 0;
+    @media only screen and ( max-width: $screen-xs-max ) {
+      margin: 10px 0;
+    }
+    border-top: 1px solid $thin-border;
+  }
+  &__action{
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid $thin-border;
+    list-style: none;
+  }
+  &__link{
+    display: block;
+    padding: 20px;
+    font-size: 20px;
+    @media only screen and ( max-width: $screen-xs-max ) {
+      padding: 10px;
+      font-size: 14px;
+    }
+    &:link, &:visited{
+      color: #000;
+      text-decoration: none;
+    }
+    &:hover, &:active{
+      color: $brand-primary;
+      text-decoration: none;
+      background-color: #f9f9f9;
+    }
+  }
+  &__label{
+    font-weight: bold;
+    i{
+      color: #aaa;
+    }
+  }
+  &__desc{
+    margin: 10px 0 0;
+    font-size: 0.85em;
+    color: #888;
+    line-height: 1.2;
   }
 }

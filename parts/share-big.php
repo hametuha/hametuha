@@ -1,4 +1,5 @@
-<div class="series__row series__row--share">
+<div class="series__row series__row--share shareContainer__wrapper">
+
 	<div class="container series__inner">
 
 		<div class="row">
@@ -9,8 +10,8 @@
 					シェアする
 				</h2>
 				<p class="text-muted text-center">
-					作品を読んだ方は感想をSNSでシェアしてください。<br />
-					編集部による<strong>鬼のエゴサ</strong>で必ず作者に届きます。
+					面白かったり、気になったらSNSでシェアしてください。<br />
+					シェアしていただくと作者がやる気を出します。
 				</p>
 
 			</div>
