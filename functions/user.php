@@ -42,11 +42,17 @@ function hametuha_user_write_actions() {
 		], $actions );
 	}
 	if ( current_user_can( 'edit_posts' ) ) {
-		$actions = array_merge( [
+		$editor_actions = [
 			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '' ],
 			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '' ],
 			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '' ],
-		], $actions );
+		];
+		if ( is_singular( [ 'post', 'page', 'announcement' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
+			$editor_actions = array_merge( [
+				'pencil6' => [ get_edit_post_link(), 'このページを編集', false, '' ],
+			], $editor_actions );
+		}
+		$actions = array_merge( $editor_actions, $actions );
 	} elseif ( current_user_can( 'read' ) ) {
 		$actions['unlocked'] = [ home_url( '/become-author/' ), '同人になる', '作品を登録して公開するには同人になる必要があります。', '', '' ];
 	}
