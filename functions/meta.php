@@ -101,7 +101,7 @@ add_action( 'wp_head', function () {
  */
 add_action( 'wp_head', function () {
 	//初期値を設定
-	$image    = get_template_directory_uri() . '/assets/img/facebook-logo.png';
+	$image    = get_template_directory_uri() . '/assets/img/facebook-logo-2016.png';
 	$title    = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
 	$url      = false;
 	$type     = 'article';
