@@ -326,8 +326,8 @@
 			</div>
 
 			<div class="col-xs-12 col-sm-4 widget-twitter">
-				<a class="twitter-timeline" href="https://twitter.com/hametuha" data-widget-id="344868919800111104">
-					@hametuhaからのツイート
+				<a class="twitter-timeline" href="https://twitter.com/hashtag/%E7%A0%B4%E6%BB%85%E6%B4%BE" data-widget-id="727361413681836032">
+					#破滅派 のツイート
 				</a>
 			</div>
 
@@ -361,8 +361,8 @@
 
 					<p>
 						破滅派は要するに<strong>オンライン文芸誌</strong>であり、文学作品を発表したり、読んだりできます。<br/>
-						<a href="<?= home_url( '/about/') ?>">設立の経緯</a>や<a
-							href="<?= home_url( '/history/') ?>">活動の記録</a>などをご覧頂き、
+						<a href="<?= home_url( '/about/' ) ?>">設立の経緯</a>や<a
+							href="<?= home_url( '/history/' ) ?>">活動の記録</a>などをご覧頂き、
 						恐れを消してください。
 					</p>
 				</div>

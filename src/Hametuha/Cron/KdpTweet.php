@@ -36,7 +36,7 @@ class KdpTweet extends CronBase
 	 * @return string
 	 */
 	public function tweet() {
-		$string = '【定期告知】破滅派のKindle本は現在[kdp_count]冊販売中です。まだご覧になっていない方はぜひご高覧ください！　今後も続々と販売予定です。 http://hametuha.com/kdp/';
+		$string = '【定期告知】破滅派のKindle本は現在[kdp_count]冊販売中です。まだご覧になっていない方はぜひご高覧ください！　今後も続々と販売予定です。 https://hametuha.com/kdp/ #kdp #電書 #セルパブ';
 		return do_shortcode( $string );
 	}
 

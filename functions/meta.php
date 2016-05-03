@@ -36,9 +36,9 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		$title .= "安否情報 {$sep} ";
 	} elseif ( is_singular( 'series' ) ) {
 		$title .= "作品集 {$sep} ";
-	} elseif( is_singular('ideas') ) {
+	} elseif ( is_singular( 'ideas' ) ) {
 		$title .= "アイデア {$sep} ";
-	} elseif ( is_post_type_archive('ideas') ) {
+	} elseif ( is_post_type_archive( 'ideas' ) ) {
 		$title = "アイデア {$sep}";
 	} elseif ( is_singular( 'thread' ) ) {
 		$title .= "BBS {$sep} ";
@@ -107,7 +107,7 @@ add_action( 'wp_head', function () {
 	$type     = 'article';
 	$creator  = '@hametuha';
 	$desc     = '';
-	$card     = 'summary';
+	$card     = 'summary_large_image';
 	$author   = '';
 	$twitters = [];
 
@@ -120,12 +120,10 @@ add_action( 'wp_head', function () {
 		$page  = get_post( get_option( 'page_on_front' ) );
 		$desc  = $page->post_excerpt;
 		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $page->ID ), 'full' )[0];
-		$card  = 'summary_large_image';
 	} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
 		$url   = home_url( '/kdp/' );
 		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。プライム会員は月1冊まで無料！';
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/kdp.jpg';
-		$card  = 'summary_large_image';
 	} elseif ( is_author() ) {
 		global $wp_query;
 		$user   = get_userdata( $wp_query->query_vars['author'] );
@@ -135,6 +133,7 @@ add_action( 'wp_head', function () {
 		$image  = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $user->ID, 300 ) );
 		$desc   = str_replace( "\n", '', get_user_meta( $user->ID, 'description', true ) );
 		$author = '<meta property="profile:username" content="' . $user->user_login . '" />';
+		$card   = 'summary';
 	} elseif ( is_singular() ) {
 		global $post;
 		$url = get_permalink();
@@ -148,6 +147,7 @@ add_action( 'wp_head', function () {
 		if ( is_singular( 'thread' ) ) {
 			// Show avatar on thread.
 			$image = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $post->post_author, 300 ) );
+			$card  = 'summary';
 		} elseif ( has_post_thumbnail() ) {
 			// Show thumbnail if set.
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
@@ -258,7 +258,7 @@ HTML;
  * リッチスニペット
  */
 add_action( 'wp_head', function () {
-	$url  = home_url( '');
+	$url  = home_url( '' );
 	$name = get_bloginfo( 'name' );
 	if ( is_front_page() ) {
 		echo <<<HTML

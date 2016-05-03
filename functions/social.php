@@ -235,6 +235,8 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 							$author = get_the_author_meta( 'display_name', $post->post_author );
 							$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
 						}
+						// Slackで通知
+						hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
 						break;
 					case 'info':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
@@ -266,6 +268,42 @@ function show_twitter_status( $url ) {
 	/** @var WP_Embed $wp_embed */
 	global $wp_embed;
 	echo $wp_embed->autoembed( $url );
+}
+
+/**
+ * Slackに投稿する
+ *
+ * @param string $content
+ * @param array $attachment
+ * @param string $channel Default '#general'
+ * @return bool
+ */
+function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
+	if ( ! defined( 'SLACK_ENDPOINT' ) ) {
+		return false;
+	}
+	$payload = [
+		'channel' => $channel,
+	];
+	if ( WP_DEBUG ) {
+		$content = "【テスト投稿】 {$content}";
+	}
+	$payload['text'] = $content;
+	if ( $attachment ) {
+		$payload['attachments'] = [ $attachment ];
+	}
+	$ch = curl_init();
+	curl_setopt_array( $ch, [
+		CURLOPT_URL => SLACK_ENDPOINT,
+		CURLOPT_POST => true,
+	    CURLOPT_POSTFIELDS => 'payload='.json_encode( $payload ),
+	    CURLOPT_RETURNTRANSFER => true,
+	    CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_TIMEOUT => 5,
+	] );
+	$result = curl_exec( $ch );
+	curl_close( $ch );
+	return false !== $result;
 }
 
 /**
