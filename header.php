@@ -156,6 +156,11 @@
 			</a>
 			<ul>
 				<li>
+					<a href="<?= home_url( '/inquiry/' ) ?>">
+						<i class="icon-envelop"></i> お問い合わせ
+					</a>
+				</li>
+				<li>
 					<a href="<?= home_url( '/sanka/' ); ?>">
 						<i class="icon-enter"></i> 参加する
 					</a>

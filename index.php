@@ -10,7 +10,7 @@
 
 				<?php
 				// Jumbotron
-				if ( is_singular( 'faq' ) || is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) ) {
+				if ( is_tax( 'faq_cat' ) ) {
 					get_template_part( 'parts/jumbotron', 'help' );
 				} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
 					get_template_part( 'parts/jumbotron', 'kdp' );
@@ -24,7 +24,7 @@
 					get_template_part( 'parts/jumbotron', 'lists' );
 				} elseif ( is_ranking() ) {
 					get_template_part( 'parts/jumbotron', 'ranking' );
-				} elseif( is_post_type_archive('ideas') ){
+				} elseif ( is_post_type_archive( 'ideas' ) ) {
 					get_template_part( 'parts/jumbotron', 'ideas' );
 				}
 				?>
@@ -126,6 +126,8 @@
 						get_template_part( 'parts/ranking', 'calendar' );
 					} elseif ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
 						get_template_part( 'parts/nav', 'lists' );
+					} elseif ( is_tax( 'faq_cat' ) ) {
+						get_template_part( 'parts/nav', 'faq' );
 					} elseif ( ! hametuha_is_profile_page() ) {
 						get_search_form();
 					}

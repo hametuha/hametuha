@@ -74,6 +74,12 @@
 
 					<?php get_template_part( 'parts/pager' ) ?>
 
+					<?php
+					if ( is_singular( 'faq' ) ) {
+						get_template_part( 'parts/nav', 'faq' );
+					}
+					?>
+
 					<div class="more">
 						<?php if ( post_type_supports( get_post_type(), 'comments' ) ): ?>
 							<?php comments_template() ?>

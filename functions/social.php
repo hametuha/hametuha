@@ -273,8 +273,8 @@ function show_twitter_status( $url ) {
 /**
  * Slackに投稿する
  *
- * @param string $content
- * @param array $attachment
+ * @param string $content Slackに投稿する文字列
+ * @param array $attachment 添付がある場合は、連想配列を渡す
  * @param string $channel Default '#general'
  * @return bool
  */
