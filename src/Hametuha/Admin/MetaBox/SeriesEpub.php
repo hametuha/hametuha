@@ -43,10 +43,14 @@ https://hametuha.com
 TEXT;
 				wp_mail( $user->user_email, '【破滅派】 電子書籍販売開始のお知らせ', $body );
 				// Slackに通知
+				$title = sprintf( '『%s』%s', get_the_title( $post ), $user->display_name );
 				hametuha_slack( '電子書籍が販売開始されました', [
-					'title' => sprintf( '『%s』%s', get_the_title( $post ), $user->display_name ),
+					'fallback' => $title,
+					'title' => $title,
 					'title_link' => $kdp_url,
-				    'color' => '#00FF00',
+					'author_name' => $user->display_name,
+					'author_link' => home_url( "/doujin/detail/{$user->user_nicename}/" ),
+				    'color' => '#00928D',
 				    'text' => "Amazonで確認できます。破滅派のページは<{$url}|こちら>です。",
 				] );
 			}
@@ -57,6 +61,17 @@ TEXT;
 				$admin_url  = get_edit_post_link( $post->ID, 'mail' );
 				$url = get_permalink( $post );
 				$author = get_userdata( $post->post_author );
+				// Slackに通知
+				$title = sprintf( '『%s』%s', get_the_title( $post ), $author->display_name );
+				hametuha_slack( '電子書籍販売申請がありました', [
+					'fallback' => $title,
+					'title' => $title,
+					'title_link' => $url,
+					'author_name' => $author->display_name,
+					'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
+					'color' => '#E80000',
+					'text' => "{$admin_url} から確認し、問題なければ公開してください。",
+				] );
 				// メールで通知
 				$body = <<<TEXT
 破滅派編集部
@@ -72,13 +87,6 @@ TEXT;
 
 TEXT;
 				wp_mail( get_option( 'admin_email' ), '【破滅派】 電子書籍申請', $body );
-				// Slackに通知
-				hametuha_slack( '電子書籍販売申請', [
-					'title' => sprintf( '『%s』%s', get_the_title( $post ), $author->display_name ),
-					'title_link' => $url,
-					'color' => '#FF0000',
-					'text' => "<{$admin_url}|管理画面>から確認し、問題なければ公開してください。",
-				] );
 			}
 		}
 		update_post_meta( $post->ID, '_series_finished', (bool) $this->input->post( 'is_finished' ) );

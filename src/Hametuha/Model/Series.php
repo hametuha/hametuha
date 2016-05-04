@@ -216,7 +216,7 @@ class Series extends Model {
 	 *
 	 * @return int
 	 */
-	public function get_visibiity( $series_id ) {
+	public function get_visibility( $series_id ) {
 		return (int) get_post_meta( $series_id, '_visibility', true );
 	}
 
@@ -229,7 +229,7 @@ class Series extends Model {
 	 */
 	public function should_hide( $post = null ) {
 		$post        = get_post( $post );
-		$limit_index = $this->get_visibiity( $post->post_parent );
+		$limit_index = $this->get_visibility( $post->post_parent );
 		if ( ! $limit_index ) {
 			return false;
 		}

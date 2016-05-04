@@ -7,7 +7,7 @@ if ( 'series' == get_post_type() ) {
 } else {
 	$series_id = $post->post_parent;
 }
-$limit = $series->get_visibiity( $series_id );
+$limit = $series->get_visibility( $series_id );
 if ( $limit ) {
 	$asin      = $series->get_asin( $series_id );
 	$permalink = get_permalink( $series_id );
