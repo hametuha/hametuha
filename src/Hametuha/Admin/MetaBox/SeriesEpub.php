@@ -17,6 +17,9 @@ class SeriesEpub extends SeriesBase {
 
 	public function savePost( \WP_Post $post ) {
 		$url = get_permalink( $post );
+		// シリーズが完結したかどうか
+		update_post_meta( $post->ID, '_series_finished', (bool) $this->input->post( 'is_finished' ) );
+		// 編集者のみ可能なアクション
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			// Editor
 			$status = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
@@ -89,7 +92,6 @@ TEXT;
 				wp_mail( get_option( 'admin_email' ), '【破滅派】 電子書籍申請', $body );
 			}
 		}
-		update_post_meta( $post->ID, '_series_finished', (bool) $this->input->post( 'is_finished' ) );
 	}
 
 

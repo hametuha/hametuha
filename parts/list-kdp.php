@@ -7,7 +7,12 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 	$query = new WP_Query( [
 		'post_type'      => 'series',
 		'post_status'    => 'publish',
-		'meta_filter'    => 'kdp',
+		'meta_query'    => [
+			[
+				'key' => '_kdp_status',
+			    'value' => 2,
+			],
+		],
 		'posts_per_page' => 12,
 	] );
 }

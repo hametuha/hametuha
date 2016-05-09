@@ -302,6 +302,11 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 		CURLOPT_TIMEOUT => 5,
 	] );
 	$result = curl_exec( $ch );
+	if ( ! $result ) {
+		$err = curl_error( $ch );
+		$no  = curl_errno( $ch );
+		error_log( sprintf( 'SLACK_ERR %s %s', $no, $err ) );
+	}
 	curl_close( $ch );
 	return false !== $result;
 }
