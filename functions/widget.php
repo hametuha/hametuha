@@ -11,7 +11,7 @@ register_sidebar(array(
 	'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	'after_widget' => '</div>',
 	'before_title' => '<h2 class="widget-title">',
-	'after_title' => '</h2>'
+	'after_title' => '</h2>',
 ));
 
 //トップページ中央
@@ -22,7 +22,7 @@ register_sidebar(array(
 	'before_widget' => '<div id="%1$s" class="col-sm-4 col-xs-12 widget %2$s">',
 	'after_widget' => '</div>',
 	'before_title' => '<h2 class="widget-title">',
-	'after_title' => '</h2>'
+	'after_title' => '</h2>',
 ));
 
 //掲示板右
@@ -33,7 +33,7 @@ register_sidebar(array(
 	'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	'after_widget' => '</div>',
 	'before_title' => '<h2 class="widget-title">',
-	'after_title' => '</h2>'	
+	'after_title' => '</h2>',
 ));
 
 //faq右
@@ -44,5 +44,5 @@ register_sidebar(array(
 	'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	'after_widget' => '</div>',
 	'before_title' => '<h2 class="widget-title">',
-	'after_title' => '</h2>'	
+	'after_title' => '</h2>',
 ));
