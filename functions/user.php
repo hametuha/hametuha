@@ -47,7 +47,7 @@ function hametuha_user_write_actions() {
 			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '' ],
 			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '' ],
 		];
-		if ( is_singular( [ 'post', 'page', 'announcement' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
+		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
 			$editor_actions = array_merge( [
 				'pencil6' => [ get_edit_post_link(), 'このページを編集', false, '' ],
 			], $editor_actions );
