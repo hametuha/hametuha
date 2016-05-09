@@ -21,8 +21,14 @@ add_action( 'init', function () {
 	//シリーズ
 	$series = 'series';
 	$args   = array(
-		'label'           => '作品集',
 		'description'     => '著者によってまとめられた作品集です。特定のテーマに基づいた連作や長編小説などがあります。近々ePubなどの形式に書き出せるようになる予定（2012年9月現在）です。',
+		'label'           => '作品集・連載',
+		'labels'          => [
+			'featured_image' => '表紙画像',
+			'set_featured_image' => '表紙画像を設定する',
+			'remove_featured_image' => '表紙画像を削除',
+			'use_featured_image' => '表紙画像として使用する',
+		],
 		'public'          => true,
 		'menu_position'   => 5,
 		'menu_icon'       => 'dashicons-book-alt',
