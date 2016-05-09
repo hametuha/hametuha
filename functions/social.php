@@ -247,6 +247,13 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 						$author = get_the_author_meta( 'display_name', $post->post_author );
 						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$post->post_title} {$url}";
 						break;
+					case 'newsletter':
+						$string = sprintf(
+							'【業務連絡】メルマガ %s が送信されました。そのうち、みなさんのお手元に届きます。登録はこちらから %s',
+							get_the_title( $post ),
+							home_url( '/merumaga/' )
+						);
+						break;
 					default:
 						$string = false;
 						break;
