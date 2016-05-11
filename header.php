@@ -10,9 +10,11 @@
 				<span class="icon-bar"></span>
 			</a>
 
+			<?php if ( ! is_hamenew() ) : ?>
 			<button class="navbar-toggle navbar-write write-panel-btn">
 				<i class="icon-quill"></i>
 			</button>
+			<?php endif; ?>
 
 		</div>
 
@@ -31,6 +33,32 @@
 			<a rel="home" href="<?= home_url() ?>">
 				<i class="icon-home"></i> ホーム
 			</a>
+		</li>
+		<li>
+			<a href="<?= get_post_type_archive_link( 'news' ) ?>">
+				<i class="icon-newspaper"></i> はめにゅー
+			</a>
+			<ul>
+				<?php foreach ( get_terms( 'genre' ) as $term ) : ?>
+				<li>
+					<a href="<?= get_term_link( $term ) ?>">
+						<?= esc_html( $term->name ) ?><small><?= number_format_i18n( $term->count ) ?></small>
+					</a>
+				</li>
+				<?php endforeach; ?>
+				<li>
+					<span><i class="icon-tag5"></i> キーワード</span>
+					<ul>
+						<?php foreach ( get_terms( 'nouns' ) as $term ) : ?>
+						<li>
+							<a href="<?= get_term_link( $term ) ?>">
+								<?= esc_html( $term->name ) ?><small><?= number_format_i18n( $term->count ) ?></small>
+							</a>
+						</li>
+						<?php endforeach; ?>
+					</ul>
+				</li>
+			</ul>
 		</li>
 		<li class="mm-divider">作品</li>
 		<li>

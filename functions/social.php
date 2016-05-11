@@ -146,23 +146,51 @@ function hametuha_share( $post = null ) {
  *
  * @param int $unit_no
  *
- * @deprecated
  */
 function google_adsense( $unit_no = 1 ) {
 	switch ( $unit_no ) {
-		default:
-			echo <<<EOS
+		case 1:
+			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- 破滅派記事直後 -->
+<!-- はめにゅータイトル直下 -->
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-0087037684083564"
-     data-ad-slot="4859005648"
+     data-ad-slot="9464744841"
      data-ad-format="auto"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-EOS;
+HTML;
+			break;
+		case 2:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅー記事下 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="3418211243"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+			break;
+		case 3:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーサイドバー -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="2999408842"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+
 			break;
 	}
 }

@@ -102,6 +102,7 @@
 
 </footer>
 
+<?php if ( ! is_hamenew() ) : ?>
 <div id="write-panel" class="write-panel">
 	<div class="write-panel__inner">
 		<p class="text-right">
@@ -124,6 +125,7 @@
 		</ul>
 	</div>
 </div>
+<?php endif; ?>
 
 </div><!-- //#whole-body -->
 

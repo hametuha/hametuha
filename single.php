@@ -5,7 +5,7 @@
 	<div class="container single">
 
 		<div class="row">
-			<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
+			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
 				<article itemscope
 				         itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ) ?>>

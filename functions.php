@@ -84,3 +84,4 @@ get_template_part( 'functions/lwp' );
 get_template_part( 'functions/feed' );
 get_template_part( 'functions/mail' );
 get_template_part( 'functions/campaign' );
+get_template_part( 'functions/news' );

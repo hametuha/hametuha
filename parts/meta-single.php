@@ -1,6 +1,6 @@
 <ul class="metadata list-inline">
 
-	<?php if ( is_singular( 'lists' ) || is_singular( 'series' ) ): ?>
+	<?php if ( is_singular( 'lists' ) || is_singular( 'series' ) ) : ?>
 		<!-- 作成者 -->
 		<li>
 			<i class="icon-user"></i>
@@ -63,7 +63,7 @@
 	<?php endif; ?>
 
 	<!-- Edit link -->
-	<?php if ( current_user_can( 'edit_post', get_the_ID() ) ) : ?>
+	<?php if ( current_user_can( 'edit_post', get_the_ID() ) && ! is_hamenew() ) : ?>
 		<li>
 			<?php if ( 'lists' == get_post_type() ) : ?>
 				<a class="list-creator btn btn-primary btn-sm" title="リストを編集する"
@@ -77,4 +77,23 @@
 			<?php endif; ?>
 		</li>
 	<?php endif; ?>
+
+	<?php if ( is_hamenew() ) : ?>
+	   <!-- News -->
+		<?php if ( $terms = get_the_terms( get_post(), 'genre' ) ) : ?>
+		<li>
+			<?= implode( ' ', array_map( function( $term ){
+				return sprintf( '<a class="btn btn-sm btn-link" href="%s"><i class="icon-tag5"></i> %s</a>', get_term_link( $term ), esc_html( $term->name ) );
+			}, $terms ) ); ?>
+		</li>
+		<?php endif; ?>
+
+		<?php if ( hamenew_is_pr() ) : ?>
+		<li>
+			Promoted by <?= esc_html( hamenew_pr_label() ) ?>
+		</li>
+		<?php endif; ?>
+
+	<?php endif; ?>
+
 </ul><!-- //.metadata -->

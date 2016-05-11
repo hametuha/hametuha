@@ -1,0 +1,161 @@
+.news{
+
+  &-list{
+    padding: 0;
+    margin: 0;
+    &--border{
+      border-top: 1px solid #ddd;
+    }
+    &__item{
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+    }
+    &__link{
+      display: block;
+      padding: 10px;
+      position: relative;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active{
+        color: $brand-primary;
+        text-decoration: none;
+        background: #eee;
+      }
+    }
+
+    &__thumbnail{
+      float: left;
+      margin-right: 10px;
+      max-width: 80px;
+      width: auto;
+      height: auto;
+      .news-list__vertical &{
+        max-width: 100% !important;
+        float: none;
+        margin: 0 0 10px;
+        & + .news-list__body{
+          margin-left: 0;
+        }
+      }
+      & + .news-list__body{
+        margin-left: 80px + 10px;
+      }
+    }
+
+    &__title{
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    &__meta{
+      font-size: 12px;
+      color: #888;
+      margin: 0;
+      span{
+        margin-right: 0.5em;
+      }
+      i{
+        color: #aaa;
+      }
+    }
+
+  }
+
+  &-author{
+
+    border-bottom: 1px solid #eee;
+
+    &__link{
+      display: block;
+      padding: 15px;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active{
+        color: $brand-primary;
+        text-decoration: none;
+        background: #eee;
+      }
+    }
+
+    &__img{
+      float: left;
+      margin-right: 15px;
+    }
+
+    &__name{
+      font-weight: bold;
+    }
+    &__position{
+      color: #888;
+    }
+
+    &__desc{
+      display: block;
+      margin: 5px 0 0;
+      font-size: 0.85em;
+      color: #888;
+    }
+
+  }
+
+  &-keywords{
+    &__link{
+      display: inline-block;
+      padding: 5px 10px;
+      margin-right: 1em;
+      margin-bottom: 1em;
+      border: 1px solid $brand-primary;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px;
+      transition: color 0.25s linear, background-color 0.25s linear;
+      &:link, &:visited{
+        color: $brand-primary;
+        background-color: #fff;
+        text-decoration: none;
+      }
+      &:hover, &:active{
+        color: #fff;
+        background-color: $brand-primary;
+      }
+    }
+  }
+
+  &-ad{
+    &--head{
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    &--content{
+      margin-bottom: 20px;
+    }
+    &__title{
+      font-size: 10px;
+      text-align: center;
+      color: #aaa;
+      margin: 5px 0 0;
+    }
+  }
+
+  &-related{
+    margin-bottom: 20px;
+  }
+
+  &-comment{
+    margin: 20px 0;
+  }
+
+  &-related{
+    &__title{
+      margin-top :0;
+    }
+  }
+
+}
+

@@ -29,15 +29,6 @@
     @extend .nav-pills;
     @extend .nav-stacked;
   }
-  .widget_sp_image-image-link,
-  .widget_sp_image-link{
-    display: block;
-    text-align: center;
-  }
-  .widget_sp_image-description{
-    margin-top: 0.5em;
-    line-height: 1.2;
-  }
   .recent-post-list{
     border-top: 1px dotted $thin-border;
     h3{
