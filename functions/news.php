@@ -102,3 +102,25 @@ SQL;
 		return new WP_Post( $post );
 	}, $wpdb->get_results( $wpdb->prepare( $query, $post->ID, $limit ) ) );
 }
+
+/**
+ * 日付をイベント書式にして返す
+ *
+ * @param string $from
+ * @param string $to
+ * @param string $date_format
+ * @param string $time_format
+ *
+ * @return string
+ */
+function hamenew_event_date( $from, $to = '', $date_format = 'Y年n月j日', $time_format = 'H:i' ) {
+	$format = $date_format.' '.$time_format;
+	if ( ! $to ) {
+		return mysql2date( $format, $from );
+	}
+	if ( mysql2date( 'Y-m-d', $from ) == mysql2date( 'Y-m-d', $to ) ) {
+		return mysql2date( $format, $from ).'〜'.mysql2date( $time_format, $to );
+	} else {
+		return mysql2date( $format, $from ).'〜'.mysql2date( $format, $to );
+	}
+}

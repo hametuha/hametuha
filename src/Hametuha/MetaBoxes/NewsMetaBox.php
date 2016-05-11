@@ -4,6 +4,7 @@ namespace Hametuha\MetaBoxes;
 
 
 use WPametu\UI\Admin\LeadMetaBox;
+use WPametu\UI\Field\Text;
 use WPametu\UI\Field\TextArea;
 
 class NewsMetaBox extends LeadMetaBox {
@@ -27,4 +28,4 @@ class NewsMetaBox extends LeadMetaBox {
 			'max'         => 200,
 		],
 	];
-} 
+}
