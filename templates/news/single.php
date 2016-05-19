@@ -220,6 +220,7 @@
 					
 					<hr />
 					<div class="row news-comment">
+						<h2>コメント<small>Facebookコメントが利用できます</small></h2>
 						<div class="fb-comments" data-href="<?php the_permalink() ?>" data-width="100%" data-numposts="5"></div>
 					</div>
 

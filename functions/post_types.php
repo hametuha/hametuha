@@ -181,7 +181,7 @@ add_action( 'init', function () {
 		'public'      => true,
 		'menu_position' => 6,
 		'menu_icon'   => 'dashicons-admin-site',
-		'supports'    => [ 'title', 'editor', 'author', 'thumbnail', 'revisions' ],
+		'supports'    => [ 'title', 'editor', 'author', 'thumbnail', 'revisions', 'amp' ],
 		'has_archive' => true,
 		'taxonomies'  => [],
 		'capability_type' => 'post',
@@ -196,6 +196,7 @@ add_action( 'init', function () {
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
 		'^news/article/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&paged=$matches[2]',
+		'^news/article/([0-9]+)/amp/?$'                => 'index.php?p=$matches[1]&post_type=news&amp=true',
 		'^news/article/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=news',
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
 		'^lists/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=lists',

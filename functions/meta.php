@@ -109,7 +109,7 @@ add_action( 'wp_head', function () {
 			$title = hamenew_copy( sprintf( '%2$s「%1$s」のニュース', esc_html( $object->name ), $label ) );
 		} elseif ( is_singular( 'news' ) ) {
 			$terms = get_the_terms( get_queried_object(), 'genre' );
-			$seg   = [ ];
+			$seg   = [];
 			if ( $terms && ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
 					$seg[] = esc_html( $term->name ) . 'ニュース';
@@ -337,7 +337,7 @@ HTML;
   },
    "publisher": {
     "@type": "Organization",
-    "name": "<?= hamenew_copy() ?>",
+    "name": "<?php bloginfo( 'name' ) ?>",
     "logo": {
       "@type": "ImageObject",
       "url": "<?= get_template_directory_uri() ?>/assets/img/ogp/hamenew-company.png",

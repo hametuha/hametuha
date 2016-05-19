@@ -11,7 +11,7 @@
  *
  * @return string
  */
-function hamenew_copy( $prefix = '', $sep = '|' ){
+function hamenew_copy( $prefix = '', $sep = '|' ) {
 	$titles = [ 'はめにゅー' ];
 	if ( $prefix ) {
 		array_unshift( $titles, $prefix );
@@ -20,6 +20,13 @@ function hamenew_copy( $prefix = '', $sep = '|' ){
 	}
 	return implode( " {$sep} ", $titles );
 }
+
+/**
+ * ニュース以外はamp無効
+ */
+add_filter( 'amp_skip_post', function( $skip, $post_id, $post ){
+	return 'news' !== $post->post_type;
+}, 10, 3 );
 
 /**
  * 広告を挿入する

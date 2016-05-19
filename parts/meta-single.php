@@ -48,7 +48,7 @@
 			<?php endif; ?>
 			<?php break; default: ?>
 				<i class="icon-clock"></i>
-				<span itemprop="datePublished"><?php the_date( 'Y年m月d日（D）' ); ?></span>
+				<span itemprop="datePublished"><?php the_time( 'Y年m月d日（D）' ); ?></span>
 				<small><?= hametuha_passed_time( $post->post_date ) ?></small>
 				<meta itemprop="dateModified" content="<?= $post->post_modified ?>">
 			<?php endswitch; ?>
