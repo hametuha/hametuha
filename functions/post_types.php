@@ -177,7 +177,7 @@ add_action( 'init', function () {
 	// ニュース
 	register_post_type('news', [
 		'label'       => 'はめにゅー',
-		'description' => 'はめにゅーはオンライン文芸誌サイト破滅派が提供する文学関連ニュースです。コンテキスト無き文学の世界で道標となることを目指します。',
+		'description' => 'はめにゅーはオンライン文芸誌サイト破滅派が提供する文学関連ニュースです。コンテキスト無き文学の世界で道標となることを目指しています。',
 		'public'      => true,
 		'menu_position' => 6,
 		'menu_icon'   => 'dashicons-admin-site',

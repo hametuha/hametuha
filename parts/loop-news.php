@@ -21,7 +21,7 @@
 				</span>
 
 				<span class="news-list__time">
-					<i class="icon-clock"></i> <?= human_time_diff_jp( current_time( 'timestamp' ) ) ?>
+					<i class="icon-clock"></i> <?= hametuha_passed_time( $post->post_date ) ?>
 				</span>
 
 				<?php if ( ( $terms = get_the_terms( get_post(), 'genre' ) ) && ! is_wp_error( $terms ) ) : ?>

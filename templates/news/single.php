@@ -8,12 +8,12 @@
 
 			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
-				<article <?php post_class( 'col-xs-12 col-sm-9 main-container' ) ?>>
+				<article <?php post_class( 'col-xs-12 col-md-9 main-container' ) ?>>
 
 					<!-- title -->
 					<div class="page-header">
 
-						<h1 class="post-title">
+						<h1 class="post-title news__title">
 							<?php the_title(); ?>
 							<?php if ( hamenew_is_pr() ) : ?>
 								<small>（PR記事）</small>
@@ -27,29 +27,24 @@
 
 						<?php get_template_part( 'parts/meta', 'single' ) ?>
 
-						<div class="news-author">
-							<a class="news-author__link clearfix"
-							   href="<?= home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ) ?>">
-								<?= get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), [ 'class' => ' img-circle news-author__img' ] ) ?>
-								<span class="news-author__name"><?php the_author() ?></span>
-								<small
-									class="news-author__position"><?= hametuha_user_role( get_the_author_meta( 'ID' ) ) ?></small>
-								<span class="news-author__desc">
-									<?= trim_long_sentence( get_the_author_meta( 'description' ) ) ?>
-								</span>
-							</a>
-						</div><!-- .news-author -->
-
 					</div><!-- //.post-meta -->
-
-					<div class="row news-ad news-ad--head">
-						<?php google_adsense( 1 ) ?>
-						<p class="news-ad__title">Ads by Google</p>
-					</div>
-
+					
 					<?php get_template_part( 'parts/meta', 'thumbnail' ) ?>
 
-					<div class="post-content clearfix" itemprop="articleBody">
+					<?php if ( has_excerpt() ) : ?>
+					<div class="news-excerpt">
+						<?php the_excerpt() ?>
+					</div>
+					<?php endif; ?>
+
+
+					<div class="row news-ad news-ad--head">
+						<p class="news-ad__title">Ads by Google</p>
+						<?php google_adsense( 1 ) ?>
+					</div>
+
+
+					<div class="post-content clearfix">
 						<?php the_content(); ?>
 					</div><!-- //.post-content -->
 
@@ -61,6 +56,22 @@
 						'link_after'  => '</span>',
 					] );
 					?>
+
+					<div class="news-author row">
+						<a class="news-author__link clearfix"
+						   href="<?= home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ) ?>">
+							<?= get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), [ 'class' => ' img-circle news-author__img' ] ) ?>
+							文責:
+							<span class="news-author__name"><?php the_author() ?></span>
+							<small
+								class="news-author__position"><?= hametuha_user_role( get_the_author_meta( 'ID' ) ) ?></small>
+								<span class="news-author__desc">
+									<?= trim_long_sentence( get_the_author_meta( 'description' ) ) ?>
+								</span>
+						</a>
+					</div><!-- .news-author -->
+
+
 
 					<?php if ( $post->_event_title ) : ?>
 						<div class="row news-event">
@@ -109,6 +120,67 @@
 					<?php endif; ?>
 
 
+					<?php if ( $links = hamenew_links() ) : ?>
+						<div class="row news-related">
+							<div class="col-xs-12">
+								<h2 class="news-related__title"><i class="icon-link"></i> この記事の関連リンク</h2>
+								<ul class="news-related__list">
+									<?php foreach ( $links as list( $title, $url ) ) : ?>
+									<li class="news-related__item">
+										<i class="icon-arrow-right3"></i>
+										<a href="<?= esc_url( $url ) ?>" target="_blank" class="news-related__link">
+											<?= esc_html( $title ) ?> <i class="icon-popout"></i>
+										</a>
+									</li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+						</div><!-- //.news-related -->
+					<?php endif; ?>
+
+
+
+					<?php if ( $links = hamenew_books() ) : ?>
+						<div class="row news-books">
+							<div class="col-xs-12">
+								<h2 class="news-books__title"><i class="icon-books"></i> この記事の関連書籍など</h2>
+								<ul class="news-books__list">
+									<?php foreach ( $links as list(  $title, $url, $src, $author, $publisher, $rank ) ) : ?>
+										<li class="news-books__item">
+											<a href="<?= esc_url( $url ) ?>" target="_blank" class="news-books__link clearfix">
+												<?php if ( $src ) : ?>
+													<img src="<?= $src ?>" alt="<?= esc_attr( $title ) ?>" class="news-books__image">
+												<?php endif; ?>
+												<p class="news-books__desc">
+													<span class="news-books__name"><?= esc_html( $title ) ?></span>
+													<?php if ( $author ) : ?>
+														<span class="news-books__author">
+															<i class="icon-user"></i> <?= esc_html( $author ) ?>
+														</span>
+													<?php endif; ?>
+													<?php if ( $publisher ) : ?>
+														<span class="news-books__publisher">
+															<i class="icon-office"></i> <?= esc_html( $publisher ) ?>
+														</span>
+													<?php endif; ?>
+													<span class="news-books__rank">
+														<i class="icon-crown"></i> <?= $rank ? number_format_i18n( $rank ) : '-' ?>位
+													</span><br />
+													<span class="label label-warning">
+														<i class="icon-amazon"></i> Amazonで見る
+													</span>
+												</p>
+											</a>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+								<p class="text-center text-muted news-books__note">
+									Supported by amazon Product Advertising API
+								</p>
+							</div>
+						</div><!-- //.news-related -->
+					<?php endif; ?>
+
 					<?php get_template_part( 'parts/share' ) ?>
 
 					<div class="row">
@@ -145,10 +217,17 @@
 							}, $terms ) ); ?>
 						</p>
 					<?php endif; ?>
+					
+					<hr />
+					<div class="row news-comment">
+						<div class="fb-comments" data-href="<?php the_permalink() ?>" data-width="100%" data-numposts="5"></div>
+					</div>
 
 					<hr/>
 
 					<?php get_template_part( 'parts/pager' ) ?>
+
+					<?php get_template_part( 'parts/jumbotron', 'news' ) ?>
 
 				</article><!-- //.single-container -->
 
@@ -158,11 +237,6 @@
 
 		</div><!-- //.row -->
 
-		<div class="row news-comment">
-			<div class="fb-comments" data-href="<?php the_permalink() ?>" data-width="100%" data-numposts="5"></div>
-		</div>
-
-		<?php get_template_part( 'parts/jumbotron', 'news' ) ?>
 
 	</div><!-- //.container -->
 

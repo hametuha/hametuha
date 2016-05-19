@@ -190,7 +190,34 @@ HTML;
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 HTML;
-
+			break;
+		case 4:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーアーカイブ上 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="4446972448"
+     data-ad-format="auto"></ins>
+<script>
+ (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+			break;
+		case 5:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーアーカイブ下 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="5923705643"
+     data-ad-format="auto"></ins>
+<script>
+ (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
 			break;
 	}
 }

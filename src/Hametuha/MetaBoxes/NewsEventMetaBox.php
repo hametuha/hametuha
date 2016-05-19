@@ -10,7 +10,7 @@ use WPametu\UI\Field\Radio;
 use WPametu\UI\Field\Text;
 use WPametu\UI\Field\TextArea;
 
-class NewsPrMetaBox extends EditMetaBox {
+class NewsEventMetaBox extends EditMetaBox {
 
 	protected $post_types = [ 'news' ];
 
@@ -34,7 +34,7 @@ class NewsPrMetaBox extends EditMetaBox {
 		'_event_end' => [
 			'class'       => DateTime::class,
 			'label'       => '終了',
-			'description' => '空白の場合は表示されません。',
+			'description' => '空白の場合は表示されません。複数日にまたがる場合、時間は表示されません。',
 		],
 		'_event_address' => [
 			'class' => Text::class,

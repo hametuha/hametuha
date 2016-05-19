@@ -4,7 +4,6 @@
  *
  */
 
-
 /**
  * wp_titleを変更
  *
@@ -102,7 +101,31 @@ add_action( 'wp_head', function () {
 add_action( 'wp_head', function () {
 	//初期値を設定
 	$image    = get_template_directory_uri() . '/assets/img/facebook-logo-2016.png';
-	$title    = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
+	if ( is_hamenew() ) {
+		if ( is_tax( 'nouns' ) || is_tax( 'genre' ) ) {
+			$object = get_queried_object();
+			$taxonomy = get_taxonomy( $object->taxonomy );
+			$label = is_tax( 'nouns' ) ? 'キーワード' : esc_html( $taxonomy->label );
+			$title = hamenew_copy( sprintf( '%2$s「%1$s」のニュース', esc_html( $object->name ), $label ) );
+		} elseif ( is_singular( 'news' ) ) {
+			$terms = get_the_terms( get_queried_object(), 'genre' );
+			$seg   = [ ];
+			if ( $terms && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$seg[] = esc_html( $term->name ) . 'ニュース';
+					break;
+				}
+			}
+			array_unshift( $seg, esc_html( get_the_title() ) );
+			$title = hamenew_copy( implode( ' | ', $seg ) );
+		} elseif ( is_page_template( 'page-hamenew.php' ) ) {
+			$title = hamenew_copy( get_the_title() );
+		} else {
+			$title = hamenew_copy( );
+		}
+	} else {
+		$title    = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
+	}
 	$url      = false;
 	$type     = 'article';
 	$creator  = '@hametuha';
@@ -113,6 +136,10 @@ add_action( 'wp_head', function () {
 
 	global $wp_query;
 
+	// はメニューのときだけ画像を設定
+	if ( is_hamenew() ) {
+		$image = get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png';
+	}
 	//個別設定
 	if ( is_front_page() ) {
 		$url   = trailingslashit( get_bloginfo( 'url' ) );
@@ -186,11 +213,10 @@ add_action( 'wp_head', function () {
 				}
 			}
 		}
-	} elseif ( is_category() ) {
-		if ( $cat = get_category( get_query_var( 'cat' ) ) ) {
-			$desc = $cat->category_description;
-			$url  = get_category_link( $cat );
-		}
+	} elseif ( is_tax() || is_category() || is_tag() ) {
+		$term = get_queried_object();
+		$url = get_term_link( $term );
+		$desc = $term->description;
 	} elseif ( is_ranking() ) {
 		$url   = home_url( $_SERVER['REQUEST_URI'] );
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/ranking.jpg';
@@ -258,26 +284,72 @@ HTML;
  * リッチスニペット
  */
 add_action( 'wp_head', function () {
-	$url  = home_url( '' );
+	$url  = home_url( '/' );
 	$name = get_bloginfo( 'name' );
+	$css_dir = get_template_directory_uri();
 	if ( is_front_page() ) {
 		echo <<<HTML
 <script type="application/ld+json">
 {
-   "@context": "http://schema.org",
-   "@type": "WebSite",
-   "name": "{$name}",
-   "url": "{$url}",
-   "potentialAction": {
-     "@type": "SearchAction",
-     "target": "{$url}?s={search_term_string}",
-     "query-input": "required name=search_term_string"
-   }
+  "@context": "http://schema.org",
+  "@type": "WebSite",
+  "url": "{$url}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{$url}?s={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
 }
 </script>
 HTML;
 	}
-	$css_dir = get_template_directory_uri();
+	if ( is_singular( 'news' ) ) {
+		$excerpt = preg_replace( '#[\r|\n]#', '', strip_tags( get_the_excerpt() ) );
+		$image = [
+			get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png',
+		    '1200',
+		    '696',
+		];
+		if ( has_post_thumbnail() ) {
+			$image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+		}
+		?>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "<?php the_permalink() ?>"
+  },
+  "headline": "<?= esc_js( get_the_title() ) ?>",
+  "image": {
+    "@type": "ImageObject",
+    "url": "<?= $image[0] ?>",
+    "height": <?= $image[1] ?>,
+    "width": <?= $image[2] ?>
+  },
+  "datePublished": "<?php the_date( DateTime::ATOM ) ?>",
+  "dateModified": "<?php the_modified_date( DateTime::ATOM ) ?>",
+  "author": {
+    "@type": "Person",
+    "name": "<?= esc_js( get_the_author() ) ?>"
+  },
+   "publisher": {
+    "@type": "Organization",
+    "name": "<?= hamenew_copy() ?>",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "<?= get_template_directory_uri() ?>/assets/img/ogp/hamenew-company.png",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "description": "<?= esc_js( $excerpt ) ?>"
+}
+</script>
+		<?php
+	}
 	echo <<<HTML
 <script type="application/ld+json">
 {
@@ -289,7 +361,7 @@ HTML;
 	"sameAs" : [
 		"https://www.facebook.com/hametuha.inc",
 		"https://www.twitter.com/hametuha",
-		"http://plus.google.com/+HametuhaCom"
+		"https://plus.google.com/+HametuhaCom"
 	]
 }
 </script>
