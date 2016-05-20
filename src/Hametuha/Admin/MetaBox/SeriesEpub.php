@@ -73,7 +73,7 @@ TEXT;
 					'author_name' => $author->display_name,
 					'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
 					'color' => '#E80000',
-					'text' => "{$admin_url} から確認し、問題なければ公開してください。",
+					'text' => "<{$admin_url}|管理画面> から確認し、問題なければ公開してください。",
 				] );
 				// メールで通知
 				$body = <<<TEXT
