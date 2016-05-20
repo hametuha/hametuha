@@ -358,7 +358,8 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 	curl_setopt_array( $ch, [
 		CURLOPT_URL => SLACK_ENDPOINT,
 		CURLOPT_POST => true,
-	    CURLOPT_POSTFIELDS => 'payload='.json_encode( $payload ),
+		CURLOPT_HTTPHEADER => [ 'Content-Type: application/json' ],
+	    CURLOPT_POSTFIELDS => json_encode( $payload ),
 	    CURLOPT_RETURNTRANSFER => true,
 	    CURLOPT_SSL_VERIFYPEER => false,
 		CURLOPT_TIMEOUT => 5,
@@ -368,6 +369,8 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 		$err = curl_error( $ch );
 		$no  = curl_errno( $ch );
 		error_log( sprintf( 'SLACK_ERR %s %s', $no, $err ) );
+	} elseif ( WP_DEBUG ) {
+		error_log( sprintf( 'SLACK_SUCCESS: %s %s', $result, json_encode( $payload ) ) );
 	}
 	curl_close( $ch );
 	return false !== $result;

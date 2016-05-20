@@ -165,7 +165,7 @@ add_action( 'init', function () {
 			'manage_terms' => 'edit_others_posts',
 			'edit_terms'   => 'edit_others_posts',
 			'delete_terms' => 'edit_others_posts',
-			'assign_terms' => 'edit_posts',
+			'assign_terms' => 'edit_post',
 		],
 		'show_admin_column' => true,
 		'rewrite'      => [
@@ -183,8 +183,9 @@ add_action( 'init', function () {
 		'menu_icon'   => 'dashicons-admin-site',
 		'supports'    => [ 'title', 'editor', 'author', 'thumbnail', 'revisions', 'amp' ],
 		'has_archive' => true,
-		'taxonomies'  => [],
-		'capability_type' => 'post',
+		'taxonomies'  => [ 'genre', 'nouns' ],
+		'map_meta_cap' => true,
+		'capability_type' => [ 'news_post', 'news_posts' ],
 	]);
 
 } );

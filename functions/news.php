@@ -318,7 +318,7 @@ add_action( 'save_post', function( $post_id, $post ) {
 			foreach ( $terms as $term ) {
 				$url = get_term_link( $term );
 				if ( false === array_search( $url, $urls ) ) {
-					$url[] = $url;
+					$urls[] = $url;
 				}
 				if ( $term->parent ) {
 					$parent = get_term( $term->parent, $term->taxonomy );
@@ -345,32 +345,59 @@ add_action( 'save_post', function( $post_id, $post ) {
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	// ニュース以外は無視
-	if ( 'news' !== $post->post_status || WP_DEBUG ) {
+	if ( 'news' !== $post->post_type ) {
 		return;
 	}
 	$author = get_userdata( $post->post_author );
+	$edit_link = get_edit_post_link( $post->ID, 'mail' );
+	$title = get_the_title( $post );
+	$base = [
+		'title' => $title,
+		'title_link' => $edit_link,
+		'author_name' => $author->display_name,
+		'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
+		'text' => $post->post_excerpt,
+	];
+	if ( has_post_thumbnail( $post ) ) {
+		$base['thumb_url'] = get_the_post_thumbnail_url( $post, 'thumbnail' );
+	}
 	switch ( $new_status ) {
+		case 'private':
+			switch ( $old_status ) {
+				case 'private':
+				case 'trash':
+					// なにもしない
+					break;
+				default:
+					// 没になった
+					// TODO: なんらかの方法で連絡する
+					hametuha_slack( '@here 公開されていたニュースがボツになりました。このニュースはもう修正できません。', array_merge( $base, [
+						'fallback' => sprintf( '「%s」がボツになりました。', $title ),
+					    'title_link' => admin_url( 'edit.php?post_type=news' ),
+					] ), '#news' );
+					break;
+			}
+			break;
 		case 'pending':
-			if ( ! user_can( $post->post_author, 'edit_others_posts' ) ) {
+			if ( ! user_can( $post->post_author, 'edit_others_news_posts' ) ) {
 				switch ( $old_status ) {
 					case 'pending':
 						// 何もしない
 						break;
 					case 'publish':
-						// 公開されていたものが非公開になった
+						// 公開されていたものレビュー待ちになった
 						// TODO: なんらかの方法で連絡する
+						hametuha_slack( '@here 公開されていたニュースがレビュー待ちになりました。執筆者は修正してください。', array_merge( $base, [
+							'fallback' => sprintf( '「%s」が再度レビュー待ちになりました。', $title ),
+							'color' => 'danger',
+						] ), '#news' );
 						break;
 					default:
 						// 承認待ちになった
-						$title = get_the_title( $post );
-						hametuha_slack( '@here ニュースが承認待ちです。', [
-							'fallback' => $title,
-							'title' => $title,
-							'title_link' => get_edit_post_link( $post->ID, 'mail' ),
-							'author_name' => $author->display_name,
-							'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
-							'color' => '#00928D',
-						], '#news' );
+						hametuha_slack( '@channel ニュースが承認待ちです。公開権限を持っている方は承認をお願いします。', array_merge( $base, [
+							'fallback' => sprintf( '「%s」が承認待ちです。', $title ),
+							'color' => 'warning',
+						] ), '#news' );
 						break;
 				}
 			}
@@ -380,18 +407,62 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 			switch ( $old_status ) {
 				case 'publish':
 				case 'private':
+				case 'trash':
 					// なにもしない
 					break;
 				default:
 					// 公開された
 					$string = sprintf( '#はめにゅー 更新 「%s」 %s', get_the_title( $post ), get_permalink( $post ) );
-					if ( function_exists( 'update_twitter_status' ) ) {
+					if ( function_exists( 'update_twitter_status' ) && ! WP_DEBUG ) {
 						update_twitter_status( $string );
 					}
 					// Slackに通知
-					hametuha_slack( $string, [], '#news' );
+					hametuha_slack( '@here ニュースが公開されました。', array_merge( $base, [
+						'fallback' => sprintf( '「%s」%s', $title, $author->display_name ),
+						'title_link' => get_permalink( $post ),
+						'color' => 'good',
+					] ), '#news' );
 					break;
 			}
 			break;
+		default:
+			// それ以外はなにもしない
+			break;
 	}
 }, 10, 3 );
+
+/**
+ * ヘルプメニューを追加
+ */
+add_action( 'admin_head', function() {
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! ( $screen = get_current_screen() ) || 'news' != $screen->post_type ) {
+		return;
+	}
+	foreach ( [
+		'publish' => [ '公開フロー', 'ニュースは「レビュー待ち」として送信されたのち、破滅派編集部によるチェックを経て公開されます。なるべく早く行いますが、24時間365日で対応することはできませんので、その点ご了承ください。' ],
+		'published' => [ '公開済みニュース', '一度公開されたニュースは破滅派編集部以外編集できません。修正要望がある場合はSLACKにてお問い合わせください。' ],
+		'banned' => [ 'ボツニュース', 'ニュースのステータスが「非公開」となっている場合、そのニュースはボツになっています。ボツになったニュースはもう編集できません。理由についてはSLACKにてお伝えしますので、お問い合わせください。' ],
+		'contact' => [ '連絡方法', 'ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。' ],
+	] as $id => list( $title, $content ) ) {
+		$screen->add_help_tab( [
+			'id' => 'news-'.$id,
+		    'title' => $title,
+		    'content' => $content,
+		] );
+	}
+
+	// サイドバーを追加
+	$term = get_term_by( 'slug', 'news', 'faq_cat' );
+	if ( $term ) {
+		$url = get_term_link( $term );
+	} else {
+		$url = get_post_type_archive_link( 'faq' );
+	}
+	$sidebar = <<<HTML
+<ul>
+	<li><a href="{$url}" target="_blank">よくある質問</a></li>
+	<li><a href="https://hametuha.slack.com" target="_blank">破滅派SLACK</a></li>
+</ul>
+HTML;
+	$screen->set_help_sidebar( $sidebar );
+} );

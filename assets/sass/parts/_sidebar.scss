@@ -15,8 +15,13 @@
   }
   img{
     max-width: 100%;
-    width: auto;
-    height: auto;
+  }
+  .widget_sp_image-image-link{
+    img{
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
   }
   .small-button{
     @extend .btn;
