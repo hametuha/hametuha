@@ -173,6 +173,7 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 	foreach ( $columns as $key => $val ) {
 		switch ( $post_type ) {
 			case 'news':
+			case 'post':
 				$new_columns[ $key ] = $val;
 				if ( 'title' == $key ) {
 					$new_columns['thumbnail'] = 'アイキャッチ';
