@@ -303,7 +303,8 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 	curl_setopt_array( $ch, [
 		CURLOPT_URL => SLACK_ENDPOINT,
 		CURLOPT_POST => true,
-	    CURLOPT_POSTFIELDS => 'payload='.json_encode( $payload ),
+		CURLOPT_HTTPHEADER => [ 'Content-Type: application/json' ],
+		CURLOPT_POSTFIELDS => json_encode( $payload ),
 	    CURLOPT_RETURNTRANSFER => true,
 	    CURLOPT_SSL_VERIFYPEER => false,
 		CURLOPT_TIMEOUT => 5,
