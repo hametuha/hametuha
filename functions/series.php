@@ -172,6 +172,12 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 	$new_columns = [];
 	foreach ( $columns as $key => $val ) {
 		switch ( $post_type ) {
+			case 'news':
+				$new_columns[ $key ] = $val;
+				if ( 'title' == $key ) {
+					$new_columns['thumbnail'] = 'アイキャッチ';
+				}
+				break;
 			case 'series':
 				if ( 'author' == $key ) {
 					$val = '編集者';
@@ -217,7 +223,11 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 		case 'count':
 			$total = Series::get_instance()->get_total( $post_id );
 			if ( $total ) {
-				printf( '%s作品', number_format( $total ) );
+				if ( Series::get_instance()->is_finished( $post_id )  ) {
+					printf( '<span style="color: #a1de9e;"> 完結（%s作品）</span>', number_format( $total ) );
+				} else {
+					printf( '連載中（%s作品）', number_format( $total ) );
+				}
 			} else {
 				echo '<span style="color: lightgrey;">登録なし</span>';
 			}
