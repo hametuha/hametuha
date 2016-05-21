@@ -499,4 +499,62 @@ SQL;
 				break;
 		}
 	}
+
+	/**
+	 * 作品集が公開可能かチェックする
+	 *
+	 * @param null|int|\WP_Post $post
+	 * @return false|\WP_Error
+	 */
+	public function validate( $post = null ) {
+		$post = get_post( $post );
+		$errors = new \WP_Error();
+		if ( 'series' != $post->post_type ) {
+			$errors->add( 'fatal', 'これは作品集ではありません' );
+		}
+		// 表紙画像
+		if ( ! has_post_thumbnail( $post ) ) {
+			$errors->add( 'fatal', '表紙画像が設定されていません' );
+		} else {
+			$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post ), 'kindle-cover' );
+			if ( 1200 != $thumbnail[1] || 1920 != $thumbnail[2] ) {
+				$errors->add( 'fatal', '表紙画像のサイズが不正です。サイズは幅1200px 高さ1920pxでなくてはなりません。これ以上大きい解像度でアップロードしてください。' );
+			}
+		}
+		// サムネイル
+		if ( ! $post->post_excerpt ) {
+			$errors->add( 'fatal', 'リード文が設定されていません。' );
+		} elseif ( 100 > mb_strlen( $post->post_excerpt, 'utf-8' ) ) {
+			$errors->add( 'warning', 'リード文が短すぎます。もう少し読んでもらえるようなリード文にしましょう。' );
+		}
+		// 登録された文章
+		$length = get_post_length( $post );
+		if ( 2000 > $length ) {
+			if ( ! count( get_posts( [
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'post_parent'    => get_the_ID(),
+				'posts_per_page' => - 1,
+				'orderby'        => [
+					'menu_order' => 'DESC',
+					'date'       => 'ASC',
+				],
+				'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
+			] ) )
+			) {
+				$errors->add( 'fatal', '作品が1つも登録されていません。' );
+			} else {
+				$errors->add( 'fatal', sprintf( '%s文字では短すぎます……', number_format_i18n( $length ) ) );
+			}
+		}
+		// 完結済みか
+		if ( ! $this->is_finished( $post->ID ) ) {
+			$errors->add( 'fatal', 'この作品集はまだ完結していません。' );
+		}
+		if ( $errors->errors ) {
+			return $errors;
+		} else {
+			return false;
+		}
+	}
 }

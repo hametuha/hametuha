@@ -103,6 +103,7 @@ TEXT;
 	public function editFormX( \WP_Post $post ) {
 		$status = $this->series->get_status( $post->ID );
 		$index  = $this->series->get_status( $post->ID );
+		$errors = $this->series->validate( $post );
 		?>
 
 		<div class="misc-pub-section misc-pub-section--epub, misc-pub-section--finished">
@@ -121,7 +122,10 @@ TEXT;
 				<strong><?= $this->series->status_label[ $status ] ?></strong>
 				<?php if ( $status > 1 ) : ?>
 					<br/>
-					<small>ASIN: <code><?= $this->series->get_asin( $post->ID ) ?></code></small>
+					<small>ASIN: <code><?= $this->series->get_asin( $post->ID ); ?></code></small>
+				<?php elseif ( $status && $errors ) : ?>
+					<br />
+					<strong style="color: red">この作品集には不備があるので販売できません。</strong>
 				<?php endif; ?>
 			</label>
 		</div>
@@ -158,7 +162,13 @@ TEXT;
 				<?php
 				switch ( $status ) {
 					case 1:
-						echo '現在、販売処理を行っています。しばらくお待ち下さい。';
+						if ( $errors ) {
+							echo implode( '<br />', array_map( function( $string ){
+								return sprintf( '<span style="color: red;"><i class="dashicons dashicons-no"></i> %s</span>', esc_html( $string)  );
+							}, $errors->get_error_messages() ) );
+						} else {
+							echo '現在、販売処理を行っています。しばらくお待ち下さい。';
+						}
 						break;
 					case 2:
 						printf( '現在、販売中です。販売を取り止めたい場合は<a href="%s" target="_blank">お問い合わせ</a>からご連絡ください。', home_url( '/inquiry', 'https' ) );

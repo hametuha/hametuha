@@ -47,7 +47,7 @@ function the_series( $pre = '', $after = '', $post = null ) {
 	$series = is_series( $post );
 	if ( $series ) {
 		$series = get_post( $series );
-		echo $pre . '<a href="' . get_permalink( $series->ID ) . '" itemprop="isPartOf">' . apply_filters( "the_title", $series->post_title ) . '</a>' . $after;
+		echo $pre . '<a href="' . get_permalink( $series->ID ) . '" itemprop="isPartOf">' . apply_filters( 'the_title', $series->post_title ) . '</a>' . $after;
 	}
 }
 
@@ -169,7 +169,7 @@ function hametuha_series_hide( $content ) {
  * 投稿リストにカラムを追加
  */
 add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
-	$new_columns = [ ];
+	$new_columns = [];
 	foreach ( $columns as $key => $val ) {
 		switch ( $post_type ) {
 			case 'series':
@@ -178,6 +178,7 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 				}
 				$new_columns[ $key ] = $val;
 				if ( 'title' == $key ) {
+					$new_columns['thumbnail'] = '表紙画像';
 					$new_columns['count']        = '作品数';
 					$new_columns['sales_status'] = '販売状況';
 				}
@@ -206,6 +207,13 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
  */
 add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 	switch ( $column ) {
+		case 'thumbnail':
+			if ( has_post_thumbnail( $post_id ) ) {
+				echo get_the_post_thumbnail( $post_id, 'thumbnail', [ 'class' => 'post-list-thumbnail' ] );
+			} else {
+				printf( '<img src="%s/assets/img/dammy/300.png" class="post-list-thumbnail" />', get_template_directory_uri() );
+			}
+			break;
 		case 'count':
 			$total = Series::get_instance()->get_total( $post_id );
 			if ( $total ) {
@@ -216,18 +224,22 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 			break;
 		case 'sales_status':
 			$status = Series::get_instance()->get_status( $post_id );
+			$extra = '';
 			switch ( $status ) {
 				case 2:
 					$color = 'green';
 					break;
 				case 1:
 					$color = 'orange';
+					if ( Series::get_instance()->validate( $post_id ) ) {
+						$extra = '<strong style="color: red">（不備あり）</strong>';
+					}
 					break;
 				default:
 					$color = 'lightgrey';
 					break;
 			}
-			printf( "<span style='color: %s'>%s</span>", $color, Series::get_instance()->status_label[ $status ] );
+			printf( "<span style='color: %s'>%s%s</span>", $color, Series::get_instance()->status_label[ $status ], $extra );
 			if ( $asin = Series::get_instance()->get_asin( $post_id ) ) {
 				echo "<code>{$asin}</code>";
 			}

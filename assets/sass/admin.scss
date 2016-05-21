@@ -3,6 +3,13 @@
  *
  * @package hametuha
  */
+$break-point: 782px;
+
+@mixin small-screen() {
+  @media only screen and (max-width: $break-point){
+    @content;
+  }
+}
 
 .post-state-format{
   display: none;
@@ -95,6 +102,16 @@ div.admin-notice{
       width: 80%;
     }
   }
+}
+
+.widefat .column-thumbnail{
+  padding: 0;
+  widtH: 80px;
+}
+.post-list-thumbnail{
+  max-width: 80px;
+  width: auto;
+  height: auto;
 }
 
 .sidemeta{

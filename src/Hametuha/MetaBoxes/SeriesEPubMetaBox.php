@@ -10,9 +10,7 @@ use WPametu\UI\Field\Radio;
 
 class SeriesEPubMetaBox extends LeadMetaBox
 {
-
-
-	protected $post_types = ['series'];
+	protected $post_types = [ 'series' ];
 
 	protected $name = 'hametuha_epub_format_helper';
 
@@ -36,8 +34,8 @@ class SeriesEPubMetaBox extends LeadMetaBox
 			'rows' => 5,
 			'min' => 20,
 			'max' => 200,
-			'description' => 'リードは作品集のWebページに表示されます。',
-			'placeholder' => 'ex. この作品はほんとうに素晴らしいんです。読んでください！'
+			'description' => 'リードは作品集のWebページおよび電子書籍販売ストアに一番最初に表示されます。作品を読むための非常に重要な要素なので、よく考えて入力してください。',
+			'placeholder' => 'ex. 都内有数のお嬢様学校をゾンビの群れが襲撃する！　そのときたまたま編入した「俺」は去年から驚愕になったこの学校唯一の男子として、全校生徒を守るべく釘バット一本で立ち向かう。',
 		],
 		'_preface' => [
 			'class' => Textarea::class,
