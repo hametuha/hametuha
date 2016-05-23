@@ -182,15 +182,9 @@ HTML;
 						<h3 class="list-title">新着</h3>
 						<ul class="post-list">
 							<?php
-							$recent = new WP_Query( [
-								'post_type' => 'post',
-							    'post_status' => 'publish',
-							    'posts_per_page' => 3,
-							] );
-							while ( $recent->have_posts() ) {
-								$recent->the_post();
+							foreach ( hametuha_recent_posts( 3 ) as $post ) {
+								setup_postdata( $post );
 								get_template_part( 'parts/loop', 'front' );
-
 							}
 							wp_reset_postdata();
 							?>

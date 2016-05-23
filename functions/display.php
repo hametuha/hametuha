@@ -342,6 +342,26 @@ function trim_long_sentence( $sentence, $length = 100, $elipsis = '…' ) {
 	}
 }
 
+/**
+ * 文字列を検閲する
+ *
+ * @param string $string
+ *
+ * @return string
+ */
+function hametuha_censor( $string ) {
+	foreach ( explode( "\r\n", get_option( 'four_words', '' ) ) as $four_word ) {
+		if ( $four_word ) {
+			$replace = '';
+			for ( $i = 0, $l = mb_strlen( $four_word, 'utf-8' ); $i < $l; $i++ ) {
+				$replace .= '●';
+			}
+			$string = str_replace( $four_word, $replace, $string );
+		}
+	}
+	return $string;
+}
+
 //
 // Theme My Loginを使っているときに
 // REST APIプラグインがこけないようにする
