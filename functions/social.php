@@ -215,6 +215,8 @@ add_action( 'admin_notices', function () {
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	//はじめて公開にしたときだけ
 	if ( ! WP_DEBUG && 'publish' === $new_status && function_exists( 'update_twitter_status' ) ) {
+		$title = hametuha_censor( get_the_title( $post ) );
+		$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
 		switch ( $old_status ) {
 			case 'new':
 			case 'draft':
@@ -224,8 +226,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 				switch ( $post->post_type ) {
 					case 'post':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんが #破滅派 に新作「{$post->post_title}」を投稿しました {$url}";
+						$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
 						break;
 					case 'announcement':
 						$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
@@ -244,8 +245,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 						break;
 					case 'thread':
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$post->post_title} {$url}";
+						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
 						break;
 					case 'newsletter':
 						$string = sprintf(
