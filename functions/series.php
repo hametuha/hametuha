@@ -181,6 +181,9 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 			case 'series':
 				if ( 'author' == $key ) {
 					$val = '編集者';
+					if ( current_user_can( 'edit_others_posts' ) ) {
+						$new_columns['menu_order'] = '順';
+					}
 				}
 				$new_columns[ $key ] = $val;
 				if ( 'title' == $key ) {
@@ -200,6 +203,13 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 				break;
 		}
 	}
+	if ( isset( $new_columns['menu_order'] ) ) {
+		// menu_orderがカラムに存在したら、ソート順を追加
+		add_filter( 'manage_edit-series_sortable_columns', function( $sortable_columns ) {
+			$sortable_columns['menu_order'] = [ 'menu_order', false ];
+			return $sortable_columns;
+		}, 10, 3 );
+	}
 	if ( $new_columns ) {
 		$columns = $new_columns;
 	}
@@ -213,6 +223,19 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
  */
 add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 	switch ( $column ) {
+		case 'menu_order':
+			$order = get_post( $post_id )->menu_order;
+			if ( 99 < $order ) {
+				$color = 'red';
+			} elseif ( 9 < $order ) {
+				$color = 'green';
+			} elseif ( 0 < $order ) {
+				$color = 'black';
+			} else {
+				$color = 'lightgrey';
+			}
+			printf( '<span style="color: %s">%s</span>', $color, number_format( $order ) );
+			break;
 		case 'thumbnail':
 			if ( has_post_thumbnail( $post_id ) ) {
 				echo get_the_post_thumbnail( $post_id, 'thumbnail', [ 'class' => 'post-list-thumbnail' ] );

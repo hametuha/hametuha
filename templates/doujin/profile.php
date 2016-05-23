@@ -105,9 +105,39 @@
 		</div>
 		<!-- //.doujin_row--base -->
 
+		<?php get_template_part( 'parts/list', 'kdp' ); ?>
+
 		<div class=" doujin__row doujin__row--activity">
 			<div class="container">
 				<div class="row">
+					<div class="col-sm-4 col-xs-12 doujin__item">
+						<h2 class="doujin__item--title text-center">最新投稿</h2><?php
+						$query = new WP_Query( [
+							'post_type'      => 'post',
+							'author'         => $this->doujin->ID,
+							'posts_per_page' => 3,
+							'orderby'        => [ 'date' => 'DESC' ],
+							'post_status'    => 'publish',
+						] );
+						if ( $query->have_posts() ) :
+							?>
+							<ul class="post-list">
+								<?php
+								while ( $query->have_posts() ) {
+									$query->the_post();
+									get_template_part( 'parts/loop', 'front' );
+								}
+								?>
+							</ul>
+							<a class="btn btn-primary btn-lg btn-block"
+							   href="<?= get_author_posts_url( $this->doujin->ID ) ?>?post_type=any">もっと見る</a>
+						<?php else : ?>
+							<div class="alert alert-warning">
+								投稿がありません
+							</div>
+						<?php endif; ?>
+
+					</div>
 					<div class="col-sm-4 col-xs-12 doujin__item">
 						<h2 class="doujin__item--title text-center">最近の活動</h2>
 						<ul class="doujin__activities">
@@ -194,82 +224,14 @@
 							<dt>SNS戦闘力</dt>
 							<dd><?= number_format( $this->author->get_sns_count( $this->doujin->ID ) ) ?></dd>
 						</dl>
-
-
-					</div>
-					<div class="col-sm-4 col-xs-12 doujin__item">
 						<h2 class="doujin__item--title text-center">レビュー</h2>
-
 						<div id="review-graph" class="doujin__item--chart">
-
 						</div>
 					</div>
 				</div>
 
 			</div>
 		</div>
-
-
-		<div class="doujin__row doujin__row--recent">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<h2 class="text-center">最新の投稿</h2>
-						<?php
-						$query = new WP_Query( [
-							'post_type'      => 'any',
-							'author'         => $this->doujin->ID,
-							'posts_per_page' => 3,
-							'orderby'        => [ 'date' => 'DESC' ],
-							'post_status'    => 'publish',
-						] );
-						if ( $query->have_posts() ) :
-							?>
-							<ol class="archive-container media-list">
-								<?php
-								while ( $query->have_posts() ) {
-									$query->the_post();
-									get_template_part( 'parts/loop', get_post_type() );
-								}
-								?>
-							</ol>
-							<a class="btn btn-primary btn-lg btn-block"
-							   href="<?= get_author_posts_url( $this->doujin->ID ) ?>?post_type=any">もっと見る</a>
-						<?php else : ?>
-							<div class="alert alert-warning">
-								投稿がありません
-							</div>
-						<?php endif; ?>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<?php
-		$query = new \WP_Query( [
-			'post_type'      => 'series',
-			'meta_filter'    => 'kdp',
-			'author'         => $this->doujin->ID,
-			'posts_per_page' => 3,
-		] );
-		if ( $query->have_posts() ) :
-			?>
-			<div class="doujin__row doujin__row--kdp">
-				<div class="container">
-					<div class="row">
-						<h2 class="doujin__title--major text-center">Kindle本</h2>
-						<ol class="archive-container media-list">
-							<?php while ( $query->have_posts() ) : $query->the_post(); ?>
-								<?php get_template_part( 'parts/loop', 'series' ); ?>
-							<?php endwhile; ?>
-						</ol>
-						<a class="btn btn-primary btn-lg btn-block"
-						   href="<?= get_author_posts_url( $this->doujin->ID ) ?>?meta_filter=kdp&amp;post_type=series">もっと見る</a>
-					</div>
-				</div>
-			</div>
-		<?php endif; ?>
-
 
 		<?php
 		$query = new \WP_Query( [

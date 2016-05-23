@@ -1,8 +1,26 @@
 <?php
 $series = \Hametuha\Model\Series::get_instance();
+
 if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 	global $wp_query;
 	$query = $wp_query;
+} elseif ( $doujin = is_doujin_profile_page() ) {
+	$query = new WP_Query( [
+		'post_type'      => 'series',
+		'post_status'    => 'publish',
+		'meta_query'    => [
+			[
+				'key' => '_kdp_status',
+				'value' => 2,
+			],
+		],
+		'author_name' => $doujin,
+		'posts_per_page' => -1,
+		'orderby' => [
+			'menu_order' => 'DESC',
+			'date'       => 'DESC',
+		],
+	] );
 } else {
 	$query = new WP_Query( [
 		'post_type'      => 'series',
@@ -13,11 +31,18 @@ if ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 			    'value' => 2,
 			],
 		],
-		'posts_per_page' => 12,
+		'posts_per_page' => 16,
+	    'orderby' => [
+		    'menu_order' => 'DESC',
+	        'date'       => 'DESC',
+	    ],
 	] );
 }
+if ( ! $query->have_posts() ) {
+	return;
+}
 ?>
-<div class="ebookList<?= is_front_page() ? ' ebookList--front' : '' ?>">
+<div class="ebookList<?= ( is_front_page() || is_doujin_profile_page() ) ? ' ebookList--front' : '' ?>">
 	<div class="container">
 		<div class="ebookList__wrap">
 			<?php

@@ -131,6 +131,18 @@ TEXT;
 		</div>
 
 		<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
+
+			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--order">
+				<label>
+					<span class="dashicons dashicons-thumbs-up"></span> 優先順位:
+					<input type="number" class="regular-text" name="menu_order" value="<?= intval( $post->menu_order ) ?>" />
+				</label>
+				<p class="description">
+					順位が高いほど優先して表示されます。編集者のみ変更できます。
+				</p>
+			</div>
+
+
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--status">
 				<label>
 					<span class="dashicons dashicons-admin-settings"></span> ステータス変更:

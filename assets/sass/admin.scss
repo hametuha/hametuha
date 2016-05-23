@@ -104,9 +104,20 @@ div.admin-notice{
   }
 }
 
-.widefat .column-thumbnail{
-  padding: 0;
-  width: 60px;
+.widefat .column{
+  &-thumbnail{
+    padding: 0;
+    width: 60px;
+  }
+  &-menu_order{
+    padding: 0 0.5em;
+    width: 4em;
+    text-align: center;
+    vertical-align: middle;
+    span{
+      vertical-align: middle;
+    }
+  }
 }
 .post-list-thumbnail{
   max-width: 60px;

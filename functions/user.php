@@ -344,6 +344,19 @@ function is_administrator( $user_id ) {
 }
 
 /**
+ * 同人の詳細ページならtrue
+ *
+ * @return bool|string
+ */
+function is_doujin_profile_page() {
+	if ( \Hametuha\Rest\Doujin::class == str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match )  ) {
+		return $match[1];
+	} else {
+		return false;
+	}
+}
+
+/**
  * 最近追加されたユーザーを返す
  * @global wpdb $wpdb
  *

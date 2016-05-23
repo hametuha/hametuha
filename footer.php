@@ -1,4 +1,4 @@
-<?php if ( ! is_front_page() && 'kdp' !== get_query_var( 'meta_filter' ) ) {
+<?php if ( ! is_front_page() && 'kdp' !== get_query_var( 'meta_filter' ) && ! is_doujin_profile_page() ) {
 	get_template_part( 'parts/list', 'kdp' );
 } ?>
 
