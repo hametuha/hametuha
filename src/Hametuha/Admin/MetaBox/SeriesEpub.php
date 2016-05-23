@@ -22,10 +22,11 @@ class SeriesEpub extends SeriesBase {
 		// 編集者のみ可能なアクション
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			// Editor
+			$current = $this->series->get_status( $post->ID );
 			$status = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
 			update_post_meta( $post->ID, '_kdp_status', $status );
 			update_post_meta( $post->ID, '_asin', $this->input->post( 'asin' ) );
-			if ( 2 === $status ) {
+			if ( 2 === $status && 2 !== $current ) {
 				$user = new \WP_User( $post->post_author );
 				$kdp_url = $this->series->get_kdp_url( $post->ID );
 				// メールで通知
@@ -40,6 +41,9 @@ class SeriesEpub extends SeriesBase {
 Amazon: {$kdp_url}
 
 ご不明な点などありましたがら、気軽に破滅派までお尋ねください。
+表紙画像などを販売開始後に変更されても、Amazonには反映されません。
+破滅派編集部に必ず連絡をするようにしてください。
+
 
 https://hametuha.com
 
