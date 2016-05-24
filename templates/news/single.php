@@ -87,6 +87,13 @@
 											<span class="label label-default">終了しました</span>
 										<?php endif; ?>
 									</p>
+								<?php elseif ( $post->_event_end ) : ?>
+									<p class="news-event__date">
+										<strong><i class="icon-calendar"></i> 〆切</strong> <?= mysql2date( 'Y年n月j日（D）', $post->_event_end ) ?>
+										<?php if ( strtotime( $post->_event_end ) < current_time( 'timestamp', true ) ) : ?>
+											<span class="label label-default">終了しました</span>
+										<?php endif; ?>
+									</p>
 								<?php endif; ?>
 
 								<?php if ( $post->_event_address ) : ?>

@@ -7,6 +7,7 @@ use WPametu\UI\Admin\EditMetaBox;
 use WPametu\UI\Field\DateTime;
 use WPametu\UI\Field\GeoChecker;
 use WPametu\UI\Field\Radio;
+use WPametu\UI\Field\Select;
 use WPametu\UI\Field\Text;
 use WPametu\UI\Field\TextArea;
 
@@ -16,7 +17,7 @@ class NewsEventMetaBox extends EditMetaBox {
 
 	protected $name = 'hametuha_news_event_helper';
 
-	protected $label = 'イベント情報';
+	protected $label = '文学賞・イベント';
 
 	protected $context = 'advanced';
 
@@ -25,16 +26,28 @@ class NewsEventMetaBox extends EditMetaBox {
 			'class'       => Text::class,
 			'label'       => 'イベント名',
 		    'description' => '空白の場合はイベント自体が表示されません',
+		    'required'    => true,
+		],
+		'_event_type'     => [
+			'class'       => Select::class,
+		    'label'       => '種別',
+		    'options'     => [
+			    ''  => 'リアルイベント',
+		        '1' => 'オンラインイベント',
+		        '2' => '公募',
+		        '3' => '文学賞',
+		    ],
+		    'default'     => '',
 		],
 		'_event_start' => [
 			'class'       => DateTime::class,
 			'label'       => '開始',
-			'description' => '空白の場合は表示されません。',
+			'description' => '空白の場合は表示されません。00:00の場合、時刻は表示されません。',
 		],
 		'_event_end' => [
 			'class'       => DateTime::class,
 			'label'       => '終了',
-			'description' => '空白の場合は表示されません。複数日にまたがる場合、時間は表示されません。',
+			'description' => '空白の場合は表示されません。複数日にまたがる場合、00:00の場合、時刻は表示されません。',
 		],
 		'_event_address' => [
 			'class' => Text::class,
@@ -59,4 +72,18 @@ class NewsEventMetaBox extends EditMetaBox {
 	        'rows' => 3,
 	    ],
 	];
+
+	/**
+	 * This meta fields description
+	 */
+	protected function desc() {
+		echo <<<HTML
+<p class="description">
+	文学賞などの公募情報の場合、終了日だけを設定してください。
+</p>
+HTML;
+
+	}
+
+
 }
