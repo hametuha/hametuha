@@ -362,6 +362,33 @@ function hametuha_censor( $string ) {
 	return $string;
 }
 
+/**
+ * 検閲文字列を返す
+ */
+add_shortcode( 'censored_words', function () {
+	if ( is_user_logged_in() ) {
+		$words = trim( get_option( 'four_words' ) );
+		if ( $words ) {
+			return sprintf( '<pre>%s</pre>', esc_html( $words ) );
+		} else {
+			return <<<HTML
+<div class="alert alert-success">
+破滅派で現在検閲している単語はありません。
+</div>
+HTML;
+
+		}
+	} else {
+		$url = wp_login_url( $_SERVER['REQUEST_URI'] );
+		return <<<HTML
+<div class="alert alert-warning">
+破滅派で検閲対象となる文字列を知るには、<a href="{$url}" class="alert-link" rel="nofollow">ログイン</a>している必要があります。
+</div>
+HTML;
+
+	}
+} );
+
 //
 // Theme My Loginを使っているときに
 // REST APIプラグインがこけないようにする
