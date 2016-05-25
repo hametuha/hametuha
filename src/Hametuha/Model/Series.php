@@ -557,4 +557,9 @@ SQL;
 			return false;
 		}
 	}
+
+	public function get_list( $type = 'sales', $limit = 10 ) {
+		
+
+	}
 }

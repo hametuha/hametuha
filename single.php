@@ -5,12 +5,12 @@
 	<div class="container single">
 
 		<div class="row">
-			<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
+			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
 				<article itemscope
 				         itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ) ?>>
 
-					<?php if ( get_post_type() == 'faq' ): ?>
+					<?php if ( get_post_type() == 'faq' ) : ?>
 						<?php get_template_part( 'parts/jumbotron', 'help' ); ?>
 					<?php elseif ( ! is_page() ) : ?>
 						<?php get_template_part( 'parts/bar', 'posttype' ) ?>
@@ -35,34 +35,45 @@
 					</div><!-- //.post-meta -->
 
 
-					<?php if ( has_excerpt() ): ?>
+					<?php if ( has_excerpt() ) : ?>
 						<div class="excerpt" itemprop="description">
 							<?php the_excerpt(); ?>
 						</div><!-- //.excerpt -->
 					<?php endif; ?>
 
-					<?php if ( get_post_type() == 'announcement' ): ?>
+					<?php if ( get_post_type() == 'announcement' ) : ?>
 						<?php get_template_part( 'parts/meta', 'announcement' ); ?>
 						<?php get_template_part( 'parts/table', 'ticket' ); ?>
 					<?php endif; ?>
 
+					<?php
+					$diff = ceil( ( time() - strtotime( $post->post_date_gmt ) ) / 86400 );
+					if ( in_array( get_post_type(), [ 'faq', 'announcement' ] ) && ( 365 < $diff ) ) :
+						?>
+						<div class="alert alert-danger">
+							この<?= esc_html( get_post_type_object( get_post_type() )->label ) ?>が公開されたのは
+							<strong><?= number_format_i18n( $diff ) ?>日前</strong>です。
+							場合によってはすでに無効になっている可能性がありますので、その点ご了承ください。
+						</div>
+					<?php endif; ?>
 
 					<div class="post-content clearfix" itemprop="articleBody">
-						<?php the_content(); ?>
+						<?php the_content() ?>
 					</div><!-- //.post-content -->
 
 
-					<?php wp_link_pages( array( 'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
-					                            'after'       => '</p></div>',
-					                            'link_before' => '<span>',
-					                            'link_after'  => '</span>'
-					) ); ?>
+					<?php wp_link_pages( [
+						'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
+						'after'       => '</p></div>',
+						'link_before' => '<span>',
+						'link_after'  => '</span>',
+					] ); ?>
 
-					<?php if ( get_post_type() == 'announcement' ): ?>
+					<?php if ( get_post_type() == 'announcement' ) : ?>
 						<?php get_template_part( 'parts/table', 'ticket' ); ?>
 					<?php endif; ?>
 
-					<?php if ( false !== array_search( get_post_type(), [ 'anpi', 'announcement' ] ) ): ?>
+					<?php if ( false !== array_search( get_post_type(), [ 'anpi', 'announcement' ] ) ) : ?>
 
 						<h2><i class="icon-vcard"></i> 著者情報</h2>
 						<?php get_template_part( 'parts/author' ) ?>
@@ -81,7 +92,7 @@
 					?>
 
 					<div class="more">
-						<?php if ( post_type_supports( get_post_type(), 'comments' ) ): ?>
+						<?php if ( post_type_supports( get_post_type(), 'comments' ) ) : ?>
 							<?php comments_template() ?>
 						<?php endif; ?>
 					</div>

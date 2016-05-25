@@ -24,10 +24,10 @@ add_action( 'init', function () {
 		'description'     => '著者によってまとめられた作品集です。特定のテーマに基づいた連作や長編小説などがあります。近々ePubなどの形式に書き出せるようになる予定（2012年9月現在）です。',
 		'label'           => '作品集・連載',
 		'labels'          => [
-			'featured_image' => '表紙画像',
-			'set_featured_image' => '表紙画像を設定する',
+			'featured_image'        => '表紙画像',
+			'set_featured_image'    => '表紙画像を設定する',
 			'remove_featured_image' => '表紙画像を削除',
-			'use_featured_image' => '表紙画像として使用する',
+			'use_featured_image'    => '表紙画像として使用する',
 		],
 		'public'          => true,
 		'menu_position'   => 5,
@@ -89,22 +89,39 @@ add_action( 'init', function () {
 		'query_var'    => true,
 		'rewrite'      => array( 'slug' => 'faq-cat' ),
 		'label'        => 'カテゴリー',
+		'show_admin_column' => true,
+		'meta_box_cb'  => function( $post ) {
+			$post_terms = array_map( function( $term ) {
+				return $term->name;
+			}, get_the_terms( $post, 'faq_cat' ) );
+			?>
+			<input type="hidden" name="tax-input[faq_cat]" value="<?= esc_attr( implode( ', ', $post_terms ) ) ?>" />
+			<p class="taxonomy-check-list">
+				<?php foreach ( get_terms( 'faq_cat', [ 'hide_empty' => false ] ) as $term ) : ?>
+					<label class="taxonomy-check-label">
+						<input type="checkbox" class="taxonomy-check-box" value="<?= esc_attr( $term->name ) ?>" <?php checked( has_term( $term->term_id, 'faq_cat', $post ) ) ?>/>
+						<?= esc_html( $term->name ) ?>
+					</label>
+				<?php endforeach; ?>
+			</p>
+			<?php
+		},
 	) );
 
 
 	//安否情報
 	$args = array(
-		'label'           => '安否情報',
-		'description'     => '破滅派同人の安否を知るための最新情報です。書いていない人のことは心配してあげてください。',
-		'public'          => true,
-		'menu_position'   => 10,
-		'menu_icon'       => 'dashicons-microphone',
-		'supports'        => array( 'title', 'editor', 'author', 'thumbnail', 'comments' ),
-		'has_archive'     => true,
-		'capability_type' => 'post',
-		'show_in_rest'    => true,
+		'label'                 => '安否情報',
+		'description'           => '破滅派同人の安否を知るための最新情報です。書いていない人のことは心配してあげてください。',
+		'public'                => true,
+		'menu_position'         => 10,
+		'menu_icon'             => 'dashicons-microphone',
+		'supports'              => array( 'title', 'editor', 'author', 'thumbnail', 'comments' ),
+		'has_archive'           => true,
+		'capability_type'       => 'post',
+		'show_in_rest'          => true,
 		'rest_controller_class' => 'WP_REST_Posts_Controller',
-		'rewrite'         => array( 'slug' => 'anpi/archives' ),
+		'rewrite'               => array( 'slug' => 'anpi/archives' ),
 	);
 	register_post_type( 'anpi', $args );
 
@@ -123,26 +140,26 @@ add_action( 'init', function () {
 		'hierarchical' => false,
 		'show_ui'      => false,
 		'query_var'    => true,
-		'capabilities' => array(
+		'capabilities' => [
 			'manage_terms' => 'manage_options',
 			'edit_terms'   => 'manage_options',
 			'delete_terms' => 'manage_options',
 			'assign_terms' => 'manage_options',
-		),
+		],
 		'rewrite'      => array( 'slug' => 'review' ),
 	) );
 
 	// アイデア
-	register_post_type('ideas', [
-		'label'       => 'アイデア',
-		'description' => '作品執筆の手助けとなるアイデアです。「自分が書くのはちょっと……」というシャイなあなたにもオススメ。非公開設定もあります。',
-		'public'      => true,
-		'menu_icon'   => 'dashicons-lightbulb',
-	    'supports'    => [ 'title', 'editor', 'author', 'comments' ],
-	    'has_archive' => true,
-	    'taxonomies'  => [ 'post_tag' ],
-	    'capability_type' => 'page',
-	]);
+	register_post_type( 'ideas', [
+		'label'           => 'アイデア',
+		'description'     => '作品執筆の手助けとなるアイデアです。「自分が書くのはちょっと……」というシャイなあなたにもオススメ。非公開設定もあります。',
+		'public'          => true,
+		'menu_icon'       => 'dashicons-lightbulb',
+		'supports'        => [ 'title', 'editor', 'author', 'comments' ],
+		'has_archive'     => true,
+		'taxonomies'      => [ 'post_tag' ],
+		'capability_type' => 'page',
+	] );
 
 } );
 
@@ -154,7 +171,7 @@ add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
 		'^lists/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=lists',
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
-	    '^idea/(\\d+)/?'                    => 'index.php?p=$matches[1]&post_type=ideas',
+		'^idea/(\\d+)/?'                    => 'index.php?p=$matches[1]&post_type=ideas',
 	], $rules );
 } );
 
@@ -327,6 +344,8 @@ function hametuha_is_profile_page() {
 function hametuha_page_type() {
 	if ( is_singular( 'post' ) || is_tag() || is_category() ) {
 		return 'post';
+	} elseif ( is_singular( 'news' ) || is_post_type_archive( 'news' ) || is_tax( 'genre' ) || is_tax( 'nouns' ) ) {
+		return 'news';
 	} elseif ( is_singular( 'anpi' ) || is_post_type_archive( 'anpi' ) || is_tax( 'anpi_cat' ) ) {
 		return 'anpi';
 	} elseif ( is_singular( 'thread' ) || is_post_type_archive( 'thread' ) || is_tax( 'topic' ) ) {
@@ -354,8 +373,9 @@ function hametuha_page_type() {
 
 /**
  * Show field on amdmin screen
+ *
  * @param stdClass $term
- * @param string   $taxonomy
+ * @param string $taxonomy
  */
 add_action( 'post_tag_edit_form_fields', function ( $term, $taxonomy ) {
 	?>
@@ -365,15 +385,16 @@ add_action( 'post_tag_edit_form_fields', function ( $term, $taxonomy ) {
 			<select name="tag_genre" id="tag-genre">
 				<?php $genre = get_term_meta( $term->term_id, 'genre', true ); ?>
 				<option value="" <?php selected( ! $genre ) ?>>指定なし</option>
-				<?php
-				foreach ( [
-					'サブジャンル',
-				    '固有名詞',
-				    '印象',
-				    '一般名詞',
-				] as $val ) :
-					?>
-					<option value="<?= esc_attr( $val ) ?>" <?php selected( $val == $genre ) ?>><?= esc_html( $val ) ?></option>
+				<?php foreach (
+					[
+						'サブジャンル',
+						'固有名詞',
+						'印象',
+						'一般名詞',
+					] as $val
+				) : ?>
+					<option
+						value="<?= esc_attr( $val ) ?>" <?php selected( $val == $genre ) ?>><?= esc_html( $val ) ?></option>
 				<?php endforeach; ?>
 			</select>
 		</td>
@@ -388,13 +409,11 @@ add_action( 'post_tag_edit_form_fields', function ( $term, $taxonomy ) {
 			</script>
 			<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
 			<select name="tag_type" id="tag-type">
-				<option value="" <?php selected( ! get_term_meta($term->term_id, 'tag_type', true) ) ?>>指定しない</option>
-				<?php
-				foreach( [
-				    'idea'  => 'アイデア募集中',
-				] as $key => $val ) :
-					?>
-				<option value="<?= esc_attr($key) ?>" <?php selected( $key == get_term_meta($term->term_id, 'tag_type', true) ) ?>><?= esc_html($val) ?></option>
+				<option value="" <?php selected( ! get_term_meta( $term->term_id, 'tag_type', true ) ) ?>>指定しない</option>
+				<?php foreach ( [ 'idea' => 'アイデア募集中' ] as $key => $val ) : ?>
+					<option value="<?= esc_attr( $key ) ?>" <?php selected( get_term_meta( $term->term_id, 'tag_type', true ) === $key ) ?>>
+						<?= esc_html( $val ) ?>
+					</option>
 				<?php endforeach; ?>
 			</select>
 		</td>
@@ -405,7 +424,7 @@ add_action( 'post_tag_edit_form_fields', function ( $term, $taxonomy ) {
 /**
  * Save term meta
  *
- * @param int    $term_id
+ * @param int $term_id
  * @param string $taxonomy
  */
 add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
@@ -419,14 +438,58 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 }, 10, 2 );
 
 /**
+ * 閲覧制限のあるコンテンツを保護する
+ *
+ * @param string $content
+ * @return string
+ */
+add_filter( 'the_content', function( $content ) {
+	$obj = get_post_type_object( get_post_type() );
+	$login_url = wp_login_url( get_permalink() );
+	switch ( get_post_meta( get_the_ID(), '_accessibility', true ) ) {
+		case 'writer':
+			if ( current_user_can( 'edit_posts' ) ) {
+				return $content;
+			} else {
+				return <<<HTML
+<div class="alert alert-warning">
+この{$obj->label}は投稿者しか見ることができません。
+ログインしていない方は<a class="alert-link" href="{$login_url}" rel="nofollow" >ログイン</a>してください。
+</div>
+HTML;
+			}
+			break;
+		case 'editor':
+			if ( current_user_can( 'edit_others_posts' ) ) {
+				return $content;
+			} else {
+				return <<<HTML
+<div class="alert alert-warning">
+この{$obj->label}は編集者しか見ることができません。
+ログインしていない方は<a class="alert-link" href="{$login_url}" rel="nofollow" >ログイン</a>してください。
+</div>
+HTML;
+			}
+			break;
+		default:
+			return $content;
+			break;
+	}
+}, 11 );
+
+/**
  * 投稿本文をREST APIから削除
  *
  * @param WP_REST_Response $response
  * @param WP_Post $post
- * @param WP_REST_Request    $request    Request object.
+ * @param WP_REST_Request $request Request object.
+ *
  * @return WP_REST_Response
  */
 add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $request ) {
 	$response->data['content'] = $response->data['excerpt'];
+
 	return $response;
 } );
+
+
