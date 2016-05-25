@@ -88,6 +88,7 @@
 					<?php
 					if ( is_singular( 'faq' ) ) {
 						get_template_part( 'parts/nav', 'faq' );
+						get_search_form();
 					}
 					?>
 
