@@ -389,6 +389,45 @@ HTML;
 	}
 } );
 
+/**
+ * ログインしている人にだけ見える文字列
+ */
+add_shortcode( 'fyeo', function( $atts = [], $content = '' ){
+	$atts = shortcode_atts( [
+		'tag_line' => '',
+	    'capability' => '',
+	], $atts, 'fyeo' );
+	switch ( $atts['capabiltiy'] ) {
+		case 'writer':
+			$visibility = current_user_can( 'edit_posts' );
+			break;
+		case 'editor':
+			$visibility = current_user_can( 'edit_others_posts' );
+			break;
+		case 'reader':
+		case '':
+			$visibility = current_user_can( 'read' );
+			break;
+		default:
+			$visibility = current_user_can( $atts['capability'] );
+			break;
+	}
+	if ( ! $visibility ) {
+		$tag_line = [ sprintf( '<a href="%s" class="alert-link" rel="nofollow">ログイン</a>済みで権限のある人にしか表示できません。', get_permalink() ) ];
+		if ( $atts['tag_line'] ) {
+			array_unshift( $tag_line, $atts['tag_line'] );
+		}
+		$tag_line = implode( ' ', $tag_line );
+		$content = <<<HTML
+<div class="alert alert-warning">
+{$tag_line}
+</div>
+HTML;
+	}
+	return $content;
+} );
+
+
 //
 // Theme My Loginを使っているときに
 // REST APIプラグインがこけないようにする
