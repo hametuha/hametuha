@@ -129,7 +129,7 @@
 					) : setup_postdata( $post ); ?>
 						<a class="list-group-item" href="<?php the_permalink(); ?>">
 							<h3 class="list-group-item-heading">
-								<?php the_title(); ?>
+								<?= hametuha_censor( get_the_title() ); ?>
 								<span class="badge"><?php comments_number( '0', '1', '%' ); ?></span>
 								<?php if ( is_new_post( 7, $post ) ) : ?>
 									<span class="label label-danger">New</span>

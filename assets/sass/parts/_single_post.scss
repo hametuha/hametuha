@@ -634,6 +634,7 @@ p.pixiv-embed-illust{
 // プレビュー
 #watermark{
   position: fixed;
+  z-index: 100;
   top: 50%;
   left: 50%;
   font-size: 28px;
