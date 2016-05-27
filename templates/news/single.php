@@ -233,7 +233,11 @@
 
 					<hr/>
 
-					<?php get_template_part( 'parts/pager' ) ?>
+
+					<ul class="news-pager">
+						<?php previous_post_link(  '<li class="previous">%link</li>', '<i class="icon-arrow-left"></i><small>PREVIOUS POST</small><br />%title'  ); ?>
+						<?php next_post_link(  '<li class="next">%link</li>', '<i class="icon-arrow-right2"></i><small>NEXT POST</small><br />%title'  ); ?>
+					</ul>
 
 					<?php get_template_part( 'parts/jumbotron', 'news' ) ?>
 

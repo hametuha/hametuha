@@ -1,11 +1,11 @@
 .news {
 
-  &-eyecatch{
-    h1{
+  &-eyecatch {
+    h1 {
       margin: 0;
       padding: $navbar-height 0 0;
       text-align: center;
-      img{
+      img {
         max-width: 100%;
         width: auto;
         height: auto;
@@ -21,7 +21,7 @@
   }
   & + .post-title-thumbnail {
     margin-top: 20px;
-    @media only screen and ( max-width: $screen-xs-max ) {
+    @media only screen and (max-width: $screen-xs-max) {
       margin-top: 0;
     }
   }
@@ -181,7 +181,7 @@
       margin-top: 20px;
       margin-bottom: 20px;
     }
-    &__archive{
+    &__archive {
       margin-top: 20px;
       margin-bottom: 20px;
     }
@@ -211,52 +211,52 @@
     }
   }
 
-  %divider-box{
+  %divider-box {
     margin-top: 20px;
     margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #eee;
   }
 
-  &-related{
+  &-related {
     @extend %divider-box;
-    &__title{
+    &__title {
       margin: 0 0 10px;
       font-size: 18px;
       font-weight: bold;
     }
-    &__list{
+    &__list {
       padding: 0;
       margin: 0;
-      & > i{
+      & > i {
         color: #ccc;
       }
     }
-    &__item{
+    &__item {
       list-style: none;
       margin: 10px 0;
       font-size: 16px;
     }
   }
 
-  &-books{
+  &-books {
     @extend %divider-box;
-    &__title{
+    &__title {
       margin: 0 0 10px;
       font-size: 18px;
       font-weight: bold;
     }
-    &__list{
+    &__list {
       margin: 0 0 20px;
       padding: 0;
       border-bottom: 1px dashed #eee;
     }
-    &__item{
+    &__item {
       list-style: none;
       margin: 0;
       border-top: 1px dashed #eee;
     }
-    &__image{
+    &__image {
       float: left;
       max-width: 120px;
       width: auto;
@@ -265,32 +265,32 @@
         max-width: 80px;
       }
     }
-    &__desc{
-      .news-books__image + &{
+    &__desc {
+      .news-books__image + & {
         margin-left: 120px + 20px;
         @media only screen and (max-width: $screen-xs-max) {
           margin-left: 80px + 10px;
         }
       }
     }
-    &__note{
+    &__note {
       margin: 0;
       color: #ccc;
     }
-    &__link{
+    &__link {
       display: block;
       padding: 10px;
-      &:link, &:visited{
+      &:link, &:visited {
         color: #000;
         text-decoration: none;
       }
-      &:hover, &:active{
+      &:hover, &:active {
         background: #eee;
         text-decoration: none;
         color: $brand-primary;
       }
     }
-    &__name{
+    &__name {
       font-size: 18px;
       display: block;
       margin-bottom: 10px;
@@ -311,11 +311,11 @@
     margin-bottom: 20px;
     padding: 20px 0;
     background: #eee;
-    &__title{
+    &__title {
       font-size: 20px;
       font-weight: bold;
     }
-    i{
+    i {
       color: #888;
     }
     &__map {
@@ -325,28 +325,105 @@
     }
   }
 
-  &-recruit{
+  &-recruit {
     background: #444;
     margin-top: 20px;
     margin-bottom: 20px;
     color: #fff;
 
-    &__eyecatch{
+    &__eyecatch {
       padding-top: 15px;
       padding-bottom: 15px;
       text-align: center;
     }
-    &__img{
+    &__img {
       max-width: 100%;
       width: auto;
       height: auto;
     }
-    &__title{
+    &__title {
       font-size: 16px;
       font-weight: bold;
       text-align: center;
     }
   }
 
+
+  &-pager {
+    @include clearfix();
+    margin: 20px 0 0;
+    padding: 0;
+    border-top: 1px solid $thin-border;
+    border-bottom: 1px solid $thin-border;
+    li {
+      width: 50%;
+      float: left;
+      list-style: none;
+      &:hover{
+        background: #f9f9f9;
+      }
+      @media only screen and (max-width: $screen-sm-max ) {
+        width: 100%;
+        float: none;
+        &:nth-child(even) a{
+          border-left: none;
+          border-top: 1px solid $thin-border;
+        }
+      }
+      &.previous a{
+        border-right: 1px solid $thin-border;
+        @media only screen and (max-width: $screen-sm-max ) {
+          border-right: none;
+        }
+        padding-left: 40px;
+        i{
+          left: 10px;
+        }
+      }
+      &.next {
+        text-align: right;
+        float: right;
+        a{
+          padding-right: 40px;
+        }
+        &:first-child a{
+          border-left: 1px solid $thin-border;
+        }
+        i{
+          right: 10px;
+        }
+      }
+
+      a {
+        display: block;
+        font-size: 16px;
+        padding: 20px 20px;
+        min-height: 3.2em;
+        line-height: 1.1;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        position: relative;
+        &:link, &:visited {
+          color: #000;
+          text-decoration: none;
+        }
+        &:hover {
+          color: $brand-primary;
+          text-decoration: none;
+        }
+        small{
+          color: #aaa;
+          font-size: 10px;
+        }
+        i {
+          position: absolute;
+          color: #999;
+          top: 50%;
+          margin-top: -0.5em;
+        }
+      }
+    }
+  }
 }
 
