@@ -50,7 +50,7 @@ add_action( 'do_meta_boxes', '_hametuha_admin_dashboard_metaboxes' );
 function _hametuha_remove_metabox( $post_type, $context ) {
 	switch ( $context ) {
 		case 'normal':
-			if ( $post_type == 'post' ) {
+			if ( 'post' == $post_type ) {
 				//カスタムフィールド
 				remove_meta_box( 'postcustom', $post_type, $context );
 				//トラックバック
@@ -150,7 +150,7 @@ add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 add_action( 'admin_init', function() {
 	// 検閲
 	add_settings_section( 'censorship', '検閲', function () {
-		echo '<p>コンテンツの検閲を行うための設定です。</p>';
+		echo '<p>コンテンツの検閲を行うための設定です。正規表現が使えます。デリミタは<code>#</code>です。</p>';
 	}, 'discussion' );
 	// 検閲ブラックリスト
 	add_settings_field( 'four_words', '検閲対象文字列', function ($args) {

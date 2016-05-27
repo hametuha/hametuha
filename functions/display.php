@@ -352,11 +352,13 @@ function trim_long_sentence( $sentence, $length = 100, $elipsis = '…' ) {
 function hametuha_censor( $string ) {
 	foreach ( explode( "\r\n", get_option( 'four_words', '' ) ) as $four_word ) {
 		if ( $four_word ) {
-			$replace = '';
-			for ( $i = 0, $l = mb_strlen( $four_word, 'utf-8' ); $i < $l; $i++ ) {
-				$replace .= '●';
-			}
-			$string = str_replace( $four_word, $replace, $string );
+			$string = preg_replace_callback( "#{$four_word}#u", function( $match ){
+				$replace = '';
+				for ( $i = 0, $l = mb_strlen( $match[0], 'utf-8' ); $i < $l; $i++ ) {
+					$replace .= '●';
+				}
+				return $replace;
+			}, $string );
 		}
 	}
 	return $string;
