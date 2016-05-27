@@ -1,3 +1,10 @@
+<?php
+$title = get_the_title();
+$title_display = hametuha_censor( $title );
+$excerpt = trim_long_sentence( get_the_excerpt(), 98 );
+$excerpt_display = hametuha_censor( $excerpt );
+$censored = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
+?>
 <li data-post-id="<?php the_ID() ?>" <?php post_class( 'media' ) ?>>
 	<a href="<?php the_permalink() ?>" class="media__link<?= has_post_thumbnail() ? '' : ' media__link--nopad' ?>">
 
@@ -14,7 +21,7 @@ HTML;
 
 			<!-- Title -->
 			<h2 class="media-body__title">
-				<?php the_title(); ?>
+				<?= is_doujin_profile_page() ? $title : $title_display ?>
 				<?php switch ( get_post_type() ) {
 					case 'post':
 						if ( $post->post_parent ) {
@@ -76,16 +83,21 @@ HTML;
 					<?php endif; ?>
 				</li>
 				<li class="static"><i class="icon-reading"></i> <?= number_format( get_post_length() ) ?>文字</li>
-				<?php if ( in_array($post->post_status, ['private', 'protected'] ) ) : ?>
+				<?php if ( in_array( $post->post_status, ['private', 'protected'] ) ) : ?>
 				<li>
 					<span class="label label-default"><?= esc_html( get_post_status_object(get_post_status())->label ) ?></span>
+				</li>
+				<?php endif; ?>
+				<?php if ( $censored ) : ?>
+				<li>
+					<span class="label label-danger">検閲済み</span>
 				</li>
 				<?php endif; ?>
 			</ul>
 
 			<!-- Excerpt -->
 			<div class="archive-excerpt">
-				<p class="text-muted"><?= trim_long_sentence( get_the_excerpt(), 98 ); ?></p>
+				<p class="text-muted"><?= is_doujin_profile_page() ? $excerpt : $excerpt_display ?></p>
 			</div>
 
 

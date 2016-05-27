@@ -34,7 +34,7 @@ $rank = get_the_ranking();
 
 	        <!-- Title -->
 	        <h2>
-	            <?php the_title(); ?>
+	            <?= hametuha_censor( get_the_title() ); ?>
 	            <?php if( 'post' == get_post_type() && ($terms = get_the_category()) ): ?>
 	                <?php foreach($terms as $category): ?>
 	                    <small><?= esc_html($category->name) ?></small>
@@ -69,7 +69,7 @@ $rank = get_the_ranking();
 
 	        <!-- Excerpt -->
 	        <div class="archive-excerpt">
-	            <p class="text-muted"><?= trim_long_sentence(get_the_excerpt(), 98); ?></p>
+	            <p class="text-muted"><?= hametuha_censor( trim_long_sentence(get_the_excerpt(), 98) ); ?></p>
 	        </div>
 
 

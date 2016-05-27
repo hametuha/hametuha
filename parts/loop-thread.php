@@ -7,7 +7,7 @@
 
 	    <div class="media-body">
 	        <h3 class="title">
-	           <?php the_title(); ?>
+	           <?= hametuha_censor( get_the_title() ); ?>
 	            <small><i class="icon-calendar"></i> <?= hametuha_passed_time($post->post_date) ?></small>
 	        </h3>
 	        <ul class="list-inline">
