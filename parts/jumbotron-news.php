@@ -18,6 +18,9 @@
 			<?php endforeach; ?>
 		</p>
 		<?php endif; ?>
+		<p class="text-center">
+			<a href="https://twitter.com/minico_me" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @minico_me</a>
+		</p>
 	</div>
 	
 

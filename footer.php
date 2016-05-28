@@ -8,9 +8,9 @@
 		<div class="row footer-subscription">
 
 			<div class="col-xs-12 col-sm-4 text-center">
-				<h3>メルマガ</h3>
+				<h3>破滅派通信</h3>
 				<p class="text-muted">
-					月一（努力目標）で配信しています。
+					月一（努力目標）で配信するメルマガです。
 				</p>
 				<a class="btn btn-primary" href="<?= home_url( '/merumaga/' ) ?>">
 					<i class="icon-mail"></i> 購読する
@@ -18,7 +18,7 @@
 			</div>
 
 			<div class="col-xs-12 col-sm-4 text-center">
-				<h3>Facebook</h3>
+				<h3>公式Facebook</h3>
 
 				<p class="text-muted">
 					破滅派からのお知らせが届きます。
@@ -30,10 +30,10 @@
 			</div>
 
 			<div class="col-xs-12 col-sm-4 text-center">
-				<h3>Twitter</h3>
+				<h3>公式Twitter</h3>
 
 				<p class="text-muted">
-					更新情報をつぶやいています。
+					更新情報などをつぶやいています。
 				</p>
 				<a href="https://twitter.com/hametuha" class="twitter-follow-button" data-show-count="false"
 				   data-lang="ja" data-size="large">@hametuhaさんをフォロー</a>

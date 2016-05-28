@@ -45,12 +45,21 @@
 				?>
 			</ol>
 
-			<div class="row news-ad__archive">
-				<p class="news-ad__title">Ads by Google</p>
-				<?php google_adsense( 4 ) ?>
+			<?php wp_pagenavi(); ?>
+
+			<div class="row">
+
+				<div class="col-xs-12 col-sm-6 news-ad--content">
+					<?php google_adsense( 4 ) ?>
+					<p class="news-ad__title">Ads by Google</p>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 news-related">
+					<div class="fb-page" data-href="https://www.facebook.com/minico.me/" data-width="500" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/minico.me/"><a href="https://www.facebook.com/minico.me/">ミニ子</a></blockquote></div></div>
+				</div>
+
 			</div>
 
-			<?php wp_pagenavi(); ?>
 
 			<?php get_search_form(); ?>
 

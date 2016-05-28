@@ -348,6 +348,31 @@
     }
   }
 
+  &-follow{
+    width: 100%;
+    table-layout: fixed;
+    margin: 20px auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: darken( $facebook-color, 10 );
+    color: #fff;
+    &__img{
+      height: 250px;
+      background: url( "../img/jumbotron/hamenew-share.jpg" ) center center no-repeat;
+      background-size: cover;
+    }
+    &__link{
+      padding-top: 20px;
+      padding-bottom: 20px;
+      vertical-align: middle;
+    }
+    &__like{
+      min-height: 30px;
+    }
+    &__caption{
+      color: lighten( $facebook-color, 20 );
+    }
+  }
 
   &-pager {
     @include clearfix();
