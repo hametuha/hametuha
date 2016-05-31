@@ -5,7 +5,7 @@ namespace Hametuha\MetaBoxes;
 
 use WPametu\UI\Admin\LeadMetaBox;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Textarea;
 
 class NewsMetaBox extends LeadMetaBox {
 
@@ -19,7 +19,7 @@ class NewsMetaBox extends LeadMetaBox {
 
 	protected $fields = [
 		'excerpt' => [
-			'class'       => TextArea::class,
+			'class'       => Textarea::class,
 			'label'       => '煽り文',
 			'required'    => true,
 			'description' => 'ニュースの概要です。SNSなどで使われるので、続きが読みたくなるような概要を書いてください。',

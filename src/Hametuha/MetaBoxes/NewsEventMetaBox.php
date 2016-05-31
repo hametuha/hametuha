@@ -9,7 +9,7 @@ use WPametu\UI\Field\GeoChecker;
 use WPametu\UI\Field\Radio;
 use WPametu\UI\Field\Select;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\TextArea;
+use WPametu\UI\Field\Textarea;
 
 class NewsEventMetaBox extends EditMetaBox {
 
@@ -67,7 +67,7 @@ class NewsEventMetaBox extends EditMetaBox {
 			'description' => '「住所」に入力した場所はこの地図のように表示されます。',
 		],
 	    '_event_desc' => [
-		    'class' => TextArea::class,
+		    'class' => Textarea::class,
 	        'label' => '備考',
 	        'rows' => 3,
 	    ],
