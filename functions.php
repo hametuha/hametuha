@@ -56,6 +56,7 @@ $script_flg = array();
 
 get_template_part( 'functions/utility' );
 get_template_part( 'functions/display' );
+get_template_part( 'functions/cdn' );
 get_template_part( 'functions/ranking' );
 get_template_part( 'functions/meta' );
 get_template_part( 'functions/post_types' );
@@ -84,3 +85,5 @@ get_template_part( 'functions/lwp' );
 get_template_part( 'functions/feed' );
 get_template_part( 'functions/mail' );
 get_template_part( 'functions/campaign' );
+get_template_part( 'functions/news' );
+get_template_part( 'functions/amp' );

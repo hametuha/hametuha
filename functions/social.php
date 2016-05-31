@@ -146,23 +146,78 @@ function hametuha_share( $post = null ) {
  *
  * @param int $unit_no
  *
- * @deprecated
  */
 function google_adsense( $unit_no = 1 ) {
 	switch ( $unit_no ) {
-		default:
-			echo <<<EOS
+		case 1:
+			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- 破滅派記事直後 -->
+<!-- はめにゅータイトル直下 -->
 <ins class="adsbygoogle"
      style="display:block"
      data-ad-client="ca-pub-0087037684083564"
-     data-ad-slot="4859005648"
+     data-ad-slot="9464744841"
      data-ad-format="auto"></ins>
 <script>
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-EOS;
+HTML;
+			break;
+		case 2:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅー記事下 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="3418211243"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+			break;
+		case 3:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーサイドバー -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="2999408842"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+			break;
+		case 4:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーアーカイブ上 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="4446972448"
+     data-ad-format="auto"></ins>
+<script>
+ (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+			break;
+		case 5:
+			echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- はめにゅーアーカイブ下 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="5923705643"
+     data-ad-format="auto"></ins>
+<script>
+ (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
 			break;
 	}
 }
@@ -314,6 +369,8 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 		$err = curl_error( $ch );
 		$no  = curl_errno( $ch );
 		error_log( sprintf( 'SLACK_ERR %s %s', $no, $err ) );
+	} elseif ( WP_DEBUG ) {
+		error_log( sprintf( 'SLACK_SUCCESS: %s %s', $result, json_encode( $payload ) ) );
 	}
 	curl_close( $ch );
 	return false !== $result;

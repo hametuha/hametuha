@@ -16,7 +16,7 @@ add_filter('ajax_query_attachments_args', function ( array $query ) {
 
 
 // 管理画面でだけ実行
-if( is_admin() ){
+if ( is_admin() ) {
 
     /**
      * コメントは自分の投稿についたものだけ
@@ -26,7 +26,7 @@ if( is_admin() ){
      */
     add_action('pre_get_comments', function( WP_Comment_Query &$comment_query ){
         $screen = get_current_screen();
-        if( 'edit-comments' === $screen->id && !current_user_can('edit_others_posts') ){
+        if( $screen && 'edit-comments' === $screen->id && !current_user_can('edit_others_posts') ){
             $comment_query->query_vars['post_author'] = get_current_user_id();
         }
     });
@@ -38,12 +38,12 @@ if( is_admin() ){
      * @action pre_get_posts
      * @param WP_Query &$wp_query
      */
-    add_action('pre_get_posts', function( WP_Query &$wp_query ){
+    add_action( 'pre_get_posts', function( WP_Query &$wp_query ) {
         $screen = get_current_screen();
-        if( $wp_query->is_main_query() && 'edit' === $screen->base && !current_user_can('edit_others_posts') ){
+        if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && !current_user_can( 'edit_others_posts' ) && 'news' != $screen->post_type ) {
             $wp_query->set('author', get_current_user_id());
         }
-    });
+    } );
 
     /**
      * アドミンバーをカスタマイズ

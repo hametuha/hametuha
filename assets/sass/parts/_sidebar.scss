@@ -15,8 +15,13 @@
   }
   img{
     max-width: 100%;
-    width: auto;
-    height: auto;
+  }
+  .widget_sp_image-image-link{
+    img{
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
   }
   .small-button{
     @extend .btn;
@@ -28,15 +33,6 @@
     @extend .nav;
     @extend .nav-pills;
     @extend .nav-stacked;
-  }
-  .widget_sp_image-image-link,
-  .widget_sp_image-link{
-    display: block;
-    text-align: center;
-  }
-  .widget_sp_image-description{
-    margin-top: 0.5em;
-    line-height: 1.2;
   }
   .recent-post-list{
     border-top: 1px dotted $thin-border;

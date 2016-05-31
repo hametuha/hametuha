@@ -158,7 +158,7 @@ function hametuha_user_role( $user = null ) {
 		return 'ゲスト';
 	}
 	if ( $user->has_cap( 'manage_options' ) ) {
-		return '管理者';
+		return '編集長';
 	} elseif ( $user->has_cap( 'edit_others_posts' ) ) {
 		return '編集者';
 	} elseif ( $user->has_cap( 'edit_posts' ) ) {

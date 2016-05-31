@@ -3,10 +3,32 @@
  * アイキャッチに関する処理
  */
 
+$content_width = 970;
+
+//画像のサイズ（小さい）を追加
+add_image_size( 'pinky', 160, 160, true );
+
+// プロフィール写真を追加
+add_image_size( 'profile', 300, 300, true );
+
+// ePub表紙用画像
+add_image_size( 'kindle-cover', 1200, 1920, true );
+
+/**
+ * 選択できる画像サイズを追加
+ *
+ * @param array $sizes
+ *
+ * @return array
+ */
+add_filter( 'image_size_names_choose', function ( $sizes ) {
+	$sizes['pinky'] = '小型正方形';
+	return $sizes;
+} );
 
 //投稿サムネイルを許可
-add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement' ] );
-set_post_thumbnail_size( 640, 480, false );
+add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news' ] );
+set_post_thumbnail_size( $content_width, 696, false );
 
 
 /**

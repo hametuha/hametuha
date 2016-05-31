@@ -25,24 +25,14 @@ register_sidebar(array(
 	'after_title' => '</h2>',
 ));
 
-//掲示板右
-register_sidebar(array(
-	'name' => '掲示板右',
-	'id' => 'thread-sidebar',
-	'description' => '掲示板の右に表示されます',
+// ニュース右
+register_sidebar( [
+	'name' => 'ニュース右',
+	'id' => 'news-sidebar',
+	'description' => 'ニュースページの右に表示されます',
 	'before_widget' => '<div id="%1$s" class="widget %2$s">',
 	'after_widget' => '</div>',
 	'before_title' => '<h2 class="widget-title">',
 	'after_title' => '</h2>',
-));
+] );
 
-//faq右
-register_sidebar(array(
-	'name' => 'よくある質問',
-	'id' => 'faq-sidebar',
-	'description' => 'よくある質問ページの右側に表示されます',
-	'before_widget' => '<div id="%1$s" class="widget %2$s">',
-	'after_widget' => '</div>',
-	'before_title' => '<h2 class="widget-title">',
-	'after_title' => '</h2>',
-));

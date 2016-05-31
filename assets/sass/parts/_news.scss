@@ -1,0 +1,456 @@
+.news {
+
+  &-eyecatch {
+    h1 {
+      margin: 0;
+      padding: $navbar-height 0 0;
+      text-align: center;
+      img {
+        max-width: 100%;
+        width: auto;
+        height: auto;
+      }
+    }
+  }
+
+  &__title {
+    font-weight: bold;
+    small {
+      font-weight: normal;
+    }
+  }
+  & + .post-title-thumbnail {
+    margin-top: 20px;
+    @media only screen and (max-width: $screen-xs-max) {
+      margin-top: 0;
+    }
+  }
+
+  &-list {
+    padding: 0;
+    margin: 0;
+    &--border {
+      border-top: 1px solid #ddd;
+    }
+    &__item {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+    }
+    &__link {
+      display: block;
+      padding: 10px;
+      position: relative;
+      @include transition( background-color 0.3s ease-in-out, color 0.3s ease-in-out );
+      &:link, &:visited {
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active {
+        color: $brand-primary;
+        text-decoration: none;
+        background: #eee;
+      }
+    }
+
+    &__thumbnail {
+      float: left;
+      margin-right: 10px;
+      max-width: 80px;
+      width: auto;
+      height: auto;
+      .news-list__vertical & {
+        @media only screen and (min-width: $screen-sm-max + 1) {
+          max-width: 100% !important;
+          display: block;
+          float: none;
+          margin: 0 auto 10px;
+        }
+        @media only screen and (max-width: $screen-sm-max) {
+          max-width: 80px !important;
+        }
+        & + .news-list__body {
+          @media only screen and (min-width: $screen-sm-max + 1) {
+            margin-left: 0;
+          }
+        }
+      }
+      & + .news-list__body {
+        margin-left: 80px + 10px;
+      }
+    }
+
+    &__title {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    &__meta {
+      font-size: 12px;
+      color: #888;
+      margin: 0;
+      span {
+        margin-right: 0.5em;
+      }
+      i {
+        color: #aaa;
+      }
+    }
+
+  }
+
+  &-excerpt {
+    padding: 15px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #000;
+    font-weight: bold;
+    p {
+      margin: 0 0 1em;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &-author {
+
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+
+    &__link {
+      display: block;
+      padding: 15px;
+      &:link, &:visited {
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active {
+        color: $brand-primary;
+        text-decoration: none;
+        background: #eee;
+      }
+    }
+
+    &__img {
+      float: left;
+      margin-right: 15px;
+    }
+
+    &__name {
+      font-weight: bold;
+    }
+    &__position {
+      color: #888;
+    }
+
+    &__desc {
+      display: block;
+      margin: 5px 0 0;
+      font-size: 0.85em;
+      color: #888;
+    }
+
+  }
+
+  &-keywords {
+    &__link {
+      display: inline-block;
+      padding: 5px 10px;
+      margin-right: 1em;
+      margin-bottom: 1em;
+      border: 1px solid $brand-primary;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px;
+      transition: color 0.25s linear, background-color 0.25s linear;
+      &:link, &:visited {
+        color: $brand-primary;
+        background-color: #fff;
+        text-decoration: none;
+      }
+      &:hover, &:active {
+        color: #fff;
+        background-color: $brand-primary;
+      }
+    }
+  }
+
+  &-ad {
+    &--head {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    &__archive {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    &--content {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    &__title {
+      font-size: 10px;
+      text-align: center;
+      color: #aaa;
+      margin: 5px 0 0;
+    }
+  }
+
+  &-related {
+    margin-bottom: 20px;
+  }
+
+  &-comment {
+    margin: 20px 0;
+  }
+
+  &-related {
+    &__title {
+      margin: 0;
+    }
+  }
+
+  %divider-box {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  &-related {
+    @extend %divider-box;
+    &__title {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    &__list {
+      padding: 0;
+      margin: 0;
+      & > i {
+        color: #ccc;
+      }
+    }
+    &__item {
+      list-style: none;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+  }
+
+  &-books {
+    @extend %divider-box;
+    &__title {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    &__list {
+      margin: 0 0 20px;
+      padding: 0;
+      border-bottom: 1px dashed #eee;
+    }
+    &__item {
+      list-style: none;
+      margin: 0;
+      border-top: 1px dashed #eee;
+    }
+    &__image {
+      float: left;
+      max-width: 120px;
+      width: auto;
+      height: auto;
+      @media only screen and (max-width: $screen-xs-max) {
+        max-width: 80px;
+      }
+    }
+    &__desc {
+      .news-books__image + & {
+        margin-left: 120px + 20px;
+        @media only screen and (max-width: $screen-xs-max) {
+          margin-left: 80px + 10px;
+        }
+      }
+    }
+    &__note {
+      margin: 0;
+      color: #ccc;
+    }
+    &__link {
+      display: block;
+      padding: 10px;
+      &:link, &:visited {
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active {
+        background: #eee;
+        text-decoration: none;
+        color: $brand-primary;
+      }
+    }
+    &__name {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    &__author,
+    &__publisher,
+    &__rank {
+      color: #888;
+      i {
+        color: #ccc;
+      }
+    }
+  }
+
+  &-event {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    background: #eee;
+    &__title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    i {
+      color: #888;
+    }
+    &__map {
+      &--inner {
+        height: 250px;
+      }
+    }
+  }
+
+  &-recruit {
+    background: #444;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+
+    &__eyecatch {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      text-align: center;
+    }
+    &__img {
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
+    &__title {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  &-follow{
+    width: 100%;
+    table-layout: fixed;
+    margin: 20px auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background: darken( $facebook-color, 10 );
+    color: #fff;
+    &__img{
+      height: 250px;
+      background: url( "../img/jumbotron/hamenew-share.jpg" ) center center no-repeat;
+      background-size: cover;
+      padding: 0;
+    }
+    &__link{
+      padding-top: 20px;
+      padding-bottom: 20px;
+      vertical-align: middle;
+    }
+    &__like{
+      min-height: 30px;
+    }
+    &__caption{
+      color: lighten( $facebook-color, 20 );
+    }
+  }
+
+  &-pager {
+    @include clearfix();
+    margin: 20px 0 0;
+    padding: 0;
+    border-top: 1px solid $thin-border;
+    border-bottom: 1px solid $thin-border;
+    li {
+      width: 50%;
+      float: left;
+      list-style: none;
+      &:hover{
+        background: #f9f9f9;
+      }
+      @media only screen and (max-width: $screen-sm-max ) {
+        width: 100%;
+        float: none;
+        &:nth-child(even) a{
+          border-left: none;
+          border-top: 1px solid $thin-border;
+        }
+      }
+      &.previous a{
+        border-right: 1px solid $thin-border;
+        @media only screen and (max-width: $screen-sm-max ) {
+          border-right: none;
+        }
+        padding-left: 40px;
+        i{
+          left: 10px;
+        }
+      }
+      &.next {
+        text-align: right;
+        float: right;
+        a{
+          padding-right: 40px;
+        }
+        &:first-child a{
+          border-left: 1px solid $thin-border;
+        }
+        i{
+          right: 10px;
+        }
+      }
+
+      a {
+        display: block;
+        font-size: 16px;
+        padding: 20px 20px;
+        min-height: 3.2em;
+        line-height: 1.1;
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        position: relative;
+        &:link, &:visited {
+          color: #000;
+          text-decoration: none;
+        }
+        &:hover {
+          color: $brand-primary;
+          text-decoration: none;
+        }
+        small{
+          color: #aaa;
+          font-size: 10px;
+        }
+        i {
+          position: absolute;
+          color: #999;
+          top: 50%;
+          margin-top: -0.5em;
+        }
+      }
+    }
+  }
+}
+
