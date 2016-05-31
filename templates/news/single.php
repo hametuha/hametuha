@@ -28,6 +28,12 @@
 						<?php get_template_part( 'parts/meta', 'single' ) ?>
 
 					</div><!-- //.post-meta -->
+
+
+					<div class="row news-ad news-ad--head">
+						<p class="news-ad__title">Ads by Google</p>
+						<?php google_adsense( 1 ) ?>
+					</div>
 					
 					<?php get_template_part( 'parts/meta', 'thumbnail' ) ?>
 
@@ -36,12 +42,6 @@
 						<?php the_excerpt() ?>
 					</div>
 					<?php endif; ?>
-
-
-					<div class="row news-ad news-ad--head">
-						<p class="news-ad__title">Ads by Google</p>
-						<?php google_adsense( 1 ) ?>
-					</div>
 
 
 					<div class="post-content clearfix">

@@ -1,9 +1,11 @@
 <?php get_header() ?>
 
 <div class="news-eyecatch">
-	<h1>
+	<h1 class="text-center">&nbsp;
+<?php /*
 		<img src="<?= get_template_directory_uri() ?>/assets/img/jumbotron/hamenew.jpg"
 	         alt="<?= esc_attr( hamenew_copy() ) ?>">
+*/ ?>
 	</h1>
 </div><!-- //.news-eyecatch -->
 
