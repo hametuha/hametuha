@@ -277,6 +277,14 @@ HTML;
 	foreach ( $twitters as $key => $content ) {
 		printf( '<meta name="twitter:%s" content="%s" />', $key, $content );
 	}
+
+	if ( is_hamenew() ) {
+		echo <<<HTML
+
+<meta property="fb:pages" content="112969535414323" />
+
+HTML;
+	}
 }, 1 );
 
 
