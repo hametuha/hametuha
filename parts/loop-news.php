@@ -1,7 +1,9 @@
 <li class="news-list__item">
 	<a href="<?php the_permalink() ?>" class="news-list__link clearfix">
 		<?php if ( has_post_thumbnail() ) : ?>
-			<?php the_post_thumbnail( 'thumbnail', [ 'class' => 'news-list__thumbnail' ] ) ?>
+			<div class="news-list__image">
+				<?php the_post_thumbnail( 'thumbnail', [ 'class' => 'news-list__thumbnail' ] ) ?>
+			</div>
 		<?php endif ?>
 
 		<div class="news-list__body">

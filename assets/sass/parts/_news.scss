@@ -54,6 +54,15 @@
       }
     }
 
+    &__image{
+      .news-list__vertical &{
+        @media only screen and (min-width: $screen-sm-max + 1) {
+          max-height: 200px;
+          overflow: hidden;
+        }
+      }
+    }
+
     &__thumbnail {
       float: left;
       margin-right: 10px;
