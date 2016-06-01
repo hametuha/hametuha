@@ -213,6 +213,7 @@ add_action( 'init', function () {
  */
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
+		'^news_sitemap/?$' => 'index.php?feed=news_sitemap&post_type=news',
 		'^news/article/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&paged=$matches[2]',
 		'^news/article/([0-9]+)/amp/?$'                => 'index.php?p=$matches[1]&post_type=news&amp=true',
 		'^news/article/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=news',
