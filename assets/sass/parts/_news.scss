@@ -250,12 +250,23 @@
     &__list {
       margin: 0 0 20px;
       padding: 0;
-      border-bottom: 1px dashed #eee;
+      @include clearfix();
     }
     &__item {
       list-style: none;
       margin: 0;
-      border-top: 1px dashed #eee;
+      border-bottom: 1px dashed #eee;
+      &:first-child{
+        border-top: 1px dashed #eee;
+      }
+      @media only screen and (min-width: $screen-sm-min ) {
+        border: none !important;
+        float: left;
+        width: 50%;
+        &:nth-child( 2n + 1 ){
+          clear: left;
+        }
+      }
     }
     &__image {
       float: left;

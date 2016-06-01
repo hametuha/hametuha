@@ -219,7 +219,7 @@ function hamenew_books( $post = null ) {
 	$post = get_post( $post );
 	$asin = get_post_meta( $post->ID, '_news_related_books', true );
 	if ( ! $asin || ! class_exists( 'WP_Hamazon_Controller' ) || ( ! WP_Hamazon_Controller::get_instance()->amazon ) ) {
-		return [ ];
+		return [];
 	}
 
 	return array_filter( array_map( function ( $code ) {
@@ -238,6 +238,8 @@ function hamenew_books( $post = null ) {
 		$author    = (string) $item->ItemAttributes->Author;
 		if ( isset( $item->LargeImage ) ) {
 			$src = (string) $item->LargeImage->URL;
+			// SSL対応
+			$src = str_replace( 'http://ecx.images-amazon.com', 'https://images-na.ssl-images-amazon.com', $src );
 		} else {
 			$src = false;
 		}

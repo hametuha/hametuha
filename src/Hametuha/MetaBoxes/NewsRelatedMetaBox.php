@@ -33,7 +33,7 @@ class NewsRelatedMetaBox extends EditMetaBox {
 		'_news_related_books' => [
 			'class'       => Textarea::class,
 			'label'       => '関連書籍',
-			'description' => 'ASINを1行に1つ入力してください。ASINはAmazonの商品コードで、Amazonサイトで調べることができます。',
+			'description' => 'ISBNまたはASINを1行に1つ入力してください。ASINはAmazonの商品コードで、Amazonサイトで調べることができます。',
 			'rows'        => 3,
 			'placeholder' => 'B00ZQ66UG6',
 		],
