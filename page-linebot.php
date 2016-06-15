@@ -1,21 +1,50 @@
 <?php
 // @see http://qiita.com/srea/items/58ba0f7d870a6ee3da2a
+// @see https://developers.line.me/bot-api/api-reference#receiving_messages
 nocache_headers();
-$json_string = file_get_contents( 'php://input' );
-$jsonObj     = json_decode( $json_string );
-$to          = $jsonObj->{"result"}[0]->{"content"}->{"from"};
+$json_string  = file_get_contents( 'php://input' );
+$jsonObj      = json_decode( $json_string );
+$to           = $jsonObj->result[0]->content->from;
+$message      = $jsonObj->result[0]->content->text;
+$content_type = $jsonObj->result[0]->content->contentType;
+switch ( $content_type ) {
+	case 1:
+	case 10:
+		$ch = curl_init( 'https://chatbot-api.userlocal.jp/api/chat' );
+		curl_setopt_array( $ch, [
+			CURLOPT_POST => true,
+		    CURLOPT_POSTFIELDS => [
+			    'key' => USER_LOCAL_KEY,
+			    'message' => $message,
+			    'bot_name' => 'めつかれ！',
+			    'platform' => 'line',
+			    'user_id'  => $to,
+		    ],
+		    CURLOPT_RETURNTRANSFER => true,
+		    CURLOPT_SSL_VERIFYPEER => false,
+		] );
+		$res = json_decode( curl_exec( $ch ) );
+		if ( $res && 'success' == $res->status ) {
+			$response = $res->result;
+		} else {
+			$response = sprintf( 'すいません、エラーです……（%s）', curl_errno( $ch ) );
+		}
+		curl_close( $ch );
 
-// テキストで返事をする場合
-$response_format_text = [ 'contentType' => 1, "toType" => 1, "text" => "おはめつ！" ];
-// 画像で返事をする場合
-$response_format_image = [
-	'contentType'        => 2,
-	"toType"             => 1,
-	'originalContentUrl' => "画像URL",
-	"previewImageUrl"    => "サムネイル画像URL"
-];
-// 他にも色々ある
-// ....
+		$response_format_text = [
+			'contentType' => 1,
+			"toType" => 1,
+			"text" => $response,
+		];
+		break;
+	default:
+		$response_format_text = [
+			'contentType' => 1,
+			"toType" => 1,
+			"text" => "すいません、まだそれは理解できません……",
+		];
+		break;
+}
 
 // toChannelとeventTypeは固定値なので、変更不要。
 $post_data = [
