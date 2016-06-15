@@ -87,8 +87,7 @@
 						<a href="<?= $url ?>" class="btn btn-default btn-block">もっと見る</a>
 					</p>
 				</div>
-
-				<?php wp_reset_postdata(); endif; ?>
+			<?php wp_reset_postdata(); endif; ?>
 
 
 			<div class="col-xs-12 col-sm-4">
@@ -104,6 +103,27 @@
 				</ul>
 				<p>
 					<a href="<?= home_url( '/latest/' ) ?>" class="btn btn-default btn-block">すべての新着投稿</a>
+				</p>
+			</div>
+
+			<div class="col-xs-12 col-sm-4">
+				<h2>はめにゅー</h2>
+				<small>文学関連ニュース</small>
+				<ul class="post-list">
+					<?php
+					foreach ( get_posts( [
+						'post_type' => 'news',
+						'post_status' => 'publish',
+						'posts_per_page' => 5,
+					] ) as $post ) {
+						setup_postdata( $post );
+						hameplate( 'parts/loop', 'news' );
+					}
+					wp_reset_postdata();
+					?>
+				</ul>
+				<p>
+					<a href="<?= get_post_type_archive_link( 'news' ) ?>" class="btn btn-default btn-block">はめにゅートップ</a>
 				</p>
 			</div>
 

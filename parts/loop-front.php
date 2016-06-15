@@ -4,6 +4,7 @@ $title_display = hametuha_censor( $title );
 $excerpt = trim_long_sentence( get_the_excerpt(), 98 );
 $excerpt_display = hametuha_censor( $excerpt );
 $censored = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
+$no_desc = isset( $description ) && ( false === $description );
 ?>
 <li>
 	<a href="<?php the_permalink() ?>" class="clearfix">
@@ -36,7 +37,7 @@ $censored = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $e
 			<?php endif; ?>
 		</div>
 
-		<?php if ( has_excerpt() ) : ?>
+		<?php if ( has_excerpt() && ! $no_desc ) : ?>
 			<div class="list-excerpt">
 				<?= esc_html( is_doujin_profile_page() ? $excerpt : $excerpt_display ); ?>
 			</div>
