@@ -48,9 +48,14 @@ jQuery(document).ready(function ($) {
         }
     }
 
+    // 書くボタン
     $('.write-panel-btn').click(function(e) {
         e.preventDefault();
         $('#write-panel').toggleClass('open');
     } );
+
+    // スクロール
+    var headroom  = new Headroom(document.getElementById('header'));
+    headroom.init();
 
 });
