@@ -116,7 +116,7 @@
 
 								<div class="col-sm-12 col-md-6 news-event__map">
 									<div class="news-event__map--inner">
-										<iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDqiZUrqda0DVlw6HelWEbPLpcgFU0wXqM&q=<?= rawurlencode( $post->_event_address ) ?>"></iframe>
+										<iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyDDZqyowmW69rWqntGmiYRg1u3tira2Wm8&q=<?= rawurlencode( $post->_event_address ) ?>"></iframe>
 									</div>
 								</div><!-- -->
 

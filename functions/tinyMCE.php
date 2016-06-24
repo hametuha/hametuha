@@ -78,17 +78,38 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 			],
 		],
 	];
-	if ( $screen && 'newsletter' == $screen->post_type ) {
-		$styles[] = [
-			'title' => 'ボタン',
-			'items' => [
-				[
-					'title'    => 'リンクボタン',
-					'selector' => 'a',
-					'classes'  => 'btn',
-				],
-			],
-		];
+	if ( $screen ) {
+		switch ( $screen->post_type ) {
+			case 'news':
+				$styles[] = [
+					'title' => 'インタビュー',
+					'items' => [
+						[
+							'title' => '回答者',
+							'inline' => 'span',
+							'classes' => 'interviewee',
+						],
+						[
+							'title' => '聞き手',
+							'block' => 'p',
+							'classes' => 'interviewer',
+						],
+					],
+				];
+				break;
+			case 'newsletter':
+				$styles[] = [
+					'title' => 'ボタン',
+					'items' => [
+						[
+							'title'    => 'リンクボタン',
+							'selector' => 'a',
+							'classes'  => 'btn',
+						],
+					],
+				];
+				break;
+		}
 	}
 	$initArray['style_formats'] = json_encode( $styles );
 
