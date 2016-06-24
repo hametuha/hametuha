@@ -65,6 +65,10 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 				'inline'  => 'strong',
 				'classes' => 'text-emphasis',
 			],
+		    [
+			    'title'   => '編注',
+		        'inline'  => 'small',
+			],
 		],
 	];
 	// ブロック
