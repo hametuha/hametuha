@@ -17,10 +17,6 @@
 			</h4>
 
 			<p class="news-list__meta">
-				<span class="news-list__author">
-					<?= get_avatar( get_the_author_meta( 'ID' ), 24, '', get_the_author(), [ 'class' => 'img-circle news-list__avatar' ] ) ?>
-					<?php the_author(); ?>
-				</span>
 
 				<span class="news-list__time">
 					<i class="icon-clock"></i> <?= hametuha_passed_time( $post->post_date ) ?>

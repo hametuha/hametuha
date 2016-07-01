@@ -244,7 +244,12 @@
 						</h2>
 						<p class="news-keywords__wrapper">
 							<?= implode( ' ', array_map( function ( $term ) {
-								return sprintf( '<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s</a>', get_term_link( $term ), esc_html( $term->name ) );
+								return sprintf(
+									'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
+									get_term_link( $term ),
+									esc_html( $term->name ),
+									$term->count > 100 ? '99+' : number_format( $term->count )
+								);
 							}, $terms ) ); ?>
 						</p>
 					<?php endif; ?>

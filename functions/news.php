@@ -406,6 +406,11 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 			break;
 		case 'publish':
 			// 投稿が公開された
+			// まだpost_metaがなかったら保存
+			if ( ! get_post_meta( $post->ID, '_news_published', true ) ) {
+				update_post_meta( $post->ID, '_news_published', $post->post_date );
+			}
+			// なにかする
 			switch ( $old_status ) {
 				case 'publish':
 				case 'private':

@@ -54,6 +54,11 @@
     }
   }
 
+  // 強調
+  .text-emphasis{
+    -webkit-text-emphasis-style: filled sesame ;
+  }
+
   .interviewer{
     color: #777;
     font-style: italic;
@@ -347,11 +352,6 @@
       &:after{
         content: '〕';
       }
-    }
-
-    // 強調
-    .text-emphasis{
-      -webkit-text-emphasis-style: filled sesame ;
     }
     strong{
       font-family: $work-bold;
