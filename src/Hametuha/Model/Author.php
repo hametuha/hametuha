@@ -175,6 +175,24 @@ SQL;
 	}
 
 	/**
+	 * ニュースの投稿者を取得する
+	 *
+	 * @return array
+	 */
+	public function get_journalists() {
+		$users = $this->select( ', u.*' )
+		            ->distinct( 'u.ID' )
+		            ->from( "{$this->db->users} AS u" )
+		            ->join( "{$this->posts} AS p", 'p.post_author = u.ID', 'INNER' )
+		            ->wheres( [
+			            'p.post_type = %s'   => 'news',
+			            'p.post_status = %s' => 'publish',
+		            ] )
+		            ->result();
+		return $users;
+	}
+
+	/**
 	 * ユーザー名を更新する
 	 *
 	 * @param string $login
