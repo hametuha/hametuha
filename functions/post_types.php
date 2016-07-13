@@ -95,7 +95,7 @@ add_action( 'init', function () {
 				return $term->name;
 			}, get_the_terms( $post, 'faq_cat' ) );
 			?>
-			<input type="hidden" name="tax-input[faq_cat]" value="<?= esc_attr( implode( ', ', $post_terms ) ) ?>" />
+			<input type="hidden" name="tax_input[faq_cat]" value="<?= esc_attr( implode( ', ', $post_terms ) ) ?>" />
 			<p class="taxonomy-check-list">
 				<?php foreach ( get_terms( 'faq_cat', [ 'hide_empty' => false ] ) as $term ) : ?>
 					<label class="taxonomy-check-label">
