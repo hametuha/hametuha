@@ -14,7 +14,6 @@ use WPametu\Http\Input;
  */
 class NewsListTable extends \WP_List_Table {
 
-
 	public function __construct() {
 		parent::__construct( [
 			'singular' => 'news',
@@ -79,6 +78,18 @@ class NewsListTable extends \WP_List_Table {
 					</option>
 				<?php endforeach; ?>
 			</select>
+			<select name="news-year">
+				<option value="0"<?php selected( ! $this->input->get( 'news-year' ) ) ?>>すべての年</option>
+				<?php for ( $i = (int) date_i18n( 'Y' ); $i >= 2016; $i-- ) : ?>
+					<option value="<?= $i ?>"<?php selected( $i == $this->input->get('news-year') ) ?>><?= $i ?>年</option>
+				<?php endfor; ?>
+			</select>
+			<select name="news-month">
+				<option value="0"<?php selected( ! $this->input->get( 'news-month' ) ) ?>>すべての月</option>
+				<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
+					<option value="<?= $i ?>"<?php selected( $i == $this->input->get('news-month') ) ?>><?= $i ?>月</option>
+				<?php endfor; ?>
+			</select>
 			<?php
 		}
 		echo '<input type="submit" class="button" value="フィルター" />';
@@ -99,6 +110,8 @@ class NewsListTable extends \WP_List_Table {
 			'posts_per_page' => 20,
 		    'paged' => max( 1, $this->get_pagenum() ),
 		    's' => $this->input->get( 's' ),
+		    'tax_query' => [],
+		    'meta_query' => [],
 		];
 		// 投稿者
 		if ( current_user_can( 'edit_others_posts' ) ) {
@@ -108,14 +121,29 @@ class NewsListTable extends \WP_List_Table {
 		}
 		// タクソノミー
 		if ( $term_id = $this->input->get( 'genre' ) ) {
-			$args['tax_query'] = [
-				[
-					'taxonomy' => 'genre',
-				    'terms' => $term_id,
-				    'field' => 'id',
-				],
+			$args['tax_query'][] = [
+				'taxonomy' => 'genre',
+				'terms'    => $term_id,
+				'field'    => 'id',
 			];
 		}
+		// 公開日による絞込
+		$year = $this->input->get( 'news-year' );
+		$month = $this->input->get( 'news-month' );
+		if ( $year && $month ) {
+			$start = sprintf( '%04d-%02d-01 00:00:00', $year, $month );
+			$d = new \DateTime();
+			$d->setTimezone( new \DateTimeZone( 'Asia/Tokyo' ) );
+			$d->setDate( $year, $month, 1 );
+			$end = $d->format( 'Y-m-t 23:59:59' );
+			$args['meta_query'][] = [
+				'key' => '_news_published',
+			    'value' => [ $start, $end ],
+			    'compare' => 'BETWEEN',
+			    'type'   => 'DATETIME',
+			];
+		}
+		// 並び順
 		switch ( $this->input->get( 'orderby' ) ) {
 			case 'pv':
 				$args['meta_key'] = '_current_pv';
