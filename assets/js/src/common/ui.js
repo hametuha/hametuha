@@ -55,7 +55,17 @@ jQuery(document).ready(function ($) {
     } );
 
     // スクロール
-    var headroom  = new Headroom(document.getElementById('header'));
-    headroom.init();
+    var header = document.getElementById('header');
+    if ( header ) {
+        var headroom = new Headroom(header, {
+            onPin : function() {
+                $('body').removeClass( 'header-hidden' );
+            },
+            onUnpin : function() {
+                $('body').addClass( 'header-hidden' );
+            }
+        });
+        headroom.init();
+    }
 
 });

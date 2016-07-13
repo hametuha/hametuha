@@ -778,15 +778,24 @@ form{
   border-radius: 0;
   position: fixed;
   opacity: 0;
+  transform: translateY(-100%);
   top: $navbar-height;
-  margin-top: -1 * $navbar-height;
   left: 0;
   right: 0;
   height: auto;
   z-index: $zindex-navbar-fixed - 1;
-  @include transition(margin-top .5s ease-out 0, opacity .5s ease-out 0);
+  will-change: transform, opacity, top;
+  transition: transform .3s ease-in-out, opacity .3s ease-in-out, top .3s ease-in-out;
+  .header-hidden &{
+    @include head-room() {
+      top: 0;
+    }
+  }
+  .no-header &{
+    top: 0;
+  }
   &-on {
-    margin-top: 0;
+    transform: translateY(0);
     opacity: 1;
   }
 }

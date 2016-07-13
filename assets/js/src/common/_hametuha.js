@@ -128,12 +128,19 @@
                     message +
                 '</div>';
             $alert = $(body);
-            $('body').append($alert);
+            if ( $('#whole-body').length ) {
+                $('#whole-body').append($alert);
+            } else {
+                $('body').append($alert);
+            }
             setTimeout(function(){
                 $alert.addClass('alert-sticky-on');
             }, 10);
             setTimeout(function(){
-                $alert.remove();
+                $alert.removeClass('alert-sticky-on');
+                setTimeout(function(){
+                    $alert.remove();
+                }, 300);
             }, delay);
         },
 

@@ -108,6 +108,12 @@ body.single-post{
   position: fixed;
   z-index: 20;
   top: $navbar-height + $subnavbar-height;
+  transition: top .3s ease-in-out;
+  .header-hidden &{
+    @include head-room(){
+      top: 0;
+    }
+  }
   border: none;
   width: 100%;
   height: $single-footer-height;

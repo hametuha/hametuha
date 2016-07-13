@@ -128,12 +128,19 @@
                     message +
                 '</div>';
             $alert = $(body);
-            $('body').append($alert);
+            if ( $('#whole-body').length ) {
+                $('#whole-body').append($alert);
+            } else {
+                $('body').append($alert);
+            }
             setTimeout(function(){
                 $alert.addClass('alert-sticky-on');
             }, 10);
             setTimeout(function(){
-                $alert.remove();
+                $alert.removeClass('alert-sticky-on');
+                setTimeout(function(){
+                    $alert.remove();
+                }, 300);
             }, delay);
         },
 
@@ -4084,8 +4091,18 @@ jQuery(document).ready(function ($) {
     } );
 
     // スクロール
-    var headroom  = new Headroom(document.getElementById('header'));
-    headroom.init();
+    var header = document.getElementById('header');
+    if ( header ) {
+        var headroom = new Headroom(header, {
+            onPin : function() {
+                $('body').removeClass( 'header-hidden' );
+            },
+            onUnpin : function() {
+                $('body').addClass( 'header-hidden' );
+            }
+        });
+        headroom.init();
+    }
 
 });
 

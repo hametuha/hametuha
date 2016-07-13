@@ -1,4 +1,11 @@
-<?php get_header( 'meta' ); ?>
+<?php
+add_filter( 'body_class', function( $classes ){
+	$classes[] = 'no-header';
+	return $classes;
+} );
+
+get_header( 'meta' );
+?>
 <div id="login-form">
 
 	<h1 class="text-center">
