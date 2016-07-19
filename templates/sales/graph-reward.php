@@ -8,6 +8,8 @@
 
 	<p class="text-muted">あなたが受け取ることのできる報酬です。</p>
 
+
+
 	<div class="alert alert-warning">
 		<p>
 			大変申し訳ございませんが、このページは現在作成中です。

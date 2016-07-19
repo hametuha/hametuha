@@ -187,6 +187,34 @@ class Sales extends Model {
 	}
 
 	/**
+	 * 売上リポートを作成
+	 *
+	 * @param int $year
+	 * @param int $month
+	 *
+	 * @return array|mixed|null
+	 */
+	public function monthly_report( $year, $month ) {
+		$sales = UserSales::get_instance();
+		list( $start, $end ) = $sales->get_range( $year, $month );
+		$result = $this
+			->select( 'p.post_author as user_id, p.post_title as label, s.asin, SUM(s.unit) as unit, SUM(s.royalty) as sub_total' )
+			->from( "{$this->table} as s" )
+			->join( "{$this->db->postmeta} as pm", "pm.meta_key = '_asin' AND pm.meta_value = s.asin" )
+			->join( "{$this->db->posts} as p", 'p.ID = pm.post_id' )
+			->wheres( [
+				's.date >= %s' => $start,
+			    's.date <= %s' => $end,
+			    's.price != %d' => 0,
+			] )
+			->group_by( 's.asin' )
+			->result();
+		return array_filter( $result, function( $row ) {
+			return $row->user_id && ( 0 < $row->sub_total );
+		} );
+	}
+
+	/**
 	 * Get total result
 	 *
 	 * @return int
