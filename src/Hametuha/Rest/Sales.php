@@ -197,20 +197,35 @@ class Sales extends RestTemplate {
 	public function get_account( $page = '', $paged = 1 ) {
 		$this->auth_redirect();
 		// Top page
-		$this->title .= ' | 支払い先';
+		$this->title .= ' | 支払い情報';
 		$this->set_data( [
-			'breadcrumb' => '支払い先',
+			'breadcrumb' => '支払い情報',
 			'current'    => 'account',
 			'graph'      => 'account',
+		    'account'    => hametuha_bank_account( get_current_user_id() ),
+		    'address'    => hametuha_billing_address( get_current_user_id() ),
 		] );
 		$this->response();
 	}
 
 	/**
-	 *
+	 * Save billing information
 	 */
 	public function post_account() {
 		$this->auth_redirect();
+		if ( ! $this->verify_nonce() ) {
+			$this->error( '不正なアクションです。やり直してください。', 401 );
+		}
+		foreach ( [
+			'bank' => [ 'group', 'branch', 'type', 'number', 'name' ],
+			'billing' => [ 'name', 'number', 'address' ],
+		] as $group => $keys ) {
+			foreach ( $keys as $key ) {
+				$meta_key = "_{$group}_{$key}";
+				update_user_meta( get_current_user_id(), $meta_key, $this->input->post( "{$group}_{$key}" ) );
+			}
+		}
+		wp_redirect( home_url( '/sales/account/' ) );
 		exit;
 	}
 

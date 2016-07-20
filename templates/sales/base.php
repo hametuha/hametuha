@@ -34,30 +34,30 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs nav-tabs--analytics">
 						<li role="presentation" class="<?= $current ? '' : 'active' ?>">
-							<a href="<?= home_url( '/sales/', 'https' ) ?>" aria-controls="statistics">
+							<a href="<?= home_url( '/sales/' ) ?>" aria-controls="statistics">
 								売り上げ
 							</a>
 						</li>
 						<li role="presentation" class="<?= 'reward' == $current ? 'active' : '' ?>">
-							<a href="<?= home_url( '/sales/reward/', 'https' ) ?>" aria-controls="readers">
+							<a href="<?= home_url( '/sales/reward/' ) ?>" aria-controls="readers">
 								確定報酬
 							</a>
 						</li>
 						<li role="presentation" class="<?= 'payment' == $current ? 'active' : '' ?>">
-							<a href="<?= home_url( '/sales/payment/', 'https' ) ?>" aria-controls="readers">
+							<a href="<?= home_url( '/sales/payment/' ) ?>" aria-controls="readers">
 								入金履歴
 							</a>
 						</li>
 						<li role="presentation" class="<?= 'account' == $current ? 'active' : '' ?>">
-							<a href="<?= home_url( '/sales/account/', 'https' ) ?>" aria-controls="readers">
-								支払い先
+							<a href="<?= home_url( '/sales/account/' ) ?>" aria-controls="readers">
+								支払い情報
 							</a>
 						</li>
 					</ul>
 
 					<div class="statistics statistics--main">
 
-						<?php if ( isset($endpoint) ) : ?>
+						<?php if ( isset( $endpoint ) ) : ?>
 
 						<form class="form-inline statistics__form" id="analytics-date-form" method="get"
 							  action="">
@@ -99,6 +99,7 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 									Amazonから破滅派に振り込まれる金額です。
 									このうち、<a class="alert-link" href="<?= home_url( '/contract/ebook-agency-contract/', 'https' ) ?>">規約に書いてある手数料</a>
 									を引いたものがあなたの収益となります。
+									源泉徴収を行いますので、差し引かれた分は確定申告で取り返してください。
 								</dd>
 							</dl>
 						</div><!-- //.alert -->

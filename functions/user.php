@@ -38,7 +38,7 @@ function hametuha_user_write_actions() {
 	} else {
 		$actions = array_merge( [
 			'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', '' ],
-		    'key3' => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
+			'key3'  => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
 		], $actions );
 	}
 	if ( current_user_can( 'edit_posts' ) ) {
@@ -46,9 +46,15 @@ function hametuha_user_write_actions() {
 			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '' ],
 			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '' ],
 			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '' ],
-		    'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '' ],
+			'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '' ],
 		];
-		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
+		if ( is_singular( [
+				'post',
+				'page',
+				'announcement',
+				'series'
+			] ) && current_user_can( 'edit_post', get_the_ID() )
+		) {
 			$editor_actions = array_merge( [
 				'pencil6' => [ get_edit_post_link(), 'このページを編集', false, '' ],
 			], $editor_actions );
@@ -350,7 +356,7 @@ function is_administrator( $user_id ) {
  * @return bool|string
  */
 function is_doujin_profile_page() {
-	if ( \Hametuha\Rest\Doujin::class == str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match )  ) {
+	if ( \Hametuha\Rest\Doujin::class == str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match ) ) {
 		return $match[1];
 	} else {
 		return false;
@@ -467,4 +473,81 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 	} else {
 		return 100;
 	}
+}
+
+/**
+ * 銀行口座情報を取得する
+ *
+ * @param int $user_id
+ *
+ * @return array
+ */
+function hametuha_bank_account( $user_id = 0 ) {
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+	$account = [];
+	foreach ( [ 'group', 'branch', 'type', 'number', 'name' ] as $key ) {
+		$meta_key = "_bank_{$key}";
+		$account[ $key ] = get_user_meta( $user_id, $meta_key, true );
+	}
+	return $account;
+}
+
+/**
+ * 支払先情報を取得する
+ *
+ * @param int $user_id
+ *
+ * @return array
+ */
+function hametuha_billing_address( $user_id = 0 ) {
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+	$address = [];
+	foreach ( [ 'name', 'number', 'address' ] as $key ) {
+		$meta_key = "_billing_{$key}";
+		$address[ $key ] = get_user_meta( $user_id, $meta_key, true );
+	}
+	return $address;
+}
+
+/**
+ * ユーザーの銀行口座がオッケーか否かを返す
+ *
+ * @param int $user_id
+ *
+ * @return bool
+ */
+function hametuha_bank_ready( $user_id = 0 ) {
+	$account = hametuha_bank_account( $user_id );
+	if ( ! $account ) {
+		return false;
+	}
+	foreach ( $account as $value ) {
+		if ( ! $value ) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * ユーザーの支払い先がオッケーかを返す
+ *
+ * @param int $user_id
+ * @return boolean
+ */
+function hametuha_billing_ready( $user_id = 0 ) {
+	$account = hametuha_billing_address( $user_id );
+	if ( ! $account ) {
+		return false;
+	}
+	foreach ( $account as $value ) {
+		if ( ! $value ) {
+			return false;
+		}
+	}
+	return true;
 }
