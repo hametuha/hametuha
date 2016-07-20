@@ -5,7 +5,7 @@ $total = 0;
 $deducting = 0;
 array_map( function( $reward ) use ( &$total, &$deducting ){
 	$total += $reward->total;
-	$deducting = $reward->deducting;
+	$deducting += $reward->deducting;
 }, $records );
 ?>
 <div id="kdp-reward" class="stat">
