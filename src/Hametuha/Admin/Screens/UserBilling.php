@@ -31,7 +31,31 @@ class UserBilling extends Screen {
 	 * Admin init
 	 */
 	public function adminInit() {
+		add_action( 'wp_ajax_user_billing', [ $this, 'ajax' ] );
+	}
 
+	/**
+	 * 決済を処理済にする
+	 */
+	public function ajax() {
+		try {
+			if ( ! $this->input->verify_nonce( 'update_billing' ) ) {
+				throw new \Exception( '不正なアクセスです。', 401 );
+			}
+			if ( ! ( $done = $this->user_sales->fix_billing( $this->input->post( 'user_ids' ) ) ) ) {
+				throw new \Exception( '該当する決済はありませんでした。', 404 );
+			}
+			$json = [
+				'success' => true,
+			    'message' => sprintf( '%d件を処理済みにしました。リロードします。', $done ),
+			];
+		} catch ( \Exception $e ) {
+			$json = [
+				'success' => false,
+				'message' => $e->getMessage(),
+			];
+		}
+		wp_send_json( $json );
 	}
 
 	/**
@@ -42,7 +66,6 @@ class UserBilling extends Screen {
 		echo <<<HTML
 			<input type="hidden" name="page" value="{$this->slug}" />
 HTML;
-
 		$table = new UserBillingTable();
 		$table->prepare_items();
 		$table->views();
@@ -53,6 +76,42 @@ HTML;
 		ob_end_clean();
 		echo $content;
 		echo '</form>';
+		// 更新要スクリプト
+		$endpoint = admin_url( 'admin-ajax.php' );
+		$nonce    = wp_create_nonce( 'update_billing' );
+		echo <<<HTML
+<script>
+jQuery(document).ready(function($){
+    $('#doaction,#doaction2').click(function(e){
+        e.preventDefault();
+        if ( 'update' !== $(this).prev('select').val() ) {
+            return false;
+        }
+        var ids = [];
+        $('.billing-user:checked').each(function( index, input ){
+            ids.push( $(input).val() );
+        });
+        if ( ! ids.length ) {
+            return false;
+        }
+        
+        $.post( '{$endpoint}', {
+          _wpnonce: '{$nonce}',
+          action: 'user_billing',
+          user_ids: ids
+        } ).done(function(result){
+          alert(result.message);
+          if(result.success){
+            window.location.reload();
+          }
+        }).fail(function(){
+            alert( 'エラーが発生しました。' );
+        });
+    });
+});
+</script>
+HTML;
+
 	}
 
 

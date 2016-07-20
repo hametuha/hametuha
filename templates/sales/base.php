@@ -11,10 +11,10 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?= home_url( '' ) ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
 			&gt;
 			<?php if ( $breadcrumb ) : ?>
-				<a href="<?= home_url( '/sales/', 'https' ) ?>">売上管理</a>
+				<a href="<?= home_url( '/sales/' ) ?>">売上管理</a>
 				&gt; <?= $breadcrumb ?>
 			<?php else : ?>
 				売上管理
@@ -97,9 +97,21 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 								<dt>ロイヤリティ</dt>
 								<dd>
 									Amazonから破滅派に振り込まれる金額です。
-									このうち、<a class="alert-link" href="<?= home_url( '/contract/ebook-agency-contract/', 'https' ) ?>">規約に書いてある手数料</a>
+									このうち、<a class="alert-link" href="<?= home_url( '/contract/ebook-agency-contract/' ) ?>">規約に書いてある手数料</a>
 									を引いたものがあなたの収益となります。
 									源泉徴収を行いますので、差し引かれた分は確定申告で取り返してください。
+								</dd>
+								<dt>支払い時期</dt>
+								<dd>
+									毎月15日に集計を取り、月末までに振り込みます。
+								</dd>
+								<dt>支払い下限額</dt>
+								<dd>
+									確定した報酬の合計額が<strong>&yen; 3,000に満たない場合、入金は繰り越し</strong>となります。ご了承ください。
+								</dd>
+								<dt>アカウントの削除</dt>
+								<dd>
+									確定報酬が残った段階でアカウントを削除してしまうと、入金されません。ご注意ください。
 								</dd>
 							</dl>
 						</div><!-- //.alert -->

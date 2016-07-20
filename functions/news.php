@@ -53,6 +53,9 @@ HTML;
  * @return bool
  */
 function is_hamenew() {
+	if ( is_front_page() ) {
+		return false;
+	}
 	return is_singular( 'news' ) || is_tax( 'nouns' ) || is_tax( 'genre' ) || is_post_type_archive( 'news' ) || is_page_template( 'page-hamenew.php' );
 }
 
@@ -108,7 +111,7 @@ add_filter( 'template_include', function ( $path ) {
  * ニュースページの場合は20件にする
  */
 add_action( 'pre_get_posts', function ( &$wp_query ) {
-	if ( $wp_query->is_main_query() && is_hamenew() && ! is_singular( 'news' ) ) {
+	if ( $wp_query->is_main_query() && ( $wp_query->is_tax( [ 'nouns', 'genre' ] ) || $wp_query->is_post_type_archive( 'news' ) ) && ! $wp_query->is_singular( 'news' ) ) {
 		$wp_query->set( 'posts_per_page', 20 );
 	}
 } );

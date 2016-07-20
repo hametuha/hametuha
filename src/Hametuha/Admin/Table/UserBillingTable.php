@@ -22,10 +22,23 @@ class UserBillingTable extends RewardTableBase {
 
 	public function get_columns() {
 		return [
+			'cb' => '<input type="checkbox" />',
+			'payable' => '',
 			'user'  => 'ユーザー',
 			'account' => '口座',
 			'deducting' => '源泉徴収',
 			'total'  => '振込額',
+		];
+	}
+
+	/**
+	 * 支払いアクション
+	 *
+	 * @return array
+	 */
+	public function get_bulk_actions() {
+		return [
+			'update' => '支払い済みにする',
 		];
 	}
 
@@ -53,6 +66,17 @@ class UserBillingTable extends RewardTableBase {
 	}
 
 	/**
+	 * Checkbox column
+	 *
+	 * @param object $item
+	 *
+	 * @return string
+	 */
+	public function column_cb( $item ) {
+		return '<input type="checkbox" class="billing-user" name="user_id[]" value="' . esc_attr( $item->user_id ) . '" />';
+	}
+
+	/**
 	 * Get column
 	 *
 	 * @param \stdClass $item
@@ -60,12 +84,29 @@ class UserBillingTable extends RewardTableBase {
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
+			case 'payable':
+				if ( hametuha_bank_ready( $item->user_id ) && hametuha_billing_ready( $item->user_id ) ) {
+					$color = 'green';
+					$icon = 'yes';
+				} else {
+					$color = 'red';
+					$icon = 'no';
+				}
+				printf( '<i class="dashicons dashicons-%s" style="color: %s"></i>', $icon, $color );
+				break;
 			case 'user':
 				$user = get_userdata( $item->user_id );
 				if ( ! $user ) {
 					echo '<span style="color: lightgrey">削除されたユーザー</span>';
 				} else {
 					echo esc_html( $user->display_name );
+				}
+				break;
+			case 'account':
+				if ( hametuha_bank_ready( $item->user_id ) ) {
+					echo esc_html( implode( ' ', hametuha_bank_account( $item->user_id ) ) );
+				} else {
+					echo '<span style="color: lightgrey">---</span>';
 				}
 				break;
 			case 'deducting':

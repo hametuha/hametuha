@@ -205,7 +205,7 @@ class Sales extends Model {
 			->wheres( [
 				's.date >= %s' => $start,
 			    's.date <= %s' => $end,
-			    's.price != %d' => 0,
+			    's.royalty != %d' => 0,
 			] )
 			->group_by( 's.asin' )
 			->result();

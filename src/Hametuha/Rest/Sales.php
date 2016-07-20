@@ -5,12 +5,14 @@ namespace Hametuha\Rest;
 
 use Hametuha\Model\Series;
 use Hametuha\Model\Sales as ModelSales;
+use Hametuha\Model\UserSales;
 use WPametu\API\Rest\RestTemplate;
 
 /**
  * Class Sales
  * @package Hametuha\Rest
  * @property-read ModelSales $sales
+ * @property-read UserSales $user_sales
  * @property-read Series $series
  */
 class Sales extends RestTemplate {
@@ -26,6 +28,7 @@ class Sales extends RestTemplate {
 	protected $models = [
 		'sales'  => ModelSales::class,
 		'series' => Series::class,
+	    'user_sales' => UserSales::class,
 	];
 
 	/**
@@ -166,6 +169,7 @@ class Sales extends RestTemplate {
 			'breadcrumb' => '報酬',
 			'current'    => 'reward',
 			'graph'      => 'reward',
+		    'rewards'    => $this->user_sales->get_billing_list( date_i18n( 'Y' ), date_i18n( 'n' ), get_current_user_id() ),
 		] );
 		$this->response();
 	}
@@ -173,6 +177,8 @@ class Sales extends RestTemplate {
 	/**
 	 * Get reward
 	 *
+	 *
+	 * @todo 今年のしか出せないので、修正する
 	 * @param string $page
 	 * @param int $paged
 	 */
@@ -184,6 +190,7 @@ class Sales extends RestTemplate {
 			'breadcrumb' => '入金履歴',
 			'current'    => 'payment',
 			'graph'      => 'payment',
+		    'records'    => $this->user_sales->get_fixed( get_current_user_id(), date_i18n( 'Y' ) ),
 		] );
 		$this->response();
 	}

@@ -128,6 +128,26 @@ class UserSales extends Model {
 	}
 
 	/**
+	 * 確定済みの報酬を表示する
+	 *
+	 * @param int $user_id
+	 * @param int $year
+	 * @return array
+	 */
+	public function get_fixed( $user_id, $year = 0 ) {
+		$this->select( 'user_id, SUM(unit) AS unit, SUM(deducting) AS deducting, SUM(total) AS total, EXTRACT(YEAR_MONTH FROM fixed) as payed' )
+			->wheres( [
+				'user_id = %d' => $user_id,
+			    'status = %d' => 1,
+			] )
+			->group_by( 'payed', 'DESC' );
+		if ( $year ) {
+			$this->where( ' EXTRACT(YEAR from fixed ) = %d', $year );
+		}
+		return $this->result();
+	}
+
+	/**
 	 * 月別の売上リストを作成する
 	 *
 	 * @param array $args
@@ -165,21 +185,28 @@ class UserSales extends Model {
 	 *
 	 * @param int $year
 	 * @param int $month
+	 * @param int $user_id
 	 *
 	 * @return array
 	 */
-	public function get_billing_list( $year, $month ) {
+	public function get_billing_list( $year, $month, $user_id = 0 ) {
 		$date = new \DateTime();
 		$date->setTimezone( new \DateTimeZone( 'Asia/Tokyo' ) );
 		$date->setDate( $year, $month, 1 );
-		return $this
+		$this
 			->wheres( [
 				'created <= %s' => $date->format( 'Y-m-t 23:59:59' ),
 		        'status = %d' => 0,
-			] )
-			->select( 'SUM(total) AS total, user_id, SUM(deducting) AS deducting' )
-			->group_by( 'user_id' )
-			->result();
+			] );
+		if ( $user_id ) {
+			$this->select( 'total, user_id, deducting, description, created, unit, sales_type' )
+				->where( 'user_id = %d', $user_id )
+				->order_by( 'created', 'DESC' );
+		} else {
+			$this->select( 'SUM(total) AS total, user_id, SUM(deducting) AS deducting' )
+				->group_by( 'user_id' );
+		}
+		return $this->result();
 	}
 
 	/**
@@ -195,7 +222,8 @@ class UserSales extends Model {
 		$success = 0;
 		foreach ( $sales as $sale ) {
 			$label = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
-			if ( $this->add( $sale->user_id, 'kdp', $sale->sub_total * $this->bill / $sale->unit, $sale->unit, $label, true ) ) {
+			$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
+			if ( $this->add( $sale->user_id, 'kdp', $sale->sub_total * $this->bill / $sale->unit, $sale->unit, $label, true, true, 0, $created ) ) {
 				$success++;
 			}
 		}
@@ -215,10 +243,11 @@ class UserSales extends Model {
 	 * @param bool $tax_included
 	 * @param bool $deduction
 	 * @param int $status
+	 * @param string $created
 	 *
 	 * @return false|int
 	 */
-	public function add( $user_id, $type, $price, $unit = 1, $description = '', $tax_included = false, $deduction = true, $status = 0 ) {
+	public function add( $user_id, $type, $price, $unit = 1, $description = '', $tax_included = false, $deduction = true, $status = 0, $created = '' ) {
 		// 消費税と小計を出す
 		$sub_total = $unit * $price;
 		if ( $tax_included ) {
@@ -246,8 +275,36 @@ class UserSales extends Model {
 		    'total' => $total,
 		    'status' => $status,
 		    'description' => $description,
-		    'created' => current_time( 'mysql' ),
+		    'created' => $created ?: current_time( 'mysql' ),
+		    'updated' => current_time( 'mysql' ),
 		] );
+	}
+
+	/**
+	 * 支払いを確定する
+	 *
+	 * @param array|int $user_ids
+	 *
+	 * @return false|int
+	 */
+	public function fix_billing( $user_ids = [] ) {
+		if ( is_numeric( $user_ids ) ) {
+			$user_ids = (array) $user_ids;
+		}
+		$user_ids = implode( ', ', array_map( 'intval', array_unique( $user_ids ) ) );
+		if ( ! $user_ids ) {
+			return false;
+		}
+		$query = <<<SQL
+			UPDATE {$this->table}
+			SET `fixed` = %s,
+                `updated` = %s,
+                `status` = 1
+            WHERE `user_id` IN ( {$user_ids} )
+              AND `status` = 0
+SQL;
+		$now = current_time( 'mysql' );
+		return $this->db->query( $this->db->prepare( $query, $now, $now ) );
 	}
 
 	/**
