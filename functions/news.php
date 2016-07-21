@@ -481,16 +481,16 @@ HTML;
  * XMLサイトマップを追加
  */
 add_filter( 'bwp_gxs_external_sitemaps', function( $data ) {
-	$post = get_posts( [
-		'post_type' => 'news',
-		'post_status' => 'publish',
-	    'posts_per_page' => 1,
-	    'orderby' => [ 'date' => 'DESC' ],
-	] );
-	$data[] = [
-		'location' => home_url( '/news_sitemap/' ),
-	    'lastmod' => mysql2date( DateTime::W3C, current( $post )->post_date ),
-	];
+//	$post = get_posts( [
+//		'post_type' => 'news',
+//		'post_status' => 'publish',
+//	    'posts_per_page' => 1,
+//	    'orderby' => [ 'date' => 'DESC' ],
+//	] );
+//	$data[] = [
+//		'location' => home_url( '/news_sitemap/' ),
+//	    'lastmod' => mysql2date( DateTime::W3C, current( $post )->post_date ),
+//	];
 	return $data;
 } );
 
