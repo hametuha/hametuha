@@ -12,6 +12,7 @@
   table.colophon{
     $border-color: #999;
     $border: 1px solid $border-color;
+    width: 100%;
 
     margin: 2em 0;
 
@@ -30,7 +31,7 @@
     th{
       white-space: nowrap;
       text-align: right;
-      width: 5em;
+      max-width: 5em;
     }
     a.url{
       display: block;

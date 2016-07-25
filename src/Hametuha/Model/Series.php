@@ -562,4 +562,17 @@ SQL;
 		
 
 	}
+
+	/**
+	 * 設定値があればそれを返す
+	 *
+	 * @param int $author_id
+	 * @param string $key
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	public function override_meta( $author_id, $key, $default ) {
+		return get_user_meta( $author_id, $key, true ) ?: $default;
+	}
 }

@@ -310,7 +310,9 @@ HTML;
 
 		$id  = 'preview';
 		$dir = 'rtl' == $this->input->get( 'direction' ) ? 'rtl' : 'ltr';
-
+		if ( false !== array_search( $template, [ 'colophon', 'titlepage', 'contributors' ] ) ) {
+			$dir = 'lrt';
+		}
 		nocache_headers();
 		if ( 'content' == $template ) {
 			$post = get_post( $this->input->get( 'post_id' ) );
@@ -454,7 +456,7 @@ HTML;
 					$factory->opf->addItem( $path, '' );
 				}
 				// Assign properties
-				$property = [ ];
+				$property = [];
 				if ( false !== strpos( $h['html'], '<script' ) ) {
 					$property[] = 'scripted';
 				}
