@@ -533,7 +533,7 @@ add_action( 'pre_get_posts', function( WP_Query $wp_query ) {
 							break;
 						case 'book-store':
 						case 'literature':
-						case 'japanese-lieterature':
+						case 'japanese-literature':
 						case 'magazine':
 							$terms[] = 'Book';
 							break;
