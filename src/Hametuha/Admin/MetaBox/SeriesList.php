@@ -8,8 +8,7 @@ namespace Hametuha\Admin\MetaBox;
  *
  * @package Hametuha\Admin\MetaBox
  */
-class SeriesList extends SeriesBase
-{
+class SeriesList extends SeriesBase {
 
 	protected $context = 'normal';
 
@@ -24,16 +23,21 @@ class SeriesList extends SeriesBase
 	/**
 	 * Register Ajax action
 	 */
-	public function adminInit(){
-		if( $this->isAjax() ){
-			add_action('wp_ajax_series_list', [$this, 'seriesList']);
+	public function adminInit() {
+		if ( $this->isAjax() ) {
+			add_action( 'wp_ajax_series_list', [ $this, 'seriesList' ] );
 		}
-		add_action("admin_enqueue_scripts", function($page){
+		add_action( 'admin_enqueue_scripts', function ( $page ) {
 			$screen = get_current_screen();
-			if( 'post' == $screen->base && 'series' == $screen->post_type ){
-				wp_enqueue_script('series-helper', get_stylesheet_directory_uri().'/assets/js/dist/admin/series-helper.js', ['jquery-ui-sortable', 'backbone', 'underscore', 'jquery-effects-highlight'], filemtime(get_stylesheet_directory().'/assets/js/dist/admin/series-helper.js'), true);
+			if ( 'post' == $screen->base && 'series' == $screen->post_type ) {
+				wp_enqueue_script( 'series-helper', get_stylesheet_directory_uri() . '/assets/js/dist/admin/series-helper.js', [
+					'jquery-ui-sortable',
+					'backbone',
+					'underscore',
+					'jquery-effects-highlight',
+				], filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/series-helper.js' ), true );
 			}
-		});
+		} );
 	}
 
 	/**
@@ -42,19 +46,19 @@ class SeriesList extends SeriesBase
 	 * @param \WP_Post $post
 	 */
 	public function savePost( \WP_Post $post ) {
-		foreach( ['series_order', 'series_override'] as $key ){
-			if( $this->input->post($key) && is_array($this->input->post($key)) ){
-				foreach( $this->input->post($key) as $id => $value ){
-					if( !current_user_can('edit_post', $id) ){
+		foreach ( [ 'series_order', 'series_override' ] as $key ) {
+			if ( $this->input->post( $key ) && is_array( $this->input->post( $key ) ) ) {
+				foreach ( $this->input->post( $key ) as $id => $value ) {
+					if ( ! current_user_can( 'edit_post', $id ) ) {
 						continue;
 					}
-					switch( $key ){
+					switch ( $key ) {
 						case 'series_order':
-							$this->series->update_order($id, $value);
-							clean_post_cache($id);
+							$this->series->update_order( $id, $value );
+							clean_post_cache( $id );
 							break;
 						case 'series_override':
-							update_post_meta($id, '_series_override', $value);
+							update_post_meta( $id, '_series_override', $value );
 							break;
 						default:
 							// do nothing
@@ -69,35 +73,35 @@ class SeriesList extends SeriesBase
 	/**
 	 * Update serires list
 	 */
-	public function seriesList(){
-		try{
-			if( !$this->input->verify_nonce($this->nonce_action, $this->nonce_key) ){
-				throw new \Exception('不正なアクセスです。', 500);
+	public function seriesList() {
+		try {
+			if ( ! $this->input->verify_nonce( $this->nonce_action, $this->nonce_key ) ) {
+				throw new \Exception( '不正なアクセスです。', 500 );
 			}
-			$post_id = $this->input->post('post_id');
-			if( !$post_id || !current_user_can('edit_post', $post_id) ){
-				throw new \Exception('あなたには権限がありません。', 500);
+			$post_id = $this->input->post( 'post_id' );
+			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+				throw new \Exception( 'あなたには権限がありません。', 500 );
 			}
-			$result = wp_update_post([
-				'ID' => $post_id,
-			    'post_parent' => 0,
-			], true);
-			if( !$result || is_wp_error($result) ){
-				throw new \Exception('更新できませんでした。', 500);
+			$result = wp_update_post( [
+				'ID'          => $post_id,
+				'post_parent' => 0,
+			], true );
+			if ( ! $result || is_wp_error( $result ) ) {
+				throw new \Exception( '更新できませんでした。', 500 );
 			}
 			$json = [
 				'success' => true,
-			    'message' => 'OK',
-			    'code' => 200,
+				'message' => 'OK',
+				'code'    => 200,
 			];
-		}catch ( \Exception $e ){
+		} catch ( \Exception $e ) {
 			$json = [
 				'success' => false,
-			    'message' => $e->getMessage(),
-			    'code' => $e->getCode(),
+				'message' => $e->getMessage(),
+				'code'    => $e->getCode(),
 			];
 		}
-		wp_send_json($json);
+		wp_send_json( $json );
 	}
 
 	/**
@@ -107,12 +111,13 @@ class SeriesList extends SeriesBase
 	 *
 	 * @return string
 	 */
-	protected function renderList( \WP_Post $post ){
-		$title = get_the_title($post);
-		$override = esc_attr(get_post_meta($post->ID, '_series_override', true));
-		$date = mysql2date(get_option('date_format'), $post->post_date);
-		$author = esc_html(get_the_author_meta('display_name', $post->post_author));
-		$edit_url = get_edit_post_link($post->ID);
+	protected function renderList( \WP_Post $post ) {
+		$title    = get_the_title( $post );
+		$override = esc_attr( get_post_meta( $post->ID, '_series_override', true ) );
+		$date     = mysql2date( get_option( 'date_format' ), $post->post_date );
+		$author   = esc_html( get_the_author_meta( 'display_name', $post->post_author ) );
+		$edit_url = get_edit_post_link( $post->ID );
+
 		return <<<HTML
 		<li>
 			<input type="hidden" name="series_order[{$post->ID}]" value="{$post->menu_order}" />
@@ -136,40 +141,41 @@ HTML;
 	 * @param array $screen
 	 */
 	public function doMetaBox( \WP_Post $post, array $screen ) {
-		$users = get_series_authors($post);
-		$editor = new \WP_User($post->post_author);
-		$series = get_posts(   [
-			'post_type' => 'post',
-			'post_parent' => $post->ID,
-			'post_status' => ['publish', 'future', 'draft', 'pending'],
-			'posts_per_page' => -1,
-			'orderby' => [
+		$users  = get_series_authors( $post );
+		$editor = new \WP_User( $post->post_author );
+		$series = get_posts( [
+			'post_type'        => 'post',
+			'post_parent'      => $post->ID,
+			'post_status'      => [ 'publish', 'future', 'draft', 'pending', 'private' ],
+			'posts_per_page'   => - 1,
+			'orderby'          => [
 				'menu_order' => 'DESC',
-				'post_date' => 'ASC',
+				'post_date'  => 'ASC',
 			],
-		    'suppress_filters' => false,
-		]);
+			'suppress_filters' => false,
+		] );
 		?>
-			<p class="description">
-				この作品集に登録されている作品の一覧です。並び順の初期値は古い順です。目次に表示されるタイトルは上書きすることができます。<br />
-				<strong>例：</strong>
-			</p>
-			<ol id="series-posts-list" data-endpoint="<?= admin_url('admin-ajax.php') ?>" data-post-id="<?= $post->ID ?>" data-nonce="<?= wp_create_nonce($this->nonce_action) ?>">
+		<p class="description">
+			この作品集に登録されている作品の一覧です。並び順の初期値は古い順です。目次に表示されるタイトルは上書きすることができます。<br/>
+			<strong>例：</strong>
+		</p>
+		<ol id="series-posts-list" data-endpoint="<?= admin_url( 'admin-ajax.php' ) ?>" data-post-id="<?= $post->ID ?>"
+		    data-nonce="<?= wp_create_nonce( $this->nonce_action ) ?>">
 			<?php
-				foreach( $series as $s ){
-					echo $this->renderList($s);
-				}
+			foreach ( $series as $s ) {
+				echo $this->renderList( $s );
+			}
 			?>
-			</ol>
-			<hr />
-			<table class="form-table">
-				<tr>
-					<th>編集者</th>
-					<td>
-						<?= esc_html($editor->display_name) ?>
-					</td>
-				</tr>
-			</table>
+		</ol>
+		<hr/>
+		<table class="form-table">
+			<tr>
+				<th>編集者</th>
+				<td>
+					<?= esc_html( $editor->display_name ) ?>
+				</td>
+			</tr>
+		</table>
 		<?php
 	}
 

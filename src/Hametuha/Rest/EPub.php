@@ -372,6 +372,7 @@ HTML;
 				get_posts( [
 					'post_type'      => 'post',
 					'post_parent'    => $series->ID,
+					'post_status'    => 'any',
 					'posts_per_page' => - 1,
 					'orderby'        => [
 						'menu_order' => 'DESC',
@@ -417,7 +418,7 @@ HTML;
 			$html['toc']['html'] = $this->get_content( $series->ID, $series, 'toc', $direction );
 			// Create content
 			foreach ( $html as $key => $h ) {
-				$property = [ ];
+				$property = [];
 				switch ( $key ) {
 					case 'toc':
 						$property[] = 'nav';
@@ -578,7 +579,7 @@ HTML;
 						get_posts( [
 							'post_parent'    => $post->ID,
 							'post_type'      => 'post',
-							'post_status'    => 'publish',
+							'post_status'    => 'any',
 							'posts_per_page' => - 1,
 							'orderby'        => [
 								'menu_order' => 'DESC',
