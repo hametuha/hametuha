@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hamepub.git",
-                "reference": "0723a08f399f52a570e644b004f59b1797450e69"
+                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/0723a08f399f52a570e644b004f59b1797450e69",
-                "reference": "0723a08f399f52a570e644b004f59b1797450e69",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/f2dbe9ce68d0fc3792c57463d841972a85d68577",
+                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577",
                 "shasum": ""
             },
             "require": {
@@ -96,7 +96,7 @@
                 "epub",
                 "wordpress"
             ],
-            "time": "2015-07-13 11:25:40"
+            "time": "2016-07-27 16:30:42"
         },
         {
             "name": "hametuha/wpametu",
