@@ -275,19 +275,11 @@ add_action( 'wp_head', function () {
 <meta property="og:locale" content="ja_jp" />
 <meta property="fb:admins" content="1034317368" />
 <meta property="fb:app_id" content="196054397143922" />
+<meta property="fb:pages" content="196103120449777,112969535414323" />
 <!-- twitter cards -->
 HTML;
-
 	foreach ( $twitters as $key => $content ) {
 		printf( '<meta name="twitter:%s" content="%s" />', $key, $content );
-	}
-
-	if ( is_hamenew() ) {
-		echo <<<HTML
-
-<meta property="fb:pages" content="112969535414323" />
-
-HTML;
 	}
 }, 1 );
 
