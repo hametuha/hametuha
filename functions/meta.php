@@ -138,7 +138,7 @@ add_action( 'wp_head', function () {
 
 	// はメニューのときだけ画像を設定
 	if ( is_hamenew() ) {
-		$image = get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png';
+		$image = get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png?201608';
 	}
 	//個別設定
 	if ( is_front_page() ) {
@@ -178,20 +178,22 @@ add_action( 'wp_head', function () {
 		} elseif ( has_post_thumbnail() ) {
 			// Show thumbnail if set.
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
-				$image = $src[0];
-				$card  = 'summary_large_image';
-				// If this is seris,
-				// Show product card
-				if ( is_singular( 'series' ) ) {
-					$series = \Hametuha\Model\Series::get_instance();
-					if ( 2 == $series->get_status( $post->ID ) ) {
-						// If this is e-book and sold...
-						// $card               = 'product';
-						$twitters['label1'] = '価格';
-						$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
-						if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
-							$twitters['label2'] = 'ジャンル';
-							$twitters['data2']  = $subtitle;
+				if ( ! is_hamenew() || $src[1] >= 696 ) {
+					$image = $src[0];
+					$card  = 'summary_large_image';
+					// If this is seris,
+					// Show product card
+					if ( is_singular( 'series' ) ) {
+						$series = \Hametuha\Model\Series::get_instance();
+						if ( 2 == $series->get_status( $post->ID ) ) {
+							// If this is e-book and sold...
+							// $card               = 'product';
+							$twitters['label1'] = '価格';
+							$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
+							if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
+								$twitters['label2'] = 'ジャンル';
+								$twitters['data2']  = $subtitle;
+							}
 						}
 					}
 				}
@@ -208,8 +210,10 @@ add_action( 'wp_head', function () {
 			] );
 			foreach ( $attachments as $attachment ) {
 				if ( $src = wp_get_attachment_image_src( $attachment->ID, 'full' ) ) {
-					$image = $src[0];
-					$card  = 'summary_large_image';
+					if ( ! is_hamenew() || $src[1] >= 696 ) {
+						$image = $src[0];
+						$card  = 'summary_large_image';
+					}
 				}
 			}
 		}

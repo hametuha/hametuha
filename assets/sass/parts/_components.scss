@@ -247,6 +247,39 @@ i.rotation{
 }
 
 //
+// サブナビゲーション
+// -------------------
+//
+.nav-sub{
+  & > li{
+    a{
+      margin-right: 5px;
+      margin-left: 5px;
+      transition: color .5s ease-in-out, background-color .5s ease-in-out;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+        background-color: #f9f9f9;
+      }
+      &:hover, &:active{
+        color: $brand-primary;
+        text-decoration: none;
+        background-color: #ddd;
+      }
+    }
+    &:first-child a{
+      margin-left: 0;
+    }
+    &:last-child a{
+      margin-right: 0;
+    }
+  }
+}
+
+
+
+
+//
 // ジャンボトロン
 //
 // --------------------
@@ -498,6 +531,7 @@ ul.metadata{
     }
   }
 }
+
 // コンテナ
 .archive-container{
   margin: 20px 0;

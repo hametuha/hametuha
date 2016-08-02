@@ -1,7 +1,7 @@
 <div class="news-recruit row">
 
 	<div class="col-xs-12 col-sm-6 news-recruit__eyecatch">
-		<img class="news-recruit__img" src="<?= get_template_directory_uri() ?>/assets/img/jumbotron/hamenew-recruit.jpg" alt="" />
+		<img class="news-recruit__img" src="<?= get_template_directory_uri() ?>/assets/img/jumbotron/hamenew-recruit.jpg?201608" alt="募集中……" />
 	</div>
 
 	<div class="col-xs-12 col-sm-6 news-recruit__copy">

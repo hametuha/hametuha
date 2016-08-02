@@ -1,14 +1,35 @@
 .news {
 
   &-eyecatch {
-    h1 {
-      margin: 0;
-      padding: $navbar-height 0 0;
-      text-align: center;
-      img {
-        max-width: 100%;
-        width: auto;
-        height: auto;
+    padding-top: $navbar-height;
+    &-text{
+      background: url( "../img/jumbotron/hamenew.jpg?201608" ) bottom left no-repeat;
+      background-size: contain;
+      padding: 80px 40px 80px 30%;
+      @include mq-max( $screen-md-max ){
+        padding: 40px 0 40px 30%;
+      }
+      @include mq-max( $screen-sm-max){
+        padding: 20px 0 20px 30%;
+      }
+      @include mq-max( $screen-xs-max ){
+        padding: 40px 0 0 30%;
+      }
+    }
+    &-title {
+      font-size: 3em;
+      margin-bottom: 0.5em;
+      font-family: $work-bold-sans;
+      @include mq-max($screen-xs-max){
+        font-size: 2em;
+      }
+    }
+    &-lead{
+      font-size: 1.2em;
+      line-height: 1.4;
+      font-family: $work-body-sans;
+      @include mq-max($screen-xs-max){
+        font-size: 1em;
       }
     }
   }
