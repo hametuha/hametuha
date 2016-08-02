@@ -273,8 +273,8 @@ add_action( 'wp_head', function () {
 <meta property="article:publisher" content="https://www.facebook.com/hametuha.inc" />
 <meta property="og:site_name" content="破滅派｜オンライン文芸誌" />
 <meta property="og:locale" content="ja_jp" />
-<meta property="fb:app_id" content="196054397143922" />
 <meta property="fb:admins" content="1034317368" />
+<meta property="fb:app_id" content="196054397143922" />
 <!-- twitter cards -->
 HTML;
 

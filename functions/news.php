@@ -56,6 +56,7 @@ function is_hamenew() {
 	if ( is_front_page() ) {
 		return false;
 	}
+
 	return is_singular( 'news' ) || is_tax( 'nouns' ) || is_tax( 'genre' ) || is_post_type_archive( 'news' ) || is_page_template( 'page-hamenew.php' );
 }
 
@@ -111,7 +112,11 @@ add_filter( 'template_include', function ( $path ) {
  * ニュースページの場合は20件にする
  */
 add_action( 'pre_get_posts', function ( &$wp_query ) {
-	if ( $wp_query->is_main_query() && ( $wp_query->is_tax( [ 'nouns', 'genre' ] ) || $wp_query->is_post_type_archive( 'news' ) ) && ! $wp_query->is_singular( 'news' ) ) {
+	if ( $wp_query->is_main_query() && ( $wp_query->is_tax( [
+				'nouns',
+				'genre'
+			] ) || $wp_query->is_post_type_archive( 'news' ) ) && ! $wp_query->is_singular( 'news' )
+	) {
 		$wp_query->set( 'posts_per_page', 20 );
 	}
 } );
@@ -137,7 +142,7 @@ function hamenew_related( $limit = 5, $post = null ) {
 		}
 	}
 	if ( ! $term_ids ) {
-		return [];
+		return [ ];
 	}
 	$term_ids = implode( ', ', $term_ids );
 	$query    = <<<SQL
@@ -194,7 +199,7 @@ function hamenew_links( $post = null ) {
 	$post  = get_post( $post );
 	$links = get_post_meta( $post->ID, '_news_related_links', true );
 	if ( ! $links ) {
-		return [];
+		return [ ];
 	}
 
 	return array_filter( array_map( function ( $line ) {
@@ -222,7 +227,7 @@ function hamenew_books( $post = null ) {
 	$post = get_post( $post );
 	$asin = get_post_meta( $post->ID, '_news_related_books', true );
 	if ( ! $asin || ! class_exists( 'WP_Hamazon_Controller' ) || ( ! WP_Hamazon_Controller::get_instance()->amazon ) ) {
-		return [];
+		return [ ];
 	}
 
 	return array_filter( array_map( function ( $code ) {
@@ -259,7 +264,7 @@ function hamenew_books( $post = null ) {
 function hamenew_popular_nouns() {
 	$terms = get_terms( 'nouns' );
 	if ( ! $terms || is_wp_error( $terms ) ) {
-		return [];
+		return [ ];
 	}
 	// Filter terms
 	$terms = array_filter( $terms, function ( $term ) {
@@ -299,21 +304,21 @@ add_filter( 'single_term_title', function ( $name ) {
  * @param int $post_id
  * @param WP_Post $post
  */
-add_action( 'save_post', function( $post_id, $post ) {
+add_action( 'save_post', function ( $post_id, $post ) {
 	if ( 'news' !== $post->post_type || 'publish' !== $post->post_status ) {
 		return;
 	}
 	// クラウドフレアのキャッシュをすべて削除する
 	$urls = [
 		home_url( '/' ),
-	    get_post_type_archive_link( 'news' ),
+		get_post_type_archive_link( 'news' ),
 	];
 	// パーマリンク
 	foreach ( explode( '<!--nextpage-->', $post->post_content ) as $index => $content ) {
 		if ( $index ) {
 			$urls[] = get_permalink( $post );
 		} else {
-			$urls[] = trailingslashit( get_permalink( $post ) ).'page/'.($index + 1).'/';
+			$urls[] = trailingslashit( get_permalink( $post ) ) . 'page/' . ( $index + 1 ) . '/';
 		}
 		$urls[] = trailingslashit( get_permalink( $post ) ) . 'amp/';
 	}
@@ -353,15 +358,15 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 	if ( 'news' !== $post->post_type ) {
 		return;
 	}
-	$author = get_userdata( $post->post_author );
+	$author    = get_userdata( $post->post_author );
 	$edit_link = get_edit_post_link( $post->ID, 'mail' );
-	$title = get_the_title( $post );
-	$base = [
-		'title' => $title,
-		'title_link' => $edit_link,
+	$title     = get_the_title( $post );
+	$base      = [
+		'title'       => $title,
+		'title_link'  => $edit_link,
 		'author_name' => $author->display_name,
 		'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
-		'text' => $post->post_excerpt,
+		'text'        => $post->post_excerpt,
 	];
 	if ( has_post_thumbnail( $post ) ) {
 		$base['thumb_url'] = get_the_post_thumbnail_url( $post, 'thumbnail' );
@@ -377,8 +382,8 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					// 没になった
 					// TODO: なんらかの方法で連絡する
 					hametuha_slack( '@here 公開されていたニュースがボツになりました。このニュースはもう修正できません。', array_merge( $base, [
-						'fallback' => sprintf( '「%s」がボツになりました。', $title ),
-					    'title_link' => admin_url( 'edit.php?post_type=news' ),
+						'fallback'   => sprintf( '「%s」がボツになりました。', $title ),
+						'title_link' => admin_url( 'edit.php?post_type=news' ),
 					] ), '#news' );
 					break;
 			}
@@ -394,14 +399,14 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 						// TODO: なんらかの方法で連絡する
 						hametuha_slack( '@here 公開されていたニュースがレビュー待ちになりました。執筆者は修正してください。', array_merge( $base, [
 							'fallback' => sprintf( '「%s」が再度レビュー待ちになりました。', $title ),
-							'color' => 'danger',
+							'color'    => 'danger',
 						] ), '#news' );
 						break;
 					default:
 						// 承認待ちになった
 						hametuha_slack( '@channel ニュースが承認待ちです。公開権限を持っている方は承認をお願いします。', array_merge( $base, [
 							'fallback' => sprintf( '「%s」が承認待ちです。', $title ),
-							'color' => 'warning',
+							'color'    => 'warning',
 						] ), '#news' );
 						break;
 				}
@@ -428,9 +433,9 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					}
 					// Slackに通知
 					hametuha_slack( '@here ニュースが公開されました。', array_merge( $base, [
-						'fallback' => sprintf( '「%s」%s', $title, $author->display_name ),
+						'fallback'   => sprintf( '「%s」%s', $title, $author->display_name ),
 						'title_link' => get_permalink( $post ),
-						'color' => 'good',
+						'color'      => 'good',
 					] ), '#news' );
 					break;
 			}
@@ -444,20 +449,30 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 /**
  * ヘルプメニューを追加
  */
-add_action( 'admin_head', function() {
+add_action( 'admin_head', function () {
 	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! ( $screen = get_current_screen() ) || 'news' != $screen->post_type ) {
 		return;
 	}
-	foreach ( [
-		'publish' => [ '公開フロー', 'ニュースは「レビュー待ち」として送信されたのち、破滅派編集部によるチェックを経て公開されます。なるべく早く行いますが、24時間365日で対応することはできませんので、その点ご了承ください。' ],
-		'published' => [ '公開済みニュース', '一度公開されたニュースは破滅派編集部以外編集できません。修正要望がある場合はSLACKにてお問い合わせください。' ],
-		'banned' => [ 'ボツニュース', 'ニュースのステータスが「非公開」となっている場合、そのニュースはボツになっています。ボツになったニュースはもう編集できません。理由についてはSLACKにてお伝えしますので、お問い合わせください。' ],
-		'contact' => [ '連絡方法', 'ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。' ],
-	] as $id => list( $title, $content ) ) {
+	foreach (
+		[
+			'publish'   => [
+				'公開フロー',
+				'ニュースは「レビュー待ち」として送信されたのち、破滅派編集部によるチェックを経て公開されます。なるべく早く行いますが、24時間365日で対応することはできませんので、その点ご了承ください。'
+			],
+			'published' => [ '公開済みニュース', '一度公開されたニュースは破滅派編集部以外編集できません。修正要望がある場合はSLACKにてお問い合わせください。' ],
+			'banned'    => [
+				'ボツニュース',
+				'ニュースのステータスが「非公開」となっている場合、そのニュースはボツになっています。ボツになったニュースはもう編集できません。理由についてはSLACKにてお伝えしますので、お問い合わせください。'
+			],
+			'contact'   => [ '連絡方法', 'ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。' ],
+		] as $id => list(
+		$title, $content
+	)
+	) {
 		$screen->add_help_tab( [
-			'id' => 'news-'.$id,
-		    'title' => $title,
-		    'content' => $content,
+			'id'      => 'news-' . $id,
+			'title'   => $title,
+			'content' => $content,
 		] );
 	}
 
@@ -479,8 +494,10 @@ HTML;
 
 /**
  * XMLサイトマップを追加
+ *
+ * @todo いまのところ、Googleに無視されているので、あとでやる
  */
-add_filter( 'bwp_gxs_external_sitemaps', function( $data ) {
+add_filter( 'bwp_gxs_external_sitemaps', function ( $data ) {
 //	$post = get_posts( [
 //		'post_type' => 'news',
 //		'post_status' => 'publish',
@@ -497,64 +514,239 @@ add_filter( 'bwp_gxs_external_sitemaps', function( $data ) {
 /**
  * サイトマップ用フィードを作成
  */
-add_action( 'pre_get_posts', function( WP_Query $wp_query ) {
+add_action( 'pre_get_posts', function ( WP_Query $wp_query ) {
 	if ( $wp_query->is_main_query() && $wp_query->is_feed( 'news_sitemap' ) ) {
 		$wp_query->set( 'posts_per_page', 20 );
 		$wp_query->set( 'posts_status', 'publish' );
 		$wp_query->set( 'ordeby', [ 'date' => 'DESC' ] );
-		add_action( 'do_feed_news_sitemap', function(){
+		add_action( 'do_feed_news_sitemap', function () {
 			header( 'Content-Type: text/xml; charset=UTF-8' );
 			echo '<?xml version="1.0" encoding="UTF-8"?>';
 			?>
 
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-	<?php while ( have_posts() ) : the_post(); ?>
-	<url>
-		<loc><?php the_permalink() ?></loc>
-		<news:news>
-			<news:publication>
-				<news:name><?= htmlspecialchars( 'はめにゅー | 破滅派がお届けする文学関連ニュース', ENT_XML1, 'UTF-8' ) ?></news:name>
-				<news:language>ja</news:language>
-			</news:publication>
-			<news:genres>UserGenerated,Blog</news:genres>
-			<news:publication_date><?= the_time( DateTime::W3C ) ?></news:publication_date>
-			<news:title><?= htmlspecialchars( get_the_title(), ENT_XML1, 'UTF-8' ) ?></news:title>
-			<news:keywords><?php
-				$terms = [ 'Entertainment' ];
-				$genres = get_the_terms( get_post(), 'genre' );
-				foreach ( $genres as $genre ) {
-					switch ( strtolower( $genre->slug ) ) {
-						case 'tech':
-							$terms[] = 'Technology';
-							break;
-						case 'foreign-lieterature':
-							$terms[] = 'World';
-							break;
-						case 'book-store':
-						case 'literature':
-						case 'japanese-literature':
-						case 'magazine':
-							$terms[] = 'Book';
-							break;
-						case 'tv':
-							$terms[] = 'TV';
-							break;
-						case 'publishing':
-						case 'logistics':
-							$rerms[] = 'Business';
-							break;
-					}
-					$terms [] = htmlspecialchars( $genre->slug, ENT_XML1, 'UTF-8' );
-				}
-				echo implode(', ', $terms);
-				?></news:keywords>
-		</news:news>
-	</url>
-	<?php endwhile; ?>
-</urlset>
+			<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+				<?php while ( have_posts() ) : the_post(); ?>
+					<url>
+						<loc><?php the_permalink() ?></loc>
+						<news:news>
+							<news:publication>
+								<news:name><?= htmlspecialchars( 'はめにゅー | 破滅派がお届けする文学関連ニュース', ENT_XML1, 'UTF-8' ) ?></news:name>
+								<news:language>ja</news:language>
+							</news:publication>
+							<news:genres>UserGenerated,Blog</news:genres>
+							<news:publication_date><?= the_time( DateTime::W3C ) ?></news:publication_date>
+							<news:title><?= htmlspecialchars( get_the_title(), ENT_XML1, 'UTF-8' ) ?></news:title>
+							<news:keywords><?php
+								$terms  = [ 'Entertainment' ];
+								$genres = get_the_terms( get_post(), 'genre' );
+								foreach ( $genres as $genre ) {
+									switch ( strtolower( $genre->slug ) ) {
+										case 'tech':
+											$terms[] = 'Technology';
+											break;
+										case 'foreign-lieterature':
+											$terms[] = 'World';
+											break;
+										case 'book-store':
+										case 'literature':
+										case 'japanese-literature':
+										case 'magazine':
+											$terms[] = 'Book';
+											break;
+										case 'tv':
+											$terms[] = 'TV';
+											break;
+										case 'publishing':
+										case 'logistics':
+											$rerms[] = 'Business';
+											break;
+									}
+									$terms [] = htmlspecialchars( $genre->slug, ENT_XML1, 'UTF-8' );
+								}
+								echo implode( ', ', $terms );
+								?></news:keywords>
+						</news:news>
+					</url>
+				<?php endwhile; ?>
+			</urlset>
 			<?php
 		} );
 	}
+} );
+
+/**
+ * RSSのタイトルを変更
+ *
+ * @param string $title
+ * @return string
+ */
+add_filter( 'get_wp_title_rss', function( $title ) {
+	if ( is_post_type_archive( 'news' ) ) {
+		$title = 'はめにゅー | 文芸関連ニュース';
+	}
+	return $title;
+} );
+
+add_filter( 'bloginfo_rss', function($value, $show){
+	if ( 'description' == $show && is_post_type_archive( 'news' ) ) {
+		$value = get_post_type_object('news')->description;
+	}
+	return $value;
+}, 10, 2);
+/**
+ * リライトルールを登録
+ */
+add_filter( 'rewrite_rules_array', function ( $rules ) {
+	return array_merge( [
+		'^instant-articles/(news)/?$'               => 'index.php?feed=instant_article&post_type=$matches[1]&orderby=modified&order=desc',
+		'^instant-articles/(news)/page/([0-9+])/?$' => 'index.php?feed=instant_article&post_type=$matches[1]&orderby=modified&order=desc&paged=$matches[2]',
+	], $rules );
+} );
+
+add_action( 'pre_get_posts', function( &$wp_query ) {
+	if ( $wp_query->is_feed( 'instant_article' ) ) {
+		$wp_query->set( 'posts_per_rss', 20 );
+	}
+} );
+
+/**
+ * インスタントアーティクルを追加
+ */
+add_filter( 'feed_content_type', function ( $mime, $type ) {
+	if ( 'instant_article' == $type ) {
+		$mime = 'application/xml+rss';
+	};
+
+	return $mime;
+}, 10, 2 );
+
+/**
+ * フィードを出力
+ */
+add_action( 'do_feed_instant_article', function () {
+	header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . get_option( 'blog_charset' ), true );
+	echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+	/**
+	 * Fires between the xml and rss tags in a feed.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $context Type of feed. Possible values include 'rss2', 'rss2-comments',
+	 *                        'rdf', 'atom', and 'atom-comments'.
+	 */
+	do_action( 'rss_tag_pre', 'rss2' );
+	?>
+	<rss version="2.0"
+	     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	     xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	     xmlns:dc="http://purl.org/dc/elements/1.1/"
+	     xmlns:atom="http://www.w3.org/2005/Atom"
+	     xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	     xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+		<?php
+		/**
+		 * Fires at the end of the RSS root to add namespaces.
+		 *
+		 * @since 2.0.0
+		 */
+		do_action( 'rss2_ns' );
+		?>
+	>
+
+		<channel>
+			<title><?php wp_title_rss(); ?></title>
+			<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml"/>
+			<link><?php bloginfo_rss( 'url' ) ?></link>
+			<description><?php bloginfo_rss( "description" ) ?></description>
+			<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_lastpostmodified( 'GMT' ), false ); ?></lastBuildDate>
+			<language><?php bloginfo_rss( 'language' ); ?></language>
+			<sy:updatePeriod><?php
+				$duration = 'hourly';
+
+				/**
+				 * Filter how often to update the RSS feed.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param string $duration The update period. Accepts 'hourly', 'daily', 'weekly', 'monthly',
+				 *                         'yearly'. Default 'hourly'.
+				 */
+				echo apply_filters( 'rss_update_period', $duration );
+				?></sy:updatePeriod>
+			<sy:updateFrequency><?php
+				$frequency = '1';
+
+				/**
+				 * Filter the RSS update frequency.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param string $frequency An integer passed as a string representing the frequency
+				 *                          of RSS updates within the update period. Default '1'.
+				 */
+				echo apply_filters( 'rss_update_frequency', $frequency );
+				?></sy:updateFrequency>
+			<?php
+			/**
+			 * Fires at the end of the RSS2 Feed Header.
+			 *
+			 * @since 2.0.0
+			 */
+			do_action( 'rss2_head' );
+
+			// Filter for amazon link
+			add_filter( 'wp_hamazon_amazon', function ( $tag ) {
+				$tag = preg_replace( '#<p class="tmkm-amazon-img">(.*?)</p>#u', '<figure>$1</figure>', $tag );
+
+				return $tag;
+			} );
+
+			add_filter( 'the_content', function ( $content ) {
+				$content = preg_replace( '#(<blockquote class="twitter-tweet" (data-)?width="[0-9]+">.*?</script></p>)#us', '<figure class="op-social"><iframe>$1</iframe></figure>', $content );
+
+				return $content;
+			} );
+
+			while ( have_posts() ) : the_post();
+				?>
+				<item>
+					<title><?php the_title_rss() ?></title>
+					<link><?php the_permalink_rss() ?></link>
+					<?php if ( get_comments_number() || comments_open() ) : ?>
+						<comments><?php comments_link_feed(); ?></comments>
+					<?php endif; ?>
+					<pubDate><?php echo mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true ), false ); ?></pubDate>
+					<dc:creator><![CDATA[<?php the_author() ?>]]></dc:creator>
+					<author><![CDATA[<?php the_author() ?>]]></author>
+					<?php the_category_rss( 'rss2' ) ?>
+
+					<guid isPermaLink="false"><?php the_guid(); ?></guid>
+					<description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
+					<?php
+					ob_start();
+					get_template_part( 'templates/news/instant-article' );
+					$content = ob_get_contents();
+					ob_end_clean();
+					?>
+					<content:encoded><![CDATA[<?php echo $content; ?>]]></content:encoded>
+					<?php if ( get_comments_number() || comments_open() ) : ?>
+						<wfw:commentRss><?php echo esc_url( get_post_comments_feed_link( null, 'rss2' ) ); ?></wfw:commentRss>
+						<slash:comments><?php echo get_comments_number(); ?></slash:comments>
+					<?php endif; ?>
+					<?php rss_enclosure(); ?>
+					<?php
+					/**
+					 * Fires at the end of each RSS2 feed item.
+					 *
+					 * @since 2.0.0
+					 */
+					do_action( 'rss2_item' );
+					?>
+				</item>
+			<?php endwhile; ?>
+		</channel>
+	</rss>
+	<?php
 } );
 
