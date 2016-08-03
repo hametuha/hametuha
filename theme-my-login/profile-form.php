@@ -156,7 +156,9 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 			<div class="alert alert-info">
 				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
 					この情報はあなたの
-					<a class="alert-link" href="<?= home_url( sprintf( '/doujin/detail/%s/', $profileuser->user_nicename )) ?>">プロフィールページ</a>
+					<a class="alert-link" href="<?= home_url( sprintf( '/doujin/detail/%s/', $profileuser->user_nicename ) ) ?>">
+						プロフィールページ
+					</a>
 					に表示されます。
 					読者があなたのことを知るきっかけになりますので、なるべく詳細に入力しましょう。
 					入力していない情報は表示されません。
@@ -197,7 +199,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 					$placeholder = '';
 					$instruction = '';
 					$class_names = [ 'form-control' ];
-                    $textarea = false;
+					$textarea = false;
 					switch ( $name ) {
 						case 'aim':
 							$placeholder = ' placeholder="ex. 私のブログ"';
@@ -214,15 +216,15 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 							$placeholder = ' placeholder="ex. 東京都千代田区"';
 							$instruction = '自分のアイデンティティが育まれた場所を入力してください。';
 							break;
-                        case 'favorite_authors':
-                            $placeholder = ' placeholder="ex. 夏目漱石,チャールズ・ディケンズ"';
-                            $instruction = '好きな作家をカンマ区切りで入力してください。';
-                            break;
-                        case 'favorite_words':
-                            $textarea = true;
-                            $placeholder = ' placeholder="ex. 人生は一行のボオドレウヱルに如かない——芥川龍之介"';
-                            $instruction = '好きな言葉を出店付きで入力してください。';
-                            break;
+						case 'favorite_authors':
+							$placeholder = ' placeholder="ex. 夏目漱石,チャールズ・ディケンズ"';
+							$instruction = '好きな作家をカンマ区切りで入力してください。';
+							break;
+						case 'favorite_words':
+							$textarea    = true;
+							$placeholder = ' placeholder="ex. 人生は一行のボオドレウヱルに如かない——芥川龍之介"';
+							$instruction = '好きな言葉を出店付きで入力してください。';
+							break;
 						default:
 							// Do nothing
 							break;
@@ -231,13 +233,13 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 					<div class="form-group">
 						<label
 							for="<?php echo $name; ?>"><?php echo apply_filters( 'user_' . $name . '_label', $desc ); ?></label>
-                        <?php if( $textarea ): ?>
+                        <?php if ( $textarea ) : ?>
 
                         <textarea <?php echo $placeholder; ?>
                             name="<?php echo $name; ?>" rows="5"
                                                           id="<?php echo $name; ?>"
                                                           class="<?= implode( ' ', $class_names ) ?>"><?= esc_textarea( $profileuser->$name ) ?></textarea>
-                        <?php else: ?>
+                        <?php else : ?>
 						<input<?php echo $placeholder; ?> type="<?= $type ?>" name="<?php echo $name; ?>"
 														  id="<?php echo $name; ?>"
 														  value="<?php echo esc_attr( $profileuser->$name ) ?>"
@@ -251,8 +253,6 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 				}
 			endif;
 			?>
-
-
 			<p class="submit">
 				<input type="submit" class="btn btn-primary btn-lg btn-block" value="更新"/>
 			</p>
@@ -273,7 +273,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 					<p class="description text-success"><i class="icon-checkmark-circle2"></i> プロフィール写真をアップロード済みです。</p>
 				<?php elseif ( has_gravatar( $current_user->ID ) ) : ?>
 					<p class="description text-success"><i class="icon-checkmark-circle2"></i> Gravatarが有効です。</p>
-				<?php else: ?>
+				<?php else : ?>
 					<p class="description text-danger"><i class="icon-warning2"></i> プロフィール写真がありません。</p>
 				<?php endif; ?>
 				<p class="description text-muted">
@@ -285,12 +285,29 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 
 		</section>
 
+		<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+		<section class="clearfix">
+			<h3><i class="icon-gift"></i> 報酬</h3>
+
+			<hr />
+			<h4>ニュース報酬</h4>
+			<p class="description text-muted">ニュース記事を書いて1記事あたり貰える金額です。詳細は<a href="<?= home_url( '/faq-cat/news/' ) ?>">よくある質問</a>を御覧ください。</p>
+			<p>
+				<strong>2,000PVを超えた記事に関して1,000円</strong>を受け取ることができます。
+				<?php if ( $news_guranterr = \Hametuha\Model\Sales::get_instance()->get_guarantee( $current_user->ID, 'news' ) ) : ?>
+					 また、<strong>最低保証額として1記事あたり<?= number_format( $news_guranterr ) ?>円が保証</strong>されています。
+				<?php endif; ?>
+			</p>
+
+
+
+		</section>
+		<?php endif; ?>
+
 
 		<section class="misc-section">
 			<h2><i class="icon-plus2"></i> その他</h2>
-			<?php
-			do_action( 'show_user_profile', $profileuser );
-			?>
+			<?php do_action( 'show_user_profile', $profileuser ); ?>
 
 			<p class="submit">
 				<input type="submit" class="btn btn-primary btn-lg btn-block" value="更新"/>

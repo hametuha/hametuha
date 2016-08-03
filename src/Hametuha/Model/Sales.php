@@ -222,4 +222,29 @@ class Sales extends Model {
 	public function total() {
 		return (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
 	}
+
+	/**
+	 * Get user's guarantee
+	 *
+	 * @param int $user_id
+	 * @param string $type Default 'news'
+	 *
+	 * @return float
+	 */
+	public function get_guarantee( $user_id, $type = 'news' ) {
+		return (float) get_user_meta( $user_id, "_{$type}_guarantee", true );
+	}
+
+	/**
+	 * Save user's guarantee
+	 *
+	 * @param int $user_id
+	 * @param $type
+	 * @param $value
+	 *
+	 * @return bool|int
+	 */
+	public function save_guarantee( $user_id, $type, $value ) {
+		return update_user_meta( $user_id, "_{$type}_guarantee", $value );
+	}
 }

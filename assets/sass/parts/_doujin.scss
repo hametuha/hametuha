@@ -134,3 +134,20 @@
   }
 }
 
+.wpg-connect-table{
+  th{
+    font-size: 1em;
+    display: block;
+    padding: 0;
+    i{
+      font-size: 1.6em;
+    }
+
+  }
+  td{
+    display: block;
+    padding: 0 0 10px;
+    border-bottom: 1px dotted #ddd;
+  }
+}
+

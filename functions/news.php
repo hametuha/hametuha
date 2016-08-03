@@ -749,4 +749,3 @@ add_action( 'do_feed_instant_article', function () {
 	</rss>
 	<?php
 } );
-
