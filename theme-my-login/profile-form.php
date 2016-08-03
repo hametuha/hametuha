@@ -293,7 +293,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 			<h4>ニュース報酬</h4>
 			<p class="description text-muted">ニュース記事を書いて1記事あたり貰える金額です。詳細は<a href="<?= home_url( '/faq-cat/news/' ) ?>">よくある質問</a>を御覧ください。</p>
 			<p>
-				<strong>2,000PVを超えた記事に関して1,000円</strong>を受け取ることができます。
+				<strong>2,000PVを超えた記事に関して500円</strong>を受け取ることができます。
 				<?php if ( $news_guranterr = \Hametuha\Model\Sales::get_instance()->get_guarantee( $current_user->ID, 'news' ) ) : ?>
 					 また、<strong>最低保証額として1記事あたり<?= number_format( $news_guranterr ) ?>円が保証</strong>されています。
 				<?php endif; ?>

@@ -230,7 +230,77 @@ class UserSales extends Model {
 		return [ $total, $success ];
 	}
 
+	/**
+	 *
+	 *
+	 * @param int $year
+	 * @param int $month
+	 *
+	 * @return array
+	 */
+	public function save_news_report( $year, $month ) {
+		$done = 0;
+		$none = 0;
+		foreach ( $this->get_news_report( $year, $month ) as $user_id => $sales ) {
+			if ( $sales['total'] ) {
+				$label = sprintf( '%d年%d月 ニュース %d/%d 記事', $year, $month, $sales['valid'], $sales['count'] );
+				$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
+				if ( $this->add( $user_id, 'news', $sales['total'] / $sales['valid'], $sales['valid'], $label, true, true, 0, $created ) ) {
+					$done++;
+				}
+			} else {
+				$none++;
+			}
+		}
+		return [ $done, $none ];
+	}
 
+	/**
+	 * Get news release.
+	 *
+	 * @param int $year
+	 * @param int $month
+	 *
+	 * @return array
+	 */
+	public function get_news_report( $year, $month ) {
+		list( $start, $end ) = $this->get_range( $year, $month );
+		$result = [];
+		foreach (
+			get_posts( [
+				'post_type'      => 'news',
+				'post_status'    => 'publish',
+				'posts_per_page' => - 1,
+				'meta_query'     => [
+					'key'     => '_news_published',
+					'value'   => [ $start, $end ],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATETIME',
+				],
+			] ) as $post
+		) {
+			if ( ! isset( $result[ $post->post_author ] ) ) {
+				$result[ $post->post_author ] = [
+					'count' => 0,
+					'valid' => 0,
+					'total' => 0,
+				];
+			}
+			$result[ $post->post_author ]['count'] ++;
+			$get = 0;
+			if ( $guarantee = Sales::get_instance()->get_guarantee( $post->post_author, 'news' ) ) {
+				$get = $guarantee;
+				$result[ $post->post_author ]['valid'] ++;
+			} else {
+				if (  2000 < get_post_meta( $post->ID, '_current_pv', true ) ) {
+					$get = 500;
+					$result[ $post->post_author ]['valid'] ++;
+				}
+			}
+			$result[ $post->post_author ]['total'] += $get;
+		}
+		return $result;
+	}
 
 	/**
 	 * データを挿入する

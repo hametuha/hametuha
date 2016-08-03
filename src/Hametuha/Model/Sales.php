@@ -56,14 +56,14 @@ class Sales extends Model {
 	 *
 	 * @return array|mixed|null
 	 */
-	public function get_records( array $args = [] ) {
+	public function get_records( array $args = [ ] ) {
 		$args = wp_parse_args( $args, [
 			'author'   => 0,
 			'asin'     => '',
 			'store'    => '',
 			'type'     => '',
 			'per_page' => 20,
-		    'page'   => 0,
+			'page'     => 0,
 		] );
 		$this->where_not_null( 'pm.meta_value' );
 		if ( $args['author'] ) {
@@ -75,6 +75,7 @@ class Sales extends Model {
 		if ( $args['type'] ) {
 			$this->where( "{$this->table}.type = %s", $args['type'] );
 		}
+
 		return $this->select( "{$this->table}.*, p.*" )
 		            ->calc()
 		            ->order_by( "{$this->table}.date", 'DESC' )
@@ -96,10 +97,10 @@ class Sales extends Model {
 			$this->where( 'p.post_author = %d', $author_id );
 		}
 		$rows    = $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
-						->select( "p.*, {$this->table}.*" )
-						->order_by( "{$this->table}.date", 'DESC' )
-						->result();
-		$results = [];
+		                ->select( "p.*, {$this->table}.*" )
+		                ->order_by( "{$this->table}.date", 'DESC' )
+		                ->result();
+		$results = [ ];
 		$from_ts = strtotime( $from );
 		$to_ts   = strtotime( $to );
 		$diff    = ceil( ( $to_ts - $from_ts ) / ( 60 * 60 * 24 ) );
@@ -144,9 +145,9 @@ class Sales extends Model {
 		}
 
 		return $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
-					->select( "p.*, {$this->table}.*" )
-					->order_by( "{$this->table}.date", 'DESC' )
-					->result();
+		            ->select( "p.*, {$this->table}.*" )
+		            ->order_by( "{$this->table}.date", 'DESC' )
+		            ->result();
 	}
 
 
@@ -203,13 +204,14 @@ class Sales extends Model {
 			->join( "{$this->db->postmeta} as pm", "pm.meta_key = '_asin' AND pm.meta_value = s.asin" )
 			->join( "{$this->db->posts} as p", 'p.ID = pm.post_id' )
 			->wheres( [
-				's.date >= %s' => $start,
-			    's.date <= %s' => $end,
-			    's.royalty != %d' => 0,
+				's.date >= %s'    => $start,
+				's.date <= %s'    => $end,
+				's.royalty != %d' => 0,
 			] )
 			->group_by( 's.asin' )
 			->result();
-		return array_filter( $result, function( $row ) {
+
+		return array_filter( $result, function ( $row ) {
 			return $row->user_id && ( 0 < $row->sub_total );
 		} );
 	}
