@@ -272,10 +272,12 @@ class UserSales extends Model {
 				'post_status'    => 'publish',
 				'posts_per_page' => - 1,
 				'meta_query'     => [
-					'key'     => '_news_published',
-					'value'   => [ $start, $end ],
-					'compare' => 'BETWEEN',
-					'type'    => 'DATETIME',
+					[
+						'key'     => '_news_published',
+						'value'   => [ $start, $end ],
+						'compare' => 'BETWEEN',
+						'type'    => 'DATETIME',
+					],
 				],
 			] ) as $post
 		) {
