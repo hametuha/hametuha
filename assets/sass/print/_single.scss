@@ -1,0 +1,36 @@
+@media only print{
+
+  body.single-post{
+    padding-top: 0;
+    .container{
+      max-width: 100%;
+    }
+    .work-content{
+      font-size: 11pt;
+    }
+  }
+
+
+  // リンクのURLを出さない
+  .work-meta,
+  .series-pager-title{
+    a::after{
+      content: "";
+    }
+  }
+
+  // 非表示にする要素
+  .single-post-thumbnail,
+  .footer-wrapper,
+  .ebookList,
+  .finish-nav,
+  .series-pager,
+  .work-wrapper ~ div,
+  #footer-single{
+    display: none;
+  }
+
+
+
+
+}
