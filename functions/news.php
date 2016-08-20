@@ -498,81 +498,60 @@ HTML;
  * @todo いまのところ、Googleに無視されているので、あとでやる
  */
 add_filter( 'bwp_gxs_external_sitemaps', function ( $data ) {
-//	$post = get_posts( [
-//		'post_type' => 'news',
-//		'post_status' => 'publish',
-//	    'posts_per_page' => 1,
-//	    'orderby' => [ 'date' => 'DESC' ],
-//	] );
-//	$data[] = [
-//		'location' => home_url( '/news_sitemap/' ),
-//	    'lastmod' => mysql2date( DateTime::W3C, current( $post )->post_date ),
-//	];
+	/** @var wpdb $wpdb */
+	global $wpdb;
+	$query = <<<SQL
+		SELECT COUNT(ID) FROM {$wpdb->posts}
+		WHERE post_type = 'news'
+          AND post_status = 'publish'
+SQL;
+	$total = (int) $wpdb->get_var( $query );
+	$per_page = get_option( 'posts_per_rss', 20 );
+	for ( $i = 0, $l = ceil( $total / $per_page ); $i < $l; $i++ ) {
+		$url = home_url( '/amp_sitemap/' ).( $i ? sprintf( '?paged=%d', $i + 1 ) : '' );
+		$data[] = [
+			'location' => $url,
+		];
+	}
+	$post = get_posts( [
+		'post_type' => 'news',
+		'post_status' => 'publish',
+	    'posts_per_page' => 1,
+	    'orderby' => [ 'date' => 'DESC' ],
+	] );
 	return $data;
 } );
 
 /**
  * サイトマップ用フィードを作成
  */
-add_action( 'pre_get_posts', function ( WP_Query $wp_query ) {
-	if ( $wp_query->is_main_query() && $wp_query->is_feed( 'news_sitemap' ) ) {
-		$wp_query->set( 'posts_per_page', 20 );
-		$wp_query->set( 'posts_status', 'publish' );
-		$wp_query->set( 'ordeby', [ 'date' => 'DESC' ] );
-		add_action( 'do_feed_news_sitemap', function () {
-			header( 'Content-Type: text/xml; charset=UTF-8' );
-			echo '<?xml version="1.0" encoding="UTF-8"?>';
-			?>
-
-			<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-			        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-				<?php while ( have_posts() ) : the_post(); ?>
-					<url>
-						<loc><?php the_permalink() ?></loc>
-						<news:news>
-							<news:publication>
-								<news:name><?= htmlspecialchars( 'はめにゅー | 破滅派がお届けする文学関連ニュース', ENT_XML1, 'UTF-8' ) ?></news:name>
-								<news:language>ja</news:language>
-							</news:publication>
-							<news:genres>UserGenerated,Blog</news:genres>
-							<news:publication_date><?= the_time( DateTime::W3C ) ?></news:publication_date>
-							<news:title><?= htmlspecialchars( get_the_title(), ENT_XML1, 'UTF-8' ) ?></news:title>
-							<news:keywords><?php
-								$terms  = [ 'Entertainment' ];
-								$genres = get_the_terms( get_post(), 'genre' );
-								foreach ( $genres as $genre ) {
-									switch ( strtolower( $genre->slug ) ) {
-										case 'tech':
-											$terms[] = 'Technology';
-											break;
-										case 'foreign-lieterature':
-											$terms[] = 'World';
-											break;
-										case 'book-store':
-										case 'literature':
-										case 'japanese-literature':
-										case 'magazine':
-											$terms[] = 'Book';
-											break;
-										case 'tv':
-											$terms[] = 'TV';
-											break;
-										case 'publishing':
-										case 'logistics':
-											$rerms[] = 'Business';
-											break;
-									}
-									$terms [] = htmlspecialchars( $genre->slug, ENT_XML1, 'UTF-8' );
-								}
-								echo implode( ', ', $terms );
-								?></news:keywords>
-						</news:news>
-					</url>
-				<?php endwhile; ?>
-			</urlset>
-			<?php
-		} );
+add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
+	if ( ! $wp_query->is_main_query() || ! $wp_query->is_feed ) {
+		return;
 	}
+} );
+
+/**
+ * amp用サイトマップ
+ */
+add_action( 'do_feed_amp_sitemap', function () {
+	header( 'Content-Type: text/xml; charset=UTF-8' );
+	echo '<?xml version="1.0" encoding="UTF-8"?>';
+	?>
+	<urlset
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+		xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+		<?php while ( have_posts() ) : the_post(); ?>
+			<url>
+				<loc><?= trailingslashit( get_permalink() ) ?>amp/</loc>
+				<lastmod><?= the_modified_time( DateTime::W3C ); ?></lastmod>
+				<changefreq>weekly</changefreq>
+				<priority>0.5</priority>
+			</url>
+		<?php endwhile; ?>
+	</urlset>
+	<?php
 } );
 
 /**
@@ -588,9 +567,12 @@ add_filter( 'get_wp_title_rss', function( $title ) {
 	return $title;
 } );
 
+/**
+ * AMPを変更
+ */
 add_filter( 'bloginfo_rss', function($value, $show){
 	if ( 'description' == $show && is_post_type_archive( 'news' ) ) {
-		$value = get_post_type_object('news')->description;
+		$value = get_post_type_object( 'news' )->description;
 	}
 	return $value;
 }, 10, 2);
