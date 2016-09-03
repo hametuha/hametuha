@@ -21,7 +21,7 @@
 			case 'facebook':
 				$link = sprintf(
 					'<div class="fb-like" data-href="%s" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>',
-					hametuha_user_link( $url, 'share-single', 'Facebook' )
+					is_front_page() ? 'https://www.facebook.com/hametuha.inc/' : hametuha_user_link( $url, 'share-single', 'Facebook' )
 				);
 				break;
 			case 'twitter':
