@@ -18,9 +18,10 @@
 			<?php endforeach; ?>
 		</p>
 		<?php endif; ?>
-		<p class="text-center">
-			<a href="https://twitter.com/minico_me" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @minico_me</a>
-		</p>
+		<div class="text-center">
+			<a href="https://twitter.com/minico_me" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @minico_me</a><br />
+			<div class="fb-like" data-href="https://www.facebook.com/minicome/" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+		</div>
 	</div>
 	
 

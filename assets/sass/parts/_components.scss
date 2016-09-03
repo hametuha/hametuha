@@ -256,15 +256,16 @@ i.rotation{
       margin-right: 5px;
       margin-left: 5px;
       transition: color .5s ease-in-out, background-color .5s ease-in-out;
+      border-radius: 0;
       &:link, &:visited{
-        color: #000;
+        color: #fff;
         text-decoration: none;
-        background-color: #f9f9f9;
+        background-color: $brand-primary;
       }
       &:hover, &:active{
-        color: $brand-primary;
+        color: #fff;
         text-decoration: none;
-        background-color: #ddd;
+        background-color: lighten($brand-primary, 10);
       }
     }
     &:first-child a{
@@ -670,59 +671,99 @@ ul.metadata{
 //
 // ---------------
 //
-.shareContainer{
+.share{
 
-  padding-top: 20px;
-  padding-bottom: 20px;
+  $height: 80px;
+
+  &__container{
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 
   &__item{
     width: 20%;
     float: left;
+    text-align: center;
+    height: $height;
+    @media only screen and ( max-width: 440px){
+      width: 25%;
+      &--hatena{
+        display: none;
+      }
+    }
+    @each $var in (
+            facebook $facebook-color 10px,
+            twitter $twitter-color 10px,
+            googleplus $google-color 10px,
+            hatena $hatena-color 10px,
+            line $line-color 0,
+            pocket $pocket-color 10px,
+    ){
+      $brand: nth($var, 1);
+      $color: nth($var, 2);
+      $pad: nth($var, 3);
+      &--#{$brand}{
+        @extend .share__item;
+        background-color: $color;
+        padding-top: $pad;
+      }
+    }
   }
-
-  .secondary{
-    height: 40px;
-    line-height: 40px;
-    color: $hametuha-color;
-  }
-  a{
+  &__baloon{
+    box-sizing: border-box;
     display: block;
-    height: 40px;
-    line-height: 40px;
+    margin: 0 auto 8px;
+    width: 75px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    position: relative;
+    &:after{
+      content: "";
+      position: absolute;
+      display: block;
+      width: 0;
+      height: 0;
+      border: 5px solid transparent;
+      border-top-color: #fff;
+      left: 50%;
+      margin-left: -5px;
+      bottom: -10px;
+    }
+    &:link, &:visited{
+      text-decoration: none;
+      color: #444;
+    }
+    &:hover, &:active{
+      text-decoration: none;
+      color: $twitter-color;
+    }
+  }
+  &__button{
+    display: block;
+    height: $height;
+    line-height: $height;
     &:link, &:visited{
       color: #fff;
       text-decoration: none;
     }
-    &:active{
+    &:hover, &:active{
       color: #fff;
-      opacity: .8;
+      background-color: rgba( 255, 255, 255, .2 );
     }
-    @each $var in (
-      facebook $facebook-color,
-      twitter $twitter-color,
-      googleplus $google-color,
-      hatena $hatena-color,
-      line $line-color,
-      pocket $pocket-color,
-    ){
-      $brand: nth($var, 1);
-      $color: nth($var, 2);
-      &.share--#{$brand}{
-        background-color: $color;
-      }
-    }
-    span{
-      margin-left: 0.5em;
-      @media only screen and (max-width: $screen-xs-max ) {
-        display: none;
-      }
+    i{
+      color: #fff !important;
+      line-height: 1;
+      font-size: 24px;
+      vertical-align: middle;
     }
   }
-  i{
-    color: #fff !important;
-    line-height: 1;
-    font-size: 24px;
-    vertical-align: middle;
+  &__text{
+    margin-left: 0.5em;
+    @media only screen and (max-width: $screen-xs-max ) {
+      display: none;
+    }
   }
 }
 

@@ -10,9 +10,20 @@ add_action( 'admin_footer', function () {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.4&appId=196054397143922";
+  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.7&appId=196054397143922";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
+<script>
+! function (d, s, id) {
+	var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+	if (!d.getElementById(id)) {
+		js = d.createElement(s);
+		js.id = id;
+		js.src = p + '://platform.twitter.com/widgets.js';
+		fjs.parentNode.insertBefore(js, fjs);
+	}
+}(document, 'script', 'twitter-wjs');
+</script>
 HTML;
 } );
 
@@ -51,94 +62,6 @@ function hametuha_user_link( $url, $label, $source, $author = null ) {
 		'utm_campaign' => $label,
 		'utm_medium'   => $author,
 	] );
-}
-
-/**
- * 一連のシェアボタンを出力する
- *
- * @param WP_Post $post 指定しない場合は現在の投稿
- *
- * @return array
- */
-function hametuha_share( $post = null ) {
-	if ( is_singular() ) {
-		$post    = get_post( $post );
-		$title   = get_the_title( $post );
-		$url     = get_permalink( $post );
-		$post_id = $post->ID;
-	} else {
-		$title   = get_bloginfo( 'name' );
-		$url     = home_url( '/' );
-		$post_id = 0;
-	}
-	$encoded_url   = rawurlencode( $url );
-	$encoded_title = rawurlencode( $title . ' | 破滅派' );
-	$hash_tag      = rawurlencode( '#破滅派' );
-	$data_title    = esc_attr( $title );
-	$links         = [];
-	foreach (
-		[
-			[
-				'facebook',
-				hametuha_user_link( $url, 'share-single', 'Facebook' ),
-				'4',
-				true,
-			    'シェア',
-			],
-			[
-				'twitter',
-				'https://twitter.com/share?url=' . rawurlencode( hametuha_user_link( $url, 'share-single', 'Twitter ' ) ) . '&amp;text='.rawurlencode( $title )."%20{$hash_tag}",
-				'3',
-				false,
-				'呟く',
-			],
-			[
-				'googleplus',
-				'https://plus.google.com/share?url=' . rawurlencode( hametuha_user_link( $url, 'share-single', 'Google+' ) ),
-				'4',
-				true,
-				'シェア',
-			],
-			[
-				'hatena',
-				"http://b.hatena.ne.jp/add?title={$encoded_title}&amp;url={$encoded_url}",
-				'',
-				true,
-				'はてぶ',
-			],
-			[
-				'line',
-				"line://msg/text/{$encoded_title}%20" . rawurlencode( hametuha_user_link( $url, 'share-single', 'Line' ) ),
-				'',
-				false,
-				'送る',
-			],
-		] as list( $brand, $href, $suffix, $blank, $text )
-	) {
-		if ( 'hatena' === $brand ) {
-			$additional_class = ' hatena-bookmark-button';
-			$data             = ' data-hatena-bookmark-layout="simple"';
-		} else {
-			$data             = '';
-			$additional_class = '';
-		}
-		$links[ $brand ] = sprintf(
-			'<a class="share share--%1$s share-retrieve%8$s" data-medium="%1$s" data-target="%2$d" href="%3$s"%5$s%7$s>
-				<i class="icon-%1$s%4$s"></i>
-				<span>%6$s</span>
-			</a>',
-			$brand,
-			$post_id,
-			$href,
-			$suffix,
-			( $blank ? ' target="_blank"' : '' ),
-			$text,
-			$data,
-			$additional_class
-		);
-	}
-
-	return $links;
 }
 
 /**
@@ -233,29 +156,19 @@ add_action( 'admin_notices', function () {
 			return;
 		}
 		?>
-			<div class="admin-notice admin-notice--info">
-				<p>
-					<span class="dashicons dashicons-info"></span> この投稿は<strong>公開済み</strong>です。
-					投稿を宣伝してみんなに読んでもらいましょう。
-				</p>
-				<div class="fb-share-button"
-				     data-href="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ) ?>"
-				     data-layout="button_count"></div>
-				<a href="https://twitter.com/share" class="twitter-share-button"
-				   data-url="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ) ?>"
-				   data-text="<?= get_the_title( $post ) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
-				<script>
-					! function (d, s, id) {
-						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-						if (!d.getElementById(id)) {
-							js = d.createElement(s);
-							js.id = id;
-							js.src = p + '://platform.twitter.com/widgets.js';
-							fjs.parentNode.insertBefore(js, fjs);
-						}
-					}(document, 'script', 'twitter-wjs');
-				</script>
-			</div>
+		<div class="admin-notice admin-notice--info">
+			<p>
+				<span class="dashicons dashicons-info"></span> この投稿は<strong>公開済み</strong>です。
+				投稿を宣伝してみんなに読んでもらいましょう。
+			</p>
+			<div class="fb-share-button"
+			     data-href="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ) ?>"
+			     data-layout="button_count"></div>
+			<a href="https://twitter.com/share" class="twitter-share-button"
+			   data-url="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ) ?>"
+			   data-text="<?= get_the_title( $post ) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
+
+		</div>
 		<?php
 	}
 } );
@@ -270,7 +183,7 @@ add_action( 'admin_notices', function () {
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	//はじめて公開にしたときだけ
 	if ( ! WP_DEBUG && 'publish' === $new_status && function_exists( 'update_twitter_status' ) ) {
-		$title = hametuha_censor( get_the_title( $post ) );
+		$title  = hametuha_censor( get_the_title( $post ) );
 		$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
 		switch ( $old_status ) {
 			case 'new':
@@ -338,6 +251,7 @@ function show_twitter_status( $url ) {
  * @param string $content Slackに投稿する文字列
  * @param array $attachment 添付がある場合は、連想配列を渡す
  * @param string $channel Default '#general'
+ *
  * @return bool
  */
 function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
@@ -356,13 +270,13 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 	}
 	$ch = curl_init();
 	curl_setopt_array( $ch, [
-		CURLOPT_URL => SLACK_ENDPOINT,
-		CURLOPT_POST => true,
-		CURLOPT_HTTPHEADER => [ 'Content-Type: application/json' ],
-		CURLOPT_POSTFIELDS => json_encode( $payload ),
-	    CURLOPT_RETURNTRANSFER => true,
-	    CURLOPT_SSL_VERIFYPEER => false,
-		CURLOPT_TIMEOUT => 5,
+		CURLOPT_URL            => SLACK_ENDPOINT,
+		CURLOPT_POST           => true,
+		CURLOPT_HTTPHEADER     => [ 'Content-Type: application/json' ],
+		CURLOPT_POSTFIELDS     => json_encode( $payload ),
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_SSL_VERIFYPEER => false,
+		CURLOPT_TIMEOUT        => 5,
 	] );
 	$result = curl_exec( $ch );
 	if ( ! $result ) {
@@ -373,6 +287,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 		error_log( sprintf( 'SLACK_SUCCESS: %s %s', $result, json_encode( $payload ) ) );
 	}
 	curl_close( $ch );
+
 	return false !== $result;
 }
 
