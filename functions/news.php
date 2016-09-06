@@ -132,7 +132,7 @@ add_action( 'pre_get_posts', function ( &$wp_query ) {
 function hamenew_related( $limit = 5, $post = null ) {
 	global $wpdb;
 	$post     = get_post( $post );
-	$term_ids = [ ];
+	$term_ids = [];
 	foreach ( [ 'nouns', 'genre' ] as $tax ) {
 		$terms = get_the_terms( $post, $tax );
 		if ( $terms && ! is_wp_error( $terms ) ) {
@@ -142,7 +142,7 @@ function hamenew_related( $limit = 5, $post = null ) {
 		}
 	}
 	if ( ! $term_ids ) {
-		return [ ];
+		return [];
 	}
 	$term_ids = implode( ', ', $term_ids );
 	$query    = <<<SQL
@@ -199,7 +199,7 @@ function hamenew_links( $post = null ) {
 	$post  = get_post( $post );
 	$links = get_post_meta( $post->ID, '_news_related_links', true );
 	if ( ! $links ) {
-		return [ ];
+		return [];
 	}
 
 	return array_filter( array_map( function ( $line ) {
@@ -227,7 +227,7 @@ function hamenew_books( $post = null ) {
 	$post = get_post( $post );
 	$asin = get_post_meta( $post->ID, '_news_related_books', true );
 	if ( ! $asin || ! class_exists( 'WP_Hamazon_Controller' ) || ( ! WP_Hamazon_Controller::get_instance()->amazon ) ) {
-		return [ ];
+		return [];
 	}
 
 	return array_filter( array_map( function ( $code ) {
@@ -264,7 +264,7 @@ function hamenew_books( $post = null ) {
 function hamenew_popular_nouns() {
 	$terms = get_terms( 'nouns' );
 	if ( ! $terms || is_wp_error( $terms ) ) {
-		return [ ];
+		return [];
 	}
 	// Filter terms
 	$terms = array_filter( $terms, function ( $term ) {
@@ -583,14 +583,46 @@ add_filter( 'rewrite_rules_array', function ( $rules ) {
 	return array_merge( [
 		'^instant-articles/(news)/?$'               => 'index.php?feed=instant_article&post_type=$matches[1]&orderby=modified&order=desc',
 		'^instant-articles/(news)/page/([0-9+])/?$' => 'index.php?feed=instant_article&post_type=$matches[1]&orderby=modified&order=desc&paged=$matches[2]',
+	    '^instant-article/preview/([0-9]+)/'                => 'index.php?p=$matches[1]&post_type=news',
 	], $rules );
 } );
 
+/**
+ * pre_get_postsを修正
+ */
 add_action( 'pre_get_posts', function( &$wp_query ) {
 	if ( $wp_query->is_feed( 'instant_article' ) ) {
 		$wp_query->set( 'posts_per_rss', 20 );
+	} else if ( isset( $_GET['preview_id'] ) ) {
+		add_filter( 'template_include', function($path){
+			return get_template_directory().'/templates/news/instant-article.php';
+		} );
 	}
 } );
+
+/**
+ * Instant Article用にコンテンツを修正
+ *
+ * @param string $content
+ *
+ * @return mixed
+ */
+function _fb_instant_content( $content ){
+	// twitterを修正
+	$content = preg_replace( '#(<blockquote class="twitter-tweet" (data-)?width="[0-9]+">.*?</script></p>)#us', '<figure class="op-social"><iframe>$1</iframe></figure>', $content );
+	// tableを編集
+	$content = preg_replace_callback( '#<table([^>]*?>)(.*)</table>#us', function( $match ) {
+		$table = $match[0];
+		$table = <<<HTML
+<figure class="op-interactive">
+<iframe>{$table}</iframe>
+</figure>
+HTML;
+		return $table;
+	}, $content );
+
+	return $content;
+}
 
 /**
  * インスタントアーティクルを追加
@@ -684,11 +716,7 @@ add_action( 'do_feed_instant_article', function () {
 				return $tag;
 			} );
 
-			add_filter( 'the_content', function ( $content ) {
-				$content = preg_replace( '#(<blockquote class="twitter-tweet" (data-)?width="[0-9]+">.*?</script></p>)#us', '<figure class="op-social"><iframe>$1</iframe></figure>', $content );
-
-				return $content;
-			} );
+			add_filter( 'the_content', '_fb_instant_content' );
 
 			while ( have_posts() ) : the_post();
 				?>

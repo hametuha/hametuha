@@ -9,8 +9,42 @@ function emp($var){
 	return empty($var);
 }
 
-
-
+/**
+ * 住所から座標を取得する
+ *
+ * @param string $address
+ * @param string $key
+ * @param int $expires
+ *
+ * @return array|WP_Error
+ */
+function hametuha_geocode( $address, $key = 'geocode', $expires = 3600 ) {
+	$coordinate = wp_cache_get( $key, 'geocode' );
+	if ( false === $coordinate ) {
+		if ( ! defined( 'GOOGLE_SERVER_KEY' ) ) {
+			return new WP_Error( 500, 'サーバーキーが設定されていません。' );
+		}
+		$endpoint = sprintf(
+			'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s',
+			rawurlencode( $address ),
+			GOOGLE_SERVER_KEY
+		);
+		$response = wp_remote_get( $endpoint );
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+		$response = json_decode( $response['body'] );
+		if ( 'OK' !== $response->status ) {
+			return new WP_Error( 'error', '指定された住所が見つかりません' );
+		}
+		$coordinate = [
+			'lat' => $response->results[0]->geometry->location->lat,
+		    'lng' => $response->results[0]->geometry->location->lng,
+		];
+		wp_cache_set( $key, $coordinate, 'geocode', $expires );
+	}
+	return $coordinate;
+}
 
 
 /**

@@ -21,17 +21,15 @@
 			case 'facebook':
 				$link = sprintf(
 					'<div class="fb-like" data-href="%s" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>',
-					is_front_page() ? 'https://www.facebook.com/hametuha.inc/' : hametuha_user_link( $url, 'share-single', 'Facebook' )
+					is_front_page() ? 'https://www.facebook.com/minicome/' : hametuha_user_link( $url, 'share-single', 'Facebook' )
 				);
 				break;
 			case 'twitter':
+				$via = 'minico_me';
+				$related = 'hametuha';
 				if ( is_hamenew() ) {
-					$via = 'minico_me';
-					$related = 'hametuha';
 					$hash_tag = 'はめにゅー';
 				} else {
-					$via = 'hametuha';
-					$related = 'minico_me';
 					$hash_tag = '破滅派';
 				}
 				$link = sprintf(

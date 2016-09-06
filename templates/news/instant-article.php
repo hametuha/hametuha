@@ -1,3 +1,9 @@
+<?php
+if ( ! is_feed() && is_singular() ) {
+	the_post();
+	add_filter( 'the_content', '_fb_instant_content' );
+}
+?>
 <!doctype html>
 <html lang="ja" prefix="op: http://media.facebook.com/op#">
 <head>
@@ -13,10 +19,10 @@
 		}
 	}
 	if ( $category ) :
-	?>
-	<meta property="op:tags" content="<?= esc_attr( implode(', ', array_map( function( $cat ){
-		return $cat->name;
-	}, $category) ) ) ?>">
+		?>
+		<meta property="op:tags" content="<?= esc_attr( implode( ', ', array_map( function ( $cat ) {
+			return $cat->name;
+		}, $category ) ) ) ?>">
 	<?php endif; ?>
 </head>
 <body>
@@ -29,7 +35,8 @@
 		<time class="op-published" datetime="<?php the_time( DATE_ATOM ) ?>"><?php the_time( 'Y.m.d H:i' ) ?></time>
 
 		<!-- The date and time when your article was last updated -->
-		<time class="op-modified" dateTime="<?php the_modified_date( DATE_ATOM ) ?>"><?php the_modified_date( 'Y.m.d H:i' ) ?></time>
+		<time class="op-modified"
+		      dateTime="<?php the_modified_date( DATE_ATOM ) ?>"><?php the_modified_date( 'Y.m.d H:i' ) ?></time>
 
 		<!-- The authors of your article -->
 		<address>
@@ -38,12 +45,12 @@
 
 		<!-- The cover image shown inside your article -->
 		<?php if ( has_post_thumbnail() ) : $thumbnail = get_post( get_post_thumbnail_id() ) ?>
-		<figure>
-			<img src="<?= get_the_post_thumbnail_url( null, 'large' ) ?>" />
-			<?php if ( $thumbnail->post_excerpt ) : ?>
-				<figcaption><?= wp_kses( $thumbnail->post_excerpt, [ 'a' => [ 'href' ] ] ) ?></figcaption>
-			<?php endif; ?>
-		</figure>
+			<figure>
+				<img src="<?= get_the_post_thumbnail_url( null, 'large' ) ?>"/>
+				<?php if ( $thumbnail->post_excerpt ) : ?>
+					<figcaption><?= wp_kses( $thumbnail->post_excerpt, [ 'a' => [ 'href' ] ] ) ?></figcaption>
+				<?php endif; ?>
+			</figure>
 		<?php endif; ?>
 
 	</header>
@@ -51,16 +58,86 @@
 	<!-- Body text for your article -->
 	<?php the_content(); ?>
 
+
+	<?php if ( $post->_event_title ) : ?>
+		<h2><?= esc_html( $post->_event_title ) ?></h2>
+
+		<ul>
+
+			<?php if ( $post->_event_start ) : ?>
+				<li>
+					<strong>日時: </strong> <?= hamenew_event_date( $post->_event_start, $post->_event_end ) ?>
+					<?php if ( strtotime( $post->_event_end ?: $post->_event_start ) < current_time( 'timestamp', true ) ) : ?>
+						<small>（終了しました）</small>
+					<?php endif; ?>
+				</li>
+			<?php elseif ( $post->_event_end ) : ?>
+				<li>
+					<strong>〆切: </strong> <?= mysql2date( 'Y年n月j日（D）', $post->_event_end ) ?>
+					<?php if ( strtotime( $post->_event_end ) < current_time( 'timestamp', true ) ) : ?>
+						<small>（終了しました）</small>
+					<?php endif; ?>
+				</li>
+			<?php endif; ?>
+
+			<?php if ( $post->_event_address ) : ?>
+				<li>
+					<strong>場所: </strong> <?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?>
+				</li>
+			<?php endif; ?>
+
+			<?php if ( $post->_event_desc ) : ?>
+				<li><?= nl2br( esc_html( $post->_event_desc ) ) ?></li>
+			<?php endif; ?>
+
+
+		</ul>
+
+		<?php if ( $post->_event_address && ( $latlng = hametuha_geocode( $post->_event_address, 'post_'.get_the_ID() ) ) ) : ?>
+			<?php if ( is_wp_error( $latlng ) ) :  ?>
+				<p>地図情報を取得できませんでした: <?= esc_html( $latlng->get_error_message() ) ?></p>
+			<?php else : ?>
+			<figure class="og-map">
+				<figcaption><?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?></figcaption>
+				<script type="application/json" class="op-geotag">
+					{
+						"type": "Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [<?= $latlng['lat'] ?>, <?= $latlng['lng'] ?>]
+						}
+					}
+				</script>
+			</figure>
+			<?php endif; ?>
+		<?php endif; ?>
+
+	<?php endif; ?>
+
+
 	<!-- An ad within your article -->
 	<figure class="op-ad">
-		<iframe width="300" height="250" style="border:0; margin:0;" src="https://www.facebook.com/adnw_request?placement=1652819101702631_1652837168367491&adtype=banner300x250"></iframe>
+		<iframe width="300" height="250" style="border:0; margin:0;"
+		        src="https://www.facebook.com/adnw_request?placement=1652819101702631_1652837168367491&adtype=banner300x250"></iframe>
 	</figure>
 
 	<!-- Analytics code for your article -->
 	<figure class="op-tracker">
 		<iframe hidden>
 			<script>
-				(function (i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function () {(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),                         m=s.getElementsByTagName(o)0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				(function (i, s, o, g, r, a, m) {
+					i['GoogleAnalyticsObject'] = r;
+					i[r] = i[r] || function () {
+							(i[r].q = i[r].q || []).push(arguments)
+						}, i[r].l = 1 * new Date();
+					a = s.createElement(o), m = s.getElementsByTagName(o)
+					0
+					]
+					;
+					a.async = 1;
+					a.src = g;
+					m.parentNode.insertBefore(a, m)
+				})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 				ga('create', 'UA-1766751-2', 'auto');
 				ga('require', 'displayfeatures');
 				ga('set', 'campaignSource', 'Facebook');
@@ -75,10 +152,10 @@
 
 	<footer>
 		<?php if ( $related = hamenew_related( 3 ) ) : ?>
-		<!-- // Related posts -->
+			<!-- // Related posts -->
 			<ul class="op-related-articles">
 				<?php foreach ( $related as $rel ) : ?>
-				<li><a href="<?= get_permalink( $rel ) ?>"><?= esc_html( get_the_title( $rel ) ) ?></a></li>
+					<li><a href="<?= get_permalink( $rel ) ?>"><?= esc_html( get_the_title( $rel ) ) ?></a></li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endif; ?>

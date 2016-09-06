@@ -22,15 +22,24 @@ $nav-padding: 15px;
     h3 {
       margin-top: 0;
     }
-    .col-sm-4 {
+    i{
+      display: inline-block;
+      font-size: 64px;
+      margin-bottom: 10px;
+    }
+    .col-sm-3 {
       @media only screen and (max-width: $screen-xs-max) {
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        &:last-child {
-          margin-bottom: 0;
-          border-bottom: none;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 1px solid $navbar-default-border;
+        &:nth-child(1),
+        &:nth-child(2){
+          margin-top: 0;
+          border-top: none;
         }
-        border-bottom: 1px solid $navbar-default-border;
+        &:nth-child(3){
+          clear: left;
+        }
       }
     }
   }

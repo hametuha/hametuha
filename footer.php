@@ -7,36 +7,54 @@
 
 		<div class="row footer-subscription">
 
-			<div class="col-xs-12 col-sm-4 text-center">
-				<h3>破滅派通信</h3>
+			<div class="col-xs-6 col-sm-3 text-center">
+				<h3>メルマガ</h3>
+
+
 				<p class="text-muted">
-					月一（努力目標）で配信するメルマガです。
+					<i class="icon-mail"></i><br />
+					月一（努力目標）で配信してます。
 				</p>
 				<a class="btn btn-primary" href="<?= home_url( '/merumaga/' ) ?>">
-					<i class="icon-mail"></i> 購読する
+					購読する
 				</a>
 			</div>
 
-			<div class="col-xs-12 col-sm-4 text-center">
+			<div class="col-xs-6 col-sm-3 text-center">
 				<h3>公式Facebook</h3>
 
 				<p class="text-muted">
-					破滅派からのお知らせが届きます。
+					<i class="icon-facebook"></i><br />
+					ミニ子からお知らせが届きます。
 				</p>
 
-				<div class="fb-like" data-href="https://www.facebook.com/hametuha.inc" data-show-faces="false"
+				<div class="fb-like" data-href="https://www.facebook.com/minicome" data-show-faces="false"
 				     data-layout="button_count"></div>
 
 			</div>
 
-			<div class="col-xs-12 col-sm-4 text-center">
+			<div class="col-xs-6 col-sm-3 text-center">
+
 				<h3>公式Twitter</h3>
 
 				<p class="text-muted">
-					更新情報などをつぶやいています。
+					<i class="icon-twitter"></i><br />
+					ミニ子がつぶやいています。
 				</p>
-				<a href="https://twitter.com/hametuha" class="twitter-follow-button" data-show-count="false"
-				   data-lang="ja" data-size="large">@hametuhaさんをフォロー</a>
+
+				<a href="https://twitter.com/minico_me" class="twitter-follow-button" data-show-count="false" data-lang="ja">
+					ミニ子をフォロー
+				</a>
+
+			</div>
+
+			<div class="col-xs-6 col-sm-3 text-center">
+				<h3>公式Instagram</h3>
+				<p class="text-muted">
+					<i class="icon-instagram"></i><br />
+					文学的な写真をお届けします
+				</p>
+				<a href="https://www.instagram.com/minico_hametuha/?ref=badge" class="ig-b- ig-b-v-24"><img src="//badges.instagram.com/static/images/ig-badge-view-24.png" alt="Instagram" /></a>
 			</div>
 
 		</div><!-- //.row -->

@@ -1,20 +1,20 @@
 @import "amazon";
 
-body.modal-open{
+body.modal-open {
   padding-right: 0 !important;
 }
 
-a[disabled], input[disabled]{
+a[disabled], input[disabled] {
   cursor: not-allowed;
 }
 
-.m20{
+.m20 {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 // ヘルプボタン
-.help-tip{
+.help-tip {
   padding: 1px 5px;
   @include border-radius(10px);
   margin-left: 1em;
@@ -46,8 +46,8 @@ a[disabled], input[disabled]{
       color: orange;
     }
   }
-  &-link{
-    @each $var in (danger $brand-danger, warning $brand-warning){
+  &-link {
+    @each $var in (danger $brand-danger, warning $brand-warning) {
       $name: nth($var, 1);
       $color: nth($var, 2);
       &--#{$name} {
@@ -66,83 +66,84 @@ a[disabled], input[disabled]{
 }
 
 // 回転
-.rotation{
+.rotation {
   @include animation(rotation 1.5s linear infinite);
 }
-i.rotation{
+
+i.rotation {
   display: inline-block;
 }
 
 // ハイライト
 @include bg-blink(highlight, #fff, #fff7ab);
-.highlighting{
+.highlighting {
   @include animation(highlight 1.5s linear infinite);
 }
 
 // サムネイル
-.pseudo-thumbnail{
+.pseudo-thumbnail {
   background-size: cover;
   background-color: #737373;
   background-position: center center;
 }
 
-.pager{
-  a{
+.pager {
+  a {
     max-width: 45%;
   }
 }
-@include mq-max($screen-xs-max){
-  .pager{
+
+@include mq-max($screen-xs-max) {
+  .pager {
     font-size: 12px;
   }
 }
 
-
-.tag-cloud{
+.tag-cloud {
   font-family: $work-title;
 }
 
 // フィードバック
-.has-feedback{
+.has-feedback {
   .icon-checkmark,
   .icon-spam,
   .icon-close,
-  .icon-loop3{
+  .icon-loop3 {
     display: none;
   }
-  .help-text{
+  .help-text {
     display: none;
     color: $inverse-body;
   }
-  &.loading{
-    .icon-loop3{
+  &.loading {
+    .icon-loop3 {
       display: block;
       color: $more-shade-font;
     }
   }
-  &.has-warning{
-    .icon-spam{
+  &.has-warning {
+    .icon-spam {
       display: block;
     }
-    .help-warning{
+    .help-warning {
       display: inline;
       background-color: $brand-warning;
     }
   }
-  &.has-error{
-    .icon-close{
+  &.has-error {
+    .icon-close {
       display: block;
     }
-    .help-error{
+    .help-error {
       display: inline;
       background-color: $brand-danger;
     }
   }
-  &.has-success{
-    .icon-checkmark{
+  &.has-success {
+    .icon-checkmark {
       display: block;
     }
-    .help-success{
+    .help-success {
       display: inline;
       background-color: $brand-success;
     }
@@ -150,66 +151,69 @@ i.rotation{
 }
 
 // ツールチップ
-.tooltip-inner{
+.tooltip-inner {
   text-align: left;
 }
 
 // タグコンテナ
-.tag-container{
-  a{
+.tag-container {
+  a {
     margin-top: 5px;
     margin-right: 5px;
     @extend .btn;
     @extend .btn-default;
     @extend .btn-xs;
-    i{
-      &:before{
+    i {
+      &:before {
         @include hameticon();
         @extend .icon-plus-circle2:before;
       }
       vertical-align: middle;
       color: $clear-font;
-      &:hover{
+      &:hover {
         color: $brand-success;
       }
     }
-    &.me{
+    &.me {
       @extend .btn-danger;
-      i{
-        &:before{
+      i {
+        &:before {
           @extend .icon-close3:before;
         }
         color: inherit;
-        &:hover{
+        &:hover {
           color: darken($brand-danger, 20);
         }
       }
     }
   }
-  & + .alert{
+  & + .alert {
     display: none;
   }
-  &.no-tag + .alert{
+  &.no-tag + .alert {
     display: block;
   }
 }
+
 // スピナー
-.ui-autocomplete-input{
- & + .form-control-feedback{
-   top: 0;
-   right: 50px;
-   color: $more-shade-font;
-   display: none;
- }
+.ui-autocomplete-input {
+  & + .form-control-feedback {
+    top: 0;
+    right: 50px;
+    color: $more-shade-font;
+    display: none;
+  }
 }
-.ui-autocomplete-loading{
-  & + .form-control-feedback{
+
+.ui-autocomplete-loading {
+  & + .form-control-feedback {
     @include inline-block();
   }
 }
+
 // インジケーター
-%loading-indicator{
-  &:before{
+%loading-indicator {
+  &:before {
     content: "";
     display: block;
     top: 0;
@@ -220,7 +224,7 @@ i.rotation{
     background-color: rgba(255, 255, 255, .6);
     z-index: 10;
   }
-  &:after{
+  &:after {
     @extend .icon-spinner2:before;
     @extend .rotation;
     font-family: "hameticon";
@@ -237,7 +241,7 @@ i.rotation{
   }
 }
 
-.container-subtitle{
+.container-subtitle {
   font-size: 14px;
   font-weight: bold;
   border-bottom: 1px dotted $more-shade-font;
@@ -250,47 +254,44 @@ i.rotation{
 // サブナビゲーション
 // -------------------
 //
-.nav-sub{
-  & > li{
-    a{
+.nav-sub {
+  & > li {
+    a {
       margin-right: 5px;
       margin-left: 5px;
       transition: color .5s ease-in-out, background-color .5s ease-in-out;
       border-radius: 0;
-      &:link, &:visited{
+      &:link, &:visited {
         color: #fff;
         text-decoration: none;
         background-color: $brand-primary;
       }
-      &:hover, &:active{
+      &:hover, &:active {
         color: #fff;
         text-decoration: none;
         background-color: lighten($brand-primary, 10);
       }
     }
-    &:first-child a{
+    &:first-child a {
       margin-left: 0;
     }
-    &:last-child a{
+    &:last-child a {
       margin-right: 0;
     }
   }
 }
-
-
-
 
 //
 // ジャンボトロン
 //
 // --------------------
 //
-.jumbotron{
+.jumbotron {
   position: relative;
   overflow: hidden;
   background-position: center center;
   background-size: cover;
-  &:after{
+  &:after {
     z-index: 1;
     position: absolute;
     display: block;
@@ -301,34 +302,35 @@ i.rotation{
     left: 0;
     background-color: rgba(0, 0, 0, 0.2);
   }
-  h1, p{
+  h1, p {
     position: relative;
     z-index: 2;
     color: $inverse-body;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
   }
-  .btn{
+  .btn {
     @extend .btn-trans;
   }
 }
+
 @media only screen and (max-width: $screen-sm-max) {
-  .jumbotron{
-    h1{
+  .jumbotron {
+    h1 {
       font-size: 48px;
     }
-    p{
+    p {
       font-size: 14px;
     }
   }
 }
+
 @media only screen and (max-width: $screen-xs-max) {
-  .jumbotron{
-    h1{
+  .jumbotron {
+    h1 {
       font-size: 32px;
     }
   }
 }
-
 
 //
 // 著者情報
@@ -337,11 +339,11 @@ i.rotation{
 //
 
 // 個別管理するためのミックスイン
-@mixin author-profile($image-size){
+@mixin author-profile($image-size) {
   $image-pad: $image-size / 4;
   padding: $image-pad $image-pad $image-pad $image-pad * 2 + $image-size;
   margin: $image-pad 0;
-  .avatar{
+  .avatar {
     width: $image-size;
     height: $image-size;
     left: $image-pad;
@@ -349,12 +351,12 @@ i.rotation{
   }
 }
 
-@mixin long-desc($color){
+@mixin long-desc($color) {
   max-height: 6em;
   overflow: hidden;
   z-index: 2;
   position: relative;
-  &:after{
+  &:after {
     position: absolute;
     content: "";
     display: block;
@@ -362,57 +364,55 @@ i.rotation{
     left: 0;
     bottom: 0;
     width: 100%;
-    @include gradient-vertical(transparentize($color, 1), $color );
+    @include gradient-vertical(transparentize($color, 1), $color);
   }
 }
 
 // 共通
-.author-profile{
+.author-profile {
   $border: 1px solid $navbar-default-border;
   background-color: $navbar-default-bg;
   border-top: $border;
   border-bottom: $border;
   position: relative;
-  h3{
+  h3 {
     margin-top: 0;
-    small{
+    small {
       @media only screen and (max-width: $screen-xs-max) {
         display: block;
       }
     }
   }
-  .avatar{
+  .avatar {
     @extend .img-circle;
   }
   padding-top: 20px;
   padding-bottom: 20px;
-  .author-desc{
+  .author-desc {
     margin-bottom: 1em;
     line-height: 1.2;
-    &--long{
+    &--long {
       @include long-desc($navbar-default-bg);
     }
   }
 }
 
-
 //
 //  ページヘッダー
 //
-.page-header{
+.page-header {
 
-  .single &{
+  .single & {
     margin-bottom: 0;
   }
 }
-
 
 //
 // メタデータ用のインラインリスト
 //
 // --------------------
 //
-ul.metadata{
+ul.metadata {
   border-bottom: 1px solid #eee;
   color: #999;
   padding: 7px 15px;
@@ -421,13 +421,13 @@ ul.metadata{
     padding-right: 0;
     padding-left: 0;
   }
-  .single-news &{
+  .single-news & {
     margin-bottom: 0;
   }
-  li{
+  li {
     border-left: 1px solid #eee;
     padding: 0.25em 0.5em;
-    &:first-child{
+    &:first-child {
       border-left: none;
       @media only screen and (max-width: $screen-xs-max) {
         border-left: 1px solid #ddd;
@@ -436,35 +436,33 @@ ul.metadata{
   }
 }
 
-
-
 //
 // 一覧ページのヘッダー
 //
 // --------------------
 //
-.archive-meta{
-  h1{
+.archive-meta {
+  h1 {
     font-size: 28px;
     font-family: $work-title;
-    .label{
+    .label {
       font-family: sans-serif;
       margin-left: 0.5em;
     }
   }
-  .desc{
+  .desc {
     font-family: $work-title;
-    p{
-      margin-bottom:1em;
+    p {
+      margin-bottom: 1em;
       color: $little-shade-font;
       padding-left: 1em;
       padding-right: 1em;
-      &:first-child{
+      &:first-child {
         padding-top: 2em;
         margin-top: 2em;
         border-top: $divide-border;
       }
-      &:last-child{
+      &:last-child {
         padding-bottom: 2em;
         margin-bottom: 2em;
         border-bottom: $divide-border;
@@ -472,16 +470,17 @@ ul.metadata{
     }
   }
 }
-.meta{
-  &--series{
+
+.meta {
+  &--series {
     margin-bottom: 1em;
     border-bottom: $divide-border;
     padding-bottom: 1em;
   }
-  &__thumbnail{
+  &__thumbnail {
     padding-top: 0.5em;
     text-align: center;
-    img{
+    img {
       max-width: 100%;
       height: auto;
       width: auto;
@@ -489,42 +488,41 @@ ul.metadata{
   }
 }
 
-
 //
 // 一覧ページのリスト
 //
 // --------------------
 //
 // タブ
-.nav-tabs--archive{
-  li{
-    .icon-arrow-up{
+.nav-tabs--archive {
+  li {
+    .icon-arrow-up {
       display: none;
     }
-    &.active{
-      a:hover{
+    &.active {
+      a:hover {
         cursor: pointer;
-        .icon-arrow-up{
+        .icon-arrow-up {
           display: inline-block;
         }
-        .icon-arrow-down{
+        .icon-arrow-down {
           display: none;
         }
       }
     }
-    &.asc{
-      .icon-arrow-up{
+    &.asc {
+      .icon-arrow-up {
         display: inline-block;
       }
-      .icon-arrow-down{
+      .icon-arrow-down {
         display: none;
       }
-      &.active{
-        a:hover{
-          .icon-arrow-down{
+      &.active {
+        a:hover {
+          .icon-arrow-down {
             display: inline-block;
           }
-          .icon-arrow-up{
+          .icon-arrow-up {
             display: none;
           }
         }
@@ -534,39 +532,39 @@ ul.metadata{
 }
 
 // コンテナ
-.archive-container{
+.archive-container {
   margin: 20px 0;
   border-top: 1px solid $thin-border;
   // タブが上にある場合はマージンなし
-  .nav-tabs--archive + .tab-content &{
+  .nav-tabs--archive + .tab-content & {
     border-top: none;
     margin-top: 0;
   }
-  & > li{
+  & > li {
     margin-top: 0;
     padding: 0;
     border-bottom: 1px solid $thin-border;
-    &:nth-child(even){
+    &:nth-child(even) {
       background-color: $zebra-bg;
     }
-    .media__link{
+    .media__link {
       @extend .clearfix;
       display: block;
       padding: 1em;
       @media only screen and (max-width: $screen-sm-max) {
         padding: 1em 0.5em;
       }
-        &:link{
+      &:link {
         text-decoration: none;
       }
-      &:visited{
+      &:visited {
         text-decoration: none;
       }
-      &:hover{
+      &:hover {
         background: $link-active-bg;
         text-decoration: none;
       }
-      &:active{
+      &:active {
         color: $link-active;
         background: #fffecc;
         text-decoration: none;
@@ -574,46 +572,46 @@ ul.metadata{
     }
   }
   // 見出し
-  h3, h2{
+  h3, h2 {
     margin-top: 0;
   }
   // アバター
-  .pull-left, .pull-right{
-    img{
+  .pull-left, .pull-right {
+    img {
       height: auto;
       width: auto;
       max-width: 160px;
-      @media only screen and (max-width: $screen-sm-max){
+      @media only screen and (max-width: $screen-sm-max) {
         max-width: 80px;
       }
     }
-    .avatar{
+    .avatar {
       width: 80px;
       height: 80px;
       @extend .img-circle;
     }
   }
-  .pull-left{
+  .pull-left {
     margin-right: 1em;
   }
-  .pull-right{
+  .pull-right {
     margin-left: 1em;
   }
-  .author-info .avatar{
+  .author-info .avatar {
     width: 20px;
     height: 20px;
     @extend .img-circle;
   }
   // リスト（メタ情報）
-  ul.list-inline{
+  ul.list-inline {
     color: #666;
     margin-bottom: 10px;
-    i{
+    i {
       color: #aaa;
     }
-    li{
+    li {
       border-left: 1px solid #ddd;
-      &:first-child{
+      &:first-child {
         border-left: none;
       }
     }
@@ -621,25 +619,25 @@ ul.metadata{
 }
 
 // リード
-.excerpt{
+.excerpt {
   margin: 2em 1em;
-  p{
+  p {
     @extend .lead;
   }
 }
 
 // シングルページのページャ
-.post-pager{
+.post-pager {
   margin: 20px 0;
 }
 
 // ページネーション
-.link-pages{
+.link-pages {
   margin: 1.5em 0 2em !important;
   text-align: center;
   font-family: sans-serif;
   text-indent: 0 !important;
-  & > span, a{
+  & > span, a {
     font-size: 12px;
     @include inline-block();
     margin-left: 0.5em;
@@ -647,19 +645,19 @@ ul.metadata{
     @include border-radius(2px);
     color: #fff;
   }
-  & > span{
+  & > span {
     background-color: $shade-font;
   }
-  a{
-    &:link, &:visited{
+  a {
+    &:link, &:visited {
       background-color: $link-color;
       text-decoration: none;
     }
-    &:hover{
+    &:hover {
       background-color: $link-active;
       text-decoration: none;
     }
-    &:active{
+    &:active {
       background-color: lighten($link-active, 10);
       text-decoration: none;
     }
@@ -671,23 +669,23 @@ ul.metadata{
 //
 // ---------------
 //
-.share{
+.share {
 
   $height: 80px;
 
-  &__container{
+  &__container {
     padding-top: 20px;
     padding-bottom: 20px;
   }
 
-  &__item{
+  &__item {
     width: 20%;
     float: left;
     text-align: center;
     height: $height;
-    @media only screen and ( max-width: 440px){
+    @media only screen and (max-width: 440px) {
       width: 25%;
-      &--hatena{
+      &--hatena {
         display: none;
       }
     }
@@ -698,18 +696,18 @@ ul.metadata{
             hatena $hatena-color 10px,
             line $line-color 0,
             pocket $pocket-color 10px,
-    ){
+    ) {
       $brand: nth($var, 1);
       $color: nth($var, 2);
       $pad: nth($var, 3);
-      &--#{$brand}{
+      &--#{$brand} {
         @extend .share__item;
         background-color: $color;
         padding-top: $pad;
       }
     }
   }
-  &__baloon{
+  &__baloon {
     box-sizing: border-box;
     display: block;
     margin: 0 auto 8px;
@@ -719,7 +717,7 @@ ul.metadata{
     background-color: #fff;
     border-radius: 2px;
     position: relative;
-    &:after{
+    &:after {
       content: "";
       position: absolute;
       display: block;
@@ -731,37 +729,37 @@ ul.metadata{
       margin-left: -5px;
       bottom: -10px;
     }
-    &:link, &:visited{
+    &:link, &:visited {
       text-decoration: none;
       color: #444;
     }
-    &:hover, &:active{
+    &:hover, &:active {
       text-decoration: none;
       color: $twitter-color;
     }
   }
-  &__button{
+  &__button {
     display: block;
     height: $height;
     line-height: $height;
-    &:link, &:visited{
+    &:link, &:visited {
       color: #fff;
       text-decoration: none;
     }
-    &:hover, &:active{
+    &:hover, &:active {
       color: #fff;
-      background-color: rgba( 255, 255, 255, .2 );
+      background-color: rgba(255, 255, 255, .2);
     }
-    i{
+    i {
       color: #fff !important;
       line-height: 1;
       font-size: 24px;
       vertical-align: middle;
     }
   }
-  &__text{
+  &__text {
     margin-left: 0.5em;
-    @media only screen and (max-width: $screen-xs-max ) {
+    @media only screen and (max-width: $screen-xs-max) {
       display: none;
     }
   }
@@ -772,54 +770,53 @@ ul.metadata{
 //
 // ---------------
 //
-.event-detail{
-  .dl-horizontal{
+.event-detail {
+  .dl-horizontal {
     border-top: 2px solid $thin-border;
     border-bottom: 2px solid $thin-border;
     padding: 15px;
-    dt, dd{
+    dt, dd {
       margin-bottom: 10px;
     }
   }
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .event-detail{
-    .dl-horizontal{
-      dt{
+  .event-detail {
+    .dl-horizontal {
+      dt {
         margin-bottom: 5px;
       }
     }
   }
 }
 
-caption.outdated{
+caption.outdated {
   @extend .text-danger;
 }
 
-#gmap-announcement{
+#gmap-announcement {
   height: 250px;
   background-color: $navbar-default-bg;
   margin-bottom: 20px;
 }
 
 // フィードバック
-.afb_container{
-  .good, .bad{
+.afb_container {
+  .good, .bad {
     @extend .btn;
     @extend .btn-sm;
-    &:link{
+    &:link {
       text-decoration: none;
     }
   }
-  .good{
+  .good {
     @extend .btn-success;
   }
-  .bad{
+  .bad {
     @extend .btn-default;
   }
 }
-
 
 // アラート
 .alert-sticky {
@@ -834,12 +831,12 @@ caption.outdated{
   z-index: $zindex-navbar-fixed - 1;
   will-change: transform, opacity, top;
   transition: transform .3s ease-in-out, opacity .3s ease-in-out, top .3s ease-in-out;
-  .header-hidden &{
+  .header-hidden & {
     @include head-room() {
       top: 0;
     }
   }
-  .no-header &{
+  .no-header & {
     top: 0;
   }
   &-on {
@@ -848,13 +845,48 @@ caption.outdated{
   }
 }
 
-
 .widget_sp_image-image-link,
-.widget_sp_image-link{
+.widget_sp_image-link {
   display: block;
   text-align: center;
 }
-.widget_sp_image-description{
+
+.widget_sp_image-description {
   margin-top: 0.5em;
   line-height: 1.2;
 }
+
+// Instagram
+.ig-b- {
+  display: inline-block;
+  img {
+    visibility: hidden;
+  }
+  &:hover {
+    background-position: 0 -60px;
+  }
+
+  &:active {
+    background-position: 0 -120px;
+  }
+
+  &v-24 {
+    width: 137px;
+    height: 24px;
+    background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0;
+  }
+
+  @media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (min--moz-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2 / 1),
+  only screen and (min-device-pixel-ratio: 2),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
+    &v-24 {
+      background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);
+      background-size: 160px 178px;
+    }
+  }
+}
+
+

@@ -346,18 +346,18 @@
 			</div>
 
 			<div class="col-xs-12 col-sm-4 widget-twitter">
-				<a class="twitter-timeline" href="https://twitter.com/hashtag/%E7%A0%B4%E6%BB%85%E6%B4%BE" data-widget-id="727361413681836032">
-					#破滅派 のツイート
+				<a class="twitter-timeline" href="https://twitter.com/search?q=%E7%A0%B4%E6%BB%85%E6%B4%BE%20-from%3Arusitakigami%20-from%3Aen_okawa" data-widget-id="727361413681836032">
+					破滅派に関するツイート
 				</a>
 			</div>
 
 			<div class="col-xs-12 col-sm-4 widget-facebook">
-				<div class="fb-page" data-href="https://www.facebook.com/hametuha.inc" data-height="230"
+				<div class="fb-page" data-href="https://www.facebook.com/minicome" data-height="230"
 				     data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
 				     data-show-facepile="true" data-show-posts="false">
 					<div class="fb-xfbml-parse-ignore">
 						<blockquote cite="https://www.facebook.com/hametuha.inc"><a
-								href="https://www.facebook.com/hametuha.inc">株式会社破滅派</a></blockquote>
+								href="https://www.facebook.com/minico_me">ミニ子</a></blockquote>
 					</div>
 				</div>
 			</div>
