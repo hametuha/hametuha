@@ -60,58 +60,50 @@ if ( ! is_feed() && is_singular() ) {
 
 
 	<?php if ( $post->_event_title ) : ?>
+		
 		<h2><?= esc_html( $post->_event_title ) ?></h2>
 
-		<ul>
+		<?php if ( $post->_event_start || $post->_event_end ) : ?>
+			<p>
 
-			<?php if ( $post->_event_start ) : ?>
-				<li>
+				<?php if ( $post->_event_start ) : ?>
 					<strong>日時: </strong> <?= hamenew_event_date( $post->_event_start, $post->_event_end ) ?>
 					<?php if ( strtotime( $post->_event_end ?: $post->_event_start ) < current_time( 'timestamp', true ) ) : ?>
 						<small>（終了しました）</small>
 					<?php endif; ?>
-				</li>
-			<?php elseif ( $post->_event_end ) : ?>
-				<li>
+				<?php elseif ( $post->_event_end ) : ?>
 					<strong>〆切: </strong> <?= mysql2date( 'Y年n月j日（D）', $post->_event_end ) ?>
 					<?php if ( strtotime( $post->_event_end ) < current_time( 'timestamp', true ) ) : ?>
 						<small>（終了しました）</small>
 					<?php endif; ?>
-				</li>
-			<?php endif; ?>
-
-			<?php if ( $post->_event_address ) : ?>
-				<li>
-					<strong>場所: </strong> <?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?>
-				</li>
-			<?php endif; ?>
-
-			<?php if ( $post->_event_desc ) : ?>
-				<li><?= nl2br( esc_html( $post->_event_desc ) ) ?></li>
-			<?php endif; ?>
+				<?php endif; ?>
+			</p>
+		<?php endif; ?>
 
 
-		</ul>
+		<?php if ( $post->_event_desc ) : ?>
+			<?= wpautop( esc_html( $post->_event_desc ) ) ?>
+		<?php endif; ?>
 
-		<?php if ( $post->_event_address && ( $latlng = hametuha_geocode( $post->_event_address, 'post_'.get_the_ID() ) ) ) : ?>
-			<?php if ( is_wp_error( $latlng ) ) :  ?>
+		<?php if ( $post->_event_address && ( $latlng = hametuha_geocode( $post->_event_address, 'post_' . get_the_ID() ) ) ) : ?>
+			<?php if ( is_wp_error( $latlng ) ) : ?>
 				<p>地図情報を取得できませんでした: <?= esc_html( $latlng->get_error_message() ) ?></p>
 			<?php else : ?>
-			<figure class="op-map">
-				<figcaption><?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?></figcaption>
-				<script type="application/json" class="op-geotag">
-					{
-						"type": "Feature",
-						"geometry": {
-							"type": "Point",
-							"coordinates": [<?= $latlng['lat'] ?>, <?= $latlng['lng'] ?>]
-						},
-						"properties": {
-							"title": "<?= esc_js( $post->_event_address ) ?>"
+				<figure class="op-map">
+					<figcaption><?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?></figcaption>
+					<script type="application/json" class="op-geotag">
+						{
+							"type": "Feature",
+							"geometry": {
+								"type": "Point",
+								"coordinates": [<?= $latlng['lat'] ?>, <?= $latlng['lng'] ?> ]
+							},
+							"properties": {
+								"title": "<?= esc_js( $post->_event_address ) ?>"
+							}
 						}
-					}
-				</script>
-			</figure>
+					</script>
+				</figure>
 			<?php endif; ?>
 		<?php endif; ?>
 
