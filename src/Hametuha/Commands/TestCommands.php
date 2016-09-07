@@ -72,6 +72,69 @@ TEXT;
 	}
 
 	/**
+	 * Post message to facebook
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp ametu-test fb 'こんにちは！'
+	 *
+	 * @synopsis <message> [--link=<link>]
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function fb( $args, $assoc_args ) {
+		list( $message ) = $args;
+		$param = [
+			'message' => $message,
+		];
+		if ( isset( $assoc_args['link'] ) ) {
+			$param['link'] = $assoc_args['link'];
+		}
+		$response = minico_share( $param );
+		if ( is_wp_error( $response ) ) {
+			var_dump( $response );
+			self::e( sprintf( '%s: %s', $response->get_error_code(), $response->get_error_message() ) );
+		}
+		var_dump( $response );
+		self::s( 'Message sent.' );
+	}
+
+
+	/**
+	 * Get ranking
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp ametu-test ga '2016-09-06' '2016-09-06'
+	 *
+	 * @synopsis <start> <end>
+	 * @param array $args
+	 * @param array $assoc_args
+	 */
+	public function ga( $args, $assoc_args ) {
+		list( $start, $end ) = $args;
+		$rankings = hametuha_ga_ranking( $start, $end, [
+			'dimensions' => 'ga:pageTitle,ga:pagePath',
+		] );
+		if ( is_wp_error( $rankings ) ) {
+			self::e( $rankings->get_error_message() );
+		}
+		$table = new \cli\Table();
+		$table->setHeaders( [ 'Rank', 'Title', 'Path', 'PV' ] );
+		$body = [];
+		foreach ( $rankings as $index => list( $title, $path, $pv ) ) {
+			$body[] = [
+				$index + 1,
+				current( explode( ' | ', $title ) ),
+				home_url( $path ),
+				$pv,
+			];
+		}
+		$table->setRows( $body );
+		$table->display();
+	}
+
+	/**
 	 * Check if mail user is spam
 	 *
 	 * ## EXAMPLES

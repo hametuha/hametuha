@@ -21,7 +21,7 @@
 			</div>
 
 			<div class="col-xs-6 col-sm-3 text-center">
-				<h3>公式Facebook</h3>
+				<h3>Facebook</h3>
 
 				<p class="text-muted">
 					<i class="icon-facebook"></i><br />
@@ -49,7 +49,7 @@
 			</div>
 
 			<div class="col-xs-6 col-sm-3 text-center">
-				<h3>公式Instagram</h3>
+				<h3>Instagram</h3>
 				<p class="text-muted">
 					<i class="icon-instagram"></i><br />
 					文学的な写真をお届けします
