@@ -219,22 +219,6 @@
 						<div class="col-xs-12 col-sm-6 news-ad--content">
 							<?php google_adsense( 2 ) ?>
 							<p class="news-ad__title">Ads by Google</p>
-							<?php if ( ( $terms = get_the_terms( get_post(), 'nouns' ) ) && ! is_wp_error( $terms ) ) : ?>
-								<hr/>
-								<h2 class="news-keywords__title">キーワード
-									<small>このニュースに出てくる固有名詞</small>
-								</h2>
-								<p class="news-keywords__wrapper">
-									<?= implode( ' ', array_map( function ( $term ) {
-										return sprintf(
-											'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
-											get_term_link( $term ),
-											esc_html( $term->name ),
-											$term->count > 100 ? '99+' : number_format( $term->count )
-										);
-									}, $terms ) ); ?>
-								</p>
-							<?php endif; ?>
 						</div>
 
 						<div class="col-xs-12 col-sm-6 news-related">
@@ -251,6 +235,26 @@
 						</div>
 
 					</div>
+
+					<?php if ( ( $terms = get_the_terms( get_post(), 'nouns' ) ) && ! is_wp_error( $terms ) ) : ?>
+						<hr/>
+						<h2 class="news-keywords__title">キーワード
+							<small>このニュースに出てくる固有名詞</small>
+						</h2>
+						<p class="news-keywords__wrapper">
+							<?= implode( ' ', array_map( function ( $term ) {
+								if ( 2 > $term->count ) {
+									return '';
+								}
+								return sprintf(
+									'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
+									get_term_link( $term ),
+									esc_html( $term->name ),
+									$term->count > 100 ? '99+' : number_format( $term->count )
+								);
+							}, $terms ) ); ?>
+						</p>
+					<?php endif; ?>
 
 					<hr />
 					<div class="row news-comment">
