@@ -97,7 +97,7 @@ if ( ! is_feed() && is_singular() ) {
 			<?php if ( is_wp_error( $latlng ) ) :  ?>
 				<p>地図情報を取得できませんでした: <?= esc_html( $latlng->get_error_message() ) ?></p>
 			<?php else : ?>
-			<figure class="og-map">
+			<figure class="op-map">
 				<figcaption><?= esc_html( $post->_event_address . ' ' . $post->_event_bld ) ?></figcaption>
 				<script type="application/json" class="op-geotag">
 					{
@@ -105,6 +105,9 @@ if ( ! is_feed() && is_singular() ) {
 						"geometry": {
 							"type": "Point",
 							"coordinates": [<?= $latlng['lat'] ?>, <?= $latlng['lng'] ?>]
+						},
+						"properties": {
+							"title": "<?= esc_js( $post->_event_address ) ?>"
 						}
 					}
 				</script>

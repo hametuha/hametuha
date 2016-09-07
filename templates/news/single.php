@@ -251,7 +251,7 @@
 						</div>
 
 					</div>
-					
+
 					<hr />
 					<div class="row news-comment">
 						<h2>コメント<small>Facebookコメントが利用できます</small></h2>
