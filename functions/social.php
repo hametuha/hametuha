@@ -146,7 +146,7 @@ HTML;
 }
 
 /**
- * テスト
+ * 管理画面に投稿する
  */
 add_action( 'admin_notices', function () {
 	$screen = get_current_screen();
@@ -172,67 +172,6 @@ add_action( 'admin_notices', function () {
 		<?php
 	}
 } );
-
-/**
- * 投稿が公開されたときにつぶやく
- *
- * @param string $new_status
- * @param string $old_status
- * @param object $post
- */
-add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
-	//はじめて公開にしたときだけ
-	if ( ! WP_DEBUG && 'publish' === $new_status && function_exists( 'update_twitter_status' ) ) {
-		$title  = hametuha_censor( get_the_title( $post ) );
-		$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
-		switch ( $old_status ) {
-			case 'new':
-			case 'draft':
-			case 'pending':
-			case 'auto-draft':
-			case 'future':
-				switch ( $post->post_type ) {
-					case 'post':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
-						break;
-					case 'announcement':
-						$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
-							$string = "#破滅派 編集部からのお知らせです > {$post->post_title} {$url}";
-						} else {
-							$author = get_the_author_meta( 'display_name', $post->post_author );
-							$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
-						}
-						// Slackで通知
-						hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
-						break;
-					case 'info':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
-						break;
-					case 'thread':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
-						break;
-					case 'newsletter':
-						$string = sprintf(
-							'【業務連絡】メルマガ %s が送信されました。そのうち、みなさんのお手元に届きます。登録はこちらから %s',
-							get_the_title( $post ),
-							home_url( '/merumaga/' )
-						);
-						break;
-					default:
-						$string = false;
-						break;
-				}
-				if ( $string ) {
-					update_twitter_status( $string );
-				}
-				break;
-		}
-	}
-}, 10, 3 );
 
 /**
  * twitterのつぶやきを表示する
@@ -266,7 +205,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 	}
 	$payload['text'] = $content;
 	if ( $attachment ) {
-		$payload['attachments'] = [ $attachment ];
+		$payload['attachments'] = $attachment;
 	}
 	$ch = curl_init();
 	curl_setopt_array( $ch, [
@@ -289,6 +228,49 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 	curl_close( $ch );
 
 	return false !== $result;
+}
+
+/**
+ * パーミッションを変更する
+ */
+add_filter( 'giansim_facebook_params', function( $params, $context ){
+	switch ( $context ) {
+		case 'admin':
+			$params['scope'] = 'manage_pages,publish_pages';
+			break;
+		default:
+			// Do nothing.
+			break;
+	}
+	return $params;
+}, 10, 2 );
+
+/**
+ * Facebookページに投稿をシェアする
+ *
+ * @todo 作りかけ
+ * @see https://developers.facebook.com/docs/graph-api/reference/v2.7/page/feed
+ * @param array $params link or string is required.
+ *
+ * @return string|WP_Error
+ */
+function minico_share( $params ) {
+	if ( ! function_exists( 'gianism_fb_admin' ) ) {
+		return new WP_Error( 'no_gianism', 'Gianismが有効化されていません。' );
+	}
+	// Get admin object
+	$fb = gianism_fb_admin();
+	if ( is_wp_error( $fb ) ) {
+		return $fb;
+	}
+	// Let's get Page setting.
+	$page_id = gianism_fb_admin_id();
+	try {
+		$response = $fb->api( "$page_id/feed", 'POST', $params );
+		return $response;
+	} catch ( Exception $e ) {
+		return new WP_Error( $e->getCode(), $e->getMessage() );
+	}
 }
 
 /**
