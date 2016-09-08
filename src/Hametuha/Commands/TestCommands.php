@@ -154,8 +154,8 @@ TEXT;
 			$table = new \cli\Table();
 			$table->setHeaders( [ 'ID', 'URL' ] );
 			$rows = [];
-			foreach ( $result->data as $post ) {
-				$rows[] = [ $post->id, $post->canonical_url ];
+			foreach ( $result['data'] as $post ) {
+				$rows[] = [ $post['id'], $post['canonical_url'] ];
 			}
 			$table->setRows( $rows );
 			$table->display();

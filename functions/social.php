@@ -269,7 +269,7 @@ function minico_access_token() {
  * @param string $method
  * @param array $params
  *
- * @return stdClass|WP_Error
+ * @return array|WP_Error
  */
 function minico_fb_request( $endpoint, $method = 'GET', $params = [] ) {
 	try {
@@ -284,8 +284,7 @@ function minico_fb_request( $endpoint, $method = 'GET', $params = [] ) {
 		// Let's get Page setting.
 		$page_id  = gianism_fb_admin_id();
 		$endpoint = ltrim( $endpoint, '/' );
-		$response = $fb->api( "{$page_id}{$endpoint}", $method, $params );
-		return json_decode( $response );
+		return $fb->api( "{$page_id}{$endpoint}", $method, $params );
 	} catch ( Exception $e ) {
 		return new WP_Error( $e->getCode(), $e->getMessage() );
 	}
