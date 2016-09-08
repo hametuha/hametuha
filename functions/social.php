@@ -257,8 +257,9 @@ function minico_access_token() {
 	if ( is_wp_error( $response ) ) {
 		return $response;
 	} else {
-		update_option( 'minico_fb_access_token', $response->access_token, false );
-		return (string) $response->access_token;
+		$access_token = $response['access_token'];
+		update_option( 'minico_fb_access_token', $access_token, false );
+		return (string) $access_token;
 	}
 }
 
