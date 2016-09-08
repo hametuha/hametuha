@@ -495,7 +495,7 @@ add_filter( 'rewrite_rules_array', function ( $rules ) {
 add_action( 'pre_get_posts', function( &$wp_query ) {
 	if ( $wp_query->is_feed( 'instant_article' ) ) {
 		$wp_query->set( 'posts_per_rss', 20 );
-	} else if ( isset( $_GET['preview_id'] ) ) {
+	} else if ( isset( $_GET['preview_instant_article'] ) ) {
 		add_filter( 'template_include', function($path){
 			return get_template_directory().'/templates/news/instant-article.php';
 		} );

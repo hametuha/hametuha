@@ -64,16 +64,18 @@ class HotPost extends CronBase {
 			$results = hametuha_ga_ranking( $start, $end, $params );
 			if ( ! is_wp_error( $results ) ) {
 				foreach ( $results as $index => list( $title, $path, $pv ) ) {
-					$title = trim( current( explode( '|', $title ) ) );
-					$url = home_url( $path );
+					$title         = trim( current( explode( '|', $title ) ) );
+					$url           = home_url( $path );
 					$attachments[] = [
-						'title'       => $title,
-						'title_link'  => $url,
-						'text'        => sprintf( '%d位 %s PV', ( $index + 1 ), number_format( $pv ) ),
-					    'fallback' => $title,
+						'title'      => $title,
+						'title_link' => $url,
+						'text'       => sprintf( '%d位 %s PV', ( $index + 1 ), number_format( $pv ) ),
+						'fallback'   => $title,
 					];
 				}
 				hametuha_slack( "@here {$message}", $attachments, $channel );
+			} else {
+				error_log( $results->get_error_message(), null );
 			}
 		}
 	}
