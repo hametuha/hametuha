@@ -236,7 +236,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 add_filter( 'giansim_facebook_params', function( $params, $context ){
 	switch ( $context ) {
 		case 'admin':
-			$params['scope'] = 'manage_pages,publish_pages';
+			$params['scope'] = 'manage_pages,publish_pages,pages_manage_instant_articles';
 			break;
 		default:
 			// Do nothing.
@@ -285,8 +285,8 @@ function minico_fb_request( $endpoint, $method = 'GET', $params = [] ) {
 		// Let's get Page setting.
 		$page_id  = gianism_fb_admin_id();
 		$endpoint = ltrim( $endpoint, '/' );
-		return $fb->api( "{$page_id}{$endpoint}", $method, $params );
-	} catch ( Exception $e ) {
+		return $fb->api( "{$page_id}/{$endpoint}", $method, $params );
+	} catch ( FacebookApiException $e ) {
 		return new WP_Error( $e->getCode(), $e->getMessage() );
 	}
 }
