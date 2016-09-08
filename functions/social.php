@@ -236,7 +236,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 add_filter( 'giansim_facebook_params', function( $params, $context ){
 	switch ( $context ) {
 		case 'admin':
-			$params['scope'] = 'manage_pages,publish_pages';
+			$params['scope'] = 'manage_pages,publish_pages,pages_manage_instant_articles,pages_show_list';
 			break;
 		default:
 			// Do nothing.
@@ -246,31 +246,45 @@ add_filter( 'giansim_facebook_params', function( $params, $context ){
 }, 10, 2 );
 
 /**
+ * Facebookページのリクエスト
+ *
+ * @param string $endpoint
+ * @param string $method
+ * @param array $params
+ *
+ * @return stdClass|WP_Error
+ */
+function minico_fb_request( $endpoint, $method = 'GET', $params = [] ) {
+	try {
+		if ( ! function_exists( 'gianism_fb_admin' ) ) {
+			return new WP_Error( 'no_gianism', 'Gianismが有効化されていません。' );
+		}
+		// Get admin object
+		$fb = gianism_fb_admin();
+		if ( is_wp_error( $fb ) ) {
+			return $fb;
+		}
+		// Let's get Page setting.
+		$page_id  = gianism_fb_admin_id();
+		$endpoint = ltrim( $endpoint, '/' );
+		$response = $fb->api( "{$page_id}/{$endpoint}", $method, $params );
+		return json_decode( $response );
+	} catch ( Exception $e ) {
+		return new WP_Error( $e->getCode(), $e->getMessage() );
+	}
+}
+
+/**
  * Facebookページに投稿をシェアする
  *
  * @todo 作りかけ
  * @see https://developers.facebook.com/docs/graph-api/reference/v2.7/page/feed
  * @param array $params link or string is required.
  *
- * @return string|WP_Error
+ * @return stdClass|WP_Error
  */
 function minico_share( $params ) {
-	if ( ! function_exists( 'gianism_fb_admin' ) ) {
-		return new WP_Error( 'no_gianism', 'Gianismが有効化されていません。' );
-	}
-	// Get admin object
-	$fb = gianism_fb_admin();
-	if ( is_wp_error( $fb ) ) {
-		return $fb;
-	}
-	// Let's get Page setting.
-	$page_id = gianism_fb_admin_id();
-	try {
-		$response = $fb->api( "$page_id/feed", 'POST', $params );
-		return $response;
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getCode(), $e->getMessage() );
-	}
+	return minico_fb_request( 'feed', 'POST', $params );
 }
 
 /**
