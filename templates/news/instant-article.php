@@ -55,6 +55,13 @@ if ( ! is_feed() && is_singular() ) {
 
 	</header>
 
+	<!-- Excerpt -->
+	<?php if ( has_excerpt() ) : ?>
+		<aside>
+			<?= esc_html( strip_tags( get_the_excerpt() ) ) ?>
+		</aside>
+	<?php endif; ?>
+
 	<!-- Body text for your article -->
 	<?php the_content(); ?>
 
