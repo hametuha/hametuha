@@ -236,7 +236,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 add_filter( 'giansim_facebook_params', function( $params, $context ){
 	switch ( $context ) {
 		case 'admin':
-			$params['scope'] = 'manage_pages,publish_pages,pages_manage_instant_articles,pages_show_list';
+			$params['scope'] = 'manage_pages,publish_pages';
 			break;
 		default:
 			// Do nothing.
@@ -244,6 +244,23 @@ add_filter( 'giansim_facebook_params', function( $params, $context ){
 	}
 	return $params;
 }, 10, 2 );
+
+/**
+ * ページ用のアクセストークンを利用する
+ *
+ * @return string|WP_Error
+ */
+function minico_access_token() {
+	$response = minico_fb_request( '', 'GET', [
+		'fields' => 'access_token',
+	] );
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	} else {
+		update_option( 'minico_fb_access_token', $response->access_token, false );
+		return (string) $response->access_token;
+	}
+}
 
 /**
  * Facebookページのリクエスト
@@ -267,7 +284,7 @@ function minico_fb_request( $endpoint, $method = 'GET', $params = [] ) {
 		// Let's get Page setting.
 		$page_id  = gianism_fb_admin_id();
 		$endpoint = ltrim( $endpoint, '/' );
-		$response = $fb->api( "{$page_id}/{$endpoint}", $method, $params );
+		$response = $fb->api( "{$page_id}{$endpoint}", $method, $params );
 		return json_decode( $response );
 	} catch ( Exception $e ) {
 		return new WP_Error( $e->getCode(), $e->getMessage() );
