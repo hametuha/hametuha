@@ -30,22 +30,20 @@ class HotPost extends CronBase {
 			$channel = '#general';
 			switch ( date_i18n( 'H' ) ) {
 				case 8:
-					$message = '先週人気あった投稿トップ20件です。';
-					if ( '月' != date_i18n( 'D' ) ) {
-						return;
-					}
+					$message = 'ここ3日で人気があったページのトップ20件です。';
 					$params = [
 						'filters' => 'ga:dimension1=~(post|news)',
 						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					    'max-results' => 20,
 					];
-					$start = date_i18n( 'Y-m-d', strtotime( 'Previous Monday' ) );
+					$start = date_i18n( 'Y-m-d', strtotime( '3 days ago' ) );
 					$end   = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
 					break;
 				case 18:
 					$message = '昨日人気があった投稿の上位10件です。';
 					$params = [
-						'filters' => 'ga:dimension1=~(post|news)',
+						'filters' => 'ga:dimension1==post',
+						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
 					$start = $end = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
 					break;
@@ -53,6 +51,7 @@ class HotPost extends CronBase {
 					$message = '今日人気があったニュースです。';
 					$params = [
 						'filters' => 'ga:dimension1==news',
+						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
 					$start = $end = date_i18n( 'Y-m-d' );
 					$channel = '#news';
@@ -65,11 +64,12 @@ class HotPost extends CronBase {
 			if ( ! is_wp_error( $results ) ) {
 				foreach ( $results as $index => list( $title, $path, $pv ) ) {
 					$title         = trim( current( explode( '|', $title ) ) );
+					$type = ( false !== strpos( $path, 'news/' ) ) ? 'ニュース' : '投稿';
 					$url           = home_url( $path );
 					$attachments[] = [
 						'title'      => $title,
 						'title_link' => $url,
-						'text'       => sprintf( '%d位 %s PV', ( $index + 1 ), number_format( $pv ) ),
+						'text'       => sprintf( '%d位 %s PV（%s）', ( $index + 1 ), number_format( $pv ), $type ),
 						'fallback'   => $title,
 					];
 				}
