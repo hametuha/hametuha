@@ -70,6 +70,7 @@ get_template_part( 'functions/analytics' );
 get_template_part( 'functions/override' );
 get_template_part( 'functions/social' );
 get_template_part( 'functions/social', 'share' );
+get_template_part( 'functions/tag' );
 get_template_part( 'functions/user' );
 get_template_part( 'functions/user_content' );
 get_template_part( 'functions/user_change_login' );
