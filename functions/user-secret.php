@@ -1,25 +1,12 @@
 <?php
 /**
- * ユーザーの報酬に関する処理
+ * 破滅派の一員としてではなく、電子書籍を発表したい人
  */
 
-/**
- * プロフィールをオーバーライドする
- */
 add_action( 'edit_user_profile', function( WP_User $user ) {
-	if ( current_user_can( 'administrator' ) ) {
-		wp_nonce_field( 'override_publisher', '_publishernonce', false );
+	if ( current_user_can( 'edit_users' ) ) {
+		wp_nonce_field( 'secret_publisher', '_secretpublishernonce', false );
 		?>
-		<hr />
-		<h2><span class="dashicons dashicons-money"></span> 報酬設定</h2>
-		<table class="form-table">
-			<tr>
-				<th><label for="news_guarantee">ニュース最低保証</label></th>
-				<td>
-					<input class="regular-text" type="number" name="news_guarantee" id="news_guarantee" value="<?= esc_attr( \Hametuha\Model\Sales::get_instance()->get_guarantee( $user->ID, 'news' ) ) ?>" />円
-				</td>
-			</tr>
-		</table>
 		<hr />
 		<h2><span class="dashicons dashicons-businessman"></span> ゲスト・ユーザー</h2>
 		<table class="form-table">
@@ -44,23 +31,20 @@ add_action( 'edit_user_profile', function( WP_User $user ) {
 		</table>
 		<?php
 	}
-} );
+}, 11 );
+
+
 
 /**
  * メタ情報を保存する
  */
 add_action( 'edit_user_profile_update', function ( $user_id ) {
 	$input = \WPametu\Http\Input::get_instance();
-	if ( ! $input->verify_nonce( 'override_publisher', '_publishernonce' ) || ! current_user_can( 'edit_users' ) ) {
+	if ( ! $input->verify_nonce( 'secret_publisher', '_secretpublishernonce' ) || ! current_user_can( 'edit_users' ) ) {
 		return;
 	}
 	// 発行者データ
 	foreach ( [ 'publisher_name', 'publisher_tel', 'publisher_mail', 'publisher_address' ] as $key ) {
 		update_user_meta( $user_id, '_'.$key, $input->post( $key ) );
-	}
-	// 報酬データ
-	foreach ( [ 'news' ] as $type ) {
-		$key = "{$type}_guarantee";
-		update_user_meta( $user_id, "_{$key}", $input->post( $key ) );
 	}
 } );

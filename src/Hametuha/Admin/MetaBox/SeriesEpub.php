@@ -197,7 +197,7 @@ TEXT;
 			</p>
 		</div>
 
-		<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
+		<?php if ( current_user_can( 'publish_epub', $post->ID ) ) : ?>
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--files">
 				<label>
 					<span class="dashicons dashicons-format-aside"></span> ファイル:

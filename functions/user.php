@@ -93,7 +93,7 @@ SQL;
 /**
  * ユーザーテーブルの名前表示を変更
  */
-add_filter( "manage_users_columns", function ( $columns ) {
+add_filter( 'manage_users_columns', function ( $columns ) {
 	$new_column = array();
 	foreach ( $columns as $key => $val ) {
 		if ( 'name' === $key ) {
@@ -116,7 +116,7 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 	if ( 'display_name' == $column ) {
 		$ruby = (string) get_user_meta( $user_id, 'last_name', true );
 		$name = (string) get_the_author_meta( 'display_name', $user_id );
-
+		$role = '';
 		return sprintf( '<ruby>%s<rt>%s</rt></ruby>', esc_html( $name ), esc_html( $ruby ) );
 	} else {
 		return $td;
@@ -310,22 +310,6 @@ SQL;
 	return (int) $wpdb->get_var( $sql );
 }
 
-
-/**
- * 編集者か否かを返す
- * @global wpdb $wpdb
- *
- * @param int $user_id
- *
- * @return boolean
- */
-function is_editor( $user_id ) {
-	global $wpdb;
-	$user_level = (int) $wpdb->get_var( $wpdb->prepare( "SELECT meta_value FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = '{$wpdb->prefix}user_level'", $user_id ) );
-
-	return ( $user_level == 5 );
-}
-
 /**
  * ペンディング中のユーザーか否か
  * @return boolean
@@ -337,17 +321,6 @@ function is_pending_user() {
 	} else {
 		return false;
 	}
-}
-
-/**
- * 管理者か否かを返す
- *
- * @param int $user_id
- *
- * @return boolean
- */
-function is_administrator( $user_id ) {
-	return user_can( $user_id, 'administrator' );
 }
 
 /**
@@ -475,79 +448,3 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 	}
 }
 
-/**
- * 銀行口座情報を取得する
- *
- * @param int $user_id
- *
- * @return array
- */
-function hametuha_bank_account( $user_id = 0 ) {
-	if ( ! $user_id ) {
-		$user_id = get_current_user_id();
-	}
-	$account = [];
-	foreach ( [ 'group', 'branch', 'type', 'number', 'name' ] as $key ) {
-		$meta_key = "_bank_{$key}";
-		$account[ $key ] = get_user_meta( $user_id, $meta_key, true );
-	}
-	return $account;
-}
-
-/**
- * 支払先情報を取得する
- *
- * @param int $user_id
- *
- * @return array
- */
-function hametuha_billing_address( $user_id = 0 ) {
-	if ( ! $user_id ) {
-		$user_id = get_current_user_id();
-	}
-	$address = [];
-	foreach ( [ 'name', 'number', 'address' ] as $key ) {
-		$meta_key = "_billing_{$key}";
-		$address[ $key ] = get_user_meta( $user_id, $meta_key, true );
-	}
-	return $address;
-}
-
-/**
- * ユーザーの銀行口座がオッケーか否かを返す
- *
- * @param int $user_id
- *
- * @return bool
- */
-function hametuha_bank_ready( $user_id = 0 ) {
-	$account = hametuha_bank_account( $user_id );
-	if ( ! $account ) {
-		return false;
-	}
-	foreach ( $account as $value ) {
-		if ( ! $value ) {
-			return false;
-		}
-	}
-	return true;
-}
-
-/**
- * ユーザーの支払い先がオッケーかを返す
- *
- * @param int $user_id
- * @return boolean
- */
-function hametuha_billing_ready( $user_id = 0 ) {
-	$account = hametuha_billing_address( $user_id );
-	if ( ! $account ) {
-		return false;
-	}
-	foreach ( $account as $value ) {
-		if ( ! $value ) {
-			return false;
-		}
-	}
-	return true;
-}

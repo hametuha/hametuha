@@ -1,5 +1,4 @@
 <?php
-
 /**
  * エディタースタイルを適用する
  *
@@ -117,7 +116,7 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 	}
 	$initArray['style_formats'] = json_encode( $styles );
 
-	if( ! is_admin() ){
+	if ( ! is_admin() ) {
 		$initArray['menubar'] = false;
 	}
 
@@ -143,7 +142,7 @@ add_action( 'edit_form_after_title', function ( WP_Post $post ) {
  *
  * @return array
  */
-add_filter( "mce_external_plugins", function ( array $plugin_array ) {
+add_filter( 'mce_external_plugins', function ( array $plugin_array ) {
 	$plugin_array['hametuha'] = get_stylesheet_directory_uri() . '/assets/js/dist/admin/mce.js';
 
 	return $plugin_array;
