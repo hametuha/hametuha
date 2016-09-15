@@ -148,10 +148,20 @@ div.admin-notice{
   }
 }
 
-.hametuha-tag-label{
-  display: block;
+.hametuha-tag {
+  &-label {
+    display: block;
+  }
+  &-extra{
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 5px;
+    &+span{
+      color: #888;
+      font-size: 0.85em;
+    }
+  }
 }
-
 .taxonomy-check{
   &-list{
 

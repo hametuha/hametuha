@@ -33,7 +33,7 @@ class EPub extends RestTemplate {
 	/**
 	 * @var array
 	 */
-	protected $additional_class = [ ];
+	protected $additional_class = [];
 
 	/**
 	 * @var bool
@@ -54,9 +54,6 @@ class EPub extends RestTemplate {
 	 * @throws \Exception
 	 */
 	private function validate_file( $file_id ) {
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
-			throw new \Exception( 'あなたにはダウンロードする権限がありません。', 403 );
-		}
 		if ( ! ( $file = $this->files->get_file( $file_id ) ) ) {
 			throw new \Exception( '該当するファイルは存在しません。', 404 );
 		}
@@ -203,6 +200,9 @@ class EPub extends RestTemplate {
 	public function get_file( $file_id ) {
 		try {
 			$file = $this->validate_file( $file_id );
+			if ( ! current_user_can( 'get_epub', $file_id ) ) {
+				throw new \Exception( 'あなたにはePubを取得する権限がありません。', 401 );
+			}
 			if ( ! ( $post = get_post( $file->post_id ) ) ) {
 				throw new \Exception( 'ファイルに紐付いた投稿が見つかりません。', 404 );
 			}
@@ -232,7 +232,7 @@ class EPub extends RestTemplate {
 			$command  = sprintf( '%s %s -out %s', EPUB_PATH, $path, $tmp );
 			$result   = exec( $command, $output );
 			$lines    = implode( '<br />', array_map( 'esc_html', $output ) );
-			$messages = [ ];
+			$messages = [];
 			try {
 				$xml = simplexml_load_file( $tmp );
 				if ( $xml && $xml->repInfo->messages->count() ) {
@@ -286,6 +286,9 @@ HTML;
 	 */
 	public function get_delete( $file_id ) {
 		$file = $this->validate_file( $file_id );
+		if ( ! current_user_can( 'get_epub', $file_id ) ) {
+			throw new \Exception( 'あなたにはePubへのアクセス権がありません。', 401 );
+		}
 		if ( ! $this->files->delete_file( $file_id ) ) {
 			throw new \Exception( 'ファイルを削除できませんでした。', 500 );
 		}
@@ -338,7 +341,7 @@ HTML;
 			// Avoid time out
 			set_time_limit( 0 );
 			// Check capability
-			if ( ! $series || 'series' != $series->post_type || ! current_user_can( 'edit_others_posts' ) ) {
+			if ( ! $series || 'series' != $series->post_type || ! current_user_can( 'publish_epub', $series->ID ) ) {
 				throw new \Exception( 'あなたにはePubを取得する権利がありません。', 403 );
 			}
 			// Check ePub is published
@@ -346,7 +349,7 @@ HTML;
 			// Set direction
 			$direction = $this->series->get_direction( $series->ID );
 			// Get HTMLs
-			$html = [ ];
+			$html = [];
 //			$html['cover'] = [
 //				'label' => '表紙',
 //				'html'  => $this->get_content( $series_id, $series, 'cover', $direction )

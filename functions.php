@@ -54,38 +54,55 @@ if ( file_exists( $oauth_mo ) ) {
  */
 $script_flg = array();
 
-get_template_part( 'functions/utility' );
-get_template_part( 'functions/display' );
-get_template_part( 'functions/cdn' );
-get_template_part( 'functions/ranking' );
-get_template_part( 'functions/meta' );
-get_template_part( 'functions/post_types' );
-get_template_part( 'functions/post_list' );
-get_template_part( 'functions/post_list_admin' );
-get_template_part( 'functions/series' );
-get_template_part( 'functions/dashboard' );
+// Assets
 get_template_part( 'functions/assets' );
 get_template_part( 'functions/assets', 'ssl' );
-get_template_part( 'functions/analytics' );
+get_template_part( 'functions/assets', 'analytics' );
+get_template_part( 'functions/assets', 'cdn' );
+get_template_part( 'functions/assets', 'eyecatch' );
+get_template_part( 'functions/assets', 'tinymce' );
+// 掲示板
+get_template_part( 'functions/bulletin-board' );
+// キャンペーン
+get_template_part( 'functions/campaign' );
+// 表示
+get_template_part( 'functions/display' );
+// amazon
+get_template_part( 'functions/hamazon' );
+// メール
+get_template_part( 'functions/mail' );
+// メニュー
+get_template_part( 'functions/menu' );
+// メタ情報
+get_template_part( 'functions/meta' );
+// 上書き処理
 get_template_part( 'functions/override' );
+get_template_part( 'functions/override', 'dashboard' );
+get_template_part( 'functions/override', 'error' );
+get_template_part( 'functions/override', 'feed' );
+get_template_part( 'functions/override', 'lwp' );
+get_template_part( 'functions/override', 'amp' );
+// 投稿リスト
+get_template_part( 'functions/post_list' );
+get_template_part( 'functions/post_list', 'admin' );
+// 投稿タイプ
+get_template_part( 'functions/post_type' );
+get_template_part( 'functions/post_type', 'news' );
+get_template_part( 'functions/post_type', 'series' );
+// ランキング
+get_template_part( 'functions/ranking' );
+// Social
 get_template_part( 'functions/social' );
 get_template_part( 'functions/social', 'share' );
+// User
 get_template_part( 'functions/user' );
-get_template_part( 'functions/user_content' );
-get_template_part( 'functions/user_change_login' );
-get_template_part( 'functions/user_profile_picture' );
+get_template_part( 'functions/user', 'caps' );
+get_template_part( 'functions/user', 'affiliate' );
+get_template_part( 'functions/user', 'picture' );
+get_template_part( 'functions/user', 'secret' );
+// ユーティリティ
+get_template_part( 'functions/utility' );
+// タクソノミー
+get_template_part( 'functions/tag' );
+// ウィジェット
 get_template_part( 'functions/widget' );
-get_template_part( 'functions/menu' );
-get_template_part( 'functions/error' );
-get_template_part( 'functions/tinyMCE' );
-get_template_part( 'functions/hamazon' );
-get_template_part( 'functions/eyecatch' );
-get_template_part( 'functions/bulletin-board' );
-get_template_part( 'functions/device' );
-get_template_part( 'functions/lwp' );
-get_template_part( 'functions/feed' );
-get_template_part( 'functions/mail' );
-get_template_part( 'functions/campaign' );
-get_template_part( 'functions/news' );
-get_template_part( 'functions/amp' );
-get_template_part( 'functions/affiliate' );

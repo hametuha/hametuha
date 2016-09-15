@@ -304,6 +304,7 @@ foreach ( array( 'posts', 'pages' ) as $post_cap ) {
 		</section>
 		<?php endif; ?>
 
+		<?php do_action( 'hametuha_profile_section', $profileuser ); ?>
 
 		<section class="misc-section">
 			<h2><i class="icon-plus2"></i> その他</h2>

@@ -35,7 +35,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 		<tr>
 			<th>初出</th>
 			<td>
-				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>（<?php the_time('Y年m月d日') ?>）
+				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>（<?php the_time( 'Y年m月d日' ) ?>）
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +43,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			<td>
 				<?= implode( ' / ', array_map( function( WP_User $author ) {
 					return esc_html( $author->display_name );
-				}, $authors ) ) ?>
+				}, $authors ) ); ?>
 			</td>
 		</tr>
 		<tr>
