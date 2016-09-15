@@ -503,13 +503,26 @@ add_action( 'pre_get_posts', function( &$wp_query ) {
 } );
 
 /**
+ * WP Hamazonのタグを変更
+ *
+ * @param string $tag
+ *
+ * @return string
+ */
+function _fb_instant_amazon( $tag ) {
+	$tag = preg_replace( '#<p class="tmkm-amazon-img">(.*?)</p>#u', '<figure>$1</figure>', $tag );
+
+	return $tag;
+}
+
+/**
  * Instant Article用にコンテンツを修正
  *
  * @param string $content
  *
  * @return mixed
  */
-function _fb_instant_content( $content ){
+function _fb_instant_content( $content ) {
 	// twitterを修正
 	$content = preg_replace( '#(<blockquote class="twitter-tweet" (data-)?width="[0-9]+">.*?</script></p>)#us', '<figure class="op-social"><iframe>$1</iframe></figure>', $content );
 	// tableを編集
@@ -521,6 +534,12 @@ function _fb_instant_content( $content ){
 </figure>
 HTML;
 		return $table;
+	}, $content );
+	// rubyタグを修正
+	$content = preg_replace( '#<rt>([^<]+)</rt>#', '<rt>（$1）</rt>', $content );
+	// pタグだけに囲まれた画像を修正
+	$content = preg_replace_callback( '#<p[^>]*?>(<img[^>]+>)</p>#us', function( $matches ) {
+		return sprintf( '<figure>%s</figure>', $matches[1] );
 	}, $content );
 
 	return $content;
@@ -610,16 +629,10 @@ add_action( 'do_feed_instant_article', function () {
 			 * @since 2.0.0
 			 */
 			do_action( 'rss2_head' );
-
-			// Filter for amazon link
-			add_filter( 'wp_hamazon_amazon', function ( $tag ) {
-				$tag = preg_replace( '#<p class="tmkm-amazon-img">(.*?)</p>#u', '<figure>$1</figure>', $tag );
-
-				return $tag;
-			} );
-
+			// Filter for amazon link.
+			add_filter( 'wp_hamazon_amazon', '_fb_instant_amazon' );
+			// Filter for content
 			add_filter( 'the_content', '_fb_instant_content' );
-
 			while ( have_posts() ) : the_post();
 				?>
 				<item>

@@ -90,9 +90,10 @@ function cf_make_request( $endpoint, $params = [], $method = 'GET' ) {
  * @return array|mixed|object|WP_Error
  */
 function cf_purge_cache( $urls ) {
-
+	if ( ! cf_availavle() ) {
+		return new WP_Error( 500, 'CloudFlare is not avaialable' );
+	}
 	$response = cf_make_request( '/zones/' . CF_ZONE_ID . '/purge_cache', [ 'files' => $urls ], 'DELETE' );
-
 	if ( is_wp_error( $response ) ) {
 		return $response;
 	} else {
