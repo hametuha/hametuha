@@ -51,11 +51,21 @@ class CompiledFileTable extends \WP_List_Table {
 			$this->get_sortable_columns(),
 		];
 
-		$this->items = $this->files->get_files( [
-			's'      => $this->input->get( 's' ),
-			'p'      => $this->input->get( 'p' ),
-			'author' => $this->input->get( 'author' ),
-		], 20, max( 1, $this->get_pagenum() ) - 1 );
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			$args = [
+				's'      => $this->input->get( 's' ),
+				'p'      => $this->input->get( 'p' ),
+				'author' => $this->input->get( 'author' ),
+			];
+		} else {
+			$args = [
+				's'      => $this->input->get( 's' ),
+				'p'      => $this->input->get( 'p' ),
+				'author' => get_current_user_id(),
+			    'secret' => true,
+			];
+		}
+		$this->items = $this->files->get_files( $args, 20, max( 1, $this->get_pagenum() ) - 1 );
 
 		$this->set_pagination_args( [
 			'total_items' => $this->files->total(),

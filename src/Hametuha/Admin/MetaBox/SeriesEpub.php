@@ -26,6 +26,14 @@ class SeriesEpub extends SeriesBase {
 			$status = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
 			update_post_meta( $post->ID, '_kdp_status', $status );
 			update_post_meta( $post->ID, '_asin', $this->input->post( 'asin' ) );
+			// シークレットゲスト
+			if ( hametuha_is_secret_guest( $post->post_author ) ) {
+				if ( $this->input->post( 'secret_ebook' ) ) {
+					update_post_meta( $post->ID, '_is_secret_book', true );
+				} else {
+					delete_post_meta( $post->ID, '_is_secret_book' );
+				}
+			}
 			if ( 2 === $status && 2 !== $current ) {
 				$user = new \WP_User( $post->post_author );
 				$kdp_url = $this->series->get_kdp_url( $post->ID );
@@ -195,7 +203,28 @@ TEXT;
 				}
 				?>
 			</p>
+
 		</div>
+
+		<?php if ( hametuha_is_secret_guest( $post->post_author ) ) : ?>
+			<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
+				<hr/>
+				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--secret">
+					<label>
+						<input type="checkbox" value="1"
+						       name="secret_ebook" <?php checked( hametuha_is_secret_book( $post ) ); ?> />
+						シークレットブックにする
+					</label>
+				</div>
+			<?php elseif ( hametuha_is_secret_book( $post ) ) : ?>
+				<hr/>
+				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--secret">
+					<h4><span class="dashicons dashicons-yes"></span> シークレットブック</h4>
+					<p class="description">この本は非公開のままePubを作成することができます。</p>
+				</div>
+			<?php endif; ?>
+
+		<?php endif; ?>
 
 		<?php if ( current_user_can( 'publish_epub', $post->ID ) ) : ?>
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--files">
@@ -212,8 +241,7 @@ TEXT;
 				<a class="button" target="epub-publisher" href="<?= home_url( "epub/publish/{$post->ID}", 'https' ) ?>">書き出し</a>
 				<iframe name="epub-publisher" style="display: none"></iframe>
 			</div>
-		<?php endif; ?>
-		<?php
+		<?php endif;
 	}
 
 

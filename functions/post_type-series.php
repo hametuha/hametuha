@@ -272,7 +272,11 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 					$color = 'lightgrey';
 					break;
 			}
-			printf( "<span style='color: %s'>%s%s</span>", $color, Series::get_instance()->status_label[ $status ], $extra );
+			$secret = '';
+			if ( hametuha_is_secret_book( $post_id ) ) {
+				$secret = '- <strong>シークレット</strong>';
+			}
+			printf( "<span style='color: %s'>%s%s</span>%s", $color, Series::get_instance()->status_label[ $status ], $extra, $secret );
 			if ( $asin = Series::get_instance()->get_asin( $post_id ) ) {
 				echo "<code>{$asin}</code>";
 			}

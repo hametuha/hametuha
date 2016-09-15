@@ -9,15 +9,15 @@ use WPametu\UI\Admin\Screen;
 
 class CompiledFileList extends Screen {
 
-	protected $menu_title = 'ファイル';
+	protected $menu_title = '電子書籍ファイル';
 
-	protected $title = '出力されたファイル';
+	protected $title = '出力された電子書籍ファイル';
 
 	protected $slug = 'hamepub-files';
 
 	protected $parent = 'edit.php?post_type=series';
 
-	protected $caps = 'edit_others_posts';
+	protected $caps = 'edit_posts';
 
 	protected $icon = 'dashicons-format-aside';
 

@@ -96,6 +96,7 @@ get_template_part( 'functions/social' );
 get_template_part( 'functions/social', 'share' );
 // User
 get_template_part( 'functions/user' );
+get_template_part( 'functions/user', 'caps' );
 get_template_part( 'functions/user', 'affiliate' );
 get_template_part( 'functions/user', 'picture' );
 get_template_part( 'functions/user', 'secret' );

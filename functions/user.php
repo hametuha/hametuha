@@ -116,8 +116,8 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 	if ( 'display_name' == $column ) {
 		$ruby = (string) get_user_meta( $user_id, 'last_name', true );
 		$name = (string) get_the_author_meta( 'display_name', $user_id );
-		$role = '';
-		return sprintf( '<ruby>%s<rt>%s</rt></ruby>', esc_html( $name ), esc_html( $ruby ) );
+		$role = hametuha_is_secret_guest( $user_id ) ? ' - <strong>シークレット</strong>' : '';
+		return sprintf( '<ruby>%s<rt>%s</rt></ruby>%s', esc_html( $name ), esc_html( $ruby ), $role );
 	} else {
 		return $td;
 	}
