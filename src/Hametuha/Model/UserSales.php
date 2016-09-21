@@ -210,6 +210,28 @@ class UserSales extends Model {
 	}
 
 	/**
+	 * 支払い済みの履歴を返す
+	 *
+	 * @param string $year
+	 * @param string $month
+	 *
+	 * @return array|mixed|null
+	 */
+	public function get_fixed_billing( $year, $month ) {
+		$year_month = sprintf( '%04d%02d', $year, $month );
+		return $this
+			->select( "{$this->table}.*, {$this->db->users}.display_name" )
+			->join( $this->db->users, "{$this->db->users}.ID = {$this->table}.user_id" )
+			->wheres( [
+				"EXTRACT(YEAR_MONTH FROM {$this->table}.`fixed`) = %s" => $year.$month,
+		        "{$this->table}.`status` = %d" => 1,
+			] )
+			->order_by( "{$this->db->users}.ID", 'ASC' )
+			->result();
+
+	}
+
+	/**
 	 * KDPの売上を保存する
 	 *
 	 * @param int $year

@@ -111,7 +111,7 @@ class UserBillingTable extends RewardTableBase {
 				break;
 			case 'deducting':
 			case 'total':
-				printf( '&yen; %s', number_format_i18n( $item->{$column_name} ) );
+				printf( '&yen; %s', number_format_i18n( round( $item->{$column_name} ) ) );
 				break;
 		}
 	}
