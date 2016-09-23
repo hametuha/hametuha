@@ -116,12 +116,12 @@ function get_kdp_remote_price( $post = null, $cache = true ) {
  */
 function is_series_price_unmatch( $post = null ) {
 	$post = get_post( $post );
-	$request_price = get_post_meta( $post->ID, '_kdp_requested_price' );
+	$request_price = get_post_meta( $post->ID, '_kdp_required_price', true );
 	$real_price    = get_post_meta( $post->ID, '_kdp_price', true );
-	if ( ! is_numeric( $real_price ) || ! is_numeric( $request_price ) ) {
+	if ( ! ( is_numeric( $real_price ) && is_numeric( $request_price ) ) ) {
 		return false;
 	}
-	return $real_price != $real_price;
+	return $real_price != $request_price;
 }
 
 /**

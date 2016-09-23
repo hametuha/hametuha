@@ -223,6 +223,10 @@ TEXT;
 					<input type="number" readonly class="regular-text"
 					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
 				<?php endif; ?>
+				<?php if ( is_series_price_unmatch( $post ) ) : ?>
+					<br />
+					<span class="required">希望小売価格: &yen; <?= number_format( get_post_meta( $post->ID, '_kdp_required_price', true ) ) ?></span>
+				<?php endif; ?>
 			</label>
 			<?php endif; ?>
 			<?php if ( get_current_user_id() == $post->post_author ) : ?>
