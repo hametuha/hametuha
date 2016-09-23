@@ -55,22 +55,34 @@ function the_series( $pre = '', $after = '', $post = null ) {
  * Get KDP price
  *
  * @param null|int|WP_Post $post
- * @param bool|true $cache
  */
-function the_series_price( $post = null, $cache = true ) {
-	$price = get_series_price( $post, $cache );
+function the_series_price( $post = null ) {
+	$price = get_series_price( $post );
 	echo false !== $price ? number_format( $price ) : 'N/A';
 }
 
 /**
- * 料金を取得する
+ * 販売価格を記載する
  *
+ * @param null|int|WP_Post $post
+ * @return false|int
+ */
+function get_series_price( $post = null ) {
+	$post = get_post( $post );
+	$price = get_post_meta( $post->ID, '_kdp_price', true );
+	return ! is_numeric( $price ) ? false : (int) $price;
+}
+
+/**
+ * Amazonに記載されている料金を取得する
+ *
+ * @deprecated
  * @param null $post
  * @param bool|true $cache
  *
  * @return false|int
  */
-function get_series_price( $post = null, $cache = true ) {
+function get_kdp_remote_price( $post = null, $cache = true ) {
 	$post   = get_post( $post );
 	$series = Series::get_instance();
 	if ( 2 != $series->get_status( $post->ID ) ) {
