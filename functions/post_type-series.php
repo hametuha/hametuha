@@ -96,6 +96,23 @@ function get_series_price( $post = null, $cache = true ) {
 }
 
 /**
+ * 実際の価格に合っているかを返す
+ *
+ * @param null|int|WP_Post $post
+ *
+ * @return bool
+ */
+function is_series_price_unmatch( $post = null ) {
+	$post = get_post( $post );
+	$request_price = get_post_meta( $post->ID, '_kdp_requested_price' );
+	$real_price    = get_post_meta( $post->ID, '_kdp_price', true );
+	if ( ! is_numeric( $real_price ) || ! is_numeric( $request_price ) ) {
+		return false;
+	}
+	return $real_price != $real_price;
+}
+
+/**
  * Get all user for series
  *
  * @param null|WP_Post|int $post

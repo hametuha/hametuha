@@ -38,6 +38,16 @@ $break-point: 782px;
   .dashicons{
     color: #82878c;
   }
+  p.description{
+    margin: 10px 0;
+  }
+  .block{
+    display: block;
+    &.hidden{
+      display: none;
+    }
+    margin: 5px 0;
+  }
 }
 
 div.admin-notice{

@@ -30,8 +30,8 @@
         window.open(url, $(this).attr('target'));
     });
 
-    // 並び順
     $(document).ready(function(){
+        // 並び順
         var $sorter = $('#series-posts-list');
         $sorter.sortable({
             axis: 'y',
@@ -68,7 +68,16 @@
                 });
             }
         });
+        // 希望小売価格
+        $( '#change-price' ).click(function(){
+            if ( $(this).attr('checked') ) {
+                $('#change-price-box').removeClass('hidden');
+            } else {
+                $('#change-price-box').addClass('hidden');
+            }
+        });
 
     });
+
 
 })(jQuery);

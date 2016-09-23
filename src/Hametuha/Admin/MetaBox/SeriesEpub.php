@@ -17,15 +17,21 @@ class SeriesEpub extends SeriesBase {
 
 	public function savePost( \WP_Post $post ) {
 		$url = get_permalink( $post );
+		$author = get_userdata( $post->post_author );
 		// シリーズが完結したかどうか
 		update_post_meta( $post->ID, '_series_finished', (bool) $this->input->post( 'is_finished' ) );
 		// 編集者のみ可能なアクション
 		if ( current_user_can( 'edit_others_posts' ) ) {
-			// Editor
+			// 販売状況
 			$current = $this->series->get_status( $post->ID );
 			$status = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
 			update_post_meta( $post->ID, '_kdp_status', $status );
+			// Asin
 			update_post_meta( $post->ID, '_asin', $this->input->post( 'asin' ) );
+			// 価格
+			$prev_price = get_post_meta( $post->ID, '_kdp_price', true );
+			$new_price  = $this->input->post( 'kdp_price' );
+			update_post_meta( $post->ID, '_kdp_price', $new_price );
 			// シークレットゲスト
 			if ( hametuha_is_secret_guest( $post->post_author ) ) {
 				if ( $this->input->post( 'secret_ebook' ) ) {
@@ -35,11 +41,10 @@ class SeriesEpub extends SeriesBase {
 				}
 			}
 			if ( 2 === $status && 2 !== $current ) {
-				$user = new \WP_User( $post->post_author );
 				$kdp_url = $this->series->get_kdp_url( $post->ID );
 				// メールで通知
 				$body = <<<TEXT
-{$user->display_name}様
+{$author->display_name}様
 
 
 ご利用ありがとうございます。破滅派編集部です。
@@ -56,18 +61,20 @@ Amazon: {$kdp_url}
 https://hametuha.com
 
 TEXT;
-				wp_mail( $user->user_email, '【破滅派】 電子書籍販売開始のお知らせ', $body );
+				wp_mail( $author->user_email, '【破滅派】 電子書籍販売開始のお知らせ', $body );
 				// Slackに通知
-				$title = sprintf( '『%s』%s', get_the_title( $post ), $user->display_name );
-				hametuha_slack( '電子書籍が販売開始されました', [[
-					'fallback' => $title,
-					'title' => $title,
-					'title_link' => $kdp_url,
-					'author_name' => $user->display_name,
-					'author_link' => home_url( "/doujin/detail/{$user->user_nicename}/" ),
-				    'color' => '#00928D',
-				    'text' => "Amazonで確認できます。破滅派のページは<{$url}|こちら>です。",
-				]] );
+				$title = sprintf( '『%s』%s', get_the_title( $post ), $author->display_name );
+				hametuha_slack( '電子書籍が販売開始されました', [
+					[
+						'fallback' => $title,
+						'title' => $title,
+						'title_link' => $kdp_url,
+						'author_name' => $author->display_name,
+						'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
+				        'color' => '#00928D',
+				        'text' => "Amazonで確認できます。破滅派のページは<{$url}|こちら>です。",
+					],
+				] );
 			}
 		} elseif ( current_user_can( 'edit_post', $post->ID ) ) {
 			// Author
@@ -75,18 +82,19 @@ TEXT;
 				update_post_meta( $post->ID, '_kdp_status', 1 );
 				$admin_url  = get_edit_post_link( $post->ID, 'mail' );
 				$url = get_permalink( $post );
-				$author = get_userdata( $post->post_author );
 				// Slackに通知
 				$title = sprintf( '『%s』%s', get_the_title( $post ), $author->display_name );
-				hametuha_slack( '電子書籍販売申請がありました', [[
-					'fallback' => $title,
-					'title' => $title,
-					'title_link' => $url,
-					'author_name' => $author->display_name,
-					'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
-					'color' => '#E80000',
-					'text' => "<{$admin_url}|管理画面> から確認し、問題なければ公開してください。",
-				]] );
+				hametuha_slack( '@channel 電子書籍販売申請がありました', [
+					[
+						'fallback'    => $title,
+						'title'       => $title,
+						'title_link'  => $url,
+						'author_name' => $author->display_name,
+						'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
+						'color'       => '#E80000',
+						'text'        => "<{$admin_url}|管理画面> から確認し、問題なければ公開してください。",
+					],
+				], '#admin' );
 				// メールで通知
 				$body = <<<TEXT
 破滅派編集部
@@ -102,6 +110,34 @@ TEXT;
 
 TEXT;
 				wp_mail( get_option( 'admin_email' ), '【破滅派】 電子書籍申請', $body );
+			}
+		}
+		// 著者のみ可能なアクション
+		if ( get_current_user_id() == $post->post_author ) {
+			// 販売済みの電子書籍の希望小売価格が変更されたら
+			$current_required_price = get_post_meta( $post->ID, '_kdp_required_price', true );
+			$new_required_price     = $this->input->post( 'kdp_required_price' );
+			if ( '1' === $this->input->post( 'change_price_flag' ) ) {
+				update_post_meta( $post->ID, '_kdp_required_price', $new_required_price );
+			}
+			if ( '2' === get_post_meta( $post->ID, '_kdp_status', true ) ) {
+				if ( $current_required_price != $new_required_price ) {
+					// Slackに通知
+					$from = $current_required_price ? '￥'.number_format( $current_required_price ) : 'なし';
+					$to   = $new_required_price     ? '￥'.number_format( $new_required_price ) : 'なし';
+					$title = sprintf( '『%s』%s → %s', get_the_title( $post ), $from, $to );
+					hametuha_slack( '@channel 電子書籍の希望小売価格が変更されました', [
+						[
+							'fallback'    => $title,
+							'title'       => $title,
+							'title_link'  => get_edit_post_link( $post->ID ),
+							'author_name' => $author->display_name,
+							'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
+							'color'       => '#E80000',
+							'text'        => '管理画面から確認し、問題なければ修正してください。',
+						],
+					], '#admin' );
+				}
 			}
 		}
 	}
@@ -177,6 +213,28 @@ TEXT;
 
 
 		<div class="misc-pub-section misc-pub-section--epub misc-pub-section--enroll">
+			<?php if ( 2 == $status ) : ?>
+			<label>
+				<span class="dashicons dashicons-money"></span> 販売価格:
+				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
+					<input type="number" name="kdp_price" class="regular-text"
+				       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
+				<?php else : ?>
+					<input type="number" readonly class="regular-text"
+					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
+				<?php endif; ?>
+			</label>
+			<?php endif; ?>
+			<?php if ( get_current_user_id() == $post->post_author ) : ?>
+				<label class="block">
+					<input type="checkbox" id="change-price" name="change_price_flag" value="1" /> 希望小売価格を編集 <a href="<?= home_url( '/faq/pricing-strategy' ) ?>" target="_blank">[?]</a>
+				</label>
+				<label id="change-price-box" class="hidden block">
+					<input type="number" name="kdp_required_price" class="regular-text"
+					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_required_price', true ) ) ?>"/>
+				</label>
+				<hr />
+			<?php endif; ?>
 			<?php if ( current_user_can( 'edit_post', $post->ID ) && ! $status ) : ?>
 				<label>
 					<input type="checkbox" name="please-publish" value="1"> 販売申請する

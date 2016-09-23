@@ -87,7 +87,6 @@ class Series extends Model {
 		return (int) get_post_meta( $post_id, '_kdp_status', true );
 	}
 
-
 	/**
 	 * @param int $post_id
 	 *
