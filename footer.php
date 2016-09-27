@@ -86,7 +86,7 @@
 						foreach (
 							[
 								'ha'          => [ 'https://hametuha.co.jp', '株式会社破滅派', '' ],
-								'cup'         => [ 'http://hametuha.tokyo', '無目的スペース', '' ],
+								'cup'         => [ 'https://hametuha.tokyo', 'イベント', '' ],
 								'image2'      => [ 'http://hametuha.pics', 'はめぴくっ！', '' ],
 								'googleplus3' => [
 									'https://plus.google.com/b/115001047459194790006/115001047459194790006/about/p/pub',
