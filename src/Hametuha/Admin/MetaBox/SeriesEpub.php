@@ -223,9 +223,11 @@ TEXT;
 					<input type="number" readonly class="regular-text"
 					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
 				<?php endif; ?>
+				<br />
 				<?php if ( is_series_price_unmatch( $post ) ) : ?>
-					<br />
-					<span class="required">希望小売価格: &yen; <?= number_format( get_post_meta( $post->ID, '_kdp_required_price', true ) ) ?></span>
+					<span class="required">希望小売価格: &yen; <?= number_format( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?></span>
+				<?php elseif ( ( $price = get_post_meta( $post->ID, '_kdp_required_price', true ) ) && is_numeric( $price ) ) : ?>
+					<small>希望小売価格: &yen; <?= number_format( $price ) ?></small>
 				<?php endif; ?>
 			</label>
 			<?php endif; ?>
