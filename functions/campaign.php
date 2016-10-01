@@ -4,6 +4,85 @@
  */
 
 /**
+ * 合評会一覧を出力するショートコード
+ */
+add_shortcode( 'campaign_list', function( $atts ) {
+	$atts = shortcode_atts( [
+		'year' => hametuha_financial_year(),
+	], $atts, 'campaign_list' );
+	$campaign = hametuha_review_terms( $atts['year'], false );
+	if ( ! $campaign ) {
+		return '';
+	}
+	$content = '<ol class="campaign-review">';
+	foreach ( $campaign as $term ) {
+		$link = get_term_link( $term );
+		$label = esc_html( $term->name );
+		$desc = nl2br( esc_html( $term->description ) );
+		$count = number_format_i18n( $term->count );
+		$limit = hametuha_is_available_campaign( $term )
+			? sprintf( '<span class="label label-danger campaign-review__label">%s〆切</span>', mysql2date( get_option( 'date_format' ), get_term_meta( $term->term_id, '_campaign_limit', true ) ) )
+			: '<span class="label label-default campaign-review__label">募集終了</span>';
+		$content .= <<<HTML
+		<li class="campaign-review__item">
+			<a href="{$link}" class="campaign-review__link block-link">
+				<strong class="campaign-review__title">
+					{$label}
+					{$limit}
+				</strong>
+				<p class="campaign-review__desc">
+					{$desc}
+				</p>
+			</a>
+		</li>
+HTML;
+
+	}
+	$content .= '</ol>';
+	return $content;
+} );
+
+/**
+ * 合評会のタームを返す
+ *
+ * @param int  $year
+ * @param bool $ascendant
+ *
+ * @return array
+ */
+function hametuha_review_terms( $year, $ascendant = true ) {
+	$terms = get_terms( [
+		'taxonomy' => 'campaign',
+	    'hide_empty' => false,
+	] );
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return [];
+	}
+	$terms = array_filter( $terms, function ( $term ) use ( $year ) {
+		$first     = implode( '|', array_map( function( $m ) {
+			return sprintf( '%02d', $m );
+		}, range( 4, 12 ) ) );
+		$second    = implode( '|', array_map( function( $m ) {
+			return sprintf( '%02d', $m );
+		}, range( 1, 3 ) ) );
+		$next_year = $year + 1;
+		return preg_match( "#^joint-review-{$year}({$first})$#", $term->slug ) || preg_match( "#^joint-review-{$next_year}({$second})$#", $term->slug );
+	} );
+	usort( $terms, function( $a, $b ) use ( $ascendant ) {
+		if ( $a->slug == $b->slug ) {
+			return 0;
+		} else {
+			if ( $ascendant ) {
+				return $a->slug > $b->slug ? 1 : -1;
+			} else {
+				return $a->slug > $b->slug ? -1 : 1;
+			}
+		}
+	} );
+	return $terms;
+}
+
+/**
  * キャンペーンが応募中か
  *
  * @param WP_Term $term
