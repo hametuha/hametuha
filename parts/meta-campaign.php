@@ -26,7 +26,7 @@ $has_limit = hametuha_campaign_has_limit( $campaign->term_id );
 		<dt>応募方法</dt>
 		<dd>
 			応募タグ <strong><?= esc_html( $campaign->name ) ?></strong> をつけて、所定の期日までに作品を投稿してください。
-			雑誌掲載作品は「非公開」を選べば表示されません。
+			雑誌掲載作品は「非公開」を選べば表示されません。（<a href="<?= home_url( 'faq/how-to-participate-campaign' ) ?>">詳しく</a>）
 		</dd>
 	</dl>
 </div>
