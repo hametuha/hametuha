@@ -53,9 +53,13 @@
 							<?php get_template_part( 'parts/search', 'author' ) ?>
 						<?php endif; ?>
 
+
 					</div>
 				<?php } ?>
 
+				<?php if ( is_tax( 'campaign' ) ) {
+					get_template_part( 'parts/meta', 'campaign' );
+				} ?>
 				<div>
 
 					<?php
