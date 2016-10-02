@@ -889,4 +889,24 @@ caption.outdated {
   }
 }
 
-
+.post-content {
+  .row-block {
+    &__link {
+      display: block;
+    }
+    &__icon {
+      line-height: 1;
+      text-align: center;
+      padding: 20px 0;
+      color: #000;
+      font-size: 60px;
+    }
+    &__desc {
+      text-align: center;
+      font-size: 0.85em;
+      color: $shade-font;
+      padding-bottom: 20px;
+      margin: 0;
+    }
+  }
+}

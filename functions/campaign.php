@@ -33,6 +33,7 @@ add_shortcode( 'campaign_list', function( $atts ) {
 				<p class="campaign-review__desc">
 					{$desc}
 				</p>
+				<i class="icon-arrow-right2"></i>
 			</a>
 		</li>
 HTML;

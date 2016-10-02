@@ -1,19 +1,21 @@
 .post-content{
   .campaign-review{
     padding: 0;
-    margin: 2em 0;
+    margin: 20px 0;
     &__item{
       list-style: none;
       margin: 0;
       padding: 0;
-      border-top: 1px solid $thin-border;
+      border: 1px solid #aaa;
+      border-bottom-width: 0;
       &:last-child{
-        border-bottom: 1px solid $thin-border;
+        border-bottom-width: 1px;
       }
     }
     &__link{
+      position: relative;
       display: block;
-      padding: 10px;
+      padding: 10px 30px 15px 10px;
       &:link, &:visited{
         color: #000;
         text-decoration: none;
@@ -21,6 +23,14 @@
       &:hover, &:active{
         background: #f1f1f1;
         color: #444;
+      }
+      i{
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        color: #aaa;
+        font-size: 24px;
+        transform: translateY(-50%);
       }
     }
     &__title{

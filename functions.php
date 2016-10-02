@@ -91,6 +91,8 @@ get_template_part( 'functions/post_type', 'news' );
 get_template_part( 'functions/post_type', 'series' );
 // ランキング
 get_template_part( 'functions/ranking' );
+// ショートコード
+get_template_part( 'functions/shortcodes', 'page' );
 // Social
 get_template_part( 'functions/social' );
 get_template_part( 'functions/social', 'share' );

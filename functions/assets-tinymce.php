@@ -79,6 +79,12 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 				'block' => 'aside',
 				'wrapper' => true,
 			],
+		    [
+		    	'title' => 'ROW',
+		        'block' => 'div',
+		        'classes' => 'row',
+			    'wrapper' => true,
+		    ],
 		],
 	];
 	if ( $screen ) {
