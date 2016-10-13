@@ -328,20 +328,37 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 		</tr>
 		<tr>
 			<th>
-				<label for="campaign_limit">最低文字数</label>
+				<label for="campaign_min_length">最低文字数</label>
 			</th>
 			<td>
-				<input id="campaign_limit" name="campaign_min_length" type="number" class="regular-text"
+				<input id="campaign_min_length" name="campaign_min_length" type="number" class="regular-text"
 				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ) ?>"/>
 			</td>
 		</tr>
 		<tr>
 			<th>
-				<label for="campaign_limit">最大文字数</label>
+				<label for="campaign_max_length">最大文字数</label>
 			</th>
 			<td>
-				<input id="campaign_limit" name="campaign_max_length" type="number" class="regular-text"
+				<input id="campaign_max_length" name="campaign_max_length" type="number" class="regular-text"
 				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ) ?>"/>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<label for="campaign_detail">補足</label>
+			</th>
+			<td>
+				<textarea rows="3" style="width: 90%;" id="campaign_detail" name="campaign_detail"><?= esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ) ?></textarea>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<label for="campaign_url">URL</label>
+			</th>
+			<td>
+				<input id="campaign_url" name="campaign_url" type="text" class="regular-text"
+				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ) ?>"/>
 			</td>
 		</tr>
 		<?php
@@ -349,11 +366,11 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 } );
 
 /**
- * 期限を保存
+ * 応募要項を保存
  */
 add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 	if ( 'campaign' == $taxonomy && isset( $_POST['campaign_limit'] ) ) {
-		foreach ( [ 'campaign_limit', 'campaign_min_length', 'campaign_max_length' ] as $key ) {
+		foreach ( [ 'campaign_limit', 'campaign_min_length', 'campaign_max_length', 'campaign_detail', 'campaign_url' ] as $key ) {
 			if ( isset( $_POST[ $key ] ) ) {
 				update_term_meta( $term_id, '_'.$key, $_POST[ $key ] );
 			}
