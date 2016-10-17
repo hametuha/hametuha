@@ -34,6 +34,8 @@ get_header(); ?>
 
 						<?php the_series( '<p class="series">', sprintf( '（第%s話）</p>', $series->get_index() ) ); ?>
 
+						<?= the_terms( get_the_ID(), 'campaign', '<p class="campaign">', ', ', '応募作品</p>' ) ?>
+
 						<p class="author">
 							<a href="#post-author"><?php the_author(); ?></a>
 						</p>
@@ -108,16 +110,20 @@ HTML;
 						<?= $series->prev( '<li class="previous">' ); ?>
 						<?= $series->next( '<li class="next">' ); ?>
 					</ul>
-				<?php else : ?>
-
 				<?php endif; ?>
+
 
 				<div id="single-post-footernote" class="row">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
 				</div>
 
 				<p class="finish-nav">
-					読み終えたらレビューしてください<br/>
+					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>
+						これは<?php the_terms( get_the_ID(), 'campaign' ) ?>の応募作品です。<br />
+						他の作品ともどもレビューお願いします。<br />
+					<?php else : ?>
+						読み終えたらレビューしてください<br/>
+					<?php endif; ?>
 					<i class="icon-point-down"></i>
 				</p>
 
@@ -132,8 +138,6 @@ HTML;
 				</div>
 
 				<?php get_template_part( 'parts/list', 'author' ) ?>
-				
-
 
 				<?php
 				// Yarpp関連記事
