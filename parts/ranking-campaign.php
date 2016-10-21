@@ -35,6 +35,11 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 						<?= get_avatar( $user_id ) ?>
 						<span class="campaign-score-user-title">
 							<?= esc_html( $user->display_name ) ?>
+							<?php if ( $var['author'] ) : ?>
+								<span class="label label-danger">書</span>
+							<?php else : ?>
+								<span class="label label-default">読</span>
+							<?php endif; ?>
 						</span>
 					</th>
 					<?php foreach ( $records['posts'] as $post_id => $author ) : ?>
