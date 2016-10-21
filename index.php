@@ -133,6 +133,8 @@
 					} elseif ( is_tax( 'faq_cat' ) ) {
 						get_template_part( 'parts/nav', 'faq' );
 						get_search_form();
+					} elseif ( is_tax( 'campaign' ) ) {
+						get_template_part( 'parts/ranking', 'campaign' );
 					} elseif ( ! hametuha_is_profile_page() ) {
 						get_search_form();
 					}

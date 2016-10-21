@@ -150,6 +150,31 @@ class Rating extends Model
         return (int)$this->get_var();
     }
 
+	/**
+	 * 投稿に付与された評価のリストを返す
+	 *
+	 * @param int|array $post_id
+	 * @param string $limit
+	 *
+	 * @return array|mixed|null
+	 */
+    public function get_user_points( $post_id, $limit = '' ) {
+    	$this
+		    ->from($this->table)
+		    ->calc(false)
+		    ->select('object_id as post_id, user_id, location AS rating')
+		    ->where( 'rel_type = %s', $this->type );
+    	if ( is_array( $post_id ) ) {
+    		$this->where_in( 'object_id', $post_id, '%d' );
+	    } else {
+	    	$this->where( 'object_id = %d', $post_id );
+	    }
+	    if ( $limit ) {
+	    	$this->where( 'updated <= %s', $limit );
+	    }
+	    return $this->result();
+    }
+
     /**
      * If this is series?
      *

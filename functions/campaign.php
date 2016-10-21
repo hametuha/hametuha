@@ -4,6 +4,141 @@
  */
 
 /**
+ * レビューが更新されたらキャッシュ削除
+ *
+ * @param WP_Post $post
+ */
+add_action( 'hametuha_post_reviewed', function( $post ) {
+	if ( ( $campaigns = get_the_terms( $post, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
+		foreach ( $campaigns as $campaign ) {
+			wp_cache_delete( $campaign->term_id, 'campaign_record' );
+		}
+	}
+} );
+
+/**
+ * コメントが交信されたらキャッシュ削除
+ *
+ * @param int $comment_id
+ * @param WP_Comment $comment
+ */
+add_action( 'wp_insert_comment', function( $comment_id, $comment ){
+	if ( ( $campaigns = get_the_terms( $comment->comment_post_ID, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
+		foreach ( $campaigns as $campaign ) {
+			wp_cache_delete( $campaign->term_id, 'campaign_record' );
+		}
+	}
+}, 10, 2 );
+
+/**
+ * キャンペーンの採点結果を表示する
+ *
+ * @param null|WP_Term $term
+ *
+ * @return array|WP_Error
+ */
+function hametuha_campaign_record( $term = null ) {
+	if ( is_null( $term ) && is_tax( 'campaign' ) ) {
+		$term = get_queried_object();
+	}
+	if ( ! $term || 'campaign' !== $term->taxonomy ) {
+		return [];
+	}
+	$limit = get_term_meta( $term->term_id, '_campaign_range_end', true );
+	if ( $limit ) {
+		$limit .= ' 23:59:59';
+	} else {
+		return new WP_Error( 'not_campaign', sprintf( '%sは採点のないキャンペーンです。', $term->name ) );
+	}
+	$record = wp_cache_get( $term->term_id, 'campaign_record' );
+	if ( false === $record ) {
+		$post_ids = [];
+		$participants = [];
+		$record_base = [];
+		// Get submitted posts
+		foreach ( get_posts( [
+			'posts_per_page' => -1,
+		    'post_status' => 'publish',
+		    'no_found_rows' => true,
+		    'orderby' => [
+		    	'ID' => 'ASC',
+		    ],
+		    'tax_query' => [
+		    	[
+		    		'taxonomy' => 'campaign',
+			        'field'   => 'id',
+			        'terms'    => $term->term_id,
+			    ],
+		    ],
+		] ) as $post ) {
+			$participants[ (int) $post->post_author ] = [
+				'author' => true,
+			    'comment_total'  => 0,
+			    'rate_total' => 0,
+			];
+			$post_ids[ (int) $post->ID ] = (int) $post->post_author;
+			$record_base[ (int) $post->ID ] = 0;
+		}
+		if ( ! $post_ids ) {
+			return [];
+		}
+		// Get records
+		$model = \Hametuha\Model\Rating::get_instance();
+		$records = $model->get_user_points( array_keys( $post_ids ), $limit );
+		// Get all participants
+		foreach ( $records as $record ) {
+			if ( ! array_key_exists( (int) $record->user_id, $participants ) ) {
+				$participants[ (int) $record->user_id ] = [
+					'author'        => false,
+					'comment_total' => 0,
+					'rate_total'    => 0,
+				];
+			}
+		}
+		// Calculate comment total
+		foreach ( hametuha_comment_point( array_keys( $post_ids ) ) as $row ) {
+			$participants[ $row->user_id ]['comment_total'] = (int) $row->comment_count;
+		}
+		// Add base record
+		foreach ( $participants as $id => $vars ) {
+			$participants[ $id ]['records'] = $record_base;
+		}
+		// Calculate record total
+		foreach ( $records as $record ) {
+			$score = intval( 10 * $record->rating );
+			$participants[ $record->user_id ]['rate_total'] += $score;
+			$participants[ $record->user_id ]['records'][ $record->post_id ] = $score;
+		}
+		$record = [
+			'posts'        => $post_ids,
+		    'participants' => $participants,
+		];
+		wp_cache_set( $term->term_id, $record, 'campaign_record' );
+	}
+	return $record;
+}
+
+/**
+ * Get comment count
+ *
+ * @param array $post_ids
+ *
+ * @return array|null|object
+ */
+function hametuha_comment_point( $post_ids ) {
+	global $wpdb;
+	$in = implode( ', ', array_map( 'intval', $post_ids ) );
+	$query = <<<SQL
+		SELECT user_id, COUNT(comment_ID) AS comment_count
+		FROM {$wpdb->comments}
+		WHERE comment_post_ID IN ({$in})
+		  AND user_id > 0
+		GROUP BY comment_post_ID
+SQL;
+	return $wpdb->get_results( $query );
+}
+
+/**
  * 合評会一覧を出力するショートコード
  */
 add_shortcode( 'campaign_list', function( $atts ) {
@@ -328,6 +463,15 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 		</tr>
 		<tr>
 			<th>
+				<label for="campaign_range_end">評価〆切</label>
+			</th>
+			<td>
+				<input id="campaign_range_end" name="campaign_range_end" type="text" class="regular-text" placeholder="YYYY-MM-DD"
+				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ) ?>"/>
+			</td>
+		</tr>
+		<tr>
+			<th>
 				<label for="campaign_min_length">最低文字数</label>
 			</th>
 			<td>
@@ -370,10 +514,12 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
  */
 add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 	if ( 'campaign' == $taxonomy && isset( $_POST['campaign_limit'] ) ) {
-		foreach ( [ 'campaign_limit', 'campaign_min_length', 'campaign_max_length', 'campaign_detail', 'campaign_url' ] as $key ) {
+		foreach ( [ 'campaign_limit', 'campaign_range_end', 'campaign_min_length', 'campaign_max_length', 'campaign_detail', 'campaign_url' ] as $key ) {
 			if ( isset( $_POST[ $key ] ) ) {
 				update_term_meta( $term_id, '_'.$key, $_POST[ $key ] );
 			}
 		}
+		// Clear cache
+		wp_cache_delete( $term_id, 'campaign_record' );
 	}
 }, 10, 2 );

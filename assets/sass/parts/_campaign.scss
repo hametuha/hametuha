@@ -49,3 +49,73 @@
 
   }
 }
+
+.campaign-score{
+  &-wrapper{
+    width: 100%;
+    overflow-x: scroll;
+  }
+  table-layout: fixed !important;
+  border-collapse: collapse;
+  th, td{
+    padding: 10px;
+  }
+  thead, tfoot{
+    th, td{
+      border: 1px dotted #ddd;
+      border-bottom: 3px double #ddd;
+    }
+  }
+  tbody{
+    th, td{
+      border: 1px dotted #ddd;
+      border-bottom-style: solid;
+      border-top-style: solid;
+    }
+    th{
+      border-right: 3px double #ddd;
+    }
+    tr:first-child{
+      th, td{
+        border-top: 3px double #ddd;
+      }
+    }
+    tr:last-child{
+      th, td{
+        border-bottom: 3px double #ddd;
+      }
+    }
+    tr:nth-child(odd){
+      background-color: #f9f9f9;
+    }
+  }
+  &-user{
+    text-align: center;
+    .avatar{
+      max-width: 60px;
+      width: auto;
+      height: auto;
+      border-radius: 50%;
+    }
+    &-title{
+      margin-top: 3px;
+      font-size: 12px;
+      display: block;
+    }
+  }
+  &-work{
+    max-width: 8em;
+    a{
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  &-post{
+    text-align: right;
+    tfoot &{
+      font-weight: bold;
+    }
+  }
+}

@@ -19,7 +19,6 @@ function hametuha_version() {
  */
 define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 
-
 /**
  * Bootstrap for theme
  */
