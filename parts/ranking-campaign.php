@@ -19,7 +19,7 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 				<?php foreach ( $records['posts'] as $post_id => $author ) : ?>
 					<th class="campaign-score-work"><a href="<?= get_permalink( $post_id ) ?>"><?= get_the_title( $post_id ) ?></a></th>
 				<?php endforeach; ?>
-				<th class="campaign-score-subtotal">小計</th>
+				<th class="campaign-score-subtotal">持ち点</th>
 			</tr>
 		</thead>
 		<tfoot>
@@ -32,9 +32,21 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 				?>
 				<tr>
 					<th class="campaign-score-user">
-						<?= get_avatar( $user_id ) ?>
+						<?php if ( $var['author'] ) : ?>
+							<?= get_avatar( $user_id ) ?>
+						<?php else : ?>
+							<img src="" alt="" class="avatar" />
+						<?php endif; ?>
 						<span class="campaign-score-user-title">
-							<?= esc_html( $user->display_name ) ?>
+
+							<?php
+							if ( $var['author'] ) {
+								echo esc_html( $user->display_name );
+							} else {
+								echo '読み専';
+							}
+							?>
+
 							<?php if ( $var['author'] ) : ?>
 								<span class="label label-danger">書</span>
 							<?php else : ?>
@@ -45,7 +57,7 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 					<?php foreach ( $records['posts'] as $post_id => $author ) : ?>
 						<td class="campaign-score-post <?= $author == $user_id ? 'campaign-score-own' : '' ?>">
 							<?php
-							$score = $var['rate_total'] > 0 ? $var['comment_total'] * $var['records'][ $post_id ] / $var['rate_total'] : 0;
+							$score = $var['rate_total'] > 0 ? ( $var['comment_total'] + 1 ) * $var['records'][ $post_id ] / $var['rate_total'] : 0;
 							if ( ! isset( $total[ $post_id ] ) ) {
 								$total[ $post_id ] = 0;
 							}
@@ -54,7 +66,7 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 							?>
 						</td>
 					<?php endforeach; ?>
-					<td class="campaign-score-post"><?= number_format_i18n( $var['comment_total'], 1 ) ?></td>
+					<td class="campaign-score-post"><?= number_format_i18n( $var['comment_total'] + 1, 1 ) ?></td>
 				</tr>
 				<?php
 				$out .= ob_get_contents();
