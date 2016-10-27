@@ -35,7 +35,7 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 						<?php if ( $var['author'] ) : ?>
 							<?= get_avatar( $user_id ) ?>
 						<?php else : ?>
-							<img src="" alt="" class="avatar" />
+							<img src="<?= get_template_directory_uri() ?>/assets/img/mystery-man.png" alt="" class="avatar" />
 						<?php endif; ?>
 						<span class="campaign-score-user-title">
 
