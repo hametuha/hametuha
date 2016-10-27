@@ -129,11 +129,11 @@ function hametuha_comment_point( $post_ids ) {
 	global $wpdb;
 	$in = implode( ', ', array_map( 'intval', $post_ids ) );
 	$query = <<<SQL
-		SELECT user_id, COUNT(comment_post_ID) AS comment_count
+		SELECT user_id, COUNT( DISTINCT comment_post_ID ) AS comment_count
 		FROM {$wpdb->comments}
 		WHERE comment_post_ID IN ({$in})
 		  AND user_id > 0
-		GROUP BY comment_post_ID, user_id
+		GROUP BY user_id
 SQL;
 	return $wpdb->get_results( $query );
 }
