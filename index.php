@@ -126,6 +126,7 @@
 					wp_reset_postdata(); ?>
 
 					<?php
+					// Extras
 					if ( is_ranking() ) {
 						get_template_part( 'parts/ranking', 'calendar' );
 					} elseif ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
@@ -137,6 +138,10 @@
 						get_template_part( 'parts/ranking', 'campaign' );
 					} elseif ( ! hametuha_is_profile_page() ) {
 						get_search_form();
+					}
+					// Content
+					if ( ( is_category() || is_tag() || is_tax() ) && ( $content = get_term_meta( get_queried_object_id(), '_term_content', true ) ) ) {
+						printf( '<div class="post-content clearfix">%s</div>', apply_filters( 'the_content', $content ) );
 					}
 					?>
 				</div>

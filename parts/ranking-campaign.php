@@ -86,6 +86,4 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 
 	</table>
 
-</div>
-
-
+</div><!-- campaign-score-wrapper -->

@@ -64,3 +64,29 @@ add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 
 	return $args;
 }, 10, 2 );
+
+
+/**
+ * コンテンツを入力するフィールドを追加
+ */
+add_action( 'edit_tag_form_fields', function ( $tag ) {
+	?>
+	<tr>
+		<th>
+			<label for="term_content">コンテンツ</label>
+			<?php wp_nonce_field( 'update_term_content', '_term_content_nonce', false ) ?>
+		</th>
+		<td><?php wp_editor( get_term_meta( $tag->term_id, '_term_content', true ), 'term_content' ) ?></td>
+	</tr>
+	<?php
+}, 11 );
+
+
+/**
+ * コンテンツを入力するフィールドを保存
+ */
+add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
+	if ( isset( $_POST['_term_content_nonce'] ) && wp_verify_nonce( $_POST['_term_content_nonce'], 'update_term_content' ) ) {
+		update_term_meta( $term_id, '_term_content', $_POST['term_content'] );
+	}
+} );
