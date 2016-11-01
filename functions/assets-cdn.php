@@ -1,19 +1,22 @@
 <?php
 /**
- * CloudFlare関係のタグ
+ * CloudFlare related functions
+ *
+ * @package hametuha
+ *
  */
 
 /**
- * CloudFlareが利用可能か否か
+ * Check if CloudFlare is available.
  *
  * @return bool
  */
-function cf_availavle() {
+function cf_available() {
 	return ( defined( 'CF_MAIL' ) && defined( 'CF_TOKEN' ) && defined( 'CF_ZONE_ID' ) ) ;
 }
 
 /**
- * CloudFlareのAPIにレスポンスを飛ばす
+ * Send request to CloudFlare API
  *
  * @param string $endpoint
  * @param array $params
@@ -22,10 +25,10 @@ function cf_availavle() {
  * @return array|mixed|object|WP_Error
  */
 function cf_make_request( $endpoint, $params = [], $method = 'GET' ) {
-	if ( ! cf_availavle() ) {
+	if ( ! cf_available() ) {
 		return new WP_Error( 500, 'No Credentials set.' );
 	}
-	$endpoint = 'https://api.cloudflare.com/client/v4/' . $endpoint;
+	$endpoint = 'https://api.cloudflare.com/client/v4/' . ltrim( $endpoint, '/' );
 	$opts     = [
 		CURLOPT_POST           => 'POST' === $method,
 		CURLOPT_RETURNTRANSFER => true,
@@ -90,8 +93,8 @@ function cf_make_request( $endpoint, $params = [], $method = 'GET' ) {
  * @return array|mixed|object|WP_Error
  */
 function cf_purge_cache( $urls ) {
-	if ( ! cf_availavle() ) {
-		return new WP_Error( 500, 'CloudFlare is not avaialable' );
+	if ( ! cf_available() ) {
+		return new WP_Error( 500, 'CloudFlare is not available' );
 	}
 	$response = cf_make_request( '/zones/' . CF_ZONE_ID . '/purge_cache', [ 'files' => $urls ], 'DELETE' );
 	if ( is_wp_error( $response ) ) {

@@ -1,3 +1,8 @@
+<?php
+if ( is_preview() ) {
+	return;
+}
+?>
 <div class="row row--share share__container">
 
 	<?php

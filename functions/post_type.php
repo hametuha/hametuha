@@ -182,7 +182,7 @@ add_action( 'init', function () {
 			'manage_terms' => 'edit_others_posts',
 			'edit_terms'   => 'edit_others_posts',
 			'delete_terms' => 'edit_others_posts',
-			'assign_terms' => 'edit_post',
+			'assign_terms' => 'edit_posts',
 		],
 		'show_admin_column' => true,
 		'rewrite'      => [
@@ -214,13 +214,13 @@ add_action( 'init', function () {
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
 		'^news_sitemap/?$' => 'index.php?feed=news_sitemap&post_type=news',
-		'^amp_sitemap/?$' => 'index.php?feed=amp_sitemap&post_type=news',
+		'^amp_sitemap/?$'  => 'index.php?feed=amp_sitemap&post_type=news',
 		'^news/article/([0-9]+)/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&page=$matches[2]',
-		'^news/article/([0-9]+)/amp/?$'                => 'index.php?p=$matches[1]&post_type=news&amp=true',
-		'^news/article/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=news',
+		'^news/article/([0-9]+)/amp/?$' => 'index.php?p=$matches[1]&post_type=news&amp=true',
+		'^news/article/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news',
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
-		'^lists/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=lists',
-	    '^idea/(\\d+)/?'                    => 'index.php?p=$matches[1]&post_type=ideas',
+		'^lists/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists',
+		'^idea/(\\d+)/?' => 'index.php?p=$matches[1]&post_type=ideas',
 	], $rules );
 } );
 

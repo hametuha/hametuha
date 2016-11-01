@@ -1,8 +1,9 @@
 <?php
 if ( ! is_feed() && is_singular() ) {
 	the_post();
-	add_filter( 'the_content', '_fb_instant_content' );
+	add_filter( 'the_content', '_fb_instant_content', 11 );
 }
+/** @var WP_Post $post */
 ?>
 <!doctype html>
 <html lang="ja" prefix="op: http://media.facebook.com/op#">
@@ -19,10 +20,11 @@ if ( ! is_feed() && is_singular() ) {
 		}
 	}
 	if ( $category ) :
-		?>
-		<meta property="op:tags" content="<?= esc_attr( implode( ', ', array_map( function ( $cat ) {
+		$categories = array_map( function ( $cat ) {
 			return $cat->name;
-		}, $category ) ) ) ?>">
+		}, $category );
+		?>
+		<meta property="op:tags" content="<?= esc_attr( implode( ', ', $categories ) ) ?>">
 	<?php endif; ?>
 </head>
 <body>

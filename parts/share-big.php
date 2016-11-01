@@ -1,3 +1,8 @@
+<?php
+if ( is_preview() ) {
+	return;
+}
+?>
 <div class="series__row series__row--share shareContainer__wrapper">
 
 	<div class="container series__inner">

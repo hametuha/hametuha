@@ -524,7 +524,9 @@ function _fb_instant_amazon( $tag ) {
  */
 function _fb_instant_content( $content ) {
 	// twitterを修正
-	$content = preg_replace( '#(<blockquote class="twitter-tweet" (data-)?width="[0-9]+">.*?</script></p>)#us', '<figure class="op-social"><iframe>$1</iframe></figure>', $content );
+	$content = preg_replace_callback( '#(<blockquote class="twitter-tweet" (data-)?width="([0-9]+)">.*?</script></p>)#us', function( $matches ) {
+		return sprintf( '<figure class="op-social"><iframe width="%1$s">%2$s</iframe></figure>', $matches[3], $matches[1] );
+	}, $content );
 	// tableを編集
 	$content = preg_replace_callback( '#<table([^>]*?>)(.*)</table>#us', function( $match ) {
 		$table = $match[0];
@@ -536,7 +538,14 @@ HTML;
 		return $table;
 	}, $content );
 	// rubyタグを修正
-	$content = preg_replace( '#<rt>([^<]+)</rt>#', '<rt>（$1）</rt>', $content );
+	$content = preg_replace( '#<rt>([^<]+)</rt>#', '（$1）', $content );
+	$content = preg_replace( '#</?ruby>#', '', $content );
+	// dlタグを修正
+	$content = preg_replace_callback( '#<dl>(.*?)</dl>#us', function( $matches ) {
+		return sprintf( '<ul>%s</ul>', preg_replace_callback( '#<d(t|d)>(>*?)</d(d|t)>#us', function( $m ) {
+			return sprintf( '<li>%s</li>', $m[2] );
+		}, $matches[1] ) );
+	}, $content );
 	// pタグだけに囲まれた画像を修正
 	$content = preg_replace_callback( '#<p[^>]*?>(<img[^>]+>)</p>#us', function( $matches ) {
 		return sprintf( '<figure>%s</figure>', $matches[1] );
