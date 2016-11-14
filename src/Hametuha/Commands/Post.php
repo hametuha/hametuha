@@ -33,6 +33,7 @@ class Post extends Command {
 		}
 		$posts = get_posts([
 			'post_type' => 'post',
+			'post_status' => 'any',
 		    'tax_query' => [
 		    	[
 		    		'taxonomy' => $taxonomy,
