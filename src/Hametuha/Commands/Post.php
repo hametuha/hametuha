@@ -128,20 +128,14 @@ class Post extends Command {
 				$category = $cat->name;
 			}
 		}
-		$xml = '
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		$xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Root>
 <title>%1$s</title>
 <author>%2$s</author>
 <category>%5$s</category>
-<excerpt>
-%3$s
-</excerpt>
-<article>
-%4$s
-</article>
-</Root>
-';
+<excerpt>%3$s</excerpt>
+<article>%4$s</article>
+</Root>';
 		return sprintf(
 			$xml,
 			get_the_title( $post ),
