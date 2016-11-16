@@ -122,25 +122,33 @@ class Post extends Command {
 	protected function to_xml( $post = null ) {
 		$post = get_post( $post );
 		setup_postdata( $post );
+		$category = '創作';
+		if ( $categories = get_the_category( $post ) ) {
+			foreach ( $categories as $cat ) {
+				$category = $cat->name;
+			}
+		}
 		$xml = '
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<post>
+<Root>
 <title>%1$s</title>
 <author>%2$s</author>
+<category>%5$s</category>
 <excerpt>
 %3$s
 </excerpt>
-<body>
+<article>
 %4$s
-</body>
-</post>
+</article>
+</Root>
 ';
 		return sprintf(
 			$xml,
 			get_the_title( $post ),
 			get_the_author_meta( 'display_name', $post->post_author ),
-			get_the_excerpt( $post ),
-			apply_filters( 'the_content', $post->post_content )
+			wpautop( get_the_excerpt( $post ) ),
+			apply_filters( 'the_content', $post->post_content ),
+			$category
 		);
 
 	}
