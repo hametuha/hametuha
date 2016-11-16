@@ -136,14 +136,19 @@ class Post extends Command {
 <excerpt>%3$s</excerpt>
 <article>%4$s</article>
 </Root>';
-		return sprintf(
+		$xml = sprintf(
 			$xml,
 			get_the_title( $post ),
 			get_the_author_meta( 'display_name', $post->post_author ),
-			wpautop( get_the_excerpt( $post ) ),
+			get_the_excerpt( $post ),
 			apply_filters( 'the_content', $post->post_content ),
 			$category
 		);
-
+		// 空白を変更
+		$xml = str_replace( '&nbsp;', ' ', $xml );
+		// センター寄せを変更
+		$xml = str_replace( ' style="text-align: center"', ' class="text-center"', $xml );
+		// 終了
+		return $xml;
 	}
 }
