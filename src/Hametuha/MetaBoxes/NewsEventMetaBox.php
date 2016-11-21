@@ -13,7 +13,7 @@ use WPametu\UI\Field\Textarea;
 
 class NewsEventMetaBox extends EditMetaBox {
 
-	protected $post_types = [ 'news' ];
+	protected $post_types = [ 'news', 'announcement' ];
 
 	protected $name = 'hametuha_news_event_helper';
 

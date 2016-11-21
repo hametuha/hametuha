@@ -145,4 +145,29 @@ SQL;
 			self::e( $e->getMessage() );
 		}
 	}
+
+	/**
+	 * Change meta
+	 */
+	public function fix_event() {
+		global $wpdb;
+		$query = <<<SQL
+			UPDATE {$wpdb->postmeta}
+			SET meta_key = %s
+			WHERE meta_key = %s
+SQL;
+		foreach ( [
+			'_hametuha_announcement_place'    => '_event_title',
+			'_hametuha_announcement_building' => '_event_bld',
+			'_hametuha_announcement_address'  => '_event_address',
+			'_hametuha_announcement_notice'   => '_event_desc',
+			'_hametuha_announcement_point'    => '_event_point',
+			'_lwp_event_start'                => '_event_start',
+			'_lwp_event_end'                  => '_event_end',
+		] as $old_key => $new_key  ) {
+			$replaced = $wpdb->query( $wpdb->prepare( $query, $new_key, $old_key ) );
+			self::l( sprintf( 'Change %s to %s: %d', $old_key, $new_key, $replaced ) );
+		}
+		self::s( 'Changing key is finished. Please flush post cache.' );
+	}
 }

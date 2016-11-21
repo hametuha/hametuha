@@ -50,15 +50,6 @@ add_action( 'init', function () {
 		'jquery-ui-slider',
 	], hametuha_version(), true );
 
-	// 告知ページ用JS
-	wp_register_script( 'hametuha-announcement', get_template_directory_uri() . '/assets/js/dist/single-announcement.js', [
-		'jquery',
-		'gmap',
-	], hametuha_version(), true );
-	wp_localize_script( 'hametuha-announcement', 'HametuhaAnnouncement', [
-		'icon' => get_template_directory_uri() . '/assets/img/facebook-logo.png',
-	] );
-
 	// ログイン名変更用JS
 	wp_register_script( 'hametuha-login-changer', get_template_directory_uri() . '/assets/js/dist/components/login-change-helper.js', [
 		'jquery-form',
@@ -160,10 +151,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	//コメント用
 	if ( is_singular() && ! is_page() ) {
 		wp_enqueue_script( 'comment-reply' );
-	}
-	// 告知用JS
-	if ( is_singular( 'announcement' ) ) {
-		wp_enqueue_script( 'hametuha-announcement' );
 	}
 }, 1000 );
 

@@ -1,47 +1,17 @@
 <?php
 /** @var $announcement \Hametuha\ThePost\Announcement */
 $announcement = $post->helper;
+
+
+get_template_part( 'parts/event', 'address' )
+
 ?>
 
+<?php if ( $announcement->is_participating() ) : ?>
 <div class="event-detail clearfix">
 
 	<dl class="dl-horizontal">
 
-
-		<?php
-		$start   = lwp_event_starts( 'Y/n/j (D) H:i' );
-		$end     = lwp_event_ends( 'Y/n/j (D) H:i' );
-		$expired = lwp_event_ends( 'U' ) < current_time( 'timestamp' );
-		?>
-		<?php if ( $start || $end ): ?>
-			<dt>日時</dt>
-			<dd>
-				<?php
-				echo $start . " 〜 " . $end;
-				?>
-				<?php if ( $expired ): ?>
-					<span class="label label-danger">終了</span>
-				<?php endif; ?>
-			</dd>
-		<?php elseif ( $announcement->is_limited() ) : ?>
-			<dt>日時</dt>
-			<dd>
-				<?= $announcement->get_period(); ?>
-				<?php if ( $announcement->is_expired() ) : ?>
-					<span class="label label-danger">終了</span>
-				<?php endif; ?>
-			</dd>
-		<?php endif; ?>
-
-		<?php if ( $announcement->has_place() ) : ?>
-			<dt>場所</dt>
-			<dd>
-				<a href="http://www.google.co.jp/maps?q=<?= rawurlencode( $post->helper->get_address( false ) ) ?>"
-				   class="small-button" target="_blank"><?= $post->helper->get_address() ?></a>
-			</dd>
-		<?php endif; ?>
-
-		<?php if ( $announcement->is_participating() ) : ?>
 			<dt>募集期間</dt>
 			<dd>
 				<?= $announcement->get_participating_period() ?>
@@ -61,18 +31,10 @@ $announcement = $post->helper;
 			<dd>
 				<?= $announcement->participating_limit() ?>
 			</dd>
-		<?php endif; ?>
-
-		<dt>備考</dt>
-		<dd><?= $announcement->notice ?></dd>
-
 	</dl>
 
-	<?php if ( $announcement->has_place() ): ?>
-		<div id="gmap-announcement" class="row" data-address="<?= $announcement->get_address( true ) ?>"></div>
-	<?php endif; ?>
 </div>
-
+<?php endif; ?>
 
 <?php if ( 2 == $announcement->commit_type ) : $committed_posts = $announcement->get_committed_posts(); ?>
 	<?php if ( ! empty( $committed_posts ) ) : ?>
