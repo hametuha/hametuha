@@ -407,3 +407,41 @@ function hametuha_user_selector( $name, $selected = 0, $id = '', $mode = 'any', 
 	] );
 	wp_enqueue_style( 'select2' );
 }
+
+/**
+ * Send user email
+ *
+ * @param int $user_id
+ * @param string $subject
+ * @param string $body
+ */
+function hametuha_notify( $user_id, $subject, $body ) {
+	$user = get_userdata( $user_id );
+	if ( ! $user ) {
+		return;
+	}
+	if ( false !== strpos( $user->user_email, '@pseudo.' ) ) {
+		// this is pseudo!
+		return;
+	}
+	$body = <<<TXT
+{$user->display_name} 様
+
+
+お世話になります。破滅派編集部です。
+
+{$body}
+
+===============
+破滅派オンライン文芸誌
+https://hametuha.com/
+
+このメールは自動送信です。ご質問は以下のアドレスまでお願い致します。
+info@hametuha.com
+TXT;
+
+	wp_mail( $user->user_email, "[破滅派] $subject", $body, [
+		'From: 破滅派編集部 <no-reply@hametuha.com>',
+	    'Reply-To: info@hametuha.com',
+	] );
+}

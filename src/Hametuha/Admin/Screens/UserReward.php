@@ -68,6 +68,20 @@ class UserReward extends Screen {
 			if ( ! UserSales::get_instance()->add( $user_id, 'task', $price, $unit, $desc, ! $vat_excluded, true, 0, $created ) ) {
 				throw new \Exception( 'データの保存に失敗しました。', 500 );
 			}
+			$url = home_url( '/sales/reward/' );
+			$body = <<<TXT
+破滅派で報酬が登録されました。
+
+【適用】
+{$desc}
+
+【金額】
+{$price}円
+
+詳細は以下のURLをご覧ください。
+{$url}
+TXT;
+			hametuha_notify( $user_id, '報酬が登録されました', $body );
 			wp_redirect( admin_url( 'users.php?page=hametuha-user-reward' ) );
 			exit;
 		} catch ( \Exception $e ) {
