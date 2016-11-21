@@ -193,7 +193,6 @@ function hametuha_series_hide( $content ) {
 	return $content;
 }
 
-
 /**
  * 投稿リストにカラムを追加
  */

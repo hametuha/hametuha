@@ -68,63 +68,6 @@ function hametuha_user_write_actions() {
 }
 
 /**
- * 管理画面でユーザーを探せるようにする
- *
- */
-add_filter( 'pre_user_query', function ( WP_User_Query &$user_query ) {
-	/** @var wpdb $wpdb */
-	global $wpdb;
-	if ( is_admin() && isset( $user_query->query_vars['search'] ) && ! empty( $user_query->query_vars['search'] ) ) {
-		$where = str_replace( '*', '%', $user_query->query_vars['search'] );
-
-		$user_query->query_from .= <<<SQL
-		LEFT JOIN {$wpdb->usermeta} AS last_name
-		ON {$wpdb->users}.ID = last_name.user_id AND last_name.meta_key = 'last_name'
-SQL;
-
-		$query                   = <<<SQL
-		( {$wpdb->users}.user_login LIKE %s OR {$wpdb->users}.user_nicename LIKE %s OR {$wpdb->users}.display_name LIKE %s OR last_name.meta_value LIKE %s)
-SQL;
-		$user_query->query_where = preg_replace( '/\(user_login LIKE \'%.*%\' OR user_nicename LIKE \'%.*%\'\)/u', $wpdb->prepare( $query, $where, $where, $where, $where ), $user_query->query_where );
-	}
-} );
-
-
-/**
- * ユーザーテーブルの名前表示を変更
- */
-add_filter( 'manage_users_columns', function ( $columns ) {
-	$new_column = array();
-	foreach ( $columns as $key => $val ) {
-		if ( 'name' === $key ) {
-			$new_column['display_name'] = '表示名';
-		} elseif ( false !== array_search( $columns, [ 'backwpup_role', 'ure_roles' ] ) ) {
-			// 邪魔なのは消す
-		} else {
-			$new_column[ $key ] = $val;
-		}
-	}
-
-	return $new_column;
-}, 200 );
-
-
-/**
- * 名前を表示する
- */
-add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
-	if ( 'display_name' == $column ) {
-		$ruby = (string) get_user_meta( $user_id, 'last_name', true );
-		$name = (string) get_the_author_meta( 'display_name', $user_id );
-		$role = hametuha_is_secret_guest( $user_id ) ? ' - <strong>シークレット</strong>' : '';
-		return sprintf( '<ruby>%s<rt>%s</rt></ruby>%s', esc_html( $name ), esc_html( $ruby ), $role );
-	} else {
-		return $td;
-	}
-}, 20, 3 );
-
-
-/**
  * 現在のユーザーの登録日を返す
  *
  * @param string|bool $format
@@ -266,27 +209,6 @@ SQL;
 	return (string) $wpdb->get_var( $wpdb->prepare( $sql, $author_id ) );
 }
 
-/**
- * デフォルトのコンタクトフィールドを削除する
- *
- * @param array $contactmethods
- *
- * @return array
- * @author WP Beginners
- * @url http://www.wpbeginner.com/wp-tutorials/how-to-remove-default-author-profile-fields-in-wordpress/
- */
-add_filter( 'user_contactmethods', function ( $contact_methods ) {
-	$contact_methods['aim'] = '<i class="icon-tag"></i> Webサイト名';
-	unset( $contact_methods['jabber'] );
-	unset( $contact_methods['yim'] );
-	$contact_methods['twitter']          = '<i class="icon-twitter"></i> twitterアカウント';
-	$contact_methods['location']         = '<i class="icon-location4"></i> 場所';
-	$contact_methods['birth_place']      = '<i class="icon-compass"></i> 出身地';
-	$contact_methods['favorite_authors'] = '<i class="icon-reading"></i> 好きな作家';
-	$contact_methods['favorite_words']   = '<i class="icon-pen5"></i> 好きな言葉';
-
-	return $contact_methods;
-}, '_hide_profile_fields', 10, 1 );
 
 
 /**
@@ -448,3 +370,40 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 	}
 }
 
+/**
+ * Show user selector
+ *
+ * @param string $name
+ * @param int $selected
+ * @param string $id
+ * @param string $mode
+ * @param array $classes
+ */
+function hametuha_user_selector( $name, $selected = 0, $id = '', $mode = 'any', $classes = [] ) {
+	if ( ! $id ) {
+		$id = $name;
+	}
+	$option = '';
+	if ( $selected && ( $user = get_userdata( $selected ) ) ) {
+		$option = sprintf(
+			'<option selected value="%d">%s（%s）</option>',
+			$user->ID,
+			esc_html( $user->display_name ),
+			esc_html( hametuha_user_role( $user ) )
+		);
+	}
+	printf(
+		'<select name="%4$s" id="%5$s" data-module="user-select" class="%2$s" data-mode="%3$s">%1$s</select>',
+		$option,
+		$classes ? esc_attr( implode( ' ', $classes ) ) : '',
+		esc_attr( $mode ),
+		esc_attr( $name ),
+		esc_attr( $id )
+	);
+	wp_enqueue_script( 'hametuha-user-select', get_template_directory_uri() . '/assets/js/dist/components/user-select.js', [ 'select2' ], hametuha_version(), true );
+	wp_localize_script( 'hametuha-user-select', 'HametuhaUserSelect', [
+		'endpoint' => rest_url( '/hametuha/v1/doujin/search/' ),
+		'nonce'    => wp_create_nonce( 'wp_rest' ),
+	] );
+	wp_enqueue_style( 'select2' );
+}

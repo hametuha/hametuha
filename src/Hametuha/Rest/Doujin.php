@@ -35,6 +35,9 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	protected $doujin = null;
 
+	/**
+	 * @var array
+	 */
 	protected $models = [
 		'series'        => Series::class,
 		'author'        => Author::class,
@@ -48,58 +51,68 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	public function rest_api_init() {
 		register_rest_route( 'hametuha/v1', '/doujin/followers/(?P<id>\\d+|me)/?', [
-			'methods'             => 'GET',
-			'callback'            => [ $this, 'api_followers' ],
-			'args'                => [
-				'id'     => [
-					'validate_callback' => function ( $var ) {
-						return 'me' === $var || is_numeric( $var );
-					},
-					'default'           => 0,
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'api_followers' ],
+				'args'                => [
+					'id'     => [
+						'validate_callback' => function ( $var ) {
+							return 'me' === $var || is_numeric( $var );
+						},
+						'default'           => 0,
+					],
+					'offset' => [
+						'validate_callback' => function($var){
+							return is_numeric( $var );
+						},
+						'default'           => 0,
+					],
+					's'      => [
+						'default' => '',
+					],
 				],
-				'offset' => [
-					'validate_callback' => 'is_numeric',
-					'default'           => 0,
-				],
-				's' => [
-					'default'           => '',
-				],
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
 			],
-			'permission_callback' => function () {
-				return current_user_can( 'read' );
-			},
 		] );
 		register_rest_route( 'hametuha/v1', '/doujin/following/(?P<id>\\d+|me)/?', [
-			'methods'             => 'GET',
-			'callback'            => [ $this, 'api_following' ],
-			'args'                => [
-				'id'     => [
-					'validate_callback' => function ( $var ) {
-						return 'me' === $var || is_numeric( $var );
-					},
-					'default'           => 0,
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'api_following' ],
+				'args'                => [
+					'id'     => [
+						'validate_callback' => function ( $var ) {
+							return 'me' === $var || is_numeric( $var );
+						},
+						'default'           => 0,
+					],
+					'offset' => [
+						'validate_callback' => function($var){
+							return is_numeric( $var );
+						},
+						'default'           => 0,
+					],
+					's'      => [
+						'default' => '',
+					],
 				],
-				'offset' => [
-					'validate_callback' => 'is_numeric',
-					'default'           => 0,
-				],
-				's' => [
-					'default'           => '',
-				],
+				'permission_callback' => function () {
+					return current_user_can( 'read' );
+				},
 			],
-			'permission_callback' => function () {
-				return current_user_can( 'read' );
-			},
 		] );
 		// Follow/Unfollow.
 		register_rest_route( 'hametuha/v1', '/doujin/follow/(?P<id>\d+)/?', [
 			[
 				'methods'             => 'POST',
-				'callback'            => [ $this, 'add_follower' ],
+				'callback'            => [ $this, 'api_add_follower' ],
 				'args'                => [
 					'id' => [
 						'required'          => true,
-						'validate_callback' => 'is_numeric',
+						'validate_callback' => function($var){
+							return is_numeric( $var );
+						},
 					],
 				],
 				'permission_callback' => function () {
@@ -108,15 +121,48 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			],
 			[
 				'methods'             => 'DELETE',
-				'callback'            => [ $this, 'remove_follower' ],
+				'callback'            => [ $this, 'api_remove_follower' ],
 				'args'                => [
 					'id' => [
 						'required'          => true,
-						'validate_callback' => 'is_numeric',
+						'validate_callback' => function($var){
+							return is_numeric( $var );
+						},
 					],
 				],
 				'permission_callback' => function () {
 					return current_user_can( 'read' );
+				},
+			],
+		] );
+		// Follow/Unfollow.
+		register_rest_route( 'hametuha/v1', '/doujin/search/(?P<mode>any|friends|authors)/?', [
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'api_search_user' ],
+				'args'                => [
+					'mode' => [
+						'required' => true,
+					    'validate_callback' => function( $var ) {
+						    return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
+					    },
+					],
+					's' => [
+						'required' => true,
+					],
+				],
+				'permission_callback' => function ( $request ) {
+					switch ( $request['mode'] ) {
+						case 'friends':
+							return current_user_can( 'read' );
+							break;
+						case 'authors':
+							return true;
+							break;
+						default:
+							return current_user_can( 'list_users' );
+							break;
+					}
 				},
 			],
 		] );
@@ -129,7 +175,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 *
 	 * @return bool|\WP_Error|\WP_REST_Response
 	 */
-	public function add_follower( $request ) {
+	public function api_add_follower( $request ) {
 		$user_id   = get_current_user_id();
 		$target_id = $request['id'];
 		$error     = $this->follower->follow( $user_id, $target_id );
@@ -150,7 +196,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 *
 	 * @return bool|\WP_Error|\WP_REST_Response
 	 */
-	public function remove_follower( $request ) {
+	public function api_remove_follower( $request ) {
 		$user_id   = get_current_user_id();
 		$target_id = $request['id'];
 		$error     = $this->follower->unfollow( $user_id, $target_id );
@@ -159,6 +205,50 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		} else {
 			return new \WP_REST_Response( [ 'success' => true ] );
 		}
+	}
+
+	/**
+	 * Search user
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function api_search_user( $request ) {
+		switch ( $request['mode'] ) {
+			case 'friends':
+				$users = [];
+				break;
+			default:
+				$users = array_map( [
+					$this,
+					'process_user_data',
+				], $this->author->search( $request['s'], 'any' != $request['mode'] ) );
+				break;
+		}
+		return new \WP_REST_Response( $users );
+	}
+
+	/**
+	 * Process user data
+	 *
+	 * @param \WP_User $user
+	 * @param string $context
+	 * @return array
+	 */
+	protected function process_user_data( $user, $context = 'api' ) {
+		$user_data = [
+			'ID'     => $user->ID,
+		    'name'   => $user->display_name,
+		    'avatar' => get_avatar_url( $user->ID, [
+		    	'size' => 96,
+		    ] ),
+		    'role' => hametuha_user_role( $user ),
+		    'profile_url' => $user->has_cap( 'edit_posts' ) ? home_url( "/doujin/detail/{$user->user_nicename}/" ) : '',
+		];
+		/**
+		 * ユーザーのデータを返すフィルター
+		 */
+		return apply_filters( 'hametuha_api_user', $user_data, $context );
 	}
 
 	/**
@@ -233,6 +323,20 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	}
 
 	/**
+	 * 取得すべきユーザーを設定
+	 *
+	 * @param string $nice_name
+	 *
+	 * @throws \Exception
+	 */
+	protected function set_member( $nice_name = '' ) {
+		$this->doujin = $this->author->get_by_nice_name( $nice_name );
+		if ( ! $this->doujin || ! $this->doujin->has_cap( 'edit_posts' ) ) {
+			throw new \Exception( 'Page Not Found.', 404 );
+		}
+	}
+
+	/**
 	 * ポータルページ
 	 *
 	 * @param string $author
@@ -242,6 +346,11 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		$this->method_not_found();
 	}
 
+	/**
+	 * Get doujin detail
+	 *
+	 * @param $author_name
+	 */
 	public function get_detail( $author_name ) {
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . ' | ' . $this->title;
@@ -254,6 +363,9 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		$this->response();
 	}
 
+	/**
+	 * フォロワー一覧
+	 */
 	public function get_follower() {
 		$this->auth_redirect();
 		nocache_headers();
@@ -265,20 +377,6 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			'template'   => 'follower',
 		] );
 		$this->response();
-	}
-
-	/**
-	 * 取得すべきユーザーを設定
-	 *
-	 * @param string $nice_name
-	 *
-	 * @throws \Exception
-	 */
-	protected function set_member( $nice_name = '' ) {
-		$this->doujin = $this->author->get_by_nice_name( $nice_name );
-		if ( ! $this->doujin || ! $this->doujin->has_cap( 'edit_posts' ) ) {
-			throw new \Exception( 'Page Not Found.', 404 );
-		}
 	}
 
 	/**
@@ -300,7 +398,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @return array
 	 */
 	public function ogp( array $values ) {
-		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/');
+		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
 		$values['image'] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
 		$values['desc']  = $this->doujin->user_description;
 

@@ -111,7 +111,7 @@ HTML;
 					<tr>
 						<th><label for="user_id">ユーザーID</label></th>
 						<td>
-							<input class="regular-text" type="number" name="user_id" id="user_id" value="" />
+							<?php hametuha_user_selector( 'user_id', 0, 'user_id', 'any', [ 'user-reward-select' ] ) ?>
 						</td>
 					</tr>
 					<tr>

@@ -25,8 +25,35 @@ class Author extends Model {
 		'user_content_relationships',
 	];
 
-	public function author_list_query( $offset, $per_page ) {
-
+	/**
+	 * Search user
+	 *
+	 * @param string $query
+	 * @param bool   $only_public
+	 * @param int    $offset
+	 * @param int    $per_page
+	 *
+	 * @return array
+	 */
+	public function search( $query, $only_public = true, $offset = 0, $per_page = 10 ) {
+		$this->select( "{$this->table}.*" )
+			->from( $this->table )
+			->where(
+				"( ({$this->table}.display_name LIKE %s ) OR ( {$this->table}.user_login LIKE %s ) OR ({$this->table}.user_email LIKE %s) )",
+				[ "%{$query}%", "%{$query}%", "%{$query}%" ]
+			)
+			->order_by( "{$this->table}.ID", 'ASC' )
+			->limit( $per_page, $offset );
+		if ( $only_public ) {
+			$this->join( "{$this->usermeta}", "{$this->usermeta}.user_id = {$this->user}.ID AND {$this->usermeta}.meta_key = '{$this->db->prefix}capabilities'" );
+			$this->where(
+				"{$this->usermeta}.meta_value REGEXP %s",
+				'(administrator|editor|author)'
+			);
+		}
+		return array_map( function( $row ) {
+			return new \WP_User( $row );
+		}, $this->result() );
 	}
 
 	/**
@@ -105,7 +132,7 @@ class Author extends Model {
 	 *
 	 * @return array|null|object
 	 */
-	public function get_activities( $user_id ){
+	public function get_activities( $user_id ) {
 		$query = <<<SQL
 			(
 				SELECT
@@ -152,7 +179,7 @@ class Author extends Model {
 			ORDER BY date DESC
 			LIMIT 10
 SQL;
-		return $this->db->get_results($this->db->prepare($query, $user_id, $user_id, $user_id));
+		return $this->db->get_results( $this->db->prepare( $query, $user_id, $user_id, $user_id ) );
 
 	}
 

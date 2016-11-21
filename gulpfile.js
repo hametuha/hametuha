@@ -12,7 +12,9 @@ gulp.task('sass',function(){
     var filter = $.filter('**/*.css');
 
     return gulp.src(['./assets/sass/**/*.scss'])
-        .pipe($.plumber())
+        .pipe($.plumber({
+            errorHandler: $.notify.onError('<%= error.message %>')
+        }))
         .pipe($.sassBulkImport())
         .pipe($.sourcemaps.init())
         .pipe($.sass({
@@ -90,7 +92,19 @@ gulp.task('copylib', function(){
                 './node_modules/respond.js/dest/respond.src.js',
             ])
             .pipe($.uglify())
-            .pipe(gulp.dest('./assets/js/dist/'))
+            .pipe(gulp.dest('./assets/js/dist/')),
+        gulp.src([
+                './node_modules/select2/dist/js/select2.min.js',
+            ])
+            .pipe(gulp.dest('./assets/js/dist/select2')),
+      gulp.src([
+          './node_modules/select2/dist/js/i18n/ja.js'
+      ])
+        .pipe(gulp.dest('./assets/js/dist/select2/i18n')),
+        gulp.src([
+          './node_modules/select2/dist/css/select2.min.css'
+        ])
+          .pipe(gulp.dest('./assets/css'))
     );
 });
 
