@@ -910,3 +910,11 @@ caption.outdated {
     }
   }
 }
+
+// Jetpack Gallery
+.gallery-row{
+  .type-rectangular &{
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

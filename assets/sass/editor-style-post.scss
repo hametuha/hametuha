@@ -19,4 +19,5 @@ body{
     }
   }
   @include post-style(true);
+  @include text-justify();
 }

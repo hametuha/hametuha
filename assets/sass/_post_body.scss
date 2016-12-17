@@ -1,6 +1,7 @@
 @mixin text-justify(){
   text-align: justify;
   text-justify: inter-ideograph;
+  font-feature-settings: "palt";
 }
 
 @mixin text-emphasis($style: sesame filled){
@@ -10,6 +11,7 @@
 }
 
 @mixin post-style($book: false){
+
   // 共通要素
   .alignleft{
     float: left;

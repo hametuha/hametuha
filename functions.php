@@ -1,6 +1,8 @@
 <?php
 
-
+if ( ! isset( $content_width ) ) {
+	$content_width = 878;
+}
 /**
  * 現在のテーマのバージョンを返す
  *

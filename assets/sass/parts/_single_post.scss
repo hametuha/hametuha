@@ -445,8 +445,8 @@ p.pixiv-embed-illust{
   line-height: 1.8;
   position: relative;
   @extend .work-body;
-  @extend .text-justify;
   @include post-style(true);
+  @include text-justify();
   .content-hide-cover{
     position: absolute;
     bottom: 0;
