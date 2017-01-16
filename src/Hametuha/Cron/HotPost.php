@@ -26,35 +26,22 @@ class HotPost extends CronBase {
 	public function process() {
 		if ( ! WP_DEBUG ) {
 			$message = '';
-			$attachments = [];
-			$channel = '#general';
 			switch ( date_i18n( 'H' ) ) {
 				case 8:
-					$message = 'ここ3日で人気があったページのトップ20件です。';
-					$params = [
-						'filters' => 'ga:dimension1=~(post|news)',
-						'dimensions' => 'ga:pageTitle,ga:pagePath',
-					    'max-results' => 20,
-					];
-					$start = date_i18n( 'Y-m-d', strtotime( '3 days ago' ) );
-					$end   = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
-					break;
-				case 18:
-					$message = '昨日人気があった投稿の上位10件です。';
+					$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
 					$params = [
 						'filters' => 'ga:dimension1==post',
 						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
 					$start = $end = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
 					break;
-				case 21:
-					$message = '今日人気があったニュースです。';
+				case 22:
+					$message = '【定期ポスト】今日人気があったニュースはこちらです。';
 					$params = [
 						'filters' => 'ga:dimension1==news',
 						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
 					$start = $end = date_i18n( 'Y-m-d' );
-					$channel = '#news';
 					break;
 				default:
 					return; // Do nothing.
@@ -62,18 +49,15 @@ class HotPost extends CronBase {
 			}
 			$results = hametuha_ga_ranking( $start, $end, $params );
 			if ( ! is_wp_error( $results ) ) {
+				$lines = [ $message ];
 				foreach ( $results as $index => list( $title, $path, $pv ) ) {
-					$title         = trim( current( explode( '|', $title ) ) );
-					$type = ( false !== strpos( $path, 'news/' ) ) ? 'ニュース' : '投稿';
-					$url           = home_url( $path );
-					$attachments[] = [
-						'title'      => $title,
-						'title_link' => $url,
-						'text'       => sprintf( '%d位 %s PV（%s）', ( $index + 1 ), number_format( $pv ), $type ),
-						'fallback'   => $title,
-					];
+					$lines[] = trim( current( explode( '|', $title ) ) );
+					$lines[] = home_url( $path );
+					break;
 				}
-				hametuha_slack( "@here {$message}", $attachments, $channel );
+				if ( 2 < count( $lines ) ) {
+					update_twitter_status( implode( "\n", $lines ) );
+				}
 			} else {
 				error_log( $results->get_error_message(), null );
 			}
