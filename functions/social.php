@@ -194,40 +194,9 @@ function show_twitter_status( $url ) {
  * @return bool
  */
 function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
-	if ( ! defined( 'SLACK_ENDPOINT' ) ) {
-		return false;
-	}
-	$payload = [
-		'channel' => $channel,
-	];
-	if ( WP_DEBUG ) {
-		$content = "【テスト投稿】 {$content}";
-	}
-	$payload['text'] = $content;
-	if ( $attachment ) {
-		$payload['attachments'] = $attachment;
-	}
-	$ch = curl_init();
-	curl_setopt_array( $ch, [
-		CURLOPT_URL            => SLACK_ENDPOINT,
-		CURLOPT_POST           => true,
-		CURLOPT_HTTPHEADER     => [ 'Content-Type: application/json' ],
-		CURLOPT_POSTFIELDS     => json_encode( $payload ),
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_SSL_VERIFYPEER => false,
-		CURLOPT_TIMEOUT        => 5,
-	] );
-	$result = curl_exec( $ch );
-	if ( ! $result ) {
-		$err = curl_error( $ch );
-		$no  = curl_errno( $ch );
-		error_log( sprintf( 'SLACK_ERR %s %s', $no, $err ) );
-	} elseif ( WP_DEBUG ) {
-		error_log( sprintf( 'SLACK_SUCCESS: %s %s', $result, json_encode( $payload ) ) );
-	}
-	curl_close( $ch );
+	do_action( 'hameslack', $content, $attachment, $channel );
 
-	return false !== $result;
+	return true;
 }
 
 /**
