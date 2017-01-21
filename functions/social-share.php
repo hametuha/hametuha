@@ -149,7 +149,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					// 公開された
 					$string = sprintf( '#はめにゅー 更新 「%s」 %s', get_the_title( $post ), get_permalink( $post ) );
 					if ( function_exists( 'update_twitter_status' ) && ! WP_DEBUG ) {
-						update_twitter_status( $string );
+						gianism_update_twitter_status( $string );
 					}
 					// Slackに通知
 					hametuha_slack( '@here ニュースが公開されました。', [ array_merge( $base, [

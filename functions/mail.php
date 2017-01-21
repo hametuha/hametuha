@@ -6,11 +6,11 @@
 /**
  * メルマガ購読ページはno cache headers
  */
-add_action('template_redirect', function(){
+add_action( 'template_redirect', function () {
 	if ( is_page( 'merumaga' ) ) {
 		nocache_headers();
 	}
-});
+} );
 
 /**
  * FromがWordPressにならないように
@@ -19,6 +19,7 @@ add_filter( 'wp_mail_from_name', function ( $from_name ) {
 	if ( 'WordPress' == $from_name ) {
 		$from_name = get_bloginfo( 'name' );
 	}
+
 	return $from_name;
 } );
 
@@ -29,62 +30,87 @@ add_filter( 'wp_mail_from', function ( $from_mail ) {
 	if ( 0 === strpos( $from_mail, 'wordpress@' ) ) {
 		$from_mail = 'no-reply@hametuha.com';
 	}
+
 	return $from_mail;
 } );
 
 /**
- * メールのURLを変更する
- *
- * @param string $html
- * @param WP_Post $post
- * @param stdClass $recipient
- *
- * @return string $html
- *
+ * ALO Easy Mail を上書きするフォーム
  */
-add_filter( 'alo_easymail_newsletter_content', function ( $html, WP_Post $post, $recipient ) {
+add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
+	ob_start();
+	?>
+    <!-- Begin MailChimp Signup Form -->
+    <div id="mc_embed_signup">
+        <form action="//gianism.us14.list-manage.com/subscribe/post?u=9b5777bb4451fb83373411d34&amp;id=0565845d29"
+              method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+              target="_blank" novalidate>
+            <div id="mc_embed_signup_scroll" class="mc-form">
+                <fieldset class="form-fieldset">
 
-	if ( ! ( is_singular( 'newsletter' ) || is_post_type_archive( 'series' ) || is_home() ) ) {
+                    <input type="hidden" name="language" value="ja">
 
-		// Apply CSS style
-		$parser = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles();
-		$css    = file_get_contents( get_template_directory() . '/assets/css/mail.css' );
-		$parser->setHTML( $html );
-		$parser->setCss( $css );
-		$html = $parser->convert();
-		$html = str_replace( '<p style="margin: 0.5em 0;"> </p>', '<p style="margin: 0.5em 0;">&nbsp;</p>', $html );
-		// Fix url
-		$html = preg_replace( '#http://(s\.)?hametuha\.(com|info)/wp-content#u', 'https://$1hametuha.$2/wp-content', $html );
-		// Fix link
+                    <legend class="form-legend">破滅派通信を購読する</legend>
 
-		$html = preg_replace_callback( '@href="(http://hametuha\.(info|com)([^"]+))"@u', function ( $matches ) use ( $post ) {
-			$url = add_query_arg( [
-				'utm_source'   => 'Email',
-				'utm_medium'   => 0,
-				'utm_campaign' => 'NewsLetter-' . $post->ID,
-			], $matches[1] );
-			return "href=\"{$url}\"";
-		}, $html );
-		// Add tracking code
-		if ( 'alo-easymail-admin-preview.php' !== basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
-			$query = [
-				'tid' => 'UA-1766751-2',
-				't'   => 'event',
-				'cid' => md5( $recipient->email ),
-				'ec'  => 'email',
-				'ea'  => 'open',
-				'el'  => $post->ID,
-				'cs'  => 'Email',
-				'cm'  => 0,
-				'cn'  => 'NewsLetter-' . $post->ID,
-			];
-			if ( isset( $recipient->ID ) ) {
-				$query['uid'] = $recipient->ID;
-			}
-			$tracking_code = add_query_arg( $query, 'https://www.google-analytics.com/collect' );
-			$html          = str_replace( '</body>', "<img src=\"{$tracking_code}\" /></body>", $html );
-		}
-	}
+                    <p class="form-helper text-right">
+                        <span class="form-required">*</span>は必須項目
+                    </p>
 
-	return $html;
-}, 10, 3 );
+                    <div class="form-group">
+                        <label for="mce-EMAIL">
+                            メールアドレス <span class="form-required">*</span>
+                        </label>
+                        <input type="email" value="" name="EMAIL" class="form-control" id="mce-EMAIL"
+                               placeholder="hametuah@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mce-FNAME">お名前 </label>
+                        <input type="text" value="" placeholder="ミニ子" name="FNAME" class="form-control" id="mce-FNAME">
+                    </div>
+
+
+
+                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                    <div style="display: none;" aria-hidden="true"><input type="text"
+                                                                                              name="b_9b5777bb4451fb83373411d34_0565845d29"
+                                                                                              tabindex="-1" value="">
+                    </div>
+                    <div class="clear">
+
+                        <input type="submit" value="購読する" name="subscribe" id="mc-embedded-subscribe"
+                                              class="btn btn-success btn-lg">
+
+                        <span class="form-helper">
+                            <a href="http://us14.campaign-archive1.com/home/?u=9b5777bb4451fb83373411d34&id=0565845d29"
+                               target="_blank" class="form-helper-link">
+                                こんなメールが届きます
+                            </a>
+                            <span class="form-helper-sep">|</span>
+                            <a href="http://gianism.us14.list-manage.com/unsubscribe?u=9b5777bb4451fb83373411d34&id=0565845d29"
+                               target="_blank" class="form-helper-link">
+                                購読を解除する
+                            </a>
+                        </span>
+                    </div>
+                </fieldset>
+            </div>
+        </form>
+    </div>
+
+    <!--End mc_embed_signup-->
+	<?php
+	$content = ob_get_contents();
+	ob_end_clean();
+
+	return $content;
+} );
+
+add_action( 'wp_footer', function () {
+	echo <<<HTML
+<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
+<script type="text/javascript">
+require(["mojo/signup-forms/Loader"], function(L) { L.start({"baseUrl":"mc.us14.list-manage.com","uuid":"9b5777bb4451fb83373411d34","lid":"0565845d29"}) })
+</script>
+HTML;
+} );

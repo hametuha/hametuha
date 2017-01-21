@@ -55,13 +55,6 @@ if ( file_exists( $oauth_mo ) ) {
  */
 $script_flg = array();
 
-// フックディレクトリを全部読み込み
-foreach ( scandir( __DIR__.'/hooks' ) as $file ) {
-	if ( preg_match( '#^[^\.].*\.php$#', $file ) ) {
-		require __DIR__.'/hooks/'.$file;
-	}
-}
-
 // Assets
 get_template_part( 'functions/assets' );
 get_template_part( 'functions/assets', 'ssl' );
@@ -114,3 +107,10 @@ get_template_part( 'functions/user', 'secret' );
 get_template_part( 'functions/utility' );
 // ウィジェット
 get_template_part( 'functions/widget' );
+
+// フックディレクトリを全部読み込み
+foreach ( scandir( __DIR__.'/hooks' ) as $file ) {
+	if ( preg_match( '#^[^\.].*\.php$#', $file ) ) {
+		require __DIR__.'/hooks/'.$file;
+	}
+}
