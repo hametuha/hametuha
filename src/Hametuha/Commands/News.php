@@ -67,18 +67,28 @@ SQL;
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
 		$author = isset( $assoc['author'] ) ? $assoc['author'] : 0;
 		$posts = $this->get_pv( $start_date, $end_date, $author );
+		if ( ! $posts ) {
+			self::e( 'No results found.' );
+		}
 		$table = new \cli\Table();
-		$table->setHeaders( [ 'Title', 'Author', 'Date', 'PV' ] );
-		$table->setRows( array_map( function($row){
-			$post = get_post( $row[0] );
+		$table->setHeaders( [ '#', 'ID', 'PV', 'Author', 'Date', 'Title' ] );
+		$index = 0;
+		$table->setRows( array_map( function( $row ) use ( &$index ) {
+			$index++;
+			list( $post_id, $pv ) = $row;
+			$post = get_post( $post_id );
 			return [
-				get_the_title( $post ),
-			    get_the_author_meta( 'display_name', $post->post_author ),
+				$index,
+				$post_id,
+			    $pv,
+			    get_the_author_meta( 'user_login', $post->post_author ),
 			    get_the_time( 'Y.m.d', $post ),
-			    $row[1],
+				get_the_title( $post ),
 			];
 		}, $posts ) );
 		$table->display();
+
+		self::s( sprintf( '%s News', number_format( count( $posts ) ) ) );
 	}
 
 	/**
@@ -138,17 +148,21 @@ SQL;
 				if ( ! $result || ! ( 0 < ( $count = count( $result->rows ) ) ) ) {
 					break;
 				}
-				$rows += array_filter( array_map( function ( $row ) {
+				foreach ( $result->rows as $row ) {
 					list( $path, $pv ) = $row;
 					$url     = home_url( $path );
-					$post_id = preg_replace( '#/news/article/([0-9]+)/.*?#', '$1', $path );
-					if ( ! $post_id || ! get_post( $post_id ) ) {
-						return false;
+					if ( ! preg_match( '#/news/article/(\d+)/?#', $path, $matches ) ) {
+						continue;
 					}
-					$row[0] = $post_id;
-
-					return $row;
-				}, $result->rows ) );
+					$post_id = $matches[1];
+					if ( ! is_numeric( $post_id ) || ! get_post( $post_id ) ) {
+						continue;
+					}
+					if ( ! isset( $rows[ $post_id ] ) ) {
+						$rows[ $post_id ] = 0;
+					}
+					$rows[ $post_id ] += $pv;
+				}
 				// Check if more results.
 				if ( $count >= $per_page ) {
 					$start_index += $per_page;
@@ -156,7 +170,12 @@ SQL;
 					break;
 				}
 			}
-			return $rows;
+			arsort( $rows );
+			$result_rows = [];
+			foreach ( $rows as $id => $pv ) {
+				$result_rows[] = [ $id, $pv ];
+			}
+			return $result_rows;
 		} catch ( \Exception $e ) {
 			self::e( $e->getMessage() );
 		}
