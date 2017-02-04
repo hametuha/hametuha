@@ -13,7 +13,7 @@
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	//はじめて公開にしたときだけ
-	if ( ! WP_DEBUG && 'publish' === $new_status && function_exists( 'update_twitter_status' ) ) {
+	if ( ! WP_DEBUG  && ( 'publish' === $new_status ) && function_exists( 'gianism_update_twitter_status' ) ) {
 		$title  = hametuha_censor( get_the_title( $post ) );
 		$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
 		switch ( $old_status ) {
@@ -46,19 +46,12 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
 						break;
-					case 'newsletter':
-						$string = sprintf(
-							'【業務連絡】メルマガ %s が送信されました。そのうち、みなさんのお手元に届きます。登録はこちらから %s',
-							get_the_title( $post ),
-							home_url( '/merumaga/' )
-						);
-						break;
 					default:
 						$string = false;
 						break;
 				}
 				if ( $string ) {
-					update_twitter_status( $string );
+					gianism_update_twitter_status( $string );
 				}
 				break;
 		}
@@ -148,7 +141,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 				default:
 					// 公開された
 					$string = sprintf( '#はめにゅー 更新 「%s」 %s', get_the_title( $post ), get_permalink( $post ) );
-					if ( function_exists( 'update_twitter_status' ) && ! WP_DEBUG ) {
+					if ( function_exists( 'gianism_update_twitter_status' ) && ! WP_DEBUG ) {
 						gianism_update_twitter_status( $string );
 					}
 					// Slackに通知

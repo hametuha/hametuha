@@ -96,7 +96,6 @@ get_template_part( 'functions/ranking' );
 get_template_part( 'functions/shortcodes', 'page' );
 // Social
 get_template_part( 'functions/social' );
-get_template_part( 'functions/social', 'share' );
 // User
 get_template_part( 'functions/user' );
 get_template_part( 'functions/user', 'caps' );
