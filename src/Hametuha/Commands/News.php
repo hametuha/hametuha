@@ -3,6 +3,7 @@
 
 namespace Hametuha\Commands;
 
+use Gianism\Plugins\Analytics;
 use WPametu\Utility\Command;
 
 /**
@@ -113,7 +114,7 @@ SQL;
 	 */
 	protected function get_pv( $start_date, $end_date, $author = 0 ) {
 		try {
-			$google = \Gianism\Service\Google::get_instance();
+			$google = Analytics::get_instance();
 			if ( ! $google || ! $google->ga_profile['view'] ) {
 				throw new \Exception( 'Google Analytics is not connected.', 500 );
 			}

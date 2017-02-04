@@ -56,7 +56,7 @@ class HotPost extends CronBase {
 					break;
 				}
 				if ( 2 < count( $lines ) ) {
-					update_twitter_status( implode( "\n", $lines ) );
+					gianism_update_twitter_status( implode( "\n", $lines ) );
 				}
 			} else {
 				error_log( $results->get_error_message(), null );
