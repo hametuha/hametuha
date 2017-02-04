@@ -118,8 +118,10 @@ SQL;
 			if ( ! $google || ! $google->ga_profile['view'] ) {
 				throw new \Exception( 'Google Analytics is not connected.', 500 );
 			}
+			$start_index = 1;
+			$per_page = 200;
 			$args = [
-				'max-results' => 200,
+				'max-results' => $per_page,
 				'dimensions' => 'ga:pagePath',
 				'filters' => 'ga:dimension1==news',
 				'sort' => '-ga:pageviews',
@@ -127,21 +129,34 @@ SQL;
 			if ( $author ) {
 				$args['filters'] .= ',ga:dimension2=='.$author;
 			}
-			$result = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $args );
-			if ( $result && ( 0 < count( $result->rows ) ) ) {
-				return array_filter(array_map( function( $row ){
+			$rows = [];
+			while ( true ) {
+				$loop_arg = array_merge( $args, [
+					'start-index' => $start_index,
+				] );
+				$result = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $loop_arg );
+				if ( ! $result || ! ( 0 < ( $count = count( $result->rows ) ) ) ) {
+					break;
+				}
+				$rows += array_filter( array_map( function ( $row ) {
 					list( $path, $pv ) = $row;
-					$url = home_url( $path );
+					$url     = home_url( $path );
 					$post_id = preg_replace( '#/news/article/([0-9]+)/.*?#', '$1', $path );
 					if ( ! $post_id || ! get_post( $post_id ) ) {
 						return false;
 					}
 					$row[0] = $post_id;
+
 					return $row;
-				}, $result->rows ));
-			} else {
-				return [];
+				}, $result->rows ) );
+				// Check if more results.
+				if ( $count >= $per_page ) {
+					$start_index += $per_page;
+				} else {
+					break;
+				}
 			}
+			return $rows;
 		} catch ( \Exception $e ) {
 			self::e( $e->getMessage() );
 		}
