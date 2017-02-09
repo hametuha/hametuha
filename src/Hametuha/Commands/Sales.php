@@ -5,6 +5,11 @@ namespace Hametuha\Commands;
 use Hametuha\Model\UserSales;
 use WPametu\Utility\Command;
 
+/**
+ * 破滅派の売上を確認するコマンド
+ *
+ * @package Hametuha\Commands
+ */
 class Sales extends Command {
 
 	const COMMAND_NAME = 'sales';
@@ -139,6 +144,43 @@ class Sales extends Command {
 			fclose( $csv );
 			file_put_contents( $file, mb_convert_encoding( file_get_contents( $file ), 'sjis-win', 'utf-8' ) );
 			self::s( sprintf( 'CSV out to %s', realpath( $file ) ) );
+		}
+	}
+
+	/**
+	 * Get my number of users.
+	 *
+	 * ## OPTIONS
+	 * : [<year>]
+	 *   Optional. Default is last year.
+	 * : [--tsv]
+	 *   Optional. If set, tsv value is returned.
+	 *
+	 * @synopsis [<year>] [--tsv]
+	 * @param array $args
+	 * @param array $assoc
+	 */
+	public function my_number( $args, $assoc ) {
+		$year = isset( $args[0] ) ? $args[0] : date_i18n( 'Y' ) - 1;
+		$tsv = isset( $assoc['tsv'] ) && $assoc['tsv'];
+		if ( ! preg_match( '#\d{4}#u', $year ) ) {
+			self::e( sprintf( 'Year should be 4 digits: %s', $year ) );
+		}
+		$users = UserSales::get_instance()->get_my_numbers( $year );
+		if ( ! $users ) {
+			self::e( 'No user found.' );
+		}
+		if ( $tsv ) {
+			foreach ( $users as $user ) {
+				self::l( implode( "\t", [ $user->ID, $user->my_number, $user->display_name, $user->address, $user->amount ] ) );
+			}
+		} else {
+			$table = new \cli\Table();
+			$table->setHeaders( [ 'ID', 'Name', 'My Number', 'Total', 'Address' ] );
+			foreach ( $users as $user ) {
+				$table->addRow( [ $user->ID, $user->display_name, $user->my_number, $user->amount, $user->address ] );
+			}
+			$table->display();
 		}
 	}
 

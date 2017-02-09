@@ -375,6 +375,60 @@ class UserSales extends Model {
 	}
 
 	/**
+	 * Get list of my number.
+	 *
+	 * @param int $year Year
+	 *
+	 * @return array
+	 */
+	public function get_my_numbers( $year ) {
+		$users = $this->select( 'u.*, SUM( s.total ) AS amount' )
+			->from( "{$this->db->users} AS u" )
+			->join( "{$this->table} AS s", 'u.ID = s.user_id' )
+			->wheres( [
+				'EXTRACT( YEAR FROM s.fixed ) = %d' => $year,
+			] )
+			->group_by( 'u.ID' )
+			->result();
+		$user_ids = [];
+		foreach ( $users as $user ) {
+			$user_ids[] = $user->ID;
+		}
+		// Get user meta
+		$metas = $this->select( '*' )
+			->from( $this->db->usermeta )
+			->where_in( 'user_id', $user_ids, '%d' )
+			->where_in( 'meta_key', [ '_billing_name', '_billing_number', '_billing_address' ] )
+			->result();
+		return array_map( function( $user ) use ( $metas ) {
+			$user->my_number = '';
+			$user->address   = '';
+			foreach ( $metas as $row ) {
+				if ( $row->user_id != $user->ID ) {
+					continue;
+				}
+				switch ( $row->meta_key ) {
+					case '_billing_name';
+						$user->display_name = $row->meta_value;
+						break;
+					case '_billing_number':
+						$user->my_number = $row->meta_value;
+						break;
+					case '_billing_address':
+						$user->address = $row->meta_value;
+						break;
+					default:
+						// Do nothing.
+						break;
+				}
+			}
+			return $user;
+		}, $users );
+
+
+	}
+
+	/**
 	 * 支払いを確定する
 	 *
 	 * @param array|int $user_ids
