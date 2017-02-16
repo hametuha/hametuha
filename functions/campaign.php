@@ -137,7 +137,9 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 		'orderby' => 'meta_value',
 		'order' => 'DESC',
 	] );
-	return ( ! $terms || is_wp_error( $terms ) ) ? [] : $terms;
+	return ( ! $terms || is_wp_error( $terms ) ) ? [] : array_filter( $terms, function( $term ) {
+		return 0 === strpos( $term->slug, 'joint-review' );
+	} );
 }
 
 /**
