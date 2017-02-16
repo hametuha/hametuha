@@ -122,35 +122,22 @@ SQL;
  * @return array
  */
 function hametuha_review_terms( $year, $ascendant = true ) {
+	$next_year = $year + 1;
 	$terms = get_terms( [
 		'taxonomy' => 'campaign',
 	    'hide_empty' => false,
+		'meta_query' => [
+			[
+				'key' => '_campaign_limit',
+				'value' => [ "{$year}-04-01", "{$next_year}-03-31" ],
+				'compare' => 'BETWEEN',
+				'type' => 'DATE',
+			],
+		],
+		'orderby' => 'meta_value',
+		'order' => 'DESC',
 	] );
-	if ( ! $terms || is_wp_error( $terms ) ) {
-		return [];
-	}
-	$terms = array_filter( $terms, function ( $term ) use ( $year ) {
-		$first     = implode( '|', array_map( function( $m ) {
-			return sprintf( '%02d', $m );
-		}, range( 4, 12 ) ) );
-		$second    = implode( '|', array_map( function( $m ) {
-			return sprintf( '%02d', $m );
-		}, range( 1, 3 ) ) );
-		$next_year = $year + 1;
-		return preg_match( "#^joint-review-{$year}({$first})$#", $term->slug ) || preg_match( "#^joint-review-{$next_year}({$second})$#", $term->slug );
-	} );
-	usort( $terms, function( $a, $b ) use ( $ascendant ) {
-		if ( $a->slug == $b->slug ) {
-			return 0;
-		} else {
-			if ( $ascendant ) {
-				return $a->slug > $b->slug ? 1 : -1;
-			} else {
-				return $a->slug > $b->slug ? -1 : 1;
-			}
-		}
-	} );
-	return $terms;
+	return ( ! $terms || is_wp_error( $terms ) ) ? [] : $terms;
 }
 
 /**
