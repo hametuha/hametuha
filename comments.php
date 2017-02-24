@@ -35,16 +35,16 @@ endif;
 			<ul class="commentlist media-list">
 				<?php wp_list_comments( [
 					'type'     => 'comment',
-					'callback' => 'hametuha_commment_display'
+					'callback' => 'hametuha_commment_display',
 				] ); ?>
 			</ul>
 
-			<?php if ( get_comment_pages_count() > 1 ): ?>
+			<?php if ( get_comment_pages_count() > 1 ) : ?>
 				<div class="link-pages comment-pages text-center">
 					<?= hametuha_format_pagination( paginate_comments_links( [
 						'prev_text' => '&laquo; 前',
 						'next_text' => '次 &raquo;',
-						'echo'      => false
+						'echo'      => false,
 					] ) ) ?>
 				</div>
 			<?php endif; ?>
@@ -55,7 +55,7 @@ endif;
 				<?php if ( ! is_singular( 'anpi' ) ) : ?>
 				<p class="nocomments">
 					コメントがありません。
-					<?php switch ( get_post_type() ):
+					<?php switch ( get_post_type() ) :
 						case 'faq': ?>
 							不明な点があったらコメントをお願いします。
 							<?php break;
@@ -83,7 +83,7 @@ endif;
 
 		<div class="panel-body">
 
-			<?php if ( is_user_logged_in() || get_post_type() == 'thread' ): ?>
+			<?php if ( is_user_logged_in() || get_post_type() == 'thread' ) : ?>
 
 				<div id="cancel-comment-reply">
 					<small><?php cancel_comment_reply_link( '返信をキャンセル' ) ?></small>
@@ -104,8 +104,7 @@ endif;
 				<form action="<?php echo $action; ?>" method="post" id="commentform" class="clearfix">
 					<p class="comment-text">
 						<textarea placeholder="ここにコメントを記載してください" name="comment" id="comment" class="form-control"
-						          rows="10" tabindex="4"><? if ( isset( $_POST['comment'] ) )
-								echo esc_textarea( $_POST['comment'] ) ?></textarea>
+						          rows="10" tabindex="4"><?= isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : '' ?></textarea>
 					</p>
 
 					<p class="comment-allowed-tags">
@@ -113,7 +112,7 @@ endif;
 						<code class="mono"><?php echo allowed_tags(); ?></code>
 					</p>
 
-					<?php if ( ! is_user_logged_in() ): ?>
+					<?php if ( ! is_user_logged_in() ) : ?>
 						<div class="comment-as clearfix">
 							<?= WPametu::recaptcha( 'clean', 'ja' ) ?>
 							<div class="alert alert-warning">
@@ -149,7 +148,7 @@ endif;
 		</div><!-- //.panel-body -->
 
 	</div><!-- //.panel -->
-<?php else: ?>
+<?php else : ?>
 
 	<p class="alert alert-warning">
 		このページのコメントはもう閉じられてしまいました。新たにコメントを書くことはできません。
