@@ -3,6 +3,7 @@
  */
 
 /*global Hametuha: true*/
+/*global Headroom: false*/
 
 jQuery(document).ready(function ($) {
 

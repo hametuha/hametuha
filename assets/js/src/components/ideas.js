@@ -4,7 +4,7 @@
 
 /* global wpApiSettings:false */
 
-angular.module('hametuha', ['ui.bootstrap'])
+angular.module('hametuha')
     .controller('ideaList', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';

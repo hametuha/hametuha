@@ -60,7 +60,14 @@ gulp.task('commonjs', function(){
 
 // JS Hint
 gulp.task('jshint', function(){
-    return gulp.src(['./assets/js/src/**/*.js', '!./assets/js/src/modernizr.js', '!./assets/js/src/common/jquery.mmenu.custom.js'])
+    return gulp.src([
+      './assets/js/src/**/*.js',
+      '!./assets/js/src/modernizr.js',
+      '!./assets/js/src/common/headroom.js',
+      '!./assets/js/src/common/slick.js',
+      '!./assets/js/src/common.js',
+      '!./assets/js/src/common/jquery.mmenu.custom.js'
+    ])
         .pipe($.jshint('./assets/.jshintrc'))
         .pipe($.jshint.reporter('jshint-stylish'));
 });

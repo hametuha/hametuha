@@ -771,10 +771,23 @@ ul.metadata {
 // ---------------
 //
 .event-detail {
+  border-top: 2px solid $thin-border;
+  border-bottom: 2px solid $thin-border;
+  padding: 15px;
+  &-title{
+    margin-top: 0;
+    text-align: center;
+    color: $shade-font;
+    font-weight: bold;
+    font-size: 1.8em;
+  }
+  &-alert{
+    margin-top: 20px;
+    p:first-child{
+      margin-bottom: 20px;
+    }
+  }
   .dl-horizontal {
-    border-top: 2px solid $thin-border;
-    border-bottom: 2px solid $thin-border;
-    padding: 15px;
     dt, dd {
       margin-bottom: 10px;
     }

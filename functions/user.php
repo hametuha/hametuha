@@ -43,20 +43,14 @@ function hametuha_user_write_actions() {
 	}
 	if ( current_user_can( 'edit_posts' ) ) {
 		$editor_actions = [
-			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '' ],
-			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '' ],
-			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '' ],
-			'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '' ],
+			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '', false ],
+			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '', false ],
+			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '', false ],
+			'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '', false ],
 		];
-		if ( is_singular( [
-				'post',
-				'page',
-				'announcement',
-				'series'
-			] ) && current_user_can( 'edit_post', get_the_ID() )
-		) {
+		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
 			$editor_actions = array_merge( [
-				'pencil6' => [ get_edit_post_link(), 'このページを編集', false, '' ],
+				'pencil6' => [ get_edit_post_link( get_queried_object_id() ), 'このページを編集', false, '', false ],
 			], $editor_actions );
 		}
 		$actions = array_merge( $editor_actions, $actions );

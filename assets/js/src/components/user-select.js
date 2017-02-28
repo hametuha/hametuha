@@ -4,6 +4,7 @@
 
 /*global HametuhaUserSelect: true*/
 
+
 (function ($) {
 
   'use strict';
@@ -37,7 +38,6 @@
               avatar: data[i].avatar
             });
           }
-          console.log(items);
           return {
             results: items,
             pagination: {
@@ -58,7 +58,6 @@
 
   $(document).ready(function(){
     $('select[data-module="user-select"]').each(function(index, select){
-      console.log(this);
       select2(select);
     });
   });

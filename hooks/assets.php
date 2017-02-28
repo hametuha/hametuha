@@ -19,6 +19,23 @@ add_action( 'init', function () {
 	// Angular
 	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.8', true );
 
+	/**
+	 * hametuha_angular_extensions
+	 *
+	 * @since 5.2.24
+	 * @package hametuha
+	 * @param array $modules Default ui.bootstrap
+	 * @return array
+	 */
+	$modules = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
+	$modules = implode( ', ', array_map( function( $module ) {
+		return sprintf( "'%s'", esc_js( $module ) );
+	}, $modules ) );
+	$angular_scripts = <<<JS
+angular.module('hametuha', [{$modules}]);
+JS;
+	wp_add_inline_script( 'angular', $angular_scripts );
+
 	// Select2
 	wp_register_script( 'select2', get_template_directory_uri().'/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
 	wp_register_style( 'select2', get_template_directory_uri().'/assets/css/select2.min.css', [], '4.0.3' );

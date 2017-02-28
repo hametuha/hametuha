@@ -6,7 +6,7 @@ hameplate( 'templates/editor/header', '', [
 ] );
 ?>
 
-<div ng-controller="hameditor">
+<div ng-controller="hametuhaEditor">
 
 	<div class="container container--hameditor">
 
