@@ -244,9 +244,10 @@ class Announcement extends PostHelper {
 	/**
 	 * Get event participants
 	 *
+	 * @param bool $with_mail Default false
 	 * @return array
 	 */
-	public function get_participants() {
+	public function get_participants( $with_mail = false ) {
 		$comments = new \WP_Comment_Query( [
 			'post_id' => $this->post->ID,
 			'type'    => 'participant',
@@ -261,7 +262,7 @@ class Announcement extends PostHelper {
 		] );
 		$return = [];
 		foreach ( $comments->comments as $comment ) {
-			if ( $user = $this->get_user_object( $comment ) ) {
+			if ( $user = $this->get_user_object( $comment, $with_mail ) ) {
 				$return[] = $user;
 			}
 		}
@@ -272,10 +273,11 @@ class Announcement extends PostHelper {
 	 * Get user object
 	 *
 	 * @param \stdClass|\WP_Comment $comment
+	 * @param bool                  $with_mail Default false
 	 *
 	 * @return array
 	 */
-	public function get_user_object( $comment ) {
+	public function get_user_object( $comment, $with_mail = false ) {
 		$comment = get_comment( $comment );
 		$user = get_userdata( $comment->user_id );
 		if ( ! $user ) {
@@ -287,6 +289,7 @@ class Announcement extends PostHelper {
 			'url'    => $user->has_cap( 'edit_posts' ) ? esc_url( home_url( "/doujin/detail/{$user->user_nicename}/" ) ) : '#',
 			'avatar' => get_avatar_url( $user->ID ),
 		    'text'   => $comment->comment_content,
+		    'mail'   => $with_mail ? $user->user_email : '',
 		];
 	}
 
