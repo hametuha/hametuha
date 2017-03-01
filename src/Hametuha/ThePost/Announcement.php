@@ -173,6 +173,24 @@ class Announcement extends PostHelper {
 	}
 
 	/**
+	 * Get comment ID
+	 *
+	 * @param int $user_id
+	 *
+	 * @return int
+	 */
+	public function get_ticket_id( $user_id ) {
+		$comments = new \WP_Comment_Query( [
+			'post_id' => $this->post->ID,
+			'type'    => 'participant',
+			'number'  => 1,
+			'status' => '1',
+			'user_id' => $user_id,
+		] );
+		return $comments->comments ? $comments->comments[0]->comment_ID : 0;
+	}
+
+	/**
 	 * Search user
 	 *
 	 * @param null|int $user_id
@@ -189,19 +207,111 @@ class Announcement extends PostHelper {
 		$comments = new \WP_Comment_Query( [
 			'post_id' => $this->post->ID,
 			'type'    => 'participant',
-			'number'  => false,
+			'status'  => 1,
+			'number'  => 1,
 			'user_id' => $user_id,
+			'meta_query' => [
+				[
+					'key' => '_participating',
+					'value' => 1,
+				],
+			],
+		] );
+		return count( $comments->comments ) ?: false;
+	}
+
+	/**
+	 * Count participants
+	 *
+	 * @return int
+	 */
+	public function participating_count() {
+		$comments = new \WP_Comment_Query( [
+			'post_id' => $this->post->ID,
+			'type'    => 'participant',
+			'status'  => 1,
+			'number'  => false,
+			'meta_query' => [
+				[
+					'key' => '_participating',
+					'value' => 1,
+				],
+			],
 		] );
 		return count( $comments->comments );
 	}
 
-	public function guest_commment( $user_id = null ) {
+	/**
+	 * Get event participants
+	 *
+	 * @return array
+	 */
+	public function get_participants() {
 		$comments = new \WP_Comment_Query( [
 			'post_id' => $this->post->ID,
 			'type'    => 'participant',
+			'status'  => 1,
 			'number'  => false,
+			'meta_query' => [
+				[
+					'key' => '_participating',
+					'value' => 1,
+				],
+			],
+		] );
+		$return = [];
+		foreach ( $comments->comments as $comment ) {
+			if ( $user = $this->get_user_object( $comment ) ) {
+				$return[] = $user;
+			}
+		}
+		return $return;
+	}
+
+	/**
+	 * Get user object
+	 *
+	 * @param \stdClass|\WP_Comment $comment
+	 *
+	 * @return array
+	 */
+	public function get_user_object( $comment ) {
+		$comment = get_comment( $comment );
+		$user = get_userdata( $comment->user_id );
+		if ( ! $user ) {
+			return [];
+		}
+		return [
+			'id'     => (int) $user->ID,
+			'name'   => $user->display_name,
+			'url'    => $user->has_cap( 'edit_posts' ) ? esc_url( home_url( "/doujin/detail/{$user->user_nicename}/" ) ) : '#',
+			'avatar' => get_avatar_url( $user->ID ),
+		    'text'   => $comment->comment_content,
+		];
+	}
+
+	/**
+	 * Get participants comment
+	 *
+	 * @param null|int $user_id
+	 *
+	 * @return string
+	 */
+	public function guest_comment( $user_id = null ) {
+		if ( is_null( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+		if ( ! $user_id ) {
+			return '';
+		}
+		$comments = new \WP_Comment_Query( [
+			'post_id' => $this->post->ID,
+			'type'    => 'participant',
+			'number'  => 1,
+			'status'  => 1,
 			'user_id' => $user_id,
 		] );
+		return $comments->comments ? $comments->comments[0]->comment_content : '';
 	}
 
 	/**

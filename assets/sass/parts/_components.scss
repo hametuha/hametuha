@@ -792,6 +792,43 @@ ul.metadata {
       margin-bottom: 10px;
     }
   }
+  &-comment{
+    margin-top: 20px;
+    textarea{
+      margin-bottom: 10px;
+    }
+  }
+  &-list{
+    margin: 10px 0 0;
+  }
+  &-user{
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    margin-right: 10px;
+    text-align: center;
+    .help-tip{
+      margin: 0;
+      padding: 0;
+      display: block;
+    }
+    img{
+      max-width: 32px;
+      width: auto;
+      height: auto;
+    }
+    strong{
+      display: block;
+      font-size: 10px;
+      white-space:nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .loading{
+    position: relative;
+    @extend %loading-indicator;
+  }
 }
 
 @media only screen and (max-width: $screen-xs-max) {

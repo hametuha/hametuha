@@ -10,77 +10,103 @@ get_template_part( 'parts/event', 'address' )
 <?php if ( $announcement->is_participating() ) :
 	$rest_time_for_limit = $announcement->left_second_to_participate();
 	// enqueue
-
+	wp_enqueue_script( 'hamevent' );
+	wp_localize_script( 'hamevent', 'HamEvent', [
+		'inList'       => $announcement->in_list( get_current_user_id() ),
+		'event'        => get_the_ID(),
+		'text'         => $announcement->guest_comment( get_current_user_id() ),
+		'participants' => $announcement->get_participants(),
+		'limit'        => $announcement->participating_limit(),
+	] );
 	?>
 
-	<table class="table event-detail-table">
-		<caption>イベント参加の詳細</caption>
-		<tr>
-			<th>募集期間</th>
-			<td>
-				<?= $announcement->get_participating_period() ?>
-				<?php if ( 0 === $rest_time_for_limit ) : ?>
-					<span class="label label-danger">終了</span>
-				<?php endif; ?>
-			</td>
-		</tr>
-		<tr>
-			<th>応募条件</th>
-			<td>
-				<?= $announcement->participating_condition() ?>
-			</td>
-		</tr>
-		<tr>
-			<th>参加費用</th>
-			<td>
-				<?= $announcement->participating_cost() ?>
-			</td>
-		</tr>
-		<tr>
-			<th>定員</th>
-			<td>
-				<?= $announcement->participating_limit() ?>
-			</td>
-		</tr>
-	</table>
+	<div ng-controller="hameventStatus">
 
-	<div class="event-detail clearfix">
-	<?php if ( 0 < $rest_time_for_limit ) : ?>
-		<h2 class="event-detail-title">参加フォーム</h2>
-		<?php if ( current_user_can( 'read' ) ) : ?>
-		<form class="event-user-form">
-			<div class="form-group">
-				<label for="participant_status">
-					<input type="checkbox" name="participant_status" id="participant_status"
-						   value="1" <?php checked( $announcement->in_list( get_current_user_id() ) ) ?> />
-					このイベントに参加する
-				</label>
-			</div>
-			<div class="form-group">
-				<label for="participant_text">コメント</label>
-				<textarea id="" name=""><?php
-					echo esc_textarea( $announcement->guest_commment( get_current_user_id() ) );
-				?></textarea>
-			</div>
-		</form>
-			<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
-				編集者専用フォーム
+		<table class="table event-detail-table">
+			<caption>イベント参加の詳細</caption>
+			<tr>
+				<th>募集期間</th>
+				<td>
+					<?= $announcement->get_participating_period() ?>
+					<?php if ( 0 === $rest_time_for_limit ) : ?>
+						<span class="label label-danger">終了</span>
+					<?php endif; ?>
+				</td>
+			</tr>
+			<tr>
+				<th>応募条件</th>
+				<td>
+					<?= $announcement->participating_condition() ?>
+				</td>
+			</tr>
+			<tr>
+				<th>参加費用</th>
+				<td>
+					<?= $announcement->participating_cost() ?>
+				</td>
+			</tr>
+			<tr>
+				<th>定員</th>
+				<td>
+					<div ng-cloak>
+
+					{{participants.length}} / {{limit}} 名
+					<?php if ( current_user_can( 'read' ) ) : ?>
+						<div class="event-detail-list" ng-if="participants.length">
+							<div class="event-detail-user" ng-repeat="user in participants">
+								<img ng-src="{{user.avatar}}" uib-tooltip="{{user.text}}">
+								<strong><a ng-href="{{user.url}}">{{user.name}}</a></strong>
+							</div>
+						</div>
+					<?php endif; ?>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<div class="event-detail clearfix" ng-cloak>
+			<?php if ( 0 < $rest_time_for_limit ) : ?>
+				<?php if ( current_user_can( 'read' ) ) : ?>
+					<div class="alert alert-info event-detail-alert" ng-if="limit <= participants.length">
+						<p class="text-center">
+							このイベントはすでに定員を超過しています。
+						</p>
+					</div>
+					<div ng-class="loading ? 'loading' : ''">
+						<div class="text-center" ng-if="inList">
+							<span class="text-success text-lg">参加しています</span>
+							<button class="btn btn-delete btn-sm" ng-click="getOut()">キャンセル</button>
+						</div>
+						<div class="" ng-if="(!inList) && (participants.length < limit)">
+							<button class="btn btn-success btn-lg btn-block" ng-click="getIn()">参加する</button>
+						</div>
+						<div class="form-group event-detail-comment">
+							<label>参加コメント</label>
+							<textarea class="form-control" ng-model="text"
+									  ng-keyup="updateComment()"></textarea>
+							<div class="form-helper">参加にあたってなにかコメントがあれば書いてください。ログインしているユーザーに表示されます。</div>
+						</div>
+					</div>
+					<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
+						<div>
+						</div>
+					<?php endif; ?>
+				<?php else : ?>
+					<div class="alert alert-warning event-detail-alert">
+						<p class="text-center">
+							イベントに参加するには<a href="<?= wp_login_url( get_permalink() ) ?>" class="alert-link">ログイン</a>する必要があります。
+						</p>
+						<p class="text-center">
+							<a class="btn btn-success btn-lg" href="<?= wp_login_url( get_permalink() ) ?>">ログインして参加</a>
+						</p>
+					</div>
+				<?php endif; ?>
+			<?php else : ?>
+				<div class="alert alert-warning event-detail-over">
+					このイベントはすでに申し込み期限を過ぎています。
+				</div>
 			<?php endif; ?>
-		<?php else : ?>
-		<div class="alert alert-warning event-detail-alert">
-			<p class="text-center">
-				イベントに参加するには<a href="<?= wp_login_url( get_permalink() ) ?>" class="alert-link">ログイン</a>する必要があります。
-			</p>
-			<p class="text-center">
-				<a class="btn btn-success btn-lg" href="<?= wp_login_url( get_permalink() ) ?>">ログインして参加</a>
-			</p>
 		</div>
-		<?php endif; ?>
-	<?php else : ?>
-		<div class="alert alert-warning event-detail-over">
-			このイベントはすでに申し込み期限を過ぎています。
-		</div>
-	<?php endif; ?>
 	</div>
 <?php endif; ?>
 

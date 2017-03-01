@@ -399,7 +399,7 @@ add_shortcode( 'fyeo', function( $atts = [], $content = '' ){
 		'tag_line' => '',
 	    'capability' => '',
 	], $atts, 'fyeo' );
-	switch ( $atts['capabiltiy'] ) {
+	switch ( $atts['capability'] ) {
 		case 'writer':
 			$visibility = current_user_can( 'edit_posts' );
 			break;
