@@ -228,7 +228,18 @@ Chart.defaults.global.responsive = true;
         if( $radar.length ){
             if( Modernizr.canvas ){
                 ctx = $radar.get(0).getContext('2d');
-                chart = new Chart(ctx).Radar(postScore, {
+                chart = new Chart(ctx, {
+                  type: 'radar',
+                  data: postScore.data,
+                  options: {
+                    tooltips: {
+                      callbacks: {
+                        title: function (tip, data) {
+                          return postScore.labels[tip[0].datasetIndex][tip[0].index];
+                        }
+                      }
+                    }
+                  }
                 });
             }else{
                 $radar.replaceWith('<p class="alert alert-danger">Canvasに対応していないため、ご利用の環境ではレーダーチャートを表示できません。</p>');

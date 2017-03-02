@@ -12,7 +12,13 @@
     $(document).ready(function(){
 
         // レーダーチャート
-        var radar = $('#genre-context'), ctx, chart, data = [];
+        var radar = $('#genre-context'), ctx, chart, data = {
+            labels: [],
+            datasets: [{
+              data: [],
+              backgroundColor: []
+            }]
+        };
         if( radar.length ){
             if( Modernizr.canvas ){
                 // データを加工する
@@ -20,16 +26,14 @@
                     if( index > 10 ){
                         return false;
                     }
-                    data.push({
-                        value: parseInt(cat.count, 10),
-                        label: cat.name,
-                        color: 'rgba(255, 0, 0, ' + Math.min(1, Math.round((cat.count / HametuhaGenreStatic.total) * 0.8 * 10) / 10  + 0.2) + ')',
-                        highlight: 'red'
-                    });
+                    data.labels.push(cat.name);
+                    data.datasets[0].data.push(parseInt(cat.count, 10));
+                    data.datasets[0].backgroundColor.push( 'rgba(255, 0, 0, ' + Math.min(1, Math.round((cat.count / HametuhaGenreStatic.total) * 0.8 * 10) / 10  + 0.2) + ')' );
                 });
                 ctx = radar.get(0).getContext('2d');
-                chart = new Chart(ctx).Doughnut(data, {
-
+                chart = new Chart(ctx, {
+                  type: 'doughnut',
+                  data: data
                 });
             }
         }

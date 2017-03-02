@@ -221,34 +221,41 @@ SQL;
 			'labels'   => [ '知性', '完成度', '構成', '読後感', '好感度', '作者' ],
 			'datasets' => [
 				[
-					'label'                => '健全指数',
-					'fillColor'            => "rgba(172, 255, 165, 0.4)",
-					'strokeColor'          => "rgba(172, 255, 165, 0.8)",
-					'pointColor'           => "rgba(172, 255, 165, 1)",
-					'pointStrokeColor'     => "#fff",
-					'pointHighlightFill'   => "#fff",
-					'pointHighlightStroke' => "rgba(172, 255, 165, 1)",
-					'data'                 => [ ],
-					'label_set'            => [ ]
+					'label'                     => '健全指数',
+					'backgroundColor'           => 'rgba(172, 255, 165, 0.4)',
+					'borderColor'               => 'rgba(172, 255, 165, 0.8)',
+					'pointBackgroundColor'      => 'rgba(172, 255, 165, 1)',
+					'pointBorderColor'          => '#fff',
+					'pointHoverBackgroundColor' => '#fff',
+					'pointHoverBorderColor'     => 'rgba(172, 255, 165, 1)',
+					'data'                      => [],
+					'label_set'                 => [],
 				],
 				[
-					'label'                => '破滅指数',
-					'fillColor'            => "rgba(232, 76, 63, 0.4)",
-					'strokeColor'          => "rgba(232, 76, 63, 0.8)",
-					'pointColor'           => "rgba(232, 76, 63, 1)",
-					'pointStrokeColor'     => "#fff",
-					'pointHighlightFill'   => "#fff",
-					'pointHighlightStroke' => "rgba(232, 76, 63, 1)",
-					'data'                 => [ ],
-					'label_set'            => [ ]
-				]
-			]
+					'label'                     => '破滅指数',
+					'backgroundColor'           => 'rgba(232, 76, 63, 0.4)',
+					'borderColor'               => 'rgba(232, 76, 63, 0.8)',
+					'pointBackgroundColor'      => 'rgba(232, 76, 63, 1)',
+					'pointBorderColor'          => '#fff',
+					'pointHoverBackgroundColor' => '#fff',
+					'pointHoverBorderColor'     => 'rgba(232, 76, 63, 1)',
+					'data'                      => [],
+					'label_set'                 => [],
+				],
+			],
 		];
 		// ポイントを取得
 		$points = $this->get_post_chart_points( $post->ID, ( 'series' == $post->post_type ) );
 
 		// データ整形
+		$labels = [
+			[],
+		    [],
+		];
 		foreach ( $this->feedback_tags as $key => $val ) {
+			list( $pos, $nega ) = $val;
+			$labels[0][] = $pos;
+			$labels[1][] = $nega;
 			for ( $i = 0, $l = count( $val ); $i < $l; $i ++ ) {
 				$score = 0;
 				foreach ( $points as $point ) {
@@ -265,12 +272,15 @@ SQL;
 				$data['datasets'][ $i ]['label_set'][] = $val[ $i ];
 			}
 		}
-		$data = json_encode( $data );
+		$json = json_encode( [
+			'data' => $data,
+		    'labels' => $labels,
+		] );
 		$html = <<<HTML
 <div>
 <canvas id="single-radar" width="300" height="300"></canvas>
 <script type="text/javascript">
-window.postScore = {$data};
+window.postScore = {$json};
 </script>
 </div>
 HTML;

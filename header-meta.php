@@ -22,7 +22,7 @@
 <?php
 $path = get_template_directory() . '/assets/js/dist/social.js';
 if ( file_exists( $path ) ) {
-	include $path;
+	echo str_replace( '//# sourceMappingURL=map/social.js.map', '', file_get_contents( $path ) );
 }
 ?>
 //]]>
