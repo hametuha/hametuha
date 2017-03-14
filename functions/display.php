@@ -95,6 +95,20 @@ function linkify($url) {
 }
 
 /**
+ * URLからドメインを取り出す
+ *
+ * @param string $url
+ *
+ * @return string
+ */
+function hametuha_grab_domain( $url ) {
+	if ( ! preg_match( '#https?://([^/]+)#', $url, $match ) ) {
+		return $url;
+	}
+	return $match[1];
+}
+
+/**
  * つぶやきを出力する
  *
  * @param null|WP_Post $post
@@ -441,4 +455,20 @@ if ( ! function_exists( 'login_header' ) ) {
 		echo '</div>';
 		get_footer( 'login' );
 	}
+}
+
+/**
+ * 改行などを削除
+ *
+ * @param string $markup
+ *
+ * @return string
+ */
+function hametuha_format_html_indent_for_embed( $markup ) {
+	// Delete all spacing chars
+	$markup = preg_replace( '#(\r|\n|\t)#', '', $markup );
+	// Add line break to div
+	$broken_text = preg_replace( '#<div([^>]*?)>#u', "\n<div$1>\n", $markup );
+	$broken_text = str_replace( '</div>', "\n</div>\n", $markup );
+	return trim( $broken_text );
 }

@@ -14,9 +14,6 @@ add_action( 'admin_head', function () {
 		case 'series':
 			add_editor_style( 'assets/css/editor-style-post.css' );
 			break;
-		case 'newsletter':
-			add_editor_style( 'assets/css/editor-style-mail.css' );
-			break;
 		default:
 			add_editor_style( 'assets/css/editor-style.css' );
 			break;

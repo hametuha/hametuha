@@ -7,4 +7,6 @@
 body{
   margin: 20px;
   @include post-style();
+
+  @import "parts/embed";
 }

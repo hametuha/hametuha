@@ -1,7 +1,6 @@
 @mixin text-justify(){
   text-align: justify;
   text-justify: inter-ideograph;
-  font-feature-settings: "palt";
 }
 
 @mixin text-emphasis($style: sesame filled){
