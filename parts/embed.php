@@ -7,7 +7,7 @@ $epub_status = $model->get_status( $object->ID );
 ?>
 <div class="embed-wrap">
 
-		<?php if ( has_post_thumbnail() ) : ?>
+		<?php if ( has_post_thumbnail( $object ) ) : ?>
 			<div class="embed-thumbnail">
 				<a href="<?php the_permalink( $object ) ?>" class="embed-thumbnail-link">
 					<?= get_the_post_thumbnail( $object, 'medium', [ 'class' => 'embed-thumbnail-img' ] ) ?>
