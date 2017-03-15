@@ -283,13 +283,30 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		if ( $comment_id = $event->get_ticket_id( get_current_user_id() ) ) {
 			$args['comment_ID'] = $comment_id;
 			wp_update_comment( $args );
+			$updated = true;
 		} else {
 			$comment_id = wp_insert_comment( $args );
+			$updated = false;
 		}
 		update_comment_meta( $comment_id, '_participating', $request['status'] );
-		return $comment_id ? new \WP_REST_Response( $event->get_user_object( $comment_id ) ) : new \WP_Error( 500, 'ステータスの変更に失敗しました。', [
-			'status' => 500,
-		] );
+		if ( $comment_id ) {
+			$organizer = get_userdata( $post->post_author );
+			if ( get_current_user_id() != $post->post_author ) {
+				do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
+					'post'        => $post,
+					'status'      => $request['status'],
+					'organizer'   => $organizer,
+					'participant' => get_userdata( get_current_user_id() ),
+					'update'      => $updated,
+				    'message'     => $request['text'],
+				] );
+			}
+			return new \WP_REST_Response( $event->get_user_object( $comment_id ) );
+		} else {
+			return new \WP_Error( 500, 'ステータスの変更に失敗しました。', [
+				'status' => 500,
+			] );
+		}
 	}
 
 	/**
