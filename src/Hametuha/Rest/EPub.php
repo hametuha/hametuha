@@ -27,6 +27,11 @@ class EPub extends RestTemplate {
 	 */
 	public static $prefix = 'epub';
 
+	/**
+	 * @var string
+	 * @todo これはHamePubに移す
+	 */
+	protected $no_indent = ' 　【《〔〝『「（”"\'’—\(\)&';
 
 	protected $content_type = 'text/html';
 
@@ -295,21 +300,18 @@ HTML;
 		wp_redirect( admin_url( 'edit.php?post_type=series&page=hamepub-files' ) );
 	}
 
-
+	/**
+	 * 印刷用レイアウトを表示する
+	 *
+	 * @param int $series_id
+	 *
+	 * @throws \Exception
+	 */
 	public function get_print( $series_id = 0 ) {
 		if ( ! current_user_can( 'edit_post', $series_id ) ) {
 			throw new \Exception( 'あなたには印刷する権利がありません。', 403 );
 		}
-		$query = new \WP_Query( [
-			'post_type'      => 'post',
-			'post_parent'    => $series_id,
-			'post_status'    => 'any',
-			'posts_per_page' => - 1,
-			'orderby'        => [
-				'menu_order' => 'DESC',
-				'post_date'  => 'ASC',
-			],
-		] );
+		$query = Series::get_series_query( $series_id );
 		if ( ! $query->have_posts() ) {
 			throw new \Exception( 'この作品集には投稿が紐づけられていません', 404 );
 		}
@@ -319,6 +321,9 @@ HTML;
 			$classes[] = 'single-post';
 			$classes[] = 'series-print';
 			return $classes;
+		} );
+		add_filter( 'the_content', function( $content ) {
+			return preg_replace( "#<p>([^{$this->no_indent}])#u", '<p class="indent">$1', $content );
 		} );
 		$this->set_data([
 			'series' => get_post( $series_id ),
@@ -403,18 +408,7 @@ HTML;
 				];
 			}
 			// Add children
-			foreach (
-				get_posts( [
-					'post_type'      => 'post',
-					'post_parent'    => $series->ID,
-					'post_status'    => 'any',
-					'posts_per_page' => - 1,
-					'orderby'        => [
-						'menu_order' => 'DESC',
-						'post_date'  => 'ASC',
-					],
-				] ) as $p
-			) {
+			foreach ( Series::get_series_posts( $series->ID ) as $p ) {
 				$html[ 'post-' . $p->ID ] = [
 					'label' => get_post_meta( $p->ID, '_series_override', true ) ?: get_the_title( $p ),
 					'html'  => $this->get_content( $series_id, $p, 'content', $direction ),
@@ -610,18 +604,7 @@ HTML;
 			case 'toc':
 				$this->title = '目次';
 				if ( ! $this->factory( $id )->toc->length() ) {
-					foreach (
-						get_posts( [
-							'post_parent'    => $post->ID,
-							'post_type'      => 'post',
-							'post_status'    => 'any',
-							'posts_per_page' => - 1,
-							'orderby'        => [
-								'menu_order' => 'DESC',
-								'date'       => 'ASC',
-							],
-						] ) as $post
-					) {
+					foreach ( Series::get_series_posts( $post->ID ) as $post ) {
 						$title     = get_post_meta( $post->ID, '_series_override', true ) ?: get_the_title( $post );
 						$permalink = get_permalink( $post );
 						$toc       = $this->factory( $id )->toc->addChild( $title, $permalink );

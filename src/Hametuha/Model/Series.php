@@ -558,8 +558,49 @@ SQL;
 	}
 
 	public function get_list( $type = 'sales', $limit = 10 ) {
-		
 
+	}
+
+	/**
+	 * Get series arg
+	 *
+	 * @param int $series_id
+	 *
+	 * @return array
+	 */
+	protected static function get_series_args( $series_id ) {
+		return [
+			'post_type'      => 'post',
+			'post_parent'    => $series_id,
+			'post_status'    => 'any',
+			'posts_per_page' => - 1,
+			'orderby'        => [
+				'menu_order' => 'DESC',
+				'post_date'  => 'ASC',
+			],
+		];
+	}
+
+	/**
+	 * Get series posts
+	 *
+	 * @param int $series_id
+	 *
+	 * @return array
+	 */
+	public static function get_series_posts( $series_id ) {
+		return get_posts( self::get_series_args( $series_id ) );
+	}
+
+	/**
+	 * Return series query
+	 *
+	 * @param int $series_id
+	 *
+	 * @return \WP_Query
+	 */
+	public static function get_series_query( $series_id ) {
+		return new \WP_Query( self::get_series_args( $series_id ) );
 	}
 
 	/**
