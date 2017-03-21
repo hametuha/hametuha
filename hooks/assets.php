@@ -174,7 +174,7 @@ add_action( 'wp_enqueue_scripts', function () {
 /**
  * 管理画面でアセットを読み込む
  */
-add_action( "admin_enqueue_scripts", function ( $page = '' ) {
+add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 
 	$screen = get_current_screen();
 

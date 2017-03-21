@@ -19,7 +19,10 @@
             $form.attr('action', $(this).attr('data-endpoint'));
             $form.find('input[name=direction]').val( $('input[name=orientation]:checked').val() == 'vertical' ? 'rtl' : 'ltr' );
             $form.find('input[name=post_id]').val(val);
+            $('body').append($form);
             $form.submit();
+            $form.remove();
+
         }
     });
 
