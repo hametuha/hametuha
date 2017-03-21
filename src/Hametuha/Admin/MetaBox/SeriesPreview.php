@@ -80,5 +80,12 @@ HTML;
 			$GLOBALS['post'] = $_old_post;
 			wp_reset_postdata();
 		}
+		?>
+		<hr />
+		<h4>印刷確認</h4>
+		<a class="button" href="<?= home_url( "/epub/print/{$post->ID}" ) ?>" target="_blank">
+			まとめて印刷
+		</a>
+		<?php
 	}
 }

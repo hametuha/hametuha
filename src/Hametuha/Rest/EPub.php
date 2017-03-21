@@ -295,6 +295,38 @@ HTML;
 		wp_redirect( admin_url( 'edit.php?post_type=series&page=hamepub-files' ) );
 	}
 
+
+	public function get_print( $series_id = 0 ) {
+		if ( ! current_user_can( 'edit_post', $series_id ) ) {
+			throw new \Exception( 'あなたには印刷する権利がありません。', 403 );
+		}
+		$query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_parent'    => $series_id,
+			'post_status'    => 'any',
+			'posts_per_page' => - 1,
+			'orderby'        => [
+				'menu_order' => 'DESC',
+				'post_date'  => 'ASC',
+			],
+		] );
+		if ( ! $query->have_posts() ) {
+			throw new \Exception( 'この作品集には投稿が紐づけられていません', 404 );
+		}
+		nocache_headers();
+		$this->title = get_the_title( $series_id );
+		add_filter( 'body_class', function( $classes ) {
+			$classes[] = 'single-post';
+			$classes[] = 'series-print';
+			return $classes;
+		} );
+		$this->set_data([
+			'series' => get_post( $series_id ),
+			'query'  => $query,
+		]);
+		$this->load_template( 'templates/epub/print' );
+	}
+
 	/**
 	 * プレビュー画面
 	 *
