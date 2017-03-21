@@ -22,7 +22,6 @@
             $('body').append($form);
             $form.submit();
             $form.remove();
-
         }
     });
 
