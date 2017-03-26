@@ -264,7 +264,7 @@ class Notification extends RestTemplate {
 			}
 			switch ( $post->post_type ) {
 				case 'announcement':
-					$message = sprintf( "破滅派からお知らせです: <strong>%s</strong>", get_the_title( $post ) );
+					$message = sprintf( '破滅派からお知らせです: <strong>%s</strong>', get_the_title( $post ) );
 					$this->notifications->add_general( 0, $post->ID, $message, 'info@hametuha.com' );
 					break;
 				default:

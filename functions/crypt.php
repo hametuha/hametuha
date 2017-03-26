@@ -45,6 +45,21 @@ function hametuha_validate_web_hook( $slug, $token ) {
 }
 
 /**
+ * Get rest endpoint URL
+ *
+ * @param int|WP_Post|null $post
+ *
+ * @return string
+ */
+function hametuha_webhook_url( $post ) {
+	$post = get_post( $post );
+	if ( ! $token = get_post_meta( $post->ID, '_webhook_token', true ) ) {
+		return '';
+	}
+	return home_url( sprintf( '/webhook/do/%s/%s/', $post->post_name, $token ) );
+}
+
+/**
  * Check nonce
  *
  * @param string $action

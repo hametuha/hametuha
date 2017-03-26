@@ -29,15 +29,16 @@ add_action( 'add_meta_boxes', function( $post_type ) {
 	}
 	add_meta_box( 'web-hook-info', 'Webフック設定', function( WP_Post $post ) {
 		wp_nonce_field( 'webhook', '_webhook_nonce', false );
+		$endpoint = hametuha_webhook_url( $post );
 		?>
 		<table class="form-table">
 			<tr>
 				<th>
-					<label for="webhook_token">Webフック</label>
+					<label for="webhook_token">エンドポイント</label>
 				</th>
 				<td>
 					<input type="text" class="regular-text" name="webhook_token" id="webhook_token"
-					       value="<?= esc_attr( get_post_meta( $post->ID, '_webhook_token', true ) ) ?>"
+					       value="<?= esc_url( $endpoint ) ?>"
 					       placeholder="まだ生成されていません" readonly />
 				</td>
 			</tr>
@@ -84,23 +85,24 @@ add_filter( 'manage_web-hook_posts_columns', function( $column ) {
 	foreach ( $column as $key => $value ) {
 		$new_column[ $key ] = $value;
 		if ( 'title' == $key ) {
-			$new_column['slug']  = 'スラッグ';
-			$new_column['token'] = 'トークン';
+			$new_column['endpoint']  = 'エンドポイント';
 		}
 	}
 	return $new_column;
 } );
 
-
+/**
+ * Display column content
+ *
+ * @param string $column
+ * @param int    $post_id
+ */
 add_action( 'manage_web-hook_posts_custom_column', function( $column, $post_id ) {
 	switch ( $column ) {
-		case 'slug':
-			echo esc_html( get_post( $post_id )->post_name );
-			break;
-		case 'token':
-			$token = get_post_meta( $post_id, '_webhook_token', true );
+		case 'endpoint':
+			$token = hametuha_webhook_url( $post_id );
 			if ( $token ) {
-				printf( '<code>%s</code>', $token );
+				printf( '<input type="url" value="%s" readonly onclick="this.select()" style="text-align: right; width: 20em;" />', esc_url( $token ) );
 			} else {
 				echo '<span style="color:lightgrey"><span class="dashicons dashicons-no"></span> まだ生成されていません</span>';
 			}
@@ -110,3 +112,42 @@ add_action( 'manage_web-hook_posts_custom_column', function( $column, $post_id )
 			break;
 	}
 }, 10, 2 );
+
+/**
+ * Register rest action
+ */
+add_action( 'rest_api_init', function() {
+	// List of Webhooks
+	register_rest_route( 'hametuha/v1', '/webhooks/?', [
+		[
+			'methods' => 'GET',
+			'callback' => function() {
+				$hooks = get_posts( [
+					'post_type'   => 'web-hook',
+					'post_status' => 'publish',
+					'meta_query'  => [
+						'key'     => '_webhook_token',
+						'value'   => '',
+						'compare' => '!=',
+					],
+				] );
+				if ( ! $hooks ) {
+					return new WP_Error( 404, '利用可能なWebフックは存在しません', [ 'status' => 404 ] );
+				}
+				$return = [];
+				foreach ( $hooks as $hook ) {
+					$return[] = [
+						'title'    => get_the_title( $hook ),
+						'endpoint' => hametuha_webhook_url( $hook ),
+					];
+				}
+				return new WP_REST_Response( $return );
+			},
+			'args' => [],
+			'permission_callback' => function() {
+				// Everything is O.K.
+				return true;
+			},
+		],
+	] );
+} );
