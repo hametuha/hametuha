@@ -12,7 +12,11 @@ add_action( 'after_setup_theme', function() {
 		];
 		$post_id = url_to_postid( $url );
 		if ( ! $post_id || false === array_search( get_post( $post_id )->post_type, $allowed_post_types ) ) {
-			return $url;
+			return sprintf(
+				'<a href="%s">%s</a>',
+				esc_attr( $url ),
+				esc_html( 20 < strlen( $url ) ? mb_substr( $url, 0, 30, 'utf-8' ) . '&hellip;' : $url )
+			);
 		}
 		$post = get_post( $post_id );
 		return hametuha_format_html_indent_for_embed( hameplate( 'parts/embed', $post->post_type, [
