@@ -21,9 +21,6 @@
 		<?php endwhile; endif; ?>
 	</div><!-- //.front-container -->
 
-<?php get_template_part( 'parts/list', 'kdp' ) ?>
-
-
 	<div class="container front-container">
 		<div class="frontpage-widget clearfix">
 

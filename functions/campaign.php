@@ -143,6 +143,31 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 }
 
 /**
+ * 最新のキャンペーンを取得する
+ *
+ * @param int $limit
+ *
+ * @return array|int|WP_Error
+ */
+function hametuha_recent_campaigns( $limit = 5 ) {
+	$campaigns = get_terms( [
+		'taxonomy'   => 'campaign',
+	    'hide_empty' => false,
+	    'meta_query' => [
+	    	[
+	    		'key'     => '_campaign_limit',
+		        'value'   => '',
+		        'compare' => '!=',
+		    ],
+	    ],
+	    'number'  => $limit,
+	    'orderby' => 'meta_value',
+	    'order'   => 'DESC',
+	] );
+	return $campaigns && ! is_wp_error( $campaigns ) ? $campaigns : [];
+}
+
+/**
  * キャンペーンが応募中か
  *
  * @param WP_Term $term

@@ -11,7 +11,8 @@
   "scripts": {
     "build": "gulp build",
     "watch": "gulp watch",
-    "display": "gulp bs"
+    "display": "gulp bs",
+    "gulp": "gulp"
   },
   "author": "Hametuha inc.",
   "license": "MIT",
@@ -32,7 +33,6 @@
     "gulp-jshint": "^2.0",
     "gulp-load-plugins": "^1.2",
     "gulp-notify": "^2.2.0",
-    "gulp-pleeease": "^2.0",
     "gulp-plumber": "^1.0.0",
     "gulp-sass": "^2.2",
     "gulp-sass-bulk-import": "^1.0",

@@ -1,7 +1,3 @@
-<?php if ( ! is_front_page() && 'kdp' !== get_query_var( 'meta_filter' ) && ! is_doujin_profile_page() ) {
-	get_template_part( 'parts/list', 'kdp' );
-} ?>
-
 <footer id="footer" class="footer-wrapper">
 	<div id="footer-sidebar" class="container">
 
@@ -9,7 +5,6 @@
 
 			<div class="col-xs-6 col-sm-3 text-center">
 				<h3>メルマガ</h3>
-
 
 				<p class="text-muted">
 					<i class="icon-mail"></i><br />

@@ -20,7 +20,7 @@ gulp.task('sass',function(){
         .pipe($.sass({
             errLogToConsole: true,
             outputStyle: 'compressed',
-            sourceComments: 'normal',
+            sourceComments: false,
             sourcemap: true,
             includePaths: [
                 './assets/sass',
@@ -29,10 +29,10 @@ gulp.task('sass',function(){
                 './vendor/hametuha'
             ]
         }))
+        .pipe($.autoprefixer({
+           browsers: ['last 2 versions', 'ie 11']
+        }))
         .pipe($.sourcemaps.write('./map'))
-        //.pipe($.pleeease({
-        //    browsers: ['last 4 versions', 'ie 8']
-        //}))
         //.pipe(filter)
         //.pipe(filter.restore())
         .pipe(gulp.dest('./assets/css'));

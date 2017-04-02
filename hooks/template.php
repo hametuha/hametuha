@@ -9,6 +9,5 @@ add_filter( 'template_include', function ( $path ) {
 	} elseif ( is_search() && is_post_type_archive( 'faq' ) ) {
 		$path = get_template_directory() . '/index.php';
 	}
-
 	return $path;
 } );

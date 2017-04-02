@@ -32,6 +32,17 @@
         }
       ]
     });
+
+    $('.widget-kdp-list').slick({
+      infinite: true,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      dots: true,
+      speed: 200,
+      cssEase: 'ease-in-out',
+      autoplay: true,
+      autoplaySpeed: 2000
+    });
   });
 
 })(jQuery);

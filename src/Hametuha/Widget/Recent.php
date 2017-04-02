@@ -107,9 +107,9 @@ class Recent extends Widget {
 	 * @return string
 	 */
 	protected function set_avatar( $content ) {
-		$sizes = [ ];
+		$sizes = [];
 		$match = array();
-		if ( preg_match_all( "/avatar_([0-9]{1,3})/", $content, $match ) ) {
+		if ( preg_match_all( '/avatar_([0-9]{1,3})/', $content, $match ) ) {
 			foreach ( $match as $m ) {
 				$sizes[] = $m[1];
 			}

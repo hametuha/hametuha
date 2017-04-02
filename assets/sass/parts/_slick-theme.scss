@@ -99,7 +99,7 @@ $slick-opacity-not-active: 0.25 !default;
 }
 
 .slick-prev {
-    left: -25px;
+    left: 0;
     [dir="rtl"] & {
         left: auto;
         right: -25px;
@@ -114,7 +114,7 @@ $slick-opacity-not-active: 0.25 !default;
 
 
 .slick-next {
-    right: -25px;
+    right: 0;
     [dir="rtl"] & {
         left: -25px;
         right: auto;
@@ -138,12 +138,12 @@ $slick-opacity-not-active: 0.25 !default;
     bottom: -45px;
     list-style: none;
     display: block;
-    text-align: center;
+    text-align: center !important;
     padding: 0;
     width: 100%;
     li {
         position: relative;
-        display: inline-block;
+        display: inline-block !important;
         height: 20px;
         width: 20px;
         margin: 0 5px;

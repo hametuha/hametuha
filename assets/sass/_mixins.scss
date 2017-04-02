@@ -84,3 +84,28 @@
 }
 
 
+//
+// Typograhpy
+//-------------------
+//
+
+@mixin text-justify(){
+  text-align: justify;
+  text-justify: inter-ideograph;
+}
+
+@mixin text-emphasis($style: sesame filled){
+  -webkit-text-emphasis-style: $style;
+  -moz-text-emphasis-style: $style;
+  text-emphasis-style: $style;
+}
+
+%block-link{
+  display: block;
+  &:link, &:visited{
+    text-decoration: none;
+  }
+  &:hover, &:active{
+    text-decoration: none;
+  }
+}

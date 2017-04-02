@@ -1,5 +1,8 @@
 .front-container{
   padding-top: $navbar-height + $subnavbar-height;
+  & + .front-container{
+    padding-top: 0;
+  }
   .jumbotron{
     @include border-radius(0);
   }

@@ -1,14 +1,3 @@
-@mixin text-justify(){
-  text-align: justify;
-  text-justify: inter-ideograph;
-}
-
-@mixin text-emphasis($style: sesame filled){
-  -webkit-text-emphasis-style: $style;
-  -moz-text-emphasis-style: $style;
-  text-emphasis-style: $style;
-}
-
 @mixin post-style($book: false){
 
   // 共通要素
@@ -40,7 +29,7 @@
   }
   .wp-caption-text{
     font-size: 0.8em;
-    @extend .text-muted;
+    color: $text-muted;
   }
   aside{
     margin: 1em 0;

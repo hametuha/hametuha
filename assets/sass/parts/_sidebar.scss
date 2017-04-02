@@ -1,3 +1,92 @@
+// Global widget
+.widget{
+  img{
+    max-width: 100%;
+  }
+  // Image widget
+  &_sp_image-image-link{
+    display: block;
+    text-align: center;
+    img{
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
+  }
+  &-kdp {
+    &-lead {
+      font-size: 14px;
+      margin: 10px;
+    }
+    &-list {
+      & + a {
+        margin-top: 50px;
+      }
+      .slick-dots > li{
+        float: left
+      }
+    }
+    &-item {
+      text-align: center;
+      img{
+        margin-right: auto;
+        margin-left: auto;
+      }
+    }
+  }
+
+
+  // キャンペーン
+  &-campaign{
+    &-lead{
+      margin: 10px 0;
+      font-size: 16px;
+      font-family: $work-body-sans;
+      color: $brand-warning;
+    }
+    &-list{
+      border: 1px solid $thin-border;
+      border-radius: $border-radius-base;
+    }
+    &-item{
+      border-bottom: 1px solid $thin-border;
+      &:last-child{
+        border-bottom: none;
+      }
+      a{
+        @extend %block-link;
+        padding: 20px 10px;
+        &:link, &:visited{
+          color: #000;
+          background: #fff;
+        }
+        &:hover, &:active{
+          color: $link-active;
+          background: $hover-bg;
+        }
+      }
+    }
+    &-title{
+      font-size: 18px;
+      margin-right: 5px;
+    }
+    &-date{
+      display: block;
+      font-size: 14px;
+      margin: 5px 0;
+      color: #888;
+      i{
+        color: #aaa;
+        margin-right: 5px;
+      }
+    }
+    &-desc{
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
 #sidebar{
   @media only screen and (max-width: $screen-xs-max) {
     margin-top: 40px;
@@ -17,11 +106,6 @@
     max-width: 100%;
   }
   .widget_sp_image-image-link{
-    img{
-      max-width: 100%;
-      width: auto;
-      height: auto;
-    }
   }
   .small-button{
     @extend .btn;
