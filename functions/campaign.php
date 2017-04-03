@@ -156,8 +156,9 @@ function hametuha_recent_campaigns( $limit = 5 ) {
 	    'meta_query' => [
 	    	[
 	    		'key'     => '_campaign_limit',
-		        'value'   => '',
-		        'compare' => '!=',
+		        'value'   => date_i18n( 'Y-m-d' ),
+		        'compare' => '>=',
+		        'type'    => 'DATE',
 		    ],
 	    ],
 	    'number'  => $limit,

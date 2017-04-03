@@ -28,9 +28,10 @@ class CampaignWidget extends Widget {
 		/** @var string $number */
 		ob_start();
 		$campaigns = hametuha_recent_campaigns( $number );
+		if ( $campaigns ) :
 		?>
-		<div class="widget-campaign-lead">
-			破滅派のイベント・キャンペーンはこちら！
+		<div class="widget-campaign-lead text-center">
+			破滅派のイベント・キャンペーン
 		</div>
 		<div class="widget-campaign-list">
 			<?php foreach ( $campaigns as $campaign ) : ?>
@@ -61,7 +62,11 @@ class CampaignWidget extends Widget {
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<?php
+		<?php else : ?>
+			<div class="widget-campaign-lead text-center">
+				現在募集はありません。
+			</div>
+		<?php endif;
 		$content = ob_get_contents();
 		ob_end_clean();
 
