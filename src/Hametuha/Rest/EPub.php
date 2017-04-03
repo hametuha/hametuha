@@ -500,7 +500,7 @@ HTML;
 			// Add Cover Image
 			if ( has_post_thumbnail( $series->ID ) ) {
 				$thumb = get_post_thumbnail_id( $series->ID );
-				$src   = wp_get_attachment_image_src( $thumb, 'epub-cover' );
+				$src   = wp_get_attachment_image_src( $thumb, $this->series->image_size );
 				$url   = preg_replace( '/(https?):\/\/(s\.)?/', '$1://', $src[0] );
 				$path  = str_replace( home_url( '/' ), ABSPATH, $url );
 				if ( file_exists( $path ) ) {

@@ -11,6 +11,15 @@ use WPametu\DB\Model;
  * @package Hametuha\Model
  */
 class Series extends Model {
+
+	/**
+	 * This seems a bug.
+	 *
+	 * @todo Fix this and make patch.
+	 * @var array|string
+	 */
+	public $image_size = [ 1201, 1921 ];
+
 	/**
 	 * Status Label
 	 *
@@ -515,12 +524,13 @@ SQL;
 		if ( ! has_post_thumbnail( $post ) ) {
 			$errors->add( 'fatal', '表紙画像が設定されていません' );
 		} else {
-			$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post ), 'kindle-cover' );
+			// TODO: これはバグでは？ 4.7.3から？
+			$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), $this->image_size );
 			if ( 1200 != $thumbnail[1] || 1920 != $thumbnail[2] ) {
 				$errors->add( 'fatal', '表紙画像のサイズが不正です。サイズは幅1200px 高さ1920pxでなくてはなりません。これ以上大きい解像度でアップロードしてください。' );
 			}
 		}
-		// サムネイル
+		// リード
 		if ( ! $post->post_excerpt ) {
 			$errors->add( 'fatal', 'リード文が設定されていません。' );
 		} elseif ( 100 > mb_strlen( $post->post_excerpt, 'utf-8' ) ) {

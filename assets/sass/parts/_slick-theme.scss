@@ -144,6 +144,7 @@ $slick-opacity-not-active: 0.25 !default;
     li {
         position: relative;
         display: inline-block !important;
+        float: none !important;
         height: 20px;
         width: 20px;
         margin: 0 5px;

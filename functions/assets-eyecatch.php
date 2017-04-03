@@ -3,8 +3,6 @@
  * アイキャッチに関する処理
  */
 
-$content_width = 970;
-
 //画像のサイズ（小さい）を追加
 add_image_size( 'pinky', 160, 160, true );
 
@@ -27,6 +25,7 @@ add_filter( 'image_size_names_choose', function ( $sizes ) {
 } );
 
 //投稿サムネイルを許可
+global $content_width;
 add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news' ] );
 set_post_thumbnail_size( $content_width, 696, false );
 
