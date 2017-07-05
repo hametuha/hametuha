@@ -23,7 +23,11 @@ $table = [
         ],
         'owner_id' => [
             'type' => Column::BIGINT,
-            'signed' => false
+            'signed' => false,
+        ],
+        'issuer_id' => [
+	        'type' => Column::BIGINT,
+	        'signed' => false,
         ],
         'status'  => [
 	        'type' => Column::VARCHAR,
@@ -41,6 +45,7 @@ $table = [
     ],
     'indexes' => [
         'by_owner'   => ['owner_id', 'status'],
+        'by_issuer'   => ['issuer_id', 'status'],
         'by_datetime' => ['created', 'status', 'owner_id'],
         'expired' => ['expires', 'status'],
     ]

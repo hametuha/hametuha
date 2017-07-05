@@ -156,6 +156,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( is_singular( 'post' ) ) {
 		wp_dequeue_script( 'contact-form-7' );
 		wp_enqueue_script( 'hametuha-single' );
+		wp_enqueue_script( 'hametuha-selection', get_template_directory_uri() . '/assets/js/dist/components/share.js', [ 'jquery', 'angular' ], hametuha_version(), true );
 	}
 	// トップページ
 	if ( is_front_page() ) {

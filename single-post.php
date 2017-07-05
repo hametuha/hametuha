@@ -74,8 +74,7 @@ HTML;
 					}
 				} ?>
 
-				<div class="work-content row" itemprop="articleBody">
-
+				<div class="work-content row" itemprop="articleBody" ng-controller="workContent" ng-mouseup="updateText()">
 
 					<?php the_content(); ?>
 
@@ -90,6 +89,8 @@ HTML;
 						'link_before' => '<span>',
 						'link_after'  => '</span>',
 					) ); ?>
+
+					<text-holder selection="selection"></text-holder>
 
 				</div>
 				<!-- //.single-post-content -->

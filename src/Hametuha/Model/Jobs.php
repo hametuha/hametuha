@@ -24,6 +24,7 @@ class Jobs extends Model {
 		'job_id'    => '%d',
 		'title'     => '%s',
 		'owner_id'  => '%d',
+		'issuer_id' => '%d',
 		'status'    => '%s',
 	    'created'   => '%s',
 		'updated'   => '%s',
