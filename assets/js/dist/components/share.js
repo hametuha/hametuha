@@ -1,0 +1,2 @@
+!function(e){"use strict";angular.module("hametuha").controller("workContent",["$scope",function(e){e.selection="",e.updateText=function(){e.selection=window.getSelection().toString()}}]).directive("textHolder",[function(){return{restrict:"E",replace:!1,scope:{selection:"="},templateUrl:Hametuha.template("text-holder.html"),link:function(e,t,n){e.share=function(){alert(e.selection)}}}}])}(jQuery);
+//# sourceMappingURL=../map/components/share.js.map
