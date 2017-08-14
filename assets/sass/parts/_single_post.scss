@@ -656,3 +656,62 @@ p.pixiv-embed-illust{
   font-weight: bold;
   opacity: 0.4;
 }
+
+.selecting{
+  $size: 32px;
+  $bg: #FCF3E9;
+  &-wrapper{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    padding: 10px;
+    background: $bg;
+    box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, .2);
+    color: #444;
+    font-family: $font-family-sans-serif !important;
+    margin-top: -30px;
+    &:after{
+      content: "";
+      display: block;
+      clear: left;
+    }
+    &:before{
+      content: "";
+      display: block;
+      position: absolute;
+      left: 50%;
+      margin-left: -10px;
+      top: 100%;
+      width: 0;
+      height: 0;
+      border-top: 10px solid $bg;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 0 solid transparent;
+    }
+  }
+  &-icon{
+    display: inline-block;
+    width: $size;
+    height: $size;
+    background: url('../img/minico/256x256.png') center center no-repeat;
+    background-size: cover;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  &-desc{
+    font-size: 14px;
+    color: #444;
+    white-space: nowrap;
+  }
+  &-button{
+    text-align: center;
+    padding: 5px;
+    border-radius: 50%;
+    &:hover{
+      text-decoration: none;
+      background: rgba(0, 0, 0, .1);
+    }
+  }
+}
