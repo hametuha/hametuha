@@ -28,7 +28,7 @@ if ( is_admin() ) {
 	 * @param WP_Comment_Query &$comment_query
 	 */
 	add_action( 'pre_get_comments', function ( WP_Comment_Query &$comment_query ) {
-		$screen = get_current_screen();
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		if ( $screen && 'edit-comments' === $screen->id && ! current_user_can( 'edit_others_posts' ) ) {
 			$comment_query->query_vars['post_author'] = get_current_user_id();
 		}
@@ -43,7 +43,7 @@ if ( is_admin() ) {
 	 * @param WP_Query &$wp_query
 	 */
 	add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
-		$screen = get_current_screen();
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 		if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && ! current_user_can( 'edit_others_posts' ) && 'news' != $screen->post_type ) {
 			$wp_query->set( 'author', get_current_user_id() );
 		}

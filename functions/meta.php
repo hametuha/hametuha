@@ -56,6 +56,25 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 	return $title;
 }, 10, 3 );
 
+/**
+ * タイトルを変更
+ *
+ * @todo get_document_titleが標準になったら消す
+ * @param array
+ */
+add_filter( 'document_title_parts', function( $title ){
+	if ( is_singular( 'news' ) ) {
+		$title = [ hamenew_copy( get_the_title() ) ];
+	}
+	return $title;
+} );
+
+/**
+ * タイトルタグのセパレータを変更
+ */
+add_filter( 'document_title_separator', function(){
+	return '|';
+} );
 
 /**
  * Faviconの表示
@@ -68,7 +87,7 @@ function _hametuha_favicon() {
 
 add_action( 'admin_head', '_hametuha_favicon' );
 add_action( 'wp_head', '_hametuha_favicon' );
-
+add_action( 'amp_post_template_head', '_hametuha_favicon' );
 
 /**
  * OGPのprefixを取得する
@@ -162,11 +181,9 @@ add_action( 'wp_head', function () {
 		$author = '<meta property="profile:username" content="' . $user->user_login . '" />';
 		$card   = 'summary';
 	} elseif ( is_singular() ) {
-		global $post;
-		$url = get_permalink();
-		setup_postdata( $post );
-		$desc = get_the_excerpt();
-		wp_reset_postdata();
+		$post = get_queried_object();
+		$url = get_permalink( $post );
+		$desc = get_the_excerpt( $post );
 		$author = '<meta property="article:author" content="' . get_author_posts_url( $post->post_author ) . '" />';
 		if ( $screen_name = get_user_meta( $post->post_author, 'twitter', true ) ) {
 			$creator = '@' . $screen_name;
@@ -178,23 +195,22 @@ add_action( 'wp_head', function () {
 		} elseif ( has_post_thumbnail() ) {
 			// Show thumbnail if set.
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
-				if ( ! is_hamenew() || $src[1] >= 696 ) {
-					$image = $src[0];
+				$image = $src[0];
+				if ( $src[1] >= 696 ) {
 					$card  = 'summary_large_image';
-					// If this is seris,
-					// Show product card
-					if ( is_singular( 'series' ) ) {
-						$series = \Hametuha\Model\Series::get_instance();
-						if ( 2 == $series->get_status( $post->ID ) ) {
-							// If this is e-book and sold...
-							// $card               = 'product';
-							$twitters['label1'] = '価格';
-							$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
-							if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
-								$twitters['label2'] = 'ジャンル';
-								$twitters['data2']  = $subtitle;
-							}
-						}
+				}
+			}
+			// Show product card
+			if ( is_singular( 'series' ) ) {
+				$series = \Hametuha\Model\Series::get_instance();
+				if ( 2 == $series->get_status( $post->ID ) ) {
+					// If this is e-book and sold...
+					// $card               = 'product';
+					$twitters['label1'] = '価格';
+					$twitters['data1']  = '&yen;' . number_format( get_series_price( $post ) );
+					if ( $subtitle = $series->get_subtitle( $post->ID ) ) {
+						$twitters['label2'] = 'ジャンル';
+						$twitters['data2']  = $subtitle;
 					}
 				}
 			}

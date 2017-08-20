@@ -82,7 +82,6 @@ get_template_part( 'functions/override', 'dashboard' );
 get_template_part( 'functions/override', 'error' );
 get_template_part( 'functions/override', 'feed' );
 get_template_part( 'functions/override', 'lwp' );
-get_template_part( 'functions/override', 'amp' );
 // 投稿リスト
 get_template_part( 'functions/post_list' );
 get_template_part( 'functions/post_list', 'admin' );
@@ -107,9 +106,13 @@ get_template_part( 'functions/utility' );
 // ウィジェット
 get_template_part( 'functions/widget' );
 
+
 // フックディレクトリを全部読み込み
-foreach ( scandir( __DIR__.'/hooks' ) as $file ) {
-	if ( preg_match( '#^[^\.].*\.php$#', $file ) ) {
-		require __DIR__.'/hooks/'.$file;
+$dir = __DIR__ . '/hooks';
+if ( is_dir( $dir ) ) {
+	foreach ( scandir( $dir ) as $file ) {
+		if ( preg_match( '#^[^\._].*\.php$#', $file ) ) {
+			require $dir . '/' . $file;
+		}
 	}
 }
