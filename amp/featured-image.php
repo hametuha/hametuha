@@ -11,9 +11,9 @@ $caption = $featured_image['caption'];
 <figure class="amp-wp-article-featured-image wp-caption">
 	<?php echo $amp_html; // amphtml content; no kses ?>
 	<?php if ( $caption ) : ?>
-		<fig-caption class="wp-caption-text">
+		<p class="wp-caption-text">
 			<?php echo wp_kses_data( $caption ); ?>
-		</fig-caption>
+		</p>
 	<?php endif; ?>
 </figure>
 
