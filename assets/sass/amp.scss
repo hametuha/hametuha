@@ -13,6 +13,7 @@ $amp-pad: 16px;
 }
 
 %list-line{
+  list-style: none;
   border-bottom: 1px solid #ddd;
   &:first-child{
     border-top: 1px solid #ddd;
@@ -131,12 +132,10 @@ $amp-pad: 16px;
       }
     }
     &-img{
-
-      img{
-
+      body & img{
         max-width: 100%;
-        width: auto !important;
-        height: auto !important;
+        width: auto;
+        height: auto;
       }
     }
   }
