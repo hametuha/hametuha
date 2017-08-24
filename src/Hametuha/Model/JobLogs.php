@@ -23,12 +23,12 @@ class JobLogs extends Model {
 	 *
 	 * @param int    $job_id
 	 * @param string $message
-	 * @param bool   $error
 	 * @param int    $owner
+	 * @param bool   $error
 	 *
 	 * @return bool
 	 */
-	public function add( $job_id, $message, $error = false, $owner = 0 ) {
+	public function add( $job_id, $message, $owner = 0, $error = false ) {
 		return (bool) $this->insert( [
 			'job_id'   => $job_id,
 		    'message'  => $message,

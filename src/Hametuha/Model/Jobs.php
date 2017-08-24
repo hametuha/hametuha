@@ -13,10 +13,12 @@ use WPametu\DB\Model;
  * @property-read string $users
  * @property-read string $posts
  * @property-read string $object_relationships
+ * @property-read JobMeta $job_meta
+ * @property-read JobLogs $job_log
  */
 class Jobs extends Model {
 
-	protected $related = [ 'posts', 'users', 'object_relationships' ];
+	protected $related = [ 'posts', 'users', 'object_relationships', 'job_meta', 'job_log' ];
 
 	protected $updated_column = 'updated';
 
@@ -56,6 +58,27 @@ class Jobs extends Model {
 		
 		else {
 			return $this->get( $job_id );
+		}
+	}
+
+	/**
+	 * Getter
+	 *
+	 * @param string $name
+	 *
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		switch ( $name ) {
+			case 'job_meta':
+				return JobMeta::get_instance();
+				break;
+			case 'job_logs':
+				return JobLogs::get_instance();
+				break;
+			defautl:
+				return parent::__get( $name );
+				break;
 		}
 	}
 }
