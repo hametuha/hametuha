@@ -226,6 +226,7 @@ nav.amp-wp-title-bar div {
 .tmkm-amazon-view p{
   margin: 0.25em 0;
 }
+
 .amp-footer-content{
   text-align: center;
   font-size: 12px;
@@ -233,13 +234,20 @@ nav.amp-wp-title-bar div {
   background: #FBF0E4;
   padding: 20px;
 }
+
 body{
   font-family: "游ゴシック体", "Yu Gothic", YuGothic, sans-serif;
   padding-bottom: 0;
 }
-.amp-ad-container{
-  margin: 10px -16px;
-  text-align: center;
+
+.amp-ad{
+  &-container{
+    margin: 10px -16px;
+    text-align: center;
+  }
+  &-wrapper{
+    margin: 0 16px;
+  }
 }
 footer{
   h2 small{
