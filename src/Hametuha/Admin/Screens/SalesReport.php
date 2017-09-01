@@ -58,7 +58,7 @@ class SalesReport extends Screen {
 				$errors  = 0;
 				while ( $line = fgetcsv( $handle ) ) {
 					if ( $counter > 0 ) {
-						if ( count( $line ) !== 16 ) {
+						if ( count( $line ) !== 15 ) {
 							$errors ++;
 						} else {
 							$value = array_map( 'trim', [
@@ -66,10 +66,10 @@ class SalesReport extends Screen {
 								'date'     => date_i18n( 'Y-m-d', strtotime( $line[0] ) ),
 								'asin'     => $line[3],
 								'place'    => $line[4],
-								'type'     => $line[6],
-								'unit'     => $line[9],
-								'royalty'  => $line[14],
-								'currency' => $line[15],
+								'type'     => $line[8],
+								'unit'     => $line[5],
+								'royalty'  => $line[13],
+								'currency' => $line[14],
 							] );
 							if ( is_wp_error( $this->sales->validate( $value ) ) ) {
 								$errors ++;
