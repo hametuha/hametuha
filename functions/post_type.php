@@ -171,6 +171,12 @@ add_action( 'init', function () {
 		'rewrite'      => [
 			'slug' => 'news/nouns',
 		],
+		'capabilities' => [
+			'manage_terms' => 'edit_posts',
+			'edit_terms'   => 'edit_posts',
+			'delete_terms' => 'edit_others_posts',
+			'assign_terms' => 'edit_posts',
+		],
 	] );
 
 	// 形式

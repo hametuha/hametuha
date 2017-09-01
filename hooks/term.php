@@ -69,17 +69,16 @@ add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 /**
  * コンテンツを入力するフィールドを追加
  */
-add_action( 'edit_tag_form_fields', function ( $tag ) {
-	?>
-	<tr>
-		<th>
-			<label for="term_content">コンテンツ</label>
+foreach ( [ 'campaign', 'nouns' ] as $taxonomy ) {
+	add_action( $taxonomy . '_edit_form', function ( $tag, $taxonomy ) {
+		?>
+		<div>
 			<?php wp_nonce_field( 'update_term_content', '_term_content_nonce', false ) ?>
-		</th>
-		<td><?php wp_editor( get_term_meta( $tag->term_id, '_term_content', true ), 'term_content' ) ?></td>
-	</tr>
-	<?php
-}, 11 );
+			<?php wp_editor( get_term_meta( $tag->term_id, '_term_content', true ), 'term_content' ) ?>
+		</div>
+		<?php
+	}, 11, 2 );
+}
 
 
 /**
