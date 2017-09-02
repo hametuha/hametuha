@@ -20,7 +20,7 @@ if( hametuha_is_profile_page() ){
 }elseif( is_tax('nouns') ) {
 	switch ( get_term_meta( get_queried_object_id(), 'noun_category', true ) ) {
 		case 'company':
-			$suffix = '出版社';
+			$suffix = '企業・団体';
 			break;
 		case 'person':
 			$suffix = '人物';

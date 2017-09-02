@@ -21,7 +21,7 @@ add_action( "nouns_edit_form_fields", function( $tag, $taxonomy ) {
 				<option value=""<?= selected( ! $current ) ?>>指定なし</option>
 				<?php foreach ( [
 					'person'   => '人',
-					'company' => '出版社',
+					'company' => '企業・団体',
 					'magazine' => '雑誌',
 					'prize'    => '文学賞'
 				] as $key => $genre ) : ?>
