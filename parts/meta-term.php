@@ -19,6 +19,7 @@ $keys = [
 		'url' => '関連URL',
 	],
 	'prize' => [
+		'category' => 'ジャンル',
 		'money' => '賞金',
 		'month' => '〆切',
 		'limit' => '応募枚数',
