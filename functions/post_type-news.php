@@ -259,26 +259,62 @@ function hamenew_books( $post = null ) {
 /**
  * 人気のキーワードを返す
  *
+ * @param int $term_id Default 0
+ * @param int $days    Default 30
+ * @param int $limit   Default 20
  * @return array
  */
-function hamenew_popular_nouns() {
-	$terms = get_terms( 'nouns' );
-	if ( ! $terms || is_wp_error( $terms ) ) {
-		return [];
-	}
-	// Filter terms
-	$terms = array_filter( $terms, function ( $term ) {
-		return 1 < $term->count;
-	} );
-	usort( $terms, function ( $a, $b ) {
-		if ( $a->count === $b->count ) {
-			return 0;
-		} else {
-			return $a->count > $b->count ? - 1 : 1;
+function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
+	global $wpdb;
+	$wheres = [
+		"( tt.taxonomy = 'nouns' )"
+	];
+	// Filter term id
+	if ( $term_id ) {
+		$term = get_term( $term_id, 'nouns' );
+		if ( ! $term || is_wp_error( $term ) ) {
+			return [];
 		}
-	} );
-
-	return $terms;
+		$ids      = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_id ) );
+		if ( ! $ids ) {
+			return [];
+		}
+		$ids = implode( ', ', $ids );
+		$wheres[] = $wpdb->prepare( '(tt.term_taxonomy_id != %d)', $term->term_taxonomy_id );
+		$wheres[] = <<<SQL
+			( tt.term_taxonomy_id IN (
+				SELECT term_taxonomy_id FROM {$wpdb->term_relationships}
+				WHERE object_id IN ({$ids})
+			    GROUP BY term_taxonomy_id
+			) )
+SQL;
+	}
+	// Filter days
+	if ( $days ) {
+		$days = (int) $days;
+		$wheres[] = <<<SQL
+			( tt.term_taxonomy_id IN (
+			  SELECT tr.term_taxonomy_id FROM {$wpdb->term_relationships} AS tr
+			  LEFT JOIN {$wpdb->posts} AS p
+			  ON p.ID = tr.object_id
+			  WHERE p.post_type = 'news'
+			    AND p.post_status = 'publish'
+			    AND DATE_ADD(p.post_date, INTERVAL {$days} DAY) > NOW()
+			) )
+SQL;
+	}
+	$wheres = $wheres ? " WHERE " . implode( ' AND ', $wheres ) : '';
+	$query = <<<SQL
+		SELECT t.*, tt.* FROM {$wpdb->terms} AS t
+		INNER JOIN {$wpdb->term_taxonomy} AS tt
+		ON t.term_id = tt.term_id
+		{$wheres}
+		ORDER BY tt.count DESC
+SQL;
+	if ( $limit ) {
+		$query .= sprintf( ' LIMIT %d', $limit );
+	}
+	return $wpdb->get_results( $query );
 }
 
 /**

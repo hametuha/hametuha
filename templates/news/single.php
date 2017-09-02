@@ -195,11 +195,10 @@
 							<small>このニュースに出てくる固有名詞</small>
 						</h2>
 						<p class="news-keywords__wrapper">
+							<?php if ( $terms = array_filter( $terms, function( $term ) {
+								return 1 < $term->count;
+							} ) ) : ?>
 							<?= implode( ' ', array_map( function ( $term ) {
-								if ( 2 > $term->count ) {
-									return '';
-								}
-
 								return sprintf(
 									'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
 									get_term_link( $term ),
@@ -207,6 +206,9 @@
 									$term->count > 100 ? '99+' : number_format( $term->count )
 								);
 							}, $terms ) ); ?>
+							<?php else : ?>
+								関連するキーワードのニュースはありません。
+							<?php endif; ?>
 						</p>
 					<?php endif; ?>
 

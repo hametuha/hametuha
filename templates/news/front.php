@@ -1,28 +1,15 @@
 <?php get_header() ?>
 
-<div class="news-eyecatch container">
-	<div class="news-eyecatch-text">
-		<h1 class="news-eyecatch-title">文芸にもニュースを。</h1>
-		<div class="news-eyecatch-lead">
-			<?= apply_filters( 'the_content', get_post_type_object( 'news' )->description ) ?>
-		</div>
-	</div>
-</div><!-- //.news-eyecatch -->
+<?php get_template_part( 'templates/news/header', 'news' ) ?>
 
 <div class="container archive">
 
-	<div class="row">
+	<?php get_template_part( 'templates/news/nav', 'news' ) ?>
 
+	<div class="row">
 
 		<div class="col-xs-12 col-md-9 main-container">
 
-			<ul class="nav nav-pills nav-justified nav-sub">
-				<?php foreach ( get_terms( 'genre', [ 'parent' => 0 ] ) as $term ) : ?>
-				<li>
-					<a href="<?= get_term_link( $term ) ?>"><?= esc_html( $term->name ) ?></a>
-				</li>
-				<?php endforeach; ?>
-			</ul>
 
 			<div class="row news-ad__archive">
 				<p class="news-ad__title">Ads by Google</p>
@@ -58,29 +45,7 @@
 
 			<?php get_search_form(); ?>
 
-			<?php
-			if ( $terms = hamenew_popular_nouns() ) :
-				usort( $terms, function( $a, $b ) {
-					if ( $a->count == $b->count ) {
-						return 0;
-					} else {
-						return $a->count < $b->count ? 1 : -1;
-					}
-				} );
-				?>
-				<hr/>
-				<h2 class="news-keywords__title">人気のキーワード</h2>
-				<p class="news-keywords__wrapper">
-					<?= implode( ' ', array_map( function ( $term ) {
-						return sprintf(
-							'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%d)</a>',
-							get_term_link( $term ),
-							esc_html( $term->name ),
-							$term->count > 100 ? '99+' : number_format( $term->count )
-						);
-					}, $terms ) ); ?>
-				</p>
-			<?php endif; ?>
+			<?php get_template_part( 'templates/news/block', 'keywords' ) ?>
 
 			<?php get_template_part( 'parts/jumbotron', 'news' ) ?>
 
