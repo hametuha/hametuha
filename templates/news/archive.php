@@ -14,17 +14,26 @@
 						<span class="label label-default"><?php echo number_format_i18n( loop_count() ); ?>件</span>
 					</h1>
 
-					<div class="desc">
-						<?php get_template_part( 'parts/meta-desc' ); ?>
-					</div>
+					<?php get_template_part( 'parts/meta', 'term' ) ?>
 
+					<?php if ( $desc = term_description() ) : ?>
+						<div class="description-wrapper">
+							<?= wpautop( $desc ) ?>
+						</div>
+
+					<?php endif; ?>
 				</div>
-				
+
 				<div class="row news-ad__archive">
 					<p class="news-ad__title">Ads by Google</p>
 					<?php google_adsense( 4 ) ?>
 				</div>
 
+				<?php if ( is_tax() && ( $content = get_term_meta( get_queried_object_id(), '_term_content', true ) ) ) : ?>
+				<div class="post-content clearfix">
+					<?= apply_filters( 'the_content', $content ) ?>
+				</div>
+				<?php endif; ?>
 
 				<!-- Tab panes -->
 				<ol class="archive-container media-list">

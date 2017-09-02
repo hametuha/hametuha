@@ -1,0 +1,27 @@
+.metadata{
+
+  &-table{
+    margin: 20px 0;
+    table-layout: auto;
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid #eee;
+    &-zebra{
+      @extend .metadata-table;
+      tr:nth-child(even){
+        background-color: #f9f9f9;
+      }
+    }
+    th, td{
+      padding: 1em;
+      border-bottom: 1px solid #eee;
+    }
+  }
+  &-th{
+    width: 8em;
+    border-right: 1px solid #eee;
+  }
+
+
+
+}

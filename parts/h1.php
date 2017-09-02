@@ -14,10 +14,34 @@ if( hametuha_is_profile_page() ){
 
 	wp_title('');
 
-}elseif( is_tax('faq_cat') ){
+}elseif( is_tax('faq_cat') ) {
 
-	single_term_title('カテゴリー: ');
-
+	single_term_title( 'カテゴリー: ' );
+}elseif( is_tax('nouns') ) {
+	switch ( get_term_meta( get_queried_object_id(), 'noun_category', true ) ) {
+		case 'company':
+			$suffix = '出版社';
+			break;
+		case 'person':
+			$suffix = '人物';
+			break;
+		case 'prize':
+			$suffix = '文学賞';
+			break;
+		case 'magazine':
+			$suffix = '雑誌';
+			break;
+		default:
+			$suffix = '固有名詞';
+			break;
+	}
+	if ( ( $start = get_term_meta( get_queried_object_id(), 'noun_genre_start', true ) ) && is_numeric( $start ) ) {
+		$suffix .= sprintf( ' %04d年〜', $start );
+		if ( ( $end = get_term_meta( get_queried_object_id(), 'noun_genre_end', true ) ) && is_numeric( $end ) ) {
+			$suffix .= sprintf( '%04d年', $end );
+		}
+	}
+	printf( '%s%s', esc_html( get_queried_object()->name ), $suffix ? " <small>（{$suffix}）</small>" : '' );
 }elseif( is_tag() ){
 
 	single_tag_title('タグ: ');
