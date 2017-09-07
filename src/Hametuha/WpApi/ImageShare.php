@@ -12,7 +12,7 @@ use WPametu\API\Rest\WpApi;
  * @package Hametuha\WpApi
  * @property Jobs $jobs
  */
-class ImageGen extends WpApi {
+class ImageShare extends WpApi {
 
 	/**
 	 * Get route
@@ -20,24 +20,8 @@ class ImageGen extends WpApi {
 	 * @return string
 	 */
 	protected function get_route() {
-		return 'text/of/(?P<id>\\d+)';
+		return 'text-image/of/(?P<id>\\d+)';
 	}
-
-	/**
-	 * Parse permission
-	 *
-	 * @param \WP_REST_Request $request Request object.
-	 *
-	 * @return bool
-	 */
-	public function permission_callback( $request ) {
-		switch ( strtoupper( $request->get_method() ) ) {
-			default:
-				return current_user_can( 'read' );
-				break;
-		}
-	}
-
 
 	/**
 	 * Get arguments for method.
@@ -85,7 +69,7 @@ class ImageGen extends WpApi {
 		}
 		// JOBを登録
 		$job = $this->jobs->add( '' );
-		$url = rest_url( '/hametuha/v1/text/rendered/' . $job->job_id );
+		$url = rest_url( '/hametuha/v1/text/of/' . $job->job_id );
 		$post_back = rest_url( '/hametuha/v1/text-image/of/' . $job->job_id );
 
 		// 結果を取得し、IDを保存

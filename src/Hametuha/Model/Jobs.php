@@ -14,16 +14,16 @@ use WPametu\DB\Model;
  * @property-read string $posts
  * @property-read string $object_relationships
  * @property-read JobMeta $job_meta
- * @property-read JobLogs $job_log
  */
 class Jobs extends Model {
 
-	protected $related = [ 'posts', 'users', 'object_relationships', 'job_meta', 'job_log' ];
+	protected $related = [ 'posts', 'users', 'object_relationships', 'job_meta' ];
 
 	protected $updated_column = 'updated';
 
 	protected $default_placeholder = [
 		'job_id'    => '%d',
+		'key'       => '%s',
 		'title'     => '%s',
 		'owner_id'  => '%d',
 		'issuer_id' => '%d',
@@ -36,28 +36,66 @@ class Jobs extends Model {
 	/**
 	 * Create new Job
 	 *
+	 * @param string $job_key
 	 * @param string $title
-	 * @param bool $expires
-	 * @param int $owner_id
-	 * @param array $related_posts
-	 * @param array $related_users
+	 * @param string $expires
+	 * @param int    $owner_id
+	 * @param int    $issuer_id
 	 * @param string $status
+	 * @param array  $metas
 	 *
 	 * @return \WP_Error|\stdClass
 	 */
-	public function add( $title, $expires = false, $owner_id = 0, $related_posts = [], $related_users = [], $status = JobStatus::ONGOING ) {
-		$job_id = $this->insert( [
+	public function add( $job_key, $title, $expires = '', $owner_id = 0, $issuer_id = 0, $status = JobStatus::ONGOING, array $metas = [] ) {
+		$now = current_time( 'mysql' );
+		$data = [
+			'job_key'  => $job_key,
 			'title'    => $title,
 			'owner_id' => $owner_id,
+			'issuer_id' => $issuer_id,
 		    'status'   => $status,
-		    'created'  => current_time( 'mysql' ),
-		] );
+		    'created'  => $now,
+		];
+		if ( $expires ) {
+			$data['expires'] = $expires;
+		}
+		$job_id = $this->insert( $data );
 		if ( ! $job_id ) {
 			return new \WP_Error( 500, 'ジョブの追加に失敗しました。' );
 		}
-		
-		else {
-			return $this->get( $job_id );
+		if ( $metas ) {
+			$this->job_meta->add( $job_id, $metas );
+		}
+		return $this->get( $job_id );
+	}
+
+	/**
+	 *
+	 *
+	 * @param int    $job_id
+	 * @param string $new_status
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function update_status( $job_id, $new_status ) {
+		$job = $this->get( $job_id );
+		if ( ! $job ) {
+			return new \WP_Error( 404, 'ジョブが見つかりませんでした' );
+		}
+		$old_status = $job->status;
+		if ( $new_status === $old_status ) {
+			return new \WP_Error( 400, 'ジョブのステータスに変化がありません。' );
+		}
+		$updated = $this->update( [
+			'status' => $new_status,
+		], [
+			'job_id' => $job_id,
+		] );
+		if ( $updated ) {
+			do_action( 'hametuha_job_updated', $job, $new_status, $old_status );
+			return true;
+		} else {
+			return new \WP_Error( 500, 'ジョブステータスの更新に失敗しました' );
 		}
 	}
 
@@ -73,10 +111,7 @@ class Jobs extends Model {
 			case 'job_meta':
 				return JobMeta::get_instance();
 				break;
-			case 'job_logs':
-				return JobLogs::get_instance();
-				break;
-			defautl:
+			default:
 				return parent::__get( $name );
 				break;
 		}

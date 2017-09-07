@@ -9,13 +9,17 @@ $table = [
 
     'name' => 'jobs',
 
-    'version' => '1.0.1',
+    'version' => '1.0.2',
 
     'columns' => [
 	    'job_id' => [
 		    'type' => Column::BIGINT,
 		    'primary' => true,
 		    'auto_increment' => true,
+	    ],
+	    'job_key' => [
+		    'type' => Column::VARCHAR,
+		    'length' => 64,
 	    ],
         'title' => [
             'type' => Column::VARCHAR,
@@ -44,9 +48,9 @@ $table = [
         ],
     ],
     'indexes' => [
-        'by_owner'   => ['owner_id', 'status'],
-        'by_issuer'   => ['issuer_id', 'status'],
-        'by_datetime' => ['created', 'status', 'owner_id'],
-        'expired' => ['expires', 'status'],
+        'by_key_owner'   => [ 'job_key', 'owner_id', 'status'],
+        'by_issuer_key'  => [ 'job_key', 'issuer_id', 'status' ],
+        'by_datetime_key' => [ 'job_key', 'created', 'status' ],
+        'by_expired' => [ 'expires', 'status', 'job_key' ],
     ]
 ];

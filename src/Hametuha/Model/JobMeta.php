@@ -26,7 +26,7 @@ class JobMeta extends Model {
 	 *
 	 * @return bool
 	 */
-	public function add( $job_id, $values ) {
+	public function add( $job_id, array $values ) {
 		$job_id = (int) $job_id;
 		$input = [];
 		$created = current_time( 'mysql' );
@@ -46,6 +46,23 @@ class JobMeta extends Model {
 			VALUES {$input}
 SQL;
 		return (bool) $this->db->query( $query );
+	}
+
+	/**
+	 * Add log for job
+	 *
+	 * @param int    $job_id
+	 * @param string $message
+	 *
+	 * @return false|int
+	 */
+	public function log( $job_id, $message ) {
+		return $this->db->insert( $this->table, [
+			'job_id' => $job_id,
+			'meta_key' => 'log',
+			'meta_value' => $message,
+			'created' => current_time( 'timestamp' ),
+		] );
 	}
 
 }
