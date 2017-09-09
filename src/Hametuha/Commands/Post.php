@@ -3,6 +3,7 @@
 namespace Hametuha\Commands;
 
 
+use Hametuha\Model\Jobs;
 use WPametu\Utility\Command;
 use cli\Table;
 
@@ -151,4 +152,32 @@ class Post extends Command {
 		// 終了
 		return $xml;
 	}
+
+	/**
+	 * 試しにFacebookページとして投稿を行う
+	 *
+	 * @param array $args
+	 * @synopsis <job_id> <message>
+	 */
+	public function share_pic( $args ) {
+		list( $job_id, $message ) = $args;
+		$jobs = Jobs::get_instance();
+		$job = $jobs->get( $job_id );
+		if ( ! $job || 'text_to_image' != $job->job_key ) {
+			self::e( 'エラー' );
+		}
+		try{
+			$api = gianism_fb_page_api();
+			if ( is_wp_error( $api ) ) {
+				throw new \Exception( $api->get_error_message(), $api->get_error_code() );
+			}
+			$response = $api->post( 'me/feed', [
+				'message' => $message,
+			] );
+			self::s( $response->getGraphNode()->getField( 'id' ) );
+		} catch (\Exception $e ){
+			self::e( $e->getCode() . ': ' . $e->getMessage() );
+		}
+	}
+
 }

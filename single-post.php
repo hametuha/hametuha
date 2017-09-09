@@ -74,8 +74,7 @@ HTML;
 					}
 				} ?>
 
-				<div class="work-content row" itemprop="articleBody">
-
+				<div class="work-content row" itemprop="articleBody" ng-controller="workContent" ng-mouseup="updateText()">
 
 					<?php the_content(); ?>
 
@@ -90,6 +89,10 @@ HTML;
 						'link_before' => '<span>',
 						'link_after'  => '</span>',
 					) ); ?>
+
+					<?php if ( is_user_logged_in() && ! is_preview() ) : ?>
+						<text-holder selection="selection" selection-top="selectionTop" content-height="contentHeight" id="<?= the_ID() ?>"></text-holder>
+					<?php endif; ?>
 
 				</div>
 				<!-- //.single-post-content -->

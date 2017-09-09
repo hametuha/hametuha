@@ -1,0 +1,50 @@
+body.quote{
+  width: 1200px;
+  height: 1200px;
+  overflow: hidden;
+  background: red;
+}
+
+.quote{
+  //zoom: 0.5;
+  &-container{
+    height: 1200px;
+    padding: 50px 100px;
+    color: #fff;
+    text-align: center;
+    position: relative;
+  }
+
+  &-token{
+    display: inline-block;
+  }
+
+  &-body{
+    font-family: $work-body;
+    line-height: 1.8;
+    position: absolute;
+    padding: 50px;
+    top: 50%;
+    left: 0;
+    right: 0;
+  }
+
+  &-meta{
+    position: absolute;
+    bottom: 0;
+    padding: 50px;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .2);
+    font-family: $work-body-sans;
+  }
+
+  &-title{
+    strong{
+      font-family: $work-bold-sans;
+      display: block;
+      font-size: 24px;
+    }
+  }
+
+}

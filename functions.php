@@ -70,6 +70,8 @@ get_template_part( 'functions/campaign' );
 get_template_part( 'functions/display' );
 // amazon
 get_template_part( 'functions/hamazon' );
+// 暗号化
+get_template_part( 'functions/crypt' );
 // メール
 get_template_part( 'functions/mail' );
 // メニュー
