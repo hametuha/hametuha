@@ -3,6 +3,7 @@
 namespace Hametuha\WpApi;
 
 
+use Hametuha\Master\JobStatus;
 use Hametuha\Model\Jobs;
 use WPametu\API\Rest\WpApi;
 
@@ -53,7 +54,8 @@ class ImageGen extends WpApi {
 					'id' => [
 						'required' => true,
 						'validate_callback' => function( $var ) {
-							return (bool) get_post( $var );
+							$post = get_post( $var );
+							return $post && 'post' == $post->post_type;
 						},
 					],
 					'text' => [
@@ -83,19 +85,29 @@ class ImageGen extends WpApi {
 				'status' => 500,
 			] );
 		}
+		$post = get_post( $request['id'] );
 		// JOBを登録
-		$job = $this->jobs->add( '' );
-		$url = rest_url( '/hametuha/v1/text/rendered/' . $job->job_id );
+		$job = $this->jobs->add( 'text_to_image',  'Image #' . $post->ID, '', 0, get_current_user_id(), JobStatus::ONGOING, [
+			'post_id' => $post->ID,
+			'text' => $request['text'],
+		] );
+		if ( is_wp_error( $job ) ) {
+			return $job;
+		}
+		$url = home_url( '/image-gen/quote/' . $job->job_id );
 		$post_back = rest_url( '/hametuha/v1/text-image/of/' . $job->job_id );
-
 		// 結果を取得し、IDを保存
 		$endpoint = trailingslashit( HAMEPIC_URL ) . 'camera/ss';
 		$result = wp_remote_post( $endpoint, [
-			'url' => $url,
-		    'size' => '1200x1200',
-		    'post_back' => $post_back,
+			'body' => [
+				'url'       => $url,
+				'size'      => '1200x1200',
+				'post_back' => $post_back,
+			],
 		] );
 		if ( is_wp_error( $result ) ) {
+			// Remove job
+			$this->jobs->remove( $job->job_id );
 			return $result;
 		}
 		return new \WP_REST_Response( [

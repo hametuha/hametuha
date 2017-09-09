@@ -8,6 +8,11 @@ use WPametu\DB\Model;
 class JobMeta extends Model {
 
 	/**
+	 * @var string
+	 */
+	protected $name = 'job_meta';
+
+	/**
 	 * @var array
 	 */
 	protected $default_placeholder = [
@@ -35,7 +40,7 @@ class JobMeta extends Model {
 				$job_id,
 				$this->db->prepare( '%s', $key ),
 				$this->db->prepare( '%s', $val ),
-				$created,
+				$this->db->prepare( '%s', $created ),
 			];
 		}
 		$input = implode( ', ', array_map( function( $row ) {
@@ -46,6 +51,25 @@ class JobMeta extends Model {
 			VALUES {$input}
 SQL;
 		return (bool) $this->db->query( $query );
+	}
+
+	/**
+	 * Get all metas
+	 *
+	 * @param int $job_id
+	 *
+	 * @return array
+	 */
+	public function all_metas( $job_id ) {
+		$metas = $this->wheres( [
+			'job_id = %d' => $job_id,
+			'meta_key != %s' => 'log',
+		] )->result();
+		$values = [];
+		foreach ( $metas as $meta ) {
+			$values[$meta->meta_key] = $meta->meta_value;
+		}
+		return $values;
 	}
 
 	/**
@@ -64,5 +88,4 @@ SQL;
 			'created' => current_time( 'timestamp' ),
 		] );
 	}
-
 }

@@ -17,13 +17,17 @@ use WPametu\DB\Model;
  */
 class Jobs extends Model {
 
+	protected $name = 'jobs';
+
+	protected $primary_key = 'job_id';
+
 	protected $related = [ 'posts', 'users', 'object_relationships', 'job_meta' ];
 
 	protected $updated_column = 'updated';
 
 	protected $default_placeholder = [
 		'job_id'    => '%d',
-		'key'       => '%s',
+		'job_key'   => '%s',
 		'title'     => '%s',
 		'owner_id'  => '%d',
 		'issuer_id' => '%d',
@@ -59,10 +63,10 @@ class Jobs extends Model {
 		if ( $expires ) {
 			$data['expires'] = $expires;
 		}
-		$job_id = $this->insert( $data );
-		if ( ! $job_id ) {
+		if ( ! $this->insert( $data ) ) {
 			return new \WP_Error( 500, 'ジョブの追加に失敗しました。' );
 		}
+		$job_id = $this->db->insert_id;
 		if ( $metas ) {
 			$this->job_meta->add( $job_id, $metas );
 		}
@@ -96,6 +100,40 @@ class Jobs extends Model {
 			return true;
 		} else {
 			return new \WP_Error( 500, 'ジョブステータスの更新に失敗しました' );
+		}
+	}
+
+	/**
+	 * Get single job
+	 *
+	 * @param int $job_id
+	 * @param bool $ignore_cache
+	 *
+	 * @return mixed|null
+	 */
+	public function get( $job_id, $ignore_cache = false ) {
+		$job = parent::get( $job_id, $ignore_cache );
+		if ( ! $job ) {
+			return $job;
+		}
+		$job->meta = $this->job_meta->all_metas( $job->job_id );
+		return $job;
+	}
+
+	/**
+	 * Remove job
+	 *
+	 * @param int $job_id
+	 *
+	 * @return false|int
+	 */
+	public function remove( $job_id ) {
+		if ( $this->delete_where( [ 'job_id' => $job_id ] ) ) {
+			return $this->job_meta->delete_where( [
+				'job_id' => $job_id,
+			] );
+		} else {
+			return false;
 		}
 	}
 
