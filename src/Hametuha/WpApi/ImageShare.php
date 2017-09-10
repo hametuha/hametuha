@@ -111,7 +111,7 @@ class ImageShare extends WpApi {
 					$display_name = '@' . ltrim( $screen_name, '@' );
 				}
 			}
-			$url  = get_permalink( $job->metas['post_id'] );
+			$url  = get_permalink( $job->meta['post_id'] );
 			$message = sprintf( '%s さんから %s', $display_name, $url );
 			$response = $api->post( 'me/photos', [
 				'url' => $image_url,
@@ -136,7 +136,6 @@ class ImageShare extends WpApi {
 				'response' => $e->getCode(),
 			] );
 		}
-
 	}
 
 	/**

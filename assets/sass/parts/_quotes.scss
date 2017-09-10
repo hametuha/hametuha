@@ -2,7 +2,35 @@ body.quote{
   width: 1200px;
   height: 1200px;
   overflow: hidden;
-  background: red;
+  position: relative;
+  &:before {
+    position: absolute;
+    content: "";
+    display: block;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+  $styles: ( #fff, red, .2, "MatissePro-M" ),
+          ( #000, #eee, .05, $work-body ),
+          ( #444, #ffda76, .05, "TsukuAOldMinPr6N-M" );
+  @for $i from 1 through length($styles) {
+    $vars: nth($styles, $i);
+    &-style-#{$i} {
+      color: nth($vars, 1);
+      background-color: nth($vars, 2);
+      &:before{
+        opacity: nth($vars, 3);
+        background-image: url("../img/quote/style-0#{$i}.png");
+      }
+      .quote-body{
+        font-family: nth($vars, 4);
+      }
+    }
+  }
 }
 
 .quote{
@@ -10,7 +38,6 @@ body.quote{
   &-container{
     height: 1200px;
     padding: 0;
-    color: #fff;
     text-align: center;
     position: relative;
   }
@@ -20,7 +47,6 @@ body.quote{
   }
 
   &-body{
-    font-family: $work-body;
     line-height: 1.8;
     position: relative;
     margin: 0;

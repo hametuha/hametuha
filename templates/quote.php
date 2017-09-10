@@ -1,4 +1,10 @@
 <?php
+
+add_filter( 'body_class', function( $classes ) {
+	$classes[] = 'quote-style-' . ( ( isset( $_GET['style'] ) ) ? (int) $_GET['style'] : rand( 1, 3 ) );
+	return $classes;
+} );
+
 /** @var WP_Post $post */
 /** @var string  $text */
 /** @var WP_User $user */
@@ -7,7 +13,7 @@ setup_postdata( $post );
 ?>
 
 
-<div class="quote-container" data-style="<?= ( isset( $_GET['style'] ) ) ? 'style-' . (int) $_GET['style'] : '' ?>">
+<div class="quote-container">
 
 	<table class="quote-body">
 		<tr>
