@@ -9,18 +9,22 @@ setup_postdata( $post );
 
 <div class="quote-container" data-style="<?= ( isset( $_GET['style'] ) ) ? 'style-' . (int) $_GET['style'] : '' ?>">
 
-	<div class="quote-body">
-		<?php
-		$separated = $this->tokenize( $text );
-		if ( is_wp_error( $separated ) ) {
-			echo esc_html( $text );
-		} else {
-			echo implode('', array_map( function( $text ) {
-				return sprintf( '<span class="quote-token">%s</span>', esc_html( $text ) );
-			}, $separated ) );
-		}
-		?>
-	</div>
+	<table class="quote-body">
+		<tr>
+			<td class="quote-body-cell">
+				<?php
+				$separated = $this->tokenize( $text );
+				if ( is_wp_error( $separated ) ) {
+					echo esc_html( $text );
+				} else {
+					echo implode( '', array_map( function ( $text ) {
+						return sprintf( '<span class="quote-token">%s</span>', esc_html( $text ) );
+					}, $separated ) );
+				}
+				?>
+			</td>
+		</tr>
+	</table>
 
 	<div class="quote-meta">
 
@@ -42,17 +46,6 @@ setup_postdata( $post );
 	  var footer = $('.quote-meta').height();
 	  var size = Math.ceil( ( 1100 - footer ) / Math.sqrt( $body.text().length ) / 1.8 );
 	  $body.css('font-size', size + 'px');
-
-	  var height = $body.height();
-	  $body.css('margin-top', '-' + ( height / 2 + footer ) + 'px' );
-	  // Change style
-	  var $container = $('.quote-container');
-	  var container_class = $container.attr('data-style');
-	  if ( container_class ) {
-	    $('body').addClass( container_class);
-	  } else {
-		$('body').addClass('style-' + ( Math.round( ( Math.random() * 3)) + 1) );
-	  }
 	});
 </script>
 <?php wp_footer(); ?>

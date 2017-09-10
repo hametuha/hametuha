@@ -9,7 +9,7 @@ body.quote{
   //zoom: 0.5;
   &-container{
     height: 1200px;
-    padding: 50px 100px;
+    padding: 0;
     color: #fff;
     text-align: center;
     position: relative;
@@ -22,11 +22,17 @@ body.quote{
   &-body{
     font-family: $work-body;
     line-height: 1.8;
-    position: absolute;
-    padding: 50px;
-    top: 50%;
-    left: 0;
-    right: 0;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    &-cell{
+      margin: 0;
+      padding: 50px;
+      box-sizing: border-box;
+      width: 1200px;
+      height: 1200px;
+      vertical-align: middle;
+    }
   }
 
   &-meta{

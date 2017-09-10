@@ -76,16 +76,23 @@ class ImageGen extends RestTemplate
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
-		return json_decode( $response['body'] );
+		$tokens = [];
+		$i = 0;
+		$store = '';
+		foreach ( json_decode( $response['body'] ) as $token ) {
+			// If store exists, prepend it.
+			if ( $store ) {
+				$token = $store . $token;
+				$store = '';
+			}
+			// If end with start parentheses, store it.
+			if ( preg_match( '#^(.*)([『「（])$#u', $token, $matches ) ) {
+				$token = $matches[1];
+				$store = $matches[2];
+			}
+			$tokens[ $i ] = $token;
+			$i ++;
+		}
+		return $tokens;
 	}
-
-    /**
-     * スクリプトを読み込む
-     *
-     * @param string $page
-     */
-    public function enqueue_assets( $page = '' ){
-        wp_enqueue_script('hametuha-become-author');
-    }
-
-} 
+}
