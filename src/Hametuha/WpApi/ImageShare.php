@@ -117,12 +117,16 @@ class ImageShare extends WpApi {
 				'url' => $image_url,
 				'caption' => $message,
 			] );
+			// Post to twitter
+			if ( ( $twitter = \Gianism\Service\Twitter::get_instance() ) && is_callable( [ $twitter, 'tweet_with_media' ] ) ) {
+				$twitter->tweet_with_media( $message, [ $image_url ] );
+			}
+
 			if ( $edge_id = $response->getGraphNode()->getField( 'post_id' ) ) {
 				$this->jobs->job_meta->add( $job->job_id, [
 					'fb_edge_id' => $edge_id,
 				] );
 				$this->jobs->update_status( $job->job_id, JobStatus::SUCCESS );
-
 				return new \WP_REST_Response( [
 					'success' => true,
 				] );
