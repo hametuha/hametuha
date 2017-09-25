@@ -222,10 +222,11 @@ class Series extends Model {
 	 *
 	 * @param int $series_id
 	 *
-	 * @return int
+	 * @return int|string
 	 */
 	public function get_visibility( $series_id ) {
-		return (int) get_post_meta( $series_id, '_visibility', true );
+		$key = get_post_meta( $series_id, '_visibility', true );
+		return is_numeric( $key ) ? (int) $key : '';
 	}
 
 	/**
@@ -238,7 +239,10 @@ class Series extends Model {
 	public function should_hide( $post = null ) {
 		$post        = get_post( $post );
 		$limit_index = $this->get_visibility( $post->post_parent );
-		if ( ! $limit_index ) {
+		// No limit
+		if ( 0 === $limit_index ) {
+			return true;
+		} else if ( ! $limit_index ) {
 			return false;
 		}
 		$cur_index = $this->get_index( $post );

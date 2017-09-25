@@ -8,13 +8,15 @@ if ( 'series' == get_post_type() ) {
 	$series_id = $post->post_parent;
 }
 $limit = $series->get_visibility( $series_id );
-if ( $limit ) {
+if ( is_numeric( $limit ) ) {
 	$asin      = $series->get_asin( $series_id );
 	$permalink = get_permalink( $series_id );
 	$title     = get_the_title( $series_id );
-	$msg       = <<<HTML
-		        	<a class="alert-link" href="{$permalink}">
-HTML;
+	if ( $limit ) {
+		$msg = sprintf( '%sは%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
+	} else {
+		$msg = sprintf( '%sの全文は電子書籍でご覧頂けます。', esc_html( $title ) );
+	}
 	switch ( $series->get_status( $series_id ) ) {
 		case 2:
 			?>
@@ -24,7 +26,7 @@ HTML;
 					     alt="<?= esc_attr( $title ) ?>" class="series__single--image"/>
 				</a>
 				<p class="text-muted">
-					<?= esc_html( $title ) ?>は<?= number_format( $limit ) ?>話まで無料で読むことができます。
+					<?= $msg ?>
 					続きはAmazonでご利用ください。
 				</p>
 				<a class="btn btl-lg btn-trans btn-amazon" href="<?= $series->get_kdp_url( $series_id ) ?>"
@@ -41,7 +43,7 @@ HTML;
 			?>
 			<div class="alert alert-danger text-center">
 				<p>
-					<?= esc_html( $title ) ?>は<?= number_format( $limit ) ?>話まで無料で読むことができます。
+					<?= $msg ?>
 					続きは現在販売準備中です。乞うご期待。
 				</p>
 			</div>

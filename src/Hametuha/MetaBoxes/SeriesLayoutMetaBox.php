@@ -62,7 +62,7 @@ class SeriesLayoutMetaBox extends EditMetaBox
 		    'require' => true,
 		    'min' => 0,
 		    'default' => 0,
-		    'description' => '1以上の値に設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。',
+		    'description' => '数値を設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。0だと全話に制限がかかります。',
 		],
 	];
 
