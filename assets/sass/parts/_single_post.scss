@@ -449,10 +449,11 @@ p.pixiv-embed-illust{
   @include text-justify();
   .content-hide-cover{
     position: absolute;
-    bottom: 0;
+    bottom: 3em;
     left: 0;
     width: 100%;
     height: 30%;
+    max-height: 200px;
     @include gradient-vertical(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1), 0%, 80%);
   }
 }
