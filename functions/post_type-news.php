@@ -394,17 +394,20 @@ add_action( 'admin_head', function () {
 		[
 			'publish'   => [
 				'公開フロー',
-				'ニュースは「レビュー待ち」として送信されたのち、破滅派編集部によるチェックを経て公開されます。なるべく早く行いますが、24時間365日で対応することはできませんので、その点ご了承ください。',
+				'<p>ニュースは「レビュー待ち」として送信されたのち、破滅派編集部によるチェックを経て公開されます。なるべく早く行いますが、24時間365日で対応することはできませんので、その点ご了承ください。</p>',
 			],
 			'published' => [
 				'公開済みニュース',
-				'一度公開されたニュースは破滅派編集部以外編集できません。修正要望がある場合はSLACKにてお問い合わせください。',
+				'<p>一度公開されたニュースは破滅派編集部以外編集できません。修正要望がある場合はSLACKにてお問い合わせください。</p>',
 			],
 			'banned'    => [
 				'ボツニュース',
-				'ニュースのステータスが「非公開」となっている場合、そのニュースはボツになっています。ボツになったニュースはもう編集できません。理由についてはSLACKにてお伝えしますので、お問い合わせください。',
+				'<p>ニュースのステータスが「非公開」となっている場合、そのニュースはボツになっています。ボツになったニュースはもう編集できません。理由についてはSLACKにてお伝えしますので、お問い合わせください。</p>',
 			],
-			'contact'   => [ '連絡方法', 'ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。' ],
+			'contact'   => [
+                '連絡方法',
+                '<p>ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。</p>'
+            ],
 		] as $id => list( $title, $content )
 	) {
 		$screen->add_help_tab( [
@@ -413,6 +416,17 @@ add_action( 'admin_head', function () {
 			'content' => $content,
 		] );
 	}
+	if ( isset( $_GET['post'] ) ) {
+        $screen->add_help_tab( [
+            'id' => 'news-preview',
+            'title' => 'プレビュー',
+            'content' => sprintf(
+				'<p>はめにゅーは様々なフォーマットで公開されます。<a href="%s" target="_blank">Instant Article</a>や<a href="%s" target="_blank">AMP</a>でも見栄えもチェックしてください。</p>',
+				home_url( sprintf( 'instant-article/preview/%d/?preview_instant_article=true', $_GET['post'] ) ),
+				amp_get_permalink( $_GET['post'] )
+			),
+        ] );
+    }
 
 	// サイドバーを追加
 	$term = get_term_by( 'slug', 'news', 'faq_cat' );
@@ -524,6 +538,8 @@ add_filter( 'rewrite_rules_array', function ( $rules ) {
 	    '^instant-article/preview/([0-9]+)/'                => 'index.php?p=$matches[1]&post_type=news',
 	], $rules );
 } );
+
+
 
 /**
  * pre_get_postsを修正

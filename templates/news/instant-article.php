@@ -4,8 +4,7 @@ if ( ! is_feed() && is_singular() ) {
 	add_filter( 'the_content', '_fb_instant_content', 11 );
 }
 /** @var WP_Post $post */
-?>
-<!doctype html>
+?><!doctype html>
 <html lang="ja" prefix="op: http://media.facebook.com/op#">
 <head>
 	<meta charset="utf-8">
@@ -57,6 +56,16 @@ if ( ! is_feed() && is_singular() ) {
 
 	</header>
 
+    <figure class="op-ad">
+        <iframe width="320" height="50" src="<?= taf_iframe_url( 'fb-after-header', [
+			'width'        => 320,
+			'height'       => 50,
+            'utm_source'   => 'facebook',
+            'utm_medium'   => 'Social Instant Article',
+            'utm_campaign' => 'after-header',
+        ] ) ?>"></iframe>
+    </figure>
+
 	<!-- Excerpt -->
 	<?php if ( has_excerpt() ) : ?>
 		<aside>
@@ -66,6 +75,18 @@ if ( ! is_feed() && is_singular() ) {
 
 	<!-- Body text for your article -->
 	<?php the_content(); ?>
+
+
+    <!-- An ad within your article -->
+    <figure class="op-ad">
+        <iframe width="300" height="250" style="border:0; margin:0;" src="<?= taf_iframe_url( 'fb-after-header', [
+            'width'        => 300,
+            'height'       => 250,
+            'utm_source'   => 'facebook',
+            'utm_medium'   => 'Social Instant Article',
+            'utm_campaign' => 'after-content',
+        ] )  ?>"></iframe>
+    </figure>
 
 
 	<?php if ( $post->_event_title ) : ?>
@@ -117,13 +138,6 @@ if ( ! is_feed() && is_singular() ) {
 		<?php endif; ?>
 
 	<?php endif; ?>
-
-
-	<!-- An ad within your article -->
-	<figure class="op-ad">
-		<iframe width="300" height="250" style="border:0; margin:0;"
-		        src="https://www.facebook.com/adnw_request?placement=1652819101702631_1652837168367491&adtype=banner300x250"></iframe>
-	</figure>
 
 	<!-- Analytics code for your article -->
 	<figure class="op-tracker">
