@@ -278,12 +278,14 @@ SQL;
 				if ( 'SUCCESS' == $status ) {
 					echo '.';
 				} else {
+					$errors = [];
+					foreach ( $result->getField( 'errors') as $error ) {
+						$errors[] = $error->getField( 'message' );
+					}
 					$table->addRow( [
 						$post->ID,
 						$status,
-						implode( "\n", array_map( function ( $error ) {
-							return $error->getField( 'message' );
-						}, $result->getField( 'errors' ) ) ),
+						implode( "\n", $errors ),
 					] );
 					echo 'x';
 				}
