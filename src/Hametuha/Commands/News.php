@@ -205,4 +205,43 @@ SQL;
 		}
 		self::s( 'Changing key is finished. Please flush post cache.' );
 	}
+
+	/**
+	 * Fix instant article contents.
+	 */
+	public function fix_instant_articles() {
+		$count = 0;
+		$errors = [];
+		if ( ! function_exists( 'gianism_fb_update_instant_article' ) ) {
+			\WP_CLI::error( 'gianism_fb_update_instant_articleがありません。' );
+		}
+		if ( 'https://hametuha.com' !== home_url() ) {
+			\WP_CLI::error( '本番環境でしか実行できません。' );
+		}
+		add_filter( 'the_content', '_fb_instant_content', 11 );
+		foreach ( get_posts( [
+			'post_type' => 'news',
+			'post_status' => 'publish',
+			'posts_per_page' => -1,
+		] ) as $post ) {
+			$count++;
+			setup_postdata( $post );
+			ob_start();
+			get_template_part( 'templates/news/instant-article' );
+			$html = ob_get_contents();
+			ob_end_clean();
+			$import_status = gianism_fb_update_instant_article( $html, true );
+			if ( is_wp_error( $import_status ) ) {
+				$errors[ $post->ID ] = $import_status->get_error_message();
+				echo 'x';
+			} else {
+				update_post_meta( $post->ID, '_fb_instant_article_status', $import_status );
+				echo '.';
+			}
+		}
+		foreach ( $errors as $id => $message ) {
+			\WP_CLI::warning( sprintf( '%d: %s', $id, $message ) );
+		}
+		\WP_CLI::success( sprintf( '%d件を更新しました。', $count ) );
+	}
 }

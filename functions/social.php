@@ -202,16 +202,17 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 /**
  * パーミッションを変更する
  */
-add_filter( 'giansim_facebook_params', function( $params, $context ){
+add_filter( 'gianism_facebook_permissions', function( array $permissions, $context ){
 	switch ( $context ) {
 		case 'admin':
-			$params['scope'] = 'manage_pages,publish_pages,pages_manage_instant_articles';
+		    $permissions[] = 'publish_pages';
+		    $permissions[] = 'pages_manage_instant_articles';
 			break;
 		default:
 			// Do nothing.
 			break;
 	}
-	return $params;
+	return $permissions;
 }, 10, 2 );
 
 /**

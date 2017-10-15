@@ -88,4 +88,4 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 	if ( isset( $_POST['_term_content_nonce'] ) && wp_verify_nonce( $_POST['_term_content_nonce'], 'update_term_content' ) ) {
 		update_term_meta( $term_id, '_term_content', $_POST['term_content'] );
 	}
-} );
+}, 10, 2 );

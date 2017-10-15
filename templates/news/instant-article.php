@@ -76,6 +76,26 @@ if ( ! is_feed() && is_singular() ) {
 	<!-- Body text for your article -->
 	<?php the_content(); ?>
 
+	<?php if ( $links = hamenew_books() ) : ?>
+        <h2>この記事の関連書籍など</h2>
+        <ul>
+            <?php foreach ( $links as list( $title, $url, $src, $author, $publisher, $rank ) ) : ?>
+                <li>
+                    <a href="<?= esc_url( $url ) ?>">
+						<strong><?= esc_html( $title ) ?></strong>
+						<?php if ( $author ) : ?>
+                            <?= esc_html( $author ) ?>
+						<?php endif; ?>
+						<?php if ( $publisher ) : ?>
+							（<?= esc_html( $publisher ) ?>）
+						<?php endif; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+	<?php endif; ?>
+
+
 
     <!-- An ad within your article -->
     <figure class="op-ad">
@@ -87,6 +107,19 @@ if ( ! is_feed() && is_singular() ) {
             'utm_campaign' => 'after-content',
         ] )  ?>"></iframe>
     </figure>
+
+	<?php if ( $links = hamenew_links() ) : ?>
+        <h2> この記事の関連リンク</h2>
+        <ol>
+            <?php foreach ( $links as list( $title, $url ) ) : ?>
+                <li>
+                    <a href="<?= esc_url( $url ) ?>">
+						<?= esc_html( $title ) ?>
+                    </a>
+                </li>
+			<?php endforeach; ?>
+        </ol>
+	<?php endif; ?>
 
 
 	<?php if ( $post->_event_title ) : ?>
