@@ -220,13 +220,14 @@ SQL;
 			\WP_CLI::error( '本番環境でしか実行できません。' );
 		}
 		add_filter( 'the_content', '_fb_instant_content', 11 );
-		foreach ( get_posts( [
+		$query = new \WP_Query( [
 			'post_type' => 'news',
 			'post_status' => 'publish',
 			'posts_per_page' => -1,
-		] ) as $post ) {
+		] );
+		while ( $query->have_posts() ) {
+			$query->the_post();
 			$count++;
-			setup_postdata( $post );
 			ob_start();
 			get_template_part( 'templates/news/instant-article' );
 			$html = ob_get_contents();
