@@ -3,6 +3,7 @@
 
 namespace Hametuha\Commands;
 
+use AFB\Admin\Table;
 use Gianism\Plugins\Analytics;
 use WPametu\Utility\Command;
 
@@ -243,5 +244,54 @@ SQL;
 			\WP_CLI::warning( sprintf( '%d: %s', $id, $message ) );
 		}
 		\WP_CLI::success( sprintf( '%d件を更新しました。', $count ) );
+	}
+
+	/**
+	 * Check Instant article status
+	 */
+	public function get_status() {
+		$api = gianism_fb_page_api();
+		if ( is_wp_error( $api ) ) {
+			\WP_CLI::error( $api->get_error_message() );
+		}
+		$table = new \cli\Table();
+		$table->setHeaders( [ 'ID', 'Status', 'Errors' ] );
+		try {
+			foreach ( get_posts( [
+				'post_type' => 'news',
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+				'meta_query' => [
+					[
+						'key' => '_fb_instant_article_status',
+						'value' => '',
+						'compare' => '!=',
+					]
+				],
+			] ) as $post ) {
+				$status_id = get_post_meta( $post->ID, '_fb_instant_article_status', true );
+				$result = $api->get( add_query_arg( [
+					'access_token' => $api->getDefaultAccessToken()->getValue(),
+					'fields' => 'status,errors',
+				], $status_id ) )->getGraphNode();
+				$status = $result->getField( 'status' );
+				if ( 'SUCCESS' == $status ) {
+					echo '.';
+				} else {
+					$table->addRow( [
+						$post->ID,
+						$status,
+						implode( "\n", array_map( function ( $error ) {
+							return $error->getField( 'message' );
+						}, $result->getField( 'errors' ) ) ),
+					] );
+					echo 'x';
+				}
+			}
+			\WP_CLI::line( '' );
+			$table->display();
+		} catch ( \Exception $e ) {
+			\WP_CLI::error( $e->getMessage() );
+		}
 	}
 }
