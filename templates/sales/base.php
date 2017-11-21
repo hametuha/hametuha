@@ -89,32 +89,6 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 							<a class="alert-link" href="<?= home_url( '/announcement/we-will-publish-10-ebooks/' ) ?>">KDP販売代行の経緯</a>をご覧ください。
 						</div>
 					<?php else : ?>
-						<div class="alert alert-info">
-							<?= esc_html( get_the_author_meta( 'display_name', get_current_user_id() ) ) ?>
-							さんは現在<?= number_format( $work_count ) ?>点の作品を出品中です。
-							<hr />
-							<dl class="alert__list">
-								<dt>ロイヤリティ</dt>
-								<dd>
-									Amazonから破滅派に振り込まれる金額です。
-									このうち、<a class="alert-link" href="<?= home_url( '/contract/ebook-agency-contract/' ) ?>">規約に書いてある手数料</a>
-									を引いたものがあなたの収益となります。
-									源泉徴収を行いますので、差し引かれた分は確定申告で取り返してください。
-								</dd>
-								<dt>支払い時期</dt>
-								<dd>
-									毎月15日に集計を取り、月末までに振り込みます。
-								</dd>
-								<dt>支払い下限額</dt>
-								<dd>
-									確定した報酬の合計額が<strong>&yen; 3,000に満たない場合、入金は繰り越し</strong>となります。ご了承ください。
-								</dd>
-								<dt>アカウントの削除</dt>
-								<dd>
-									確定報酬が残った段階でアカウントを削除してしまうと、入金されません。ご注意ください。
-								</dd>
-							</dl>
-						</div><!-- //.alert -->
 					<?php endif; ?>
 
 

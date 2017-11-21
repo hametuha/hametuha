@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "hametuha/wpametu": "dev-master",
+    "hametuha/wpametu": "0.8.x-dev",
     "hametuha/hamepub": "1.0.*@dev"
   },
   "autoload": {

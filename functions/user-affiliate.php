@@ -66,6 +66,15 @@ function hametuha_bank_ready( $user_id = 0 ) {
 }
 
 /**
+ * 最低支払い金額
+ *
+ * @return int
+ */
+function hametuha_minimum_payment() {
+    return 3000;
+}
+
+/**
  * ユーザーの支払い先がオッケーかを返す
  *
  * @param int $user_id
