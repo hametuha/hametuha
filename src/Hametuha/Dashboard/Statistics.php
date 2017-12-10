@@ -34,18 +34,17 @@ class Statistics extends Screen {
 	 * @return string
 	 */
 	public function description( $page = '' ) {
-		return 'これまでの統計情報を表示します。';
+		return '直近一ヶ月の統計情報を表示します。';
 	}
 
 	/**
 	 * Set children.
 	 */
 	protected function default_children() {
-		return [
-			'statistics' => 'アクセス',
-			'readers'    => '読者層',
-			'traffic'    => '集客経路',
-		];
+		return [];
+//			'statistics' => 'アクセス',
+//			'readers'    => '読者層',
+//			'traffic'    => '集客経路',
 	}
 
 	/**
@@ -54,9 +53,28 @@ class Statistics extends Screen {
 	 * @param string $page
 	 */
 	public function render( $page = '' ) {
-
-
-
+		switch ( $page ) {
+			case 'readers':
+				hameplate( 'templates/dashboard/analytics', 'readers', [
+					'page' => $page,
+					'endpoint' => rest_url( "hametuha/v1/sales/history/me" ),
+				] );
+				break;
+			case 'payments':
+				hameplate( 'templates/dashboard/sales', 'payments', [
+					'endpoint' => rest_url( "hametuha/v1/sales/payments/me" ),
+				] );
+				break;
+			default:
+				wp_enqueue_script( 'hametuha-hb-stats-pv' );
+				hameplate( 'templates/dashboard/analytics', 'access', [
+					'endpoint' => rest_url( "hametuha/v1/stats/access/me" ),
+				] );
+				break;
+		}
+		hameplate( 'templates/dashboard/footer', '', [
+			'slug' => 'dashboard-analytics-footer',
+		] );
 	}
 
 

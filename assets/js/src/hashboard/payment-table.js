@@ -248,7 +248,7 @@
             }
           }
           self.chartData = chartData;
-        }).fail(this.errorHandler()).always(function(){
+        }).fail($.hbRestError()).always(function(){
           self.loading = false;
         });
       },
@@ -265,7 +265,7 @@
           self.tax = response.deducting;
           self.available = response.enough,
           self.records = response.records;
-        }).fail(this.errorHandler()).always(function(){
+        }).fail($.hbRestError()).always(function(){
           self.loading = false;
         });
       },
@@ -279,7 +279,7 @@
           self.total = response.total;
           self.tax = response.deducting;
           self.records = response.records;
-        }).fail(this.errorHandler()).always(function(){
+        }).fail($.hbRestError()).always(function(){
           self.loading = false;
         });
       }

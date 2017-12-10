@@ -3,7 +3,7 @@
 
     <hb-bar-chart
             v-if="records.length"
-            class="hb-chart hb-chart-bar"
+            class="hb-chart hb-chart-line"
             :chart-data="chartData"
             :options="options"></hb-bar-chart>
 
@@ -24,7 +24,7 @@
         <tr>
             <th colspan="3">&nbsp;</th>
             <th class="text-right">{{total | monetize}}</th>
-            <th colspan="3">&nbsp;</th>
+            <th colspan="4">&nbsp;</th>
         </tr>
         </tfoot>
         <tbody>

@@ -1,1 +1,1 @@
-{"version":3,"sources":[],"names":[],"mappings":"","file":"../hashboard.css","sourcesContent":[]}
+{"version":3,"sources":["hashboard.scss"],"names":[],"mappings":"AAIA,WACE,gBAAkB,CACnB","file":"../hashboard.css","sourcesContent":["body{\n\n}\n\n.minHeight{\n  min-height: 150px;\n}"]}

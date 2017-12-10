@@ -183,5 +183,4 @@ class Sales extends Command {
 			$table->display();
 		}
 	}
-
 }

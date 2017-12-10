@@ -4,11 +4,26 @@
 			<a href="#" class="dropdown-toggle"
 			   data-toggle="dropdown"><?= get_avatar( get_current_user_id(), 60 ) ?></a>
 			<ul class="dropdown-menu">
-				<li class="greeting">
-					<strong><?= hametuha_user_name() ?></strong>さん<br/>
-					<span class="role"><?= hametuha_user_role() ?></span>
-				</li>
-				<li class="divider"></li>
+                <li class="greeting">
+                    <strong><?= hametuha_user_name() ?></strong>さん<br/>
+                    <span class="role"><?= hametuha_user_role() ?></span>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a href="<?= home_url( 'dashboard' ) ?>">
+                        <i class="icon-cog"></i>
+                        設定
+                    </a>
+                </li>
+				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+                    <li>
+                        <a href="<?= admin_url() ?>">
+                            <i class="icon-dashboard"></i>
+                            作品管理
+                        </a>
+                    </li>
+				<?php endif; ?>
+                <li class="divider"></li>
 				<li>
 					<a href="<?= home_url( '/your/comments/') ?>">
 						<i class="icon-bubble-dots"></i>
@@ -33,47 +48,14 @@
 						アイデア帳
 					</a>
 				</li>
+                <li>
+                    <a href="<?= home_url( '/doujin/follower/', 'https' ) ?>">
+                        <i class="icon-heart5"></i>
+                        フォロワー
+                    </a>
+                </li>
 
-				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-
-					<li class="divider"></li>
-					<li><span class="text-muted">管理</span></li>
-					<li>
-						<a href="<?= home_url( '/statistics/', 'https' ) ?>">
-							<i class="icon-chart"></i>
-							統計情報
-						</a>
-					</li>
-					<li>
-						<a href="<?= home_url( '/sales/', 'https' ) ?>">
-							<i class="icon-coins"></i>
-							売上管理
-						</a>
-					</li>
-					<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-						<li>
-							<a href="<?= admin_url() ?>">
-								<i class="icon-dashboard"></i>
-								ダッシュボード
-							</a>
-						</li>
-					<?php endif; ?>
-				<?php endif; ?>
-				<li class="divider"></li>
-				<li>
-					<a href="<?= admin_url( 'profile.php' ) ?>">
-						<i class="icon-profile"></i>
-						プロフィール
-					</a>
-				</li>
-				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-					<li>
-						<a href="<?= home_url( '/doujin/follower/', 'https' ) ?>">
-							<i class="icon-heart5"></i>
-							フォロワー
-						</a>
-					</li>
-				<?php endif; ?>
+                <li class="divider"></li>
 				<li>
 					<a href="<?= wp_logout_url() ?>">
 						<i class="icon-exit4"></i>

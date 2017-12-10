@@ -5,6 +5,7 @@ namespace Hametuha\WpApi;
 
 use Gianism\Plugins\Analytics;
 use WPametu\API\Rest\WpApi;
+use WPametu\Utility\StringHelper;
 
 /**
  * Analytics api
@@ -65,7 +66,9 @@ abstract class AnalyticsPattern extends WpApi {
 		$fields[$key] = [
 			'required' => true,
 			'default'  => $default,
-			'validation_callback' => [ $this->str, 'is_date' ],
+			'validate_callback' => function( $var ) use ( $key ) {
+				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) ) ;
+			},
 		];
 	}
 
@@ -109,6 +112,41 @@ abstract class AnalyticsPattern extends WpApi {
 			return [];
 		}
 	}
+
+	/**
+	 * Parse permission
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return bool
+	 */
+	public function permission_callback( $request ) {
+		if ( 'me' === $request->get_param( 'user_id' ) ) {
+			return current_user_can( 'read' );
+		} else {
+			return current_user_can( 'edit_others_posts' );
+		}
+	}
+
+
+	/**
+	 * Return metrics considering date range
+	 *
+	 * @param string $start
+	 * @param string $end
+	 * @return string
+	 */
+	protected function proper_metrics( $start, $end ) {
+		$start = new \DateTime( "{$start} 00:00:00" );
+		$end   = new \DateTime( "{$end} 00:00:00" );
+		$diff = $start->diff( $end )->days;
+		if ( $diff > 365 * 1 ) {
+			// Over 2 years, year month.
+			return 'ga:yearMonth';
+		} else {
+			return 'ga:date';
+		}
+	}
+
 
 	/**
 	 * Getter

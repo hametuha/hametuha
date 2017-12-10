@@ -38,7 +38,7 @@ function hametuha_billing_address( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 	$address = [];
-	foreach ( [ 'name', 'number', 'address' ] as $key ) {
+	foreach ( [ 'name', 'number', 'address', 'address2', 'zip' ] as $key ) {
 		$meta_key = "_billing_{$key}";
 		$address[ $key ] = get_user_meta( $user_id, $meta_key, true );
 	}
@@ -85,10 +85,20 @@ function hametuha_billing_ready( $user_id = 0 ) {
 	if ( ! $account ) {
 		return false;
 	}
-	foreach ( $account as $value ) {
-		if ( ! $value ) {
-			return false;
-		}
+	foreach ( $account as $key => $value ) {
+	    switch ( $key ) {
+            case 'zip':
+            case 'name':
+            case 'number':
+            case 'address':
+				if ( !$value ) {
+					return false;
+				}
+                break;
+            default:
+                // Do nothing.
+                break;
+        }
 	}
 	return true;
 }

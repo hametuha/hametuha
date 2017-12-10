@@ -5,9 +5,9 @@ namespace Hametuha\Dashboard;
 
 use Hametuha\Hashboard\Pattern\Screen;
 
-class Sales extends Screen {
+class Works extends Screen {
 
-	protected $icon = 'attach_money';
+	protected $icon = 'reply';
 
 	/**
 	 * Should return unique URL slug.
@@ -15,7 +15,7 @@ class Sales extends Screen {
 	 * @return string
 	 */
 	public function slug() {
-		return 'sales';
+		return 'edit';
 	}
 
 	/**
@@ -24,7 +24,7 @@ class Sales extends Screen {
 	 * @return string
 	 */
 	public function label() {
-		return '売上';
+		return 'フィードバック';
 	}
 
 	/**
@@ -54,11 +54,12 @@ class Sales extends Screen {
 	 * Set children.
 	 */
 	protected function default_children() {
-		return [
-			'sales'    => '電子書籍売上',
-            'deposit'  => '確定報酬',
-			'rewards'  => '報酬履歴',
-			'payments' => '入金履歴',
+		$pages = [
+			'works'    => '投稿',
+			'series'   => '作品集',
+            'comments' => 'コメント',
+			'reviews'  => 'レビュー',
+			'lists'    => '',
 		];
 	}
 
