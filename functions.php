@@ -26,9 +26,16 @@ define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
  */
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	// Load vendor dir if dev environment.
+	$dev_dir = __DIR__ . '/vendor-dev';
+	if ( is_dir( $dev_dir ) ) {
+
+	}
 	require_once __DIR__ . '/vendor/autoload.php';
 	// Load WPametu
 	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
+	// Activate hashboard
+	Hametuha\Hashboard::get_instance();
 }
 
 /**
@@ -108,13 +115,14 @@ get_template_part( 'functions/utility' );
 // ウィジェット
 get_template_part( 'functions/widget' );
 
-
-// フックディレクトリを全部読み込み
-$dir = __DIR__ . '/hooks';
-if ( is_dir( $dir ) ) {
-	foreach ( scandir( $dir ) as $file ) {
-		if ( preg_match( '#^[^\._].*\.php$#', $file ) ) {
-			require $dir . '/' . $file;
+// ディレクトリを全部読み込み
+foreach ( [ 'hooks' ] as $folder ) {
+	$dir = __DIR__ . '/' . $folder;
+	if ( is_dir( $dir ) ) {
+		foreach ( scandir( $dir ) as $file ) {
+			if ( preg_match( '#^[^\._].*\.php$#', $file ) ) {
+				require $dir . '/' . $file;
+			}
 		}
 	}
 }

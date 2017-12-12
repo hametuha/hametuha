@@ -4,6 +4,9 @@
  * 新しい画面を追加
  */
 add_filter( 'hashboard_screens', function( $screens ) {
+	if ( ! current_user_can( 'edit_posts' ) ) {
+		return $screens;
+	}
 	$new_screens = [];
 	foreach ( $screens as  $key => $class_name ) {
 		if ( 'profile' == $key ) {

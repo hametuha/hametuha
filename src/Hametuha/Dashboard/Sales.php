@@ -28,6 +28,14 @@ class Sales extends Screen {
 	}
 
 	/**
+	 * Head action
+	 */
+	public function head() {
+		wp_enqueue_script( 'hametuha-hb-payment-table' );
+	}
+
+
+	/**
 	 * Get description of this screen.
 	 *
 	 * @param string $page
@@ -68,7 +76,6 @@ class Sales extends Screen {
 	 * @param string $page
 	 */
 	public function render( $page = '' ) {
-		wp_enqueue_script( 'hametuha-hb-payment-table' );
 		switch ( $page ) {
 			case 'rewards':
             case 'deposit':

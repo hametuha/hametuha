@@ -123,17 +123,17 @@ add_filter( 'hashboard_field_groups', function( $args, $user, $group, $page ) {
 				break;
 			case 'address':
 				$label = '住所';
-				$placeholder = '東京都港区南青山2-11-13';
+				$placeholder = 'ex. 東京都港区南青山2-11-13';
 				break;
 			case 'address2':
 				$label = "建物・アパート";
 				$row = 'open';
-				$placeholder = '南青山ビル4F';
+				$placeholder = 'ex. 南青山ビル4F';
 				break;
             case 'zip':
                 $label = "郵便番号";
                 $row = 'close';
-                $placeholder = '107-0062';
+                $placeholder = 'ex. 107-0062';
                 break;
 		}
 		$field = [
