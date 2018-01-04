@@ -8,11 +8,16 @@ if ( 'series' == get_post_type() ) {
 	$series_id = $post->post_parent;
 }
 $limit = $series->get_visibility( $series_id );
-if ( is_numeric( $limit ) ) {
+if ( is_numeric( $limit ) || is_array( $limit ) ) {
 	$asin      = $series->get_asin( $series_id );
 	$permalink = get_permalink( $series_id );
 	$title     = get_the_title( $series_id );
-	if ( $limit ) {
+	if ( is_array( $limit ) ) {
+	    sort( $limit );
+		$msg = sprintf( '%sは%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function( $number ) {
+		    return sprintf( '%d話', $number );
+        }, $limit ) ) );
+    } elseif ( $limit ) {
 		$msg = sprintf( '%sは%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
 	} else {
 		$msg = sprintf( '%sの全文は電子書籍でご覧頂けます。', esc_html( $title ) );

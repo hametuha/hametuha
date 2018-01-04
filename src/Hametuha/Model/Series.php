@@ -222,11 +222,27 @@ class Series extends Model {
 	 *
 	 * @param int $series_id
 	 *
-	 * @return int|string
+	 * @return int|string|array
 	 */
 	public function get_visibility( $series_id ) {
 		$key = get_post_meta( $series_id, '_visibility', true );
-		return is_numeric( $key ) ? (int) $key : '';
+		$values = array_unique( array_filter( array_map( function( $var ) {
+			$number = trim( $var );
+			if ( is_numeric( $var ) ) {
+				return (int) $var;
+			} else {
+				return '';
+			}
+		}, explode( ',', $key ) ), function( $numeric ) {
+			return is_numeric( $numeric );
+		} ) );
+		if ( empty( $values ) ) {
+			return '';
+		} elseif ( 1 === count( $values ) ) {
+			return $values[0];
+		} else {
+			return $values;
+		}
 	}
 
 	/**
@@ -246,8 +262,11 @@ class Series extends Model {
 			return false;
 		}
 		$cur_index = $this->get_index( $post );
-
-		return $cur_index > $limit_index;
+		if ( is_array( $limit_index ) ) {
+			return false === array_search( $cur_index, $limit_index );
+		} else {
+			return $cur_index > $limit_index;
+		}
 	}
 
 	/**

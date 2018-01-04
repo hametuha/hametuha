@@ -57,12 +57,12 @@ class SeriesLayoutMetaBox extends EditMetaBox
 		    'description' => '一話完結型の場合、各話に著作権表示がされます。',
 		],
 		'_visibility' => [
-			'class' => Number::class,
+			'class' => Text::class,
 		    'label' => '閲覧設定',
 		    'require' => true,
 		    'min' => 0,
 		    'default' => 0,
-		    'description' => '数値を設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。0だと全話に制限がかかります。',
+		    'description' => '数値を設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。0だと全話に制限がかかります。カンマ区切りで複数指定すると、指定されたページ(1,4,5なら1,4,5話)が閲覧可能になります。',
 		],
 	];
 
