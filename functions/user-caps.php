@@ -21,7 +21,7 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 			} elseif ( hametuha_is_secret_book( $post ) ) {
 				$caps[] = 'edit_posts';
 			} else {
-				$caps[] = 'do_not_allow';
+				$caps[] = 'manage_options';
 			}
 			break;
 		case 'get_epub':
