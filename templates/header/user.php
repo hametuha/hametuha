@@ -12,7 +12,7 @@
                 <li>
                     <a href="<?= home_url( 'dashboard' ) ?>">
                         <i class="icon-cog"></i>
-                        設定
+                        ダッシュボード
                     </a>
                 </li>
 				<?php if ( current_user_can( 'edit_posts' ) ) : ?>

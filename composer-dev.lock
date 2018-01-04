@@ -103,7 +103,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../lib/hashboard",
-                "reference": "cfa7018d1c9d3bf1b5ddfe84d4fe77b60ccb37ff",
+                "reference": "13281b6df43d5149ec0393277a708d2d4370675e",
                 "shasum": null
             },
             "require": {
