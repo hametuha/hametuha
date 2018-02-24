@@ -33,20 +33,6 @@ add_action( 'hashboard_after_main', function( \Hametuha\Hashboard\Pattern\Screen
 		return;
 	}
 	$current_user = wp_get_current_user();
-	?>
-	<hr />
-	<h3>ニュース報酬</h3>
-	<p class="description text-muted">ニュース記事を書いて1記事あたり貰える金額です。</p>
-	<p>
-		<a class="btn btn-primary" href="<?= home_url( '/faq-cat/news/' ) ?>">もっと詳しく</a>
-	</p>
-	<p>
-		<strong>2,000PVを超えた記事に関して500円</strong>を受け取ることができます。
-		<?php if ( $news_gurantee = \Hametuha\Model\Sales::get_instance()->get_guarantee( $current_user->ID, 'news' ) ) : ?>
-			ただし、あなたの場合は<strong>最低保証額として1記事あたり<?= number_format( $news_gurantee ) ?>円が保証</strong>されています。
-		<?php endif; ?>
-	</p>
-	<?php
 }, 10, 3 );
 
 

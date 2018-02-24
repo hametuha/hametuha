@@ -46,7 +46,7 @@ add_action( 'hashboard_after_main', function( \Hametuha\Hashboard\Pattern\Screen
         <a class="btn btn-primary" href="<?= home_url( '/faq-cat/news/' ) ?>">もっと詳しく</a>
     </p>
     <p>
-        <strong>2,000PVを超えた記事に関して500円</strong>を受け取ることができます。
+        <strong>2,000pvを超えた記事に関して500円</strong>を受け取ることができます。
 		<?php if ( $news_gurantee = \Hametuha\Model\Sales::get_instance()->get_guarantee( $current_user->ID, 'news' ) ) : ?>
             ただし、あなたの場合は<strong>最低保証額として1記事あたり<?= number_format( $news_gurantee ) ?>円が保証</strong>されています。
 		<?php endif; ?>

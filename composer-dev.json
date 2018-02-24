@@ -1,7 +1,7 @@
 {
   "name": "hametuha/hametuha",
   "description": "A WordPress theme for hametuha",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "MIT",
   "authors": [
     {
@@ -33,9 +33,9 @@
     }
   ],
   "require": {
-    "hametuha/wpametu": "0.8.x-dev",
-    "hametuha/HamePub": "1.0.*-dev",
-    "hametuha/hashboard": "0.8.x-dev"
+    "hametuha/wpametu": "*",
+    "hametuha/HamePub": "*",
+    "hametuha/hashboard": "*"
   },
   "autoload": {
     "psr-0": {

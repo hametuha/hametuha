@@ -224,25 +224,25 @@ gulp.task('jade', function(){
 // watch
 gulp.task('watch',function(){
     // Make SASS
-    gulp.watch('./assets/sass/**/*.scss',['sass']);
+    gulp.watch('assets/sass/**/*.scss',['sass']);
     // Uglify all
-    gulp.watch(['./assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'],['js']);
+    gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'],['js']);
     // Check JS syntax
-    gulp.watch('./assets/js/src/**/*.js',['jshint']);
+    gulp.watch('assets/js/src/**/*.js',['jshint']);
     // Build common js
-    gulp.watch('./assets/js/src/common/**/*.js',['commonjs']);
+    gulp.watch('assets/js/src/common/**/*.js',['commonjs']);
     // Minify Image
-    gulp.watch('./assets/img/src/**/*',['imagemin']);
-    // Build Jasde
-    gulp.watch('./assets/jade/**/*.jade', ['jade']);
+    gulp.watch('assets/img/src/**/*',['imagemin']);
+    // Build Jade
+    gulp.watch('assets/jade/**/*.jade', ['jade']);
 });
 
 gulp.task('bs-watch', function(){
     gulp.watch([
-        './assets/css/**/*.css',
-        './assets/js/dist/**/*.js',
-        './assets/img/**/*', '!./assets/img/src/**/*',
-        './assets/html/*.html'
+        'assets/css/**/*.css',
+        'assets/js/dist/**/*.js',
+        'assets/img/**/*', '!./assets/img/src/**/*',
+        'assets/html/*.html'
     ], ['bs-reload'])
 });
 
