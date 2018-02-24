@@ -87,6 +87,9 @@
 			</ul>
 		</li>
 	<?php else : ?>
-		<li><a class="login-btn" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>">ログイン</a></li>
+		<li class="login-buttons">
+            <a href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>">ログイン</a>
+            <?php wp_register( '', '' ) ?>
+        </li>
 	<?php endif; ?>
 </ul><!-- //#user-info -->
