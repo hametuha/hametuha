@@ -43,5 +43,14 @@ class PostFormatMetabox extends EditMetaBox {
 			],
 			'description' => 'この作品がどのように表示されるかを選んでください。<small>※縦書きレイアウトは一時的に停止しています。設定だけしておけば、そのうち有効になります。</small>',
 		],
+		'_noindex' => [
+			'class' => Radio::class,
+			'label' => '検索エンジン',
+			'options' => [
+				''        => '表示する',
+				'noindex' => '隠す',
+			],
+			'default' => 'この作品がGoogleをはじめとする検索エンジンで表示されないようにします。',
+		],
 	];
 } 

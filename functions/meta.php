@@ -387,3 +387,30 @@ HTML;
 </script>
 HTML;
 } );
+
+/**
+ * 検索エンジン対策
+ */
+add_action( 'wp_head', function() {
+    if ( ! is_singular( 'post' ) ) {
+        return;
+    }
+    if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
+        echo '<meta name="robots" content="noindex,noarchive" />';
+    }
+} );
+
+/**
+ * サイトマップから削除
+ */
+add_filter( 'bwp_gxs_excluded_posts', function( $excludes, $requested ) {
+    global $wpdb;
+    $query = <<<SQL
+        SELECT p.ID FROM {$wpdb->posts} AS p
+        INNER JOIN {$wpdb->postmeta} AS pm
+        ON p.ID = pm.post_id AND pm.meta_key = '_noindex'
+        WHERE p.post_status = 'publish'
+          AND pm.meta_value = 'noindex'
+SQL;
+    return array_map( 'intval', array_filter( array_merge( $excludes, $wpdb->get_col( $query ) ) ) );
+}, 10, 2 );
