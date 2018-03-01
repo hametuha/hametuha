@@ -42,6 +42,7 @@
     "html5shiv": "^3.7.3",
     "imagemin-pngquant": "^4.0.0",
     "jshint": "^2.9.1",
+    "materialize-css": "^0.100",
     "jshint-stylish": "^2.0",
     "lodash": "^4.2.1",
     "respond.js": "^1.4.2",
