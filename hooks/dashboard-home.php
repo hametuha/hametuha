@@ -8,22 +8,30 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 	return [
 		[
 			'id' => 'notification',
-			'html' => '通知',
+			'title' => '通知',
 			'size' => 1,
 		],
 		[
 			'id'   => 'actions',
-			'html' => 'アクション',
+			'title' => 'アクション',
+			'html' => '<p>ああああああああ',
 			'size' => 1,
 		],
 		[
 			'id' => 'announcement',
-			'html' => '告知',
+			'title' => '告知',
+			'html' => '<p>ああああああああ<br />いいいいいい<br />ううううう</p>',
 			'size' => 1,
 		],
 		[
 			'id' => 'recent-works',
-			'html' => '最近の作品',
+			'title' => '最近の作品',
+			'html' => '<p>ああああああああ<br />いいいいいい<br />ううあああああああああああああああああああああああああああああああああああああああううう</p>',
+			'size' => 1,
+		],
+		[
+			'id' => 'slack',
+			'title' => 'Slack登録',
 			'size' => 1,
 		],
 	];

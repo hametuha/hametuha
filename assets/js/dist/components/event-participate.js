@@ -1,2 +1,5 @@
+/**
+ * Description
+ */
 !function(){angular.module("hametuha").controller("hameventStatus",["$scope","$http","$timeout",function(t,n,a){t.participants=HamEvent.participants,t.inList=HamEvent.inList,t.limit=parseInt(HamEvent.limit,10),t.text=HamEvent.text,t.loading=!1;var i=null,e=function(e,u,c){if(!t.loading){i&&a.cancel(i);!!t.status;return t.loading=!0,n({method:"POST",url:wpApiSettings.root+"hametuha/v1/participants/"+HamEvent.event+"/",headers:{"X-WP-Nonce":wpApiSettings.nonce},data:{status:e,text:u}}).then(c,function(t){var n=t.data?t.data.message:"エラーが発生しました。やりなおしてください。";Hametuha.alert(n,!0)}).then(function(){t.loading=!1})}},u=function(n){for(var a=0,i=t.participants.length;a<i;a++)if(n===t.participants[a].id)return a;return!1};t.getOut=function(){e(!1,t.text,function(n){var a=u(n.data.id);!1!==a&&(t.participants.splice(a,1),t.inList=!1)})},t.getIn=function(){e(!0,t.text,function(n){var a=u(n.data.id);!1===a&&(t.participants.push(n.data),t.inList=!0)})},t.updateComment=function(){i&&a.cancel(i),i=a(function(){e(t.inList,t.text,function(){})},3e3)}}])}();
 //# sourceMappingURL=../map/components/event-participate.js.map

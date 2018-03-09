@@ -7,7 +7,7 @@
             :chart-data="chartData"
             :options="options"></hb-bar-chart>
 
-    <table :class="{loading: loading, highlight: true}">
+    <table :class="{table: true, 'table-striped': true, loading: loading, highlight: true}">
         <thead>
         <tr>
             <th class="cell-2">月</th>
@@ -39,7 +39,7 @@
             <td class="text-left">{{record.store | labeling}}</td>
         </tr>
         <tr v-if="!records.length">
-            <td class="error text-center disabled" colspan="7">
+            <td class="error text-center disabled" colspan="8">
                 記録がありません。
             </td>
         </tr>

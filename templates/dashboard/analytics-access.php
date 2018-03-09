@@ -1,16 +1,16 @@
 <div id="access-container" data-endpoint="<?= esc_url( $endpoint ) ?>" :class="{loading: loading, minHeight: true}">
 
-    日付変更
+    <hb-month-selector label="日付変更" @date-updated="dateChangeHandler"></hb-month-selector>
 
     <hb-bar-chart
             v-if="records.length"
             v-bind:chart-data="chartData"
             v-bind:options="options"></hb-bar-chart>
 
-    <table :class="{loading: loading, striped: true}">
+    <table :class="{table:true, 'table-striped': true, loading: loading, striped: true}">
         <thead>
         <tr>
-            <th class="cell-2">順位</th>
+            <th class="cell-2 text-right">#</th>
             <th class="text-left">タイトル</th>
             <th class="text-left">種別</th>
             <th class="text-right">PV</th>

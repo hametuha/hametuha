@@ -119,18 +119,9 @@ JS;
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery' ], hametuha_version(), true );
 
 	// Register all hashboard.
-	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['materialize'], hametuha_version() );
+	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
-	if ( is_dir( $hash_dir ) ) {
-		foreach ( scandir( $hash_dir ) as $file ) {
-			if ( preg_match( '#^([^._].*)\.js$#u', $file, $matches ) ) {
-				$url = get_template_directory_uri() . '/assets/js/dist/hashboard/' . $file;
-				$deps = [ 'hashboard', 'hb-components-bar-chart', 'hb-components-pagination', 'hb-components-month-selector' ];
-				wp_register_script( "hametuha-hb-{$matches[1]}", $url, $deps, hametuha_version(), true );
-			}
-		}
-	}
-
+	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
 } );
 
 /**

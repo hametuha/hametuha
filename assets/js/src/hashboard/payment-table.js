@@ -1,3 +1,7 @@
+/*!
+ * wpdeps=hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector
+ */
+
 /*global Materialize: false*/
 /*global Vue: false*/
 
@@ -153,7 +157,7 @@
           if (response.responseJSON && response.responseJSON.message) {
             msg = response.responseJSON.message;
           }
-          Materialize.toast('<i class="material-icons error">close</i>' + msg, 4000);
+          Hashboard.toast('<i class="material-icons error">close</i>' + msg, 4000);
         };
       },
 

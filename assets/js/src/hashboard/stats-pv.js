@@ -1,5 +1,5 @@
-/**
- * Description
+/*!
+ * wpdeps=hashboard,hb-components-bar-chart,hb-components-month-selector, hb-plugins-date
  */
 
 /*global Vue: true*/
@@ -10,47 +10,49 @@
 
   var app = new Vue({
     el: '#access-container',
-    data: {
-      loading: false,
-      from: '2017-10-01',
-      to: '2017-10-31',
-      rankings: [],
-      records: [],
-      chartData: {
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        tooltips: {
-          enabled: true,
-          mode: 'index',
-          callbacks: {
-            label: function (tooltipItems, data) {
-              return tooltipItems.yLabel + 'PV（' + data.datasets[tooltipItems.datasetIndex].label + '）';
+    data: function () {
+      var now = new Date();
+      var year = now.getFullYear();
+      var month = ( '0' + ( now.getMonth() + 1 ) ).slice(-2);
+      return {
+        loading: false,
+        from: [year, month, '01'].join('-'),
+        to: [year, month, $.hbGetLastDateOfMonth(year, month)].join('-'),
+        rankings: [],
+        records: [],
+        chartData: {},
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          tooltips: {
+            enabled: true,
+            mode: 'index',
+            callbacks: {
+              label: function (tooltipItems, data) {
+                return tooltipItems.yLabel + 'PV（' + data.datasets[tooltipItems.datasetIndex].label + '）';
+              }
             }
+          },
+          scales: {
+            yAxes: [{
+              stacked: true
+            }]
           }
-        },
-        scales: {
-          yAxes: [{
-            stacked: true
-          }]
         }
       }
     },
-    computed: {
-    },
+    computed: {},
 
-    mounted: function(){
+    mounted: function () {
       this.fetch();
     },
     methods: {
-
-      filledLabels: function( from, to ) {
+      filledLabels: function (from, to) {
         var start = new Date(from);
-        var end   = new Date(to);
+        var end = new Date(to);
         var labels = [];
         for (; start <= end; start.setDate(start.getDate() + 1)) {
-          labels.push( start.getFullYear() + '-' + ('0' + (start.getMonth() + 1)).slice(-2) + '-' + ('0' + start.getDate()).slice(-2));
+          labels.push(start.getFullYear() + '-' + ('0' + (start.getMonth() + 1)).slice(-2) + '-' + ('0' + start.getDate()).slice(-2));
         }
         return labels;
       },
@@ -61,38 +63,45 @@
        * @param length
        * @returns {Array}
        */
-      skeleton: function(length) {
+      skeleton: function (length) {
         var array = [];
-        for(var i = 0; i < length; i++) {
+        for (var i = 0; i < length; i++) {
           array.push(0);
         }
         return array;
       },
 
-      fillDataSet: function(dataSets, labels, type, date, pv) {
-        if ( ! dataSets[type] ) {
-          dataSets[type] = this.skeleton( labels.length );
+      dateChangeHandler: function (year, month) {
+        month = ('0' + month).slice(-2);
+        this.from = [year, month, '01'].join('-');
+        this.to   = [year, month, $.hbGetLastDateOfMonth(year, month)].join('-');
+        this.fetch();
+      },
+
+      fillDataSet: function (dataSets, labels, type, date, pv) {
+        if (!dataSets[type]) {
+          dataSets[type] = this.skeleton(labels.length);
         }
         var index = labels.indexOf(date);
-        if ( index > -1 ) {
+        if (index > -1) {
           dataSets[type][index] += pv;
         }
       },
 
-      fetch: function() {
+      fetch: function () {
         this.loading = true;
         var self = this;
         $.hbRest('GET', $('#access-container').attr('data-endpoint'), {
           from: this.from,
           to: this.to
-        } ).done(function(response){
+        }).done(function (response) {
           // Set ranking
           var rankings = [];
           var curRank, j;
-          for ( var i = 0, l = response.rankings.length; i < l; i++){
+          for (var i = 0, l = response.rankings.length; i < l; i++) {
             curRank = 0;
-            for ( j = 0; j < l; j++ ) {
-              if ( response.rankings[j].pv > response.rankings[i].pv ) {
+            for (j = 0; j < l; j++) {
+              if (response.rankings[j].pv > response.rankings[i].pv) {
                 curRank++;
               } else {
                 break;
@@ -103,9 +112,9 @@
           self.rankings = response.rankings;
           // Create graph
           var chartData = {};
-          var labels = self.filledLabels( response.start, response.end );
+          var labels = self.filledLabels(response.start, response.end);
           var data_sets = {};
-          $.each( response.records, function(index, record){
+          $.each(response.records, function (index, record) {
             self.fillDataSet(data_sets, labels, record.post_type, record.date, record.pv);
           });
 
@@ -124,8 +133,8 @@
             [110, 76, 64]
           ];
           var colorIndex = 0;
-          for(var prop in data_sets){
-            if(!data_sets.hasOwnProperty(prop)) {
+          for (var prop in data_sets) {
+            if (!data_sets.hasOwnProperty(prop)) {
               continue;
             }
             var color = colors[colorIndex].join(', ');
@@ -141,12 +150,12 @@
           }
           self.chartData = chartData;
           self.records = response.records;
-        }).fail($.hbRestError()).always(function(){
+        }).fail($.hbRestError()).always(function () {
           self.loading = false;
         })
       }
     }
-  } );
+  });
 
 
 })(jQuery);

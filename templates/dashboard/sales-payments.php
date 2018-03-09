@@ -1,12 +1,12 @@
 <div id="sales-container" data-endpoint="<?= esc_url( $endpoint ) ?>" data-slug="payments">
-    <p class="">
-        <select class="browser-default" v-on:change="getPayments" v-model="currentYear">
+    <div class="form-group">
+        <select class="form-control" v-on:change="getPayments" v-model="currentYear">
             <?php $curYear = date_i18n( 'Y' ); for ( $i = $curYear, $l = 2015; $i >= $l; $i-- ) : ?>
                 <option value="<?= $i ?>"<?php selected( $i, $curYear ) ?>><?= $i ?>年</option>
             <?php endfor; ?>
         </select>
-    </p>
-    <table :class="{loading: loading, highlight: true}">
+    </div>
+    <table :class="{table: true, 'table-striped': true, loading: loading, highlight: true}">
         <thead>
         <tr>
             <th class="cell-2">月</th>

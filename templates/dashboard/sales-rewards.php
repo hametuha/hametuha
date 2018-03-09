@@ -2,10 +2,10 @@
 	<?php if ( 'rewards' == $page ) : ?>
         <hb-month-selector v-on:date-updated="getReward" label="日付"></hb-month-selector>
 	<?php endif; ?>
-    <table :class="{loading: loading, highlight: true}">
+    <table :class="{table: true, 'table-striped': true, loading: loading, highlight: true}">
         <thead>
         <tr>
-            <th class="cell-2">#</th>
+            <th class="cell-2 text-right">#</th>
             <th class="text-left">適用</th>
             <th class="cell-3 text-right">数量</th>
             <th class="text-right">源泉徴収</th>

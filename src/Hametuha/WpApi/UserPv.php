@@ -98,9 +98,10 @@ class UserPv extends AnalyticsPattern {
 			'date_dimension' => $date_dimension,
 			'records' => array_map( function( $row ) {
 				list( $date, $post_type, $pv ) = $row;
+				$post_type_obj = get_post_type_object( $post_type );
 				return [
 					'date' => preg_replace( '#(\d{4})(\d{2})(\d{2})#u', '$1-$2-$3', $date ),
-					'post_type' => get_post_type_object( $post_type )->label,
+					'post_type' => $post_type_obj ? $post_type_obj->label : $post_type,
 					'pv'   => (int) $pv,
 				];
 			}, $this->fetch( $start, $end, 'ga:pageviews', $pv_params, true ) ),

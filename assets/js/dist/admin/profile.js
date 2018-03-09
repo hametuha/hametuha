@@ -1,2 +1,5 @@
+/**
+ * ユーザーのレビューを表示する
+ */
 !function(e){"use strict";google.load("visualization","1.1",{packages:["bar"]}),google.setOnLoadCallback(function(){var a={cols:[{label:"名前",id:"label",type:"string"},{label:"まっとう",id:"positive",type:"number"},{label:"破滅的",id:"negative",type:"number"}],rows:[]};for(var t in HametuhaReviews)if(HametuhaReviews.hasOwnProperty(t)){var i=HametuhaReviews[t];a.rows.push({c:[{v:i.genre,f:i.genre},{v:i.positive.value,f:i.positive.label+" ("+i.positive.value+")"},{v:i.negative.value,f:i.negative.label+" ("+i.negative.value+")"}]})}var o=new google.visualization.ChartWrapper({chartType:"Bar",containerId:document.getElementById("review-graph")});o.setDataTable(a),o.setOptions(google.charts.Bar.convertOptions({chart:{title:"これまでに投稿者が集めたレビューの総数"},bars:"horizontal",backgroundColor:"#f9f9f9",legend:{position:"none"}})),o.draw();var n=null;e(window).resize(function(){n&&clearTimeout(n),n=setTimeout(function(){o.draw()},500)})})}(jQuery);
 //# sourceMappingURL=../map/admin/profile.js.map
