@@ -33,7 +33,7 @@ add_action( 'after_setup_theme', function() {
 			try {
 				$response = wp_remote_get( $url );
 				if ( is_wp_error( $response ) ) {
-					throw new Exception( $response->get_error_message(), $response->get_error_code() );
+					throw new Exception( $response->get_error_message(), 500 );
 				}
 				$html5 = new \Masterminds\HTML5();
 				$dom = $html5->loadHTML( $response['body'] );

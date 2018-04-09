@@ -1,3 +1,33 @@
+$hametuha-border-style: 1px solid #ddd !default;
+
+.hametuha-hb-notifications{
+  position: relative;
+}
+
+.notification-loop{
+  border: $hametuha-border-style;
+  border-top: none;
+  &:first-child{
+    border-top: $hametuha-border-style;
+  }
+  &-container{
+    margin-bottom: 20px;
+  }
+  &-small{
+    .notification__item{
+      font-size: 0.85em;
+      .notification__link{
+        padding: 0.5em;
+        img{
+          max-width: 32px;
+          & + .notification__text {
+            margin-left: 48px;
+          }
+        }
+      }
+    }
+  }
+}
 
 // 通知エリア
 .notification{

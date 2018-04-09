@@ -69,38 +69,6 @@ class Notification extends RestTemplate {
 	}
 
 	/**
-	 * Get all notifications
-	 *
-	 * @param string $page
-	 * @param int $paged
-	 *
-	 * @throws \Exception
-	 */
-	public function get_all( $page = 'page', $paged = 1 ) {
-		$this->get_list( '', $paged );
-	}
-
-	/**
-	 * Show general works
-	 *
-	 * @param string $page
-	 * @param int $paged
-	 */
-	public function get_general( $page = 'page', $paged = 1 ) {
-		$this->get_list( 'general', $paged );
-	}
-
-	/**
-	 * Show list of your works
-	 *
-	 * @param string $page
-	 * @param int $paged
-	 */
-	public function get_works( $page = 'page', $paged = 1 ) {
-		$this->get_list( 'works', $paged );
-	}
-
-	/**
 	 * Get list
 	 *
 	 * @param string $type

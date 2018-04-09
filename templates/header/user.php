@@ -79,7 +79,7 @@
 				<?php endif; ?>
 				<li class="divider"></li>
 				<li class="text-center notification__more">
-					<a href="<?= home_url( '/notification/all/', 'https' ) ?>">
+					<a href="<?= home_url( '/dashboard/notifications/all' ) ?>">
 						通知一覧へ
 						<i class="icon-arrow-right4"></i>
 					</a>

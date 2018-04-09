@@ -1,0 +1,1 @@
+{"version":3,"sources":["components/notification-block.js"],"names":["$","jQuery"],"mappings":";;;CAMA,SAAWA,GACT,cAGCC","file":"../../components/notification-block.js","sourcesContent":["/**\n * Description\n */\n\n/*global hoge: true*/\n\n(function ($) {\n  'use strict';\n\n\n})(jQuery);\n"]}

@@ -14,6 +14,7 @@ add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	unset( $contact_methods[ 'jabber' ] );
 	unset( $contact_methods[ 'yim' ] );
 	$contact_methods[ 'twitter' ] = 'twitterアカウント';
+	$contact_methods[ 'slack' ] = 'Slack名';
 	$contact_methods[ 'location' ] = '場所';
 	$contact_methods[ 'birth_place' ] = '出身地';
 	$contact_methods[ 'favorite_authors' ] = '好きな作家';
@@ -69,7 +70,8 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 				'type' => 'separator',
 				'label' => 'ソーシャル',
 			],
-			'twitter' => 0,
+			'twitter' => 1,
+			'slack' => 2,
 			'loc_sep' => [
 				'type' => 'separator',
 				'label' => '地域情報',
@@ -104,6 +106,9 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 					$field[ 'description' ] = 'Webサイトやブログをお持ちの場合は記入してください。';
 					break;
 				case 'twitter':
+					$field[ 'placeholder' ] = 'hametuha';
+					break;
+				case 'slack':
 					$field[ 'placeholder' ] = 'hametuha';
 					break;
 				case 'location':

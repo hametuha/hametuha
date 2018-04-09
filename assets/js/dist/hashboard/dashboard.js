@@ -1,0 +1,5 @@
+/*!
+ * wpdeps=hb-components-post-list,hb-plugins-toast
+ */
+!function(i){Vue.component("hametuha-notification-block",{data:function(){return{limit:3,notifications:[],loading:!1}},props:{link:{type:String,required:!0}},template:'<div class="hb-post-list"><div class="hb-post-list-list"><div v-for="n in notifications" class="notification-loop notification-loop-small" v-html="n.rendered"></div></div><a :href="link" class="btn btn-block btn-secondary">もっと読む</a><hb-loading title="読み込み中……" :loading="loading"></hb-loading></div>',mounted:function(){var n=this;n.loading=!0,i.hbRest("GET","hametuha/v1/notifications/all",{paged:1}).done(function(i,t,o){for(var a=[],l=0;l<i.length&&(a.push(i[l]),l!==n.limit);l++);n.notifications=a}).fail(i.hbRestError()).always(function(){n.loading=!1})}}),i(document).on("click","#slack-invitation",function(n){n.preventDefault(),i.hbRest("POST","hameslack/v1/invitation/me").done(function(i){Hashboard.toast(i.message)}).fail(i.hbRestError()).always(function(){})})}(jQuery);
+//# sourceMappingURL=../map/hashboard/dashboard.js.map

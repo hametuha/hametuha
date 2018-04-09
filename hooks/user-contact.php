@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Slackでの登録情報
+ */
+add_filter( 'hameslack_invite_args', function( $args, $user ) {
+	unset( $args['last_name'] );
+	$args[ 'first_name' ] = $user->user_login;
+	return $args;
+}, 10, 2 );
 
 
 /**
