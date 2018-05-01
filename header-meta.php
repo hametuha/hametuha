@@ -17,14 +17,4 @@
 	echo ' itemscope itemtype="http://schema.org/WebPage"';
 } ?> <?php body_class() ?>>
 <div id="fb-root"></div>
-<script>
-//<![CDATA[
-<?php
-$path = get_template_directory() . '/assets/js/dist/social.js';
-if ( file_exists( $path ) ) {
-	echo str_replace( '//# sourceMappingURL=map/social.js.map', '', file_get_contents( $path ) );
-}
-?>
-//]]>
-</script>
 <div id="whole-body">

@@ -93,6 +93,9 @@ JS;
 		'wp-api',
 	], hametuha_version(), true );
 
+	// ソーシャル計測
+	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', hametuha_version(), [ 'jquery' ], true );
+
 	// イベント参加
 	wp_register_script( 'hamevent', get_template_directory_uri(). '/assets/js/dist/components/event-participate.js', [
 		'angular',
@@ -128,11 +131,14 @@ JS;
  * CSSを読み込む
  */
 add_action( 'wp_enqueue_scripts', function () {
-	//統一CSS
+	// 統一CSS
 	wp_enqueue_style( 'hametuha-app' );
 
-	//Theme My login
+	// Theme My login
 	wp_dequeue_style( 'theme-my-login' );
+
+	// Social scripts
+	wp_enqueue_script( 'hametuha-social' );
 
 	//iframe
 	if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
