@@ -97,6 +97,32 @@ HTML;
 				</div>
 				<!-- //.single-post-content -->
 
+				<?php if ( $external = hametuha_external_url() ) : ?>
+                    <div class="alert alert-info text-center">
+                        この作品の続きは外部にて読むことができます。
+                    </div>
+                    <?php if ( $ogp = hametuha_remote_ogp( $external ) ) : ?>
+                        <div class="external-link">
+                            <div class="row">
+                                <?php if ( $ogp['img'] ) : ?>
+                                <div class="col-xs-12 col-sm-3">
+                                    <img src="<?= esc_url( $ogp['img'] ) ?>" class="img-responsive" alt="<?= esc_attr( $ogp['title'] ) ?>"/>
+                                </div>
+                                <?php endif; ?>
+                                <div class="col-xs-12 col-sm-9">
+                                    <h3><?= esc_html( $ogp['title'] ) ?></h3>
+                                    <p class="text-muted"><?= esc_html( $ogp['desc'] ) ?></p>
+                                    <a class="btn btn-primary" href="<?= esc_url( $external ) ?>" rel="nofollow" target="_blank">外部サイトへ移動</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php else : ?>
+                        <div class="alert alert-danger text-center">
+                            情報の取得に失敗しました（<a href="<?= esc_url( $external ) ?>" target="_blank" class="alert-link" rel="nofollow">外部サイトへ移動する</a>）
+                        </div>
+                    <?php endif; ?>
+				<?php endif; ?>
+
 				<p class="text-center pub-date">
 					<span><?php the_time( 'Y年n月j日' ) ?></span>公開
 					<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ) ?></span>

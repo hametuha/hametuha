@@ -472,3 +472,59 @@ function hametuha_format_html_indent_for_embed( $markup ) {
 	$broken_text = str_replace( '</div>', "\n</div>\n", $markup );
 	return trim( $broken_text );
 }
+
+/**
+ * Get external URL.
+ *
+ * @param null|int|WP_Post $post
+ * @return string
+ */
+function hametuha_external_url( $post = null ) {
+    $post = get_post( $post );
+	$external = get_post_meta( $post->ID, '_external_url', true );
+	return preg_match( '#^https?://#u', $external ) ? $external : '';
+}
+
+/**
+ * URLを取得する
+ *
+ * @param string $url
+ * @param int    $time
+ * @return array|WP_Error
+ */
+function hametuha_remote_ogp( $url, $time = 3600 ) {
+    $cache = wp_cache_get( $url, 'ext_ogp' );
+    if ( ( false === $cache ) || ( 0 === $time ) ) {
+        $html = wp_remote_get( $url, [
+			'timeout'     => 5,
+			'sslverify'   => false,
+        ] );
+        if ( is_wp_error( $html ) ) {
+            return $html;
+        }
+        $body = $html['body'];
+        $ogp = [
+            'title' => $url,
+            'desc'  => '',
+            'img'   => get_template_directory_uri() . '/assets/img/dammy/300.png',
+        ];
+        foreach ( [
+                'title' => '#<title[^>]*?>(.+)</title>#u',
+                'desc'  => '#<meta[^>]*property=[\'"]og:description[\'"][^>]*content=[\'"](.*)[\'"]#u',
+                'img'   => '#<meta[^>]*[\'"]og:image[\'"][^>]*content=[\'"](https://.*)[\'"]#u',
+                  ] as $key => $regexp ) {
+            if ( preg_match( $regexp, $body, $match ) ) {
+                $ogp[ $key ] = $match[1];
+            }
+        }
+        if ( $ogp ) {
+            if ( $time ) {
+                wp_cache_set( $url, $ogp, 'ext_ogp', $time );
+            }
+            $cache = $ogp;
+        } else {
+            return new WP_Error( 'no_ogp', '外部サイトのデータを取得できませんでした。' );
+        }
+    }
+    return $cache;
+}
