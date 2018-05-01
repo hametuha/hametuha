@@ -218,3 +218,22 @@ add_action( 'wp_head', function () {
 <![endif]-->
 EOS;
 }, 20 );
+
+
+/**
+ * jQueryをフッターに動かす
+ */
+add_action( 'init', function() {
+	if ( is_admin() ) {
+		return;
+	}
+	global $wp_scripts;
+	$jquery = $wp_scripts->registered['jquery-core'];
+	$jquery_ver = $jquery->ver;
+	$jquery_src = $jquery->src;
+	// Register jQuery again.
+	wp_deregister_script( 'jquery' );
+	wp_register_script( 'jquery', false, ['jquery-core'], $jquery_ver, true );
+	wp_deregister_script( 'jquery-core' );
+	wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, true );
+} );
