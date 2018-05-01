@@ -2,6 +2,8 @@
 .widget{
   img{
     max-width: 100%;
+    width: auto;
+    height: auto;
   }
   // Image widget
   &_sp_image-image-link{
@@ -31,6 +33,7 @@
       display: none;
 
       img{
+
         margin-right: auto;
         margin-left: auto;
       }
