@@ -38,55 +38,6 @@
   }
 
 
-  // キャンペーン
-  &-campaign{
-    &-lead{
-      margin: 10px 0;
-      font-size: 16px;
-      font-family: $work-body-sans;
-      color: $brand-warning;
-    }
-    &-list{
-      border: 1px solid $thin-border;
-      border-radius: $border-radius-base;
-    }
-    &-item{
-      border-bottom: 1px solid $thin-border;
-      &:last-child{
-        border-bottom: none;
-      }
-      a{
-        @extend %block-link;
-        padding: 20px 10px;
-        &:link, &:visited{
-          color: #000;
-          background: #fff;
-        }
-        &:hover, &:active{
-          color: $link-active;
-          background: $hover-bg;
-        }
-      }
-    }
-    &-title{
-      font-size: 18px;
-      margin-right: 5px;
-    }
-    &-date{
-      display: block;
-      font-size: 14px;
-      margin: 5px 0;
-      color: #888;
-      i{
-        color: #aaa;
-        margin-right: 5px;
-      }
-    }
-    &-desc{
-      font-size: 14px;
-      color: #666;
-    }
-  }
 }
 
 #sidebar{

@@ -145,26 +145,36 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 /**
  * 最新のキャンペーンを取得する
  *
- * @param int $limit
+ * @param int    $limit      Number to retrieve. 0 means all.
+ * @param string $date       Date string or 'now'. Default 'now'.
  *
  * @return array|int|WP_Error
  */
-function hametuha_recent_campaigns( $limit = 5 ) {
-	$campaigns = get_terms( [
+function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
+	if ( 'now' === $date ) {
+		$date = date_i18n( 'Y-m-d' );
+	}
+	$args = [
 		'taxonomy'   => 'campaign',
-	    'hide_empty' => false,
-	    'meta_query' => [
-	    	[
-	    		'key'     => '_campaign_limit',
-		        'value'   => date_i18n( 'Y-m-d' ),
-		        'compare' => '>=',
-		        'type'    => 'DATE',
-		    ],
-	    ],
-	    'number'  => $limit,
-	    'orderby' => 'meta_value',
-	    'order'   => 'DESC',
-	] );
+		'hide_empty' => false,
+		'meta_query' => [],
+		'number'  => $limit,
+		'orderby' => 'meta_value',
+		'order'   => 'DESC',
+	];
+	if ( $date ) {
+		$args['meta_query'] = [
+			[
+				'key'     => '_campaign_limit',
+				'value'   => $date,
+				'compare' => '>=',
+				'type'    => 'DATE',
+			],
+		];
+	} else {
+		$args['meta_key'] = '_campaign_limit';
+	}
+	$campaigns = get_terms( $args );
 	return $campaigns && ! is_wp_error( $campaigns ) ? $campaigns : [];
 }
 

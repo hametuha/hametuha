@@ -35,7 +35,7 @@
         var store = [];
         for(var i = 0; i < response.length; i++){
           store.push(response[i]);
-          if(i === self.limit){
+          if(i+1 >= self.limit){
             break;
           }
         }

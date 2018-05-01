@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hamepub.git",
-                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577"
+                "reference": "7b3853885da8aca3cdc8e307d72bce2a6135475d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/f2dbe9ce68d0fc3792c57463d841972a85d68577",
-                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/7b3853885da8aca3cdc8e307d72bce2a6135475d",
+                "reference": "7b3853885da8aca3cdc8e307d72bce2a6135475d",
                 "shasum": ""
             },
             "require": {
@@ -95,7 +95,7 @@
                 "epub",
                 "wordpress"
             ],
-            "time": "2016-07-27 16:30:42"
+            "time": "2018-04-21T07:38:32+00:00"
         },
         {
             "name": "hametuha/hashboard",
@@ -103,16 +103,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hashboard.git",
-                "reference": "13281b6df43d5149ec0393277a708d2d4370675e"
+                "reference": "81fce25b0686dc7d0a7fda02a71db09689fbba10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hashboard/zipball/13281b6df43d5149ec0393277a708d2d4370675e",
-                "reference": "13281b6df43d5149ec0393277a708d2d4370675e",
+                "url": "https://api.github.com/repos/hametuha/hashboard/zipball/81fce25b0686dc7d0a7fda02a71db09689fbba10",
+                "reference": "81fce25b0686dc7d0a7fda02a71db09689fbba10",
                 "shasum": ""
             },
             "require": {
                 "hametuha/pattern": "^0.8",
+                "hametuha/wp-enqueue-manager": "^1.0",
                 "php": ">=5.5.0",
                 "ramsey/uuid": "^3.7"
             },
@@ -129,7 +130,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-3.0"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -138,20 +139,20 @@
                 }
             ],
             "description": "Web service like dashboard for WordPress.",
-            "time": "2017-12-12 08:28:32"
+            "time": "2018-05-01T11:26:41+00:00"
         },
         {
             "name": "hametuha/pattern",
-            "version": "v0.8.1",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/pattern.git",
-                "reference": "c4b81a95d34bada8c631486501d16009e5dd4eb9"
+                "reference": "6d4768a1aa3bc36da546ae569a0c5a0f3763777b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/pattern/zipball/c4b81a95d34bada8c631486501d16009e5dd4eb9",
-                "reference": "c4b81a95d34bada8c631486501d16009e5dd4eb9",
+                "url": "https://api.github.com/repos/hametuha/pattern/zipball/6d4768a1aa3bc36da546ae569a0c5a0f3763777b",
+                "reference": "6d4768a1aa3bc36da546ae569a0c5a0f3763777b",
                 "shasum": ""
             },
             "require-dev": {
@@ -176,7 +177,49 @@
                 }
             ],
             "description": "WordPress Pattern Library",
-            "time": "2017-10-27T04:38:50+00:00"
+            "time": "2018-01-22T11:42:37+00:00"
+        },
+        {
+            "name": "hametuha/wp-enqueue-manager",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/wp-enqueue-manager.git",
+                "reference": "8f0b14a97e3a38f86ca67e078619a89fc29b885a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/wp-enqueue-manager/zipball/8f0b14a97e3a38f86ca67e078619a89fc29b885a",
+                "reference": "8f0b14a97e3a38f86ca67e078619a89fc29b885a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "symfony/finder": "^3.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.8",
+                "wp-coding-standards/wpcs": "~0.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Hametuha\\WpEnqueueManager": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fumikito",
+                    "email": "guy@hametuha.com"
+                }
+            ],
+            "description": "A WordPress library to bulk register assets.",
+            "time": "2018-01-28T17:00:19+00:00"
         },
         {
             "name": "hametuha/wpametu",
@@ -220,7 +263,7 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2017-11-25 08:52:44"
+            "time": "2017-11-25T08:52:44+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -289,16 +332,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.11",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8"
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/5da4d3c796c275c55f057af5a643ae297d96b4d8",
-                "reference": "5da4d3c796c275c55f057af5a643ae297d96b4d8",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
                 "shasum": ""
             },
             "require": {
@@ -333,20 +376,20 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-09-27T21:40:39+00:00"
+            "time": "2018-04-04T21:24:14+00:00"
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.7.1",
+            "version": "3.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334"
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/45cffe822057a09e05f7bd09ec5fb88eeecd2334",
-                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
                 "shasum": ""
             },
             "require": {
@@ -357,17 +400,15 @@
                 "rhumsaa/uuid": "self.version"
             },
             "require-dev": {
-                "apigen/apigen": "^4.1",
-                "codeception/aspect-mock": "^1.0 | ^2.0",
+                "codeception/aspect-mock": "^1.0 | ~2.0.0",
                 "doctrine/annotations": "~1.2.0",
                 "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
                 "ircmaxell/random-lib": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^0.9.0",
-                "mockery/mockery": "^0.9.4",
+                "mockery/mockery": "^0.9.9",
                 "moontoast/math": "^1.1",
                 "php-mock/php-mock-phpunit": "^0.3|^1.1",
-                "phpunit/phpunit": "^4.7|>=5.0 <5.4",
-                "satooshi/php-coveralls": "^0.6.1",
+                "phpunit/phpunit": "^4.7|^5.0",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "suggest": {
@@ -415,20 +456,20 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-09-22T20:46:04+00:00"
+            "time": "2018-01-20T00:28:24+00:00"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v3.4.3",
+            "version": "v3.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "e66394bc7610e69279bfdb3ab11b4fe65403f556"
+                "reference": "519a80d7c1d95c6cc0b67f686d15fe27c6910de0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/e66394bc7610e69279bfdb3ab11b4fe65403f556",
-                "reference": "e66394bc7610e69279bfdb3ab11b4fe65403f556",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/519a80d7c1d95c6cc0b67f686d15fe27c6910de0",
+                "reference": "519a80d7c1d95c6cc0b67f686d15fe27c6910de0",
                 "shasum": ""
             },
             "require": {
@@ -468,7 +509,56 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03T07:37:34+00:00"
+            "time": "2018-03-19T22:32:39+00:00"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v3.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "bd14efe8b1fabc4de82bf50dce62f05f9a102433"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/bd14efe8b1fabc4de82bf50dce62f05f9a102433",
+                "reference": "bd14efe8b1fabc4de82bf50dce62f05f9a102433",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-04-04T05:07:11+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

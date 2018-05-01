@@ -127,7 +127,8 @@ if( hametuha_is_profile_page() ){
 }elseif( is_404() ) {
 
 	echo '404: ページが見つかりませんでした';
-
+}elseif(is_page()){
+	single_post_title();
 }else{
 	wp_title('');
 

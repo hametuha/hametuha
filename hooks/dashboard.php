@@ -27,7 +27,21 @@ add_filter( 'hashboard_screens', function( $screens ) {
  * ダッシュボードをカスタマイズ
  */
 add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
-
+	ob_start();
+	?>
+	<div class="widget-campaign-list">
+		<?php foreach ( hametuha_recent_campaigns( 3, false ) as $campaign ) {
+			hameplate( 'parts/loop', 'campaign', [
+				'campaign' => $campaign
+			] );
+		} ?>
+		<div>
+			<a href="<?= home_url( '/all-campaigns' ) ?>" class="btn btn-secondary btn-block">過去の募集を見る</a>
+		</div>
+	</div>
+	<?php
+	$campaigns = ob_get_contents();
+	ob_end_clean();
 	$blocks = [
 		[
 			'id' => 'notification',
@@ -40,8 +54,8 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 		],
 		[
 			'id'   => 'actions',
-			'title' => 'アクション',
-			'html' => '<p>ああああああああ</p>',
+			'title' => '最近の募集',
+			'html' => $campaigns,
 			'size' => 1,
 		],
 		[
