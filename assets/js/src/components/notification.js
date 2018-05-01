@@ -33,7 +33,6 @@
             
             // Check notice every 10 seconds
             setInterval(function(){
-
                 $.get(HametuhaNotification.retrieve, {
                     _wpnonce: HametuhaNotification.nonce
                 }).done(function(result){

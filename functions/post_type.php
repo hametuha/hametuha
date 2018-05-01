@@ -61,6 +61,7 @@ add_action( 'init', function () {
 		'menu_icon'       => 'dashicons-pressthis',
 		'supports'        => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'comments' ),
 		'has_archive'     => true,
+		'show_in_rest'    => true,
 		'capability_type' => 'page',
 		'rewrite'         => array( 'slug' => $annoucement_post_type ),
 	);
@@ -564,6 +565,6 @@ add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $
 	$response->data['content'] = $response->data['excerpt'];
 
 	return $response;
-} );
+}, 10, 3 );
 
 

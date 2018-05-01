@@ -186,20 +186,27 @@ class UserSales extends Model {
 	 * @param int $year
 	 * @param int $month
 	 * @param int $user_id
+	 * @param int|array $status
+	 * @param bool $range If true, only on this month.
 	 *
 	 * @return array
 	 */
-	public function get_billing_list( $year, $month, $user_id = 0 ) {
+	public function get_billing_list( $year, $month, $user_id = 0, $status = 0, $range = true ) {
 		$date = new \DateTime();
 		$date->setTimezone( new \DateTimeZone( 'Asia/Tokyo' ) );
 		$date->setDate( $year, $month, 1 );
-		$this
-			->wheres( [
-				'created <= %s' => $date->format( 'Y-m-t 23:59:59' ),
-		        'status = %d' => 0,
-			] );
+		if ( $range ) {
+			$this->where( 'created BETWEEN %s AND %s', [ $date->format( 'Y-m-01 00:00:00' ), $date->format( 'Y-m-t 23:59:59' ) ] );
+		} else {
+			$this->where( 'created <= %s', $date->format( 'Y-m-t 23:59:59' ) );
+		}
+		if ( is_array( $status ) ) {
+			$this->where_in( 'status', $status, '%d' );
+		} else {
+		    $this->where( 'status = %d', $status );
+		}
 		if ( $user_id ) {
-			$this->select( 'total, user_id, deducting, description, created, unit, sales_type' )
+			$this->select( 'sales_id, total, user_id, deducting, description, created, fixed, unit, sales_type, status' )
 				->where( 'user_id = %d', $user_id )
 				->order_by( 'created', 'DESC' );
 		} else {
@@ -220,7 +227,7 @@ class UserSales extends Model {
 	public function get_fixed_billing( $year, $month ) {
 		$year_month = sprintf( '%04d%02d', $year, $month );
 		return $this
-			->select( "{$this->table}.*, {$this->db->users}.display_name" )
+			->select( "SUM({$this->table}.total) AS total, SUM({$this->table}.deducting) AS deducting, {$this->table}.fixed, {$this->table}.user_id, {$this->db->users}.display_name" )
 			->join( $this->db->users, "{$this->db->users}.ID = {$this->table}.user_id" )
 			->wheres( [
 				"EXTRACT(YEAR_MONTH FROM {$this->table}.`fixed`) = %s" => $year.$month,
@@ -228,7 +235,30 @@ class UserSales extends Model {
 			] )
 			->order_by( "{$this->db->users}.ID", 'ASC' )
 			->result();
+	}
 
+	/**
+	 * Get payment history
+	 *
+	 * @param int $year
+	 * @param int $user_id
+	 * @return array
+	 */
+	public function get_payments_list( $year, $user_id = 0 ) {
+		$this
+			->select( "SUM({$this->table}.total) AS total, SUM({$this->table}.deducting) AS deducting, {$this->table}.user_id, {$this->db->users}.display_name" )
+			->join( $this->db->users, "{$this->db->users}.ID = {$this->table}.user_id" )
+			->wheres( [
+				"EXTRACT(YEAR FROM {$this->table}.`fixed`) = %s" => $year,
+		        "{$this->table}.`status` = %d" => 1,
+			] )
+			->group_by( "{$this->table}.user_id", 'ASC' )
+			->group_by( "{$this->table}.fixed", 'DESC' )
+			->order_by( "{$this->table}.fixed", 'ASC' );
+		if ( $user_id ) {
+			$this->where( "{$this->table}.user_id = %d", $user_id );
+		}
+		return $this->result();
 	}
 
 	/**

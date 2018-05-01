@@ -31,7 +31,7 @@ class SalesReportTable extends \WP_List_Table {
 			'store'   => 'ストア',
 			'date'    => '日付',
 			'type'    => '種別',
-			'unit'    => '販売数',
+			'unit'    => '数量',
 			'royalty' => 'ロイヤリティ総額',
 		];
 	}
@@ -80,7 +80,12 @@ class SalesReportTable extends \WP_List_Table {
 				printf( '%s <small>%s</small>', number_format( $item->royalty, 2 ), $item->currency );
 				break;
 			case 'unit':
-				echo number_format( $item->unit );
+				if ( 'KENP' == $item->store ) {
+					$suffix = 'P';
+				} else {
+					$suffix = '部';
+				}
+				echo number_format( $item->unit ) . $suffix;
 				break;
 			case 'author':
 				printf( '<a href="%s">%s</a>', get_author_posts_url( $item->post_author ), esc_html( get_the_author_meta( 'display_name', $item->post_author ) ) );

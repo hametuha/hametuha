@@ -1,0 +1,27 @@
+body{
+
+}
+
+.minHeight{
+  min-height: 150px;
+}
+
+$hover-bg: #fcfcfc;
+$shade-font: #888;
+$navbar-default-bg: #f9f9f9;
+$brand-primary: blue;
+$brand-danger: red;
+
+.clearfix{
+  &:after{
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+  }
+}
+@import "variables";
+@import "mixins";
+@import "parts/notification";
+@import "parts/campaign";
+

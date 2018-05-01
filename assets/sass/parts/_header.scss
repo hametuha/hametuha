@@ -64,7 +64,7 @@
   // ユーザー情報
   &-login{
     $avatar-size: 30px;
-    width: 120px;
+    width: 150px;
     & > li:first-child .avatar{
       width: $avatar-size;
       height: $avatar-size;
@@ -89,28 +89,6 @@
         }
         &.has-notify{
           @include animation(icon-blink 1s linear 0 infinite alternate);
-        }
-        // ログインボタン
-        &.login-btn{
-          margin-right: 10px;
-          margin-top: 8px;
-          background-color: transparent;
-          @include border-radius(3px);
-          padding: 9px 4px;
-          border: 1px solid #000;
-          font-size: 14px;
-          line-height: 1;
-          &:link, &:visited{
-            color: #000;
-          }
-          &:hover{
-            color: $btn-primary-bg;
-            border-color: $btn-primary-bg;
-          }
-          &:active{
-            color: $btn-danger-bg;
-            border-color:  $btn-danger-bg;
-          }
         }
       }
       .dropdown-menu{
@@ -278,6 +256,19 @@
   }
 }
 
+// ログインボタン
+.login-buttons a{
+  @extend %btn-hollow;
+  float: right;
+  margin-top: 8px;
+  background-color: transparent;
+  margin-right: 10px;
+  &:last-child{
+    @media only screen and (max-width: 400px) {
+      display: none;
+    }
+  }
+}
 
 // 書くヤツ
 .write-panel{

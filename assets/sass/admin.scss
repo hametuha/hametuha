@@ -34,6 +34,16 @@ $break-point: 782px;
   }
 }
 
+table.sales_reports{
+  th, td{
+    &.column-unit,
+    &.column-royalty{
+      text-align: right;
+    }
+  }
+
+}
+
 .misc-pub-section{
   .dashicons{
     color: #82878c;

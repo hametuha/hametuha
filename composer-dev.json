@@ -1,0 +1,45 @@
+{
+  "name": "hametuha/hametuha",
+  "description": "A WordPress theme for hametuha",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Hametuha INC.",
+      "email": "info@hametuha.co.jp"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../../lib/hashboard",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../lib/HamePub",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../../lib/wpametu",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "require": {
+    "hametuha/wpametu": "*",
+    "hametuha/HamePub": "*",
+    "hametuha/hashboard": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "Hametuha": "src"
+    }
+  }
+}

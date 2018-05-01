@@ -56,24 +56,3 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 }, 20, 3 );
 
 
-/**
- * デフォルトのコンタクトフィールドを削除する
- *
- * @param array $contactmethods
- *
- * @return array
- * @author WP Beginners
- * @url http://www.wpbeginner.com/wp-tutorials/how-to-remove-default-author-profile-fields-in-wordpress/
- */
-add_filter( 'user_contactmethods', function ( $contact_methods ) {
-	$contact_methods['aim'] = '<i class="icon-tag"></i> Webサイト名';
-	unset( $contact_methods['jabber'] );
-	unset( $contact_methods['yim'] );
-	$contact_methods['twitter']          = '<i class="icon-twitter"></i> twitterアカウント';
-	$contact_methods['location']         = '<i class="icon-location4"></i> 場所';
-	$contact_methods['birth_place']      = '<i class="icon-compass"></i> 出身地';
-	$contact_methods['favorite_authors'] = '<i class="icon-reading"></i> 好きな作家';
-	$contact_methods['favorite_words']   = '<i class="icon-pen5"></i> 好きな言葉';
-
-	return $contact_methods;
-}, '_hide_profile_fields', 10, 1 );

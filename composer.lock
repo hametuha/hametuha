@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3d570527386f4974bcd25c35b775d6d0",
+    "content-hash": "ee00f25ef705b2de04f9855e084a7663",
     "packages": [
         {
             "name": "google/recaptcha",
@@ -57,12 +57,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hamepub.git",
-                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577"
+                "reference": "7b3853885da8aca3cdc8e307d72bce2a6135475d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/f2dbe9ce68d0fc3792c57463d841972a85d68577",
-                "reference": "f2dbe9ce68d0fc3792c57463d841972a85d68577",
+                "url": "https://api.github.com/repos/hametuha/hamepub/zipball/7b3853885da8aca3cdc8e307d72bce2a6135475d",
+                "reference": "7b3853885da8aca3cdc8e307d72bce2a6135475d",
                 "shasum": ""
             },
             "require": {
@@ -95,20 +95,144 @@
                 "epub",
                 "wordpress"
             ],
-            "time": "2016-07-27 16:30:42"
+            "time": "2018-04-21T07:38:32+00:00"
         },
         {
-            "name": "hametuha/wpametu",
-            "version": "dev-master",
+            "name": "hametuha/hashboard",
+            "version": "0.8.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "31fb5889aa9473b858d2c0107851528393247f7b"
+                "url": "https://github.com/hametuha/hashboard.git",
+                "reference": "81fce25b0686dc7d0a7fda02a71db09689fbba10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/31fb5889aa9473b858d2c0107851528393247f7b",
-                "reference": "31fb5889aa9473b858d2c0107851528393247f7b",
+                "url": "https://api.github.com/repos/hametuha/hashboard/zipball/81fce25b0686dc7d0a7fda02a71db09689fbba10",
+                "reference": "81fce25b0686dc7d0a7fda02a71db09689fbba10",
+                "shasum": ""
+            },
+            "require": {
+                "hametuha/pattern": "^0.8",
+                "hametuha/wp-enqueue-manager": "^1.0",
+                "php": ">=5.5.0",
+                "ramsey/uuid": "^3.7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.8",
+                "wp-coding-standards/wpcs": "~0.11"
+            },
+            "type": "wordpress-plugin",
+            "autoload": {
+                "psr-0": {
+                    "Hametuha\\Hashboard": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Hametuha INC",
+                    "email": "info@hametuha.co.jp"
+                }
+            ],
+            "description": "Web service like dashboard for WordPress.",
+            "time": "2018-05-01T11:26:41+00:00"
+        },
+        {
+            "name": "hametuha/pattern",
+            "version": "v0.8.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/pattern.git",
+                "reference": "6d4768a1aa3bc36da546ae569a0c5a0f3763777b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/pattern/zipball/6d4768a1aa3bc36da546ae569a0c5a0f3763777b",
+                "reference": "6d4768a1aa3bc36da546ae569a0c5a0f3763777b",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.8",
+                "wp-coding-standards/wpcs": "~0.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Hametuha\\Pattern": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Hametuha INC.",
+                    "email": "info@hametuha.co.jp"
+                }
+            ],
+            "description": "WordPress Pattern Library",
+            "time": "2018-01-22T11:42:37+00:00"
+        },
+        {
+            "name": "hametuha/wp-enqueue-manager",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/wp-enqueue-manager.git",
+                "reference": "8f0b14a97e3a38f86ca67e078619a89fc29b885a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/wp-enqueue-manager/zipball/8f0b14a97e3a38f86ca67e078619a89fc29b885a",
+                "reference": "8f0b14a97e3a38f86ca67e078619a89fc29b885a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "symfony/finder": "^3.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.8",
+                "wp-coding-standards/wpcs": "~0.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Hametuha\\WpEnqueueManager": "app/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fumikito",
+                    "email": "guy@hametuha.com"
+                }
+            ],
+            "description": "A WordPress library to bulk register assets.",
+            "time": "2018-01-28T17:00:19+00:00"
+        },
+        {
+            "name": "hametuha/wpametu",
+            "version": "0.8.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hametuha/wpametu.git",
+                "reference": "4da65e25a4fbd16c25c8aae3b9d64b7b58838550"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/4da65e25a4fbd16c25c8aae3b9d64b7b58838550",
+                "reference": "4da65e25a4fbd16c25c8aae3b9d64b7b58838550",
                 "shasum": ""
             },
             "require": {
@@ -118,9 +242,9 @@
                 "tijsverkoyen/css-to-inline-styles": "^1.5"
             },
             "require-dev": {
-                "phpdocumentor/phpdocumentor": "2.*",
-                "phpunit/phpunit": ">=4.6",
-                "wp-coding-standards/wpcs": "dev-master"
+                "phpunit/phpunit": "~4.8",
+                "squizlabs/php_codesniffer": "~2.8",
+                "wp-coding-standards/wpcs": "~0.11"
             },
             "type": "library",
             "autoload": {
@@ -139,20 +263,20 @@
                 }
             ],
             "description": "A WordPress Theme FrameWork",
-            "time": "2017-04-11 06:22:38"
+            "time": "2017-11-25T08:52:44+00:00"
         },
         {
             "name": "masterminds/html5",
-            "version": "2.2.2",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "7866e93dcf0245de22378414e0c2c7350abc45af"
+                "reference": "2c37c6c520b995b761674de3be8455a381679067"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/7866e93dcf0245de22378414e0c2c7350abc45af",
-                "reference": "7866e93dcf0245de22378414e0c2c7350abc45af",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/2c37c6c520b995b761674de3be8455a381679067",
+                "reference": "2c37c6c520b995b761674de3be8455a381679067",
                 "shasum": ""
             },
             "require": {
@@ -204,29 +328,157 @@
                 "serializer",
                 "xml"
             ],
-            "time": "2016-09-22T11:01:11+00:00"
+            "time": "2017-09-04T12:26:28+00:00"
         },
         {
-            "name": "symfony/css-selector",
-            "version": "v3.3.4",
+            "name": "paragonie/random_compat",
+            "version": "v2.0.12",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/css-selector.git",
-                "reference": "4d882dced7b995d5274293039370148e291808f2"
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/4d882dced7b995d5274293039370148e291808f2",
-                "reference": "4d882dced7b995d5274293039370148e291808f2",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2018-04-04T21:24:14+00:00"
+        },
+        {
+            "name": "ramsey/uuid",
+            "version": "3.7.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ramsey/uuid.git",
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": "^1.0|^2.0",
+                "php": "^5.4 || ^7.0"
+            },
+            "replace": {
+                "rhumsaa/uuid": "self.version"
+            },
+            "require-dev": {
+                "codeception/aspect-mock": "^1.0 | ~2.0.0",
+                "doctrine/annotations": "~1.2.0",
+                "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
+                "ircmaxell/random-lib": "^1.1",
+                "jakub-onderka/php-parallel-lint": "^0.9.0",
+                "mockery/mockery": "^0.9.9",
+                "moontoast/math": "^1.1",
+                "php-mock/php-mock-phpunit": "^0.3|^1.1",
+                "phpunit/phpunit": "^4.7|^5.0",
+                "squizlabs/php_codesniffer": "^2.3"
+            },
+            "suggest": {
+                "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+                "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
+                "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
+                "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+                "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
+                "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marijn Huizendveld",
+                    "email": "marijn.huizendveld@gmail.com"
+                },
+                {
+                    "name": "Thibaud Fabre",
+                    "email": "thibaud@aztech.io"
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                }
+            ],
+            "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
+            "homepage": "https://github.com/ramsey/uuid",
+            "keywords": [
+                "guid",
+                "identifier",
+                "uuid"
+            ],
+            "time": "2018-01-20T00:28:24+00:00"
+        },
+        {
+            "name": "symfony/css-selector",
+            "version": "v3.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/css-selector.git",
+                "reference": "519a80d7c1d95c6cc0b67f686d15fe27c6910de0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/519a80d7c1d95c6cc0b67f686d15fe27c6910de0",
+                "reference": "519a80d7c1d95c6cc0b67f686d15fe27c6910de0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -257,7 +509,56 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2017-05-01T15:01:29+00:00"
+            "time": "2018-03-19T22:32:39+00:00"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v3.4.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "bd14efe8b1fabc4de82bf50dce62f05f9a102433"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/bd14efe8b1fabc4de82bf50dce62f05f9a102433",
+                "reference": "bd14efe8b1fabc4de82bf50dce62f05f9a102433",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Finder\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Finder Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-04-04T05:07:11+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -312,7 +613,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "hametuha/wpametu": 20,
-        "hametuha/hamepub": 20
+        "hametuha/hamepub": 20,
+        "hametuha/hashboard": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -20,3 +20,9 @@ add_shortcode( 'col', function( $atts, $content = '' ) {
 	return sprintf( '<div class="col-xs-4">%s</div>', $content );
 } );
 
+/**
+ * 最小支払い金額
+ */
+add_shortcode( 'min-payment', function() {
+	return number_format( hametuha_minimum_payment() );
+} );

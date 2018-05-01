@@ -118,6 +118,10 @@ JS;
 	// 投稿編集画面
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery' ], hametuha_version(), true );
 
+	// Register all hashboard.
+	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
+	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
+	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
 } );
 
 /**
@@ -143,6 +147,12 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_dequeue_style( 'wp-pagenavi' );
 }, 1000 );
 
+/**
+ * Hashboardで読み込む
+ */
+add_action( 'hashboard_head', function() {
+	wp_enqueue_style( 'hametuha-hashboard' );
+} );
 
 /**
  * スクリプトを読み込む
@@ -179,10 +189,6 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 	$screen = get_current_screen();
 
 	wp_enqueue_style( 'hametuha-admin' );
-
-	if ( current_user_can( 'edit_posts' ) ) {
-
-	}
 
 	// 編集画面
 	if ( 'post' == $screen->base ) {

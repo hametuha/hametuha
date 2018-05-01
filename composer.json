@@ -3,6 +3,9 @@
   "description": "A WordPress theme for hametuha",
   "minimum-stability": "stable",
   "license": "MIT",
+  "scripts": {
+    "dev": "COMPOSER=composer-dev.json composer"
+  },
   "authors": [
     {
       "name": "Hametuha INC.",
@@ -10,8 +13,9 @@
     }
   ],
   "require": {
-    "hametuha/wpametu": "dev-master",
-    "hametuha/hamepub": "1.0.*@dev"
+    "hametuha/wpametu": "0.8.x-dev",
+    "hametuha/hamepub": "1.0.x-dev",
+    "hametuha/hashboard": "0.8.x-dev"
   },
   "autoload": {
     "psr-0": {

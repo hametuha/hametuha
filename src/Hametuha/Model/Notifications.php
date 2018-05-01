@@ -21,6 +21,8 @@ class Notifications extends Model {
 
 	protected $name = 'notifications';
 
+	const PER_PAGE = 10;
+
 	protected $default_placeholder = [
 		'recipient_id' => '%d',
 		'type'         => '%s',
@@ -163,7 +165,7 @@ class Notifications extends Model {
 		if ( $type ) {
 			$this->where( 'type = %s', $type );
 		}
-		$result = $this->calc( true )->limit( 10, ( max( $paged, 1 ) - 1 ) * 10 )->order_by( 'created', 'DESC' )->result();
+		$result = $this->calc( true )->limit( self::PER_PAGE, ( max( $paged, 1 ) - 1 ) )->order_by( 'created', 'DESC' )->result();
 
 		return $result;
 	}

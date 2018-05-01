@@ -63,6 +63,30 @@ a[disabled], input[disabled] {
   }
 }
 
+%btn-hollow{
+  @extend .btn;
+  $btn-color: #000;
+  display: inline-block;
+  @include border-radius(3px);
+  padding: 9px 4px;
+  border: 1px solid $btn-color;
+  font-size: 14px;
+  line-height: 1;
+  transition: color .3s linear, background-color .3s linear, border-color .3s linear;
+  position: relative;
+  &:link, &:visited{
+    color: $btn-color !important;
+    background: transparent !important;
+  }
+  &:hover{
+    color: #fff !important;
+    background-color: $btn-color !important;
+  }
+  &:active{
+    top: 1px;
+  }
+}
+
 // 回転
 .rotation {
   @include animation(rotation 1.5s linear infinite);
