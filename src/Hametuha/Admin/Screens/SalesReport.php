@@ -180,7 +180,7 @@ HTML;
 		<form method="post" enctype="multipart/form-data"
 			  action="<?= esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ) ?>">
 			<?php wp_nonce_field( 'import_kdp_data' ) ?>
-            <input type="hidden" name="type" value="kpd" />
+            <input type="hidden" name="type" value="kdp" />
 			<input type="file" name="csv" value="選択してください"/>
 			<?php submit_button( '送信' ) ?>
 		</form>
