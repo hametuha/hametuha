@@ -230,7 +230,7 @@ EOS;
  * jQueryをフッターに動かす
  */
 add_action( 'init', function() {
-	if ( is_admin() ) {
+	if ( is_admin() || 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
 		return;
 	}
 	global $wp_scripts;
