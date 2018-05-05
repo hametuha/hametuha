@@ -220,20 +220,20 @@
     clear: both;
     margin: 1.5em 0 0.5em;
     line-height: 1.1;
-    font-weight: bold;
+    font-weight: normal;
     .rtl &{
       margin: 0 1.5em 0 0.5em;
     }
   }
   h1{
-    font-size: 2.4em;
+    font-size: 2em;
     padding: 0.25em;
     background: #444;
     color: #fff;
   }
   h2{
     $h2-border: 1px dotted #444;
-    font-size: 2.2em;
+    font-size: 1.8em;
     border-bottom: $h2-border;
     padding-bottom: 0.5em;
     .rtl &{
@@ -245,7 +245,7 @@
   }
   h3{
     $h3-border:  5px #666 solid;
-    font-size: 1.8em;
+    font-size: 1.5em;
     border-left: $h3-border;
     padding-left: 0.25em;
     .rtl &{
@@ -256,14 +256,16 @@
     }
   }
   h4{
-    font-size: 1.8em;
+    font-size: 1.2em;
     color: #666;
   }
   h5{
-    font-size: 1.4em;
+    font-size: 1.1em;
+    font-weight: bold;
   }
   h6{
-    font-size: 1.2em;
+    font-size: 1em;
+    font-weight: bold;
   }
 
   // WP Required

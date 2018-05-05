@@ -12,8 +12,16 @@
 	<?php if( $show_title > 1 ): ?>
 		<p class="header__author"><?php the_author() ?></p>
 	<?php endif; ?>
+
+    <?php if ( 2 < $show_title && has_excerpt() ) : ?>
+    <div class="header__lead">
+        <?php the_excerpt() ?>
+    </div>
+    <?php endif; ?>
 </div>
 <?php endif; ?>
+
+
 
 <article class="content content--script content--afterwords clearfix">
 

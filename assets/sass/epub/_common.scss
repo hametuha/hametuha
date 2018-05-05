@@ -103,7 +103,7 @@ a{
   @extend %sans;
 
   .title {
-    font-size: 2.4em;
+    font-size: 2em;
     line-height: 1.1;
     small {
       display: block;
@@ -111,9 +111,26 @@ a{
       color: #888;
     }
   }
+
   .meta {
     text-align: right;
     color: #888;
+  }
+
+  &__lead{
+    $lead-padding: 6em;
+    color: #666;
+    p{
+      font-size: 0.9em;
+      text-indent: 1em;
+      line-height: 1.8;
+    }
+    .ltr &{
+      padding: 1em 2em 1em $lead-padding;
+    }
+    .rtl & {
+      padding: $lead-padding 1em 2em 1em;
+    }
   }
 
   .ltr &{
@@ -151,7 +168,7 @@ a{
 
   &__author{
     text-align: right;
-    font-size: 2em;
+    font-size: 1.4em;
     @include logical-property(0 1em 0 0);
   }
 }
