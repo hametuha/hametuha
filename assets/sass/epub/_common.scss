@@ -1,6 +1,7 @@
 $link-color: #2e455d;
 $active-color: #b4423d;
 $thic-border: 10px solid #444;
+$thin-border: 1px solid #ccc;
 
 //
 // Typography
@@ -136,7 +137,7 @@ a{
   .ltr &{
     .title{
       padding: 1em 2em;
-      border-bottom: $thic-border;
+      border-bottom: $thin-border;
       @media only screen and (max-width: $screen-sm-max){
         padding: 1em 0.5em;
       }
@@ -153,7 +154,7 @@ a{
     .title{
       margin: 0 0.67em;
       padding: 2em 1em;
-      border-left: $thic-border;
+      border-left: $thin-border;
       @media only screen and (max-width: $screen-sm-max) {
         padding: 0.5em 1em;
       }
@@ -208,12 +209,12 @@ article{
   color: #6e6e6e;
   .ltr &{
     padding: 1em 2em;
-    border-top: $thic-border;
+    border-top: $thin-border;
     text-align: center;
   }
   .rtl &{
     padding: 2em 1em;
-    border-right: $thic-border;
+    border-right: $thin-border;
     text-align: right;
   }
 }
