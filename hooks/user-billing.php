@@ -151,17 +151,17 @@ add_filter( 'hashboard_field_groups', function( $args, $user, $group, $page ) {
 				break;
 			case 'address':
 				$label = '住所';
-				$placeholder = 'ex. 東京都港区南青山2-11-13';
+				$placeholder = '例）東京都港区南青山2-11-13';
 				break;
 			case 'address2':
 				$label = "建物・アパート";
 				$row = 'open';
-				$placeholder = 'ex. 南青山ビル4F';
+				$placeholder = '例）南青山ビル4F';
 				break;
             case 'zip':
                 $label = "郵便番号";
                 $row = 'close';
-                $placeholder = 'ex. 107-0062';
+                $placeholder = '例）107-0062';
                 break;
 		}
 		$field = [
@@ -204,3 +204,29 @@ add_action( 'hashboard_before_fields_rendered', function( $slug, $page, $field_n
     </div>
 	<?php
 }, 10, 3 );
+
+/**
+ * ユーザーの詳細画面に住所を表示する
+ */
+add_action( 'edit_user_profile', function( WP_User $user ) {
+    $address = hametuha_billing_address( $user->ID );
+    ?>
+    <h3>住所</h3>
+    <table class="form-table">
+        <tr>
+            <th>郵便番号</th>
+            <td><input type="text" class="regular-text" readonly value="<?= esc_attr( $address['zip'] ) ?>" /> </td>
+        </tr>
+        <tr>
+            <th>住所</th>
+            <td>
+                <textarea class="regular-text" readonly><?= esc_textarea( $address['address']. "\n" . $address['address2'] ) ?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>氏名</th>
+            <td><input type="text" class="regular-text" readonly value="<?= esc_attr( $address['name'] ) ?>" /> </td>
+        </tr>
+    </table>
+    <?php
+} );
