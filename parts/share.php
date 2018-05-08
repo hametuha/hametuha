@@ -37,6 +37,9 @@ if ( is_preview() ) {
 				} else {
 					$hash_tag = '破滅派';
 				}
+				if ( $post_id && $author = get_user_meta( $post->post_author, 'twitter', true ) ) {
+				    $related = $author;
+                }
 				$link = sprintf(
 					'<div class="share__box"><a class="share__baloon" href="%s" target="_blank">反応</a><a data-text="%s" href="%s" class="twitter-share-button" data-via="%s" data-related="%s" data-hashtags="%s">つぶやく</a></div>',
 					esc_url( sprintf( 'https://twitter.com/search?f=tweets&vertical=default&q=%s&src=typd', rawurlencode( preg_replace( '#^https?://#', '', $url ) ) ) ),
