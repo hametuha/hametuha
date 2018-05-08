@@ -41,11 +41,22 @@ class SeriesLayoutMetaBox extends EditMetaBox
 		    'options' => [
 		    	3 => 'タイトル・筆名・リード（アンソロジー）',
 			    2 => 'タイトル・筆名（アンソロジー）',
+				4 => 'タイトル・リード（短編集）',
 			    1 => 'タイトルのみ（短編集）',
 		        0 => '表示しない（連載）',
 		    ],
 		    'default' => 0,
 		    'description' => 'それぞれの作品のタイトルを表示するか否か。連載作品の場合、タイトルはなくてもよいかもしれません。',
+		],
+		'_hide_correct' => [
+			'class' => Radio::class,
+			'label' => '初出一覧',
+			'options' => [
+				0 => '表示する',
+				1 => '表示しない',
+			],
+			'default' => 0,
+			'description' => '各作品の初出一覧を奥付に表示します。',
 		],
 		'_series_type' => [
 			'class' => Radio::class,

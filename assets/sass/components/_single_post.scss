@@ -487,19 +487,40 @@ p.pixiv-embed-illust{
   margin: 20px 0 0;
   padding: 0;
   border-top: $divide-border;
-  li{
+  &-title{
+    font-family: $work-title;
+  }
+  li {
     width: 50%;
     float: left;
     list-style: none;
-    &.next{
+    &.next {
       text-align: right;
       float: right;
       border-left: 1px solid $thin-border;
     }
-    a{
+  }
+
+  &-text {
+    display: block;
+    .next &{
+      text-align: right;
+    }
+  }
+  &-nombre {
+    display: block;
+  }
+  &-link{
       display: block;
+      position: relative;
       font-size: 16px;
       padding: 40px 20px;
+    .previous &{
+      padding-left: 40px;
+    }
+    .next &{
+      padding-right: 40px;
+    }
       &:link, &:visited{
         color: #000;
         text-decoration: none;
@@ -509,13 +530,19 @@ p.pixiv-embed-illust{
         text-decoration: none;
         background: #f9f9f9;
       }
-      i{
-        color: #999;
-      }
     }
-  }
-  &-title{
-    font-family: $work-title;
+  &-icon {
+    $icon-pad: 15px;
+    .previous &{
+      left: $icon-pad;
+    }
+    .next &{
+      right: $icon-pad;
+    }
+    position: absolute;
+    color: #999;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 

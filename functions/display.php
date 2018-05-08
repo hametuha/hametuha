@@ -528,3 +528,27 @@ function hametuha_remote_ogp( $url, $time = 3600 ) {
     }
     return $cache;
 }
+
+/**
+ * 初出を表示する
+ *
+ * @param bool             $format
+ * @param null|int|WP_Post $post
+ * @return string
+ */
+function hametuha_first_corrected( $format = false, $post = null ) {
+    $post = get_post( $post );
+    $corrected = get_post_meta( $post->ID, '_first_collected', true );
+    $url       = get_post_meta( $post->ID, 'oldurl', true );
+    if ( ! $corrected && ! $url ) {
+        return '';
+    }
+    if ( ! $corrected ) {
+        $corrected = $url;
+    }
+    if ( ! $format || ! $url ) {
+        return esc_html( $corrected );
+    } else {
+        return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $corrected ) );
+    }
+}

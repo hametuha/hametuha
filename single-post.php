@@ -127,6 +127,9 @@ HTML;
 					<span><?php the_time( 'Y年n月j日' ) ?></span>公開
 					<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ) ?></span>
 					<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ) ?></span>
+                    <?php if ( $corrected = hametuha_first_corrected( true ) ) : ?>
+                        （初出 <?= $corrected ?>）
+                    <?php endif; ?>
 				</p>
 
 				<?php if ( is_series() ) : ?>

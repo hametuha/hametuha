@@ -9,7 +9,7 @@
 <?php if( $show_title ): ?>
 <div class="header header--afterwords">
 	<h1 class="title"><?= $filtered_title ?></h1>
-	<?php if( $show_title > 1 ): ?>
+	<?php if( $show_title > 1 && $show_title < 4 ): ?>
 		<p class="header__author"><?php the_author() ?></p>
 	<?php endif; ?>
 

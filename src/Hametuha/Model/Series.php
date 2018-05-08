@@ -403,18 +403,28 @@ SQL;
 	public function prev( $before = '<li>', $after = '</li>', $post = null, $next = false ) {
 		$post  = get_post( $post );
 		$index = $this->get_index( $post );
-		if ( $next ) {
-			$link = '<a href="%s">第%s話 <i class="icon-arrow-right2"></i></a>';
-		} else {
-			$link = '<a href="%s"><i class="icon-arrow-left"></i> 第%s話</a>';
-		}
+		$icon = $next ? 'right2' : 'left';
+		$link = <<<'HTML'
+			<a class="series-pager-link" href="%3$s">
+				<small class="series-pager-nombre">第%2$s話</small>
+				<span class="series-pager-text hidden-xs">%1$s</span>
+				<i class="series-pager-icon icon-arrow-%6$s"></i>
+			</a>
+HTML;
 		$operand = $next ? 1 : - 1;
 		$target  = $this->get_sibling( $index + $operand, $post );
 		if ( ( $index < 0 ) || ! $index || ( $index < 2 && ! $next ) || ! $target ) {
 			return '';
 		}
-
-		return sprintf( '%s' . $link . '%s', $before, get_permalink( $target ), $index + $operand, $after );
+		return sprintf(
+			'%4$s' . $link . '%5$s',
+			esc_html( get_the_title( $target ) ),
+			$index + $operand,
+			get_permalink( $target ),
+			$before,
+			$after,
+			$icon
+		);
 	}
 
 	/**

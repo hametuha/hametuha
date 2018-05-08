@@ -33,7 +33,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			<td><?php the_title() ?></td>
 		</tr>
 		<tr>
-			<th>初出</th>
+			<th>URL</th>
 			<td>
 				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>（<?php the_time( 'Y年m月d日' ) ?>）
 			</td>
@@ -72,7 +72,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 		<?php endforeach; ?>
 	</table>
 
-
+    <?php if ( ! get_post_meta( $post->ID, '_hide_correct', true ) ) : ?>
 	<table class="colophon">
 		<caption>初出一覧</caption>
 		<?php
@@ -91,16 +91,22 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			<tr>
 				<th><?= number_format( $counter ) ?></th>
 				<td>
-					<a href="<?php the_permalink() ?>">
-						<?php the_title() ?>
-					</a>
-					<br />
-					<small><?php the_time( 'Y年m月d日' ) ?></small>
+                    <?php if ( $corrected = hametuha_first_corrected( true, $post ) ) : ?>
+                        <?= esc_html( get_the_title( $post ) )  ?>
+                        （<?= $corrected; ?>）
+					<?php else : ?>
+                        <a href="<?php the_permalink() ?>">
+							<?php the_title() ?>
+                        </a>
+                        <br/>
+                        <small><?php the_time( 'Y年m月d日' ) ?></small>
+					<?php endif; ?>
 				</td>
 			</tr>
 			<?php endwhile; wp_reset_postdata(); ?>
 		<?php endif; ?>
 	</table>
+    <?php endif; ?>
 
 	<table class="colophon">
 		<caption>連絡先</caption>
