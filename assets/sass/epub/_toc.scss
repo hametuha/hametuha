@@ -14,8 +14,8 @@ $toc-link-border: 1px solid #444;
       padding: 0.5em;
       border-bottom: $toc-link-border;
       &:before{
-        content : counters(section, '-') '. ';
-        counter-increment : section;
+        //content : counters(section, '-') '. ';
+        //counter-increment : section;
       }
       a:link, a:hover{
         text-decoration: none;
@@ -27,13 +27,17 @@ $toc-link-border: 1px solid #444;
       }
     }
     ol{
-      border-top-style: dotted;
+      border-top: none;
       & > li{
         font-weight: normal;
         padding-left: 2em;
-        border-bottom-style: dotted;
+        border-bottom: none;
         &:last-child{
           border-bottom: none;
+        }
+        list-style: disc inside;
+        li{
+          list-style-type: circle;
         }
       }
     }
@@ -45,15 +49,16 @@ $toc-link-border: 1px solid #444;
   .content--toc{
     ol{
       border-top: none;
-      border-right: $toc-link-border;
+      border-right: none;
       li{
+        padding-top: 1em;
         border-bottom: none;
+        border-right: none;
         border-left: $toc-link-border;
       }
       ol > li{
         padding-left: 0;
-        padding-top: 2em;
-        border-left-style: dotted;
+        border-left-style: none;
         &:last-child{
           border-left: none;
         }
@@ -67,6 +72,7 @@ $toc-link-border: 1px solid #444;
   .content--toc{
     ol{
       li{
+        padding-left: 1em;
       }
     }
   }
