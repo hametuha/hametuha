@@ -24,18 +24,18 @@
 
             <div class="checkbox">
                 <label>
-                    <input class="form-unlimiter" type="checkbox" name="review_contract" value="1" />
+                    <input class="form-unlimiter" type="checkbox" name="review_contract" value="1" id="become-login-check" />
                     利用規約に同意する
                 </label>
             </div>
 
             <p>
-                <input type="submit" class="btn btn-primary btn-block btn-lg" disabled value="同人になる">
+                <input id="become-login-button" type="submit" class="btn btn-primary btn-block btn-lg" disabled value="同人になる">
             </p>
 
         </form>
 
-    </div><!--  -->
+    </div><!-- // #login-body -->
 
     <p class="text-center">
         <a href="<?= admin_url( 'profile.php' ) ?>">プロフィール編集へ戻る</a>

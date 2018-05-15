@@ -63,3 +63,33 @@ form{
   }
 }
 
+#login-form{
+
+  h1{
+    padding-top: 40px;
+    font-size: 80px;
+    a{
+      transition: opacity .3s linear;
+      &:link, &:visited{
+        color: #000;
+        text-decoration: none;
+      }
+      &:hover, &:active{
+        opacity: .8;
+        text-decoration: none;
+      }
+    }
+  }
+
+}
+
+#login-body{
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+#become-author{
+
+
+
+}

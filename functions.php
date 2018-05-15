@@ -36,6 +36,9 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
 	// Activate hashboard
 	Hametuha\Hashboard::get_instance();
+	if ( class_exists( 'Hametuha\\Hashboard\\Router\\Profile' ) ) {
+		\Hametuha\Hashboard\Router\Profile::get_instance();
+	}
 }
 
 /**

@@ -6,7 +6,7 @@ add_filter( 'body_class', function( $classes ){
 
 get_header( 'meta' );
 ?>
-<div id="login-form">
+<div id="login-form" class="container">
 
 	<h1 class="text-center">
 		<a href="<?= home_url( '/') ?>">
