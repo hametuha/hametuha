@@ -67,7 +67,9 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 			),
 			'size' => 1,
 		],
-		[
+    ];
+	if ( current_user_can( 'edit_posts' ) ) {
+	    $blocks[] = [
 			'id' => 'recent-works',
 			'title' => '最近の作品',
 			'html' => sprintf(
@@ -76,8 +78,8 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 				get_current_user_id()
 			),
 			'size' => 1,
-		],
-	];
+		];
+    }
 	// Add slack if enabled.
 	if ( function_exists( 'hameslack_can_request_invitation' ) && hameslack_can_request_invitation( get_current_user_id() ) ) {
 		$blocks[] = [
