@@ -46,10 +46,10 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 	}
 	if ( ! $page ) {
 		unset( $args['names']['fields']['first_name'] );
-		unset( $args['names']['fields']['display_name'] );
-		$args['names']['fields']['nickname']['label'] = '筆名';
-		$args['names']['fields']['nickname']['group'] = 'open';
-		$args['names']['fields']['nickname']['required'] = true;
+		unset( $args['names']['fields']['nickname'] );
+		$args['names']['fields']['display_name']['label'] = '筆名';
+		$args['names']['fields']['display_name']['group'] = 'open';
+		$args['names']['fields']['display_name']['required'] = true;
 		$args['names']['fields']['last_name']['label'] = 'よみがな（ひらがな）';
 		$args['names']['fields']['description']['label'] = '自己紹介文';
 		if ( $user->has_cap( 'edit_posts' ) ) {

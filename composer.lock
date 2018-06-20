@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/hashboard.git",
-                "reference": "419217c2ba1391b579b309b09a0a99c49b9e34f4"
+                "reference": "3b8db31ee210cc441af47d98e98b6c66645df709"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/hashboard/zipball/419217c2ba1391b579b309b09a0a99c49b9e34f4",
-                "reference": "419217c2ba1391b579b309b09a0a99c49b9e34f4",
+                "url": "https://api.github.com/repos/hametuha/hashboard/zipball/3b8db31ee210cc441af47d98e98b6c66645df709",
+                "reference": "3b8db31ee210cc441af47d98e98b6c66645df709",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 }
             ],
             "description": "Web service like dashboard for WordPress.",
-            "time": "2018-05-10T09:57:15+00:00"
+            "time": "2018-06-20T18:38:39+00:00"
         },
         {
             "name": "hametuha/pattern",
