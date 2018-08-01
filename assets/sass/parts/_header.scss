@@ -216,6 +216,12 @@
   clear: both;
 }
 
+#header{
+  & + #breadcrumb,
+  & + .sub-header{
+    padding-top: $navbar-height + $subnavbar-height;
+  }
+}
 
 
 
@@ -226,7 +232,6 @@
 //
 #breadcrumb{
   position: relative;
-  padding-top: $navbar-height + $subnavbar-height;
   background-color: transparent;
   z-index: 1;
   font-size: 12px;

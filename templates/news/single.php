@@ -57,19 +57,7 @@
 					] );
 					?>
 
-					<div class="news-author row">
-						<a class="news-author__link clearfix"
-						   href="<?= home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ) ?>">
-							<?= get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), [ 'class' => ' img-circle news-author__img' ] ) ?>
-							文責:
-							<span class="news-author__name"><?php the_author() ?></span>
-							<small
-								class="news-author__position"><?= hametuha_user_role( get_the_author_meta( 'ID' ) ) ?></small>
-							<span class="news-author__desc">
-									<?= trim_long_sentence( get_the_author_meta( 'description' ) ) ?>
-								</span>
-						</a>
-					</div><!-- .news-author -->
+					<?php get_template_part( 'parts/author', 'narrow' ) ?>
 
 
 					<?php get_template_part( 'parts/event', 'address' ) ?>
@@ -167,6 +155,10 @@
 
 					<?php get_template_part( 'parts/share' ) ?>
 
+                    <div class="row mb20">
+                        <?php google_adsense( 'related' ) ?>
+                    </div>
+
 					<div class="row">
 
 						<div class="col-xs-12 col-sm-6 news-ad--content">
@@ -175,42 +167,24 @@
 						</div>
 
 						<div class="col-xs-12 col-sm-6 news-related">
-							<h3 class="list-title news-related__title">関連記事</h3>
-							<ul class="news-list">
-								<?php
-								foreach ( hamenew_related() as $post ) {
-									setup_postdata( $post );
-									get_template_part( 'parts/loop', 'news' );
-								}
-								wp_reset_postdata();
-								?>
-							</ul>
+							<h3 class="list-title news-related__title">キーワード</h3>
+                            <p class="news-keywords__wrapper">
+								<?php if ( $terms = hametuha_get_nouns() ) : ?>
+									<?= implode( ' ', array_map( function ( $term ) {
+										return sprintf(
+											'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
+											get_term_link( $term ),
+											esc_html( $term->name ),
+											$term->count > 100 ? '99+' : number_format( $term->count )
+										);
+									}, $terms ) ); ?>
+								<?php else : ?>
+                                    関連するキーワードのニュースはありません。
+								<?php endif; ?>
+                            </p>
 						</div>
 
 					</div>
-
-					<?php if ( ( $terms = get_the_terms( get_post(), 'nouns' ) ) && ! is_wp_error( $terms ) ) : ?>
-						<hr/>
-						<h2 class="news-keywords__title">キーワード
-							<small>このニュースに出てくる固有名詞</small>
-						</h2>
-						<p class="news-keywords__wrapper">
-							<?php if ( $terms = array_filter( $terms, function( $term ) {
-								return 1 < $term->count;
-							} ) ) : ?>
-							<?= implode( ' ', array_map( function ( $term ) {
-								return sprintf(
-									'<a href="%s" class="news-keywords__link"><i class="icon-tag6"></i> %s(%s)</a>',
-									get_term_link( $term ),
-									esc_html( $term->name ),
-									$term->count > 100 ? '99+' : number_format( $term->count )
-								);
-							}, $terms ) ); ?>
-							<?php else : ?>
-								関連するキーワードのニュースはありません。
-							<?php endif; ?>
-						</p>
-					<?php endif; ?>
 
 					<?php if ( ! is_preview() ) : ?>
 					<hr/>

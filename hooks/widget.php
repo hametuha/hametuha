@@ -36,3 +36,13 @@ register_sidebar( [
 	'after_title' => '</h2>',
 ] );
 
+// FAQ右
+register_sidebar( [
+	'name' => 'FAQ右',
+	'id'   => 'faq-sidebar',
+	'description' => 'FAQの右に表示されます。',
+	'before_widget' => '<div id="%1$s" class="widget %2$s">',
+	'after_widget' => '</div>',
+	'before_title' => '<h2 class="widget-title">',
+	'after_title' => '</h2>',
+] );

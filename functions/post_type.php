@@ -67,49 +67,6 @@ add_action( 'init', function () {
 	);
 	register_post_type( $annoucement_post_type, $args );
 
-
-	//よくある質問
-	$faq_post_type = 'faq';
-	$args          = array(
-		'label'           => 'よくある質問',
-		'description'     => '破滅派に寄せられた質問です。みなさんの疑問を解決します。わからないことはお問い合わせください。',
-		'public'          => true,
-		'menu_position'   => 20,
-		'menu_icon'       => 'dashicons-editor-help',
-		'supports'        => array( 'title', 'editor', 'author', 'comments' ),
-		'has_archive'     => true,
-		'capability_type' => 'page',
-		'rewrite'         => array( 'slug' => $faq_post_type ),
-	);
-	register_post_type( $faq_post_type, $args );
-
-	//FAQタクソノミー
-	register_taxonomy( 'faq_cat', array( 'faq' ), array(
-		'hierarchical' => false,
-		'show_ui'      => true,
-		'query_var'    => true,
-		'rewrite'      => array( 'slug' => 'faq-cat' ),
-		'label'        => 'カテゴリー',
-		'show_admin_column' => true,
-		'meta_box_cb'  => function( $post ) {
-			$post_terms = array_map( function( $term ) {
-				return $term->name;
-			}, get_the_terms( $post, 'faq_cat' ) );
-			?>
-			<input type="hidden" name="tax_input[faq_cat]" value="<?= esc_attr( implode( ', ', $post_terms ) ) ?>" />
-			<p class="taxonomy-check-list">
-				<?php foreach ( get_terms( 'faq_cat', [ 'hide_empty' => false ] ) as $term ) : ?>
-					<label class="taxonomy-check-label">
-						<input type="checkbox" class="taxonomy-check-box" value="<?= esc_attr( $term->name ) ?>" <?php checked( has_term( $term->term_id, 'faq_cat', $post ) ) ?>/>
-						<?= esc_html( $term->name ) ?>
-					</label>
-				<?php endforeach; ?>
-			</p>
-			<?php
-		},
-	) );
-
-
 	//安否情報
 	$args = array(
 		'label'                 => '安否情報',
@@ -380,28 +337,6 @@ function is_recommended( $post = null ) {
 	return $lists->is_recommended( $post->ID );
 }
 
-
-/**
- * よくある質問のタイトルを変える
- * @global object $post
- *
- * @param string $title
- * @param int $id
- *
- * @return string
- */
-add_filter( 'the_title', function ( $title, $id = 0 ) {
-	if ( ! is_admin() ) {
-		$post = get_post( $id );
-		if ( $post && $post->post_type == 'faq' ) {
-			$title = 'Q. ' . $title;
-		}
-	}
-
-	return $title;
-}, 10, 2 );
-
-
 /**
  * 現在のページがプロフィールページか否か
  *
@@ -567,4 +502,20 @@ add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $
 	return $response;
 }, 10, 3 );
 
-
+/**
+ * 人気の質問を取得する。
+ *
+ * @return array
+ */
+function hametuha_popular_faqs() {
+    if ( ! class_exists( 'AFB\\Model\\FeedBacks' ) ) {
+        return [];
+    }
+	return \AFB\Model\FeedBacks::get_instance()->search( [
+		'post_type' => 'faq',
+		'post_status' => 'publish',
+		'allow_empty' => false,
+		'orderby' => 'positive',
+		'order' => 'DESC',
+    ], 1, 5 );
+}

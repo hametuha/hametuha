@@ -76,6 +76,7 @@ get_template_part( 'functions/assets', 'tinymce' );
 get_template_part( 'functions/bulletin-board' );
 // キャンペーン
 get_template_part( 'functions/campaign' );
+get_template_part( 'functions/calculate' );
 // 表示
 get_template_part( 'functions/display' );
 // amazon
@@ -113,6 +114,7 @@ get_template_part( 'functions/user', 'caps' );
 get_template_part( 'functions/user', 'affiliate' );
 get_template_part( 'functions/user', 'picture' );
 get_template_part( 'functions/user', 'secret' );
+get_template_part( 'functions/terms' );
 // ユーティリティ
 get_template_part( 'functions/utility' );
 // ウィジェット
