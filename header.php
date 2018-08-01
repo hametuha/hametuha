@@ -214,8 +214,8 @@
 			</ul>
 		</li>
 		<li>
-			<a href="<?= get_post_type_archive_link( 'faq' ); ?>">
-				<i class="icon-question2"></i> よくある質問
+			<a href="<?= home_url( 'help' ); ?>">
+				<i class="icon-question2"></i> ヘルプセンター
 			</a>
 			<ul>
 				<?php foreach ( get_terms( 'faq_cat' ) as $term ) : ?>

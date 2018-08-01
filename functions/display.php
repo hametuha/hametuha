@@ -66,9 +66,7 @@ function hameplate( $slug, $name = '', $args = [], $echo = true, $glue = '-' ) {
  * @filter show_admin_bar
  * @return boolean
  */
-add_filter( 'show_admin_bar', function () {
-	return false;
-}, 1000 );
+add_filter( 'show_admin_bar', '__return_false', 1000 );
 
 
 /**

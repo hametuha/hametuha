@@ -67,11 +67,12 @@ function hametuha_user_link( $url, $label, $source, $author = null ) {
 /**
  * Google Adsenseを出力する
  *
- * @param int $unit_no
+ * @param int|string $unit_no
  *
  */
 function google_adsense( $unit_no = 1 ) {
 	switch ( $unit_no ) {
+        case 'after_title':
 		case 1:
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -87,6 +88,7 @@ function google_adsense( $unit_no = 1 ) {
 HTML;
 			break;
 		case 2:
+        case 'after_content':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅー記事下 -->
@@ -101,6 +103,7 @@ HTML;
 HTML;
 			break;
 		case 3:
+        case 'sidebar':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーサイドバー -->
@@ -115,6 +118,7 @@ HTML;
 HTML;
 			break;
 		case 4:
+        case 'archive_top':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーアーカイブ上 -->
@@ -129,6 +133,7 @@ HTML;
 HTML;
 			break;
 		case 5:
+        case 'archive_bottom':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーアーカイブ下 -->
@@ -142,6 +147,20 @@ HTML;
 </script>
 HTML;
 			break;
+        case 6:
+        case 'related':
+            echo <<<HTML
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-0087037684083564"
+     data-ad-slot="4525538727"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+HTML;
+            break;
 	}
 }
 
