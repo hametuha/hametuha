@@ -22,7 +22,7 @@
 					<?php
                     $terms = get_terms( 'faq_cat' );
                     if ( $terms && ! is_wp_error( $terms ) ) :
-					    foreach (  as $term ) : ?>
+					    foreach ( $terms as $term ) : ?>
                         <li class="<?= is_tax( $term->taxonomy, $term->name ) || ( is_singular( 'faq' ) && has_term( $term->term_id, $term->taxonomy ) ) ? 'active' : '' ?>">
                             <a href="<?= get_term_link( $term ) ?>"><?= esc_html( $term->name ) ?></a>
                         </li>
