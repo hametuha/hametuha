@@ -217,8 +217,14 @@
 			<a href="<?= home_url( 'help' ); ?>">
 				<i class="icon-question2"></i> ヘルプセンター
 			</a>
+            <?php
+            $faqs = get_terms( [ 'taxonomy' => 'faq_cat' ] );
+            if ( $faqs && ! is_wp_error($faqs) ) :
+                ?>
 			<ul>
-				<?php foreach ( get_terms( 'faq_cat' ) as $term ) : ?>
+				<?php
+
+                foreach ( $faqs as $term ) : ?>
 					<li>
 						<a href="<?= get_term_link( $term ) ?>">
 							<?= esc_html( $term->name ) ?>について
@@ -227,6 +233,7 @@
 					</li>
 				<?php endforeach; ?>
 			</ul>
+            <?php endif; ?>
 		</li>
 
 	</ul>
