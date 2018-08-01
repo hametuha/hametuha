@@ -29,12 +29,15 @@ get_header( 'faq' ) ?>
 
 <section class="help-center-topic">
 
+<?php
+    $terms = get_terms( [ 'taxonomy' => 'faq_cat' ] );
+    if ( $terms && ! is_wp_error( $terms ) ) :
+?>
 <div class="container">
 
     <h2 class="text-center">トピック</h2>
 
     <?php
-    $terms = get_terms( [ 'taxonomy' => 'faq_cat' ] );
     $rows = [];
     $idx = 0;
     foreach ( $terms as $index => $term ) {
@@ -64,6 +67,7 @@ get_header( 'faq' ) ?>
     <?php endforeach; ?>
 </div>
 </section>
+<?php endif; ?>
 
 <section class="help-center-misc">
 
