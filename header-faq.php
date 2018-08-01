@@ -19,11 +19,14 @@
                     <li class="<?= is_page( 'help' ) ? 'active' : '' ?>">
                         <a href="<?= home_url( 'help' ) ?>">ホーム</a>
                     </li>
-					<?php foreach ( get_terms( 'faq_cat' ) as $term ) : ?>
+					<?php
+                    $terms = get_terms( 'faq_cat' );
+                    if ( $terms && ! is_wp_error( $terms ) ) :
+					    foreach (  as $term ) : ?>
                         <li class="<?= is_tax( $term->taxonomy, $term->name ) || ( is_singular( 'faq' ) && has_term( $term->term_id, $term->taxonomy ) ) ? 'active' : '' ?>">
                             <a href="<?= get_term_link( $term ) ?>"><?= esc_html( $term->name ) ?></a>
                         </li>
-					<?php endforeach; ?>
+					<?php endforeach; endif; ?>
                 </ul>
             </div>
             <div class="col hidden-xs col-sm-3 text-right">
