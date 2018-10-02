@@ -3,7 +3,8 @@
  * Template Name: ヘルプセンター
  */
 
-get_header( 'faq' ) ?>
+get_template_part( 'templates/faq/header-faq' );
+?>
 
 <section class="help-center-latest">
 

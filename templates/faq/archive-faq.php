@@ -1,6 +1,6 @@
-<?php get_header( 'faq' ) ?>
+<?php get_template_part( 'templates/faq/header-faq' ); ?>
 
-    <div class="container archive">
+<div class="container archive">
 
         <div class="row row-offcanvas row-offcanvas-right">
 
@@ -30,8 +30,7 @@
                 <?php google_adsense( 'related' ) ?>
             </div>
             <!-- //.main-container -->
-
-			<?php get_sidebar( 'faq' ) ?>
+			<?php get_template_part( 'templates/faq/sidebar-faq' ); ?>
 
         </div>
         <!-- // .offcanvas -->

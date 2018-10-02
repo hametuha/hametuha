@@ -1,5 +1,5 @@
 // インジケーター
-%loading-indicator {
+%loading-indicator, .loading {
   &:before {
     content: "";
     display: block;

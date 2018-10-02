@@ -12,39 +12,6 @@ global $_hametuha_thread_error;
 $_hametuha_thread_error= array();
 
 
-
-
-/**
- * 破滅派掲示板用のスレッドを追加する
- *
- * @action init
- */
-add_action('init', function(){
-	//投稿タイプthreadを登録
-	register_post_type('thread', [
-		'label' => 'スレッド',
-		'description' => '破滅派BBSは参加者達が意見交換をする場所です。積極的にご参加ください。匿名での投稿もできます。',
-		'public' => true,
-		'menu_icon' => 'dashicons-feedback',
-		'supports' => array('title', 'editor', 'author', 'comments'),
-		'has_archive' => true,
-		'capability_type' => 'post',
-		'rewrite' => array('slug' => 'thread'),
-		'show_ui' => current_user_can('edit_others_posts'),
-		'can_export' => false
-	]);
-	//スレッドのカテゴリーを登録
-	register_taxonomy('topic', ['thread'], [
-		'hierarchical' => false,
-		'show_ui' => current_user_can('edit_others_posts'),
-		'query_var' => true,
-		'rewrite' => ['slug' => 'topic'],
-        'label' => 'トピック'
-    ]);
-});
-
-
-
 /**
  * 匿名ユーザーのログイン名を返す
  * @return string 
@@ -251,6 +218,7 @@ add_action('template_redirect', '_hametuha_anonymous_comment');
 function _hametuha_comment_reply($comment_id, $comment){
 	global $wpdb;
 	//返信コメントか否か、投稿タイプがスレッドか否かをチェック
+    return;
 	if($comment->comment_parent > 0 && $wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE ID = %d AND post_type = 'thread' LIMIT 1", $comment->comment_post_ID))){
 		//親コメントのユーザーが匿名でないかをチェック
 		$anonymous = get_anonymous_user();
@@ -330,64 +298,50 @@ function show_thread_error(){
 
 /**
  * ユーザーが作成したスレッドの数を返す
+ *
+ * @deprecated
  * @global wpdb $wpdb
  * @param int $user_id
  * @return int 
  */
 function get_author_thread_count($user_id){
-	global $wpdb;
-	$sql = <<<EOS
-		SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_author = %d AND post_type = %s AND post_status = 'publish'
-EOS;
-	return (int)$wpdb->get_var($wpdb->prepare($sql, $user_id, 'thread'));
+	return hamethread_get_author_thread_count( $user_id );
 }
 
 /**
  * 投稿が最近コメントされたか否か
+ *
+ * @deprecated
  * @param int $offset 初期値は7
  * @param object $post
  * @return boolean
  */
 function recently_commented($offset = 7, $post = null){
-	$latest_date = get_latest_comment_date($post);
-	if(!$latest_date){
-		return false;
-	}
-	return (boolean)((time() - strtotime($latest_date)) < 60 * 60 * 24 * $offset);
+	return hamethread_recently_commented( $offset, $post );
 }
 
 /**
  * 最新コメントの日付を取得する
+ *
+ * @deprecated
  * @global wpdb $wpdb
  * @param object $post
  * @return string
  */
 function get_latest_comment_date($post = null){
-	global $wpdb;
-	$post = get_post($post);
-	$sql = <<<EOS
-		SELECT comment_date FROM {$wpdb->comments}
-		WHERE comment_post_ID = %d
-		LIMIT 1
-EOS;
-	return $wpdb->get_var($wpdb->prepare($sql, $post->ID));
+	return hamethread_get_latest_comment_date( $post );
 }
 
 /**
  * ユーザーが投稿したスレッドのレス数を返す
+ *
+ * @deprecated
  * @global wpdb $wpdb
  * @param int $user_id
  * @return int 
  */
 function get_author_response_count($user_id){
-	global $wpdb;
-	$sql = <<<EOS
-		SELECT COUNT(comment_ID) FROM {$wpdb->comments} AS c
-		INNER JOIN {$wpdb->posts} AS p
-		ON c.comment_post_ID = p.ID
-		WHERE p.post_type = 'thread' AND c.user_id = %d
-EOS;
-	return (int)$wpdb->get_var($wpdb->prepare($sql, $user_id));
+	return hamethread_get_author_response_count( $user_id );
 }
 
 /**
@@ -403,3 +357,23 @@ function _hametuha_bbs_reply_link($option){
 	}
 }
 add_filter('option_comment_registration', '_hametuha_bbs_reply_link');
+
+
+add_action( 'wp_footer', function() {
+    static $did = false;
+    if ( $did ) {
+        return;
+    }
+	if ( is_singular( 'faq' ) || is_post_type_archive( 'faq' ) || is_tax( 'faq_cat' ) || is_page( 'help' ) ) {
+		?>
+		<!-- Your customer chat code -->
+		<div class="fb-customerchat"
+			 attribution=setup_tool
+			 page_id="196103120449777"
+			 theme_color="#000000"
+			 logged_in_greeting="めつかれさまです。なにかお困りですか？"
+			 logged_out_greeting="めつかれさまです。なにかお困りですか？">
+		</div>
+		<?php
+	}
+} );

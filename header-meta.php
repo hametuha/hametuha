@@ -17,4 +17,6 @@
 	echo ' itemscope itemtype="http://schema.org/WebPage"';
 } ?> <?php body_class() ?>>
 <div id="fb-root"></div>
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
 <div id="whole-body">

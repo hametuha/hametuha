@@ -183,6 +183,7 @@ class UserSales extends Model {
 	/**
 	 * 支払すべき履歴を返す
 	 *
+	 * @deprecated
 	 * @param int $year
 	 * @param int $month
 	 * @param int $user_id
@@ -359,6 +360,7 @@ class UserSales extends Model {
 	/**
 	 * データを挿入する
 	 *
+	 * @deprecated
 	 * @param int $user_id
 	 * @param string $type
 	 * @param float $price
@@ -372,22 +374,7 @@ class UserSales extends Model {
 	 * @return false|int
 	 */
 	public function add( $user_id, $type, $price, $unit = 1, $description = '', $tax_included = false, $deduction = true, $status = 0, $created = '' ) {
-		// 消費税と小計を出す
-		$sub_total = $unit * $price;
-		if ( $tax_included ) {
-			$vat = $sub_total / ( ( $this->vat_ratio * 100 ) + 100 ) * ( $this->vat_ratio * 100 );
-			$sub_total -= $vat;
-		} else {
-			$vat = $sub_total * $this->vat_ratio;
-		}
-		// 源泉徴収税を出す
-		if ( $deduction ) {
-			$deduction_price = $sub_total * $this->deduction_ratio;
-		} else {
-			$deduction_price = 0;
-		}
-		// 振込額を出す
-		$total = $sub_total - $deduction_price + $vat;
+
 		// 保存する
 		return $this->insert( [
 			'user_id' => $user_id,
@@ -454,8 +441,6 @@ class UserSales extends Model {
 			}
 			return $user;
 		}, $users );
-
-
 	}
 
 	/**
@@ -503,6 +488,7 @@ SQL;
 	/**
 	 * 月初と月末を取得する
 	 *
+	 * @deprecated
 	 * @param int $year
 	 * @param int $month
 	 * @return array

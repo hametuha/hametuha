@@ -12,6 +12,13 @@
   "repositories": [
     {
       "type": "path",
+      "url": "../../lib/pattern",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
       "url": "../../lib/hashboard",
       "options": {
         "symlink": true
@@ -26,6 +33,13 @@
     },
     {
       "type": "path",
+      "url": "../../lib/sharee",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
       "url": "../../lib/wpametu",
       "options": {
         "symlink": true
@@ -33,9 +47,11 @@
     }
   ],
   "require": {
+    "hametuha/pattern": "*",
     "hametuha/wpametu": "*",
     "hametuha/HamePub": "*",
-    "hametuha/hashboard": "*"
+    "hametuha/hashboard": "*",
+    "hametuha/sharee": "*"
   },
   "autoload": {
     "psr-0": {

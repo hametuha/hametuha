@@ -7,63 +7,7 @@
 
 
 
-/**
- * 銀行口座情報を取得する
- *
- * @param int $user_id
- *
- * @return array
- */
-function hametuha_bank_account( $user_id = 0 ) {
-	if ( ! $user_id ) {
-		$user_id = get_current_user_id();
-	}
-	$account = [];
-	foreach ( [ 'group', 'branch', 'type', 'number', 'name' ] as $key ) {
-		$meta_key = "_bank_{$key}";
-		$account[ $key ] = get_user_meta( $user_id, $meta_key, true );
-	}
-	return $account;
-}
 
-/**
- * 支払先情報を取得する
- *
- * @param int $user_id
- *
- * @return array
- */
-function hametuha_billing_address( $user_id = 0 ) {
-	if ( ! $user_id ) {
-		$user_id = get_current_user_id();
-	}
-	$address = [];
-	foreach ( [ 'name', 'number', 'address', 'address2', 'zip' ] as $key ) {
-		$meta_key = "_billing_{$key}";
-		$address[ $key ] = get_user_meta( $user_id, $meta_key, true );
-	}
-	return $address;
-}
-
-/**
- * ユーザーの銀行口座がオッケーか否かを返す
- *
- * @param int $user_id
- *
- * @return bool
- */
-function hametuha_bank_ready( $user_id = 0 ) {
-	$account = hametuha_bank_account( $user_id );
-	if ( ! $account ) {
-		return false;
-	}
-	foreach ( $account as $value ) {
-		if ( ! $value ) {
-			return false;
-		}
-	}
-	return true;
-}
 
 /**
  * 最低支払い金額
@@ -74,34 +18,6 @@ function hametuha_minimum_payment() {
     return 3000;
 }
 
-/**
- * ユーザーの支払い先がオッケーかを返す
- *
- * @param int $user_id
- * @return boolean
- */
-function hametuha_billing_ready( $user_id = 0 ) {
-	$account = hametuha_billing_address( $user_id );
-	if ( ! $account ) {
-		return false;
-	}
-	foreach ( $account as $key => $value ) {
-	    switch ( $key ) {
-            case 'zip':
-            case 'name':
-            case 'number':
-            case 'address':
-				if ( !$value ) {
-					return false;
-				}
-                break;
-            default:
-                // Do nothing.
-                break;
-        }
-	}
-	return true;
-}
 
 /**
  * プロフィールをオーバーライドする

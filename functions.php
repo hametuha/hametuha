@@ -39,6 +39,8 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	if ( class_exists( 'Hametuha\\Hashboard\\Router\\Profile' ) ) {
 		\Hametuha\Hashboard\Router\Profile::get_instance();
 	}
+	// Activate share
+	\Hametuha\Sharee::get_instance();
 }
 
 /**
