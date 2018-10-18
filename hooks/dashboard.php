@@ -92,3 +92,5 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 	wp_enqueue_script( 'hametuha-hb-dashboard' );
 	return $blocks;
 } );
+
+

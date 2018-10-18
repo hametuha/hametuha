@@ -1,10 +1,17 @@
 .front-container{
   padding-top: $navbar-height + $subnavbar-height;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   & + .front-container{
     padding-top: 0;
   }
   .jumbotron{
     @include border-radius(0);
+    background-color: transparent;
+    &:after{
+      content: none;
+    }
   }
   h2{
     font-family: $work-title;
@@ -21,6 +28,10 @@
     img{
       width: auto;
       height: auto;
+      &.avatar{
+        width: 30px;
+        height: 30px;
+      }
     }
     .btn{
       font-family: sans-serif;

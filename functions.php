@@ -26,11 +26,6 @@ define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
  */
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	// Load vendor dir if dev environment.
-	$dev_dir = __DIR__ . '/vendor-dev';
-	if ( is_dir( $dev_dir ) ) {
-
-	}
 	require_once __DIR__ . '/vendor/autoload.php';
 	// Load WPametu
 	WPametu::entry( 'Hametuha', __DIR__ . '/src' );
@@ -39,7 +34,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	if ( class_exists( 'Hametuha\\Hashboard\\Router\\Profile' ) ) {
 		\Hametuha\Hashboard\Router\Profile::get_instance();
 	}
-	// Activate share
+	// Activate sharee
 	\Hametuha\Sharee::get_instance();
 }
 

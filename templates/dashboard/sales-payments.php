@@ -25,8 +25,8 @@
         </tfoot>
         <tbody>
         <tr v-for="record in records">
-            <td class="text-center">{{record.fixed|moment('MM')}}</td>
-            <td class="text-center">{{record.fixed|moment('DD')}}</td>
+            <td class="text-center">{{record.fixed | moment('MM')}}</td>
+            <td class="text-center">{{record.fixed | moment('DD')}}</td>
             <td>{{record.display_name}}</td>
             <td class="text-right">{{record.total | monetize}}</td>
             <td class="text-right">{{record.deducting | monetize}}</td>

@@ -106,7 +106,8 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 					$field[ 'description' ] = 'Webサイトやブログをお持ちの場合は記入してください。';
 					break;
 				case 'twitter':
-					$field[ 'placeholder' ] = 'hametuha';
+					$field[ 'placeholder' ] = '例・hametuha';
+					$field[ 'description' ] = 'アットマーク(@)はいりません。';
 					break;
 				case 'slack':
 					$field[ 'placeholder' ] = 'hametuha';
@@ -121,10 +122,12 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 					break;
 				case 'favorite_authors':
 					$field[ 'description' ] = '好きな作家をカンマ区切りで入力してください。';
+					$field[ 'placeholder' ] = '例・大江健三郎,川端康成,自分';
 					break;
 				case 'favorite_words':
 					$field[ 'type' ] = 'textarea';
 					$field[ 'description' ] = '好きな言葉を出典付きで入力してください。';
+					$field[ 'placeholder' ] = '例・悲しみではなにも買えない。なぜなら悲しみに価値はないからだ。';
 					break;
 				default:
 					// Do nothing.

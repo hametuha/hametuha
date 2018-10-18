@@ -38,7 +38,7 @@
         </tfoot>
         <tbody>
         <tr v-for="record in records">
-            <th>{{record.sales_id}}</th>
+            <th>{{record.revenue_id}}</th>
             <td>{{record.description}}</td>
             <td class="text-right">{{record.unit}}</td>
             <td class="text-right">{{record.deducting | monetize}}</td>

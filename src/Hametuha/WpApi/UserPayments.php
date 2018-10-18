@@ -3,19 +3,19 @@
 namespace Hametuha\WpApi;
 
 
-use Hametuha\Model\UserSales;
+use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\API\Rest\WpApi;
 
 /**
  * User reward API
  *
- * @property UserSales $sales
+ * @property RevenueModel $sales
  * @package Hametuha\WpApi
  */
 class UserPayments extends WpApi {
 
 	protected $models = [
-		'sales' => UserSales::class,
+		'sales' => RevenueModel::class,
 	];
 
 	/**
@@ -80,8 +80,7 @@ class UserPayments extends WpApi {
 			'deducting' => 0,
 			'records'   => [],
 		];
-
-		foreach ( $this->sales->get_payments_list( $request['year'], $user_id ) as $record ) {
+		foreach ( $this->sales->get_payment_list( $request->get_param( 'year' ), $user_id ) as $record ) {
 			$response['total'] += $record->total;
 			$response['deducting'] += $record->deducting;
 			$response['records'][] = $record;

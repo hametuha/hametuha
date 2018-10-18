@@ -1,6 +1,6 @@
-<?php get_header() ?>
+<?php get_header(); ?>
 
-<div class="sub-header faq-header">
+<div class="sub-header faq-header hidden-sm">
 	<div class="container">
 
         <div class="row sub-header-box">
