@@ -24,6 +24,37 @@ add_filter( 'hashboard_screens', function( $screens ) {
 } );
 
 /**
+ * サイドバーにリンクを追加
+ */
+add_filter( 'hashboard_sidebar_links', function ( $links ) {
+	$new_links = [];
+	$link_to_add = [
+        'dashboard' => [],
+    ];
+	if ( current_user_can( 'edit_posts' ) ) {
+	    $link_to_add['dashboard'][] = [ 'works', 'book', admin_url( 'edit.php' ), 'あなたの作品' ];
+    }
+	foreach ( $links as $key => $html ) {
+		$new_links[ $key ] = $html;
+		if ( ! isset( $link_to_add[ $key ] ) || ! $link_to_add[ $key ] ) {
+		    continue;
+        }
+		foreach ( $link_to_add[ $key ] as list( $slug, $icon, $url, $label ) ) {
+			$url = esc_url( $url );
+			$label = esc_html( $label );
+			$new_links[ $slug ] = <<<HTML
+						 <li class="hb-menu-item">
+                			<a href="{$url}">
+								<i class="material-icons">shopping_cart</i> {$label}
+                			</a>
+						</li>
+HTML;
+		}
+	}
+	return $new_links;
+} );
+
+/**
  * ダッシュボードをカスタマイズ
  */
 add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
