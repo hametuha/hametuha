@@ -72,12 +72,19 @@ class Post extends Command {
 	 * : <term>
 	 *   Term ID
 	 *
-	 * @synopsis <taxonomy> <term>
+	 * : <format>
+	 *   1 of xml, text, tag. Default xml.
+	 *
+	 * @synopsis <taxonomy> <term> [--format=<format>]
 	 * @param array $args
 	 * @param array $assoc
 	 */
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
+		$format = isset( $assoc['format'] ) ? $assoc['format'] : 'xml';
+		if ( ! in_array( $format, [ 'xml', 'text', 'tags' ] ) ) {
+			self::e( sprintf( 'Format %s is wrong.', $format ) );
+		}
 		$term = get_term_by( 'id', $term_id, $taxonomy );
 		if ( ! $term ) {
 			self::e( sprintf( 'failed to get term %d of %s', $term_id, $taxonomy ) );
@@ -104,13 +111,66 @@ class Post extends Command {
 		if ( ! $posts ) {
 			self::e( 'No post found.' );
 		}
+		$tags = [];
 		foreach ( $posts as $post ) {
-			$xml = $this->to_xml( $post );
-			file_put_contents( "{$dir}/post-{$post->ID}.xml", $xml );
-			echo '.';
+			switch ( $format ) {
+				case 'xml':
+					$xml = $this->to_xml( $post );
+					file_put_contents( "{$dir}/post-{$post->ID}.xml", $xml );
+					echo '.';
+					break;
+				case 'text':
+					$xml = $this->to_text( $post );
+					file_put_contents( "{$dir}/post-{$post->ID}.txt", $xml );
+					echo '.';
+					break;
+				case 'tags':
+					foreach ( $this->get_tags( $post ) as $tag ) {
+						$attributes = explode( ' ', $tag );
+						$tag_name = array_shift( $attributes );
+						$tags[ $tag_name ] = implode( ' ', $attributes );
+					}
+					break;
+			}
+		}
+		if ( $tags ) {
+			$table = new \cli\Table();
+			$table->setHeaders( [ 'Tag Name', 'Attributes' ] );
+			foreach ( $tags as $tag_name => $attr ) {
+				$table->addRow( [ $tag_name, $attr ?: 'empty' ] );
+			}
+			$table->display();
 		}
 		self::l( '' );
 		self::s( 'Done.' );
+	}
+
+	/**
+	 * Get tags of texts.
+	 *
+	 * @param null|int|\WP_Post $post
+	 * @return array
+	 */
+	protected function get_tags( $post = null ) {
+		$post = get_post( $post );
+		$tags = [];
+		if ( preg_match_all( '#<([^/][^>]+)>#u', $post->post_content, $matches, PREG_SET_ORDER ) ) {
+			foreach ( $matches as $match ) {
+				$tags[] = $match[1];
+			}
+		}
+		return array_unique( $tags );
+	}
+
+	/**
+	 * Get tagged text for InDesign.
+	 *
+	 * @param null|int|\WP_Post $post
+	 *
+	 * @return string
+	 */
+	protected function to_text( $post = null ) {
+
 	}
 
 	/**
