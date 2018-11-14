@@ -120,8 +120,8 @@ class Post extends Command {
 					echo '.';
 					break;
 				case 'text':
-					$xml = $this->to_text( $post );
-					file_put_contents( "{$dir}/post-{$post->ID}.txt", $xml );
+					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post );
+					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					echo '.';
 					break;
 				case 'tags':
@@ -170,7 +170,55 @@ class Post extends Command {
 	 * @return string
 	 */
 	protected function to_text( $post = null ) {
-
+		$post = get_post( $post );
+		// Fix double space.
+		$content = str_replace( "\r\n", "\n", $post->post_content );
+		$content = str_replace( "\n\n", "\n", $content );
+		// Remove empty line.
+		$content = trim( implode( "\n", array_map( function( $line ) {
+			return '&nbsp;' === $line ? '' : $line;
+		}, explode( "\n", $content ) ) ) );
+		// Convert Aside, blockquote.
+		foreach ( [
+			'#<strong>([^<]+)</strong>#u' => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+				  ] as $regexp => $converted ) {
+			$content = preg_replace( $regexp, $converted, $content );
+		}
+		// Headings
+		$content = preg_replace( '#<h(\d)>([^<]+)</h(\d)>#u', '<ParaStyle:Heading$1>$2', $content );
+		// Block quote, Aside.
+		foreach ( [ 'Aside', 'BlockQuote' ] as $tag ) {
+			$tag_name = strtolower( $tag );
+			$content = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
+				$lines = trim( $match );
+				return implode( "\n", array_map( function( $line ) use ( $tag ) {
+					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
+				}, explode( "\n", $lines ) ) );
+			}, $content );
+		}
+		// paragraph
+		foreach ( [
+			'#<p style="text-align: ([^>]+);">(.*?)</p>#u' => function( $match ) {
+				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( $match[1] ), $match[2] );
+			},
+			'#<p style="(text-indent|padding-left): ([^>]+);">(.*?)</p>#u' => function( $match ) {
+				$indent = preg_replace( '/\D/', '', $match[2] );
+				return $match[1] ? sprintf( '<ParaStyle:Indent%d>%s', $indent, $match[3] ) : $match[3];
+			},
+		] as $regexp => $callback ) {
+			$content = preg_replace_callback( $regexp, $callback, $content );
+		}
+		// Remove span
+		$content = preg_replace( '#<span([^>]*?>)(.*?)</span>#u', '$2', $content );
+		// Add normal style.
+		return implode( "\n", array_map( function( $line ) {
+			if ( 0 === strpos( $line, '<ParaStyle' ) ) {
+				return $line;
+			} else {
+				return '<ParaStyle:Normal>' . $line;
+			}
+		}, explode( "\n", $content ) ) );
 	}
 
 	/**
