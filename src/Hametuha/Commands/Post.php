@@ -191,7 +191,7 @@ class Post extends Command {
 		foreach ( [ 'Aside', 'BlockQuote' ] as $tag ) {
 			$tag_name = strtolower( $tag );
 			$content = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
-				$lines = trim( $match );
+				$lines = trim( $match[1] );
 				return implode( "\n", array_map( function( $line ) use ( $tag ) {
 					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
 				}, explode( "\n", $lines ) ) );
