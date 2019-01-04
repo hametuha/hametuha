@@ -47,7 +47,12 @@
 
 						<div class="thread-body col-sm-9 col-xs-12">
 
-							<h1 itemprop="name"><?php the_title(); ?></h1>
+							<h1 itemprop="name">
+                                <?php if ( 'private' === get_post_status() ) : ?>
+                                <i class="fa fa-lock text-warning"></i>
+                                <?php endif; ?>
+                                <?php the_title(); ?>
+                            </h1>
 							
 							<?php get_template_part( 'parts/meta', 'single' ) ?>
 

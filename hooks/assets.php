@@ -19,6 +19,15 @@ add_action( 'init', function () {
 	// Angular
 	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.8', true );
 
+	// FontAwesome
+	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
+	add_filter( 'style_loader_tag', function( $tag, $handle, $src, $media ) {
+		if ( 'font-awesome' !== $handle ) {
+			return $tag;
+		}
+		return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
+	}, 10, 4 );
+
 	/**
 	 * hametuha_angular_extensions
 	 *
@@ -103,7 +112,7 @@ JS;
 	], hametuha_version(), true );
 
 	// メインCSS
-	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', null, hametuha_version() );
+	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );
 
 	// 管理画面用CSS
 	wp_register_style( 'hametuha-admin', get_template_directory_uri() . '/assets/css/admin.css', null, hametuha_version() );
@@ -125,7 +134,7 @@ JS;
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
 	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
-} );
+}, 9 );
 
 /**
  * CSSを読み込む
@@ -140,11 +149,11 @@ add_action( 'wp_enqueue_scripts', function () {
 	// Social scripts
 	wp_enqueue_script( 'hametuha-social' );
 
-	//iframe
+	// iframe
 	if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
 		wp_dequeue_style( 'admin-bar' );
 	}
-	//投稿を読み込んでいるページ
+	// 投稿を読み込んでいるページ
 	if ( is_singular( 'post' ) ) {
 		wp_dequeue_style( 'contact-form-7' );
 		wp_dequeue_style( 'wp-tmkm-amazon' );
