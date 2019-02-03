@@ -13,6 +13,7 @@
     }
   ],
   "require": {
+    "ext-curl": "*",
     "hametuha/wpametu": "0.8.x-dev",
     "hametuha/hamepub": "1.0.x-dev",
     "hametuha/hashboard": "0.8.x-dev",
