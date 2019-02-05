@@ -113,6 +113,8 @@ function ga_record_cookie( $page ) {
  */
 add_action( 'wp_head', function () {
 	echo <<<HTML
+<!-- Facebook SDK -->
+
 <!-- Facebook Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?

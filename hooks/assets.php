@@ -103,7 +103,7 @@ JS;
 	], hametuha_version(), true );
 
 	// ソーシャル計測
-	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', hametuha_version(), [ 'jquery' ], true );
+	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
 
 	// イベント参加
 	wp_register_script( 'hamevent', get_template_directory_uri(). '/assets/js/dist/components/event-participate.js', [

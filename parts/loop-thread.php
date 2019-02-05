@@ -27,9 +27,9 @@
 	            <li>
 	                <i class="icon-clock"></i> 最新レス
 	                <?php
-	                $latest = get_latest_comment_date();
+	                $latest = hamethread_get_latest_comment_date();
 	                echo $latest ? mysql2date('Y/n/j', $latest) : 'なし';
-	                if( recently_commented() ):
+	                if( hamethread_recently_commented() ):
 	                    ?>
 	                    <span class="label label-success">New!</span>
 	                <?php endif; ?>

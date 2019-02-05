@@ -4,15 +4,27 @@
  * フッターにJS SDKを読み込む
  */
 add_action( 'admin_footer', function () {
+    $fb_app_id = '196054397143922';
+    $fb_sdk = 'https://connect.facebook.net/en_US/sdk.js';
 	echo <<<HTML
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.7&appId=196054397143922";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script>
+ window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '{$fb_app_id}',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v3.2'
+    });
+  };
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "{$fb_sdk}";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 <script>
 ! function (d, s, id) {
 	var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
@@ -27,6 +39,14 @@ add_action( 'admin_footer', function () {
 HTML;
 } );
 
+/**
+ * Mark as this page needs chat plugin.
+ */
+add_action( 'wp_footer', function() {
+	wp_localize_script( 'hametuha-social', 'HametuhaSocial', [
+		'needChat' => ( is_page( 'help' ) || is_post_type_archive( 'faq' ) || is_singular( 'faq' ) || is_tax( 'faq_cat' ) ),
+	] );
+}, 1 );
 
 /**
  * 短いURLを取得する

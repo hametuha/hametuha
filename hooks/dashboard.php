@@ -13,8 +13,22 @@ add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
 	$admin_bar->add_menu( [
 		'id' => 'hashboard-site',
 		'parent' => 'site-name',
-		'title' => 'ユーザー管理',
+		'title' => 'ダッシュボード',
 		'href' => \Hametuha\Hashboard::screen_url(),
+		'group' => false,
+	] );
+	$admin_bar->add_menu( [
+		'id' => 'bbs',
+		'parent' => 'site-name',
+		'title' => '掲示板',
+		'href' => get_post_type_archive_link( 'thread' ),
+		'group' => false,
+	] );
+	$admin_bar->add_menu( [
+		'id' => 'faqs',
+		'parent' => 'site-name',
+		'title' => 'ヘルプセンター',
+		'href' => get_post_type_archive_link( 'faq' ),
 		'group' => false,
 	] );
     $admin_bar->add_node( [

@@ -5,7 +5,7 @@
 /*global FB: false*/
 /*global twttr: false*/
 /*global Hametuha: true*/
-
+/*global HametuhaSocial: false */
 
 (function ($) {
 
@@ -36,7 +36,8 @@
     FB.init({
       appId  : '196054397143922',
       xfbml  : true,
-      version: 'v2.7'
+      autoLogAppEvents : true,
+      version: 'v3.2'
     });
     // イベントを監視
     var actions = {
@@ -67,7 +68,7 @@
     js = d.createElement(s);
     js.id = id;
     js.async = true;
-    js.src = "//connect.facebook.net/ja_JP/sdk.js";
+    js.src = HametuhaSocial.needChat ? '//connect.facebook.net/ja_JP/sdk/xfbml.customerchat.js' : "//connect.facebook.net/ja_JP/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
