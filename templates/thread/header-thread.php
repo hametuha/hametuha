@@ -23,8 +23,8 @@
         <div class="row">
             <div class="col col-xs-12 col-sm-9">
                 <ul class="nav nav-pills">
-                    <li class="<?= is_page( 'forum' ) ? 'active' : '' ?>">
-                        <a href="<?= home_url( 'forum' ) ?>">ホーム</a>
+                    <li class="<?= is_post_type_archive( 'thread' ) ? 'active' : '' ?>">
+                        <a href="<?= get_post_type_archive_link( 'thread' ) ?>">ホーム</a>
                     </li>
 					<?php
                     $terms = get_terms( 'topic' );
