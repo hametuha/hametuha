@@ -3,5 +3,7 @@ vendor-dev
 node_modules
 bower_components
 assets/html/*.html
+composer.lock
+composer-dev.lock
 .sass-cache
 .svn
