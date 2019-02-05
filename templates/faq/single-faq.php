@@ -1,4 +1,4 @@
-<?php get_header( 'faq' ); ?>
+<?php get_template_part( 'templates/faq/header-faq' ); ?>
 
 	<div class="container single">
 
@@ -50,7 +50,7 @@
 
 			<?php endwhile; endif; ?>
 
-			<?php get_sidebar( 'faq' ) ?>
+			<?php get_template_part( 'templates/faq/sidebar-faq' ); ?>
 
 		</div><!-- //.row -->
 

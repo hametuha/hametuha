@@ -3,19 +3,19 @@
 namespace Hametuha\WpApi;
 
 
-use Hametuha\Model\UserSales;
+use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\API\Rest\WpApi;
 
 /**
  * User reward API
  *
- * @property UserSales $sales
+ * @property RevenueModel $sales
  * @package Hametuha\WpApi
  */
 class UserReward extends WpApi {
 
 	protected $models = [
-		'sales' => UserSales::class,
+		'sales' => RevenueModel::class,
 	];
 
 	/**
@@ -47,19 +47,19 @@ class UserReward extends WpApi {
 				$args['year'] = [
 					'default' => date_i18n( 'Y' ),
 					'validate_callback' => function( $var ) {
-						return preg_match( '#\d{4}#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
+						return preg_match( '#^\d{4}$#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
 				];
 				$args['month'] = [
 					'default' => date_i18n( 'm' ),
 					'validate_callback' => function( $var ) {
-						return preg_match( '#\d{1,2}#', $var ) ?: new \WP_Error( 'malformat', '月は2桁の整数です。' );
+						return preg_match( '#^\d{1,2}$#', $var ) ?: new \WP_Error( 'malformat', '月は2桁の整数です。' );
 					},
 				];
 				$args['status'] = [
 					'default' => 'all',
 					'validate_callback' => function( $var ) {
-						return in_array( $var, [ 'all', '0', '1' ] ) ?: new \WP_Error( 'malformat', '指定できるステータスはの all, 0, 1 いずれかです。' );
+						return in_array( $var, [ 'all', '0', '1' ] ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
 					},
 				];
 				break;
@@ -82,15 +82,15 @@ class UserReward extends WpApi {
 			'deducting' => 0,
 			'records'   => [],
 		];
-		if ( 'all' == $request->get_param( 'status' ) ) {
-			$status = [ 0, 1 ];
-			$range = true;
-		} else {
-			$status = $request['status'];
-			$range = false;
-		}
+		$status = $request->get_param( 'status' );
 
-		foreach ( $this->sales->get_billing_list( $request['year'], $request['month'], $user_id, $status, $range ) as $sales ) {
+		foreach ( $this->sales->search( [
+			'year' => $request->get_param( 'year' ),
+			'month' => $request->get_param( 'month' ),
+			'status' => $request->get_param( 'status' ),
+			'object_id' => $user_id,
+			'per_page' => 0,
+		] ) as $sales ) {
 			$response['total'] += $sales->total;
 			$response['deducting'] += $sales->deducting;
 			$sales->paid = '0000-00-00 00:00:00' != $sales->fixed;

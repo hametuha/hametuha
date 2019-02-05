@@ -1,5 +1,2 @@
-/**
- * Description
- */
-!function(t){"use strict"}(jQuery);
+jQuery;
 //# sourceMappingURL=../map/editor/anpi.js.map

@@ -3,6 +3,42 @@
  * Home screen of hashboard/
  */
 
+/**
+ * Add links to admin bar.
+ */
+add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
+    if ( ! is_admin() ) {
+        return;
+    }
+	$admin_bar->add_menu( [
+		'id' => 'hashboard-site',
+		'parent' => 'site-name',
+		'title' => 'ダッシュボード',
+		'href' => \Hametuha\Hashboard::screen_url(),
+		'group' => false,
+	] );
+	$admin_bar->add_menu( [
+		'id' => 'bbs',
+		'parent' => 'site-name',
+		'title' => '掲示板',
+		'href' => get_post_type_archive_link( 'thread' ),
+		'group' => false,
+	] );
+	$admin_bar->add_menu( [
+		'id' => 'faqs',
+		'parent' => 'site-name',
+		'title' => 'ヘルプセンター',
+		'href' => get_post_type_archive_link( 'faq' ),
+		'group' => false,
+	] );
+    $admin_bar->add_node( [
+        'id'     => 'hashboard-user',
+        'parent' => 'user-actions',
+        'title'  => 'ダッシュボード',
+        'href'   => \Hametuha\Hashboard::screen_url(),
+        'group'  => false,
+    ] );
+}, 10 );
 
 /**
  * 新しい画面を追加
@@ -21,6 +57,47 @@ add_filter( 'hashboard_screens', function( $screens ) {
 		$new_screens[ $key ] = $class_name;
 	}
 	return $new_screens;
+} );
+
+/**
+ * サイドバーにリンクを追加
+ */
+add_filter( 'hashboard_sidebar_links', function ( $links ) {
+	$new_links = [];
+	$link_to_add = [
+        'dashboard' => [],
+    ];
+	if ( current_user_can( 'edit_posts' ) ) {
+	    $link_to_add['dashboard'][] = [ 'works', 'book', admin_url( 'edit.php' ), 'あなたの作品' ];
+    }
+	foreach ( $links as $key => $html ) {
+		$new_links[ $key ] = $html;
+		if ( ! isset( $link_to_add[ $key ] ) || ! $link_to_add[ $key ] ) {
+		    continue;
+        }
+		foreach ( $link_to_add[ $key ] as list( $slug, $icon, $url, $label ) ) {
+			$url = esc_url( $url );
+			$label = esc_html( $label );
+			$new_links[ $slug ] = <<<HTML
+						 <li class="hb-menu-item">
+                			<a href="{$url}">
+								<i class="material-icons">{$icon}</i> {$label}
+                			</a>
+						</li>
+HTML;
+		}
+	}
+	// Add help URL.
+	$help_url = get_page_link( get_page_by_path( 'help' ) );
+	$new_links['help'] = <<<HTML
+         <li class="hb-menu-item">
+            <a href="{$help_url}">
+                <i class="material-icons">live_help</i> ヘルプセンター
+            </a>
+        </li>
+HTML;
+
+	return $new_links;
 } );
 
 /**

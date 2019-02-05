@@ -129,6 +129,46 @@
   }
 }
 
+//
+// Sub header
+//
+.sub-header{
+
+  background: $hametuha-color;
+
+  .container{
+    padding-top: 40px;
+    padding-bottom: 20px;
+  }
+
+  &-title{
+    color: #fff;
+  }
+
+  .nav-pills a{
+    border-color: #fff;
+    color: #fff;
+    &:hover{
+      color: $hametuha-color;
+    }
+  }
+
+  .nav-pills .active a{
+    background: rgba( 255, 255, 255, .2 );
+    &:hover{
+      color: $hametuha-color;
+      background: #fff;
+    }
+  }
+
+  .form-control.hamelp-search-input{
+    height: 33px;
+  }
+
+  .btn-link{
+    color: #ccc;
+  }
+}
 
 //
 // mmenu

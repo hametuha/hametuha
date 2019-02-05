@@ -1,5 +1,5 @@
 /*!
- * wpdeps=hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector
+ * wpdeps=hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector,hb-filters-moment
  */
 
 /*global Materialize: false*/
@@ -50,10 +50,8 @@
     switch ( store ) {
       case 'KENP':
         return 'P';
-        break;
       default:
         return '部';
-        break;
     }
   };
 
@@ -65,10 +63,8 @@
     switch (string) {
       case 'Amazon':
         return 'KDP';
-        break;
       default:
         return string;
-        break;
     }
   };
 
@@ -206,7 +202,7 @@
             return;
           }
           var labels = [];
-          var end = [31, ( ( year % 4 === 0 ) ? 29 : 28), 31, 30, 31, 30, 31,31, 30, 31, 30, 31][parseInt(month, 10) - 1];
+          var end = [31, ( ( year % 4 === 0 && year % 100 !== 0 ) ? 29 : 28), 31, 30, 31, 30, 31,31, 30, 31, 30, 31][parseInt(month, 10) - 1];
           var price = null;
           var datasets = {};
           for(var i = 1; i <= end; i++ ) {
@@ -296,7 +292,7 @@
           this.getReward( this.currentYear, this.currentMonth, 1 );
           break;
         case 'deposit':
-          this.getReward( this.currentYear, this.currentMonth, 0 );
+          this.getReward( '0000', 0, 0 );
           break;
         case 'payments':
           this.getPayments();

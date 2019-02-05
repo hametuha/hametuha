@@ -11,6 +11,7 @@ use WPametu\Pattern\Singleton;
  * Class Picture
  *
  * @package Hametuha\User\Profile
+ * @deprecated
  * @property-read Image $image
  */
 class Picture extends Singleton {

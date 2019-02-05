@@ -46,3 +46,14 @@ register_sidebar( [
 	'before_title' => '<h2 class="widget-title">',
 	'after_title' => '</h2>',
 ] );
+
+// BBS右
+register_sidebar( [
+	'name' => 'BBS右',
+	'id'   => 'thread-sidebar',
+	'description' => '掲示板の右に表示されます。',
+	'before_widget' => '<div id="%1$s" class="widget %2$s">',
+	'after_widget' => '</div>',
+	'before_title' => '<h2 class="widget-title">',
+	'after_title' => '</h2>',
+] );

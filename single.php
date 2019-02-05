@@ -1,6 +1,8 @@
-<?php get_header(); ?>
-
-<?php get_header( 'breadcrumb' ) ?>
+<?php
+get_header();
+get_header( 'sub' );
+get_header( 'breadcrumb' );
+?>
 
 	<div class="container single">
 

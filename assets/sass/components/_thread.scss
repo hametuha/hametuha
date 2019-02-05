@@ -3,6 +3,7 @@
 }
 
 .topic-container{
+  margin-top: 60px;
   .avatar{
     border-radius: 50%;
   }
@@ -98,4 +99,9 @@ $carret-size: 20px;
       font-size: 14px;
     }
   }
+}
+
+article.type-thread{
+  padding-bottom: 40px;
+
 }

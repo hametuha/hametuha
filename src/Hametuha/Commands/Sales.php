@@ -3,6 +3,7 @@
 namespace Hametuha\Commands;
 
 use Hametuha\Model\UserSales;
+use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\Utility\Command;
 
 /**
@@ -58,129 +59,5 @@ class Sales extends Command {
 		$record[] = $year.$month;
 		update_option( 'news_sales_record', $record, false );
 		self::s( sprintf( '%d users got rewarded. %d don\'t.', $done, $none ) );
-	}
-
-	/**
-	 * 支払い済の売上一覧を取得する
-	 *
-	 *
-	 * @synopsis [--year=<year>] [--month=<month>] [--file=<file>]
-	 *
-	 * @param array $args
-	 * @param array $assoc
-	 */
-	public function fixed( $args, $assoc ) {
-		$year  = isset( $assoc['year'] ) ? $assoc['year'] : date_i18n( 'Y' );
-		$month = isset( $assoc['month'] ) ? sprintf( '%02d', $assoc['month'] ) : date_i18n( 'm' );
-		$file  = isset( $assoc['file'] ) ? $assoc['file'] : false;
-		if ( $file && ! is_writable( dirname( $file ) ) ) {
-			self::e( sprintf( '%s is not writable', $file ) );
-		}
-		$result = UserSales::get_instance()->get_fixed_billing( $year, $month );
-		if ( ! $result ) {
-			self::e( sprintf( '%d年%d月の結果はありませんでした。', $year, $month ) );
-		}
-		$table = new \cli\Table();
-		$table->setHeaders( [ 'Date', 'ID', 'Name', 'Sales Type', 'price', 'deducting', 'vat', 'subtotal' ] );
-		$rows = [];
-		foreach ( $result as $row ) {
-			$user = get_userdata( $row->user_id );
-			$rows[] = [
-				mysql2date( 'm/d', $row->fixed ),
-				$row->user_id,
-				$user->user_login,
-				$row->sales_type,
-				'¥'.number_format( round( $row->price * $row->unit ) ),
-				'¥'.number_format( round( $row->deducting ) ),
-				'¥'.number_format( round( $row->tax ) ),
-				'¥'.number_format( round( $row->total ) ),
-			];
-		}
-		$table->setRows( $rows );
-		$table->display();
-		if ( $file ) {
-			// Do CSV
-			$csv_rows = [];
-			foreach ( $result as $row ) {
-				$key = mysql2date( 'm/d', $row->fixed );
-				if ( ! isset( $csv_rows[ $key ] ) ) {
-					$csv_rows[ $key ] = [];
-				}
-				if ( ! isset( $csv_rows[ $key ][ $row->user_id ] ) ) {
-					$csv_rows[ $key ][ $row->user_id ] = [
-						'before_tax' => 0,
-					    'deducting'  => 0,
-					    'vat'        => 0,
-					    'total'      => 0,
-					];
-				}
-				foreach ( [
-					'before_tax' => $row->price * $row->unit,
-					'deducting'  => $row->deducting,
-					'vat'        => $row->tax,
-					'total'      => $row->total,
-				] as $sub_key => $amount ) {
-					$csv_rows[ $key ][ $row->user_id ][ $sub_key ] += $amount;
-				}
-			}
-			$csv = fopen( $file, 'w' );
-			foreach ( $csv_rows as $date => $users ) {
-				list( $m, $d ) = explode( '/', $date );
-				foreach ( $users as $user_id => $record ) {
-					// 月、日、支払い先、適用、源泉前金額、源泉額、消費税、源泉徴収後金額、住所
-					fputcsv( $csv, [
-						$m,
-						$d,
-						get_user_meta( $user_id, '_billing_name', true ),
-						'原稿料ほか',
-						round( $record['before_tax'] ),
-						round( $record['deducting'] ),
-						round( $record['vat'] ),
-						round( $record['total'] ),
-						get_user_meta( $user_id, '_billing_address', true ),
-					] );
-				}
-			}
-			fclose( $csv );
-			file_put_contents( $file, mb_convert_encoding( file_get_contents( $file ), 'sjis-win', 'utf-8' ) );
-			self::s( sprintf( 'CSV out to %s', realpath( $file ) ) );
-		}
-	}
-
-	/**
-	 * Get my number of users.
-	 *
-	 * ## OPTIONS
-	 * : [<year>]
-	 *   Optional. Default is last year.
-	 * : [--tsv]
-	 *   Optional. If set, tsv value is returned.
-	 *
-	 * @synopsis [<year>] [--tsv]
-	 * @param array $args
-	 * @param array $assoc
-	 */
-	public function my_number( $args, $assoc ) {
-		$year = isset( $args[0] ) ? $args[0] : date_i18n( 'Y' ) - 1;
-		$tsv = isset( $assoc['tsv'] ) && $assoc['tsv'];
-		if ( ! preg_match( '#\d{4}#u', $year ) ) {
-			self::e( sprintf( 'Year should be 4 digits: %s', $year ) );
-		}
-		$users = UserSales::get_instance()->get_my_numbers( $year );
-		if ( ! $users ) {
-			self::e( 'No user found.' );
-		}
-		if ( $tsv ) {
-			foreach ( $users as $user ) {
-				self::l( implode( "\t", [ $user->ID, $user->my_number, $user->display_name, $user->address, $user->amount ] ) );
-			}
-		} else {
-			$table = new \cli\Table();
-			$table->setHeaders( [ 'ID', 'Name', 'My Number', 'Total', 'Address' ] );
-			foreach ( $users as $user ) {
-				$table->addRow( [ $user->ID, $user->display_name, $user->my_number, $user->amount, $user->address ] );
-			}
-			$table->display();
-		}
 	}
 }

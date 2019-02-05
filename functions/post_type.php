@@ -448,44 +448,21 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 }, 10, 2 );
 
 /**
- * 閲覧制限のあるコンテンツを保護する
- *
- * @param string $content
- * @return string
+ * FAQの閲覧を制限する
  */
-add_filter( 'the_content', function( $content ) {
-	$obj = get_post_type_object( get_post_type() );
-	$login_url = wp_login_url( get_permalink() );
-	switch ( get_post_meta( get_the_ID(), '_accessibility', true ) ) {
-		case 'writer':
-			if ( current_user_can( 'edit_posts' ) ) {
-				return $content;
-			} else {
-				return <<<HTML
-<div class="alert alert-warning">
-この{$obj->label}は投稿者しか見ることができません。
-ログインしていない方は<a class="alert-link" href="{$login_url}" rel="nofollow" >ログイン</a>してください。
-</div>
-HTML;
-			}
-			break;
-		case 'editor':
-			if ( current_user_can( 'edit_others_posts' ) ) {
-				return $content;
-			} else {
-				return <<<HTML
-<div class="alert alert-warning">
-この{$obj->label}は編集者しか見ることができません。
-ログインしていない方は<a class="alert-link" href="{$login_url}" rel="nofollow" >ログイン</a>してください。
-</div>
-HTML;
-			}
-			break;
-		default:
-			return $content;
-			break;
-	}
-}, 11 );
+add_filter( 'hamelp_access_type', function( $types ) {
+    if ( isset( $types[ 'contributor' ] ) ) {
+        unset( $types['contributor'] );
+    }
+    unset( $types['author'] );
+    $types['writer'] = [
+        'label' => '著者',
+        'callback' => function() {
+            return current_user_can( 'edit_posts' );
+        },
+    ];
+    return $types;
+} );
 
 /**
  * 投稿本文をREST APIから削除

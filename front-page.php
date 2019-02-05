@@ -1,25 +1,37 @@
 <?php get_header(); ?>
 
-	<div class="container front-container">
 
-		<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+<?php
+the_post();
+$style = '';
+if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ) {
+    $style = "background-image: url('{$thumbnail[0]}')";
+}
+?>
+<div class="front-container" style="<?= $style ?>">
+    <div class="container">
+        <div class="jumbotron">
+            <h1>後ろ向きのまま前へ進め！</h1>
+			<?php the_excerpt() ?>
+            <p>
+                <a class="btn btn-success btn-lg" href="#about-us">破滅派とは？</a>
+                <?php if ( ! is_user_logged_in() ) : ?>
+                    <a class="btn btn-success btn-lg" href="<?php echo wp_registration_url() ?>" rel="nofollow">登録する</a>
+                <?php elseif ( ! current_user_can( 'edit_posts' ) ) : ?>
+                    <a class="btn btn-success btn-lg" href="<?php echo home_url( 'become-author' ) ?>" rel="nofollow">同人になる</a>
+                <?php endif; ?>
+            </p>
+        </div>
+    </div><!-- //.front-container -->
+</div>
 
-			<?php if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ) : ?>
-				<div class="row">
-					<div class="jumbotron" style="background-image: url('<?= $thumbnail[0] ?>')">
-						<h1>後ろ向きのまま前へ進め！</h1>
-						<?php the_excerpt() ?>
-						<p><a class="btn btn-success btn-lg" href="#about-us">破滅派とは？</a></p>
-					</div>
-				</div>
-			<?php endif; ?>
+<?php get_header( 'sub' ); ?>
 
-			<div class="front-page post-content">
-				<?php the_content(); ?>
-			</div>
-
-		<?php endwhile; endif; ?>
-	</div><!-- //.front-container -->
+<div class="container">
+    <div class="front-page post-content">
+		<?php the_content(); ?>
+    </div>
+</div>
 
 	<div class="container front-container">
 		<div class="frontpage-widget clearfix">

@@ -3,19 +3,18 @@ var gulp = require('gulp'),
   $ = require('gulp-load-plugins')(),
   browserSync = require('browser-sync'),
   pngquant = require('imagemin-pngquant'),
-  eventStream = require('event-stream');
+  mozjpeg = require('imagemin-mozjpeg'),
+  mergeStream = require('merge-stream');
 
 
 // Sassのタスク
 gulp.task('sass', function () {
 
-  var filter = $.filter('**/*.css');
-
   return gulp.src(['./assets/sass/**/*.scss'])
     .pipe($.plumber({
       errorHandler: $.notify.onError('<%= error.message %>')
     }))
-    .pipe($.sassBulkImport())
+    .pipe($.sassGlob())
     .pipe($.sourcemaps.init())
     .pipe($.sass({
       errLogToConsole: true,
@@ -30,11 +29,10 @@ gulp.task('sass', function () {
       ]
     }))
     .pipe($.autoprefixer({
+      grid: true,
       browsers: ['last 2 versions', 'ie 11']
     }))
     .pipe($.sourcemaps.write('./map'))
-    //.pipe(filter)
-    //.pipe(filter.restore())
     .pipe(gulp.dest('./assets/css'));
 });
 
@@ -49,7 +47,9 @@ gulp.task('js', function () {
       loadMaps: true
     }))
     .pipe($.uglify({
-      preserveComments: 'license'
+      output:{
+        comments: /^!/
+      }
     }))
     .pipe($.sourcemaps.write('./map'))
     .pipe(gulp.dest('./assets/js/dist/'));
@@ -78,7 +78,7 @@ gulp.task('jshint', function () {
 
 // Build modernizr
 gulp.task('copylib', function () {
-  return eventStream.merge(
+  return mergeStream(
     // Build Bootstrap
     gulp.src([
       './node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
@@ -98,7 +98,6 @@ gulp.task('copylib', function () {
       .pipe(gulp.dest('./assets/js/dist')),
     // Build unpacked Libraries.
     gulp.src([
-      './node_modules/modernizr/modernizr.js',
       './node_modules/html5shiv/dist/html5shiv.js',
       './node_modules/respond.js/dest/respond.src.js',
     ])
@@ -122,11 +121,20 @@ gulp.task('copylib', function () {
 // Image min
 gulp.task('imagemin', function () {
   return gulp.src('./assets/img/src/**/*')
-    .pipe($.imagemin({
-      progressive: true,
-      svgoPlugins: [{removeViewBox: false}],
-      use: [pngquant()]
-    }))
+    .pipe($.imagemin([
+      pngquant({
+        quality: '65-80',
+        speed: 1,
+        floyd: 0
+      }),
+      mozjpeg({
+        quality: 85,
+        progressive: true
+      }),
+      $.imagemin.svgo(),
+      $.imagemin.optipng(),
+      $.imagemin.gifsicle()
+    ]))
     .pipe(gulp.dest('./assets/img'));
 });
 
@@ -142,7 +150,7 @@ gulp.task('jade', function () {
 
   return gulp.src(['./assets/jade/**/*.jade', '!./assets/jade/**/_*.jade'])
     .pipe($.plumber())
-    .pipe($.jade({
+    .pipe($.pug({
       pretty: true,
       locals: {
         list: list,
@@ -228,31 +236,31 @@ gulp.task('jade', function () {
 // watch
 gulp.task('watch', function () {
   // Make SASS
-  gulp.watch('assets/sass/**/*.scss', ['sass']);
+  gulp.watch('assets/sass/**/*.scss', gulp.task('sass'));
   // Uglify all
-  gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'], ['js']);
+  gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'], gulp.task('js'));
   // Check JS syntax
-  gulp.watch('assets/js/src/**/*.js', ['jshint']);
+  gulp.watch('assets/js/src/**/*.js', gulp.task('jshint'));
   // Build common js
-  gulp.watch('assets/js/src/common/**/*.js', ['commonjs']);
+  gulp.watch('assets/js/src/common/**/*.js', gulp.task('commonjs'));
   // Minify Image
-  gulp.watch('assets/img/src/**/*', ['imagemin']);
+  gulp.watch('assets/img/src/**/*', gulp.task('imagemin'));
   // Build Jade
-  gulp.watch('assets/jade/**/*.jade', ['jade']);
+  gulp.watch('assets/jade/**/*.jade', gulp.task('jade'));
 });
 
 gulp.task('bs-watch', function () {
-  gulp.watch([
+  return gulp.watch([
     'assets/css/**/*.css',
     'assets/js/dist/**/*.js',
     'assets/img/**/*', '!./assets/img/src/**/*',
     'assets/html/*.html'
-  ], ['bs-reload'])
+  ], gulp.task('bs-reload'));
 });
 
 // BrowserSync
 gulp.task('browser-sync', function () {
-  browserSync({
+  return browserSync({
     server: {
       baseDir: "./assets/"       //対象ディレクトリ
       , index: "html/index.html"      //インデックスファイル
@@ -262,14 +270,14 @@ gulp.task('browser-sync', function () {
 });
 
 gulp.task('bs-reload', function () {
-  browserSync.reload();
+  return browserSync.reload();
 });
 
 // Build
-gulp.task('build', ['copylib', 'jshint', 'commonjs', 'js', 'sass', 'imagemin', 'jade']);
+gulp.task('build', gulp.parallel('copylib', 'jshint', 'commonjs', 'js', 'sass', 'imagemin', 'jade'));
 
 // Default Tasks
-gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
 
 // Browser sync( not working?)
-gulp.task('bs', ['browser-sync', 'bs-watch']);
+gulp.task('bs', gulp.series('browser-sync', 'bs-watch'));

@@ -275,56 +275,7 @@ i.rotation {
   }
 }
 
-//
-// ジャンボトロン
-//
-// --------------------
-//
-.jumbotron {
-  position: relative;
-  overflow: hidden;
-  background-position: center center;
-  background-size: cover;
-  &:after {
-    z-index: 1;
-    position: absolute;
-    display: block;
-    content: "";
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-  h1, p {
-    position: relative;
-    z-index: 2;
-    color: $inverse-body;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-  }
-  .btn {
-    @extend .btn-trans;
-  }
-}
 
-@media only screen and (max-width: $screen-sm-max) {
-  .jumbotron {
-    h1 {
-      font-size: 48px;
-    }
-    p {
-      font-size: 14px;
-    }
-  }
-}
-
-@media only screen and (max-width: $screen-xs-max) {
-  .jumbotron {
-    h1 {
-      font-size: 32px;
-    }
-  }
-}
 
 //
 // 著者情報

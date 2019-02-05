@@ -1,7 +1,7 @@
 <div class="col-xs-12 col-sm-3" id="sidebar" role="navigation">
 
 	<?php
-    $sidebar = get_transient( 'faq_sidebar' );
+    $sidebar = get_transient( 'faq-sidebar' );
     if ( false === $sidebar ) {
         ob_start();
         dynamic_sidebar( 'faq-sidebar' );

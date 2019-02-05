@@ -60,6 +60,25 @@
   }
 }
 
+//
+// Background sheet
+//-------------------
+//
+@mixin bg-sheet( $color: rgba(0, 0, 0, 0.2), $position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $z-index: 1 ){
+  position: $position;
+  &:after {
+    z-index: 1;
+    position: absolute;
+    display: block;
+    content: "";
+    top: $top;
+    left: $left;
+    right: $right;
+    bottom: $bottom;
+    background-color: $color;
+  }
+}
+
 
 //
 // Backward compats

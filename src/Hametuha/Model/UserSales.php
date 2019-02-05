@@ -3,8 +3,16 @@
 namespace Hametuha\Model;
 
 
+use Hametuha\Master\Calculator;
+use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\DB\Model;
 
+/**
+ * Class UserSales
+ *
+ * @package hametuha
+ *
+ */
 class UserSales extends Model {
 	
 	protected $name = 'user_sales';
@@ -80,6 +88,7 @@ class UserSales extends Model {
 	/**
 	 * ラベルを返す
 	 *
+	 * @deprecated
 	 * @param string $status
 	 *
 	 * @return string
@@ -100,6 +109,7 @@ class UserSales extends Model {
 	/**
 	 * 種別のラベルを取得する
 	 *
+	 * @deprecated
 	 * @param string $type
 	 *
 	 * @return mixed|string
@@ -112,6 +122,7 @@ class UserSales extends Model {
 	/**
 	 * セールスを取得する
 	 *
+	 * @deprecated
 	 * @param int $user_id
 	 * @param int $year
 	 * @param int $month
@@ -130,6 +141,7 @@ class UserSales extends Model {
 	/**
 	 * 確定済みの報酬を表示する
 	 *
+	 * @deprecated
 	 * @param int $user_id
 	 * @param int $year
 	 * @return array
@@ -150,6 +162,7 @@ class UserSales extends Model {
 	/**
 	 * 月別の売上リストを作成する
 	 *
+	 * @deprecated
 	 * @param array $args
 	 *
 	 * @return array
@@ -183,6 +196,7 @@ class UserSales extends Model {
 	/**
 	 * 支払すべき履歴を返す
 	 *
+	 * @deprecated
 	 * @param int $year
 	 * @param int $month
 	 * @param int $user_id
@@ -219,6 +233,7 @@ class UserSales extends Model {
 	/**
 	 * 支払い済みの履歴を返す
 	 *
+	 * @deprecated
 	 * @param string $year
 	 * @param string $month
 	 *
@@ -240,6 +255,7 @@ class UserSales extends Model {
 	/**
 	 * Get payment history
 	 *
+	 * @deprecated
 	 * @param int $year
 	 * @param int $user_id
 	 * @return array
@@ -275,7 +291,15 @@ class UserSales extends Model {
 		foreach ( $sales as $sale ) {
 			$label = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
 			$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
-			if ( $this->add( $sale->user_id, 'kdp', $sale->sub_total * $this->bill / $sale->unit, $sale->unit, $label, true, true, 0, $created ) ) {
+			list($price, $unit, $tax, $deducting, $total) = Calculator::kdp_royalty( $sale );
+			$result = RevenueModel::get_instance()->add_revenue( 'kdp', $sale->user_id, $price, [
+				'unit'        => $unit,
+				'total'       => $total,
+				'tax'         => $tax,
+				'deducting'   => $deducting,
+				'description' => $label
+			] );
+			if ( $result && ! is_wp_error( $result ) ) {
 				$success++;
 			}
 		}
@@ -297,7 +321,16 @@ class UserSales extends Model {
 			if ( $sales['total'] ) {
 				$label = sprintf( '%d年%d月 ニュース %d/%d 記事', $year, $month, $sales['valid'], $sales['count'] );
 				$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
-				if ( $this->add( $user_id, 'news', $sales['total'] / $sales['valid'], $sales['valid'], $label, true, true, 0, $created ) ) {
+				list( $price, $unit, $tax, $deducting, $total ) = Calculator::revenue( $sales['total'] / $sales['valid'], $sales['valid'], true, true );
+				$result = RevenueModel::get_instance()->add_revenue( 'news', $user_id, $price, [
+					'unit'        => $unit,
+					'total'       => $total,
+					'deducting'   => $deducting,
+					'description' => $label,
+					'created'     => $created,
+					'tax'         => $tax,
+				] );
+				if ( $result && ! is_wp_error( $result ) ) {
 					$done++;
 				}
 			} else {
@@ -359,6 +392,7 @@ class UserSales extends Model {
 	/**
 	 * データを挿入する
 	 *
+	 * @deprecated
 	 * @param int $user_id
 	 * @param string $type
 	 * @param float $price
@@ -372,22 +406,7 @@ class UserSales extends Model {
 	 * @return false|int
 	 */
 	public function add( $user_id, $type, $price, $unit = 1, $description = '', $tax_included = false, $deduction = true, $status = 0, $created = '' ) {
-		// 消費税と小計を出す
-		$sub_total = $unit * $price;
-		if ( $tax_included ) {
-			$vat = $sub_total / ( ( $this->vat_ratio * 100 ) + 100 ) * ( $this->vat_ratio * 100 );
-			$sub_total -= $vat;
-		} else {
-			$vat = $sub_total * $this->vat_ratio;
-		}
-		// 源泉徴収税を出す
-		if ( $deduction ) {
-			$deduction_price = $sub_total * $this->deduction_ratio;
-		} else {
-			$deduction_price = 0;
-		}
-		// 振込額を出す
-		$total = $sub_total - $deduction_price + $vat;
+
 		// 保存する
 		return $this->insert( [
 			'user_id' => $user_id,
@@ -454,13 +473,12 @@ class UserSales extends Model {
 			}
 			return $user;
 		}, $users );
-
-
 	}
 
 	/**
 	 * 支払いを確定する
 	 *
+	 * @deprecated
 	 * @param array|int $user_ids
 	 *
 	 * @return false|int
@@ -488,6 +506,7 @@ SQL;
 	/**
 	 * 支払いを更新する
 	 *
+	 * @deprecated
 	 * @param int $sales_id
 	 * @param int $status
 	 *
@@ -503,6 +522,7 @@ SQL;
 	/**
 	 * 月初と月末を取得する
 	 *
+	 * @deprecated
 	 * @param int $year
 	 * @param int $month
 	 * @return array
