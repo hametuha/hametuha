@@ -48,6 +48,9 @@
 						<div class="thread-body col-sm-9 col-xs-12">
 
 							<h1 itemprop="name">
+								<?php if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) : ?>
+                                    <small class="text-success">【解決済み】</small><br />
+								<?php endif; ?>
                                 <?php if ( 'private' === get_post_status() ) : ?>
                                 <i class="fa fa-lock text-warning"></i>
                                 <?php endif; ?>

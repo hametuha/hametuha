@@ -38,6 +38,12 @@
                             <a class="list-group-item" href="<?php the_permalink(); ?>">
                                 <span class="badge"><?= get_comments_number() ?></span>
 								<?= get_avatar( get_the_author_meta( 'ID' ), 32 ); ?>
+                                <?php if ( 'private' == get_post_status() ) : ?>
+                                    <i class="fa fa-lock text-warning"></i>
+                                <?php endif; ?>
+                                <?php if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) : ?>
+                                    <i class="fa fa-check-circle text-success"></i>
+                                <?php endif; ?>
 								<?php the_title(); ?>
 								<?php if ( hamethread_recently_commented() || is_new_post() ): ?>
                                     <span class="label label-warning">New!</span>
