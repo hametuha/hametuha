@@ -81,12 +81,22 @@ add_filter( 'hashboard_sidebar_links', function ( $links ) {
 			$new_links[ $slug ] = <<<HTML
 						 <li class="hb-menu-item">
                 			<a href="{$url}">
-								<i class="material-icons">shopping_cart</i> {$label}
+								<i class="material-icons">{$icon}</i> {$label}
                 			</a>
 						</li>
 HTML;
 		}
 	}
+	// Add help URL.
+	$help_url = get_page_link( get_page_by_path( 'help' ) );
+	$new_links['help'] = <<<HTML
+         <li class="hb-menu-item">
+            <a href="{$help_url}">
+                <i class="material-icons">live_help</i> ヘルプセンター
+            </a>
+        </li>
+HTML;
+
 	return $new_links;
 } );
 
@@ -159,5 +169,3 @@ add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
 	wp_enqueue_script( 'hametuha-hb-dashboard' );
 	return $blocks;
 } );
-
-
