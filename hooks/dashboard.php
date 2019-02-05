@@ -3,6 +3,28 @@
  * Home screen of hashboard/
  */
 
+/**
+ * Add links to admin bar.
+ */
+add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
+    if ( ! is_admin() ) {
+        return;
+    }
+	$admin_bar->add_menu( [
+		'id' => 'hashboard-site',
+		'parent' => 'site-name',
+		'title' => 'ユーザー管理',
+		'href' => \Hametuha\Hashboard::screen_url(),
+		'group' => false,
+	] );
+    $admin_bar->add_node( [
+        'id'     => 'hashboard-user',
+        'parent' => 'user-actions',
+        'title'  => 'ダッシュボード',
+        'href'   => \Hametuha\Hashboard::screen_url(),
+        'group'  => false,
+    ] );
+}, 10 );
 
 /**
  * 新しい画面を追加
