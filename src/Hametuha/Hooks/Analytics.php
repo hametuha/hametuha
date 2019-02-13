@@ -4,6 +4,7 @@ namespace Hametuha\Hooks;
 
 
 use Hametuha\Hashboard;
+use Hametuha\Service\AnalyticsMesurementApi;
 use Ramsey\Uuid\Uuid;
 use WPametu\Pattern\Singleton;
 
@@ -13,6 +14,7 @@ use WPametu\Pattern\Singleton;
  * This class adds analytics related functions.
  *
  * @package hametuha
+ * @property AnalyticsMesurementApi $measurement
  */
 class Analytics extends Singleton {
 
@@ -68,10 +70,15 @@ class Analytics extends Singleton {
 			}
 			$this->set_up_user_id();
 		} );
+		add_filter( 'login_title', function( $title ) {
+		    $this->set_up_user_id();
+		    return $title;
+        } );
         // Do analytics tag.
 	    add_action( 'wp_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'admin_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'hashboard_head', [ $this, 'do_tracking_code' ], 19 );
+		add_action( 'login_head', [ $this, 'do_tracking_code' ] );
 		// Facebook pixels.
         add_action( 'hametha_after_tracking_code', [ $this, 'facebook_pixel' ] );
 	}
@@ -80,14 +87,20 @@ class Analytics extends Singleton {
 	/**
 	 * Get user ID for Google analytics.
 	 *
-	 * @param int $user_id
+	 * @param int  $user_id
+     * @param bool $force If true, create new ID.
 	 * @return string
 	 */
-	public function get_stored_user_id( $user_id ) {
+	public function get_stored_user_id( $user_id, $force = false ) {
 		if ( ! $user_id ) {
 			return '';
 		}
-		return (string) get_user_meta( $user_id, 'google_analytics_id', true );
+		$id = (string) get_user_meta( $user_id, 'google_analytics_id', true );
+		if ( ! $id && $force ) {
+		    $id = $this->generated_user_id();
+		    update_user_meta( $user_id, 'google_analytics_id', $id );
+        }
+		return $id;
 	}
 
 	/**
@@ -97,7 +110,7 @@ class Analytics extends Singleton {
 	 */
 	public function generated_user_id() {
 		try {
-			$uuid = Uuid::uuid4();
+			$uuid = (string) Uuid::uuid4();
 		} catch ( \Exception $e ) {
 			$uuid = uniqid( '', true );
 		} finally {
@@ -335,5 +348,21 @@ class Analytics extends Singleton {
 		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
+	}
+
+	/**
+     * Getter
+     *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		switch ( $name ) {
+            case 'measurement':
+                return AnalyticsMesurementApi::get_instance( [
+                    'ua'  => $this->ua,
+                ] );
+                break;
+        }
 	}
 }

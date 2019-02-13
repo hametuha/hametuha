@@ -3,6 +3,7 @@
 
 namespace Hametuha\Commands;
 
+use Hametuha\Hooks\Analytics;
 use Hametuha\Model\Notifications;
 use WPametu\Service\Akismet;
 use WPametu\Utility\Command;
@@ -248,4 +249,17 @@ SQL;
 		static::s( 'Done!' );
 	}
 
+
+	/**
+	 * Test measurement protocol
+	 */
+	public function measurement() {
+		$analytics = Analytics::get_instance();
+		$analytics->measurement->event( [
+			'ec'  => 'edit',
+			'ea'  => 'publish',
+			'el'  =>100,
+			Analytics::DIMENSION_AUTHOR => 66,
+		] );
+	}
 }

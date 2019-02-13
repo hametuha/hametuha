@@ -70,14 +70,16 @@ class BecomeAuthor extends RestTemplate
             }
 
             // O.K. ユーザーを更新
-            $error = wp_update_user(array(
-                'ID' => get_current_user_id(),
-                'role' => 'author'
-            ));
+            $error = wp_update_user( [
+                'ID'   => get_current_user_id(),
+                'role' => 'author',
+            ] );
 
-            if( is_wp_error($error) ){
-                $this->error($error->get_error_message(), 500);
-            }
+            if ( is_wp_error( $error ) ) {
+                $this->error( $error->get_error_message(), 500 );
+			} else {
+	        	do_action( 'hametuha_user_became_author', get_current_user_id() );
+			}
             $this->set_data([
                 'success' => true,
                 'message' => 'おめでとうございます。あなたは同人になりました。さっそくプロフィールを編集しましょう。（5秒後に自動的に移動します。）',
