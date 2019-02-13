@@ -137,33 +137,7 @@ JS;
 }, 9 );
 
 /**
- * CSSを読み込む
- */
-add_action( 'wp_enqueue_scripts', function () {
-	// 統一CSS
-	wp_enqueue_style( 'hametuha-app' );
-
-	// Theme My login
-	wp_dequeue_style( 'theme-my-login' );
-
-	// Social scripts
-	wp_enqueue_script( 'hametuha-social' );
-
-	// iframe
-	if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
-		wp_dequeue_style( 'admin-bar' );
-	}
-	// 投稿を読み込んでいるページ
-	if ( is_singular( 'post' ) ) {
-		wp_dequeue_style( 'contact-form-7' );
-		wp_dequeue_style( 'wp-tmkm-amazon' );
-	}
-	//wp-pagenaviのCSSを打ち消し
-	wp_dequeue_style( 'wp-pagenavi' );
-}, 1000 );
-
-/**
- * Hashboardで読み込む
+ * Load Hashboard assets.
  */
 add_action( 'hashboard_head', function() {
 	wp_enqueue_style( 'hametuha-hashboard' );
@@ -174,27 +148,53 @@ add_action( 'hashboard_head', function() {
  *
  */
 add_action( 'wp_enqueue_scripts', function () {
-	//共通
+	// Common Style.
+	wp_enqueue_style( 'hametuha-app' );
+
+	// Social scripts
+	wp_enqueue_script( 'hametuha-social' );
+
+	// Common Scripts
 	wp_enqueue_script( 'hametuha-common' );
-	//投稿の場合
+	// Single post.
 	if ( is_singular( 'post' ) ) {
-		wp_dequeue_script( 'contact-form-7' );
 		wp_enqueue_script( 'hametuha-single' );
 		wp_enqueue_script( 'hametuha-selection', get_template_directory_uri() . '/assets/js/dist/components/share.js', [ 'common', 'angular' ], hametuha_version(), true );
 	}
-	// トップページ
+	// Front page.
 	if ( is_front_page() ) {
 		wp_enqueue_script( 'hametuha-front' );
 	}
-	// シリーズ
+	// Series.
 	if ( is_singular( 'series' ) ) {
 		wp_enqueue_script( 'hametuha-series' );
 	}
-	//コメント用
+	// Comment.
 	if ( is_singular() && ! is_page() ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }, 1000 );
+
+/**
+ * Dequeue Assets.
+ */
+add_action( 'wp_enqueue_scripts', function() {
+	// If contact form is not
+	if ( ! is_singular() || ! has_shortcode( get_queried_object()->post_content, 'contact-form-7' ) ) {
+		wp_dequeue_style( 'contact-form-7' );
+		wp_dequeue_script( 'contact-form-7' );
+		wp_dequeue_script( 'google-recaptcha' );
+		remove_action( 'wp_footer', 'wpcf7_recaptcha_onload_script', 40 );
+	}
+	// wp-pagenavi
+	wp_dequeue_style( 'wp-pagenavi' );
+	// iframe
+	if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
+		wp_dequeue_style( 'admin-bar' );
+	}
+	// Single Page.
+	wp_dequeue_style( 'wp-tmkm-amazon' );
+}, 1001 );
 
 /**
  * 管理画面でアセットを読み込む

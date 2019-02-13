@@ -70,6 +70,38 @@ form{
 
 #become-author{
 
+}
 
+.post-content .wpcf7{
 
+  &-response-output{
+    color: #fff;
+    border: none;
+    padding: 1em 2em;
+    border-radius: 2px;
+    margin: 2em 0;
+    background-color: $brand-danger;
+  }
+  &-mail-sent-ok{
+    background-color: $brand-success;
+  }
+  &-mail-sent-ng,
+  &-aborted {
+    background: $brand-danger;
+  }
+  &-spam-blocked,
+  &-validation-errors,
+  &-acceptance-missing {
+    background: $brand-warning;
+  }
+
+  &-not-valid-tip{
+    color: $brand-danger;
+  }
+  .use-floating-validation-tip span.wpcf7-not-valid-tip{
+    border-color: $brand-danger;
+  }
+}
+.grecaptcha-badge{
+  z-index: 20;
 }

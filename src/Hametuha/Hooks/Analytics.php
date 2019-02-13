@@ -81,6 +81,8 @@ class Analytics extends Singleton {
 		add_action( 'login_head', [ $this, 'do_tracking_code' ] );
 		// Facebook pixels.
         add_action( 'hametha_after_tracking_code', [ $this, 'facebook_pixel' ] );
+        // Contact Form 7
+		add_action( 'wp_enqueue_scripts', [ $this, 'add_inline_script' ] );
 	}
 
 
@@ -348,6 +350,22 @@ class Analytics extends Singleton {
 		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
+	}
+
+	/**
+	 * Add event listener to register event.
+	 */
+	public function add_inline_script() {
+		$data = <<<'JS'
+			document.addEventListener( 'wpcf7mailsent', function( event ) {
+				try {
+					var action = jQuery( event.target ).find( 'form' ).attr( 'action' ).split('#')[0].split( '?' );
+					action[0] = action[0].replace( /\/$/, '' ) + '/success';
+			  		ga( 'send', 'pageview', action.join( '?' ) );
+				} catch ( err ) {}
+			}, false );
+JS;
+		wp_add_inline_script( 'contact-form-7', $data );
 	}
 
 	/**
