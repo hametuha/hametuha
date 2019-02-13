@@ -20,7 +20,7 @@ if ( is_preview() ) {
 	$encoded_title = rawurlencode( $title . ' | 破滅派' );
 	$data_title    = esc_attr( $title );
 	$links         = [];
-	foreach ( [ 'facebook', 'twitter', 'googleplus', 'hatena', 'line' ] as $brand ) :
+	foreach ( [ 'facebook', 'twitter', 'hatena', 'line' ] as $brand ) :
 		$link = '';
 		switch ( $brand ) {
 			case 'facebook':
@@ -48,12 +48,6 @@ if ( is_preview() ) {
 					esc_attr( $via ),
 					esc_attr( $related ),
 					esc_attr( $hash_tag )
-				);
-				break;
-			case 'googleplus':
-				$link = sprintf(
-					'<div class="g-plusone" data-size="tall" data-callback="plusOneCallBack" data-href="%s"></div>',
-					hametuha_user_link( $url, 'share-single', 'Google+' )
 				);
 				break;
 			case 'hatena':
