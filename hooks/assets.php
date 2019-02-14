@@ -159,7 +159,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	// Single post.
 	if ( is_singular( 'post' ) ) {
 		wp_enqueue_script( 'hametuha-single' );
-		wp_enqueue_script( 'hametuha-selection', get_template_directory_uri() . '/assets/js/dist/components/share.js', [ 'common', 'angular' ], hametuha_version(), true );
 	}
 	// Front page.
 	if ( is_front_page() ) {
