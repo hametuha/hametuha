@@ -403,6 +403,34 @@ function hametuha_user_selector( $name, $selected = 0, $id = '', $mode = 'any', 
 }
 
 /**
+ * Detect if user can contact.
+ *
+ * @param int $user_id
+ * @return bool
+ */
+function hametuha_user_allow_contact( $user_id ) {
+	return (bool) get_user_meta( $user_id, 'allow_contact', true );
+}
+
+/**
+ * Get author contact URL.
+ *
+ * @return string
+ */
+function hametuha_user_contact_url( $post = null ) {
+	$post = get_post( $post );
+	$page = get_page_by_path( 'inquiry/for-author' );
+	if ( $page ) {
+		return add_query_arg( [
+			'work' => $post->ID,
+		], get_permalink( $page ) );
+	} else {
+		return home_url( 'inquiry' );
+	}
+
+}
+
+/**
  * Send user email
  *
  * @param int $user_id

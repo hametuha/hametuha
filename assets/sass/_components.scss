@@ -340,6 +340,14 @@ i.rotation {
       @include long-desc($navbar-default-bg);
     }
   }
+  &__actions{
+    a, button{
+      margin-right: 10px;
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 //

@@ -19,6 +19,7 @@ add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	$contact_methods[ 'birth_place' ] = '出身地';
 	$contact_methods[ 'favorite_authors' ] = '好きな作家';
 	$contact_methods[ 'favorite_words' ] = '好きな言葉';
+	$contact_methods[ 'allow_contact' ] = 'コンタクトを許可する';
 
 	return $contact_methods;
 }, '_hide_profile_fields', 10, 1 );
@@ -84,6 +85,11 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 			],
 			'favorite_authors' => 0,
 			'favorite_words' => 0,
+			'contact_sep' => [
+				'type' => 'separator',
+				'label' => '読者からのコンタクト',
+			],
+			'allow_contact' => 0,
 
 		];
 		foreach ( $fields as $key => $val ) {
@@ -128,6 +134,14 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 					$field[ 'type' ] = 'textarea';
 					$field[ 'description' ] = '好きな言葉を出典付きで入力してください。';
 					$field[ 'placeholder' ] = '例・悲しみではなにも買えない。なぜなら悲しみに価値はないからだ。';
+					break;
+				case 'allow_contact':
+					$field[ 'type' ] = 'select';
+					$field[ 'options' ] = [
+						'0' => 'メールを受け取らない',
+						'1' => 'メールを受け取る'
+					];
+					$field[ 'description' ] = '読者から直接メールを受けるとることを許可します。返信しない限り、メールアドレスがバレることはありません。';
 					break;
 				default:
 					// Do nothing.

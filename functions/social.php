@@ -338,7 +338,7 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 			   rel="nofollow">
 				<span class="remove">フォロー中</span>
 				<span class="add">
-					<i class="icon-user-plus2"></i> フォローする
+					<i class="icon-user-plus2"></i> フォロー
 				</span>
 				<span class="loading">
 					<i class="icon-spinner2 rotation"></i> 通信中……

@@ -240,7 +240,7 @@ class Analytics extends Singleton {
                 // Set page attributes.
                 $this->set_dimension( self::DIMENSION_POST_TYPE, get_queried_object()->post_type );
 				$this->set_dimension( self::DIMENSION_AUTHOR, get_queried_object()->post_author );
-				$this->set_dimension( self::METRIC_CHAR_LENGTH, $this->calculate_string_length( get_queried_object() ) );
+				$this->set_dimension( self::METRIC_CHAR_LENGTH, get_post_length( get_queried_object() ) );
 				// Set category.
                 $cat = 0;
                 foreach ( [
@@ -375,18 +375,6 @@ class Analytics extends Singleton {
 JS;
 		wp_add_inline_script( 'contact-form-7', $data );
 	}
-
-	/**
-	 * Get post string length.
-     *
-     * @param \WP_Post|int|null $post
-     * @return int
-	 */
-	public function calculate_string_length( $post = null ) {
-	    $post = get_post( $post );
-	    $post_content = preg_replace( '/[\s　]/u', '', strip_shortcodes( strip_tags( $post->post_content ) ) );
-	    return mb_strlen( $post_content, 'utf-8' );
-    }
 
 	/**
      * Getter

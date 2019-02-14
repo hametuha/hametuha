@@ -62,3 +62,28 @@ add_filter( 'hamail_extra_search', function( $results, $type, $id ) {
 	}
 	return $results;
 }, 10, 3 );
+
+/**
+ * Replace contact form output.
+ */
+add_filter( 'sp4cf7_output', function( $out, WP_Post $post, $error ) {
+	if ( ! $error ) {
+		ob_start();
+		?>
+		<div class="wpcf7-post-content">
+			<h3>
+				「<?= esc_html( get_the_title( $post ) ) ?>」の作者
+				<?=  esc_html( get_the_author_meta( 'display_name', $post->post_author ) ) ?>へのお問い合わせ
+			</h3>
+			<p class="text-right">
+				<a href="<?= esc_url( home_url( 'doujin/detail/' . get_the_author_meta( 'nicename', $post->post_author ) ) ); ?>" class="btn btn-outlined-secondary btn-sm">
+					作者プロフィール
+				</a>
+			</p>
+		</div>
+		<?php
+		$out = ob_get_contents();
+		ob_end_clean();
+	}
+	return $out;
+}, 10, 3 );

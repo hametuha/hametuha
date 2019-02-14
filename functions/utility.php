@@ -238,7 +238,8 @@ EOS;
 
 		return intval( $wpdb->get_var( $wpdb->prepare( $sql, $post->ID ) ) );
 	} else {
-		return mb_strlen( strip_tags( apply_filters( 'the_content', $post->post_content ) ) );
+
+		return mb_strlen( preg_replace( '/[\s　]/u', '', strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $post->post_content ) ) ) ), 'utf-8' );
 	}
 }
 

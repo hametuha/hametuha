@@ -16,6 +16,9 @@
     }
     &--share{
       background: #ebebeb;
+      .work-wrapper + &{
+        background: transparent;
+      }
     }
     &--single{
       margin: 1em 0;

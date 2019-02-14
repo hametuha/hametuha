@@ -1,5 +1,12 @@
 <?php
 /** @var \Hametuha\Rest\Doujin $this */
+$query = new WP_Query( [
+	'post_type'      => 'post',
+	'author'         => $this->doujin->ID,
+	'posts_per_page' => 3,
+	'orderby'        => [ 'date' => 'DESC' ],
+	'post_status'    => 'publish',
+] );
 ?>
 
 
@@ -27,7 +34,13 @@
 								<rt><?= esc_html( $this->doujin->user_lastname ) ?></rt>
 							</ruby>
 							<small><?= hametuha_user_role( $this->doujin->ID ) ?></small>
-							<?php hametuha_follow_btn( $this->doujin->ID ) ?>
+
+                            <?php hametuha_follow_btn( $this->doujin->ID ) ?>
+
+                            <?php if ( hametuha_user_allow_contact( $this->doujin->ID ) && $query->have_posts() ) : ?>
+                            <a class="btn btn-success" href="<?= hametuha_user_contact_url( $query->posts[0] ) ?>">問い合わせ</a>
+                            <?php endif; ?>
+
 						</h1>
 
 						<div class="doujin__desc">
@@ -112,13 +125,6 @@
 				<div class="row">
 					<div class="col-sm-4 col-xs-12 doujin__item">
 						<h2 class="doujin__item--title text-center">最新投稿</h2><?php
-						$query = new WP_Query( [
-							'post_type'      => 'post',
-							'author'         => $this->doujin->ID,
-							'posts_per_page' => 3,
-							'orderby'        => [ 'date' => 'DESC' ],
-							'post_status'    => 'publish',
-						] );
 						if ( $query->have_posts() ) :
 							?>
 							<ul class="post-list">
