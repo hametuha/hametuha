@@ -50,6 +50,8 @@ class Analytics extends Singleton {
 
 	CONST DIMENSION_USER_TYPE = 'dimension6';
 
+	CONST METRIC_CHAR_LENGTH  = 'metric1';
+
 	/**
 	 * Constructor
 	 *
@@ -238,6 +240,7 @@ class Analytics extends Singleton {
                 // Set page attributes.
                 $this->set_dimension( self::DIMENSION_POST_TYPE, get_queried_object()->post_type );
 				$this->set_dimension( self::DIMENSION_AUTHOR, get_queried_object()->post_author );
+				$this->set_dimension( self::METRIC_CHAR_LENGTH, $this->calculate_string_length( get_queried_object() ) );
 				// Set category.
                 $cat = 0;
                 foreach ( [
@@ -311,7 +314,12 @@ class Analytics extends Singleton {
      * @param string $action
 	 */
     protected function set_dimension( $dimension, $value, $action = 'set' ) {
-	    printf( 'ga( "%s", "%s", "%s" );', esc_js( $action ), esc_js( $dimension ), esc_js( $value ) );
+        if ( is_numeric( $value ) ) {
+			$str = 'ga( "%s", "%s", %d );';
+        } else {
+			$str = 'ga( "%s", "%s", "%s" );';
+        }
+	    printf( $str, esc_js( $action ), esc_js( $dimension ), esc_js( $value ) );
     }
 
 
@@ -367,6 +375,18 @@ class Analytics extends Singleton {
 JS;
 		wp_add_inline_script( 'contact-form-7', $data );
 	}
+
+	/**
+	 * Get post string length.
+     *
+     * @param \WP_Post|int|null $post
+     * @return int
+	 */
+	public function calculate_string_length( $post = null ) {
+	    $post = get_post( $post );
+	    $post_content = preg_replace( '/[\s　]/u', '', strip_shortcodes( strip_tags( $post->post_content ) ) );
+	    return mb_strlen( $post_content, 'utf-8' );
+    }
 
 	/**
      * Getter
