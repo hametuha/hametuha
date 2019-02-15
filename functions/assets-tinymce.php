@@ -33,6 +33,9 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 
 	$css_dir = get_stylesheet_directory() . '/assets/css';
+	if ( ! isset( $initArray['cache_suffix'] ) ) {
+		$initArray['cache_suffix'] = '?foo=var';
+	}
 	$initArray['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'Ymd', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
 
 	//選択できるブロック要素を変更
