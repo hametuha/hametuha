@@ -1,0 +1,34 @@
+@charset "UTF-8";
+
+
+.editor-styles-wrapper {
+  @import "bootstrap";
+  @import "mixins";
+  @import "post_body";
+  font-family: $font-family-serif;
+
+  .editor-block-list {
+
+    &__block {
+
+    }
+
+    &__layout {
+      padding: 0 28px;
+      @include post-style();
+      @import "parts/embed";
+
+      .wp-block {
+        max-width: 1180px;
+        @at-root .editing-in-page-1column & {
+          max-width: none;
+        }
+      }
+    }
+  }
+
+  .wp-block-hametuha-section .container{
+    max-width: 100%;
+
+  }
+}

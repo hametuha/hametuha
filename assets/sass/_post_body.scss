@@ -1,5 +1,15 @@
 @mixin post-style($book: false){
 
+  // section
+  .wp-block-hametuha-section{
+    padding-top: 80px;
+    padding-bottom: 80px;
+    @include mq-max( $screen-sm-max ) {
+      padding-top: 40px;
+      padding-bottom: 40px;
+    }
+  }
+
   // 共通要素
   .alignleft{
     float: left;
@@ -49,6 +59,124 @@
     -webkit-text-emphasis-style: filled sesame ;
   }
 
+  // 引用
+  blockquote.wp-block-quote,
+  .wp-block-pullquote blockquote{
+    &.is-large{
+      font-size: 2em;
+    }
+    color: #000;
+    position: relative;
+    border-left: none;
+    padding: 1.5em;
+    margin: 1.5em 0;
+    p,cite{
+      position: relative;
+      z-index: 2;
+    }
+    &:before{
+      content: '“';
+      position: absolute;
+      line-height: 1;
+      top: 0;
+      left: 0;
+      color: $thin-border;
+      font-size: 8em;
+      z-index: 1;
+    }
+
+  }
+
+  // 罫線
+  hr{
+    &.wp-block-separator{
+      border-color: #000;
+      margin-top: 80px;
+      margin-bottom: 80px;
+      @include mq-max( $screen-sm-max ){
+        margin-top: 40px;
+        margin-bottom: 40px;
+      }
+      width: 30%;
+      max-width: 150px;
+      &.is-style-wide,
+      &.is-style-dots{
+        width: 100%;
+        max-width: none;
+      }
+    }
+  }
+  // Button
+  .wp-block-button{
+    a{
+      transition: color .3s linear, background-color .3s linear, border-bottom-color .3s linear;
+      border: 2px solid transparent;
+      &:link, &:visited{
+        text-decoration: none;
+        color: #fff;
+        border-color: #000;
+        background-color: #000;
+      }
+      &:hover, &:active{
+        text-decoration: none;
+        color: #000;
+        border-color: #000;
+        background-color: transparent;
+      }
+    }
+    &.is-style-outline{
+      a{
+        &:link, &:visited{
+          color: #000;
+          border-color: #000;
+          background-color: transparent;
+        }
+        &:hover, &:active{
+          color: #fff;
+          border-color: #000;
+          background-color: #000;
+        }
+      }
+    }
+    @each $setting in (
+                    ( primary $brand-primary ),
+                    ( success $brand-success ),
+                    ( danger $brand-danger ),
+                    ( warning $brand-warning )
+    ) {
+      $class-name: nth( $setting, 1 );
+      $color: nth( $setting, 2 );
+      &.#{$class-name}, &.is-style-squared.#{$class-name} {
+        a.wp-block-button__link{
+          &:link, &:visited {
+            color: #fff;
+            background-color: $color;
+            border-color: $color;
+          }
+          &:hover, &:active {
+            color: $color;
+            background-color: transparent;;
+            border-color: $color;
+          }
+        }
+      }
+      &.is-style-outline.#{$class-name}{
+        a{
+          &:link, &:visited{
+            color: $color;;
+            border-color: $color;;
+            background-color: transparent;
+          }
+          &:hover, &:active{
+            color: #fff;
+            border-color: $color;;
+            background-color: $color;;
+          }
+        }
+      }
+    }
+  }
+
   .interviewer{
     color: #777;
     font-style: italic;
@@ -62,7 +190,7 @@
   // 普通の投稿
   @if( $book == false){
     //
-    // 作品のスタイル
+    // 普通の投稿
     //
     // ------------------------
     //
@@ -73,41 +201,75 @@
     // 文章
     p{
       margin: 1em 0;
+      &:first-child{
+        margin-top: 0;
+      }
+      &.has-drop-cap:first-letter{
+        font-size: 3em;
+        line-height: 1;
+      }
     }
     // 見出し
     h1, h2, h3, h4, h5, h6{
-      margin-top: 1em;
-      margin-bottom: 0.5em;
+      margin-top: 2em;
+      margin-bottom: 1em;
+      clear: both;
+      &:first-child{
+        margin-top: 0;
+      }
     }
     h1{
       font-size: 3em;
-      font-weight: bold;
+      font-weight: normal;
+      padding-bottom: 0.5em;
+      position: relative;
+      &:after{
+        position: absolute;
+        display: block;
+        content: "";
+        height: 3px;
+        background-color: #000;
+        bottom: 0;
+        left: 0;
+        width: 30%;
+        max-width: 150px;
+      }
+      &[style*="center"]:after{
+        left: 50%;
+        transform: translateX( -50% );
+      }
+      &[style*="right"]:after{
+        left: auto;
+        right: 0;
+      }
     }
     h2{
       font-size: 2em;
-      font-weight: bold;
+      font-weight: normal;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 0.5em;
     }
     h3{
       font-size: 1.6em;
       font-weight: bold;
     }
     h4{
-      font-size: 1.4em;
-      font-weight: bold;
-      background-color: $thin-border;
-      padding: 0.25em;
+      font-size: 1.6em;
+      font-weight: normal;
+      border-left: 5px solid #000;
+      padding-left: 0.5em;
     }
     h5{
       font-size: 1.4em;
-      font-weight: bold;
-      padding: 0 0.25em;
+      font-weight: normal;
+      border-bottom: 1px solid #000;
+      padding-bottom: 0.5em;
     }
     h6{
-      color: #999;
+      color: #000;
       font-size: 1em;
-      font-weight: normal;
-      border-bottom: 1px dotted $thin-border;
-      padding: 0.5em 0.25em;
+      font-weight: bold;
     }
     // 引用
     blockquote{
@@ -143,6 +305,9 @@
       @extend .table-striped;
     }
     // リスト
+    ul, ol, dl{
+      margin: 1em 0;
+    }
     dl{
       $border:  2px solid $thin-border;
       dt{
@@ -196,6 +361,11 @@
     // ------------------------
     //
 
+
+    & > *:first-child{
+      margin-top: 0;
+    }
+
     // 本文
     p{
       margin: 0;
@@ -208,6 +378,7 @@
       margin: 1.5em 0 0.5em;
       font-weight: normal;
       font-family: $work-bold;
+      clear: both;
     }
 
     h1{
@@ -318,6 +489,7 @@
       }
     }
 
+
     // その他
     acronym, abbr{
       cursor: help;
@@ -346,6 +518,5 @@
     strong{
       font-family: $work-bold;
     }
-
   }
 }

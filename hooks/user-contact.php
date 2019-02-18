@@ -66,7 +66,8 @@ add_filter( 'hamail_extra_search', function( $results, $type, $id ) {
 /**
  * Replace contact form output.
  */
-add_filter( 'sp4cf7_output', function( $out, WP_Post $post, $error ) {
+add_filter( 'sp4cf7_output', function( $out, $post, $error ) {
+    /** @var WP_Post $post */
 	if ( ! $error ) {
 		ob_start();
 		?>

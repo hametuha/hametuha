@@ -61,6 +61,11 @@
   @include text-justify();
   @include post-style();
 }
+.post-blocks {
+  font-family: $font-family-serif;
+  padding-top: $navbar-height;
+  padding-bottom: 0;
+}
 
 // スマートフォン用調整
 @media only screen and (max-width: $screen-xs-max){

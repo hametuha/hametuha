@@ -495,7 +495,7 @@ add_action( 'do_feed_amp_sitemap', function () {
 		<?php while ( have_posts() ) : the_post(); ?>
 			<url>
 				<loc><?= trailingslashit( get_permalink() ) ?>amp/</loc>
-				<lastmod><?= the_modified_time( DateTime::W3C ); ?></lastmod>
+				<lastmod><?php the_modified_time( DateTime::W3C ); ?></lastmod>
 				<changefreq>weekly</changefreq>
 				<priority>0.5</priority>
 			</url>

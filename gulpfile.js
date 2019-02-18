@@ -4,7 +4,10 @@ var gulp = require('gulp'),
   browserSync = require('browser-sync'),
   pngquant = require('imagemin-pngquant'),
   mozjpeg = require('imagemin-mozjpeg'),
-  mergeStream = require('merge-stream');
+  mergeStream = require('merge-stream'),
+  webpack       = require('webpack-stream'),
+  webpackBundle = require('webpack'),
+  named         = require('vinyl-named');
 
 
 // Sassのタスク
@@ -53,6 +56,47 @@ gulp.task('js', function () {
     }))
     .pipe($.sourcemaps.write('./map'))
     .pipe(gulp.dest('./assets/js/dist/'));
+});
+
+// Package jsx.
+gulp.task( 'jsx', function() {
+  var tmp = {};
+  return gulp.src([ './assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx' ])
+    .pipe($.plumber({
+      errorHandler: $.notify.onError('<%= error.message %>')
+    }))
+    .pipe(named())
+    .pipe($.rename(function (path) {
+      tmp[path.basename] = path.dirname;
+    }))
+    .pipe(webpack({
+      mode: 'production',
+      devtool: 'source-map',
+      module: {
+        rules: [
+          {
+            test: /\.jsx?$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env'],
+                plugins: ['@babel/plugin-transform-react-jsx']
+              }
+            }
+          }
+        ]
+      }
+    }, webpackBundle))
+    .pipe($.rename(function (path) {
+      if (tmp[path.basename]) {
+        path.dirname = tmp[path.basename];
+      } else if ('.map' === path.extname && tmp[path.basename.replace(/\.js$/, '')]) {
+        path.dirname = tmp[path.basename.replace(/\.js$/, '')];
+      }
+      return path;
+    }))
+    .pipe(gulp.dest('./assets/js/dist'));
 });
 
 // Build app
@@ -239,6 +283,8 @@ gulp.task('watch', function () {
   gulp.watch('assets/sass/**/*.scss', gulp.task('sass'));
   // Uglify all
   gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'], gulp.task('js'));
+  // Handle JSX
+  gulp.watch(['assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx'], gulp.task('jsx'));
   // Check JS syntax
   gulp.watch('assets/js/src/**/*.js', gulp.task('jshint'));
   // Build common js
@@ -274,7 +320,7 @@ gulp.task('bs-reload', function () {
 });
 
 // Build
-gulp.task('build', gulp.parallel('copylib', 'jshint', 'commonjs', 'js', 'sass', 'imagemin', 'jade'));
+gulp.task('build', gulp.parallel('copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin', 'jade'));
 
 // Default Tasks
 gulp.task('default', gulp.series('watch'));
