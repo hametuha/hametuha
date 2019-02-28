@@ -28,6 +28,28 @@
     }
   }
 
+  &-list{
+    background-color: #eee;
+    padding: 40px 0;
+    &-items{
+      margin: 20px 0;
+    }
+    &-item{
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    &-link{
+      &:link, &:visited{
+        text-decoration: underline;
+        color: black;
+      }
+      &:hover, &:active {
+        text-decoration: none;
+        color: $link-color;
+      }
+    }
+  }
+
   &-misc{
     background-color: #eee;
     padding: 40px 0;

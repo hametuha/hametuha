@@ -16,7 +16,7 @@ get_template_part( 'templates/faq/header-faq' );
             <ul class="help-center-latest-list">
                 <?php foreach ( hametuha_popular_faqs() as $faq ) : ?>
                     <li class="help-center-latest-item">
-                        <a href="<?= the_permalink( $faq ) ?>">
+                        <a href="<?php the_permalink( $faq ) ?>">
                             <?= esc_html( get_the_title( $faq ) ) ?>
                         </a>
                     </li>
@@ -26,6 +26,34 @@ get_template_part( 'templates/faq/header-faq' );
 
     </div>
 
+</section>
+
+<section class="help-center-list">
+    <div class="container">
+        <h2 class="text-center help-center">最新のヘルプ</h2>
+        <div class="row">
+			<?php
+            $posts = get_posts( [
+				'post_type' => 'faq',
+                'posts_per_page' => 12,
+                'post_status' => 'publish',
+			] );
+            for ( $i = 0; $i < 3; $i++ ) :
+                ?>
+                <div class="col-12 col-lg-4">
+                    <ul class="help-center-list-items">
+                        <?php for ( $j = 0; $j < 4; $j++ ) : $p = $posts[ $i * 3 + $j ]; ?>
+                        <li class="help-center-list-item">
+                            <a href="<?php the_permalink( $p ) ?>" class="help-center-list-link">
+                                <?php echo esc_html( get_the_title( $p ) ) ?>
+                            </a>
+                        </li>
+                        <?php endfor; ?>
+                    </ul>
+                </div>
+            <?php endfor; ?>
+        </div>
+    </div>
 </section>
 
 <section class="help-center-topic">
@@ -42,7 +70,7 @@ get_template_part( 'templates/faq/header-faq' );
     $rows = [];
     $idx = 0;
     foreach ( $terms as $index => $term ) {
-        $index = floor( $index / 4 );
+        $index = (int) floor( $index / 3 );
         if ( ! isset( $rows[ $index ] ) ) {
             $rows[ $index ] = [];
         }
@@ -52,7 +80,7 @@ get_template_part( 'templates/faq/header-faq' );
     ?>
     <div class="row">
         <?php foreach ( $row as $term ) : ?>
-        <div class="col col-xs-6 col-sm-3">
+        <div class="col col-xs-6 col-sm-4">
             <div class="thumbnail">
                 <div class="caption">
                     <h3><?= esc_html( $term->name ) ?></h3>
@@ -118,4 +146,4 @@ get_template_part( 'templates/faq/header-faq' );
     </div>
 
 </section>
-<?php get_footer(); ?>
+<?php get_footer();
