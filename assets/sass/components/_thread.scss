@@ -103,5 +103,17 @@ $carret-size: 20px;
 
 article.type-thread{
   padding-bottom: 40px;
+}
 
+.hamethread-footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 40px;
+  @include mq-max( $screen-sm-max ) {
+    padding: 10px 20px;
+  }
+  background: $footer-navbar-bg;
+  box-shadow: 0 0 5px rgba( 0, 0, 0, .2);
 }

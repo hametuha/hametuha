@@ -80,7 +80,7 @@
 	</div>
 </div>
 <?php endif; ?>
-
+<?php do_action( 'hametuha_after_whole_body' ) ?>
 </div><!-- //#whole-body -->
 
 
