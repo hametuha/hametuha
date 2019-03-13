@@ -28,6 +28,9 @@ add_action( 'init', function () {
 		return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
 	}, 10, 4 );
 
+	// Header script.
+	wp_register_script( 'hametuheader', get_template_directory_uri() . '/assets/js/dist/header.js', [ 'cookie-tasting-heartbeat', 'wp-element' ], hametuha_version(), true );
+
 	/**
 	 * hametuha_angular_extensions
 	 *
@@ -56,6 +59,7 @@ JS;
 		'modernizr',
 		'font-plus',
 		'jsrender',
+		'hametuheader',
 	], hametuha_version(), true );
 	wp_localize_script('hametuha-common', 'HametuhaGlobal', [
 		'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ).'/assets/js/tpl/',

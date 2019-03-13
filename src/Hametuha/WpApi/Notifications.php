@@ -42,7 +42,7 @@ class Notifications extends WpApi {
 						'description' => '取得すべき通知のタイプ。',
 						'required' => true,
 						'enum'     => [
-							'general', 'works', 'all'
+							'general', 'works', 'all', 'recent',
 						],
 					],
 					'paged' => [
@@ -52,7 +52,14 @@ class Notifications extends WpApi {
 						'sanitize_callback' => function( $num ) {
 							return max( 1, (int) $num );
 						},
-
+					],
+					'per_page' => [
+						'type'        => 'integer',
+						'description' => '1ページあたりの件数です。',
+						'default'     => NotificationsModel::PER_PAGE,
+						'sanitize_callback' => function( $num ) {
+							return max( 1, (int) $num );
+						},
 					],
 				];
 				break;
@@ -68,33 +75,44 @@ class Notifications extends WpApi {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function handle_get( \WP_REST_Request $request ) {
-		switch ( $request->get_param( 'type' ) ) {
-			case 'general':
-				$user_ids = [ 0 ];
-				break;
-			case 'works':
-				$user_ids = [ get_current_user_id() ];
-				break;
-			default:
-				$user_ids = [ 0, get_current_user_id() ];
-				break;
+		$per_page = $request->get_param( 'per_page' );
+		if ( 'recent' === $request->get_param( 'type' ) ) {
+			$notifications = wp_cache_get( get_current_user_id(), 'hametuha_notifications' );
+			if ( false === $notifications ) {
+				$notifications = $this->notifications->get_recent( get_current_user_id() );
+				wp_cache_add( get_current_user_id(), $notifications, 'hametuha_notifications', 1800 );
+			}
+			$total = count( $notifications );
+		} else {
+			switch ( $request->get_param( 'type' ) ) {
+				case 'general':
+					$user_ids = [ 0 ];
+					break;
+				case 'works':
+					$user_ids = [ get_current_user_id() ];
+					break;
+				default:
+					$user_ids = [ 0, get_current_user_id() ];
+					break;
+			}
+			$notifications = $this->notifications->get_notifications( $user_ids, '', $request->get_param( 'paged' ), $per_page );
+			$total = $this->notifications->found_count();
 		}
-		$notifications = $this->notifications->get_notifications( $user_ids, '', $request->get_param( 'paged' ) );
-		$total = $this->notifications->found_count();
 		$notifications = array_map( function( $notification ) {
 			ob_start();
 			$this->block( $notification );
 			$block = ob_get_contents();
 			ob_end_clean();
 			$notification->rendered = $block;
+			$notification->url      = $this->notifications->build_url( $notification->type, $notification->object_id );
 			return $notification;
 		}, $notifications );
 		$response = new \WP_REST_Response( $notifications );
 		nocache_headers();
 		$response->set_headers( [
 			'X-WP-Total' => $total,
-			'X-WP-TotalPages' => ceil( $total / NotificationsModel::PER_PAGE ),
-			'X-WP-PerPage' => NotificationsModel::PER_PAGE,
+			'X-WP-TotalPages' => ceil( $total / $per_page ),
+			'X-WP-PerPage' => $per_page,
 		] );
 		return $response;
 	}

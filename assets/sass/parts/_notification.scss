@@ -53,6 +53,18 @@ $hametuha-border-style: 1px solid #ddd !default;
         background-color: darken($hover-bg, 10);
       }
     }
+    // If notification is in header
+    &--header{
+      font-size: 12px;
+      border-bottom: 1px solid $thin-border;
+      .notification__link img{
+        max-width: 32px;
+        margin-right: 10px;
+      }
+      .notification__link{
+        padding: 10px;
+      }
+    }
   }
   &__link{
     &--new{
@@ -67,6 +79,7 @@ $hametuha-border-style: 1px solid #ddd !default;
       width: auto;
       height: auto;
       max-width: 48px;
+
       float: left;
       margin-right: 12px;
     }
@@ -75,6 +88,9 @@ $hametuha-border-style: 1px solid #ddd !default;
     white-space: normal;
     img + &{
       margin-left: 60px;
+      @at-root .notification__item--header &{
+        margin-left: 42px;
+      }
     }
   }
   &__time{

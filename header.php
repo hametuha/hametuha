@@ -28,9 +28,7 @@
 			</a>
 		<?php endif; ?>
 
-		<?php if ( ! is_hamenew() ) : ?>
-		<?php get_template_part( 'templates/header/user' ) ?>
-		<?php endif; ?>
+        <div id="user-info"></div>
 
 	</div><!-- .container -->
 </header>
