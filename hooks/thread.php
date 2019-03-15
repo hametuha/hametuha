@@ -178,6 +178,27 @@ add_action( 'hamethread_after_comment_form', function( $args, $comment = null ) 
 }, 10, 2 );
 
 /**
+ * Display floating button.
+ */
+add_action( 'hametuha_after_whole_body', function() {
+    if ( ! ( is_singular( 'thread' ) || is_post_type_archive( 'thread' ) || is_tax( 'topic' ) ) ) {
+        return;
+    }
+    if ( ! function_exists( 'hamethread_user_can_start' ) ) {
+        return;
+    }
+    if ( hamethread_user_can_start() ) :
+    ?>
+    <footer class="hamethread-footer text-center">
+        <button data-hamethread="create" class="btn btn-lg btn-danger" data-parent="0" data-private="0">
+            <i class="fas fa-folder-plus"></i> スレッドを開始する
+        </button>
+    </footer>
+    <?php
+    endif;
+} );
+
+/**
  * Post comment.
  */
 add_filter( 'hamethread_new_comment_params', function( array $params, WP_REST_Request $request ) {

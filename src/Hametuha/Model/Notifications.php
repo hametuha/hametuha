@@ -150,10 +150,14 @@ class Notifications extends Model {
 	 * @param int|array $user_ids
 	 * @param string $type
 	 * @param int $paged
+	 * @param int $per_page
 	 *
 	 * @return array|mixed|null
 	 */
-	public function get_notifications( $user_ids = [], $type = '', $paged = 1 ) {
+	public function get_notifications( $user_ids = [], $type = '', $paged = 1, $per_page = 0 ) {
+		if ( ! $per_page ) {
+			$per_page = self::PER_PAGE;
+		}
 		if ( ! $user_ids ) {
 			$user_ids = [ get_current_user_id() ];
 		}
@@ -165,7 +169,7 @@ class Notifications extends Model {
 		if ( $type ) {
 			$this->where( 'type = %s', $type );
 		}
-		$result = $this->calc( true )->limit( self::PER_PAGE, ( max( $paged, 1 ) - 1 ) )->order_by( 'created', 'DESC' )->result();
+		$result = $this->calc( true )->limit( $per_page, ( max( $paged, 1 ) - 1 ) )->order_by( 'created', 'DESC' )->result();
 
 		return $result;
 	}

@@ -103,6 +103,8 @@
       }
       .role{
         color: $shade-font;
+        padding-left: 0;
+        padding-right: 0;
       }
     }
     @media only screen and (max-width: $screen-xs-max){
