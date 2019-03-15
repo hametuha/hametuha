@@ -191,7 +191,7 @@ add_action( 'hametuha_after_whole_body', function() {
     ?>
     <footer class="hamethread-footer text-center">
         <button data-hamethread="create" class="btn btn-lg btn-danger" data-parent="0" data-private="0">
-            <i class="fas fa-folder-plus"></i> 掲示板を開始する
+            <i class="fas fa-folder-plus"></i> スレッドを開始する
         </button>
     </footer>
     <?php
