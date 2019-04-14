@@ -60,8 +60,6 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
  */
 add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
 	$values[ 'role' ] = hametuha_user_role( $user_id );
-	if ( user_can( $user_id, 'edit_posts' ) ) {
-		$values[ 'is_author' ] = 'true';
-	}
+	$values[ 'is_author' ] = user_can( $user_id, 'edit_posts' ) ? 'true' : '';
 	return $values;
 }, 10, 2 );

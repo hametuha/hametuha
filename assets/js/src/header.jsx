@@ -1,6 +1,7 @@
 /* global CookieTasting: false */
 
 const {Component, render} = wp.element;
+const { addQueryArgs } = wp.url;
 
 class HametuHeaderEmpty extends Component {
   render() {
@@ -49,9 +50,17 @@ class HametuHeader extends Component {
     } );
   }
 
+  getLogoutUrl() {
+    return addQueryArgs( '/wp-login.php', {
+      action: 'logout',
+      _wpnonce: CookieTasting.get( 'logout' ),
+      redirect_to: encodeURIComponent( window.location.pathname ),
+    } );
+  }
+
   getStateValue() {
     return {
-      logout: '/wp-login.php?action=logout&_wpnonce=' + CookieTasting.get('logout'),
+      logout: this.getLogoutUrl(),
       loggedIn: CookieTasting.isLoggedIn(),
       avatar: CookieTasting.get( 'avatar' ) || '',
       name: CookieTasting.userName(),

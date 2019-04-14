@@ -59,109 +59,30 @@ class Analytics extends Singleton {
 	 */
 	protected function __construct( array $setting = [] ) {
 	    // Register setup script.
-		add_action( 'template_redirect', function() {
-		    if ( is_singular( 'news' ) ) {
-		        return;
-            }
-		    $this->set_up_user_id();
-        } );
-		add_action( 'hashboard_enqueue_scripts', [ $this, 'set_up_user_id' ] );
-		add_action( 'admin_init', function() {
-			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-				return;
-			}
-			$this->set_up_user_id();
-		} );
-		add_filter( 'login_title', function( $title ) {
-		    $this->set_up_user_id();
-		    return $title;
-        } );
+		add_action( 'hashboard_enqueue_scripts', [ $this, 'enqueue_script' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_script' ] );
+		add_action( 'login_enqueue_scripts', [ $this, 'enqueue_script' ] );
         // Do analytics tag.
 	    add_action( 'wp_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'admin_head', [ $this, 'do_tracking_code' ], 19 );
-		add_action( 'hashboard_head', [ $this, 'do_tracking_code' ], 19 );
+		add_action( 'hashboard_footer', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'login_head', [ $this, 'do_tracking_code' ] );
 		// Facebook pixels.
         add_action( 'hametha_after_tracking_code', [ $this, 'facebook_pixel' ] );
         // Contact Form 7
 		add_action( 'wp_enqueue_scripts', [ $this, 'add_inline_script' ] );
-	}
-
-
-	/**
-	 * Get user ID for Google analytics.
-	 *
-	 * @param int  $user_id
-     * @param bool $force If true, create new ID.
-	 * @return string
-	 */
-	public function get_stored_user_id( $user_id, $force = false ) {
-		if ( ! $user_id ) {
-			return '';
-		}
-		$id = (string) get_user_meta( $user_id, 'google_analytics_id', true );
-		if ( ! $id && $force ) {
-		    $id = $this->generated_user_id();
-		    update_user_meta( $user_id, 'google_analytics_id', $id );
-        }
-		return $id;
+		// Add filter for Cookie Tasting.
+        add_filter( 'cookie_tasting_uuid_key', function() {
+			return 'google_analytics_id';
+        } );
 	}
 
 	/**
-	 * Generate User ID.
-	 *
-	 * @return string
+	 * Enqueue Javascript everywhere.
 	 */
-	public function generated_user_id() {
-		try {
-			$uuid = (string) Uuid::uuid4();
-		} catch ( \Exception $e ) {
-			$uuid = uniqid( '', true );
-		} finally {
-			return $uuid;
-		}
-	}
-
-	/**
-	 * Save cookie as
-	 *
-	 * @param string $cookie
-	 */
-	public function save_cookie( $cookie ) {
-		$expires = current_time( 'timestamp' ) + 60 * 60 * 24 * 365 * 3;
-		setcookie( $this->cookie_name, $cookie, $expires, '/', '', true, false );
-	}
-
-	/**
-	 * Setup user_id with cookie value.
-	 */
-	public function set_up_user_id() {
-		// Cookie found, use it.
-		if ( isset( $_COOKIE[ $this->cookie_name ] ) && $_COOKIE[ $this->cookie_name ] ) {
-			$this->user_id = $_COOKIE[ $this->cookie_name ];
-			if ( is_user_logged_in() ) {
-				$stored = $this->get_stored_user_id( get_current_user_id() );
-				if ( ! $stored ) {
-					// Save it for next visit.
-					update_user_meta( get_current_user_id(), 'google_analytics_id', $this->user_id );
-				} elseif ( $stored !== $this->user_id ) {
-					// Saved cookie exists, but different from cookie.
-					// We should override it.
-					$this->user_id = $stored;
-					$this->save_cookie( $stored );
-				}
-			}
-			return;
-		}
-		// User is logged in and cookie found.
-		if ( is_user_logged_in() && ( $stored = $this->get_stored_user_id( get_current_user_id() ) ) ) {
-			$this->user_id = $stored;
-		} else {
-			$this->user_id = $this->generated_user_id();
-		}
-		// Try to store new cookie.
-		$this->save_cookie( $this->user_id );
-	}
+	public function enqueue_script() {
+		wp_enqueue_script( 'cookie-tasting-heartbeat' );
+    }
 
 	/**
 	 * Render tracking code.
@@ -188,39 +109,9 @@ class Analytics extends Singleton {
         ga('create', '<?= $this->ua ?>', 'auto');
         ga('require', 'displayfeatures');
         ga('require', 'linkid', 'linkid.js');
-        (function() {
-          var uid = '';
-          var idKey = '<?= $this->cookie_name ?>=';
-          var allCookie = document.cookie.split(';');
-          for ( var i = 0, l = allCookie.length; i < l; i++ ) {
-            if ( -1 < allCookie[i].indexOf( idKey ) ) {
-              uid = decodeURIComponent( allCookie[i].split( '=' )[1].trim() );
-            }
-          }
-          if ( ! uid ) {
-            var chars = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".split('');
-            for ( var i = 0, len = chars.length; i < len; i++ ) {
-              switch ( chars[ i ] ) {
-                case "x":
-                  chars[ i ] = Math.floor( Math.random() * 16 ).toString( 16 );
-                  break;
-                case "y":
-                  chars[ i ] = ( Math.floor( Math.random() * 4 ) + 8 ).toString( 16 );
-                  break;
-              }
-            }
-            uid = chars.join( '' );
-            document.cookie = '<?= $this->cookie_name ?>=' + [
-              encodeURIComponent( uid ),
-              'path=/',
-              'max-age=' + 60 * 60 * 24 * 365 * 2,
-              'secure'
-            ].join( '; ' );
-          }
-          ga('set', "userId", uid);
-          ga('set', "<?= self::DIMENSION_UID ?>", uid);
-        })();
-
+        var uid = CookieTasting.get( 'uuid' );
+        ga('set', "userId", uid);
+        ga('set', "<?= self::DIMENSION_UID ?>", uid);
         <?php
             // Set user type.
             if ( ! is_singular( 'news' ) ) {

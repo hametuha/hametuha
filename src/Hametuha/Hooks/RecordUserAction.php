@@ -37,7 +37,7 @@ class RecordUserAction extends AbstractRecorders {
 	 * @param int $user_id
 	 */
 	private function save_event( $action, $user_id ) {
-		$user_hash = $this->analytics->get_stored_user_id( $user_id, true );
+		$user_hash =  cookie_tasting_get( 'uuid' ) ?: cookie_tasting_get_uuid( $user_id );
 		$this->analytics->measurement->event( [
 			'ea' => $action,
 			'ec' => 'account',
