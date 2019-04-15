@@ -32,7 +32,7 @@ class HametuHeader extends Component {
     this.checkNotifications();
     setInterval( () => {
       this.checkNotifications();
-    }, 1 * 60 * 1000 );
+    },  60 * 1000 );
   }
 
   checkNotifications() {
@@ -41,8 +41,10 @@ class HametuHeader extends Component {
       return;
     }
     // Retrieve notifications.
-    wp.apiFetch( {
-      path: 'hametuha/v1/notifications/recent',
+    CookieTasting.testBefore().then( res => {
+      return wp.apiFetch( {
+        path: 'hametuha/v1/notifications/recent',
+      } );
     } ).then( response => {
       this.setState( { notifications: response } );
     } ).catch( e => {
