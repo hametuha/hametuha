@@ -245,7 +245,6 @@ add_filter( 'gianism_facebook_permissions', function( array $permissions, $conte
 	switch ( $context ) {
 		case 'admin':
 		    $permissions[] = 'publish_pages';
-		    $permissions[] = 'pages_manage_instant_articles';
 			break;
 		default:
 			// Do nothing.

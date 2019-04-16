@@ -420,8 +420,7 @@ add_action( 'admin_head', function () {
             'id' => 'news-preview',
             'title' => 'プレビュー',
             'content' => sprintf(
-				'<p>はめにゅーは様々なフォーマットで公開されます。<a href="%s" target="_blank">Instant Article</a>や<a href="%s" target="_blank">AMP</a>でも見栄えもチェックしてください。</p>',
-				home_url( sprintf( 'instant-article/preview/%d/?preview_instant_article=true', $_GET['post'] ) ),
+				'<p>はめにゅーは様々なフォーマットで公開されます。<a href="%s" target="_blank">AMP</a>でも見栄えもチェックしてください。</p>',
 				amp_get_permalink( $_GET['post'] )
 			),
         ] );
