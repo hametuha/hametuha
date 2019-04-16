@@ -85,9 +85,6 @@
 
 
 <?php
-if ( is_preview() ) {
-	echo '<div id="watermark">プレビュー</div>';
-}
 get_template_part( 'parts/modal' );
 wp_footer();
 ?>
