@@ -1,5 +1,7 @@
 /**
  * Watermark handler.
+ *
+ * @package hametuha
  */
 
 jQuery(document).ready(function ($) {

@@ -354,8 +354,9 @@ add_action( 'save_post', function ( $post_id, $post ) {
 		} else {
 			$urls[] = trailingslashit( get_permalink( $post ) ) . 'page/' . ( $index + 1 ) . '/';
 		}
-		$urls[] = trailingslashit( get_permalink( $post ) ) . 'amp/';
 	}
+	// AMP
+    $urls[] = trailingslashit( get_permalink( $post ) ) . 'amp/';
 	// タクソノミー
 	foreach ( [ 'genre', 'nouns' ] as $taxonomy ) {
 		if ( ( $terms = get_the_terms( $post, $taxonomy ) ) && ! is_wp_error( $terms ) ) {

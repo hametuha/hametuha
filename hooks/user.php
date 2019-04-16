@@ -63,3 +63,28 @@ add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
 	$values[ 'is_author' ] = user_can( $user_id, 'edit_posts' ) ? 'true' : '';
 	return $values;
 }, 10, 2 );
+
+
+/**
+ * If user is editor, then can't resign.
+ */
+add_filter( 'nlmg_validate_user', function( WP_Error $error, $user_id ) {
+	if ( user_can( $user_id, 'edit_others_posts' ) ) {
+		$error->add( 'editor_cannot_resign', '編集者は退会できません。何か嫌なことがありましたか？　話し合いましょう。' );
+	}
+	return $error;
+}, 10, 2 );
+
+/**
+ * Move news to anonymous user.
+ */
+add_action( 'nlmg_before_leave', function( $user_id ) {
+	$anoymous = get_anonymous_user();
+	global $wpdb;
+	$query = <<<SQL
+		UPDATE {$wpdb->posts} SET post_author=%d
+		WHERE post_type   = 'news'
+          AND post_author = %d
+SQL;
+	$wpdb->query( $wpdb->prepare( $anoymous->ID, $user_id ) );
+} );

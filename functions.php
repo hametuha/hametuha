@@ -107,7 +107,6 @@ get_template_part( 'functions/shortcodes', 'page' );
 get_template_part( 'functions/social' );
 // User
 get_template_part( 'functions/user' );
-get_template_part( 'functions/user', 'caps' );
 get_template_part( 'functions/user', 'affiliate' );
 get_template_part( 'functions/user', 'picture' );
 get_template_part( 'functions/user', 'secret' );
