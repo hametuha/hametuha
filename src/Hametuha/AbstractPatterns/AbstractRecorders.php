@@ -30,6 +30,24 @@ abstract class AbstractRecorders extends Singleton {
 	abstract protected function init();
 
 	/**
+	 * Record user event.
+	 *
+	 * @param string $action
+	 * @param int $user_id
+	 * @param string $category
+	 */
+	public function save_user_event( $action, $user_id, $category, $label ) {
+		$user_hash =  cookie_tasting_get( 'uuid' ) ?: cookie_tasting_get_uuid( $user_id );
+		$this->analytics->measurement->event( [
+			'ea' => $action,
+			'ec' => $category,
+			'el' => $label,
+			'uid' => $user_hash,
+			Analytics::DIMENSION_UID => $user_hash,
+		] );
+	}
+
+	/**
 	 * Getter
 	 *
 	 * @param string $name

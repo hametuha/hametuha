@@ -33,13 +33,6 @@ class RecordEditActions extends AbstractRecorders {
 		if ( ! ( 'publish' === $new_status && 'publish' !== $old_status ) ) {
 			return;
 		}
-		$user_id = $this->analytics->get_stored_user_id( $post->post_author, true );
-		$this->analytics->measurement->event( [
-			'ea'    => 'publish',
-			'ec'    => 'edit',
-			'el'    => $post->ID,
-			'uid'   => $user_id,
-			Analytics::DIMENSION_UID => $user_id,
-		] );
+		$this->save_user_event( 'publish', $post->post_author, 'edit', $post->ID );
 	}
 }
