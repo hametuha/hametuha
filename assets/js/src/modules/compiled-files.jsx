@@ -27,3 +27,17 @@ $( document ).on( 'click', '.compiled-file-delete-btn', function( e ) {
     } );
   }
 } );
+
+$( document ).ready( () => {
+
+  const $iframe = $( 'iframe[name=file-downloader]' );
+  $iframe.load( function( e ) {
+    if (e.target.contentDocument && e.target.contentDocument.body && e.target.contentDocument.body.innerText ) {
+      let response = JSON.parse( e.target.contentDocument.body.innerText );
+      if ( response.message ) {
+        alert( response.message );
+      }
+    }
+  } );
+
+} );

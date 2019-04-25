@@ -83,7 +83,7 @@ class EpubFiles extends WpApi {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	protected function handle_get_file( $file, $request ) {
-		return $this->files->download( $file->ID );
+		return $this->files->download( $file->file_id );
 	}
 
 	/**

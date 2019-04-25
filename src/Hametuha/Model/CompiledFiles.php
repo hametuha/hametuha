@@ -264,12 +264,12 @@ class CompiledFiles extends Model {
 	 */
 	public function download( $file_id ) {
 		try {
-			$file = $this->validate_file( $file_id );
+			$file      = $this->validate_file( $file_id );
 			$mime_type = 'application/epub+zip';
 			$file_path = $this->build_file_path( $file );
 			$file_name = get_the_title( $file->post_id ) . '_' . $file->name;
 			if ( ! file_exists( $file_path ) ) {
-				throw new \Exception( 'ファイルが見つかりませんでした。', 404 );
+				throw new \Exception( sprintf( '%s にファイルが見つかりませんでした。', $file_path ), 404 );
 			}
 			set_time_limit( 0 );
 			foreach ( array_merge( wp_get_nocache_headers(), [
@@ -279,7 +279,7 @@ class CompiledFiles extends Model {
 			] ) as $header => $value ) {
 				header( "{$header}: {$value}" );
 			}
-			readfile( $file_name );
+			readfile( $file_path );
 			exit;
 		} catch ( \Exception $e ) {
 			return new \WP_Error( 'failed_to_print_epub', $e->getMessage(), [
