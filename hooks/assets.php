@@ -138,6 +138,9 @@ JS;
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
 	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
+
+	// Register all new modules.
+	\Hametuha\WpEnqueueManager::register_js( get_template_directory() . '/assets/js/dist/modules', 'hametuha-module-', hametuha_version(), true );
 }, 9 );
 
 /**

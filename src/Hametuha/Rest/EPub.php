@@ -51,25 +51,6 @@ class EPub extends RestTemplate {
 	protected $factories = [];
 
 	/**
-	 * ファイルが正しく存在することを確認
-	 *
-	 * @param int $file_id
-	 *
-	 * @return mixed|null
-	 * @throws \Exception
-	 */
-	private function validate_file( $file_id ) {
-		if ( ! ( $file = $this->files->get_file( $file_id ) ) ) {
-			throw new \Exception( '該当するファイルは存在しません。', 404 );
-		}
-		if ( ! file_exists( ( $path = $this->files->build_file_path( $file ) ) ) ) {
-			throw new \Exception( sprintf( 'ファイルが%sにありません。紛失したようです。', $path ), 404 );
-		}
-
-		return $file;
-	}
-
-	/**
 	 * Get list of series
 	 */
 	public function rest_api_init() {
@@ -217,88 +198,6 @@ class EPub extends RestTemplate {
 		}
 	}
 
-	/**
-	 * ファイルをチェックする
-	 *
-	 * @param int $file_id
-	 *
-	 * @throws \Exception
-	 */
-	public function get_check( $file_id ) {
-		$file = $this->validate_file( $file_id );
-		try {
-			if ( ! defined( 'EPUB_PATH' ) ) {
-				throw new \Exception( 'ePubチェッカーがありません', 500 );
-			}
-			// アップロードディレクトリを取得
-			$tmp = tempnam( ABSPATH . 'wp-content/hamepub/', 'epubCheck' );
-
-			$path     = $this->files->build_file_path( $file );
-			$command  = sprintf( '%s %s -out %s', EPUB_PATH, $path, $tmp );
-			$result   = exec( $command, $output );
-			$lines    = implode( '<br />', array_map( 'esc_html', $output ) );
-			$messages = [];
-			try {
-				$xml = simplexml_load_file( $tmp );
-				if ( $xml && $xml->repInfo->messages->count() ) {
-					foreach ( $xml->repInfo->messages->message as $message ) {
-						$messages[] = (string) $message;
-					}
-				} elseif ( $xml ) {
-					$messages[] = 'SUCCESS: This ePub is valid!';
-				} else {
-					$messages[] = 'Error: XML invalid.';
-				}
-			} catch ( \Exception $e ) {
-				$messages[] = 'Error: ' . $e->getMessage();
-			} finally {
-				if ( file_exists( $tmp ) ) {
-					unlink( $tmp );
-				} else {
-					$messages[] = sprintf( 'Error: Temp file %s doesn\'t exist', $tmp );
-				}
-			}
-			$messages = implode( ' ', array_map( function ( $message ) {
-				$message = esc_html( $message );
-				$message = str_replace( 'ERROR:', '<strong style="color: white; background: red; padding: 2px 3px;">ERROR:</strong>', $message );
-				$message = str_replace( 'WARN:', '<strong style="color: white; background: orange; padding: 2px 3px;">WARN:</strong>', $message );
-				$message = str_replace( 'SUCCESS:', '<strong style="color: white; background: green; padding: 2px 3px;">VALID</strong>', $message );
-
-				return "<li>{$message}</li>";
-			}, $messages ) );
-			// Show result
-			$command = esc_html( $command );
-			// Create message
-			echo <<<HTML
-<p><code>{$command}</code></p>
-<p>{$lines}</p>
-<hr />
-<ol style="font-family: monospace;">
-{$messages}
-</ol>
-HTML;
-		} catch ( \Exception $e ) {
-			printf( '<div class="error"><p>%s</p></div>', $e->getMessage() );
-		}
-	}
-
-	/**
-	 * ファイルを削除する
-	 *
-	 * @param int $file_id
-	 *
-	 * @throws \Exception
-	 */
-	public function get_delete( $file_id ) {
-		$file = $this->validate_file( $file_id );
-		if ( ! current_user_can( 'get_epub', $file_id ) ) {
-			throw new \Exception( 'あなたにはePubへのアクセス権がありません。', 401 );
-		}
-		if ( ! $this->files->delete_file( $file_id ) ) {
-			throw new \Exception( 'ファイルを削除できませんでした。', 500 );
-		}
-		wp_redirect( admin_url( 'edit.php?post_type=series&page=hamepub-files' ) );
-	}
 
 	/**
 	 * 印刷用レイアウトを表示する

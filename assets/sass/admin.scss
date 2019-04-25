@@ -202,3 +202,30 @@ div.admin-notice{
     margin-right: 10px;
   }
 }
+
+.wp-list-table .loading{
+  position: relative;
+  z-index: 1;
+  &:before{
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba( 255, 255, 255, .8 );
+    z-index: 2;
+  }
+  &:after{
+    position: absolute;
+    content: "";
+    width: 60px;
+    height: 60px;
+    background: url( "../img/ripple.gif" ) center center no-repeat;
+    background-size: cover;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+    z-index: 3;
+  }
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * ユーザーとタグを紐づけるテーブル
+ * File table
  */
 
 use WPametu\DB\Column;
@@ -9,7 +9,7 @@ $table = [
 
     'name' => 'compiled_files',
 
-    'version' => '1.0.1',
+    'version' => '1.1.0',
 
     'columns' => [
 	    'file_id' => [
@@ -36,6 +36,6 @@ $table = [
 
     'indexes' => [
         'post_only' => ['post_id'],
-        'type_post' => ['type', 'post_id']
+        'type_post' => ['type', 'post_id', 'published_for'],
     ]
 ];

@@ -8,9 +8,10 @@ use WPametu\DB\Model;
 /**
  * Compiled file list
  *
- * @package Hametuha\Hametuha\Model
+ * @package hametuha
  * @property-read string $users
  * @property-read string $posts
+ * @property-read CompiledFileMeta $meta
  */
 class CompiledFiles extends Model {
 
@@ -28,6 +29,7 @@ class CompiledFiles extends Model {
 		'type'    => '%s',
 		'post_id' => '%d',
 		'name'    => '%s',
+		'updated' => '%s',
 	];
 
 	protected $type_labels = [
@@ -62,6 +64,27 @@ class CompiledFiles extends Model {
 		return $this->where( "file_id = %d", $file_id )->get_row();
 	}
 
+	public function get_children_files( $post_id ) {
+
+	}
+
+	/**
+	 * Delete all files if post is deleted.
+	 *
+	 * @param int $post_id
+	 * @return int Deleted files count.
+	 */
+	public function delete_child_files( $post_id ) {
+		$deleted = 0;
+		foreach ( $this->get_children_files( $post_id ) as $file ) {
+			try {
+
+			} catch ( \Exception $e ) {
+
+			}
+		}
+	}
+
 	/**
 	 * Delete file
 	 *
@@ -77,7 +100,10 @@ class CompiledFiles extends Model {
 		}
 		$path = $this->build_file_path( $file );
 		$this->delete_where( [
-			[ 'file_id', '=', $file_id, '%d' ]
+			[ 'file_id', '=', $file_id, '%d' ],
+		] );
+		$this->meta->delete_where( [
+			[ 'file_id', '=', $file_id, '%d' ],
 		] );
 		if ( ! unlink( $path ) ) {
 			return false;
@@ -93,12 +119,12 @@ class CompiledFiles extends Model {
 	 * @param int $limit
 	 * @param int $page
 	 *
-	 * @return array
+	 * @return \stdClass[]
 	 */
 	public function get_files( array $args, $limit = 20, $page = 0 ) {
 		$results = [];
 		$this->calc()
-		     ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'inner' )
+		     ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
 		     ->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
 		     ->limit( $limit, $page )
 		     ->order_by( "{$this->table}.updated", 'DESC' );
@@ -120,13 +146,12 @@ class CompiledFiles extends Model {
 		if ( $args['secret'] ) {
 			$this->where( "{$this->posts}.ID IN ( SELECT post_id FROM {$this->db->postmeta} WHERE meta_key = %s AND meta_value = 1 )", '_is_secret_book' );
 		}
-		foreach ( $this->result() as $row ) {
+
+		return array_map( function( $row ) {
 			$row->label = $this->type_labels[ $row->type ];
 			$row->path  = $this->build_file_path( $row );
-			$results[]  = $row;
-		}
-
-		return $results;
+			return $row;
+		}, $this->result() );
 	}
 
 	/**
@@ -140,6 +165,87 @@ class CompiledFiles extends Model {
 		return sprintf( '%swp-content/hamepub/out/%s/%d/%s', ABSPATH, $file->type, $file->post_id, $file->name );
 	}
 
+	/**
+	 * Detect if file exists.
+	 *
+	 * @param int $file_id
+	 *
+	 * @return \stdClass|null
+	 * @throws \Exception
+	 */
+	public function validate_file( $file_id ) {
+		if ( ! ( $file = $this->get_file( $file_id ) ) ) {
+			throw new \Exception( '該当するファイルは存在しません。', 404 );
+		}
+		if ( ! file_exists( ( $path = $this->build_file_path( $file ) ) ) ) {
+			throw new \Exception( sprintf( 'ファイルが%sにありません。紛失したようです。', $path ), 404 );
+		}
+
+		return $file;
+	}
+
+	/**
+	 * Validate ePub file.
+	 *
+	 * @param int $file_id
+	 * @return \WP_Error|string[]
+	 */
+	public function validate( $file_id ) {
+		$error = new \WP_Error();
+		try {
+			if ( ! defined( 'EPUB_PATH' ) ) {
+				throw new \Exception( 'ePubチェッカーがありません', 500 );
+			}
+			// アップロードディレクトリを取得
+			$file     = $this->validate_file( $file_id );
+			$tmp      = tempnam( ABSPATH . 'wp-content/hamepub/', 'epubCheck' );
+			$path     = $this->build_file_path( $file );
+			$command  = sprintf( '%s %s -out %s', EPUB_PATH, $path, $tmp );
+			$result   = exec( $command, $output );
+			$lines    = implode( '<br />', array_map( 'esc_html', $output ) );
+			$success  = '';
+			try {
+				$xml = simplexml_load_file( $tmp );
+				if ( $xml && $xml->repInfo->messages->count() ) {
+					foreach ( $xml->repInfo->messages->message as $message ) {
+						$error->add( 'epub_failed_validation', (string) $message, [
+							'status' => 500,
+						] );
+					}
+				} elseif ( $xml ) {
+					$success = 'このePubは有効です。';
+				} else {
+					$error->add( 'epub_failed_validation', 'XMLの形式が不正です。' );
+				}
+			} catch ( \Exception $e ) {
+				$error->add( 'epub_failed_validation', $e->getMessage(), [
+					'status' => 500,
+				] );
+			} finally {
+				if ( file_exists( $tmp ) ) {
+					unlink( $tmp );
+				} else {
+					$error->add( 'epub_failed_validation', sprintf( 'Error: 一時ファイル %s が存在しません。書き込みエラー？', $tmp ), [
+						'status' => 500,
+					] );
+				}
+			}
+			if ( $success ) {
+				return [
+					'message' => $success,
+					'result'  => $lines,
+				];
+			} else {
+				$error->add( 'compile_result', $lines );
+				return $error;
+			}
+		} catch ( \Exception $e ) {
+			$error->add( 'epub_failed_validation', $e->getMessage(), [
+				'status' => $e->getCode(),
+			] );
+			return $error;
+		}
+	}
 
 	/**
 	 * Get total result
@@ -150,6 +256,37 @@ class CompiledFiles extends Model {
 		return (int) $this->db->get_var( "SELECT FOUND_ROWS()" );
 	}
 
+	/**
+	 * Download ePub file.
+	 *
+	 * @param int $file_id
+	 * @return \WP_Error
+	 */
+	public function download( $file_id ) {
+		try {
+			$file = $this->validate_file( $file_id );
+			$mime_type = 'application/epub+zip';
+			$file_path = $this->build_file_path( $file );
+			$file_name = get_the_title( $file->post_id ) . '_' . $file->name;
+			if ( ! file_exists( $file_path ) ) {
+				throw new \Exception( 'ファイルが見つかりませんでした。', 404 );
+			}
+			set_time_limit( 0 );
+			foreach ( array_merge( wp_get_nocache_headers(), [
+				'Content-Type'        => $mime_type,
+				'Content-Disposition' => sprintf( 'attachment; filename="%s"', $file_name ),
+				'Content-Length'      => filesize( $file_path ),
+			] ) as $header => $value ) {
+				header( "{$header}: {$value}" );
+			}
+			readfile( $file_name );
+			exit;
+		} catch ( \Exception $e ) {
+			return new \WP_Error( 'failed_to_print_epub', $e->getMessage(), [
+				'status' => $e->getCode(),
+			] );
+		}
+	}
 
 	/**
 	 * Get compiled objects
@@ -168,5 +305,21 @@ class CompiledFiles extends Model {
 
 		return (bool) $this->get_var();
 	}
+
+	/**
+	 * Getter
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		switch ( $name ) {
+			case 'meta':
+				return CompiledFileMeta::get_instance();
+			default:
+				return parent::__get( $name );
+		}
+	}
+
 
 }
