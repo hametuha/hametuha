@@ -32,7 +32,6 @@ class CompiledFileList extends Screen {
 	 * Enqueue scripts
 	 */
 	protected function enqueueScript() {
-		add_thickbox();
 		wp_enqueue_script( 'hametuha-module-compiled-files' );
 	}
 

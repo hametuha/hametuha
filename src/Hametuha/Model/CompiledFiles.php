@@ -193,50 +193,27 @@ class CompiledFiles extends Model {
 	public function validate( $file_id ) {
 		$error = new \WP_Error();
 		try {
-			if ( ! defined( 'EPUB_PATH' ) ) {
-				throw new \Exception( 'ePubチェッカーがありません', 500 );
-			}
 			// アップロードディレクトリを取得
 			$file     = $this->validate_file( $file_id );
-			$tmp      = tempnam( ABSPATH . 'wp-content/hamepub/', 'epubCheck' );
 			$path     = $this->build_file_path( $file );
-			$command  = sprintf( '%s %s -out %s', EPUB_PATH, $path, $tmp );
-			$result   = exec( $command, $output );
-			$lines    = implode( '<br />', array_map( 'esc_html', $output ) );
-			$success  = '';
-			try {
-				$xml = simplexml_load_file( $tmp );
-				if ( $xml && $xml->repInfo->messages->count() ) {
-					foreach ( $xml->repInfo->messages->message as $message ) {
-						$error->add( 'epub_failed_validation', (string) $message, [
-							'status' => 500,
-						] );
-					}
-				} elseif ( $xml ) {
-					$success = 'このePubは有効です。';
-				} else {
-					$error->add( 'epub_failed_validation', 'XMLの形式が不正です。' );
-				}
-			} catch ( \Exception $e ) {
-				$error->add( 'epub_failed_validation', $e->getMessage(), [
-					'status' => 500,
-				] );
-			} finally {
-				if ( file_exists( $tmp ) ) {
-					unlink( $tmp );
-				} else {
-					$error->add( 'epub_failed_validation', sprintf( 'Error: 一時ファイル %s が存在しません。書き込みエラー？', $tmp ), [
-						'status' => 500,
-					] );
-				}
+			$response = wp_remote_post( 'https://lint.hametuha.pub/validator', [
+				'timeout' => 60,
+				'body' => base64_encode( file_get_contents( $path ) ),
+			] );
+			if ( is_wp_error( $response ) ) {
+				return $response;
 			}
-			if ( $success ) {
+			if ( ! ( $response = json_decode( $response['body'] ) ) ) {
+				throw new \Exception( 'ePubチェックのAPIが動作していません。', 500 );
+			}
+			if ( $response->success ) {
 				return [
-					'message' => $success,
-					'result'  => $lines,
+					'message' => 'このePubは有効です。',
 				];
 			} else {
-				$error->add( 'compile_result', $lines );
+				foreach ( $response->messages as $message ) {
+					$error->add( 'epub_failed_validation', $message );
+				}
 				return $error;
 			}
 		} catch ( \Exception $e ) {

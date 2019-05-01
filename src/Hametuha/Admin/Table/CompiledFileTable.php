@@ -99,13 +99,14 @@ class CompiledFileTable extends \WP_List_Table {
 			case 'post':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $item->post_id ), get_the_title( $item ) );
 				echo $this->row_actions( [
-					'edit'     => sprintf( '<a href="%s">編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
-					'check'    => sprintf( '<a href="%s" class="thickbox" title="%s ePubバリデーション">チェック</a>', home_url( "epub/check/{$item->file_id}", 'https' ), get_the_title( $item ) ),
+					'edit'     => sprintf( '<a href="%s">作品集の編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
+					'check'    => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
 					'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
 						'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 					], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
 					'delete'   => sprintf( '<a class="compiled-file-delete-btn"   href="#" data-file-id="%d"">削除</a>', $item->file_id ),
 				] );
+				printf( '<div class="compiled-file-controller"></div>' );
 				break;
 			case 'author':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&author=' . $item->post_author ), esc_html( $item->display_name ) );

@@ -158,7 +158,11 @@ gulp.task('copylib', function () {
     gulp.src([
       './node_modules/select2/dist/css/select2.min.css'
     ])
-      .pipe(gulp.dest('./assets/css'))
+      .pipe(gulp.dest('./assets/css')),
+    gulp.src([
+      './node_modules/prop-types/prop-types.min.js'
+    ])
+      .pipe( gulp.dest('./assets/js/dist') )
   );
 });
 

@@ -179,27 +179,6 @@ class EPub extends RestTemplate {
 	}
 
 	/**
-	 * ファイルをダウンロード
-	 *
-	 * @param $file_id
-	 */
-	public function get_file( $file_id ) {
-		try {
-			$file = $this->validate_file( $file_id );
-			if ( ! current_user_can( 'get_epub', $file_id ) ) {
-				throw new \Exception( 'あなたにはePubを取得する権限がありません。', 401 );
-			}
-			if ( ! ( $post = get_post( $file->post_id ) ) ) {
-				throw new \Exception( 'ファイルに紐付いた投稿が見つかりません。', 404 );
-			}
-			$this->print_file( $this->files->build_file_path( $file ), 'application/epub+zip', $post->post_title . '_' . $file->name );
-		} catch ( \Exception $e ) {
-			$this->iframe_alert( $e->getMessage() );
-		}
-	}
-
-
-	/**
 	 * 印刷用レイアウトを表示する
 	 *
 	 * @param int $series_id
