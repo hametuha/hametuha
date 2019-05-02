@@ -5,10 +5,9 @@ namespace Hametuha\QueryHighJack;
 
 use WPametu\API\QueryHighJack;
 
-class BestQuery extends QueryHighJack
-{
+class BestQuery extends QueryHighJack {
 
-	protected $query_var = ['ranking'];
+	protected $query_var = [ 'ranking' ];
 
 	protected $rewrites = [
 		'best/page/([0-9]+)/?$' => 'index.php?ranking=best&paged=$matches[1]',
@@ -23,10 +22,10 @@ class BestQuery extends QueryHighJack
 	 * @param \WP_Query $wp_query
 	 */
 	public function pre_get_posts( \WP_Query &$wp_query ) {
-		if( $this->is_valid_query($wp_query) ){
-			$wp_query->set('orderby', 'meta_value_num');
-			$wp_query->set('order', 'DESC');
-			$wp_query->set('meta_key', '_current_pv');
+		if ( $this->is_valid_query( $wp_query ) ) {
+			$wp_query->set( 'orderby', 'meta_value_num' );
+			$wp_query->set( 'order', 'DESC' );
+			$wp_query->set( 'meta_key', '_current_pv' );
 		}
 	}
 
@@ -39,7 +38,7 @@ class BestQuery extends QueryHighJack
 	 * @return array
 	 */
 	public function the_posts( array $posts, \WP_Query $wp_query ) {
-		if( !$this->is_valid_query($wp_query) ){
+		if ( !$this->is_valid_query( $wp_query ) ) {
 			return $posts;
 		}
 		// Ranking Query
@@ -49,12 +48,12 @@ class BestQuery extends QueryHighJack
 			  AND CAST(meta_value AS SIGNED) > %d
 SQL;
 		// PV diff query
-		$yesterday = date_i18n('Y-m-d', current_time('timestamp') - 60 * 60 * 24);
+		$yesterday = date_i18n( 'Y-m-d', current_time( 'timestamp' ) - 60 * 60 * 24 );
 		$object_ids = [];
-		foreach( $posts as $post ){
+		foreach ( $posts as $post ) {
 			$object_ids[] = $post->ID;
 		}
-		$object_ids = implode(', ', array_map('intval', $object_ids));
+		$object_ids = implode( ', ', array_map( 'intval', $object_ids ) );
 		$diff_query = <<<SQL
 			SELECT object_id, object_value FROM {$this->db->prefix}wpg_ga_ranking
 			WHERE category = 'diff'
@@ -62,14 +61,14 @@ SQL;
 			  AND calc_date = '{$yesterday}'
 SQL;
 		$object_values = [];
-		$result = $this->db->get_results($diff_query);
-		foreach( $result as $row ){
-			$object_values[$row->object_id] = $row->object_value;
+		$result = $this->db->get_results( $diff_query );
+		foreach ( $result as $row ) {
+			$object_values[ $row->object_id ] = $row->object_value;
 		}
-		foreach( $posts as &$post ){
-			$post->pv = (int) get_post_meta($post->ID, '_current_pv', true);
-			$post->rank = $this->db->get_var($this->db->prepare($rank_query, $post->pv)) + 1;
-			$post->transition = isset( $object_values[$post->ID] ) ? (int)( 0 < $object_values[$post->ID]) : 0;
+		foreach ( $posts as &$post ) {
+			$post->pv = (int) get_post_meta( $post->ID, '_current_pv', true );
+			$post->rank = $this->db->get_var( $this->db->prepare( $rank_query, $post->pv ) ) + 1;
+			$post->transition = isset( $object_values[ $post->ID ] ) ? (int) ( 0 < $object_values[ $post->ID ] ) : 0;
 		}
 		return $posts;
 	}
@@ -83,7 +82,7 @@ SQL;
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return 'best' == $wp_query->get('ranking');
+		return 'best' == $wp_query->get( 'ranking' );
 	}
 
 
