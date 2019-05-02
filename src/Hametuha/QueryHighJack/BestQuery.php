@@ -53,15 +53,19 @@ SQL;
 		foreach ( $posts as $post ) {
 			$object_ids[] = $post->ID;
 		}
-		$object_ids = implode( ', ', array_map( 'intval', $object_ids ) );
-		$diff_query = <<<SQL
+		if ( $object_ids ) {
+			$object_ids = implode( ', ', array_map( 'intval', $object_ids ) );
+			$diff_query = <<<SQL
 			SELECT object_id, object_value FROM {$this->db->prefix}wpg_ga_ranking
 			WHERE category = 'diff'
 			  AND object_id IN ({$object_ids})
 			  AND calc_date = '{$yesterday}'
 SQL;
+			$result = $this->db->get_results( $diff_query );
+		} else {
+			$result = [];
+		}
 		$object_values = [];
-		$result = $this->db->get_results( $diff_query );
 		foreach ( $result as $row ) {
 			$object_values[ $row->object_id ] = $row->object_value;
 		}
