@@ -55,7 +55,14 @@ class EpubFiles extends WpApi {
 				break;
 			case 'POST':
 				$args = array_merge( $args, [
-
+					'published' => [
+						'default'     => '',
+						'type'        => 'string',
+						'description' => 'The datetime of publication',
+						'validate_callback' => function( $var ) {
+							return empty( $var ) || ( 'DELETE' === $var ) || preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/u', $var );
+						},
+					],
 				] );
 				break;
 		}
@@ -99,6 +106,53 @@ class EpubFiles extends WpApi {
 			return $result;
 		} else {
 			return new \WP_REST_Response( $result );
+		}
+	}
+
+	/**
+	 * Update file data.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 * @throws \Exception
+	 */
+	public function handle_post( $request ) {
+		$error = new \WP_Error();
+		$messages = [];
+		$file_id = $request->get_param( 'file_id' );
+		foreach ( [ 'published' ] as $key ) {
+			$value = $request->get_param( $key );
+			switch ( $key ) {
+				case 'published':
+					if ( 'DELETE' === $value ) {
+						// Delete file meta.
+						if ( $this->files->meta->delete_meta( $file_id, 'published' ) ) {
+							$messages[] = 'ファイルの公開日時を削除しました。';
+						} else {
+							$error->add( 'failed_to_update_file', 'ファイルの公開日時を削除できませんでした。', [
+								'status' => 500,
+							] );
+						}
+					} elseif ( $value ) {
+						// Update published date.
+						if ( $this->files->meta->update_meta( $file_id, 'published', $value ) ) {
+							$messages[] = 'ファイルの公開日時を更新しました。';
+						} else {
+							$error->add( 'failed_to_update_file', 'ファイルの公開日時を更新できませんでした。', [
+								'status' => 500,
+							] );
+						}
+					}
+					break;
+			}
+		}
+		if ( $error->get_error_messages() ) {
+			return $error;
+		} else {
+			return new \WP_REST_Response( [
+				'success'  => true,
+				'messages' => $messages,
+			] );
 		}
 	}
 

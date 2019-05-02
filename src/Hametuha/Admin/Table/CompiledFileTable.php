@@ -104,7 +104,12 @@ class CompiledFileTable extends \WP_List_Table {
 					'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
 						'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 					], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
-					'delete'   => sprintf( '<a class="compiled-file-delete-btn"   href="#" data-file-id="%d"">削除</a>', $item->file_id ),
+					'delete'   => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
+					'published' => sprintf(
+						'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
+						$item->file_id,
+						esc_attr( $this->files->meta->get_meta( $item->file_id, 'published' )->updated )
+					),
 				] );
 				printf( '<div class="compiled-file-controller"></div>' );
 				break;
@@ -131,10 +136,12 @@ class CompiledFileTable extends \WP_List_Table {
 				);
 				break;
 			case 'updated':
+				$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+				$updated = $this->files->meta->get_meta( $item->file_id, 'published' );
 				printf(
-					'%s<br /><small>販売日: %s</small>',
-					mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $item->updated ),
-					'---'
+					'%s<br /><small>販売日: <span class="compile-file-published">%s</span></small>',
+					mysql2date( $format, $item->updated ),
+					$updated ? mysql2date( $format, $updated->meta_value ) : '---'
 				);
 				break;
 		}

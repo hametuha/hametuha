@@ -36,8 +36,8 @@ class CompiledFileMeta extends Model {
 	 */
 	public function get_meta( $file_id, $key ) {
 		return $this->wheres( [
-			'file_id'  => $file_id,
-			'meta_key' => $key,
+			'file_id  = %d' => $file_id,
+			'meta_key = %s' => $key,
 		] )->get_row();
 	}
 
@@ -65,6 +65,21 @@ class CompiledFileMeta extends Model {
 		return $this->wheres( [
 			'file_id'  => $file_id,
 		] )->result();
+	}
+
+	/**
+	 * Delete meta
+	 *
+	 * @param int $file_id
+	 * @param string $key
+	 * @return false|int
+	 * @throws \Exception
+	 */
+	public function delete_meta( $file_id, $key ) {
+		return $this->delete_where( [
+			[ 'file_id', '=', $file_id, '%d' ],
+			[ 'meta_key', '=', $key, '%s' ],
+		] );
 	}
 
 	/**

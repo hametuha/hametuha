@@ -1,5 +1,5 @@
 /*!
- * wpdeps=jquery, wp-api-fetch, jquery-effects-highlight
+ * wpdeps=jquery, wp-api-fetch, jquery-effects-highlight, moment
  */
 
 const $ = jQuery;
@@ -66,6 +66,37 @@ $( document ).on( 'click', '.compiled-file-validate-btn', function( e ) {
     alert( messages.join( "\n" ) );
     window.console && console.log( res );
   } ).finally( res => {
+    $cell.removeClass( 'loading' );
+  } );
+} );
+
+$( document ).on( 'click', '.compiled-file-published-btn', function( e ) {
+  e.preventDefault();
+  let published = $( this ).attr( 'data-published' );
+  let fileId = $( this ).attr( 'data-file-id' );
+  const $cell = $( this ).parents( 'td' );
+  const response = window.prompt( "公開日時を入力してください。\n削除する場合は大文字で DELETE と入力してください。", published || moment().format( 'YYYY-MM-DD HH:mm:ss' ) );
+  if ( ! response ) {
+    return true;
+  }
+  // Now published date is got.
+  $cell.addClass( 'loading' );
+  wp.apiFetch( {
+    path: `/hametuha/v1/epub/file/${fileId}`,
+    method: 'POST',
+    data: {
+      published: response
+    }
+  } ).then( res => {
+    let text = '';
+    if ( 'DELETE' === response ) {
+      text = '---';
+    } else {
+      text = response;
+    }
+    $cell.removeClass( 'loading' ).parents( 'tr' ).effect( 'highlight' ).find( '.compile-file-published' ).text( text );
+  } ).catch( res => {
+    alert( res.message || '更新に失敗しました。' );
     $cell.removeClass( 'loading' );
   } );
 } );
