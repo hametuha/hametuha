@@ -266,6 +266,24 @@ class CompiledFiles extends Model {
 	}
 
 	/**
+	 * Get published date.
+	 *
+	 * @param int $post_id
+	 * @return \stdClass
+	 */
+	public function published( $post_id ) {
+		return $this
+			->select( "{$this->table}.*, {$this->meta->table}.meta_value AS published" )
+			->join( $this->meta->table, "{$this->table}.file_id = {$this->meta->table}.file_id AND {$this->meta->table}.meta_key = 'published'", 'innder' )
+			->wheres( [
+				"{$this->table}.post_id = %d" => $post_id,
+				"{$this->meta->table}.meta_value != %s" => '',
+			] )
+			->order_by( "{$this->meta->table}.meta_value", 'DESC' )
+			->get_row();
+	}
+
+	/**
 	 * Get compiled objects
 	 *
 	 * @param int $post_id

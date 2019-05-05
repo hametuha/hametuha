@@ -9,6 +9,8 @@ use WPametu\DB\Model;
  * Series model
  *
  * @package Hametuha\Model
+ *
+ * @property CompiledFiles $files
  */
 class Series extends Model {
 
@@ -608,6 +610,50 @@ SQL;
 	}
 
 	/**
+	 * Get latest published date.
+	 *
+	 * @param int $series_id
+	 * @return string
+	 */
+	public function last_published( $series_id ) {
+		$post = get_post( $series_id );
+		if ( ! $post || 'series' !== $post->post_type ) {
+			return '';
+		}
+		$published = $this->files->published( $post->ID );
+		return $published ? $published->published : '';
+	}
+
+	/**
+	 * Check if series is safe for
+	 *
+	 * @param int|\WP_Post $series_id
+	 * @return bool|\WP_Error
+	 */
+	public function safe_after_published( $series_id ) {
+		$error = new \WP_Error();
+		$series = get_post( $series_id );
+		if ( ! $series || 'series' !== $series->post_type ) {
+			return false;
+		}
+		$published = $this->last_published( $series->ID );
+		if ( ! $published ) {
+			return false;
+		}
+		// Check series itself.
+		if ( $series->post_modified > $published ) {
+			// TODO: How can we fix series is updated after publication?
+		}
+		// Check series posts.
+		foreach ( self::get_series_posts( $series->ID ) as $post ) {
+			if ( $published < $post->post_modified ) {
+				$error->add( 'outdated_publication', sprintf( '「%s」は販売開始後に修正されています。', get_the_title( $post ) ) );
+			}
+		}
+		return $error->get_error_messages() ? $error : true;
+	}
+
+	/**
 	 * Get series arg
 	 *
 	 * @param int $series_id
@@ -632,7 +678,7 @@ SQL;
 	 *
 	 * @param int $series_id
 	 *
-	 * @return array
+	 * @return \WP_Post[]
 	 */
 	public static function get_series_posts( $series_id ) {
 		return get_posts( self::get_series_args( $series_id ) );
@@ -661,4 +707,21 @@ SQL;
 	public function override_meta( $author_id, $key, $default ) {
 		return get_user_meta( $author_id, $key, true ) ?: $default;
 	}
+
+	/**
+	 * Getter
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __get( $name ) {
+		switch( $name ) {
+			case 'files':
+				return CompiledFiles::get_instance();
+			default:
+				return parent::__get( $name );
+		}
+	}
+
+
 }

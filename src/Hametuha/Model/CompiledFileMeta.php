@@ -104,6 +104,7 @@ class CompiledFileMeta extends Model {
 				'file_id'    => $file_id,
 				'meta_key'   => $key,
 				'meta_value' => $value,
+				'created'    => current_time( 'mysql' ),
 			] );
 		}
 	}

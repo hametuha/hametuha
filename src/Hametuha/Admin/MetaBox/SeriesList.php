@@ -21,6 +21,24 @@ class SeriesList extends SeriesBase {
 	protected $nonce_action = 'series-order-update';
 
 	/**
+	 * @var \WP_Error|bool
+	 */
+	protected $errors = null;
+
+	/**
+     * Detect if current screen is admin editor.
+     *
+	 * @return bool
+	 */
+	protected function is_series_editor() {
+	    if ( ! function_exists( 'get_current_screen' ) ) {
+	        return false;
+        }
+		$screen = get_current_screen();
+		return ( 'post' == $screen->base && 'series' == $screen->post_type );
+    }
+
+	/**
 	 * Register Ajax action
 	 */
 	public function adminInit() {
@@ -28,16 +46,18 @@ class SeriesList extends SeriesBase {
 			add_action( 'wp_ajax_series_list', [ $this, 'seriesList' ] );
 		}
 		add_action( 'admin_enqueue_scripts', function ( $page ) {
-			$screen = get_current_screen();
-			if ( 'post' == $screen->base && 'series' == $screen->post_type ) {
-				wp_enqueue_script( 'series-helper', get_stylesheet_directory_uri() . '/assets/js/dist/admin/series-helper.js', [
-					'jquery-ui-sortable',
-					'backbone',
-					'underscore',
-					'jquery-effects-highlight',
-				], filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/series-helper.js' ), true );
-			}
+		    if ( ! $this->is_series_editor() ) {
+		        return;
+            }
+			wp_enqueue_script( 'series-helper', get_stylesheet_directory_uri() . '/assets/js/dist/admin/series-helper.js', [
+				'jquery-ui-sortable',
+				'backbone',
+				'underscore',
+				'jquery-effects-highlight',
+			], filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/series-helper.js' ), true );
 		} );
+		// Display errors if edited after publication.
+		add_action( 'admin_notices', [ $this, 'render_series_errors' ] );
 	}
 
 	/**
@@ -71,7 +91,7 @@ class SeriesList extends SeriesBase {
 
 
 	/**
-	 * Update serires list
+	 * Update series list
 	 */
 	public function seriesList() {
 		try {
@@ -117,7 +137,6 @@ class SeriesList extends SeriesBase {
 		$date     = mysql2date( get_option( 'date_format' ), $post->post_date );
 		$author   = esc_html( get_the_author_meta( 'display_name', $post->post_author ) );
 		$edit_url = get_edit_post_link( $post->ID );
-
 		return <<<HTML
 		<li>
 			<input type="hidden" name="series_order[{$post->ID}]" value="{$post->menu_order}" />
@@ -133,10 +152,33 @@ class SeriesList extends SeriesBase {
 			<span class="dashicons dashicons-menu"></span>
 		</li>
 HTML;
-
 	}
 
 	/**
+	 * Display errors about series.
+	 */
+	public function render_series_errors() {
+		if ( ! $this->is_series_editor() ) {
+			return;
+		}
+		$this->errors = $this->series->safe_after_published( filter_input( INPUT_GET, 'post' ) );
+		if ( ! is_wp_error( $this->errors ) ) {
+		    return;
+        }
+		?>
+        <div class="error">
+            <p>
+                この作品集は販売開始後に修正されています。変更を反映するためには、編集部に連絡する必要があります。
+                <a href="<?= home_url( '/faq/what-is-slack/' ) ?>" target="_blank">Slack</a>
+                または<a href="<?= home_url( '/inquiry' ); ?>" target="_blank">お問い合わせフォーム</a>をご利用ください。
+            </p>
+        </div>
+        <?php
+	}
+
+	/**
+     * Render meta box.
+     *
 	 * @param \WP_Post $post
 	 * @param array $screen
 	 */
@@ -156,9 +198,18 @@ HTML;
 		] );
 		?>
 		<p class="description">
-			この作品集に登録されている作品の一覧です。並び順の初期値は古い順です。目次に表示されるタイトルは上書きすることができます。<br/>
-			<strong>例：</strong>
+			この作品集に登録されている作品の一覧です。並び順の初期値は古い順です。目次に表示されるタイトルは上書きすることができます。
+            例：作品タイトル<strong>「はじめての破滅（２）」</strong>⇨目次でのタイトル<strong>「第二話」</strong>
 		</p>
+        <?php if ( is_wp_error( $this->errors ) ) : ?>
+            <ol class="error-list">
+                <?php foreach ( $this->errors->get_error_messages() as $message ) : ?>
+                <li>
+                    <?php echo esc_html( $message ) ?>
+                </li>
+                <?php endforeach; ?>
+            </ol>
+        <?php endif; ?>
 		<ol id="series-posts-list" data-endpoint="<?= admin_url( 'admin-ajax.php' ) ?>" data-post-id="<?= $post->ID ?>"
 		    data-nonce="<?= wp_create_nonce( $this->nonce_action ) ?>">
 			<?php
