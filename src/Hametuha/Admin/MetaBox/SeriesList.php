@@ -28,14 +28,15 @@ class SeriesList extends SeriesBase {
 	/**
      * Detect if current screen is admin editor.
      *
+     * @param string $post_type Default series.
 	 * @return bool
 	 */
-	protected function is_series_editor() {
+	protected function is_series_editor( $post_type = 'series' ) {
 	    if ( ! function_exists( 'get_current_screen' ) ) {
 	        return false;
         }
 		$screen = get_current_screen();
-		return ( 'post' == $screen->base && 'series' == $screen->post_type );
+		return ( 'post' == $screen->base && $post_type == $screen->post_type );
     }
 
 	/**
@@ -58,6 +59,8 @@ class SeriesList extends SeriesBase {
 		} );
 		// Display errors if edited after publication.
 		add_action( 'admin_notices', [ $this, 'render_series_errors' ] );
+		// Display error if edited after publication.
+        add_action( 'admin_notices', [ $this, 'render_series_child_errors' ] );
 	}
 
 	/**
@@ -175,6 +178,31 @@ HTML;
         </div>
         <?php
 	}
+
+	/**
+	 * Display error about series children.
+	 */
+	public function render_series_child_errors() {
+	    if ( ! $this->is_series_editor( 'post' ) ) {
+	        return;
+        }
+	    $post = get_post( filter_input( INPUT_GET, 'post' ) );
+	    if ( ! $post->post_parent ) {
+	        return;
+        }
+	    $last_published = $this->series->last_published( $post->post_parent );
+	    if ( ! $last_published || $last_published > $post->post_modified ) {
+	        return;
+        }
+	    ?>
+        <div class="error">
+            <p>
+                この投稿は作品集公開（<code><?= mysql2date( get_option( 'date_format' ), $last_published ) ?></code>）よりもあとに修正されています。
+                修正を反映するには、編集部に<a href="<?= home_url( 'inquiry' ) ?>" target="_blank">問い合わせ</a>てください。
+            </p>
+        </div>
+        <?php
+    }
 
 	/**
      * Render meta box.
