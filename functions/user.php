@@ -16,6 +16,16 @@ function hametuha_user_name() {
 }
 
 /**
+ * Get author's detail page URL.
+ *
+ * @param int $user_id
+ * @return string
+ */
+function hametuha_author_url( $user_id ) {
+	return home_url( sprintf( 'doujin/detail/%s', get_the_author_meta( 'user_nicename', $user_id  ) ) );
+}
+
+/**
  * ユーザーが可能なアクションを返す
  *
  * @return array

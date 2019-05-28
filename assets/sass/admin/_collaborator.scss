@@ -1,0 +1,69 @@
+.collaborators {
+
+  &-list {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0;
+    counter-reset: item;
+    justify-content: space-between;
+    .dashicons{
+      color: #ddd;
+      margin-right: 0.25em;
+      vertical-align: middle;
+    }
+  }
+
+  &-item {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 30px;
+    display: flex;
+    height: 32px;
+    line-height: 32px;
+    margin: 10px 0;
+
+    & > *{
+      margin-right: 0.5em;
+    }
+
+    &:last-child{
+      margin-right: 0;
+    }
+
+    &:before {
+      counter-increment: item;
+      content: counter( item );
+      display: block;
+      position: absolute;
+      margin-right: 0;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      text-align: center;
+    }
+  }
+
+  &-avatar{
+    width: 32px;
+    height: auto;
+    border-radius: 50%;
+  }
+
+  &-name{
+  }
+
+  &-revenue{
+
+    &-waiting{
+      color: $warning;
+    }
+
+  }
+
+  &-delete-link{
+    @extend %delete-link;
+  }
+
+}

@@ -288,7 +288,7 @@ gulp.task('watch', function () {
   // Uglify all
   gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'], gulp.task('js'));
   // Handle JSX
-  gulp.watch(['assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx'], gulp.task('jsx'));
+  gulp.watch(['assets/js/src/**/*.jsx'], gulp.task('jsx'));
   // Check JS syntax
   gulp.watch('assets/js/src/**/*.js', gulp.task('jshint'));
   // Build common js
