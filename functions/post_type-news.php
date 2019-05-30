@@ -333,56 +333,6 @@ add_filter( 'single_term_title', function ( $name ) {
 } );
 
 /**
- * ニュースが更新されたとき
- *
- * @param int $post_id
- * @param WP_Post $post
- */
-add_action( 'save_post', function ( $post_id, $post ) {
-	if ( 'news' !== $post->post_type || 'publish' !== $post->post_status ) {
-		return;
-	}
-	// クラウドフレアのキャッシュをすべて削除する
-	$urls = [
-		home_url( '/' ),
-		get_post_type_archive_link( 'news' ),
-	];
-	// パーマリンク
-	foreach ( explode( '<!--nextpage-->', $post->post_content ) as $index => $content ) {
-		if ( $index ) {
-			$urls[] = get_permalink( $post );
-		} else {
-			$urls[] = trailingslashit( get_permalink( $post ) ) . 'page/' . ( $index + 1 ) . '/';
-		}
-	}
-	// AMP
-    $urls[] = trailingslashit( get_permalink( $post ) ) . 'amp/';
-	// タクソノミー
-	foreach ( [ 'genre', 'nouns' ] as $taxonomy ) {
-		if ( ( $terms = get_the_terms( $post, $taxonomy ) ) && ! is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				$url = get_term_link( $term );
-				if ( false === array_search( $url, $urls ) ) {
-					$urls[] = $url;
-				}
-				if ( $term->parent ) {
-					$parent = get_term( $term->parent, $term->taxonomy );
-					if ( $parent && ! is_wp_error( $parent ) ) {
-						$p_url = get_term_link( $parent );
-						if ( false === array_search( $p_url, $urls ) ) {
-							$urls[] = $p_url;
-						}
-					}
-				}
-			}
-		}
-	}
-	// キャッシュを消す
-	cf_purge_cache( $urls );
-}, 10, 2 );
-
-
-/**
  * ヘルプメニューを追加
  */
 add_action( 'admin_head', function () {

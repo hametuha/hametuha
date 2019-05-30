@@ -66,7 +66,6 @@ $script_flg = array();
 get_template_part( 'functions/assets' );
 get_template_part( 'functions/assets', 'ssl' );
 get_template_part( 'functions/assets', 'analytics' );
-get_template_part( 'functions/assets', 'cdn' );
 get_template_part( 'functions/assets', 'eyecatch' );
 get_template_part( 'functions/assets', 'tinymce' );
 // 掲示板
