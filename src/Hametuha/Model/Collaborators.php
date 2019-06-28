@@ -161,6 +161,7 @@ SQL;
 	 * @return bool
 	 */
 	public function confirm_invitation( $series_id, $user_id ) {
+		// TODO: The revenue should be fixed before invitation.
 		return (bool) $this->db->update( $this->relationships, [
 			'location' => 0,
 		], [
@@ -183,7 +184,8 @@ SQL;
 		$query = <<<SQL
 			SELECT
 			       u.*,
-			       r.location AS ratio, r.updated AS assigned, r.content AS `collaboration_type`
+			       r.object_id as post_id, r.location AS ratio, r.updated AS assigned, r.content AS `collaboration_type`,
+			       r.updated
 			FROM {$this->relationships} AS r
 			INNER JOIN {$this->db->users} AS u
 			ON r.user_id = u.ID
@@ -225,12 +227,28 @@ SQL;
 	 *
 	 * @param int $user_id
 	 * @param int $paged
+	 * @param int $per_page Default is 20.
 	 * @return \WP_User[]
 	 */
-	public function get_invitations( $user_id, $paged = 1 ) {
-		return $this->get_list( 0, $user_id, $paged, 20 );
+	public function get_invitations( $user_id, $paged = 1, $per_page = 20 ) {
+		return $this->get_list( 0, $user_id, $paged, $per_page );
 	}
 
+	/**
+	 * Get total invitation count.
+	 *
+	 * @param int $user_id
+	 * @return int
+	 */
+	public function total_invitations( $user_id ) {
+		global $wpdb;
+		$query = <<<SQL
+			SELECT COUNT( ID ) FROM {$this->relationships}
+			WHERE rel_type = %s
+			  AND user_id  = %d
+SQL;
+		return (int) $wpdb->get_var( $wpdb->prepare( $query, $this->rel_type, $user_id ) );
+	}
 
 	/**
 	 * Delete collaborator.

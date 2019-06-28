@@ -88,8 +88,18 @@ class CollaboratorInvitation extends WpApi {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function handle_get( $request ) {
-		$user_id = $this->get_user( $request );
-		return new \WP_REST_Response( array_map( [ $this, 'to_array' ], $this->collaborators->get_invitations( $user_id, $request->get_param( 'paged' ) ) ) );
+		$user_id    = $this->get_user( $request );
+		$per_page   = 20;
+		$cur_page   = $request->get_param( 'paged' );
+		$response   = new \WP_REST_Response( array_map( [ $this, 'to_array' ], $this->collaborators->get_invitations( $user_id, $cur_page, $per_page ) ) );
+		$total      = $this->collaborators->total_invitations( $user_id );
+		$total_page = ceil( $total / $per_page );
+		$response->set_headers( [
+			'X-WP-Total'        => $total,
+			'X-WP-Total-Pages'  => $total_page,
+			'X-WP-Current-Page' => $cur_page,
+		] );
+		return $response;
 	}
 
 	/**
@@ -101,21 +111,29 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_post( $request ) {
 		$collaborator = $this->get_invitation( $request );
+		$series_id = $request->get_param( 'series_id' );
 		if ( 0 <= $collaborator->ratio ) {
 			return new \WP_Error( 'already_collaborator', 'すでにこの作品へは招待されています。', [
 				'status' => 403,
 			] );
 		}
-		$result = $this->collaborators->confirm_invitation( $request->get_param( 'series_id' ), $collaborator->ID );
+		$result = $this->collaborators->confirm_invitation( $series_id, $collaborator->ID );
 		if ( ! $result ) {
 			return new \WP_Error( 'failed_update', 'リクエストを処理できませんでした。やりなおしてください。', [
 				'status' => 500,
 			] );
 		}
-		// TODO: Send email to series author.
+		$series = get_post( $series_id );
+		\Hametuha\Notifications\Emails\CollaboratorApproved::exec( [
+			$series->post_author => [
+				'collaborator' => $collaborator->display_name,
+				'url'          => get_edit_post_link( $series_id, 'email' ),
+				'title'        => get_the_title( $series_id ),
+			],
+		] );
 		return new \WP_REST_Response( [
 			'success' => true,
-			'message' => '作品集への招待を承認しました。報酬の設定は作者が行います。',
+			'message' => '作品集への招待を承認しました。報酬の設定は作者が行います。しばらくお待ちください。',
 		] );
 	}
 
@@ -128,8 +146,15 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_delete( $request ) {
 		$collaborator = $this->get_invitation( $request );
+		$series = get_post( $request->get_param( 'series_id' ) );
 		$result = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
-		// TODO: Send email to series author.
+		\Hametuha\Notifications\Emails\CollaboratorDenial::exec( [
+			$series->post_author => [
+				'collaborator' => $collaborator->display_name,
+				'url'          => get_edit_post_link( $series->ID, 'email' ),
+				'title'        => get_the_title( $series ),
+			],
+		] );
 		return is_wp_error( $result ) ? $result : new \WP_REST_Response( [
 			'success' => true,
 			'message' => '作品集への参加を辞退しました。',

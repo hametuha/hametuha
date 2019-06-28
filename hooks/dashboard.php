@@ -51,6 +51,7 @@ add_filter( 'hashboard_screens', function( $screens ) {
 	foreach ( $screens as  $key => $class_name ) {
 		if ( 'profile' == $key ) {
 			$new_screens['notifications'] = \Hametuha\Dashboard\Notifications::class;
+			$new_screens['requests'] = \Hametuha\Dashboard\Requests::class;
 			$new_screens['statistics'] = \Hametuha\Dashboard\Statistics::class;
 			$new_screens['sales'] = \Hametuha\Dashboard\Sales::class;
 		}

@@ -4,15 +4,15 @@ namespace Hametuha\Dashboard;
 
 use Hametuha\Hashboard\Pattern\Screen;
 
-class Notifications extends Screen {
+class Requests extends Screen {
 
-	protected $icon = 'notifications';
+	protected $icon = 'label_important';
 
 	/**
 	 * @return string
 	 */
 	public function slug() {
-		return 'notifications';
+		return 'requests';
 	}
 
 	/**
@@ -21,7 +21,7 @@ class Notifications extends Screen {
 	 * @return string
 	 */
 	public function label() {
-		return 'お知らせ';
+		return 'リクエスト';
 	}
 
 	/**
@@ -32,12 +32,10 @@ class Notifications extends Screen {
 	 */
 	public function description( $page = '' ) {
 		switch ( $page ) {
-			case 'works':
-				return 'あなたの投稿に関するお知らせです。';
-			case 'general':
-				return '破滅派運営からのお知らせです。';
-			default:
-				return 'すべてのお知らせです。';
+			case 'collaborations':
+				return '作品集の寄稿者・共同編集者として招待されたリクエストです。';
+            default:
+                return '';
 		}
 	}
 
@@ -46,9 +44,7 @@ class Notifications extends Screen {
 	 */
 	protected function default_children() {
 		return [
-			'all'     => 'すべて',
-			'works'   => 'あなたの作品',
-			'general' => '運営から',
+			'collaborations' => 'コラボレーション',
 		];
 	}
 
@@ -59,7 +55,7 @@ class Notifications extends Screen {
 	 */
 	public function render( $page = '' ) {
 		?>
-		<div id="hametuha-notifications" data-type="<?= esc_attr( $page ) ?>">
+		<div id="hametuha-requests" data-type="<?= esc_attr( $page ) ?>">
 		</div>
 		<?php
 	}
@@ -68,7 +64,7 @@ class Notifications extends Screen {
 	 * Footer action
 	 */
 	public function footer() {
-		wp_enqueue_script( 'hametuha-hb-notifications' );
+		wp_enqueue_script( 'hametuha-hb-requests' );
 	}
 
 
