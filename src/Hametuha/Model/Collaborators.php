@@ -4,6 +4,7 @@ namespace Hametuha\Model;
 
 
 
+use Hametuha\Notifications\Emails\CollaboratorDelete;
 use Hametuha\Pattern\Singleton;
 
 /**
@@ -251,6 +252,60 @@ SQL;
 	}
 
 	/**
+	 * Update user's margin.
+	 *
+	 * @param int $series_id
+	 * @param int $user_id
+	 * @param int $margin
+	 * @return bool|\WP_Error
+	 */
+	public function update_margin( $series_id, $user_id, $margin ) {
+		$existing_margins = array_sum( array_values( $this->get_margin_list( $series_id, [ $user_id ] ) ) );
+		if ( 100 < $margin + $existing_margins ) {
+			return new \WP_Error( 'too_much_revenue', '報酬の合計が100%を超えています。', [
+				'status' => 400,
+			] );
+		}
+		global $wpdb;
+		$result = $wpdb->update( $this->relationships, [
+			'location' => $margin / 100,
+		], [
+			'rel_type'  => $this->rel_type,
+			'object_id' => $series_id,
+			'user_id'   => $user_id,
+		], [ '%f' ], [ '%s', '%d', '%d' ] );
+		return $result ?: new \WP_Error( 'failed_update', '報酬を更新できませんでした。', [
+			'status' => 500,
+		] );
+	}
+
+	/**
+	 * Get series ID
+	 *
+	 * @param int   $series_id
+	 * @param int[] $excludes  Array of user IDs to exclude.
+	 * @return array
+	 */
+	public function get_margin_list( $series_id, $excludes = [] ) {
+		global $wpdb;
+		$query = <<<SQL
+			SELECT * FROM {$this->relationships}
+			WHERE rel_type  = %s
+			  AND object_id = %d
+			  AND location >= 0
+SQL;
+		if ( $excludes ) {
+			$excludes = (array) $excludes;
+			$query .= sprintf( ' AND user_id NOT IN (%s)', implode( ', ', array_map( 'intval', $excludes ) ) );
+		}
+		$margins = [];
+		foreach ( $wpdb->get_results( $wpdb->prepare( $query, $this->rel_type, $series_id ) ) as $row ) {
+			$margins[ $row->user_id ] = (int) $row->location * 100;
+		}
+		return $margins;
+	}
+
+	/**
 	 * Delete collaborator.
 	 *
 	 * @param int $series_id
@@ -278,7 +333,12 @@ SQL;
 				'status' => 404,
 			] );
 		}
-		// TODO: We should notify user to be deleted.
+		CollaboratorDelete::exec( [
+			$user_id => [
+				'url'   => get_permalink( $series_id ),
+				'title' => get_the_title( $series_id ),
+			],
+		] );
 		return true;
 	}
 

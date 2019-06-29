@@ -5,6 +5,7 @@ namespace Hametuha\WpApi;
 
 use Hametuha\AbstractPatterns\UserConverter;
 use Hametuha\Model\Author;
+use Hametuha\Notifications\Emails\CollaboratorMarginUpdate;
 use WPametu\API\Rest\WpApi;
 
 /**
@@ -49,7 +50,7 @@ class Collaborators extends WpApi {
 				},
 			],
 		];
-		if ( in_array( $method, [ 'PUSH', 'DELETE' ] ) ) {
+		if ( in_array( $method, [ 'PUT', 'DELETE' ] ) ) {
 			$args['collaborator_id'] = [
 				'collaborator_id' => [
 					'required' => true,
@@ -80,6 +81,17 @@ class Collaborators extends WpApi {
 						'description' => 'User nice name',
 						'validate_callback' => function( $var ) {
 							return ! empty( $var ) && $this->authors->get_by_nice_name( $var );
+						},
+					],
+				] );
+			case 'PUT':
+				return array_merge( $args, [
+					'margin' => [
+						'require'     => true,
+						'type'        => 'integer',
+						'description' => 'Revenue margin in percentile.',
+						'validate_callback' => function( $var ) {
+							return is_numeric( $var ) && ( 100 >= $var && 0 <= $var );
 						},
 					],
 				] );
@@ -119,6 +131,33 @@ class Collaborators extends WpApi {
 			return $result;
 		}
 		return new \WP_REST_Response( $this->to_array( $result ) );
+	}
+
+	/**
+	 * Update margin.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function handle_put( $request ) {
+		$margin       = $request->get_param( 'margin' );
+		$collaborator = get_userdata( $request->get_param( 'collaborator_id' ) );
+		$series_id    = $request->get_param( 'series_id' );
+		$response = $this->collaborators->update_margin( $series_id, $collaborator->ID, $margin );
+		if ( is_wp_error( $response) ) {
+			return $response;
+		}
+		CollaboratorMarginUpdate::exec( [
+			$collaborator->ID => [
+				'title'  => get_the_title( $series_id ),
+				'margin' => $margin,
+				'url'    => home_url( 'dashboard/requests/collaborations' )
+			],
+		] );
+		return new \WP_REST_Response( [
+			'success' => true,
+			'message' => sprintf( '%sさんの報酬を%d%%に変更しました。', $collaborator->display_name, $margin ),
+		] );
 	}
 
 	/**

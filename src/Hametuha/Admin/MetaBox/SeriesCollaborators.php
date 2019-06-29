@@ -3,6 +3,8 @@
 namespace Hametuha\Admin\MetaBox;
 
 
+use Hametuha\Model\Collaborators;
+
 /**
  * Series list
  *
@@ -65,7 +67,9 @@ class SeriesCollaborators extends SeriesBase {
 	 * @param \WP_Post $post
 	 */
 	public function savePost( \WP_Post $post ) {
-	    update_post_meta( $post->ID, '_owner_type', filter_input( INPUT_POST, 'owner_type' ) );
+	    foreach ( [ 'owner_type', 'owner_label' ] as $key ) {
+	        update_post_meta( $post->ID, '_' . $key, filter_input( INPUT_POST, $key ) );
+        }
 	}
 
 	/**
@@ -75,13 +79,15 @@ class SeriesCollaborators extends SeriesBase {
 	 * @param array $screen
 	 */
 	public function doMetaBox( \WP_Post $post, array $screen ) {
-	    $collaborators = $this->collaborators->get_collaborators( $post->ID );
         ?>
         <table class="form-table">
 			<tr>
-				<th>責任者</th>
+                <th><label for="owner_label">責任者</label></th>
 				<td>
-                    <?php echo esc_html( get_the_author_meta( 'display_name', $post->post_author ) ) ?>
+                    <input type="text" name="owner_label" id="owner_label" class="widefat"
+                           value="<?php echo esc_attr( get_post_meta( $post->ID, '_owner_label', true ) ) ?>"
+                           placeholder="<?php echo esc_attr( get_the_author_meta( 'display_name', $post->post_author ) ) ?>"/>
+                    <p class="description">責任者の名前を変更したい場合はこちらに入力してください（例・破滅派編集部）</p>
 				</td>
 			</tr>
             <tr>

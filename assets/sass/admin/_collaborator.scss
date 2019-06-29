@@ -1,11 +1,35 @@
 .collaborators {
 
   &-list {
-    list-style: none;
-    padding: 0;
+
+    table-layout: auto;
+    width: 100%;
     margin: 1em 0;
-    counter-reset: item;
-    justify-content: space-between;
+    border-collapse: collapse;
+
+    th, td{
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    thead th{
+      border-bottom: 3px double #ddd;
+    }
+    tbody tr:last-child td{
+      border-bottom: 3px double #ddd;
+    }
+
+    caption{
+      font-weight: bold;
+      text-align: left;
+      padding-bottom: 10px;
+    }
+
+    &-number{
+      text-align: right;
+      max-width: 2em;
+    }
+
     .dashicons{
       color: #ddd;
       margin-right: 0.25em;
@@ -15,33 +39,15 @@
 
   &-item {
     position: relative;
-    box-sizing: border-box;
-    width: 100%;
-    padding-left: 30px;
-    display: flex;
-    height: 32px;
-    line-height: 32px;
-    margin: 10px 0;
+  }
 
-    & > *{
-      margin-right: 0.5em;
-    }
-
-    &:last-child{
-      margin-right: 0;
-    }
-
-    &:before {
-      counter-increment: item;
-      content: counter( item );
-      display: block;
-      position: absolute;
-      margin-right: 0;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 30px;
-      text-align: center;
+  &-actions{
+    text-align: center;
+    a,button{
+      & + a,
+      & + button{
+        margin-left: 15px;
+      }
     }
   }
 
@@ -49,6 +55,8 @@
     width: 32px;
     height: auto;
     border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 10px;
   }
 
   &-name{
@@ -56,10 +64,23 @@
 
   &-revenue{
 
+    max-width: 6em;
+    &-input{
+      width: 3em;
+      margin-right: 0.25em;
+    }
+
     &-waiting{
       color: $warning;
     }
 
+  }
+
+  &-assigned{
+    text-align: right;
+    time{
+      font-family: monospace;
+    }
   }
 
   &-delete-link{

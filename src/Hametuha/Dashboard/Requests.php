@@ -6,7 +6,7 @@ use Hametuha\Hashboard\Pattern\Screen;
 
 class Requests extends Screen {
 
-	protected $icon = 'label_important';
+	protected $icon = 'verified_user';
 
 	/**
 	 * @return string

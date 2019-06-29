@@ -20,8 +20,9 @@ class CollaboratorContainer extends Component {
       shareType: CollaboratorsList.shareType,
       id: parseInt( CollaboratorsList.series_id, 10 ),
     };
+    this.addHandler    = this.addHandler.bind( this );
+    this.updateHandler = this.updateHandler.bind( this );
     this.deleteHandler = this.deleteHandler.bind( this );
-    this.addHandler = this.addHandler.bind( this );
   }
 
   componentDidMount() {
@@ -38,6 +39,41 @@ class CollaboratorContainer extends Component {
         loading: false,
       } );
     } );
+  }
+
+  addHandler( user ) {
+    const collaborators = this.state.collaborators;
+    collaborators.push( user );
+    this.setState( { collaborators } );
+  }
+
+  updateHandler( userId, ratio ) {
+    this.setState( { loading: true }, () => {
+      wp.apiFetch( {
+        path: `/hametuha/v1/collaborators/${CollaboratorsList.series_id}`,
+        method: 'PUT',
+        data: {
+          collaborator_id: userId,
+          margin: ratio
+        }
+      } ).then( res => {
+        const collaborators = [];
+        for ( let collaborator of this.state.collaborators ) {
+          if ( collaborator.id === userId ) {
+            collaborator.ratio = ratio;
+          }
+          collaborators.push( collaborator );
+        }
+        this.setState( {
+          collaborators
+        } );
+      } ).catch( res => {
+        alert( res.message || '更新できませんでした。' );
+      } ).finally( res => {
+        this.setState( { loading: false } )
+      } );
+    });
+    alert( `${userId}が${ratio}パーセント` );
   }
 
   deleteHandler( user ) {
@@ -65,12 +101,6 @@ class CollaboratorContainer extends Component {
     } );
   }
 
-  addHandler( user ) {
-    const collaborators = this.state.collaborators;
-    collaborators.push( user );
-    this.setState( { collaborators } );
-  }
-
   render() {
     const containerClassName = [ 'collaborators-list' ];
     const styles = {};
@@ -82,14 +112,26 @@ class CollaboratorContainer extends Component {
     }
     return (
       <Fragment>
-        <hr />
-        <h3>関係者</h3>
-        <ol className={containerClassName.join(' ')} style={styles}>
+        <table className={containerClassName.join(' ')} style={styles}>
+          <caption>関係者</caption>
+          <thead>
+            <tr>
+              <th className='collaborators-list-number'>#</th>
+              <th style={ { textAlign: 'left' } }>名前</th>
+              <th style={ { textAlign: 'left' } }>報酬</th>
+              <th className='collaborators-assigned'>追加日時</th>
+              <th>アクション</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <CollaboratorAdd postId={ this.state.id } addHandler={ this.addHandler }/>
+          </tfoot>
+          <tbody>
           { this.state.collaborators.map(user => {
-            return <Collaborator key={ user.id } user={user} deleteHandler={ this.deleteHandler } />
+            return <Collaborator key={ user.id } user={user} deleteHandler={ this.deleteHandler } updateHandler={ this.updateHandler }/>
           }) }
-        </ol>
-        <CollaboratorAdd postId={ this.state.id } addHandler={ this.addHandler }/>
+          </tbody>
+        </table>
       </Fragment>
     )
   }
