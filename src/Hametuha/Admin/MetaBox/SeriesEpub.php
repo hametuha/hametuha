@@ -152,6 +152,8 @@ TEXT;
 		$status = $this->series->get_status( $post->ID );
 		$index  = $this->series->get_status( $post->ID );
 		$errors = $this->series->validate( $post );
+
+		$published = $this->series->last_published( $post->ID );
 		?>
 
 		<div class="misc-pub-section misc-pub-section--epub, misc-pub-section--finished">
@@ -171,6 +173,16 @@ TEXT;
 				<?php if ( $status > 1 ) : ?>
 					<br/>
 					<small>ASIN: <code><?= $this->series->get_asin( $post->ID ); ?></code></small>
+                    <br />
+                    <small>
+                        販売開始日: <code>
+						<?php if ( $published ) : ?>
+							<?= mysql2date( get_option( 'date_format' ), $published ) ?>
+						<?php else : ?>
+                            ---
+						<?php endif; ?>
+                        </code>
+                    </small>
 				<?php elseif ( $status && $errors ) : ?>
 					<br />
 					<strong style="color: red">この作品集には不備があるので販売できません。</strong>

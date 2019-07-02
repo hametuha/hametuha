@@ -5,6 +5,7 @@ namespace Hametuha\Rest;
 
 use Hametuha\Interfaces\OgpCustomizer;
 use Hametuha\Model\Author;
+use Hametuha\Model\Collaborators;
 use Hametuha\Model\Follower;
 use Hametuha\Model\Notifications;
 use Hametuha\Model\Review;
@@ -448,8 +449,8 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * フォロワー一覧
 	 */
 	public function get_follower() {
-		$this->auth_redirect();
 		nocache_headers();
+		$this->auth_redirect();
 		$this->doujin = new \WP_User( get_current_user_id() );
 		$this->title  = 'フォロワー | ' . $this->title;
 		$this->set_data( [

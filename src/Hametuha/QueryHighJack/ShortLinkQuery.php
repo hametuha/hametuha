@@ -41,10 +41,10 @@ class ShortLinkQuery extends QueryHighJack
 	 * @param \WP_Query $wp_query
 	 */
 	public function pre_get_posts( \WP_Query &$wp_query ) {
-		if( $this->is_valid_query($wp_query) ){
+		if ( $this->is_valid_query( $wp_query ) ) {
 			$original = $this->links->get_original($wp_query->get('short_link'));
-			if( $original ){
-				wp_redirect($original, 301);
+			if ( $original ) {
+				wp_redirect( $original, 301 );
 				exit;
 			}else{
 				$wp_query->set_404();

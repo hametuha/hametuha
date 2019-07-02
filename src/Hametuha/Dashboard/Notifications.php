@@ -34,13 +34,10 @@ class Notifications extends Screen {
 		switch ( $page ) {
 			case 'works':
 				return 'あなたの投稿に関するお知らせです。';
-				break;
 			case 'general':
 				return '破滅派運営からのお知らせです。';
-				break;
 			default:
 				return 'すべてのお知らせです。';
-				break;
 		}
 	}
 

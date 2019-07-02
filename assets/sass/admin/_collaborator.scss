@@ -1,0 +1,90 @@
+.collaborators {
+
+  &-list {
+
+    table-layout: auto;
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+
+    th, td{
+      padding: 10px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    thead th{
+      border-bottom: 3px double #ddd;
+    }
+    tbody tr:last-child td{
+      border-bottom: 3px double #ddd;
+    }
+
+    caption{
+      font-weight: bold;
+      text-align: left;
+      padding-bottom: 10px;
+    }
+
+    &-number{
+      text-align: right;
+      max-width: 2em;
+    }
+
+    .dashicons{
+      color: #ddd;
+      margin-right: 0.25em;
+      vertical-align: middle;
+    }
+  }
+
+  &-item {
+    position: relative;
+  }
+
+  &-actions{
+    text-align: center;
+    a,button{
+      & + a,
+      & + button{
+        margin-left: 15px;
+      }
+    }
+  }
+
+  &-avatar{
+    width: 32px;
+    height: auto;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+  &-name{
+  }
+
+  &-revenue{
+
+    max-width: 6em;
+    &-input{
+      width: 3em;
+      margin-right: 0.25em;
+    }
+
+    &-waiting{
+      color: $warning;
+    }
+
+  }
+
+  &-assigned{
+    text-align: right;
+    time{
+      font-family: monospace;
+    }
+  }
+
+  &-delete-link{
+    @extend %delete-link;
+  }
+
+}

@@ -158,7 +158,11 @@ gulp.task('copylib', function () {
     gulp.src([
       './node_modules/select2/dist/css/select2.min.css'
     ])
-      .pipe(gulp.dest('./assets/css'))
+      .pipe(gulp.dest('./assets/css')),
+    gulp.src([
+      './node_modules/prop-types/prop-types.min.js'
+    ])
+      .pipe( gulp.dest('./assets/js/dist') )
   );
 });
 
@@ -284,7 +288,7 @@ gulp.task('watch', function () {
   // Uglify all
   gulp.watch(['assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js'], gulp.task('js'));
   // Handle JSX
-  gulp.watch(['assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx'], gulp.task('jsx'));
+  gulp.watch(['assets/js/src/**/*.jsx'], gulp.task('jsx'));
   // Check JS syntax
   gulp.watch('assets/js/src/**/*.js', gulp.task('jshint'));
   // Build common js
@@ -320,7 +324,7 @@ gulp.task('bs-reload', function () {
 });
 
 // Build
-gulp.task('build', gulp.parallel('copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin', 'jade'));
+gulp.task('build', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin', 'jade' ) );
 
 // Default Tasks
 gulp.task('default', gulp.series('watch'));

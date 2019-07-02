@@ -23,6 +23,7 @@ class Editor extends Singleton {
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'filter_block_editor' ], 10, 2 );
 		add_action( 'init', [ $this, 'register_blocks' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
+		add_filter( 'display_post_states', [ $this, 'post_state' ], 10, 2 );
 	}
 
 	/**
@@ -104,5 +105,25 @@ class Editor extends Singleton {
 	public function editor_assets() {
 		$rel_path = '/assets/css/editor-style-block.css';
 		wp_enqueue_style( 'hametuha-block-editor-style', get_template_directory_uri() . $rel_path, [], filemtime( get_template_directory() . $rel_path ) );
+	}
+
+	/**
+	 * Add post states.
+	 *
+	 * @param array $post_states
+	 * @param \WP_Post $post
+	 * @return array
+	 */
+	public function post_state( $post_states, $post ) {
+		switch ( $post->post_type ) {
+			case 'page':
+				switch ( get_page_template_slug( $post ) ) {
+					case 'page-1column.php':
+						$post_states[ 'one-columns' ] = '1カラム';
+						break;
+				}
+				break;
+		}
+		return $post_states;
 	}
 }

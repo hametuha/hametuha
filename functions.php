@@ -24,7 +24,6 @@ define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 /**
  * Bootstrap for theme
  */
-
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 	// Load WPametu
@@ -36,6 +35,19 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	}
 	// Activate sharee
 	\Hametuha\Sharee::get_instance();
+	// Register all transaction emails.
+	if ( class_exists( 'Hametuha\\Hamail\\Pattern\\TransactionalEmail' ) ) {
+		foreach ( scandir( __DIR__ . '/src/Hametuha/Notifications/Emails' ) as $file ) {
+			if ( ! preg_match( '/^(.*)\.php$/u', $file, $match ) ) {
+				continue;
+			}
+			$class_name = 'Hametuha\\Notifications\\Emails\\' . $match[1];
+			if ( ! class_exists( $class_name ) ) {
+				continue;
+			}
+			$class_name::register();
+		}
+	}
 }
 
 /**

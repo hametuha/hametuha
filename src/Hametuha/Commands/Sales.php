@@ -2,6 +2,7 @@
 
 namespace Hametuha\Commands;
 
+use cli\Table;
 use Hametuha\Model\UserSales;
 use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\Utility\Command;
@@ -18,7 +19,7 @@ class Sales extends Command {
 	/**
 	 * KDPの売上を保存する
 	 *
-	 * @synopsis [--year=<year>] [--month=<month>] [--force]
+	 * @synopsis [--year=<year>] [--month=<month>] [--force] [--dry-run]
 	 *
 	 * @param array $args
 	 * @param array $assoc
@@ -29,13 +30,30 @@ class Sales extends Command {
 		$year = isset( $assoc['year'] ) ? sprintf( '%04d', $assoc['year'] ) : $default_year;
 		$month = isset( $assoc['month'] ) ? sprintf( '%02d', $assoc['month'] ) : $default_month;
 		$force = isset( $assoc['force'] ) && $assoc['force'];
-		if ( ! $force && false !== array_search( $year.$month, $record ) ) {
-			self::e( sprintf( '%d年%d月のKDPセールスは記録済みです。', $year, $month ) );
+		$dry_run = isset( $assoc['dry-run'] ) && $assoc['dry-run'];
+		if ( $dry_run ) {
+			\WP_CLI::line( 'Getting sales report. This will not saved actually.' );
+			$result = UserSales::get_instance()->save_kdp_report( $year, $month, true );
+			if ( ! $result ) {
+				\WP_CLI::error( '売上データが見つかりませんでした。' );
+			}
+			$table = new Table();
+			$counter = 0;
+			$table->setHeaders( [ '#', '適用', 'ユーザー', '数', '小計', '源泉徴収' ] );
+			foreach ( $result as $sales ) {
+				$counter++;
+				$table->addRow( [ $counter, $sales->label, get_the_author_meta( 'display_name', $sales->user_id ) ?: '削除されたユーザー', $sales->unit, $sales->total, $sales->deducting ] );
+			}
+			$table->display();
+		} else {
+			if ( ! $force && false !== array_search( $year . $month, $record ) ) {
+				self::e( sprintf( '%d年%d月のKDPセールスは記録済みです。', $year, $month ) );
+			}
+			list( $total, $success ) = UserSales::get_instance()->save_kdp_report( $year, $month );
+			$record[] = $year . $month;
+			update_option( 'kdp_sales_record', $record, false );
+			self::s( sprintf( '%d of %d records were saved.', $success, $total ) );
 		}
-		list( $total, $success ) = UserSales::get_instance()->save_kdp_report( $year, $month );
-		$record[] = $year.$month;
-		update_option( 'kdp_sales_record', $record, false );
-		self::s( sprintf( '%d of %d records were saved.', $success, $total ) );
 	}
 
 	/**

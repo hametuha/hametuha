@@ -26,9 +26,9 @@ class CompiledFileTable extends \WP_List_Table {
 
 	public function get_columns() {
 		return [
-			'type'    => '種別',
 			'post'    => '対象作品',
 			'author'  => '作者',
+			'type'    => '種別',
 			'file'    => 'ファイル',
 			'updated' => '最終更新日',
 		];
@@ -42,6 +42,18 @@ class CompiledFileTable extends \WP_List_Table {
 			'updated' => [ 'updated', false ],
 		];
 	}
+
+	/**
+	 * Get a list of CSS classes for the WP_List_Table table tag.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @return array List of CSS classes for the table tag.
+	 */
+	protected function get_table_classes() {
+		return [ 'widefat', 'striped', $this->_args['plural'] ];
+	}
+
 
 	public function prepare_items() {
 		//Set column header
@@ -83,29 +95,54 @@ class CompiledFileTable extends \WP_List_Table {
 		switch ( $column_name ) {
 			case 'type':
 				echo $item->label;
-				echo $this->row_actions( [
-					'edit'     => sprintf( '<a href="%s">編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
-					'check'    => sprintf( '<a href="%s" class="thickbox" title="%s ePubバリデーション">チェック</a>', home_url( "epub/check/{$item->file_id}", 'https' ), get_the_title( $item ) ),
-					'download' => sprintf( '<a href="%s" target="file-downloader">ダウンロード</a>', home_url( 'epub/file/' . $item->file_id, 'https' ) ),
-					'delete'   => sprintf( '<a href="%s" onclick="return confirm(\'本当に削除してよろしいですか？　この操作は取り消せません。\');">削除</a>', home_url( 'epub/delete/' . $item->file_id, 'https' ) ),
-				] );
 				break;
 			case 'post':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $item->post_id ), get_the_title( $item ) );
+				echo $this->row_actions( [
+					'edit'     => sprintf( '<a href="%s">作品集の編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
+					'check'    => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
+					'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
+						'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+					], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
+					'delete'   => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
+					'published' => sprintf(
+						'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
+						$item->file_id,
+						esc_attr( $this->files->meta->get_meta( $item->file_id, 'published' )->updated )
+					),
+				] );
+				printf( '<div class="compiled-file-controller"></div>' );
 				break;
 			case 'author':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&author=' . $item->post_author ), esc_html( $item->display_name ) );
 				break;
 			case 'file':
-				echo esc_html( $item->name );
 				if ( file_exists( $item->path ) ) {
-					printf( '　<small style="color: green;"><span class="dashicons dashicons-yes"></span> (%sKB)</small>', number_format( filesize( $item->path ) / 1024 ) );
+					$color = 'green';
+					$icon  = 'yes';
+					$label = sprintf( '<small>(%sKB)</small>', number_format( filesize( $item->path ) / 1024 ) );
 				} else {
-					echo '　<small style="color: red;"><span class="dashicons dashicons-no"></span> ファイルなし</small>';
+					$color = 'red';
+					$icon  = 'no';
+					$label = '';
 				}
+
+				printf(
+					'<span style="color: %s"><i class="dashicons dashicons-%s"></i> %s</span> %s',
+					$color,
+					$icon,
+					esc_html( $item->name ),
+					$label
+				);
 				break;
 			case 'updated':
-				echo mysql2date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $item->updated );
+				$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+				$updated = $this->files->meta->get_meta( $item->file_id, 'published' );
+				printf(
+					'%s<br /><small>販売日: <span class="compile-file-published">%s</span></small>',
+					mysql2date( $format, $item->updated ),
+					$updated ? mysql2date( $format, $updated->meta_value ) : '---'
+				);
 				break;
 		}
 	}
