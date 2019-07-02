@@ -78,8 +78,8 @@ class UserSales extends Model {
 	 * @var array
 	 */
 	protected  $status_class = [
-		0 => 'success',
-		1 => 'warning',
+		0  => 'success',
+		1  => 'warning',
 		-1 => 'danger',
 	];
 
@@ -280,30 +280,51 @@ class UserSales extends Model {
 	/**
 	 * KDPの売上を保存する
 	 *
-	 * @param int $year
-	 * @param int $month
+	 * @param int  $year
+	 * @param int  $month
+	 * @param bool $dry_run If set true, returns array to be inserted.
 	 * @return array
 	 */
-	public function save_kdp_report( $year, $month ) {
-		$sales = Sales::get_instance()->monthly_report( $year, $month );
-		$total = count( $sales );
+	public function save_kdp_report( $year, $month, $dry_run = false ) {
+		$sales   = Sales::get_instance()->monthly_report( $year, $month );
+		$total   = 0;
 		$success = 0;
+		$return  = [];
 		foreach ( $sales as $sale ) {
-			$label = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
+			$prefix = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
 			$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
-			list($price, $unit, $tax, $deducting, $total) = Calculator::kdp_royalty( $sale );
-			$result = RevenueModel::get_instance()->add_revenue( 'kdp', $sale->user_id, $price, [
-				'unit'        => $unit,
-				'total'       => $total,
-				'tax'         => $tax,
-				'deducting'   => $deducting,
-				'description' => $label
-			] );
-			if ( $result && ! is_wp_error( $result ) ) {
-				$success++;
+			$royalties = Calculator::kdp_royalty( $sale, $prefix );
+			// Calculate price for collaborators.
+			if ( $dry_run ) {
+				foreach ( $royalties as $royalty ) {
+					list( $label, $user_id, $price, $unit, $tax, $deducting, $total ) = $royalty;
+					$return[] = (object) [
+						'label'     => $label,
+						'user_id'   => $user_id,
+						'unit'      => $unit,
+						'total'     => $total,
+						'deducting' => $deducting,
+					];
+				}
+			} else {
+				// Actually save reports.
+				foreach ( $royalties as $royalty ) {
+					$total++;
+					list( $label, $user_id, $price, $unit, $tax, $deducting, $total ) = $royalty;
+					$result = RevenueModel::get_instance()->add_revenue( 'kdp', $user_id, $price, [
+						'unit'        => $unit,
+						'total'       => $total,
+						'tax'         => $tax,
+						'deducting'   => $deducting,
+						'description' => $label,
+					] );
+					if ( $result && !is_wp_error( $result ) ) {
+						$success++;
+					}
+				}
 			}
 		}
-		return [ $total, $success ];
+		return $dry_run ? $return : [ $total, $success ];
 	}
 
 	/**

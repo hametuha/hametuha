@@ -67,15 +67,15 @@ class CollaboratorInvitation extends WpApi {
 				break;
 			case 'POST':
 			case 'DELETE':
-				$args = array_merge( $args, [
-					'series_id' => [
-						'type' => 'integer',
-						'required' => true,
-						'validate_callback' => function( $var ) {
-							return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
-						}
-					],
-				] );
+			$args = array_merge( $args, [
+				'series_id' => [
+					'type' => 'integer',
+					'required' => true,
+					'validate_callback' => function ( $var ) {
+						return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
+					},
+				],
+			] );
 				break;
 		}
 		return $args;
@@ -118,23 +118,22 @@ class CollaboratorInvitation extends WpApi {
 			] );
 		}
 		$result = $this->collaborators->confirm_invitation( $series_id, $collaborator->ID );
-		if ( ! $result ) {
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		} elseif( ! $result ) {
 			return new \WP_Error( 'failed_update', 'リクエストを処理できませんでした。やりなおしてください。', [
 				'status' => 500,
 			] );
+		} else {
+			/**
+			 * Executed when collaborators are approved.
+			 */
+			do_action( 'hametuha_collaborators_approved', $collaborator, $series_id );
+			return new \WP_REST_Response( [
+				'success' => true,
+				'message' => '作品集への招待を承認しました。',
+			] );
 		}
-		$series = get_post( $series_id );
-		\Hametuha\Notifications\Emails\CollaboratorApproved::exec( [
-			$series->post_author => [
-				'collaborator' => $collaborator->display_name,
-				'url'          => get_edit_post_link( $series_id, 'email' ),
-				'title'        => get_the_title( $series_id ),
-			],
-		] );
-		return new \WP_REST_Response( [
-			'success' => true,
-			'message' => '作品集への招待を承認しました。報酬の設定は作者が行います。しばらくお待ちください。',
-		] );
 	}
 
 	/**
@@ -148,13 +147,13 @@ class CollaboratorInvitation extends WpApi {
 		$collaborator = $this->get_invitation( $request );
 		$series = get_post( $request->get_param( 'series_id' ) );
 		$result = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
-		\Hametuha\Notifications\Emails\CollaboratorDenial::exec( [
-			$series->post_author => [
-				'collaborator' => $collaborator->display_name,
-				'url'          => get_edit_post_link( $series->ID, 'email' ),
-				'title'        => get_the_title( $series ),
-			],
-		] );
+		/**
+		 * Executed when user denied collaborator invitation.
+		 *
+		 * @param \WP_User $collaborator
+		 * @param \WP_User $user
+		 */
+		do_action( 'hametuha_collaborators_denied', $collaborator, $series );
 		return is_wp_error( $result ) ? $result : new \WP_REST_Response( [
 			'success' => true,
 			'message' => '作品集への参加を辞退しました。',

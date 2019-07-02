@@ -31,7 +31,7 @@ class CollaboratorContainer extends Component {
     } ).then( res => {
       this.setState( {
         collaborators: res,
-      } );
+      });
     } ).catch( res => {
       alert( res.message || '関係者一覧を取得できませんでした。' );
     } ).finally( res => {
@@ -42,7 +42,10 @@ class CollaboratorContainer extends Component {
   }
 
   addHandler( user ) {
-    const collaborators = this.state.collaborators;
+    const collaborators = [];
+    for ( const collaborator of this.state.collaborators ) {
+      collaborators.push( collaborator );
+    }
     collaborators.push( user );
     this.setState( { collaborators } );
   }
@@ -73,7 +76,6 @@ class CollaboratorContainer extends Component {
         this.setState( { loading: false } )
       } );
     });
-    alert( `${userId}が${ratio}パーセント` );
   }
 
   deleteHandler( user ) {
@@ -107,8 +109,6 @@ class CollaboratorContainer extends Component {
     if ( this.state.loading ) {
       containerClassName.push( 'hametuha-loading' );
       styles.minHeight = '150px';
-    } else if ( ! this.state.collaborators.length ) {
-      styles.display = 'none';
     }
     return (
       <Fragment>
@@ -127,9 +127,15 @@ class CollaboratorContainer extends Component {
             <CollaboratorAdd postId={ this.state.id } addHandler={ this.addHandler }/>
           </tfoot>
           <tbody>
-          { this.state.collaborators.map(user => {
-            return <Collaborator key={ user.id } user={user} deleteHandler={ this.deleteHandler } updateHandler={ this.updateHandler }/>
-          }) }
+          { this.state.collaborators.length ? this.state.collaborators.map( user => {
+            return <Collaborator key={ user.id } user={ user } deleteHandler={ this.deleteHandler } updateHandler={ this.updateHandler }/>
+          }) : (
+            <tr>
+              <td colSpan={ 5 }>
+                <p className='description' style={ { textAlign: 'center' } }>収入をシェアする人は登録されていません。</p>
+              </td>
+            </tr>
+          ) }
           </tbody>
         </table>
       </Fragment>

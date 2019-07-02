@@ -8,6 +8,7 @@ export class CollaboratorAdd extends Component {
     this.state = {
       loading: false,
       slug: '',
+      margin: 10
     };
   }
 
@@ -20,13 +21,18 @@ export class CollaboratorAdd extends Component {
         method: 'POST',
         data: {
           collaborator: this.state.slug,
+          margin: this.state.margin
         }
       }).then( res => {
         this.props.addHandler( res );
       }).catch( res => {
         alert( res.message || 'ユーザーを追加できませんでした。' );
       }).finally( res => {
-        this.setState( { loading: false } );
+        this.setState( {
+          loading: false,
+          slug: '',
+          margin: 10,
+        } );
       });
     } );
   }
@@ -34,10 +40,14 @@ export class CollaboratorAdd extends Component {
   render() {
     return (
       <tr className={ this.state.loading ? 'hametuha-loading' : '' }>
-        <td>&nbsp;</td>
         <td colSpan={3}>
-          <input type='text' className='widefat' placeholder='ユーザーIDからスラッグを入れてください。'
+          <input type='text' className='widefat' placeholder='ユーザーのスラッグ（URLの名前）を入れてください。'
                  value={ this.state.slug } onChange={ e => this.setState( { slug: e.target.value } ) }/>
+        </td>
+        <td>
+          <input type='number' style={{width: '3em', textAlign: 'right'}}
+                 value={ this.state.margin } onChange={ e => this.setState( { margin: e.target.value } ) }
+                 min={1} max={100}/>%
         </td>
         <td className='collaborators-actions'>
           <a href='#' className='button' onClick={ e => { e.preventDefault(); this.handleClick() } }>

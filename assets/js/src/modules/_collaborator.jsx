@@ -5,7 +5,7 @@ export class Collaborator extends Component {
   constructor( props ) {
     super( props );
     this.state = {
-      ratio: this.props.user.ratio * 100,
+      ratio: this.props.user.ratio,
     };
     this.handleDelete = this.handleDelete.bind( this );
     this.handleEdit   = this.handleEdit.bind( this );

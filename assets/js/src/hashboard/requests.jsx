@@ -14,9 +14,10 @@ Vue.component( 'hametuha-request', {
           <small>{{ request.updated | moment( 'lll' ) }}</small>
         </div>
         <p class="mb-1 text-muted">
-           作品集『<a :href="request.permalink">{{request.post_title}}</a>』に {{request.name}}さんが（{{request.label}}）として招待されています。
-           <span v-if="approved">報酬は <strong>{{ revenue }}%</strong> です。</span>
-           <span v-else>まだこの招待を受け付けていません。</span>
+           作品集『<a :href="request.permalink">{{request.post_title}}</a>』に {{request.name}}さんが（{{request.label}}）として
+           <span v-if="approved"><strong>参加中</strong>です。</span>
+           <span v-else>招待を受け付けています。</span>
+           報酬はロイヤリティの <strong>{{ revenue }}%</strong> です。
         </p>
         <p class="text-muted text-right">
             <small class="badge badge-light">アクション</smallc>
@@ -43,7 +44,7 @@ Vue.component( 'hametuha-request', {
       return this.request.ratio >= 0;
     },
     revenue: function() {
-      return parseInt( this.request.ratio, 10 );
+      return Math.abs( parseInt( this.request.ratio, 10 ) );
     },
     actions: function() {
       const btn = [];

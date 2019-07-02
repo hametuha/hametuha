@@ -87,6 +87,26 @@ class Collaborators extends Singleton {
 	}
 
 	/**
+	 *
+	 *
+	 * @param string $type
+	 * @return string
+	 */
+	public function get_collaborator_type( $type ) {
+		if ( ! isset( $this->collaborator_type[ $type ] ) ) {
+			return 'コラボレーター';
+		}
+		switch ( $type ) {
+			case 'designer':
+				return 'デザイナー';
+			case 'illustrator':
+				return 'イラストレーター';
+			default:
+				return $this->collaborator_type[ $type ] . '者';
+		}
+	}
+
+	/**
 	 * Detect if specified collaborator exists.
 	 *
 	 * @param int  $series_id
@@ -129,6 +149,13 @@ SQL;
 				'status' => 400,
 			] );
 		}
+		// Is it possible to add?
+		$margin = intval( $location * -100 );
+		$margin_is_valid = $this->is_margin_possible( $series_id, $margin, $user_id );
+		if ( is_wp_error( $margin_is_valid ) ) {
+			return $margin_is_valid;
+		}
+		// Insert.
 		$result = $this->db->insert( $this->relationships, [
 			'rel_type'  => $this->rel_type,
 			'object_id' => $post->ID,
@@ -150,7 +177,16 @@ SQL;
 				'status' => 404,
 			] );
 		}
-		// TODO: We should notify user to confirmation action.
+		/**
+		 * Executed when collaborator is added.
+		 *
+		 * @param int      $user_id
+		 * @param \WP_Post $post
+		 * @param int      $location Margin in percent.
+		 * @param string   $type     Collaborator type.
+		 * @param string   $label    Collaborator label.
+		 */
+		do_action( 'hametuha_collaborators_added', $user_id, $post, absint( $location * 100 ), $type, $this->get_collaborator_type( $type ) );
 		return $actually_added;
 	}
 
@@ -159,17 +195,27 @@ SQL;
 	 *
 	 * @param int $series_id
 	 * @param int $user_id
-	 * @return bool
+	 * @return bool|\WP_Error
 	 */
 	public function confirm_invitation( $series_id, $user_id ) {
-		// TODO: The revenue should be fixed before invitation.
+		$invitation = $this->collaborator( $series_id, $user_id );
+		if ( ! $invitation ) {
+			return new \WP_Error( 'invitation_not_exists', '招待されていないようです。', [
+				'status' => 404,
+			] );
+		}
+		$margin = absint( $invitation->ratio * 100 );
+		$validity = $this->is_margin_possible( $series_id, $margin, $user_id );
+		if ( is_wp_error( $validity ) ) {
+			return $validity;
+		}
 		return (bool) $this->db->update( $this->relationships, [
-			'location' => 0,
+			'location' => $invitation->ratio * -1,
 		], [
 			'rel_type'  => $this->rel_type,
 			'object_id' => $series_id,
 			'user_id'   => $user_id,
-		], [ '%d' ], [ '%s', '%d', '%d' ] );
+		], [ '%f' ], [ '%s', '%d', '%d' ] );
 	}
 
 	/**
@@ -260,11 +306,9 @@ SQL;
 	 * @return bool|\WP_Error
 	 */
 	public function update_margin( $series_id, $user_id, $margin ) {
-		$existing_margins = array_sum( array_values( $this->get_margin_list( $series_id, [ $user_id ] ) ) );
-		if ( 100 < $margin + $existing_margins ) {
-			return new \WP_Error( 'too_much_revenue', '報酬の合計が100%を超えています。', [
-				'status' => 400,
-			] );
+		$margin_is_valid = $this->is_margin_possible( $series_id, $margin, $user_id );
+		if ( is_wp_error( $margin_is_valid ) ) {
+			return $margin_is_valid;
 		}
 		global $wpdb;
 		$result = $wpdb->update( $this->relationships, [
@@ -277,6 +321,29 @@ SQL;
 		return $result ?: new \WP_Error( 'failed_update', '報酬を更新できませんでした。', [
 			'status' => 500,
 		] );
+	}
+
+	/**
+	 * Detect if margin is O.K.
+	 *
+	 * @param int $series_id
+	 * @param int $margin
+	 * @param int $user_id_to_exclude
+	 * @return bool|\WP_Error
+	 */
+	public function is_margin_possible( $series_id, $margin, $user_id_to_exclude = 0) {
+		$excluded = [];
+		if ( $user_id_to_exclude ) {
+			$excluded[] = $user_id_to_exclude;
+		}
+		$existing_margins = array_sum( array_values( $this->get_margin_list( $series_id, $excluded ) ) );
+		if ( 100 < $margin + $existing_margins ) {
+			return new \WP_Error( 'too_much_revenue', '報酬の合計が100%を超えています。', [
+				'status' => 400,
+			] );
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -300,9 +367,30 @@ SQL;
 		}
 		$margins = [];
 		foreach ( $wpdb->get_results( $wpdb->prepare( $query, $this->rel_type, $series_id ) ) as $row ) {
-			$margins[ $row->user_id ] = (int) $row->location * 100;
+			$margins[ $row->user_id ] = absint( $row->location * 100 );
 		}
 		return $margins;
+	}
+
+	/**
+	 * Get margin list for sales report.
+	 *
+	 * @param int $series_id
+	 * @return array
+	 */
+	public function get_final_margin( $series_id ) {
+		$series = get_post( $series_id );
+		if ( ! $series || 'series' != $series->post_type ) {
+			return [];
+		}
+		$margin_list = $this->get_margin_list( $series_id );
+		$total = 0;
+		foreach ( $margin_list as $user => $margin ) {
+			$total += $margin;
+		}
+		$total = min( 100, $total );
+		$margin_list[ $series->post_author ] = 100 - $total;
+		return $margin_list;
 	}
 
 	/**
@@ -333,12 +421,6 @@ SQL;
 				'status' => 404,
 			] );
 		}
-		CollaboratorDelete::exec( [
-			$user_id => [
-				'url'   => get_permalink( $series_id ),
-				'title' => get_the_title( $series_id ),
-			],
-		] );
 		return true;
 	}
 

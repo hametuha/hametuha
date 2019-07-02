@@ -3,6 +3,8 @@
 namespace Hametuha\Master;
 
 
+use Hametuha\Model\Collaborators;
+
 /**
  * Calculator
  *
@@ -61,18 +63,37 @@ class Calculator {
 		}
 		// 振込額を出す
 		$total = $sub_total - $deduction_price + $vat;
-		return [ $price, $unit, $vat, $deduction_price, $total ];
+		return [ $price, (int) $unit, $vat, $deduction_price, $total ];
 	}
 
 	/**
 	 * Returns KDP sales result.
 	 *
 	 * @param \stdClass $sale
+	 * @param string    $prefix
 	 * @return array
 	 */
-	public static function kdp_royalty( $sale ) {
+	public static function kdp_royalty( $sale, $prefix = '' ) {
 		$price = $sale->sub_total * self::BILL_RATIO / $sale->unit;
-		return self::revenue( $price, $sale->unit, true, true );
+		$margin_list = Collaborators::get_instance()->get_final_margin( $sale->post_id );
+		if ( ! $margin_list ) {
+			return null;
+		}
+		$series = get_post( $sale->post_id );
+		$sales = [];
+		foreach ( $margin_list as $user_id => $margin ) {
+			if ( ! $margin ) {
+				continue;
+			}
+			$revenue = $price / 100 * $margin;
+			$label   = 100 === $margin ? $prefix : sprintf( '%sの%d%%', $prefix, $margin );
+			$sales[] = array_merge( [ $label, $user_id ], self::revenue( $revenue, $sale->unit, true, true ) );
+		}
+		return $sales;
+	}
+
+	public static function group_revenue( $sale ) {
+
 	}
 
 }

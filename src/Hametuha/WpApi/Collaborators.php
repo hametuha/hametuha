@@ -76,18 +76,26 @@ class Collaborators extends WpApi {
 			case 'POST':
 				return array_merge( $args, [
 					'collaborator' => [
-						'require'     => true,
+						'required'    => true,
 						'type'        => 'string',
 						'description' => 'User nice name',
 						'validate_callback' => function( $var ) {
 							return ! empty( $var ) && $this->authors->get_by_nice_name( $var );
 						},
 					],
+					'margin' => [
+						'required' => true,
+						'type'     => 'integer',
+						'description' => 'Margin for user. Should be more than 0',
+						'validate_callback' => function( $var ) {
+							return is_numeric( $var ) && ( 0 < $var ) && ( 0 < 100 );
+						},
+					],
 				] );
 			case 'PUT':
 				return array_merge( $args, [
 					'margin' => [
-						'require'     => true,
+						'required'    => true,
 						'type'        => 'integer',
 						'description' => 'Revenue margin in percentile.',
 						'validate_callback' => function( $var ) {
@@ -126,7 +134,9 @@ class Collaborators extends WpApi {
 		if ( ! $author || ! user_can( $author, 'edit_posts' ) ) {
 			return new \WP_Error( 'invalid_author', '指定されたユーザーは存在しないか、破滅派同人ではありません。' );
 		}
-		$result = $this->collaborators->add_collaborator( $request->get_param( 'series_id' ), $author->ID );
+		$margin = $request->get_param( 'margin' );
+		// TODO: allow type to be changed.
+		$result = $this->collaborators->add_collaborator( $request->get_param( 'series_id' ), $author->ID, 'writer', $margin / 100 * -1 );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -147,13 +157,14 @@ class Collaborators extends WpApi {
 		if ( is_wp_error( $response) ) {
 			return $response;
 		}
-		CollaboratorMarginUpdate::exec( [
-			$collaborator->ID => [
-				'title'  => get_the_title( $series_id ),
-				'margin' => $margin,
-				'url'    => home_url( 'dashboard/requests/collaborations' )
-			],
-		] );
+		/**
+		 * Executed when collaborator setting is updated.
+		 *
+		 * @param \WP_User $collaborator
+		 * @param int      $series_id
+		 * @param int      $margin
+		 */
+		do_action( 'hametuha_collaborators_updated', $collaborator, $series_id, $margin );
 		return new \WP_REST_Response( [
 			'success' => true,
 			'message' => sprintf( '%sさんの報酬を%d%%に変更しました。', $collaborator->display_name, $margin ),
@@ -167,11 +178,19 @@ class Collaborators extends WpApi {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_delete( \WP_REST_Request $request ) {
-		$user_id = $request->get_param( 'collaborator_id' );
-		$result = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $user_id );
+		$user_id   = $request->get_param( 'collaborator_id' );
+		$series_id = $request->get_param( 'series_id' );
+		$result = $this->collaborators->delete_collaborator( $series_id, $user_id );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
+		/**
+		 * Executed when collaborator is deleted.
+		 *
+		 * @param int $user_id
+		 * @param int $series_id
+		 */
+		do_action( 'hametuha_collaborators_deleted', $user_id, $series_id );
 		return new \WP_REST_Response( [
 			'success' => true,
 			'message' => 'ユーザーを関係者から削除しました。',

@@ -24,7 +24,7 @@ trait UserConverter {
 			'name'       => $user->display_name,
 			'avatar'     => get_avatar_url( $user->ID ),
 			'url'        => hametuha_author_url( $user->ID ),
-			'ratio'      => 0 <= $user->ratio ? 100 * $user->ratio : -1,
+			'ratio'      => $user->ratio * 100,
 			'assigned'   => $user->assigned,
 			'type'       => $user->collaboration_type,
 			'label'      => $this->collaborators->collaborator_type[ $user->collaboration_type ],

@@ -6,9 +6,9 @@ namespace Hametuha\Notifications\Emails;
 use Hametuha\Hamail\Pattern\TransactionalEmail;
 
 /**
- * Collaborator invitaion
+ * Collaborator invitation.
  *
- * @package Hametuha\Notifications\Emails
+ * @package hametuha
  */
 class CollaboratorInvitation extends TransactionalEmail {
 
@@ -21,8 +21,8 @@ class CollaboratorInvitation extends TransactionalEmail {
 		return <<<HTML
 
 
-作品集『-title-』にコラボレーターとして招待されています。
-収益はロイヤリティのうち -revenue - です。
+作品集『-title-』に-type-として招待されています。
+収益はロイヤリティのうち -revenue-% です。
 承認する場合は以下のURLに移動してください。
 
 -url-
@@ -40,4 +40,23 @@ HTML;
 	protected function get_subject() {
 		return '破滅派 「-title-」 へのコラボレーター招待';
 	}
+
+	/**
+	 * Register hooks here.
+	 */
+	public static function register() {
+		add_action( 'hametuha_collaborators_added', function( $user_id, $post, $margin, $type, $label ) {
+			static::exec( [
+				$user_id => [
+					'title'    => get_the_title( $post ),
+					'revenue'  => $margin,
+					'type'     => $label,
+					'url'      => home_url( 'dashboard/requests/collaborations' ),
+					'post_url' => get_permalink( $post ),
+				],
+			] );
+		}, 10, 5 );
+	}
+
+
 }
