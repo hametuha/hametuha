@@ -9,6 +9,6 @@ composer-dev.lock
 .sass-cache
 .svn
 package-lock.json
-assets/img
+assets/img/*
 !assets/img/src
 assets/css
