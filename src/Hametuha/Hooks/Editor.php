@@ -19,8 +19,7 @@ class Editor extends Singleton {
 	 *
 	 * @param array $setting
 	 */
-	protected function __construct( array $setting = [] ) {
-		parent::__construct();
+	public function __construct( array $setting = [] ) {
 		add_filter( 'use_block_editor_for_post_type', [ $this, 'filter_block_editor' ], 10, 2 );
 		add_action( 'init', [ $this, 'register_blocks' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );

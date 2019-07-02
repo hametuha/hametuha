@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * User related functions.
+ */
 
 /**
  * 現在のユーザーの名前を返す

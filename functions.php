@@ -78,7 +78,6 @@ $script_flg = array();
 get_template_part( 'functions/assets' );
 get_template_part( 'functions/assets', 'ssl' );
 get_template_part( 'functions/assets', 'analytics' );
-get_template_part( 'functions/assets', 'cdn' );
 get_template_part( 'functions/assets', 'eyecatch' );
 get_template_part( 'functions/assets', 'tinymce' );
 // 掲示板
@@ -119,7 +118,6 @@ get_template_part( 'functions/shortcodes', 'page' );
 get_template_part( 'functions/social' );
 // User
 get_template_part( 'functions/user' );
-get_template_part( 'functions/user', 'caps' );
 get_template_part( 'functions/user', 'affiliate' );
 get_template_part( 'functions/user', 'picture' );
 get_template_part( 'functions/user', 'secret' );

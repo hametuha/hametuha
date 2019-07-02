@@ -137,6 +137,9 @@ JS;
 	// 投稿編集画面
 	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery' ], hametuha_version(), true );
 
+	// Watermark
+	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
+
 	// Register all hashboard.
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';

@@ -1,6 +1,7 @@
 /* global CookieTasting: false */
 
 const {Component, render} = wp.element;
+const { addQueryArgs } = wp.url;
 
 class HametuHeaderEmpty extends Component {
   render() {
@@ -31,7 +32,7 @@ class HametuHeader extends Component {
     this.checkNotifications();
     setInterval( () => {
       this.checkNotifications();
-    }, 1 * 60 * 1000 );
+    },  60 * 1000 );
   }
 
   checkNotifications() {
@@ -40,8 +41,10 @@ class HametuHeader extends Component {
       return;
     }
     // Retrieve notifications.
-    wp.apiFetch( {
-      path: 'hametuha/v1/notifications/recent',
+    CookieTasting.testBefore().then( res => {
+      return wp.apiFetch( {
+        path: 'hametuha/v1/notifications/recent',
+      } );
     } ).then( response => {
       this.setState( { notifications: response } );
     } ).catch( e => {
@@ -49,9 +52,17 @@ class HametuHeader extends Component {
     } );
   }
 
+  getLogoutUrl() {
+    return addQueryArgs( '/wp-login.php', {
+      action: 'logout',
+      _wpnonce: CookieTasting.get( 'logout' ),
+      redirect_to: encodeURIComponent( window.location.pathname ),
+    } );
+  }
+
   getStateValue() {
     return {
-      logout: '/wp-login.php?action=logout&_wpnonce=' + CookieTasting.get('logout'),
+      logout: this.getLogoutUrl(),
       loggedIn: CookieTasting.isLoggedIn(),
       avatar: CookieTasting.get( 'avatar' ) || '',
       name: CookieTasting.userName(),

@@ -37,14 +37,7 @@ class RecordUserAction extends AbstractRecorders {
 	 * @param int $user_id
 	 */
 	private function save_event( $action, $user_id ) {
-		$user_hash = $this->analytics->get_stored_user_id( $user_id, true );
-		$this->analytics->measurement->event( [
-			'ea' => $action,
-			'ec' => 'account',
-			'el' => $user_id,
-			'uid' => $user_hash,
-			Analytics::DIMENSION_UID => $user_hash,
-		] );
+		$this->save_user_event( $action, $user_id, 'account', $user_id );
 	}
 
 	/**

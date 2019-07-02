@@ -181,6 +181,7 @@ class Post extends Command {
 		// Convert Aside, blockquote.
 		foreach ( [
 			'#<strong>([^<]+)</strong>#u' => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<del>([^<]+)</del>#u' => '<CharStyle:Del>$1<CharStyle:>',
 			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
 				  ] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );

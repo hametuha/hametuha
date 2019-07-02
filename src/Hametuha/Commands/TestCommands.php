@@ -136,34 +136,6 @@ TEXT;
 	}
 
 	/**
-	 * Get the list of instant articles
-	 *
-	 * @synopsis [--d]
-	 */
-	public function articles( $args, $assoc ) {
-		$token = minico_access_token();
-		if ( is_wp_error( $token ) ) {
-			self::e( $token->get_error_message() );
-		}
-		$result = minico_fb_request( 'instant_articles', 'GET', [
-			'access_token' => $token,
-			'development_mode' => isset( $assoc['d'] ) && $assoc['d'],
-		] );
-		if ( is_wp_error( $result ) ) {
-			self::e( $result->get_error_message() );
-		} else {
-			$table = new \cli\Table();
-			$table->setHeaders( [ 'ID', 'URL' ] );
-			$rows = [];
-			foreach ( $result['data'] as $post ) {
-				$rows[] = [ $post['id'], $post['canonical_url'] ];
-			}
-			$table->setRows( $rows );
-			$table->display();
-		}
-	}
-
-	/**
 	 * Check if mail user is spam
 	 *
 	 * ## EXAMPLES
