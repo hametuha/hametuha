@@ -9,7 +9,8 @@
     "url": "http://github.com/hametuha/hametuha.git"
   },
   "scripts": {
-    "build": "gulp build",
+    "start": "gulp build && gulp watch",
+    "package": "gulp build",
     "watch": "gulp watch",
     "display": "gulp bs",
     "gulp": "gulp"
