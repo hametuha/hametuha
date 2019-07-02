@@ -286,10 +286,10 @@ class UserSales extends Model {
 	 * @return array
 	 */
 	public function save_kdp_report( $year, $month, $dry_run = false ) {
-		$sales   = Sales::get_instance()->monthly_report( $year, $month );
-		$total   = 0;
-		$success = 0;
-		$return  = [];
+		$sales     = Sales::get_instance()->monthly_report( $year, $month );
+		$retrieved = 0;
+		$success   = 0;
+		$return    = [];
 		foreach ( $sales as $sale ) {
 			$prefix = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
 			$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
@@ -309,7 +309,7 @@ class UserSales extends Model {
 			} else {
 				// Actually save reports.
 				foreach ( $royalties as $royalty ) {
-					$total++;
+					$retrieved++;
 					list( $label, $user_id, $price, $unit, $tax, $deducting, $total ) = $royalty;
 					$result = RevenueModel::get_instance()->add_revenue( 'kdp', $user_id, $price, [
 						'unit'        => $unit,
@@ -324,7 +324,7 @@ class UserSales extends Model {
 				}
 			}
 		}
-		return $dry_run ? $return : [ $total, $success ];
+		return $dry_run ? $return : [ $retrieved, $success ];
 	}
 
 	/**

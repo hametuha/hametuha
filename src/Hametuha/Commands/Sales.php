@@ -46,7 +46,7 @@ class Sales extends Command {
 			}
 			$table->display();
 		} else {
-			if ( !$force && false !== array_search( $year . $month, $record ) ) {
+			if ( ! $force && false !== array_search( $year . $month, $record ) ) {
 				self::e( sprintf( '%d年%d月のKDPセールスは記録済みです。', $year, $month ) );
 			}
 			list( $total, $success ) = UserSales::get_instance()->save_kdp_report( $year, $month );

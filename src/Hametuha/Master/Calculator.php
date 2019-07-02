@@ -77,7 +77,7 @@ class Calculator {
 		$price = $sale->sub_total * self::BILL_RATIO / $sale->unit;
 		$margin_list = Collaborators::get_instance()->get_final_margin( $sale->post_id );
 		if ( ! $margin_list ) {
-			return null;
+			return [];
 		}
 		$series = get_post( $sale->post_id );
 		$sales = [];
@@ -91,9 +91,4 @@ class Calculator {
 		}
 		return $sales;
 	}
-
-	public static function group_revenue( $sale ) {
-
-	}
-
 }
