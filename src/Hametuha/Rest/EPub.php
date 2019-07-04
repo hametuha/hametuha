@@ -4,6 +4,7 @@ namespace Hametuha\Rest;
 
 
 use Hametuha\HamePub\Factory;
+use Hametuha\Model\Collaborators;
 use Hametuha\Model\CompiledFiles;
 use Hametuha\Model\Series;
 use WPametu\API\Rest\RestTemplate;
@@ -448,7 +449,7 @@ class EPub extends RestTemplate {
 		$post->post_content = $this->page_break( $post->post_content );
 		setup_postdata( $post );
 		$this->set_data( [
-			'authors'     => get_series_authors( $post ),
+			'authors'     => Collaborators::get_instance()->get_published_collaborators( $post->ID ),
 			'post'        => $post,
 			'is_vertical' => 'rtl' == $direction,
 		] );

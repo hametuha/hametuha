@@ -12,7 +12,7 @@
 		<?php if ( ( $subtitle = get_post_meta( get_the_ID(), 'subtitle', true ) ) ) : ?>
 			<small class="subtitle"><?= esc_html( $subtitle ) ?></small>
 		<?php endif; ?>
-		<small><?php the_author() ?></small>
+		<small><?= esc_html( hametuha_author_name() ) ?></small>
 		<small class="publisher-credit">
 			<?= esc_html( $this->series->override_meta( get_the_author_meta( 'ID' ), '_publisher_name', '破滅派' ) ) ?>
 		</small>

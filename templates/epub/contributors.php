@@ -23,6 +23,7 @@
 			<?php else: ?>
 				<?= esc_html($author->display_name) ?>
 			<?php endif; ?>
+            <small><?= esc_html( $author->label ) ?></small>
 		</h2>
 		<div class="excerpt">
 			<?= wpautop($author->user_description) ?>
@@ -33,7 +34,7 @@
 				if( $author->user_url ){
 					$site_name = get_user_meta($author->ID, 'aim', true) ?: $author->user_url;
 					printf('<a href="%s">%s</a>', esc_url($author->user_url), esc_html($site_name));
-				}else{
+				} else {
 					echo 'なし';
 				}
 			?></dd>

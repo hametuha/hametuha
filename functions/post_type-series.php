@@ -138,6 +138,7 @@ function is_series_price_unmatch( $post = null ) {
 /**
  * Get all user for series
  *
+ * @deprecated
  * @param null|WP_Post|int $post
  *
  * @return array
@@ -145,7 +146,7 @@ function is_series_price_unmatch( $post = null ) {
 function get_series_authors( $post = null ) {
 	$post = get_post( $post );
 
-	return Series::get_instance()->get_authors( $post->ID );
+	return \Hametuha\Model\Collaborators::get_instance()->get_published_collaborators( $post->ID );
 }
 
 /**

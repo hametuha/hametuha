@@ -36,6 +36,7 @@ class Series extends Model {
 	/**
 	 * Return array of WP_Users
 	 *
+	 * @deprecated
 	 * @param int $post_id
 	 *
 	 * @return array

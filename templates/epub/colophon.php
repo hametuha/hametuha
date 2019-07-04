@@ -39,7 +39,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			</td>
 		</tr>
 		<tr>
-			<th>著者</th>
+			<th>執筆者</th>
 			<td>
 				<?= implode( ' / ', array_map( function( WP_User $author ) {
 					return esc_html( $author->display_name );
@@ -48,7 +48,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 		</tr>
 		<tr>
 			<th>編集者</th>
-			<td><?php the_author() ?></td>
+			<td><?= esc_html( hametuha_author_name() ) ?></td>
 		</tr>
 		<?php if ( ! $publisher ) : ?>
 			<tr>
@@ -76,17 +76,8 @@ $publisher = get_the_author_meta( '_publisher_name' );
 	<table class="colophon">
 		<caption>初出一覧</caption>
 		<?php
-		$series_query = new \WP_Query(   [
-			'post_type' => 'post',
-			'post_parent' => get_the_ID(),
-			'posts_per_page' => -1,
-			'orderby' => [
-				'menu_order' => 'DESC',
-				'post_date' => 'ASC',
-			]
-		]);
-		if ( $series_query->have_posts() ) :
-		?>
+		$series_query = \Hametuha\Model\Series::get_series_posts( get_the_ID(), [ 'publish', 'private' ], true );
+		if ( $series_query->have_posts() ) : ?>
 			<?php $counter = 0; while( $series_query->have_posts() ) : $series_query->the_post(); $counter++; ?>
 			<tr>
 				<th><?= number_format( $counter ) ?></th>

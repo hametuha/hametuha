@@ -94,16 +94,19 @@ class Collaborators extends Singleton {
 	 * @return string
 	 */
 	public function get_collaborator_type( $type ) {
-		if ( ! isset( $this->collaborator_type[ $type ] ) ) {
-			return 'コラボレーター';
-		}
 		switch ( $type ) {
 			case 'designer':
 				return 'デザイナー';
 			case 'illustrator':
 				return 'イラストレーター';
 			default:
-				return $this->collaborator_type[ $type ] . '者';
+				if ( isset( $this->collaborator_type[ $type ] ) ) {
+					return $this->collaborator_type[ $type ] . '者';
+				} elseif ( isset( $this->owner_types[ $type ] ) ) {
+					return $this->owner_types[ $type ] . '者';
+				} else {
+					return '著者';
+				}
 		}
 	}
 
@@ -285,13 +288,28 @@ SQL;
 		$author = get_userdata( $post->post_author );
 		$author->type  = $this->owner_type( $post->ID );
 		$author->label = $this->get_collaborator_type( $author->type );
-		$users[] = $author;
+		$users[ $author->ID ] = $author;
+		// Add all children.
+		foreach ( Series::get_series_posts( $post->ID ) as $child ) {
+			if ( ! isset( $users[ $child->post_author ] ) ) {
+				$child_writer = get_userdata( $child->post_author );
+				if ( $child_writer ) {
+					$child_writer->label == $this->get_collaborator_type( 'writer' );
+					$users[ $child_writer->ID ] = $child_writer;
+				}
+			}
+		}
+		// Get collaborators list.
 		foreach ( $this->get_collaborators( $post->ID ) as $user ) {
 			if ( $user->ratio < 0 ) {
 				continue;
 			}
 			$user->label = $this->get_collaborator_type( $user->collaboration_type );
-			$users[] = $user;
+			if ( isset( $users[ $user->ID ] ) ) {
+				$user[ $user->ID ] = $user;
+			} else {
+				$users[] = $user;
+			}
 		}
 		return $users;
 	}
