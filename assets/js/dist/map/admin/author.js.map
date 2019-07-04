@@ -1,1 +1,0 @@
-{"version":3,"sources":["admin/author.js"],"names":["jQuery","document","ready","$"],"mappings":"AAGAA,OAAOC,UAAUC,MAAM,SAASC","file":"../../admin/author.js","sourcesContent":["/**\n * 管理画面で投稿者用に利用される関数\n */\njQuery(document).ready(function($){\n\n});\n"]}
