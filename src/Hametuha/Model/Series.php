@@ -660,11 +660,11 @@ SQL;
 	 *
 	 * @return array
 	 */
-	protected static function get_series_args( $series_id ) {
+	protected static function get_series_args( $series_id, $status = 'any' ) {
 		return [
 			'post_type'      => 'post',
 			'post_parent'    => $series_id,
-			'post_status'    => 'any',
+			'post_status'    => $status,
 			'posts_per_page' => - 1,
 			'orderby'        => [
 				'menu_order' => 'DESC',
@@ -674,14 +674,17 @@ SQL;
 	}
 
 	/**
-	 * Get series posts
+	 * Get series posts.
 	 *
-	 * @param int $series_id
+	 * @param int    $series_id
+	 * @param string $status Default 'any'.
+	 * @param bool   $as_wp_query If set true, returns WP_Query. Otherwise, returns WP_Post array.
 	 *
-	 * @return \WP_Post[]
+	 * @return \WP_Post[]|\WP_Query
 	 */
-	public static function get_series_posts( $series_id ) {
-		return get_posts( self::get_series_args( $series_id ) );
+	public static function get_series_posts( $series_id, $status = 'any', $as_wp_query = false ) {
+		$args = self::get_series_args( $series_id, $status );
+		return $as_wp_query ? new \WP_Query( $args ) : get_posts( $args );
 	}
 
 	/**

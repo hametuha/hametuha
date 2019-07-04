@@ -60,13 +60,6 @@ function hameplate( $slug, $name = '', $args = [], $echo = true, $glue = '-' ) {
 	}
 }
 
-/**
- * アドミンバーを常に非表示
- *
- * @filter show_admin_bar
- * @return boolean
- */
-add_filter( 'show_admin_bar', '__return_false', 1000 );
 
 
 /**
@@ -239,7 +232,7 @@ function hametuha_commment_display( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment;
 	$class_name         = [ $comment->comment_type, 'media' ];
 	$is_author          = get_the_author_meta( 'ID' ) == $comment->user_id;
-	if ( get_anonymous_user()->ID == $comment->user_id ) {
+	if ( hametuha_get_anonymous_user()->ID == $comment->user_id ) {
 		$is_author = false;
 	}
 	$class_name[] = $is_author ? 'author' : 'commentor';

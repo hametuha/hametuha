@@ -11,7 +11,7 @@
     &--author{
       background-color: #ebebeb;
     }
-    &--children{
+    &--testimonials{
       background-color: #f9f9f9;
     }
     &--share{
@@ -50,29 +50,37 @@
 
   // 題字
   &__title{
-    span{
+    &--work{
+      color: #fff;
       display: block;
       padding-bottom: 0.25em;
       border-bottom: 3px double #fff;
     }
-
-    small{
+    &--headline{
+      margin-left: 0.5em;
+      color: inherit;
+    }
+    &--represent{
       color: #fff;
       display: block;
       padding-top: 0.25em;
     }
+
     &--author,
     &--share,
     &--review,
-    &--testimonials{
+    &--testimonials,
+    &--list{
       color: #aaa;
       text-shadow: 1px 1px 2px #fff;
     }
-    &--list {
-      color: #aaa;
-      padding-bottom: 1.5em;
-      margin-bottom: 1.5em;
-      border-bottom: 3px double #ddd;
+    &--author,
+    &--list{
+
+      @include mq-max( $screen-xs-max ) {
+        text-align: center;
+        margin-bottom: 2em;
+      }
     }
     &--caption{
       display: block;
@@ -118,7 +126,7 @@
       color: #666;
     }
     i.ok{
-      color: $line-color;
+      color: $brand-success;
     }
     i.ng{
       color: $brand-danger;
@@ -128,18 +136,27 @@
   // 著者
   &__author{
     padding: 1em 0;
+    min-height: 100px;
     border-bottom: 1px solid #ddd;
-    border-top: 1px solid #fff;
+    position: relative;
+    &:last-child{
+      border-bottom: none;
+    }
+    &--photo{
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY( -50% );
+      width: 80px;
+      @include mq-max( $screen-xs-max ) {
+        width: 60px;
+      }
+    }
     .avatar{
       max-width: 100%;
       width: auto;
       height: auto;
-    }
-    .row:first-child + &{
-      border-top: none;
-    }
-    &:last-child{
-      border-bottom: none;
+      vertical-align: middle;
     }
     &--desc{
       margin: 1em 0;
@@ -147,6 +164,25 @@
     &--longdesc{
       @include long-desc(#ebebeb);
     }
+    &--profile{
+      position: relative;
+      padding-left: 100px;
+      @include mq-max( $screen-xs-max ) {
+        padding-left: 80px;
+      }
+
+      h3{
+        margin-top: 0;
+        padding-right: 100px;
+      }
+
+      .btn{
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
   }
 
 
@@ -156,70 +192,65 @@
   }
   &__item{
     list-style:none;
-    margin-bottom: 30px;
-    &--counter{
-      display: block;
-      color: #aaa;
-      text-shadow: 1px 1px 2px #fff;
-      font-size: 1.2em;
-      text-align: center;
-      padding-bottom: 5px;
-      font-family: $work-title;
+    border-bottom: 1px solid #ddd;
+    &:first-child{
+      @include mq-max( $screen-xs-max ) {
+        border-top: 1px solid #ddd;
+      }
+    }
+    &:last-child{
+      border-bottom: none;
     }
     &--link{
       display: block;
-      border: 1px solid #ddd;
-      border-radius: 2px;
       position: relative;
-      @include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.2));
-      @include transition(background-color 1s 0 linear);
+      transition: color .3s linear;
       &:link{
         color: #000;
         text-decoration: none;
-        background: #fff;
       }
       &:visited{
-        color: #393977;
+        color: #444;
         text-decoration: none;
-        background: #fff;
       }
       &:hover, &:active{
         text-decoration: none;
-        background: #fffabf;
+        color: $brand-primary;
       }
     }
-    &--thumbnail{
-      height: 150px;
-      background: transparent center center no-repeat;
-      -webkit-background-size: cover;
-      background-size: cover;
-
-      @media (max-width: $screen-xs-max) {
-        height: 120px;
-      }
-    }
-    &--body{
-      padding: 10px;
+    &--meta{
+      margin-bottom: 10px;
     }
     &--title{
-      font-family: $work-title;
-      small{
-        font-family: $work-body;
+      font-family: $work-body;
+      display: inline;
+      font-size: 1.4em;
+      @at-root a:visited &:after{
+        content: "";
       }
+    }
+    &--counter{
+    }
+    &--author{
+      font-family: $work-body;
+      float: right;
+      margin-left: 1em;
+    }
+    &--body{
+      padding: 20px;
     }
     &--info{
       color: #888;
-      .avatar{
-        border-radius: 50%;
-      }
-      i{
-        color: #aaa;
-      }
+      margin-bottom: 10px;
     }
     &--excerpt{
-      z-index: 2;
       margin-top: 10px;
       font-family: $work-body;
+      color: #444;
+      p{
+        margin: 0;
+        line-height: 1.4;
+      }
     }
   }
 

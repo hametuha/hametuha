@@ -9,16 +9,19 @@
  * Generate unique length
  *
  * @param int $length Byte length.
- *
  * @return string
  */
 function hametuha_unique_id( $length ) {
-	if ( function_exists( 'random_bytes' ) ) {
-		$bytes = random_bytes( $length );
-	} else {
-		$bytes = openssl_random_pseudo_bytes( $length );
+	try {
+		if ( function_exists( 'random_bytes' ) ) {
+			$bytes = random_bytes( $length );
+		} else {
+			$bytes = openssl_random_pseudo_bytes( $length );
+		}
+		return bin2hex( $bytes );
+	} catch ( Exception $e ) {
+		return uniqid( 'hametuha' );
 	}
-	return bin2hex( $bytes );
 }
 
 /**

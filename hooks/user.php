@@ -79,7 +79,7 @@ add_filter( 'nlmg_validate_user', function( WP_Error $error, $user_id ) {
  * Move news to anonymous user.
  */
 add_action( 'nlmg_before_leave', function( $user_id ) {
-	$anoymous = get_anonymous_user();
+	$anoymous = hametuha_get_anonymous_user();
 	global $wpdb;
 	$query = <<<SQL
 		UPDATE {$wpdb->posts} SET post_author=%d

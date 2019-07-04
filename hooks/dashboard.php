@@ -4,6 +4,14 @@
  */
 
 /**
+ * アドミンバーを常に非表示
+ *
+ * @filter show_admin_bar
+ * @return boolean
+ */
+add_filter( 'show_admin_bar', '__return_false', 1000 );
+
+/**
  * Add links to admin bar.
  */
 add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {

@@ -28,6 +28,7 @@ class Collaborators extends Singleton {
 		'designer'    => 'デザイン',
 		'illustrator' => 'イラスト',
 		'translator'  => '翻訳',
+		'producer'     => '監修',
 	];
 
 	public $share_type = [
@@ -51,7 +52,7 @@ class Collaborators extends Singleton {
 	 * @return string
 	 */
 	public function owner_type( $series_id ) {
-		return get_post_meta( $series_id, '_owner_type', true ) ?: 'self_produce';
+		return get_post_meta( $series_id, '_owner_type', true ) ?: 'writer';
 	}
 
 	/**
@@ -267,6 +268,32 @@ SQL;
 	 */
 	public function get_collaborators( $series_id, $user_id = 0 ) {
 		return $this->get_list( $series_id, $user_id );
+	}
+
+	/**
+	 * Get all published collaborators.
+	 *
+	 * @param int $series_id
+	 * @return \WP_User[]
+	 */
+	public function get_published_collaborators( $series_id ) {
+		$users = [];
+		$post = get_post( $series_id );
+		if ( 'series' !== $post->post_type && 'publish' != $post->post_status ) {
+			return $users;
+		}
+		$author = get_userdata( $post->post_author );
+		$author->type  = $this->owner_type( $post->ID );
+		$author->label = $this->get_collaborator_type( $author->type );
+		$users[] = $author;
+		foreach ( $this->get_collaborators( $post->ID ) as $user ) {
+			if ( $user->ratio < 0 ) {
+				continue;
+			}
+			$user->label = $this->get_collaborator_type( $user->collaboration_type );
+			$users[] = $user;
+		}
+		return $users;
 	}
 
 	/**
