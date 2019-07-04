@@ -10,7 +10,6 @@ if ( ! isset( $content_width ) ) {
  */
 function hametuha_version() {
 	$theme = wp_get_theme();
-
 	return $theme->get( 'Version' );
 }
 
@@ -80,13 +79,11 @@ get_template_part( 'functions/assets', 'ssl' );
 get_template_part( 'functions/assets', 'analytics' );
 get_template_part( 'functions/assets', 'eyecatch' );
 get_template_part( 'functions/assets', 'tinymce' );
-// 掲示板
-get_template_part( 'functions/bulletin-board' );
 // キャンペーン
 get_template_part( 'functions/campaign' );
 get_template_part( 'functions/calculate' );
 // 表示
-get_template_part( 'functions/display' );
+include __DIR__ . '/functions/display.php';
 // amazon
 get_template_part( 'functions/hamazon' );
 // 暗号化
@@ -112,12 +109,11 @@ get_template_part( 'functions/post_type', 'news' );
 get_template_part( 'functions/post_type', 'series' );
 // ランキング
 get_template_part( 'functions/ranking' );
-// ショートコード
-get_template_part( 'functions/shortcodes', 'page' );
 // Social
 get_template_part( 'functions/social' );
 // User
 get_template_part( 'functions/user' );
+include  __DIR__ . '/functions/user-anonymous.php';
 get_template_part( 'functions/user', 'affiliate' );
 get_template_part( 'functions/user', 'picture' );
 get_template_part( 'functions/user', 'secret' );

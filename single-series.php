@@ -6,19 +6,10 @@
 
 	<?php
 	the_post();
-	$series      = \Hametuha\Model\Series::get_instance();
-	$rating      = \Hametuha\Model\Rating::get_instance();
-	$query       = new WP_Query( [
-		'post_type'      => 'post',
-		'post_status'    => 'publish',
-		'post_parent'    => get_the_ID(),
-		'posts_per_page' => - 1,
-		'orderby'        => [
-			'menu_order' => 'DESC',
-			'date'       => 'ASC',
-		],
-		'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
-	] );
+	$series        = \Hametuha\Model\Series::get_instance();
+	$rating        = \Hametuha\Model\Rating::get_instance();
+	$collaborators = \Hametuha\Model\Collaborators::get_instance();
+	$query         = \Hametuha\Model\Series::get_series_posts( get_the_ID(), 'publish',true );
 	$all_reviews = $series->get_reviews( get_the_ID(), true, 1, 12 );
 	$ratings     = [];
 	// Calc rating
@@ -62,12 +53,15 @@
 					<!-- title -->
 					<div class="series__header">
 						<h1 class="series__title">
-							<span itemprop="name"><?php the_title(); ?></span>
-							<?php if ( ( $subtitle = $series->get_subtitle( $post->ID ) ) ) : ?>
-								<small itemprop="headline">
-									<?= esc_html( $subtitle ) ?>
-								</small>
-							<?php endif; ?>
+							<span itemprop="name" class="series__title--work">
+                                <?php the_title(); ?>
+								<?php if ( ( $subtitle = $series->get_subtitle( $post->ID ) ) ) : ?>
+                                    <small itemprop="headline" class="series__title--headline"><?= esc_html( $subtitle ) ?></small>
+								<?php endif; ?>
+                            </span>
+                            <small class="series__title--represent">
+                                <?= esc_html( hametuha_author_name() ) ?>（<?= esc_html( $collaborators->owner_label( get_the_ID() ) ) ?>）
+                            </small>
 						</h1>
 					</div>
 					<!-- //.series__header -->
@@ -102,6 +96,9 @@
 						<a href="#series-children" class="btn btn-trans">
 							<i class="icon-books"></i> 掲載作一覧
 						</a>
+                        <a href="#series-testimonials" class="btn btn-trans">
+                            <i class="icon-star"></i> レビュー
+                        </a>
 					</div>
 
 				</div>
@@ -165,77 +162,107 @@
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-xs-12">
-					<h2 class="series__title--author text-center">
+				<div class="col-sm-4 col-xs-12">
+					<h2 class="series__title--author">
 						<small class="series__title--caption">Authors &amp; Editors</small>
-						執筆者・編集者
+						執筆者一覧
 					</h2>
 				</div>
+                <div class="col-sm-8 col-xs-12">
+					<?php
+					$authors_to_display = $collaborators->get_published_collaborators( get_the_ID() );
+					foreach ( $authors_to_display as $author ) :
+						?>
+
+                        <div class="series__author">
+
+                            <div class="series__author--photo">
+								<?= get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'img-circle' ] ) ?>
+                            </div>
+                            <!-- //.series__author -->
+
+                            <div class="series__author--profile">
+
+                                <h3>
+                                    <span><?= esc_html( $author->display_name ) ?></span>
+                                    <small><?= esc_html( $author->label ) ?></small>
+                                </h3>
+
+								<?php $desc = get_user_meta( $author->ID, 'description', true ); ?>
+                                <div class="series__author--desc<?= 100 < mb_strlen( $desc, 'utf-8' ) ? ' series__author--longdesc' : '' ?>">
+									<?= wpautop( $desc ) ?>
+                                </div>
+
+                                <a class="btn btn-sm btn-link btn--author" href="<?= hametuha_author_url( $author->ID ) ?>" itemprop="url">
+                                    詳しく見る
+                                </a>
+
+                            </div>
+                            <!-- //.series__author -->
+
+                        </div><!-- //.row -->
+
+					<?php endforeach; ?>
+                </div>
 			</div>
 
-			<?php
-			$editor   = new WP_User( $post->post_author );
-			$editor->editor = true;
-			$authors  = $series->get_authors( get_the_ID() );
-			$authors_to_display = [];
-			foreach ( $authors as $author ) {
-				if ( $author->ID != $editor->ID ) {
-					$author->editor = false;
-					$authors_to_display[] = $author;
-				} else {
-					$editor->author = true;
-				}
-			}
-			$authors_to_display[] = $editor;
-			foreach ( $authors_to_display as $author ) :
-				?>
-
-				<div class="row series__author">
-
-					<div class="series__author--photo col-xs-4 text-center">
-						<?= get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'img-circle' ] ) ?>
-					</div>
-					<!-- //.series__author -->
-
-					<div class="series__author--profile col-xs-8">
-						<h3>
-							<span><?= esc_html( $author->display_name ) ?></span>
-							<small><?= $author->editor ? ( $author->author ? '編集・執筆' : '編集' ) : '執筆' ?></small>
-						</h3>
-
-						<?php $desc = get_user_meta( $author->ID, 'description', true ); ?>
-						<div class="series__author--desc<?= 100 < mb_strlen( $desc, 'utf-8' ) ? ' series__author--longdesc' : '' ?>">
-							<?= wpautop( $desc ) ?>
-						</div>
-
-
-						<div class="row">
-							<div class="col-sm-5 col-xs-12 text-center">
-								<a class="btn btn-default btn--author btn-block"
-								   href="<?= home_url( sprintf( '/doujin/detail/%s/', rawurlencode( $author->user_nicename ) )) ?>"
-								   itemprop="url">
-									詳しく見る
-								</a>
-							</div>
-							<div class="col-sm-7 col-xs-12 text-center">
-								<?php hametuha_follow_btn( $author->ID, true ); ?>
-							</div>
-						</div>
-					</div>
-					<!-- //.series__author -->
-
-				</div><!-- //.row -->
-
-			<?php endforeach; ?>
 
 		</div>
 		<!-- //.container -->
 
 	</div>
+
+
 	<!-- //.series__row--author -->
+	<div class="series__row series__row--children" id="series-children">
+
+		<div class="container series__inner">
+
+			<div class="row">
+				<div class="col-sm-4 col-xs-12">
+					<h2 class="series__title--list">
+						<small class="series__title--caption">Works</small>
+						収録作一覧
+					</h2>
+				</div>
+
+                <div class="col-sm-8 col-xs-12">
+					<?php if ( $query->have_posts() ) : ?>
+                        <ol class="series__list">
+							<?php
+							$counter = 0;
+							while ( $query->have_posts() ) {
+							    $counter++;
+								$query->the_post();
+								hameplate( 'parts/loop-series', get_post_type(), [
+                                    'counter' => $counter,
+                                ] );
+							}
+							wp_reset_postdata();
+							?>
+                        </ol>
+
+					<?php else : ?>
+
+                        <div class="alert alert-warning">
+                            <p>まだ作品が登録されていません。<a class="alert-link" href="#series-notification">破滅派をフォロー</a>して、作者の活躍に期待してください。
+                            </p>
+                        </div>
+
+					<?php endif;
+					wp_reset_postdata(); ?>
+                </div>
+			</div>
 
 
-	<div class="series__row series__row--testimonials">
+		</div>
+		<!-- //.container -->
+
+	</div>
+	<!-- series_row--children -->
+
+
+	<div class="series__row series__row--testimonials" id="series-testimonials">
 
 		<div class="container series__inner">
 
@@ -369,45 +396,6 @@
 	<!-- //.series__row--testimonials -->
 
 
-	<div class="series__row series__row--children" id="series-children">
-
-		<div class="container series__inner">
-
-			<div class="row">
-				<div class="col-xs-12">
-					<h2 class="series__title--list text-center">
-						<small class="series__title--caption">Works</small>
-						掲載作一覧
-					</h2>
-				</div>
-			</div>
-
-			<?php if ( $query->have_posts() ) : ?>
-				<ol class="series__list row masonry-list">
-					<?php
-					$counter = 0;
-					while ( $query->have_posts() ) {
-						$query->the_post();
-						get_template_part( 'parts/loop-series', get_post_type() );
-					}
-					wp_reset_postdata();
-					?>
-				</ol>
-
-			<?php else : ?>
-
-				<div class="alert alert-warning">
-					<p>まだ作品が登録されていません。<a class="alert-link" href="#series-notification">破滅派をフォロー</a>して、作者の活躍に期待してください。
-					</p>
-				</div>
-
-			<?php endif;
-			wp_reset_postdata(); ?>
-		</div>
-		<!-- //.container -->
-
-	</div>
-	<!-- series_row--children -->
 
 	<?php if ( $url = $series->get_kdp_url( get_the_ID() ) ) : ?>
 		<div class="series__row series__row--amazon" itemprop="offers" itemscope itemtype="http://schema.org/Offer">

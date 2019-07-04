@@ -8,17 +8,24 @@
   padding: 1.5em 2em;
   border-bottom: 3px dashed #ddd;
   @include clearfix();
+  h2{
+    margin-bottom: 2em;
+    small{
+      color: #888;
+      margin-left: 0.25em;
+    }
+  }
   .avatar{
-    width: 150px;
-    height: 150px;
-    max-width: 150px;
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
     float: right;
     margin: 0.5em 0 1.5em 1.5em;
     border-radius: 50%;
-    @media only screen and (max-width: $screen-sm-max) {
-      max-width: 80px;
-      width: 80px;
-      height: 80px;
+    @media only screen and (max-width: $screen-xs-max) {
+      max-width: 60px;
+      width: 60px;
+      height: 60px;
     }
   }
   dl{

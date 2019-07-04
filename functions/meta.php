@@ -14,15 +14,21 @@
  * @return string
  */
 add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
+    // 著者名を追加する
+    if ( is_singular( [ 'post', 'series' ] ) ) {
+        $title .= sprintf( '%s %s ', hametuha_author_name( get_queried_object() ), $sep );
+    }
+    // その他
 	if ( is_singular( 'post' ) ) {
-		global $post;
-		$cats = get_the_category( $post->ID );
+	    // 投稿の場合はカテゴリーを追加
+		$cats = get_the_category( get_queried_object_id() );
 		if ( ! empty( $cats ) ) {
-			$cat = current( $cats )->name;
-		} else {
-			$cat = '投稿';
+		    $title .= sprintf( '%s %s ', current( $cats )->name, $sep );
 		}
-		$title .= "$cat {$sep} ";
+	} elseif ( is_singular( 'series' ) ) {
+	    // 作品集の場合は電子書籍だったら電子書籍
+        $label = \Hametuha\Model\Series::get_instance()->get_status( get_queried_object_id() ) ? '電子書籍' : '作品集';
+		$title .= sprintf( '%s %s ', $label, $sep );
 	} elseif ( is_ranking() ) {
 		$title = ranking_title() . " {$sep} ";
 	} elseif ( is_singular( 'info' ) ) {
@@ -33,8 +39,6 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		$title .= "告知 {$sep} ";
 	} elseif ( is_singular( 'anpi' ) ) {
 		$title .= "安否情報 {$sep} ";
-	} elseif ( is_singular( 'series' ) ) {
-		$title .= "作品集 {$sep} ";
 	} elseif ( is_singular( 'ideas' ) ) {
 		$title .= "アイデア {$sep} ";
 	} elseif ( is_post_type_archive( 'ideas' ) ) {
@@ -84,7 +88,6 @@ function _hametuha_favicon() {
 	<link rel="shortcut icon" href="<?= get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico"/>
 	<?php
 }
-
 add_action( 'admin_head', '_hametuha_favicon' );
 add_action( 'wp_head', '_hametuha_favicon' );
 add_action( 'amp_post_template_head', '_hametuha_favicon' );
@@ -155,7 +158,7 @@ add_action( 'wp_head', function () {
 
 	global $wp_query;
 
-	// はメニューのときだけ画像を設定
+	// はめにゅーのときだけ画像を設定
 	if ( is_hamenew() ) {
 		$image = get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png?201608';
 	}

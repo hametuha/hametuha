@@ -1,1 +1,0 @@
-{"version":3,"sources":["hashboard/status-holder.js"],"names":["$","jQuery"],"mappings":"CAEA,SAAWA,GAET,cAGCC","file":"../../hashboard/status-holder.js","sourcesContent":["/*global Materialize: false*/\n\n(function ($) {\n\n  'use strict';\n  \n\n})(jQuery);\n"]}

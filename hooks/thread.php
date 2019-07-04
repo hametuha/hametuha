@@ -95,7 +95,7 @@ add_filter( 'hamethread_new_thread_post_params', function( $args ) {
  * Allow anonymous post.
  */
 add_filter( 'hamethread_new_thread_post_arg', function( array $args, WP_REST_Request $request ) {
-    if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = get_anonymous_user() ) ) {
+    if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
         $args['post_author'] = $anonymous->ID;
     }
     return $args;
@@ -123,7 +123,7 @@ add_filter( 'hamethread_default_subscribers', function( array $subscribers, $pos
 add_action( 'hamethread_new_thread_inserted', function( $post_id, WP_REST_Request $request ) {
     $post = get_post( $post_id );
     // If anonymous, mark ID.
-	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = get_anonymous_user() ) && $post->post_author == $anonymous->ID ) {
+	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) && $post->post_author == $anonymous->ID ) {
         update_post_meta( $post->ID, '_anonymous_author', get_current_user_id() );
     }
     // Send slack notification.
@@ -202,7 +202,7 @@ add_action( 'hametuha_after_whole_body', function() {
  * Post comment.
  */
 add_filter( 'hamethread_new_comment_params', function( array $params, WP_REST_Request $request ) {
-	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = get_anonymous_user() ) ) {
+	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
 		$params = array_merge( $params, [
 			'comment_author'       => $anonymous->display_name,
 			'comment_author_email' => $anonymous->user_email,
@@ -217,7 +217,7 @@ add_filter( 'hamethread_new_comment_params', function( array $params, WP_REST_Re
  * Save original author comment.
  */
 add_action( 'hamethread_new_comment_inserted', function( $comment_id, array $comment_param, WP_REST_Request $request ) {
-	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = get_anonymous_user() ) ) {
+	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
         update_comment_meta( $comment_id, '_anonymous_author', get_current_user_id() );
     }
 }, 10, 3 );
@@ -226,7 +226,7 @@ add_action( 'hamethread_new_comment_inserted', function( $comment_id, array $com
  * Remove anonymous user from subscribers.
  */
 add_filter( 'hamethread_subscribers', function( $subscribers, $post ) {
-    if ( $anonymous = get_anonymous_user() ) {
+    if ( $anonymous = hametuha_get_anonymous_user() ) {
         $subscribers = array_filter( $subscribers, function( $subscriber ) use ( $anonymous ) {
             return $subscriber != $anonymous->ID;
         } );

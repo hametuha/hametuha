@@ -37,6 +37,17 @@ function is_series_finished( $post = null ) {
 }
 
 /**
+ * Returns multiple author
+ *
+ * @param null|int|WP_Post $series
+ * @return WP_User[]
+ */
+function hametuha_has_multiple_authors( $series = null ) {
+	$series = get_post( $series );
+
+}
+
+/**
  * シリーズに属している場合にシリーズページへのリンクを返す
  *
  * @param string $pre
@@ -127,6 +138,7 @@ function is_series_price_unmatch( $post = null ) {
 /**
  * Get all user for series
  *
+ * @deprecated
  * @param null|WP_Post|int $post
  *
  * @return array
@@ -134,7 +146,7 @@ function is_series_price_unmatch( $post = null ) {
 function get_series_authors( $post = null ) {
 	$post = get_post( $post );
 
-	return Series::get_instance()->get_authors( $post->ID );
+	return \Hametuha\Model\Collaborators::get_instance()->get_published_collaborators( $post->ID );
 }
 
 /**
@@ -193,140 +205,4 @@ function hametuha_series_hide( $content ) {
 	return $content;
 }
 
-/**
- * 投稿リストにカラムを追加
- */
-add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
-	$new_columns = [];
-	foreach ( $columns as $key => $val ) {
-		switch ( $post_type ) {
-			case 'news':
-				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
-					$new_columns['thumbnail'] = 'アイキャッチ';
-				}
-				break;
-			case 'series':
-				if ( 'author' == $key ) {
-					$val = '編集者';
-					if ( current_user_can( 'edit_others_posts' ) ) {
-						$new_columns['menu_order'] = '順';
-					}
-				}
-				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
-					$new_columns['thumbnail'] = '表紙画像';
-					$new_columns['count']        = '作品数';
-					$new_columns['sales_status'] = '販売状況';
-				}
-				break;
-			case 'post':
-				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
-					$new_columns['series'] = '作品集';
-				}
-				break;
-			default:
-				// Do nothing
-				break;
-		}
-	}
-	if ( isset( $new_columns['menu_order'] ) ) {
-		// menu_orderがカラムに存在したら、ソート順を追加
-		add_filter( 'manage_edit-series_sortable_columns', function( $sortable_columns ) {
-			$sortable_columns['menu_order'] = [ 'menu_order', false ];
-			return $sortable_columns;
-		}, 10, 3 );
-	}
-	if ( $new_columns ) {
-		$columns = $new_columns;
-	}
-
-	return $columns;
-}, 10, 2 );
-
-
-/**
- * 投稿リストのカラムを出力
- */
-add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
-	switch ( $column ) {
-		case 'menu_order':
-			$order = get_post( $post_id )->menu_order;
-			if ( 99 < $order ) {
-				$color = 'red';
-			} elseif ( 9 < $order ) {
-				$color = 'green';
-			} elseif ( 0 < $order ) {
-				$color = 'black';
-			} else {
-				$color = 'lightgrey';
-			}
-			printf( '<span style="color: %s">%s</span>', $color, number_format( $order ) );
-			break;
-		case 'thumbnail':
-			if ( has_post_thumbnail( $post_id ) ) {
-				echo get_the_post_thumbnail( $post_id, 'thumbnail', [ 'class' => 'post-list-thumbnail' ] );
-			} else {
-				printf( '<img src="%s/assets/img/dammy/300.png" class="post-list-thumbnail" />', get_template_directory_uri() );
-			}
-			break;
-		case 'count':
-			$total = Series::get_instance()->get_total( $post_id );
-			if ( $total ) {
-				if ( Series::get_instance()->is_finished( $post_id )  ) {
-					printf( '<span style="color: #a1de9e;"> 完結（%s作品）</span>', number_format( $total ) );
-				} else {
-					printf( '連載中（%s作品）', number_format( $total ) );
-				}
-			} else {
-				echo '<span style="color: lightgrey;">登録なし</span>';
-			}
-			break;
-		case 'sales_status':
-			$status = Series::get_instance()->get_status( $post_id );
-			$extra = '';
-			switch ( $status ) {
-				case 2:
-					$color = 'green';
-					break;
-				case 1:
-					$color = 'orange';
-					if ( Series::get_instance()->validate( $post_id ) ) {
-						$extra = '<strong style="color: red">（不備あり）</strong>';
-					}
-					break;
-				default:
-					$color = 'lightgrey';
-					break;
-			}
-			$secret = '';
-			if ( hametuha_is_secret_book( $post_id ) ) {
-				$secret = '- <strong>シークレット</strong>';
-			}
-			printf( "<span style='color: %s'>%s%s</span>%s", $color, Series::get_instance()->status_label[ $status ], $extra, $secret );
-			if ( $asin = Series::get_instance()->get_asin( $post_id ) ) {
-				echo "<code>{$asin}</code>";
-			}
-			break;
-		case 'series':
-			$post = get_post( $post_id );
-			if ( $post->post_parent && ( $parent = get_post( $post->post_parent ) ) ) {
-				// 親がある
-				if ( current_user_can( 'edit_post', $parent->ID ) ) {
-					$url = admin_url( "post.php?post={$parent->ID}&action=edit" );
-				} else {
-					$url = get_permalink( $parent );
-				}
-				printf( '<a href="%s">%s</a>', esc_url( $url ), get_the_title( $parent ) );
-			} else {
-				// なし
-				echo '<span style="color: #d3d3d3">--</span>';
-			}
-			break;
-		default:
-			// Do nothing.
-			break;
-	}
-}, 10, 2 );
 

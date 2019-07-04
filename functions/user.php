@@ -18,6 +18,29 @@ function hametuha_user_name() {
 }
 
 /**
+ * Get author's name.
+ *
+ * @param null|int|WP_Post $post
+ * @return string
+ */
+function hametuha_author_name( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		$user = hametuha_get_anonymous_user();
+	} else {
+		$user = get_userdata( $post->post_author );
+	}
+	switch ( $post->post_type ) {
+		case 'series':
+			$owner_label = get_post_meta( $post->ID, '_owner_label', true );
+			$display_name = get_post_meta( $post->ID, '_owner_label', true ) ?: $user->display_name;
+			return $display_name;
+		default:
+			return $user->display_name;
+	}
+}
+
+/**
  * Get author's detail page URL.
  *
  * @param int $user_id

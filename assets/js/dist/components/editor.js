@@ -1,2 +1,0 @@
-!function(e){"use strict";function t(){setTimeout(function(){var t=e(".mce-tinymce").css("border","none").parent().outerHeight();t+=-e(".mce-menubar.mce-toolbar").outerHeight(),t-=e(".mce-toolbar-grp").outerHeight(),t-=1,e(".mce-edit-area").height(t)},200)}e(window).on("resize",function(){t()})}(jQuery);
-//# sourceMappingURL=../map/components/editor.js.map
