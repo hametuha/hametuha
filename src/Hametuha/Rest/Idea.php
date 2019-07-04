@@ -559,7 +559,7 @@ class Idea extends RestTemplate {
 	 *
 	 * @return mixed
 	 */
-	public function the_posts( $posts, \WP_Query &$wp_query ) {
+	public function the_posts( $posts, \WP_Query $wp_query ) {
 		if ( false !== array_search( $wp_query->get( 'post_type' ), [ '', 'any', 'ideas' ] ) ) {
 			$posts_to_retrieve = [];
 			foreach ( $posts as $post ) {
