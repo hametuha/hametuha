@@ -306,7 +306,7 @@ SQL;
 			}
 			$user->label = $this->get_collaborator_type( $user->collaboration_type );
 			if ( isset( $users[ $user->ID ] ) ) {
-				$user[ $user->ID ] = $user;
+				$users[ $user->ID ] = $user;
 			} else {
 				$users[] = $user;
 			}
