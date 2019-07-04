@@ -133,7 +133,7 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			</tr>
 			<?php
 		endif;
-		$address = get_the_author_meta( '_publisher_address' ) ?: '〒107-0062 東京都港区南青山2-11-13 南青山ビル4F';
+		$address = get_the_author_meta( '_publisher_address' ) ?: '〒104-0061 東京都中央区銀座1-3-3 G1ビル7F 1211号';
 		if ( 'no' !== $address ) :
 			?>
 			<tr>
