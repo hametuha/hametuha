@@ -118,7 +118,17 @@ $query = new WP_Query( [
 		</div>
 		<!-- //.doujin_row--base -->
 
-		<?php get_template_part( 'parts/list', 'kdp' ); ?>
+        <hr />
+        <div class="doujin__row doujin__row--ebooks">
+            <div class="container">
+
+                <h2 class="text-center mb-4"><small>Published eBooks</small><br />電子書籍</h2>
+
+				<?php hameplate( 'templates/recommendations', '', [
+					'author' => $this->doujin->ID,
+				] ) ?>
+            </div>
+        </div>
 
 		<div class=" doujin__row doujin__row--activity">
 			<div class="container">

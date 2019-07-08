@@ -37,14 +37,55 @@ function is_series_finished( $post = null ) {
 }
 
 /**
- * Returns multiple author
+ * Convert post query arguments.
  *
- * @param null|int|WP_Post $series
- * @return WP_User[]
+ * @param array $args
+ * @return array
  */
-function hametuha_has_multiple_authors( $series = null ) {
-	$series = get_post( $series );
+function hametuha_series_args( $args ) {
+	$args = wp_parse_args( $args, [
+		'excludes'       => 0,
+		'author'         => 0,
+		'author_not'     => 0,
+		'posts_per_page' => -1,
+		'paged'          => 1,
+	] );
+	$query_args = [
+		'post_type'      => 'series',
+		'post_status'    => 'publish',
+		'meta_query'     => [
+			[
+				'key'   => '_kdp_status',
+				'value' => 2,
+			],
+		],
+		'paged'          => $args['paged'],
+		'posts_per_page' => $args['posts_per_page'],
+		'orderby' => [
+			'menu_order' => 'DESC',
+			'date'       => 'DESC',
+		],
+	];
+	if ( $args['excludes'] ) {
+		$query_args['post__not_in'] = array_map( 'intval', (array) $args['excludes'] );
+	}
+	if ( $args['author'] ) {
+		$query_args['author'] = $args['author'];
+	}
+	if ( $args['author_not'] ) {
+		$query_args['author__not_in'] = $args[ 'author_not' ];
+	}
+	return $query_args;
+}
 
+/**
+ *
+ *
+ * @param array $args
+ * @return WP_Query
+ */
+function hametuha_series_query( $args ) {
+	return new WP_Query( hametuha_series_args( $args ) );
 }
 
 /**

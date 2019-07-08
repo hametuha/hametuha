@@ -69,10 +69,14 @@
     &--author,
     &--share,
     &--review,
-    &--testimonials,
-    &--list{
-      color: #aaa;
-      text-shadow: 1px 1px 2px #fff;
+    &--testimonials
+    {
+      color: #444;
+    }
+    &--amazon,
+    &--list,
+    &--related{
+      color: #999;
     }
     &--author,
     &--list{

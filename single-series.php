@@ -388,7 +388,7 @@
 			<div class="row">
 				<div class="col-xs-12">
 
-					<h2 class="series__title--share text-center">
+					<h2 class="series__title--amazon text-center">
 						<small class="series__title--caption">Buy at Amazon</small>
 						購入する
 					</h2>
@@ -435,6 +435,34 @@
 	<?php endif; ?>
 
 	<?php get_template_part( 'parts/share', 'big' ) ?>
+
+    <section class="series__row series__row--related" id="series-related">
+
+        <div class="container series__inner">
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="series__title--related text-center">
+                        <small class="series__title--caption">Recommendations</small>
+                        おすすめ書籍
+                    </h2>
+                </div>
+            </div><!-- //.series__title--related -->
+
+            <?php hameplate( 'templates/recommendations', '', [
+                'excludes' => get_the_ID(),
+                'author'   => get_the_author_meta( 'ID' ),
+                'fill'     => true,
+            ] ) ?>
+
+            <div class="mt-1 text-center">
+                <a class="btn btn-lg btn-amazon" href="<?= home_url( 'kdp' ) ?>">
+                    <i class="icon-amazon"></i> もっと見る
+                </a>
+            </div>
+
+        </div>
+    </section><!-- //.series__row--related -->
 
 </div><!-- //.series__wrap -->
 
