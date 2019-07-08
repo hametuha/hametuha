@@ -278,9 +278,7 @@
 
 			<div class="row series__testimonials--container">
 				<hr/>
-				<?php
-				if ( $ratings ) :
-					?>
+				<?php if ( $ratings ) : ?>
 					<p class="series__testimonials--stars text-center" itemprop="aggregateRating" itemscope
 					   itemtype="http://schema.org/AggregateRating">
 						<?php
@@ -300,28 +298,22 @@
 					</p>
 					<hr/>
 				<?php endif; ?>
-				<ol id="series-testimonials-list" class="col-xs-12 serires__testimonials--list">
-					<?php $i = 0;
-					foreach ( $all_reviews['rows'] as $review ) :
-						?>
+
+				<ol id="series-testimonials-list" class="testimonial-list">
+					<?php foreach ( $all_reviews['rows'] as $review ) : ?>
 						<li itemprop="review" itemscope itemtype="http://schema.org/Review"
-							class="series__testimonials--item col-sm-4 col-xs-12<?php
-							if ( $i > 2 ) {
-								echo ' hidden';
-							} ?>">
+							class="testimonial-item">
 							<meta itemprop="datePublished" content="<?= $review->comment_date ?>">
 							<?php if ( $review->twitter ) : ?>
 								<?php show_twitter_status( $review->comment_author_url ) ?>
 								<meta itemprop="author" content="<?= preg_replace('@https://twitter.com/([^/]+)/.+@u', '@$1', $review->comment_author_url) ?>">
 							<?php else : ?>
-								<blockquote>
-									<i class="icon-quotes-left"></i>
-
+								<blockquote class="testimonial-text">
 									<div itemprop="reviewBody">
 										<?= wpautop( apply_filters( 'get_comment_text', ( get_comment_meta( $review->comment_ID, 'comment_excerpt', true ) ?: $review->comment_content ), $review ) ); ?>
 									</div>
 									<?php if ( $review->rank ) : ?>
-										<p class="series__testimonials--rating text-center" itemprop="reviewRating"
+										<p class="testimonial-rating" itemprop="reviewRating"
 										   itemscope itemtype="http://schema.org/Rating">
 											<?php for ( $j = 0; $j < $review->rank; $j ++ ) : ?>
 												<i class="icon-star6"></i>
@@ -346,7 +338,7 @@
 										$url = '';
 									}
 									?>
-									<cite>
+									<cite class="testimonial-source">
 										<?php if ( $url ) : ?>
 											<a href="<?= esc_url( $url ) ?>" rel="nofollow" target="_blank"
 											   itemprop="author">
@@ -357,18 +349,12 @@
 											<span itemprop="author"><?= esc_html( $review->comment_author ) ?></span>
 										<?php endif; ?>
 									</cite>
-									<i class="icon-quotes-right"></i>
 								</blockquote>
 							<?php endif; ?>
 						</li>
-						<?php $i ++; endforeach; ?>
+						<?php endforeach; ?>
 				</ol>
 				<p class="text-center">
-					<?php if ( count( $all_reviews['rows'] ) > 3 ) : ?>
-						<a class="btn btn-warning btn-lg" href="#series-testimonials-list">
-							<i class="icon-folder-plus4"></i> もっと見る
-						</a>
-					<?php endif; ?>
 
 					<?php if ( is_user_logged_in() ) : ?>
 						<a class="review-creator btn btn-primary btn-lg" rel="nofollow"
