@@ -120,6 +120,11 @@ class Testimonial extends RestTemplate {
 			'post'         => $series,
 			'testimonials' => $this->series->get_reviews( $series->ID, false, $paged, 10 ),
 		] );
+		// TODO: Remove body class.
+		add_filter( 'body_class', function( $classes ) {
+			$classes[] = 'no-modal-background';
+			return $classes;
+		} );
 		$this->set_template( 'list' );
 		$this->response();
 	}

@@ -9,3 +9,9 @@
   }
 }
 
+// TODO: Temporary avoid overwrapping.
+.no-modal-background{
+  .modal-backdrop{
+    display: none !important;
+  }
+}
