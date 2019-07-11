@@ -191,6 +191,45 @@ function get_series_authors( $post = null ) {
 }
 
 /**
+ * Get series genre.
+ *
+ * @param null|int|WP_Post $post
+ * @return WP_Term[]
+ */
+function hametuha_get_series_categories( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return [];
+	}
+	global $wpdb;
+	$query = <<<SQL
+		SELECT t.*, tt.*
+		FROM {$wpdb->terms} AS t
+		INNER JOIN {$wpdb->term_taxonomy} AS tt
+		ON t.term_id = tt.term_id
+		INNER JOIN (
+		    SELECT tr.term_taxonomy_id,
+		           COUNT( tr.object_id ) as `post_count`
+		    FROM {$wpdb->term_relationships} AS tr
+		    LEFT JOIN {$wpdb->posts} AS p
+		    ON tr.object_id = p.ID
+		    WHERE p.post_type = 'post'
+		      AND p.post_status IN ( 'publish', 'private' )
+		      AND p.post_parent = %d
+		    GROUP BY tr.term_taxonomy_id
+		) AS relationships 
+		ON relationships.term_taxonomy_id = tt.term_taxonomy_id
+		WHERE tt.taxonomy = 'category'
+		ORDER BY relationships.post_count DESC
+SQL;
+	$results = $wpdb->get_results( $wpdb->prepare( $query, $post->ID ) );
+	return array_map( function( $term ) {
+		return new WP_Term( $term );
+	}, $results );
+
+}
+
+/**
  * Show series range
  *
  * @param null|WP_Post|int $post

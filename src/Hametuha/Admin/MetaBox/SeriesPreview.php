@@ -47,6 +47,11 @@ class SeriesPreview extends SeriesBase {
 					奥付
 				</a>
 			</li>
+            <li>
+                <a href="<?= home_url( "epub/preview/ads/{$post->ID}", 'https' ) ?>" target="epub-preview">
+                    近刊書籍一覧
+                </a>
+            </li>
 		</ol>
 		<hr/>
 		<?php

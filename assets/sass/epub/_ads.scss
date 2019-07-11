@@ -1,0 +1,42 @@
+.content--ads{
+
+  .ads{
+    &-title{
+      font-size: 1.8em;
+    }
+    &-category{
+      font-size: 0.5em;
+      display: inline-block;
+      color: #fff;
+      background-color: #000;
+      .ltr & {
+        padding: 0.25em 0.5em;
+        margin-left: 0.5em;
+      }
+      .rtl & {
+        padding: 0.5em 0.25em;
+        margin-top: 0.5em;
+      }
+    }
+
+    &-author{
+      font-size: 1.5em;
+      text-align: right;
+    }
+
+    &-lead{
+      $border-style: 3px double #000;
+      .ltr & {
+        border-bottom: $border-style;
+        padding-bottom: 2em;
+        margin: 1em 0 2em;
+      }
+      .rtl & {
+        border-left: $border-style;
+        padding-left: 2em;
+        margin: 0 1em 0 2em;
+      }
+    }
+  }
+
+}

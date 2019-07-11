@@ -312,6 +312,11 @@ class EPub extends RestTemplate {
 					'html'  => $this->get_content( $series_id, $series, $key, 'ltr' ),
 				];
 			}
+			// Add ads
+			$html[ 'ads' ] = [
+				'label' => '電子書籍近刊',
+				'html'  => $this->get_content( $series_id, $series, 'ads', $direction ),
+			];
 			// Register all html as toc
 			foreach ( $html as $key => $h ) {
 				// Create TOC
