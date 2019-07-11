@@ -1,4 +1,5 @@
 $link-color: #2e455d;
+$visited-color: #9d80be;
 $active-color: #b4423d;
 $thic-border: 10px solid #444;
 $thin-border: 1px solid #ccc;
@@ -24,10 +25,10 @@ body{
   &-left{
     text-align: left;
   }
-  &-text-right{
+  &-right{
     text-align: right;
   }
-  &-text-center{
+  &-center{
     text-align: center;
   }
 }
@@ -68,6 +69,10 @@ a{
     color: $link-color;
     text-decoration: underline;
   }
+  &:visited{
+    color: $visited-color;
+    text-decoration: underline;
+  }
   &:hover{
     color: lighten($link-color, 10);
     text-decoration: underline;
@@ -77,8 +82,12 @@ a{
     text-decoration: none;
   }
   .rtl &{
-    &:link, &:visited{
+    &:link{
       color: $link-color;
+      text-decoration: overline;
+    }
+    &:visited{
+      color: $visited-color;
       text-decoration: overline;
     }
     &:hover{

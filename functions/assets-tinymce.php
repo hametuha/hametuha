@@ -36,7 +36,7 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 	if ( ! isset( $initArray['cache_suffix'] ) ) {
 		$initArray['cache_suffix'] = '?foo=var';
 	}
-	$initArray['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'Ymd', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
+	$initArray['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'YmdHis', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
 
 	//選択できるブロック要素を変更
 	$initArray['block_formats'] = 'Paragraph=p;大見出し=h2;中見出し=h3;小見出し=h4;最小見出し=h5;整形済みテキスト=pre';
@@ -78,6 +78,11 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 				'title' => 'コラム',
 				'block' => 'aside',
 				'wrapper' => true,
+			],
+			[
+				'title' => 'ドロップキャップ',
+				'block' => 'p',
+				'classes' => 'has-drop-cap',
 			],
 		    [
 		    	'title' => 'ROW',

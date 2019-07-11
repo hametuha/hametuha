@@ -10,6 +10,18 @@
     }
   }
 
+  .has-drop-cap{
+    text-indent: 0 !important;
+    &:first-letter{
+      line-height: 1;
+      font-size: 2.4em;
+      float: left;
+      display: inline-block;
+      padding:  0.2em 0.2em 0.2em 0;
+      margin: 0;
+    }
+  }
+
   // 共通要素
   .alignleft{
     float: left;
@@ -204,10 +216,6 @@
       &:first-child{
         margin-top: 0;
       }
-      &.has-drop-cap:first-letter{
-        font-size: 3em;
-        line-height: 1;
-      }
     }
     // 見出し
     h1, h2, h3, h4, h5, h6{
@@ -385,10 +393,11 @@
       font-size: 2em;
     }
     h2{
+      margin-top: 3em;
       color: $clear-font;
       font-size: 1.8em;
       padding-bottom: 0.5em;
-      border-bottom: 3px double $clear-font
+      border-bottom: 3px double $clear-font;
     }
     h3{
       font-size: 1.4em;

@@ -1,8 +1,15 @@
 .content--script{
 
   $text-base: #242424;
-
   color: $text-base;
+
+  // Block
+  .ltr &{
+    padding-bottom: 2em;
+  }
+  .rtl &{
+    padding-left: 2em;
+  }
 
   // Basic Typography
   @extend %serif;
@@ -11,7 +18,6 @@
   text-justify: inter-ideograph;
 
   // Text decoration
-
   strong{
     font-family: sans-serif;
     font-weight: bold;
@@ -67,17 +73,20 @@
     &.no-indent{
       text-indent: 0;
     }
-  }
-
-  .text{
-    &-center{
-      text-align: center;
-    }
-    &-right{
-      text-align: right;
-    }
-    &-left{
-      text-align: left;
+    &.has-drop-cap{
+      text-indent: 0;
+      &:first-letter{
+        font-size: 2.4em;
+        float: left;
+        display: inline-block;
+        line-height: 1;
+        .ltr &{
+          padding: 0.2em 0.2em 0.2em 0;
+        }
+        .rtl &{
+          padding: 0 0.2em 0.2em 0.2em;
+        }
+      }
     }
   }
 
@@ -207,14 +216,6 @@
     }
   }
 
-  // Image
-  img{
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-  }
-
   // Headers
   h1, h2, h3, h4, h5, h6{
     clear: both;
@@ -232,32 +233,36 @@
     color: #fff;
   }
   h2{
-    $h2-border: 1px dotted #444;
+    $h2-border: 3px double #444;
     font-size: 1.8em;
-    border-bottom: $h2-border;
-    padding-bottom: 0.5em;
-    .rtl &{
-      padding-bottom: 0;
+    .ltr &{
+      border-bottom: $h2-border;
+      padding-bottom: 0.5em;
+      margin-top: 3em;
+    }
+    .rtl & {
+      margin-right: 3em;
       padding-left: 0.5em;
-      border-bottom: none;
       border-left: $h2-border;
     }
   }
   h3{
     $h3-border:  5px #666 solid;
     font-size: 1.5em;
-    border-left: $h3-border;
-    padding-left: 0.25em;
+    .ltr &{
+      border-left: $h3-border;
+      padding-left: 0.5em;
+
+    }
     .rtl &{
-      border-left: none;
-      padding-left: 0;
-      padding-top: 0.25em;
       border-top: $h3-border;
+      padding-top: 0.5em;
     }
   }
   h4{
     font-size: 1.2em;
     color: #666;
+    @extend %sans;
   }
   h5{
     font-size: 1.1em;
@@ -269,59 +274,99 @@
   }
 
   // WP Required
+  // Image
+  img{
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+  }
+  // Avoid overflow.
+  .wp-caption,
+  img{
+    max-height: 100%;
+    max-width: 100%;
+  }
+  .wp-caption-text{
+    color: #888;
+    font-size: 0.85em;
+  }
+  // Alignment
   .alignright{
     float: right;
+    clear: left;
+    .ltr &{
+      margin: 1em 0 1em 2em;
+    }
+    .rtl &{
+      margin: 2em 1em 0 1em;
+    }
   }
   .alignleft{
     float: left;
+    clear: right;
+    .ltr &{
+      margin: 1em 2em 1em 0;
+    }
+    .rtl &{
+      margin: 0 1em 2em 1em;
+    }
+  }
+  // Limit alignment size when floating.
+  img.alignleft,
+  .alignleft img,
+  img.alignright,
+  .alignright img{
+    .ltr & {
+      max-width: 33vw;
+    }
+    .rtl & {
+      max-height: 33vh;
+    }
+  }
+  img.size-large{
+    .ltr &{
+      max-width: 80vw;
+    }
+    .rtl &{
+      max-height: 80vh;
+    }
+  }
+  img.size-medium{
+    .ltr &{
+      max-width: 33vw;
+    }
+    .rtl &{
+      max-height: 33vh;
+    }
+  }
+  img.size-thumbnail,
+  img.size-small{
+    .ltr &{
+      max-width: 20vw;
+    }
+    .rtl &{
+      max-height: 20vh;
+    }
   }
   .alignnone{
     float: none;
   }
   .aligncenter{
     float: none;
-  }
-  .wp-caption-text{
-    color: #888;
-    font-size: 0.85em;
-  }
-  .ltr &{
-    padding-bottom: 2em;
-    .wp-caption, img{
-      max-width: 100%;
-    }
-    .aligncenter{
-      display: block;
+    clear: both;
+    display: block;
+    .ltr & {
       margin: 1em auto;
     }
-    .alignleft, .alignright{
-      max-width: 50%;
-    }
-  }
-  .rtl &{
-    .wp-caption, img{
-      max-height: 100%;
-    }
-    .aligncenter{
-      margin: auto 1em;
-    }
-    .alignleft, .alignright{
-      max-height: 50%;
-    }
-    .alignleft, .alignright, .alignnone, .aligncenter{
-      margin: 1em;
-    }
-    .alignleft{
-      margin-top: 0;
-    }
-    .alignright{
-      margin-bottom: 0;
-    }
-    .aligncenter{
+    .rtl &{
       margin: auto 1em;
     }
   }
-
+  // Block elements always clear float.
+  blockquote, pre, hr, table{
+    clear: both;
+  }
 }
 
 
@@ -348,14 +393,4 @@
     }
   }
 
-}
-
-// 横書きの場合
-.ltr{
-  .content--script{
-    padding-bottom: 2em;
-    .alignleft, .alignright{
-      float: none;
-    }
-  }
 }
