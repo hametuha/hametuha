@@ -292,6 +292,9 @@ class UserSales extends Model {
 		$return    = [];
 		foreach ( $sales as $sale ) {
 			$prefix = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
+			if ( 'JPY' !== $sale->currency ) {
+				$prefix .= sprintf( '（売上%s%s）', number_format( $sale->sub_total, 2 ), $sale->currency );
+			}
 			$created = date_i18n( 'Y-m-d H:i:s', strtotime( sprintf( '%04d-%02d-15 00:00:00', $year, $month ) . ' + 1 month' ) );
 			$royalties = Calculator::kdp_royalty( $sale, $prefix );
 			// Calculate price for collaborators.
@@ -304,6 +307,7 @@ class UserSales extends Model {
 						'unit'      => $unit,
 						'total'     => $total,
 						'deducting' => $deducting,
+						'currency'  => $sale->currency,
 					];
 				}
 			} else {
@@ -317,6 +321,7 @@ class UserSales extends Model {
 						'tax'         => $tax,
 						'deducting'   => $deducting,
 						'description' => $label,
+						'currency'  => $sale->currency,
 					] );
 					if ( $result && !is_wp_error( $result ) ) {
 						$success++;

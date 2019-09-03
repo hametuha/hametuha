@@ -156,6 +156,7 @@ function is_last_page() {
 }
 
 /**
+ * 収録作品数を返す
  *
  * @global WP_Query $wp_query
  * @global wpdb $wpdb

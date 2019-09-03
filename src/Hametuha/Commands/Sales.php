@@ -3,6 +3,7 @@
 namespace Hametuha\Commands;
 
 use cli\Table;
+use Hametuha\Master\Calculator;
 use Hametuha\Model\UserSales;
 use Hametuha\Sharee\Models\RevenueModel;
 use WPametu\Utility\Command;
@@ -39,10 +40,10 @@ class Sales extends Command {
 			}
 			$table = new Table();
 			$counter = 0;
-			$table->setHeaders( [ '#', '適用', 'ユーザー', '数', '小計', '源泉徴収' ] );
+			$table->setHeaders( [ '#', '適用', 'ユーザー', '数', '小計', '源泉徴収', '通貨' ] );
 			foreach ( $result as $sales ) {
 				$counter++;
-				$table->addRow( [ $counter, $sales->label, get_the_author_meta( 'display_name', $sales->user_id ) ?: '削除されたユーザー', $sales->unit, $sales->total, $sales->deducting ] );
+				$table->addRow( [ $counter, $sales->label, get_the_author_meta( 'display_name', $sales->user_id ) ?: '削除されたユーザー', $sales->unit, $sales->total, $sales->deducting, $sales->currency ] );
 			}
 			$table->display();
 		} else {
@@ -54,6 +55,29 @@ class Sales extends Command {
 			update_option( 'kdp_sales_record', $record, false );
 			self::s( sprintf( '%d of %d records were saved.', $success, $total ) );
 		}
+	}
+
+	/**
+	 * Get currency exchange rate.
+	 *
+	 * ## OPTIONS
+	 *
+	 * : <amount>
+	 *   Amount of currency.
+	 *
+	 * : <currency>
+	 *   Currency.
+	 *
+	 * @synopsis <amount> <currency>
+	 * @param array $args
+	 */
+	public function rate( $args ) {
+		list( $amount, $currency ) = $args;
+		$rate = Calculator::get_exchange_ratio( $currency );
+		if ( is_wp_error( $rate ) ) {
+			\WP_CLI::error( $rate->get_error_message() );
+		}
+		\WP_CLI::success( sprintf( '%sJPY', number_format_i18n( $rate * $amount ) ) );
 	}
 
 	/**

@@ -205,7 +205,7 @@ class Sales extends Model {
 		$sales = UserSales::get_instance();
 		list( $start, $end ) = $sales->get_range( $year, $month );
 		$result = $this
-			->select( 'p.post_author as user_id, p.post_title as label, p.ID as post_id, s.asin, SUM(s.unit) as unit, SUM(s.royalty) as sub_total' )
+			->select( 'p.post_author as user_id, p.post_title as label, p.ID as post_id, s.asin, SUM(s.unit) as unit, SUM(s.royalty) as sub_total, s.currency' )
 			->from( "{$this->table} as s" )
 			->join( "{$this->db->postmeta} as pm", "pm.meta_key = '_asin' AND pm.meta_value = s.asin" )
 			->join( "{$this->db->posts} as p", 'p.ID = pm.post_id' )
@@ -214,7 +214,7 @@ class Sales extends Model {
 				's.date <= %s'    => $end,
 				's.royalty != %d' => 0,
 			] )
-			->group_by( 's.asin' )
+			->group_by( 's.asin, s.currency' )
 			->result();
 
 		return array_filter( $result, function ( $row ) {
