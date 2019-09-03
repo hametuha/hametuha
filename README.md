@@ -1,7 +1,9 @@
 hametuha
 ========
 
-[破滅派](http://hametuha.com)のWordPressテーマです。
+[破滅派](https://hametuha.com)のWordPressテーマです。
+
+[![Travis CI Master](https://travis-ci.org/hametuha/hametuha.svg?branch=master)](https://travis-ci.org/hametuha/hametuha)
 
 ## 貢献の方法
 
@@ -33,7 +35,7 @@ cd hametuha
 # npm をインストール
 npm install
 # ビルドを行うと、JSがnode_modulesからコピーされます。
-npm run build
+npm run package
 # ファイルを監視して、変更がある度にコンパイルします。
 npm run watch
 # ブラウザに表示します。
