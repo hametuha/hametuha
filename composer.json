@@ -4,7 +4,8 @@
   "minimum-stability": "stable",
   "license": "MIT",
   "scripts": {
-    "dev": "COMPOSER=composer-dev.json composer"
+    "dev": "COMPOSER=composer-dev.json composer",
+    "test": "phpunit"
   },
   "authors": [
     {
