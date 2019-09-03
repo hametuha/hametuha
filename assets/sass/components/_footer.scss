@@ -4,7 +4,6 @@ $nav-padding: 15px;
   &-wrapper {
   }
   &-hametuha{
-    background: $footer-navbar-bg;
     font-size: 60px;
     margin: 0 0 20px;
     border-bottom: 1px solid #000;
@@ -82,7 +81,6 @@ $nav-padding: 15px;
       font-size: 11px;
     }
   }
-
 }
 
 // 投稿ページ
@@ -90,4 +88,3 @@ $nav-padding: 15px;
   background-color: $navbar-default-bg;
   border-top: $navbar-default-border;
 }
-

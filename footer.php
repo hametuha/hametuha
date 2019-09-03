@@ -23,17 +23,12 @@
 						foreach (
 							[
 								'ha'          => [ 'https://hametuha.co.jp', '株式会社破滅派', '' ],
-								'image2'      => [ 'http://hametuha.pics', 'はめぴくっ！', '' ],
-								'googleplus3' => [
-									'https://plus.google.com/b/115001047459194790006/115001047459194790006/about/p/pub',
-									'Google+',
-									'rel="publisher"',
-								],
+								'instragram'  => [ 'https://instagram.com/minico_hametuha' ],
 								'youtube'     => [ 'https://www.youtube.com/user/hametuha', 'Youtube', '' ],
-								'minicome'    => [ 'http://minico.me', 'ミニコme!', '' ],
+								'minicome'    => [ 'https://minico.me', 'ミニコミ通販', '' ],
 								'github3'     => [ 'https://github.com/hametuha/', 'Github', '' ],
 							] as $icon => list(
-							$url, $label, $atts
+							    $url, $label, $atts
 							) ) :
 							?>
 							<li>
