@@ -267,7 +267,7 @@ add_action( 'wp_head', function () {
 	}
 	$desc  = esc_attr( str_replace( "\n", '', $desc ) );
 	$image = str_replace( '://s.', '://', $image );
-	if ( ! $url ) {
+	if ( ! $url || is_wp_error( $url ) ) {
 		return;
 	}
 	$twitters = array_merge( [
