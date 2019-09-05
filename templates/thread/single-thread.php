@@ -47,14 +47,23 @@
 
 						<div class="thread-body col-sm-9 col-xs-12">
 
-							<h1 itemprop="name">
-								<?php if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) : ?>
-                                    <small class="text-success">【解決済み】</small><br />
-								<?php endif; ?>
-                                <?php if ( 'private' === get_post_status() ) : ?>
-                                <i class="fa fa-lock text-warning"></i>
-                                <?php endif; ?>
-                                <?php the_title(); ?>
+							<h1>
+                                <?php
+                                $notices = [];
+								if ( 'private' === get_post_status() ) {
+								    $notices[] = '<small class="text-warning"><i class="fa fa-lock text-warning"></i> 非公開</small>';
+                                }
+								if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) {
+								    $notices[] = '<small class="text-success"><i class="fa fa-check-circle"></i> 解決済み</small>';
+                                }
+								if ( $notices ) {
+								    $notices[] = '<br />';
+								    echo implode( ' ', $notices );
+                                }
+                                ?>
+                                <span class="thread-body-title" itemprop="name">
+                                    <?php the_title(); ?>
+                                </span>
                             </h1>
 							
 							<?php get_template_part( 'parts/meta', 'single' ) ?>

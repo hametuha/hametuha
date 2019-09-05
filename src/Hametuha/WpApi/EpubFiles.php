@@ -183,6 +183,12 @@ class EpubFiles extends WpApi {
 	public function permission_callback( $request ) {
 		$file = $this->files->get_file( $request->get_param( 'file_id' ) );
 		switch ( $request->get_method() ) {
+			case 'GET':
+				if ( 'report' === $request->get_param( 'format' ) ) {
+					return current_user_can( 'edit_post', $file->post_id );
+				} else {
+					return current_user_can( 'get_epub', $file->file_id );
+				}
 			default:
 				return current_user_can( 'get_epub', $file->file_id );
 		}

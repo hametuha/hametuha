@@ -183,7 +183,7 @@ add_filter( 'get_comments_number', function ( $count, $post_id ) {
 			SELECT COUNT(comment_ID) FROM {$wpdb->comments}
 			WHERE comment_post_ID = %d
 			  AND comment_approved = '1'
-			  AND comment_type = ''
+			  AND comment_type IN ( '', 'comment' )
 SQL;
 		$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $post_id ) );
 	}

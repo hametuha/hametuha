@@ -313,10 +313,12 @@ class EPub extends RestTemplate {
 				];
 			}
 			// Add ads
-			$html[ 'ads' ] = [
-				'label' => '電子書籍近刊',
-				'html'  => $this->get_content( $series_id, $series, 'ads', $direction ),
-			];
+			if ( ! hametuha_is_secret_book( $series ) ) {
+				$html[ 'ads' ] = [
+					'label' => '電子書籍近刊',
+					'html'  => $this->get_content( $series_id, $series, 'ads', $direction ),
+				];
+			}
 			// Register all html as toc
 			foreach ( $html as $key => $h ) {
 				// Create TOC
@@ -503,6 +505,12 @@ class EPub extends RestTemplate {
 				$this->title = 'あとがき';
 				if ( empty( $post->post_content ) ) {
 					throw new \Exception( 'あとがきは設定されていません。', 403 );
+				}
+				break;
+			case 'ads':
+				$this->title = '破滅派電子書籍近刊';
+				if ( hametuha_is_secret_book( $post ) ) {
+					throw new \Exception( 'シークレットブックに近刊は表示されません。', 400 );
 				}
 				break;
 			default:

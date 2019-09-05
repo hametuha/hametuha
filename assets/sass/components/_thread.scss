@@ -32,7 +32,7 @@ $carret-size: 20px;
     position: relative;
     margin-top: 0;
     padding: 0.5em;
-    @include border-radius(10px);
+    border-radius: 5px;
     border: 2px solid $thin-border;
     &:before, &:after{
       content: "";
@@ -41,6 +41,8 @@ $carret-size: 20px;
       width: 0;
       height: 0;
       border: $carret-size solid transparent;
+      border-top-width: $carret-size / 2;
+      border-bottom-width: $carret-size / 2;
       top: 15px;
     }
     &:before{
@@ -48,10 +50,21 @@ $carret-size: 20px;
       border-right-color: $thin-border;
     }
     &:after{
-      left: -2 * $carret-size + 2;
+      left: -2 * $carret-size + 4;
       border-right-color: #fff;
     }
-
+    small{
+      font-size: 0.5em;
+      margin-right: 1em;
+      margin-bottom: 0.5em;
+    }
+  }
+  &-title{
+    display: block;
+    font-size: 0.85em;
+    br + &{
+      margin-top: 0.25em;
+    }
   }
   .metadata{
     border-bottom: none;

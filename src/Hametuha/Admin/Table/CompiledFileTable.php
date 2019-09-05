@@ -74,7 +74,6 @@ class CompiledFileTable extends \WP_List_Table {
 				's'      => $this->input->get( 's' ),
 				'p'      => $this->input->get( 'p' ),
 				'author' => get_current_user_id(),
-			    'secret' => true,
 			];
 		}
 		$this->items = $this->files->get_files( $args, 20, max( 1, $this->get_pagenum() ) - 1 );
@@ -98,19 +97,24 @@ class CompiledFileTable extends \WP_List_Table {
 				break;
 			case 'post':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $item->post_id ), get_the_title( $item ) );
-				echo $this->row_actions( [
+				$actions = [
 					'edit'     => sprintf( '<a href="%s">作品集の編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
 					'check'    => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
-					'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
-						'_wpnonce' => wp_create_nonce( 'wp_rest' ),
-					], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
-					'delete'   => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
-					'published' => sprintf(
-						'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
-						$item->file_id,
-						esc_attr( $this->files->meta->get_meta( $item->file_id, 'published' )->updated )
-					),
-				] );
+				];
+				if ( current_user_can( 'publish_epub', $item->post_id ) ) {
+					$actions = array_merge( $actions, [
+						'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
+							'_wpnonce' => wp_create_nonce( 'wp_rest' ),
+						], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
+						'delete' => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
+						'published' => sprintf(
+							'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
+							$item->file_id,
+							esc_attr( $this->files->meta->get_meta( $item->file_id, 'published' )->updated )
+						),
+					] );
+				}
+				echo $this->row_actions( $actions );
 				printf( '<div class="compiled-file-controller"></div>' );
 				break;
 			case 'author':

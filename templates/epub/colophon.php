@@ -2,7 +2,7 @@
 /** @var WP_Post $series */
 /** @var bool $is_vertical */
 /** @var \Hametuha\Rest\EPub $this */
-$publisher = get_the_author_meta( '_publisher_name' );
+$publisher = hametuha_is_secret_book() ? get_the_author_meta( '_publisher_name' ) : '';
 ?>
 <?php get_template_part( 'templates/epub/header' ) ?>
 
@@ -32,12 +32,14 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			<th>書名</th>
 			<td><?php the_title() ?></td>
 		</tr>
+        <?php if ( ! hametuha_is_secret_book() ) : ?>
 		<tr>
 			<th>URL</th>
 			<td>
 				<a class="url" href="<?php the_permalink() ?>"><?php the_permalink() ?></a>（<?php the_time( 'Y年m月d日' ) ?>）
 			</td>
 		</tr>
+		<?php endif; ?>
 		<tr>
 			<th>執筆者</th>
 			<td>
@@ -102,11 +104,14 @@ $publisher = get_the_author_meta( '_publisher_name' );
 	<table class="colophon">
 		<caption>連絡先</caption>
 		<tr>
-			<th>名称</th>
+			<th>発行者</th>
 			<td><?= esc_html( $publisher ) ?: '株式会社破滅派' ?></td>
 		</tr>
 		<?php
-		$tel = get_the_author_meta( '_publisher_tel' ) ?: '050-5532-8327';
+		$tel = '050-5532-8327';
+		if ( hametuha_is_secret_book() ) {
+			$tel = get_the_author_meta( '_publisher_tel' ) ?: $tel;
+        }
 		if ( 'no' !== $tel ) :
 			?>
 			<tr>
@@ -115,7 +120,10 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			</tr>
 			<?php
 		endif;
-		$mail = get_the_author_meta( '_publisher_mail' ) ?: 'info@hametuha.co.jp';
+		$mail = 'info@hametuha.co.jp';
+		if ( hametuha_is_secret_book() ) {
+		    $mail = get_the_author_meta( '_publisher_mail' ) ?: $mail;
+        }
 		if ( 'no' !== $mail ) :
 			?>
 			<tr>
@@ -124,7 +132,10 @@ $publisher = get_the_author_meta( '_publisher_name' );
 			</tr>
 			<?php
 		endif;
-		$address = get_the_author_meta( '_publisher_address' ) ?: '〒104-0061 東京都中央区銀座1-3-3 G1ビル7F 1211号';
+		$address = '〒104-0061 東京都中央区銀座1-3-3 G1ビル7F 1211号';
+		if ( hametuha_is_secret_book() ) {
+			$address = get_the_author_meta( '_publisher_address' ) ?: $address;
+        }
 		if ( 'no' !== $address ) :
 			?>
 			<tr>
