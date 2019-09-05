@@ -28,13 +28,9 @@ get_header( 'breadcrumb' );
 
 
 					<!-- Meta data -->
-                    <?php if ( ! is_page(  ) ) : ?>
 					<div <?php post_class( 'post-meta' ) ?>>
-
 						<?php get_template_part( 'parts/meta', 'single' ) ?>
-
 					</div><!-- //.post-meta -->
-                    <?php endif; ?>
 
 
 					<?php if ( has_excerpt() ) : ?>

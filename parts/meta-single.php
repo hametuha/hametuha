@@ -23,13 +23,13 @@
 	$after  = '</li>';
 	switch ( get_post_type() ) {
 		case 'thread':
-			the_terms( get_the_ID(), 'topic', $before, $after );
+			the_terms( get_the_ID(), 'topic', $before, ', ', $after );
 			break;
 		case 'faq':
-			the_terms( get_the_ID(), 'faq_cat', $before, $after );
+			the_terms( get_the_ID(), 'faq_cat', $before, ', ', $after );
 			break;
 		case 'anpi':
-			the_terms( get_the_ID(), 'anpi_cat', $before, $after );
+			the_terms( get_the_ID(), 'anpi_cat', $before, ', ', $after );
 			break;
 		default:
 			// Do nothing
@@ -39,20 +39,19 @@
 
 	<!-- Date -->
 	<li class="date">
-		<?php switch ( get_post_type() ) : case 'series': ?>
-			<i class="icon-calendar"></i>
-			<span class="hidden" itemprop="datePublished"><?php the_time( 'Y-m-dTH:i:s+09:00' ) ?></span>
-			<?php the_series_range() ?>
-			<?php if ( \Hametuha\Model\Series::get_instance()->is_finished( get_the_ID() ) ) : ?>
-				<span class="label label-danger">完結済み</span>
-			<?php endif; ?>
-			<?php break; default: ?>
-				<i class="icon-clock"></i>
-				<span itemprop="datePublished"><?php the_time( 'Y年m月d日（D）' ); ?></span>
-				<small><?= hametuha_passed_time( $post->post_date ) ?></small>
-				<meta itemprop="dateModified" content="<?= $post->post_modified ?>">
-			<?php endswitch; ?>
-	</li>
+        <i class="icon-clock"></i>
+        <span><?php the_time( 'Y年m月d日（D）' ); ?></span>
+        <small><?= hametuha_passed_time( $post->post_date ) ?></small>
+        <meta itemprop="dateModified" content="<?= date_i18n( DateTime::ISO8601, $post->post_modified_gmt ) ?>">
+        <meta itemprop="datePublished" content="<?= date_i18n( DateTime::ISO8601, $post->post_date_gmt ) ?>">
+    </li>
+
+    <?php if ( in_array( get_post_type(), [ 'page', 'faq' ] ) && hametuha_remarkably_updated() ) : ?>
+    <li class="date">
+        <i class="icon-loop4"></i>
+        <?php the_modified_date( 'Y年m月d日（D）' ) ?>更新
+    </li>
+    <?php endif; ?>
 
 	<!-- Comments -->
 	<?php if ( post_type_supports( get_post_type(), 'comments' ) ) : ?>
