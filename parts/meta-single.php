@@ -42,8 +42,8 @@
         <i class="icon-clock"></i>
         <span><?php the_time( 'Y年m月d日（D）' ); ?></span>
         <small><?= hametuha_passed_time( $post->post_date ) ?></small>
-        <meta itemprop="dateModified" content="<?= date_i18n( DateTime::ISO8601, $post->post_modified_gmt ) ?>">
-        <meta itemprop="datePublished" content="<?= date_i18n( DateTime::ISO8601, $post->post_date_gmt ) ?>">
+        <meta itemprop="dateModified" content="<?= mysql2date( DateTime::ISO8601, $post->post_modified_gmt ) ?>">
+        <meta itemprop="datePublished" content="<?= mysql2date( DateTime::ISO8601, $post->post_date_gmt ) ?>">
     </li>
 
     <?php if ( in_array( get_post_type(), [ 'page', 'faq' ] ) && hametuha_remarkably_updated() ) : ?>
