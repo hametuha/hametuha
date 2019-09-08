@@ -31,28 +31,6 @@ $carret-size: 20px;
   h1{
     position: relative;
     margin-top: 0;
-    padding: 0.5em;
-    border-radius: 5px;
-    border: 2px solid $thin-border;
-    &:before, &:after{
-      content: "";
-      display: block;
-      position: absolute;
-      width: 0;
-      height: 0;
-      border: $carret-size solid transparent;
-      border-top-width: $carret-size / 2;
-      border-bottom-width: $carret-size / 2;
-      top: 15px;
-    }
-    &:before{
-      left: -2 * $carret-size;
-      border-right-color: $thin-border;
-    }
-    &:after{
-      left: -2 * $carret-size + 4;
-      border-right-color: #fff;
-    }
     small{
       font-size: 0.5em;
       margin-right: 1em;
@@ -61,7 +39,7 @@ $carret-size: 20px;
   }
   &-title{
     display: block;
-    font-size: 0.85em;
+    font-weight: bold;
     br + &{
       margin-top: 0.25em;
     }
