@@ -24,6 +24,10 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 			case 'future':
 				switch ( $post->post_type ) {
 					case 'post':
+						// 投稿の状態をチェック
+						if ( ! hametuha_is_valid_post( $post ) ) {
+							return;
+						}
 						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
 						$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
 						break;
