@@ -22,11 +22,13 @@
 						<?php
 						foreach (
 							[
-								'ha'          => [ 'https://hametuha.co.jp', '株式会社破滅派', '' ],
-								'instragram'  => [ 'https://instagram.com/minico_hametuha' ],
-								'youtube'     => [ 'https://www.youtube.com/user/hametuha', 'Youtube', '' ],
-								'minicome'    => [ 'https://minico.me', 'ミニコミ通販', '' ],
-								'github3'     => [ 'https://github.com/hametuha/', 'Github', '' ],
+								'ha'        => [ 'https://hametuha.co.jp', '株式会社破滅派', '' ],
+								'twitter'   => [ 'https://twitter.com/minico_me', 'twitter', '' ],
+								'facebook'  => [ 'https://facebook.com/minicome', 'facebook', '' ],
+								'instagram' => [ 'https://instagram.com/minico_hametuha', 'Instagram', '' ],
+								'youtube'   => [ 'https://www.youtube.com/user/hametuha', 'Youtube', '' ],
+								'minicome'  => [ 'https://minico.me', 'ミニコミ通販', '' ],
+								'github3'   => [ 'https://github.com/hametuha/', 'Github', '' ],
 							] as $icon => list(
 							    $url, $label, $atts
 							) ) :

@@ -24,51 +24,58 @@ if ( is_preview() ) {
 		$link = '';
 		switch ( $brand ) {
 			case 'facebook':
+			    $href = add_query_arg( [
+                    'u' => rawurlencode( hametuha_user_link( $url, 'share-single', 'facebook' ) ),
+                ], 'https://www.facebook.com/sharer/sharer.php' );
 				$link = sprintf(
-					'<div class="fb-like" data-href="%s" data-layout="box_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>',
-					is_front_page() ? 'https://www.facebook.com/minicome/' : hametuha_user_link( $url, 'share-single', 'Facebook' )
+					'<a href="%s" target="_blank" class="share__button share__button--facebook"><i class="icon-facebook"></i> <span class="share__text">シェア</span></a>',
+					esc_url( $href )
 				);
 				break;
 			case 'twitter':
-				$via = 'minico_me';
-				$related = 'hametuha';
-				if ( is_hamenew() ) {
-					$hash_tag = 'はめにゅー';
-				} else {
-					$hash_tag = '破滅派';
-				}
+			    $args = [
+                    'url'      => hametuha_user_link( $url, 'share-single', 'twitter' ),
+			        'via'      => 'minico_me',
+                    'related'  => 'hametuha',
+                    'hashtags' => is_hamenew() ? 'はめにゅー,破滅派' : '破滅派',
+                ];
 				if ( $post_id && $author = get_user_meta( $post->post_author, 'twitter', true ) ) {
-				    $related = $author;
+				    $args['related'] = $author;
                 }
+				foreach ( $args as $key => $arg ) {
+				    $args[ $key ] = rawurlencode( $arg );
+                }
+				$href = add_query_arg( $args, 'https://twitter.com/intent/tweet' );
 				$link = sprintf(
-					'<div class="share__box"><a class="share__baloon" href="%s" target="_blank">反応</a><a data-text="%s" href="%s" class="twitter-share-button" data-via="%s" data-related="%s" data-hashtags="%s">つぶやく</a></div>',
-					esc_url( sprintf( 'https://twitter.com/search?f=tweets&vertical=default&q=%s&src=typd', rawurlencode( preg_replace( '#^https?://#', '', $url ) ) ) ),
-					esc_attr( $title ),
-					hametuha_user_link( $url, 'share-single', 'Twitter' ),
-					esc_attr( $via ),
-					esc_attr( $related ),
-					esc_attr( $hash_tag )
+					'<a href="%s" target="_blank" class="share__button share__button--twitter"><i class="icon-twitter"></i> <span class="share__text">つぶやく</span></a>',
+					esc_url( $href )
 				);
 				break;
 			case 'hatena':
+			    $href = 'https://b.hatena.ne.jp/entry/';
+			    if ( preg_match( '#^https://#u', $url ) ) {
+			        $href .= 's/';
+                }
+			    $href = $href . rawurlencode( preg_replace( '#^https?://#u', '', $url ) );
 				$link = sprintf(
-					'<a href="%s" class="hatena-bookmark-button" data-hatena-bookmark-layout="vertical-balloon" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>',
-					esc_url( $url )
+					'<a href="%s" target="_blank" class="share__button share__button--hatena"><i class="icon-hatena"></i> <span class="share__text">ブックマーク</span></a>',
+					esc_url( $href )
 				);
 				break;
 			case 'line':
+			    $href  = add_query_arg( [
+                    'url' => rawurlencode( hametuha_user_link( $url, 'share-single', 'Line' ) ),
+                ], 'https://social-plugins.line.me/lineit/share' );
 				$link = sprintf(
-					'<a class="share__button share-line" href="line://msg/text/%s"><i class="icon-line"></i> <span class="share__text">送る</span></a>',
-					rawurlencode( hametuha_user_link( $url, 'share-single', 'Line' ) )
+					'<a class="share__button share__button--line" href="%s"><i class="icon-line"></i> <span class="share__text">送る</span></a>',
+					 $href
 				);
 				break;
 			default:
-				// Do nothing
-				break;
-
-		}
-		?>
-		<div class="share__item--<?= $brand ?>">
+			    // Do nothing
+                break;
+        } ?>
+        <div class="share__item--<?= $brand ?>">
 			<?= $link ?>
 		</div>
 	<?php endforeach; ?>
