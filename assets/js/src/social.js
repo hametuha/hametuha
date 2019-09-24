@@ -22,7 +22,7 @@
         label    = $(this).attr('data-label'),
         value    = $(this).attr('data-value') || 1;
     if (category && action && label) {
-      Hametuha.ga.eventOutbound(event, url, category, action, label, value);
+      Hametuha.ga.eventOutbound( e, url, category, action, label, value );
     }
   });
 
@@ -112,76 +112,6 @@
         }
       });
     });
-  });
-
-
-
-  //
-  // はてな
-  // ---------------
-  //
-  (function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://b.st-hatena.com/js/bookmark_button.js";
-    js.async = true;
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, "script", "hatena-js"));
-
-
-
-  //
-  // Google
-  // ---------------
-  //
-  (function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    window.___gcfg = {
-      lang: 'ja'
-    };
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://apis.google.com/js/platform.js";
-    js.async = true;
-    js.defer = true;
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, "script", "google-plus-js"));
-  // コールバック
-  window.plusOneCallBack = function(params){
-    var status;
-  };
-
-
-
-  //
-  // LINE
-  // ---------------
-  //
-  $(document).on('click', '.share-line', function(e){
-    try{
-      var href = $(this).attr('href');
-      var path = $(this).attr('data-path');
-      var timer;
-      ga('send', {
-        hitType      : 'social',
-        socialNetwork: 'line',
-        socialAction : 'send',
-        socialTarget : path.replace(/^https?:\/\/hametuha\.(com|info)/, ''),
-        hitCallback: function(){
-          clearTimeout(timer);
-          window.location.href = href;
-        }
-      });
-      timer = setTimeout(function(){
-        window.location.href = href;
-      }, 1000);
-      e.preventDefault();
-    }catch (err){
-      // Do nothing.
-    }
   });
 
 })(jQuery);
