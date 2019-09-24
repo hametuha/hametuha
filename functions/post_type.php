@@ -496,3 +496,23 @@ function hametuha_popular_faqs() {
 		'order' => 'DESC',
     ], 1, 5 );
 }
+
+/**
+ * 投稿が十分な投稿かどうか、チェックする
+ *
+ * @param null|int|WP_Post $post
+ * @return bool
+ */
+function hametuha_is_valid_post( $post = null ) {
+    $post = get_post( $post );
+    if ( ! $post || ( 'publish' !== $post->post_status ) ) {
+        return false;
+    }
+    if ( post_password_required( $post ) ) {
+        return false;
+    }
+    if ( empty( $post->post_title ) ) {
+        return false;
+    }
+    return true;
+}
