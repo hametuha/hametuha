@@ -290,6 +290,7 @@ class UserSales extends Model {
 		$retrieved = 0;
 		$success   = 0;
 		$return    = [];
+		$errors    = new \WP_Error();
 		foreach ( $sales as $sale ) {
 			$prefix = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
 			if ( 'JPY' !== $sale->currency ) {
@@ -321,15 +322,17 @@ class UserSales extends Model {
 						'tax'         => $tax,
 						'deducting'   => $deducting,
 						'description' => $label,
-						'currency'  => $sale->currency,
+						'currency'    => $sale->currency,
 					] );
-					if ( $result && !is_wp_error( $result ) ) {
+					if ( is_wp_error( $result ) ) {
+						$errors->add( 'dberror', $result->get_error_message() );
+					} elseif ( $result ) {
 						$success++;
 					}
 				}
 			}
 		}
-		return $dry_run ? $return : [ $retrieved, $success ];
+		return $dry_run ? $return : [ $retrieved, $success, $errors ];
 	}
 
 	/**
