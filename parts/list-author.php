@@ -1,15 +1,7 @@
 <?php
 
 $authors_ranking = hametuha_get_author_popular_works( null, 3 );
-$authors_recnent = new WP_Query( [
-	'author'         => get_the_author_meta( 'ID' ),
-	'posts_per_page' => 3,
-	'post_type'      => 'post',
-	'posts__not_in'  => get_the_ID(),
-	'orderby'        => [
-		'date' => 'DESC',
-	],
-] );
+$authors_recent  = hametuha_get_author_recent_works( null, 3 );
 	?>
 <section class="m20">
 
@@ -33,13 +25,16 @@ $authors_recnent = new WP_Query( [
 
 		<div class="col-xs-12 col-sm-6">
 			<h2 class="list-title">この作者の最新作</h2>
-			<?php if ( $authors_recnent->have_posts() ) : ?>
+			<?php if ( $authors_recent ) : ?>
 				<ul class="post-list no-excerpt">
-					<?php while ( $authors_recnent->have_posts() ) : $authors_recnent->the_post(); ?>
+					<?php foreach ( $authors_recent as $post ) : setup_postdata( $post ); ?>
 						<?php get_template_part( 'parts/loop', 'front' ) ?>
-					<?php endwhile; ?>
+					<?php endforeach; wp_reset_postdata(); ?>
 				</ul>
 			<?php else : ?>
+                <div class="alert alert-light text-center">
+                    この作者は最近活動していないようです。
+                </div>
 			<?php endif; ?>
 		</div>
 	</div>

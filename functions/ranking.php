@@ -57,7 +57,7 @@ function get_the_ranking( \WP_Post $post = null){
  *
  * @param null|int|WP_Post $post
  * @param int $limit
- * @return array
+ * @return WP_Post[]
  */
 function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 	$post = get_post( $post );
@@ -75,6 +75,32 @@ function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 		INNER JOIN {$wpdb->postmeta} AS pm
 		ON p.ID = pm.post_id AND pm.meta_key = '_current_pv'
 		ORDER BY pm.meta_value + 0 DESC
+		LIMIT 0,%d
+SQL;
+	return array_map( function( $row ) {
+		return new WP_Post( $row );
+	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
+}
+
+/**
+ * 作者の最近の人気作を取得する
+ *
+ * @param null $post
+ * @param int $limit
+ * @return WP_Post[]
+ */
+function hametuha_get_author_recent_works( $post = null, $limit = 5 ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return [];
+	}
+	global $wpdb;
+	$query = <<<SQL
+		SELECT * FROM {$wpdb->posts}
+		WHERE post_author = %d
+		AND post_type   = 'post'
+		AND post_status = 'publish'
+		ORDER BY post_date DESC
 		LIMIT 0,%d
 SQL;
 	return array_map( function( $row ) {
