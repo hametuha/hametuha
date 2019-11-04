@@ -53,6 +53,36 @@ function get_the_ranking( \WP_Post $post = null){
 }
 
 /**
+ * 作者の一番人気のある作品を取得する
+ *
+ * @param null|int|WP_Post $post
+ * @param int $limit
+ * @return array
+ */
+function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return [];
+	}
+	global $wpdb;
+	$query = <<<SQL
+		SELECT p.* FROM (
+			SELECT * FROM {$wpdb->posts}
+			WHERE post_author = %d
+			AND post_type   = 'post'
+			AND post_status = 'publish'
+		) AS p
+		INNER JOIN {$wpdb->postmeta} AS pm
+		ON p.ID = pm.post_id AND pm.meta_key = '_current_pv'
+		ORDER BY pm.meta_value + 0 DESC
+		LIMIT 0,%d
+SQL;
+	return array_map( function( $row ) {
+		return new WP_Post( $row );
+	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
+}
+
+/**
  * ランキングページか否か
  *
  * @param string $type

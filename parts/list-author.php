@@ -1,15 +1,6 @@
 <?php
 
-$authors_ranking = new WP_Query( [
-	'author'         => get_the_author_meta( 'ID' ),
-	'posts_per_page' => 3,
-	'post_type'      => 'post',
-	'posts__not_in'  => get_the_ID(),
-	'meta_key'       => '_current_pv',
-	'orderby'        => [
-		'meta_value_num' => 'DESC',
-	],
-] );
+$authors_ranking = hametuha_get_author_popular_works( null, 3 );
 $authors_recnent = new WP_Query( [
 	'author'         => get_the_author_meta( 'ID' ),
 	'posts_per_page' => 3,
@@ -27,14 +18,17 @@ $authors_recnent = new WP_Query( [
 		<div class="col-xs-12 col-sm-6">
 
 			<h2 class="list-title">この作者の人気作</h2>
-			<?php if ( $authors_ranking->have_posts() ) : ?>
-			<ul class="post-list no-excerpt">
-				<?php while ( $authors_ranking->have_posts() ) : $authors_ranking->the_post(); ?>
+            <?php if ( $authors_ranking ) : ?>
+                <ul class="post-list no-excerpt">
+					<?php foreach ( $authors_ranking as $post ) : setup_postdata( $post ); ?>
 					<?php get_template_part( 'parts/loop', 'front' ) ?>
-				<?php endwhile; ?>
-			</ul>
+                    <?php endforeach; wp_reset_postdata(); ?>
+                </ul>
 			<?php else : ?>
-			<?php endif; ?>
+                <div class="alert alert-light text-center">
+                    今後の活躍にご期待ください。
+                </div>
+            <?php endif ; ?>
 		</div>
 
 		<div class="col-xs-12 col-sm-6">
