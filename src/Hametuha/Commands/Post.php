@@ -200,12 +200,13 @@ class Post extends Command {
 		}
 		// paragraph
 		foreach ( [
-			'#<p style="text-align: ([^>]+);">(.*?)</p>#u' => function( $match ) {
-				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( $match[1] ), $match[2] );
+			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function( $match ) {
+				$align = ucfirst( trim( str_replace( ';', '', $match[1] ) ) );
+				return sprintf( '<ParaStyle:Align%s>%s', $align, $match[2] );
 			},
-			'#<p style="(text-indent|padding-left): ([^>]+);">(.*?)</p>#u' => function( $match ) {
+			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function( $match ) {
 				$indent = preg_replace( '/\D/', '', $match[2] );
-				return $match[1] ? sprintf( '<ParaStyle:Indent%d>%s', $indent, $match[3] ) : $match[3];
+				return $match[1] ? sprintf( '<ParaStyle:Indent%d>%s', str_replace( ';', '', $indent ), $match[3] ) : $match[3];
 			},
 		] as $regexp => $callback ) {
 			$content = preg_replace_callback( $regexp, $callback, $content );
