@@ -212,8 +212,13 @@ function get_author_work_count( $author_id = null ) {
 	if ( is_null( $author_id ) ) {
 		$author_id = get_the_author_meta( 'ID' );
 	}
-	$sql = "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_status = 'publish' AND post_type = 'post' AND post_author = %d";
-
+	$sql = <<<SQL
+		SELECT COUNT(ID)
+		FROM {$wpdb->posts}
+		WHERE post_author = %d
+		  AND post_type = 'post'
+		  AND post_status = 'publish'
+SQL;
 	return (int) $wpdb->get_var( $wpdb->prepare( $sql, $author_id ) );
 }
 

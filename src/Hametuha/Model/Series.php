@@ -318,9 +318,9 @@ class Series extends Model {
 		if ( ! isset( $store[ $post->ID ] ) ) {
 
 			$query              = <<<SQL
-			post_type = 'post'
+			post_parent = %d
+			AND post_type = 'post'
 			AND post_status = 'publish'
-			AND post_parent = %d
 			AND (
 				menu_order > %d
 				OR
