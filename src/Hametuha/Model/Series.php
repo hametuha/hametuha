@@ -310,8 +310,11 @@ class Series extends Model {
 	 * @return int
 	 */
 	public function get_index( $post = null ) {
-		static $store = [ ];
+		static $store = [];
 		$post = get_post( $post );
+		if ( ! $post || ! $post->post_parent ) {
+			return 1;
+		}
 		if ( ! isset( $store[ $post->ID ] ) ) {
 
 			$query              = <<<SQL
