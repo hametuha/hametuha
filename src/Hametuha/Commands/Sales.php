@@ -50,10 +50,16 @@ class Sales extends Command {
 			if ( ! $force && false !== array_search( $year . $month, $record ) ) {
 				self::e( sprintf( '%d年%d月のKDPセールスは記録済みです。', $year, $month ) );
 			}
-			list( $total, $success ) = UserSales::get_instance()->save_kdp_report( $year, $month );
+			/** @var \WP_Error $errors */
+			list( $total, $success, $errors ) = UserSales::get_instance()->save_kdp_report( $year, $month );
 			$record[] = $year . $month;
 			update_option( 'kdp_sales_record', $record, false );
 			self::s( sprintf( '%d of %d records were saved.', $success, $total ) );
+			if ( $messages = $errors->get_error_messages() ) {
+				array_map( function( $message ) {
+					\WP_CLI::warning( $message );
+				}, $messages );
+			}
 		}
 	}
 

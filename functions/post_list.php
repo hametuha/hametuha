@@ -20,6 +20,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post' ) {
         WHERE post_type = %s
           AND post_status = 'publish'
         ORDER BY post_date DESC
+	    LIMIT %d
     ) AS p
     GROUP BY post_author
     ORDER BY post_date DESC
@@ -27,7 +28,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post' ) {
 
 SQL;
 	$result = [];
-	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $post_type, $limit ) ) as $row ) {
+	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $post_type, $limit * 100, $limit ) ) as $row ) {
 		$result[] = new WP_Post( $row );
 	}
 
