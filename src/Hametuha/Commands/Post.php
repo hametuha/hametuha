@@ -180,9 +180,13 @@ class Post extends Command {
 		}, explode( "\n", $content ) ) ) );
 		// Convert Aside, blockquote.
 		foreach ( [
-			'#<strong>([^<]+)</strong>#u' => '<CharStyle:Emphasis>$1<CharStyle:>',
-			'#<del>([^<]+)</del>#u' => '<CharStyle:Del>$1<CharStyle:>',
-			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<strong>([^<]+)</strong>#u'                       => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
+			'#<em>([^<]+)</em>#u'                               => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<span class="text-emphasis">([^<]+)</span>#u'     => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
+			'#<del>([^<]+)</del>#u'                             => '<CharStyle:Del>$1<CharStyle:>',
+			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#'            => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<small>([^<]+)</small>#u'                         => '〔<CharStyle:Notes>$1<CharStyle:>〕',
 				  ] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
