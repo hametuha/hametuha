@@ -122,7 +122,7 @@ class Post extends Command {
 				case 'text':
 					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
-					echo '.';
+					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					break;
 				case 'tags':
 					foreach ( $this->get_tags( $post ) as $tag ) {
@@ -188,11 +188,11 @@ class Post extends Command {
 		}
 		// Headings
 		$content = preg_replace( '#<h(\d)>([^<]+)</h(\d)>#u', '<ParaStyle:Heading$1>$2', $content );
-		// Block quote, Aside.
-		foreach ( [ 'Aside', 'BlockQuote' ] as $tag ) {
+		// Block quote, Aside, pre.
+		foreach ( [ 'Aside', 'BlockQuote', 'Pre' ] as $tag ) {
 			$tag_name = strtolower( $tag );
 			$content = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
-				$lines = trim( $match[1] );
+				$lines = trim( str_replace( "\n\n", "\n", $match[1] ) );
 				return implode( "\n", array_map( function( $line ) use ( $tag ) {
 					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
 				}, explode( "\n", $lines ) ) );
