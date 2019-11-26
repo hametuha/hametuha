@@ -4,6 +4,7 @@ namespace Hametuha\Commands;
 
 
 use Hametuha\Model\Jobs;
+use Hametuha\Sharee\Master\Address;
 use WPametu\Utility\Command;
 use cli\Table;
 
@@ -73,7 +74,7 @@ class Post extends Command {
 	 *   Term ID
 	 *
 	 * : <format>
-	 *   1 of xml, text, tag. Default xml.
+	 *   1 of xml, text, tag, csv. Default xml.
 	 *
 	 * @synopsis <taxonomy> <term> [--format=<format>]
 	 * @param array $args
@@ -82,7 +83,7 @@ class Post extends Command {
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
 		$format = isset( $assoc['format'] ) ? $assoc['format'] : 'xml';
-		if ( ! in_array( $format, [ 'xml', 'text', 'tags' ] ) ) {
+		if ( ! in_array( $format, [ 'xml', 'text', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
 		$term = get_term_by( 'id', $term_id, $taxonomy );
@@ -111,7 +112,8 @@ class Post extends Command {
 		if ( ! $posts ) {
 			self::e( 'No post found.' );
 		}
-		$tags = [];
+		$tags  = [];
+		$lines = 0;
 		foreach ( $posts as $post ) {
 			switch ( $format ) {
 				case 'xml':
@@ -123,6 +125,42 @@ class Post extends Command {
 					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
+					break;
+				case 'csv':
+					if ( ! $lines ) {
+						self::l( 'お届け先郵便番号,お届け先氏名,お届け先敬称,お届け先住所1行目,お届け先住所2行目,お届け先住所3行目,お届け先住所4行目,内容品' );
+						$lines++;
+					}
+					$line = [];
+					foreach ( [ 'zip', 'name', 'address', 'address2' ] as $key ) {
+						$value = get_user_meta( $post->post_author, '_billing_' . $key, true );
+						switch ( $key ) {
+							case 'name':
+								$line[] = $value;
+								$line[] = '様';
+								break;
+							case 'address':
+								if ( preg_match( '/^(北海道|京都|東京都|大阪府|.*?県)(.*)$/u', $value, $matches ) ) {
+									$line[] = $matches[1];
+									$line[] = $matches[2];
+								} else {
+									$line[] = '';
+									$line[] = '';
+								}
+								break;
+							case 'address2':
+								$line[] = '';
+								$line[] = 'XXXXXX';
+								break;
+							case 'zip':
+								$line[] = preg_replace( '/\D/u', '', $value );
+								break;
+							default:
+								$line[] = $value;
+								break;
+						}
+					}
+					self::l( implode( ',', $line ) );
 					break;
 				case 'tags':
 					foreach ( $this->get_tags( $post ) as $tag ) {
