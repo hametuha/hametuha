@@ -19,7 +19,7 @@
     "hametuha/wpametu": "0.8.x-dev",
     "hametuha/hamepub": "1.0.x-dev",
     "hametuha/hashboard": "0.8.x-dev",
-    "hametuha/sharee": "^0.8.0"
+    "hametuha/sharee": "^0.8.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7"

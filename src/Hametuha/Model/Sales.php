@@ -196,14 +196,15 @@ class Sales extends Model {
 	/**
 	 * 売上リポートを作成
 	 *
-	 * @param int $year
-	 * @param int $month
+	 * @param int    $year
+	 * @param int    $month
+	 * @param string $day
 	 *
 	 * @return array|mixed|null
 	 */
-	public function monthly_report( $year, $month ) {
+	public function monthly_report( $year, $month, $day = '01' ) {
 		$sales = UserSales::get_instance();
-		list( $start, $end ) = $sales->get_range( $year, $month );
+		list( $start, $end ) = $sales->get_range( $year, $month, $day );
 		$result = $this
 			->select( 'p.post_author as user_id, p.post_title as label, p.ID as post_id, s.asin, SUM(s.unit) as unit, SUM(s.royalty) as sub_total, s.currency' )
 			->from( "{$this->table} as s" )

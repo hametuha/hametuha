@@ -14,12 +14,12 @@ use WPametu\DB\Model;
  *
  */
 class UserSales extends Model {
-	
+
 	protected $name = 'user_sales';
 
 	/**
 	 * 消費税
-	 * 
+	 *
 	 * @var float
 	 */
 	protected $vat_ratio = 0.08;
@@ -35,7 +35,7 @@ class UserSales extends Model {
 	 * @var float
 	 */
 	protected $bill = 0.715;
-	
+
 	protected $default_placeholder = [
 		'sales_id' => '%d',
 	    'sales_type' => '%s',
@@ -280,19 +280,20 @@ class UserSales extends Model {
 	/**
 	 * KDPの売上を保存する
 	 *
-	 * @param int  $year
-	 * @param int  $month
-	 * @param bool $dry_run If set true, returns array to be inserted.
+	 * @param int    $year
+	 * @param int    $month
+	 * @param bool   $dry_run If set true, returns array to be inserted.
+	 * @param string $day
 	 * @return array
 	 */
-	public function save_kdp_report( $year, $month, $dry_run = false ) {
-		$sales     = Sales::get_instance()->monthly_report( $year, $month );
+	public function save_kdp_report( $year, $month, $dry_run = false, $day = '01' ) {
+		$sales     = Sales::get_instance()->monthly_report( $year, $month, $day );
 		$retrieved = 0;
 		$success   = 0;
 		$return    = [];
 		$errors    = new \WP_Error();
 		foreach ( $sales as $sale ) {
-			$prefix = sprintf( '%d年%d月『%s』', $year, $month, $sale->label );
+			$prefix = sprintf( '%d年%d月%s『%s』', $year, $month, ( '01' !== $day ? $day . '日以降' : '' ), $sale->label );
 			if ( 'JPY' !== $sale->currency ) {
 				$prefix .= sprintf( '（売上%s%s）', number_format( $sale->sub_total, 2 ), $sale->currency );
 			}
@@ -435,20 +436,19 @@ class UserSales extends Model {
 	 * @return false|int
 	 */
 	public function add( $user_id, $type, $price, $unit = 1, $description = '', $tax_included = false, $deduction = true, $status = 0, $created = '' ) {
-
 		// 保存する
 		return $this->insert( [
-			'user_id' => $user_id,
-		    'sales_type' => $type,
-		    'price' => $price,
-		    'unit'  => $unit,
-		    'tax' => $vat,
-		    'deducting' => $deduction_price,
-		    'total' => $total,
-		    'status' => $status,
+			'user_id'     => $user_id,
+		    'sales_type'  => $type,
+		    'price'       => $price,
+		    'unit'        => $unit,
+		    'tax'         => $vat,
+		    'deducting'   => $deduction_price,
+		    'total'       => $total,
+		    'status'      => $status,
 		    'description' => $description,
-		    'created' => $created ?: current_time( 'mysql' ),
-		    'updated' => current_time( 'mysql' ),
+		    'created'     => $created ?: current_time( 'mysql' ),
+		    'updated'     => current_time( 'mysql' ),
 		] );
 	}
 
@@ -547,17 +547,18 @@ SQL;
 		    'status'   => $status,
 		] );
 	}
-	
+
 	/**
 	 * 月初と月末を取得する
 	 *
 	 * @deprecated
-	 * @param int $year
-	 * @param int $month
+	 * @param int    $year
+	 * @param int    $month
+	 * @param string $day
 	 * @return array
 	 */
-	public function get_range( $year, $month ) {
-		$start = sprintf( '%04d-%02d-01 00:00:00', $year, $month );
+	public function get_range( $year, $month, $day = '01' ) {
+		$start = sprintf( '%04d-%02d-%02d 00:00:00', $year, $month, $day );
 		$d = new \DateTime();
 		$d->setTimezone( new \DateTimeZone( 'Asia/Tokyo' ) );
 		$d->setDate( $year, $month, 1 );
