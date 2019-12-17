@@ -44,17 +44,6 @@ add_action( 'login_head', function() {
 } );
 
 /**
- * Register form
- */
-add_action( 'register_form', function() {
-    ?>
-    <div class="login-form-recaptcha">
-		<?php echo Wpametu::recaptcha( 'clean', 'ja' ); ?>
-    </div>
-    <?php
-}, 1 );
-
-/**
  * Add divider to login screen
  *
  * @internal
@@ -92,17 +81,3 @@ add_filter( 'login_message', function( $messages ) {
     }, $messages );
     return $messages;
 } );
-
-/**
- * On register, check recaptcha
- *
- * @param WP_Error $errors
- * @param string $login
- * @param string $email
- */
-add_filter( 'registration_errors', function( WP_Error $errors, $login, $email ) {
-    if ( ! WPametu::validate_recaptcha()  ) {
-        $errors->add( 'invalid_recaptcha', '<strong>エラー: </strong>reCAPTCHAのスパムチェックが無効です。' );
-    }
-    return $errors;
-}, 10, 3 );
