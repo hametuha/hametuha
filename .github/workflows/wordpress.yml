@@ -1,0 +1,97 @@
+name: Hametuha Unit Test
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-16.04 ]  # OS. ubuntu-18.04 is also available.
+        php: [ '5.6', '7.2', '7.3' ]        # PHP versions to check.
+        wp: [ 'latest', '5.2' ]             # WordPress version to check.
+    services:
+      mysql:
+        image: mysql:5.7
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+        env:
+          MYSQL_ROOT_PASSWORD: root
+    name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup PHP
+        uses: nanasess/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install WordPress
+        run: bash bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
+
+      - name: Run test suite
+        run: composer test
+
+  release:
+    name: Build Plugin
+    needs: test
+    if: contains(github.ref, 'tags/')
+    runs-on: ubuntu-16.04
+    strategy:
+      matrix:
+        zip: [ 'hametuha' ] # Zip name.
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup PHP
+        uses: nanasess/setup-php@master
+        with:
+          php-version: '7.2'
+
+      - name: Install NPM
+        uses: actions/setup-node@v1
+        with:
+          node-version: '10'
+
+      - name: Build package.
+        run: bash bin/build.sh
+
+      - name: Deploy Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Create Zip
+        run: zip -r ${{ matrix.zip }}.zip ./
+
+      - name: Upload Release Zip
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./${{ matrix.zip }}.zip
+          asset_name: ${{ matrix.zip }}.zip
+          asset_content_type: application/zip
