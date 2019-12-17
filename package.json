@@ -26,7 +26,7 @@
     "angular-ui-bootstrap": "^1.1.2",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
-    "bootbox": "^4.4.0",
+    "bootbox": "^5.3.4",
     "bootstrap-sass": "^3.3.6",
     "browser-sync": "^2.11",
     "eslint": "^5.4.0",
