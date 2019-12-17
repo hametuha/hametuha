@@ -26,6 +26,11 @@ add_filter( 'login_headertitle', function() {
 add_action( 'login_head', function() {
     wp_enqueue_style( 'hametuha-login-screen', get_stylesheet_directory_uri() . '/assets/css/login.css', [], hametuha_version() );
     wp_enqueue_script( 'hametuha-login-helper', get_stylesheet_directory_uri() . '/assets/js/dist/components/login-helper.js', [ 'jquery' ], hametuha_version(), true );
+    wp_localize_script( 'hametuha-login-helper', 'HametuhaLoginHelper', [
+        'submitLabel'      => __( 'Agree with Contract and Register', 'hametuha' ),
+        'loginPlaceHolder' => __( 'e.g. hametu_tarou', 'hametuha' ),
+        'loginDescription' => __( 'Login name will be used as a part of URL. Alphanumeric value and some symbols(.-_@) are allowed.', 'hametuha' ),
+    ] );
 	$site_icon = get_site_icon_url( 84 );
 	if ( ! $site_icon ) {
 		return;
@@ -42,17 +47,6 @@ add_action( 'login_head', function() {
 	</style>
 	<?php
 } );
-
-/**
- * Register form
- */
-add_action( 'register_form', function() {
-    ?>
-    <div class="login-form-recaptcha">
-		<?php echo Wpametu::recaptcha( 'clean', 'ja' ); ?>
-    </div>
-    <?php
-}, 1 );
 
 /**
  * Add divider to login screen
@@ -92,17 +86,3 @@ add_filter( 'login_message', function( $messages ) {
     }, $messages );
     return $messages;
 } );
-
-/**
- * On register, check recaptcha
- *
- * @param WP_Error $errors
- * @param string $login
- * @param string $email
- */
-add_filter( 'registration_errors', function( WP_Error $errors, $login, $email ) {
-    if ( ! WPametu::validate_recaptcha()  ) {
-        $errors->add( 'invalid_recaptcha', '<strong>エラー: </strong>reCAPTCHAのスパムチェックが無効です。' );
-    }
-    return $errors;
-}, 10, 3 );

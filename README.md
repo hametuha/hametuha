@@ -3,7 +3,7 @@ hametuha
 
 [破滅派](https://hametuha.com)のWordPressテーマです。
 
-[![Travis CI Master](https://travis-ci.org/hametuha/hametuha.svg?branch=master)](https://travis-ci.org/hametuha/hametuha)
+
 
 ## 貢献の方法
 

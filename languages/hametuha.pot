@@ -1,0 +1,139 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Hametuha\n"
+"POT-Creation-Date: 2019-12-17 17:24+0900\n"
+"PO-Revision-Date: 2019-12-17 16:51+0900\n"
+"Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
+"Language-Team: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: style.css\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+"X-Poedit-SearchPathExcluded-2: node_modules\n"
+"X-Poedit-SearchPathExcluded-3: assets/js/dist\n"
+"X-Poedit-SearchPathExcluded-4: assets/js/src/modernizr.js\n"
+"X-Poedit-SearchPathExcluded-5: assets/js/src/common/slick.js\n"
+"X-Poedit-SearchPathExcluded-6: assets/js/src/common.js\n"
+"X-Poedit-SearchPathExcluded-7: assets/js/src/common/jquery.mmenu.custom.js\n"
+"X-Poedit-SearchPathExcluded-8: assets/js/src/common/headroom.js\n"
+
+#: amp/footer.php:21
+msgid "https://wordpress.org/"
+msgstr ""
+
+#: amp/footer.php:21
+#, php-format
+msgid "Powered by %s"
+msgstr ""
+
+#: hooks/login.php:30
+msgid "Agree with Contract and Register"
+msgstr ""
+
+#: hooks/login.php:31
+msgid "e.g. hametu_tarou"
+msgstr ""
+
+#: hooks/login.php:32
+msgid ""
+"Login name will be used as a part of URL. Alphanumeric value and some "
+"symbols(.-_@) are allowed."
+msgstr ""
+
+#: src/Hametuha/Ajax/Feedback.php:46
+msgid "該当する投稿が見つかりませんでした。"
+msgstr ""
+
+#: src/Hametuha/Master/Calculator.php:56
+msgid "Sorry, but failed to get exchange rate."
+msgstr ""
+
+#: src/Hametuha/Master/Calculator.php:61
+msgid "Sorry, but specified currency does not exist in the list."
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:44
+msgid "This site has no proper setting."
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:58
+msgid ""
+"Our spam filter recognize your request as spam. Please contact us if you are "
+"not spam."
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:162
+msgid "Google reCAPTCHA"
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:163
+msgid "Add Google reCAPTCHA to protect your site."
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:166
+msgid "Site Key"
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:167
+msgid "Secret Key"
+msgstr ""
+
+#: src/Hametuha/Service/RecaptchaV3.php:179
+msgid "This value is defined in code."
+msgstr ""
+
+#. Theme Name of the plugin/theme
+msgid "Hametuha"
+msgstr ""
+
+#. Theme URI of the plugin/theme
+msgid "http://github.com/hametuha/hametuha"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Basic Theme for Hametuha"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Hametuha inc."
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://hametuha.com"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "ヘルプセンター"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "1カラムページ"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "KDP"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "はめにゅー"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "irame専用テンプレート"
+msgstr ""
+
+#. Template Name of the plugin/theme
+msgid "キャンペーン一覧"
+msgstr ""
