@@ -21,6 +21,13 @@ function hametuha_version() {
 define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 
 /**
+ * Register i18n.
+ */
+add_action( 'after_setup_theme', function() {
+	load_theme_textdomain( 'hametuha', get_template_directory() . '/languages' );
+} );
+
+/**
  * Bootstrap for theme
  */
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
