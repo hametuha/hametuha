@@ -73,3 +73,13 @@ $gap: 8px;
     }
   }
 }
+
+.login-action-register #user_login{
+  margin-bottom: 5px;
+  & + span{
+    display: block;
+    margin-bottom: 16px;
+    color: #888;
+    font-size: 11px;
+  }
+}

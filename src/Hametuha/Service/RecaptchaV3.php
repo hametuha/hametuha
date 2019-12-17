@@ -110,14 +110,19 @@ JS;
      * Login filter.
      *
 	 * @param null|\WP_User|\WP_Error $user
-	 * @param string         $username
-	 * @param string         $password
+	 * @param string                  $username
+	 * @param string                  $password
      * @return null|\WP_Error
 	 */
     public function authenticate( $user, $username, $password ) {
         if ( ! $this->available ) {
             return $user;
         }
+        if ( empty( $username ) || empty( $password ) ) {
+            // This is not my case.
+            return $user;
+        }
+        // Is this login try?
         $token  = filter_input( INPUT_POST, 'recaptcha-v3-token' );
         $result = $this->verify( $token );
         if ( is_wp_error( $result ) ) {

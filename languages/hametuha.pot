@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Hametuha\n"
-"POT-Creation-Date: 2019-12-17 16:53+0900\n"
+"POT-Creation-Date: 2019-12-17 17:24+0900\n"
 "PO-Revision-Date: 2019-12-17 16:51+0900\n"
 "Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
 "Language-Team: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
@@ -23,6 +23,11 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 "X-Poedit-SearchPathExcluded-2: node_modules\n"
 "X-Poedit-SearchPathExcluded-3: assets/js/dist\n"
+"X-Poedit-SearchPathExcluded-4: assets/js/src/modernizr.js\n"
+"X-Poedit-SearchPathExcluded-5: assets/js/src/common/slick.js\n"
+"X-Poedit-SearchPathExcluded-6: assets/js/src/common.js\n"
+"X-Poedit-SearchPathExcluded-7: assets/js/src/common/jquery.mmenu.custom.js\n"
+"X-Poedit-SearchPathExcluded-8: assets/js/src/common/headroom.js\n"
 
 #: amp/footer.php:21
 msgid "https://wordpress.org/"
@@ -31,6 +36,20 @@ msgstr ""
 #: amp/footer.php:21
 #, php-format
 msgid "Powered by %s"
+msgstr ""
+
+#: hooks/login.php:30
+msgid "Agree with Contract and Register"
+msgstr ""
+
+#: hooks/login.php:31
+msgid "e.g. hametu_tarou"
+msgstr ""
+
+#: hooks/login.php:32
+msgid ""
+"Login name will be used as a part of URL. Alphanumeric value and some "
+"symbols(.-_@) are allowed."
 msgstr ""
 
 #: src/Hametuha/Ajax/Feedback.php:46
@@ -55,23 +74,23 @@ msgid ""
 "not spam."
 msgstr ""
 
-#: src/Hametuha/Service/RecaptchaV3.php:157
+#: src/Hametuha/Service/RecaptchaV3.php:162
 msgid "Google reCAPTCHA"
 msgstr ""
 
-#: src/Hametuha/Service/RecaptchaV3.php:158
+#: src/Hametuha/Service/RecaptchaV3.php:163
 msgid "Add Google reCAPTCHA to protect your site."
 msgstr ""
 
-#: src/Hametuha/Service/RecaptchaV3.php:161
+#: src/Hametuha/Service/RecaptchaV3.php:166
 msgid "Site Key"
 msgstr ""
 
-#: src/Hametuha/Service/RecaptchaV3.php:162
+#: src/Hametuha/Service/RecaptchaV3.php:167
 msgid "Secret Key"
 msgstr ""
 
-#: src/Hametuha/Service/RecaptchaV3.php:174
+#: src/Hametuha/Service/RecaptchaV3.php:179
 msgid "This value is defined in code."
 msgstr ""
 
