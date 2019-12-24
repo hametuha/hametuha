@@ -294,34 +294,35 @@ function is_doujin_profile_page() {
 
 /**
  * 最近追加されたユーザーを返す
+ *
  * @global wpdb $wpdb
- *
  * @param int $num
+ * @param int $days
  *
- * @return array
+ * @return WP_User[]
  */
-function get_recent_authors( $num = 5 ) {
+function hametuha_recent_authors( $num = 5, $days = 30 ) {
 	global $wpdb;
-	$sql = <<<EOS
-		SELECT u.*, um1.meta_value AS ruby, posts.post_title, posts.ID AS post_id, um2.meta_value AS description
-		FROM {$wpdb->users} AS u
-		LEFT JOIN {$wpdb->usermeta} AS um1
-		ON u.ID = um1.user_id AND um1.meta_key = 'last_name'
-		LEFT JOIN {$wpdb->usermeta} AS um2
-		ON u.ID = um2.user_id AND um2.meta_key = 'description'
-		LEFT JOIN (
-			SELECT p.post_title, p.ID, p.post_author FROM {$wpdb->posts} AS p
-			WHERE p.post_status = 'publish' AND p.post_type = 'post'
-			GROUP BY p.post_author
-			ORDER BY p.post_date DESC
-		) AS posts
-		ON u.ID = posts.post_author
-		WHERE posts.post_title IS NOT NULL
+	$now = current_time( 'timestamp' ) - $days * 60 * 60 * 24;
+	$time = date_i18n( 'Y-m-d H:i:s', $now );
+	// 最近のユーザーを取得
+	$query = <<<EOS
+		SELECT u.*, p.ID AS post_id FROM {$wpdb->posts} AS p
+		INNER JOIN {$wpdb->users} AS u
+		ON p.post_author = u.ID
+		WHERE p.post_type   = 'post'
+		  AND p.post_status = 'publish'
+		  AND p.post_date >= %s
+		  AND u.user_registered >= %s
+		GROUP BY u.ID
 		ORDER BY u.user_registered DESC
 		LIMIT %d
 EOS;
-
-	return $wpdb->get_results( $wpdb->prepare( $sql, $num ) );
+	$query = $wpdb->prepare( $query, $time, $time, $num );
+	$users = $wpdb->get_results( $query );
+	return array_map( function( $user ) {
+		return new WP_User( $user );
+	}, $users );
 }
 
 
@@ -336,6 +337,11 @@ EOS;
 function get_vigorous_author( $period = 0, $num = 5 ) {
 	/** @var wpdb $wpdb */
 	global $wpdb;
+	$sub_query = '';
+	if ( $period ) {
+		$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
+		$sub_query = $wpdb->prepare( 'AND p.post_date >= %s', $date );
+	}
 	$subquery = $period > 0 ? 'AND TO_DAYS(NOW()) - TO_DAYS(p.post_date) <= 30' : '';
 	$sql      = <<<SQL
 		SELECT DISTINCT u.*, COUNT(p.ID) AS count, SUM(CHAR_LENGTH(p.post_content)) AS length

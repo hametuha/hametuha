@@ -246,12 +246,15 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 				</p>
 			</div>
 
-
+            <?php
+            $recent_authors = hametuha_recent_authors( 3, 2000 );
+            if ( $recent_authors ) :
+            ?>
 			<div class="col-xs-12 col-sm-4">
 				<h2>新人さん</h2>
 				<ul class="user-list">
-					<?php $counter = 0;
-					foreach ( get_recent_authors( 3 ) as $user ) : $counter ++; ?>
+					<?php
+					foreach ( $recent_authors as $index => $user ) : $counter ++; ?>
 						<li class="clearfix">
 							<?php echo get_avatar( $user->ID, 80 ); ?>
 							<div class="user-info">
@@ -265,14 +268,14 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 							<p class="list-excerpt">
 								最新投稿:
 								<a href="<?php echo get_permalink( $user->post_id ); ?>">
-									<?php echo $user->post_title; ?>
+									<?php echo esc_html( get_the_title( $user->post_id ) ) ?>
 								</a>
 							</p>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
-
+            <?php endif; ?>
 
 			<div class="col-xs-12 col-sm-4">
 				<h2>最近がんばってる</h2>

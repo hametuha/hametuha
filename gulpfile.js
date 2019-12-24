@@ -324,7 +324,7 @@ gulp.task('bs-reload', function () {
 });
 
 // Build
-gulp.task('build', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin', 'jade' ) );
+gulp.task('build', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ) );
 
 // Default Tasks
 gulp.task('default', gulp.series('watch'));
