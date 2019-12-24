@@ -6,12 +6,14 @@
 /**
  * 最新の投稿をユーザーの重複なく取得する
  *
- * @param int $limit
+ * @param int    $limit
  * @param string $post_type Default post.
+ * @param int    $period
  *
  * @return array
  */
-function hametuha_recent_posts( $limit = 5, $post_type = 'post' ) {
+function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 900 ) {
+	$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
 	/** @var wpdb $wpdb */
 	global $wpdb;
 	$sql    = <<<SQL
@@ -19,6 +21,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post' ) {
         SELECT * FROM {$wpdb->posts}
         WHERE post_type = %s
           AND post_status = 'publish'
+          AND post_date >= %s
         ORDER BY post_date DESC
 	    LIMIT %d
     ) AS p
@@ -28,7 +31,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post' ) {
 
 SQL;
 	$result = [];
-	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $post_type, $limit * 100, $limit ) ) as $row ) {
+	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $post_type, $date, $limit * 100, $limit ) ) as $row ) {
 		$result[] = new WP_Post( $row );
 	}
 
@@ -68,29 +71,42 @@ function hametuha_genre_static( $limit = 0 ) {
  * 最新のシリーズを取得する
  *
  * @param int $limit
+ * @param int $period
  *
- * @return array
+ * @return WP_Post[]
  */
-function hametuha_recent_series( $limit = 5 ) {
+function hametuha_recent_series( $limit = 5, $period = 90 ) {
 	/** @var wpdb $wpdb */
 	global $wpdb;
+	$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
 	$sql    = <<<SQL
-      SELECT DISTINCT s.*, COUNT(p.ID) AS children, MAX(p.post_date) AS latest
-      FROM {$wpdb->posts} AS s
-      LEFT JOIN {$wpdb->posts} AS p
-      ON s.ID = p.post_parent
-      WHERE s.post_type = 'series'
-        AND s.post_status = 'publish'
-        AND p.post_type = 'post'
-        AND p.post_status = 'publish'
-      GROUP BY s.ID
-      ORDER BY latest DESC
-      LIMIT %d
+		select post_parent, COUNT(ID) AS children, MAX(post_date) AS latest
+		FROM {$wpdb->posts}
+		WHERE post_type = 'post'
+		AND post_status = 'publish'
+		AND post_date > %s
+		AND post_parent != 0
+		GROUP BY post_parent
+		ORDER BY latest DESC
+		LIMIT %d
 SQL;
-	$result = [];
-	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $limit ) ) as $row ) {
-		$result[] = new WP_Post( $row );
+	$sql = $wpdb->prepare( $sql, $date, $limit * 2 );
+	$series = [];
+	foreach ( $wpdb->get_results( $sql ) as $row ) {
+		$series[ $row->post_parent ] = $row;
 	}
-
-	return $result;
+	if ( ! $series ) {
+		return [];
+	}
+	$posts = get_posts( [
+		'post_type'      => 'series',
+		'post_status'    => 'publish',
+		'post__in'       => array_keys( $series ),
+		'orderby'        => 'post__in',
+		'posts_per_page' => $limit,
+	] );
+	return array_map( function( $post ) use ( $series ) {
+		$post->children = $series[ $post->ID ]->children;
+		return $post;
+	}, $posts );
 }

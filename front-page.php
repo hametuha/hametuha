@@ -98,12 +98,12 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 				</div>
 			<?php wp_reset_postdata(); endif; ?>
 
-
+            <?php if ( $recent_posts = hametuha_recent_posts( 5 ) ) : ?>
 			<div class="col-xs-12 col-sm-4">
 				<h2>新着投稿</h2>
 				<ul class="post-list">
 					<?php
-					foreach ( hametuha_recent_posts( 5 ) as $post ) {
+					foreach ( $recent_posts as $post ) {
 						setup_postdata( $post );
 						get_template_part( 'parts/loop', 'front' );
 					}
@@ -114,6 +114,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 					<a href="<?= home_url( '/latest/' ) ?>" class="btn btn-default btn-block">すべての新着投稿</a>
 				</p>
 			</div>
+            <?php endif; ?>
 
 			<div class="col-xs-12 col-sm-4">
 				<h2>はめにゅー</h2>
@@ -229,12 +230,15 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 				</p>
 			</div>
 
-
+            <?php
+            $series_update = hametuha_recent_series( 3 );
+            if ( $series_update ) :
+            ?>
 			<div class="col-xs-12 col-sm-4">
-				<h2>新着シリーズ</h2>
+				<h2>連載更新</h2>
 				<ul class="post-list">
 					<?php
-					foreach ( hametuha_recent_series( 3 ) as $post ) {
+					foreach ( $series_update as $post ) {
 						setup_postdata( $post );
 						get_template_part( 'parts/loop', 'front' );
 					}
@@ -245,7 +249,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 					<a href="<?= get_post_type_archive_link( 'series' ) ?>" class="btn btn-default btn-block">シリーズ一覧</a>
 				</p>
 			</div>
-
+            <?php endif; ?>
             <?php
             $recent_authors = hametuha_recent_authors( 3, 2000 );
             if ( $recent_authors ) :
