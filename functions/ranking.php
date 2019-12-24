@@ -68,9 +68,9 @@ function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 	$query = <<<SQL
 		SELECT p.* FROM (
 			SELECT * FROM {$wpdb->posts}
-			WHERE post_author = %d
-			AND post_type   = 'post'
-			AND post_status = 'publish'
+			WHERE post_type   = 'post'
+			  AND post_status = 'publish'
+		      AND post_author = %d
 		) AS p
 		INNER JOIN {$wpdb->postmeta} AS pm
 		ON p.ID = pm.post_id AND pm.meta_key = '_current_pv'
