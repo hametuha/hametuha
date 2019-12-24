@@ -322,34 +322,6 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 			</div>
 
 			<div class="col-xs-12 col-sm-4">
-				<h2>一番投稿した</h2>
-				<ul class="user-list">
-					<?php $counter = 0;
-					foreach ( get_vigorous_author( 0, 3 ) as $user ) : $counter ++; ?>
-						<li class="clearfix">
-							<?php if ( 1 === $counter ) : ?>
-								<i class="icon-crown"></i>
-							<?php endif; ?>
-
-							<?= get_avatar( $user->ID, 80 ); ?>
-							<div class="user-info">
-								<h3>
-									<a href="<?= home_url( sprintf( '/doujin/detail/%s', $user->user_nicename ) ); ?>">
-										<?= esc_html( $user->display_name ); ?>
-									</a>
-									<small><?php echo mysql2date( 'Y/m/d', $user->user_registered ); ?>登録</small>
-								</h3>
-							</div>
-							<p class="list-excerpt">
-								これまでに<?= number_format_i18n( $user->length ) ?>文字を書きました。
-							</p>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-
-
-			<div class="col-xs-12 col-sm-4">
 				<h2>人気のタグ</h2>
 
 				<p class="tag-cloud">
