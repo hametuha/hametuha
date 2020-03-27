@@ -173,6 +173,10 @@ function hamenew_links( $post = null ) {
  * @return array
  */
 function hamenew_books( $post = null ) {
+	// Check version is more than 5.0.0
+	if ( ! ( function_exists( 'hamazon_info' ) && version_compare( '5.0.0', hamazon_info( 'version' ), '<=' ) ) ) {
+		return [];
+	}
 	$post = get_post( $post );
 	$asin = get_post_meta( $post->ID, '_news_related_books', true );
 	if ( ! $asin || ! class_exists( 'Hametuha\WpHamazon\Constants\AmazonConstants' ) ) {
@@ -180,25 +184,48 @@ function hamenew_books( $post = null ) {
 	}
 
 	return array_filter( array_map( function ( $code ) {
-		$result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
-		if ( is_wp_error( $result ) || 'False' === (string) $result->Items->Request->IsValid ) {
-			return false;
+		$cache_key = 'amazon_api5_' . $code;
+		$result    = get_transient( $cache_key );
+		if ( ! $result ) {
+			$result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
+			if ( is_wp_error( $result ) || ! $result ) {
+				return false;
+			}
+			set_transient( $cache_key, $result, 60 * 60 * 24 );
 		}
-		$item  = $result->Items->Item[0];
-		$url   = (string) $item->DetailPageURL;
-		$title = (string) $item->ItemAttributes->Title;
+		$url   = $result['url'];
+		$title = $result['title'];
 		if ( ! $url || ! $title ) {
 			return false;
 		}
-		$rank      = (int) $item->SalesRank;
-		$publisher = (string) $item->ItemAttributes->Publisher;
-		$author    = (string) $item->ItemAttributes->Author;
-		if ( isset( $item->LargeImage ) ) {
-			$src = (string) $item->LargeImage->URL;
-		} else {
-			$src = hamazon_no_image();
+		$rank      = $result['rank'] ?: 'N/A';
+		$publisher = 'N/A';
+		foreach ( [ 'brand', 'manufacturer' ] as $key ) {
+			if ( ! empty( $result['attributes'][ $key ] ) ) {
+				$publisher = $result['attributes'][ $key ];
+				break;
+			}
 		}
-
+		$author= [];
+		if ( ! empty( $result['attributes']['contributors'] ) ) {
+			foreach ( $result['attributes']['contributors'] as $role => $names ) {
+				foreach ( $names as $name ) {
+					$author[] = $name;
+					if ( 2 < count( $author ) ) {
+						$author[] = 'ほか';
+						break 2;
+					}
+				}
+			}
+		}
+		$author = implode( ' ', $author );
+		$src    = hamazon_no_image();
+		foreach ( [ 'large', 'medium' ] as $size ) {
+			if ( ! empty( $result['images'][ $size ] ) ) {
+				$src = $result['images'][ $size ];
+				break;
+			}
+		}
 		return [ $title, $url, $src, $author, $publisher, $rank ];
 	}, explode( "\r\n", $asin ) ) );
 }

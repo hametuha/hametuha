@@ -29,5 +29,5 @@ add_filter( 'taf_default_positions', function() {
 	];
 } );
 
-// Regoster analytics
+// Register analytics
 add_action( 'taf_head', '_hametuha_ga_code' );
