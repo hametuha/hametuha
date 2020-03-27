@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
+      - name: Start MySQL
+        run: sudo systemctl start mysql
+        
       - name: Install WordPress
         run: bash bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
 
