@@ -17,6 +17,7 @@
 			</div>
 
 
+            <?php if ( have_posts() ) : ?>
 			<!-- Tab panes -->
 			<ol class="archive-container media-list">
 				<?php
@@ -26,8 +27,12 @@
 				}
 				?>
 			</ol>
-
 			<?php wp_pagenavi(); ?>
+            <?php else : ?>
+            <div class="alert alert-warning">
+                該当するニュースはありませんでした。
+            </div>
+            <?php endif; ?>
 
 			<div class="row">
 
