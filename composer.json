@@ -2,7 +2,7 @@
   "name": "hametuha/hametuha",
   "description": "A WordPress theme for hametuha",
   "minimum-stability": "stable",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "test": "phpunit"
   },
@@ -18,7 +18,7 @@
     "ext-curl": "*",
     "hametuha/wpametu": "0.8.x-dev",
     "hametuha/hamepub": "1.0.x-dev",
-    "hametuha/hashboard": "0.8.x-dev",
+    "hametuha/hashboard": "^0.8.8",
     "hametuha/sharee": "^0.8.1"
   },
   "require-dev": {
