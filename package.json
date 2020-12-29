@@ -13,7 +13,8 @@
     "package": "gulp build",
     "watch": "gulp watch",
     "display": "gulp bs",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "gulp:task": "gulp --tasks"
   },
   "author": "Hametuha inc.",
   "license": "MIT",

@@ -233,3 +233,35 @@ add_filter( 'hamethread_subscribers', function( $subscribers, $post ) {
     }
     return $subscribers;
 }, 10, 2 );
+
+/**
+ * Hide comment author name if removed.
+ *
+ * @param string     $author
+ * @param int        $comment_id
+ * @param WP_Comment $comment
+ * @return string
+ */
+add_filter( 'get_comment_author', function ( $author, $comment_id, $comment ) {
+    if ( hametuha_is_deleted_users_comment( $comment ) ) {
+        $author = __( '退会したユーザー', 'hametuha' );
+    }
+    return $author;
+}, 10, 3 );
+
+/**
+ * Hide comment content from normal user.
+ *
+ * @param string[]    $classes    An array of comment classes.
+ * @param string      $class      A comma-separated list of additional classes added to the list.
+ * @param int         $comment_id The comment id.
+ * @param WP_Comment  $comment    The comment object.
+ * @param int|WP_Post $post_id    The post ID or WP_Post object.
+ * @return string[]
+ */
+add_filter( 'comment_class', function( $classes, $class, $comment_id, $comment, $post_id ) {
+    if ( hametuha_is_deleted_users_comment( $comment ) ) {
+        $classes[] = 'deleted-user-comment';
+    }
+    return $classes;
+} );
