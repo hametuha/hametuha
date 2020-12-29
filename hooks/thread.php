@@ -264,4 +264,4 @@ add_filter( 'comment_class', function( $classes, $class, $comment_id, $comment, 
         $classes[] = 'deleted-user-comment';
     }
     return $classes;
-} );
+}, 10, 5 );
