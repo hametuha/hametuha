@@ -250,18 +250,17 @@ add_filter( 'get_comment_author', function ( $author, $comment_id, $comment ) {
 }, 10, 3 );
 
 /**
- * Hide comment content from normal user.
+ * Hide user comment.
  *
- * @param string[]    $classes    An array of comment classes.
- * @param string      $class      A comma-separated list of additional classes added to the list.
- * @param int         $comment_id The comment id.
- * @param WP_Comment  $comment    The comment object.
- * @param int|WP_Post $post_id    The post ID or WP_Post object.
- * @return string[]
+ * @param string     $comment_text
+ * @param WP_Comment $comment
  */
-add_filter( 'comment_class', function( $classes, $class, $comment_id, $comment, $post_id ) {
-    if ( hametuha_is_deleted_users_comment( $comment ) ) {
-        $classes[] = 'deleted-user-comment';
+add_filter( 'get_comment_text', function( $comment_text, $comment ) {
+    if ( hametuha_is_deleted_users_comment( $comment ) && ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
+        $comment_text = <<<HTML
+退会したユーザーのコメントは表示されません。
+<small>※管理者と投稿者には表示されます。</small>
+HTML;
     }
-    return $classes;
-}, 10, 5 );
+    return $comment_text;
+}, 10, 2 );

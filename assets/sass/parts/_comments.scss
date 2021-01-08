@@ -102,21 +102,6 @@
   }
 }
 
-
-.deleted-user-comment {
-  > .media-body > .comment-content,
-  > .hamethread-comment-item > .hamethread-comment-body > .hamethread-comment-content {
-    position: relative;
-    filter: blur(8px);
-    overflow: hidden;
-    transition: filter .3s linear;
-
-    &:hover {
-      filter: blur(0);
-    }
-  }
-}
-
 // スマートフォンのときはアバターを小さく
 @media only screen and (max-width: $screen-xs-max) {
   #discussion {
