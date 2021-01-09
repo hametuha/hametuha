@@ -264,3 +264,13 @@ HTML;
     }
     return $comment_text;
 }, 10, 2 );
+
+/**
+ * Comments can only editable by editors.
+ */
+add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
+    if ( 'edit_comment' === $cap ) {
+      $caps = [ 'edit_others_posts' ];
+    }
+    return $caps;
+}, 10, 4 );
