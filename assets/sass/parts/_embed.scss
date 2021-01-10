@@ -5,21 +5,16 @@
     clear: both;
     margin: 10px auto;
     border: 1px solid #ddd;
-    &:after{
-      content: "";
-      display: block;
-      clear: both;
-    }
   }
+
+  &-body {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
   &-thumbnail{
     width: 150px;
     padding: 10px;
-    float: left;
-    @media only screen and (max-width: $screen-xs-max){
-      float: none;
-      margin: 0 auto;
-      text-align: center;
-    }
     a{
       display: block;
       img{
@@ -29,13 +24,27 @@
       }
     }
   }
+
   &-content{
     padding: 10px;
-    .embed-thumbnail + &{
-      margin-left: 150px;
-      @media only screen and (max-width: $screen-xs-max){
-        margin-left: 0;
-      }
+    flex: 1;
+  }
+
+  // On small screen.
+  @media only screen and (max-width: $screen-xs-max){
+    &-body {
+      display: block;
+    }
+    &-thumbnail {
+      display: none;
+      margin: 0 auto;
+      text-align: center;
+      padding-bottom: 0;
+      width: auto;
+      max-width: 200px;
+    }
+    &-minicome .embed-thumbnail {
+      display: block;
     }
   }
   &-title{
@@ -92,7 +101,6 @@
     border-top: 1px solid #ddd;
     padding: 10px;
     font-size: 12px;
-    clear: both;
     background: #f9f9f9;
     &-label{
       float: right;
@@ -109,7 +117,7 @@
   &-credit{
     &-link{
       margin-left: 0.5em;
-      transition: color .3s 0 linear;
+      transition: color .3s linear;
       font-family: sans-serif;
       &:link, &:visited{
         color: #888;
