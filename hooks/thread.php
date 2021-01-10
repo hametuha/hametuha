@@ -171,7 +171,8 @@ add_action( 'hamethread_after_comment_form', function( $args, $comment = null ) 
             匿名でコメントする
         </label>
         <small id="post_as_anonymous_description" class="form-text text-muted">
-            匿名でコメントすると、あとから編集できません。
+            匿名でコメントした場合、スレッド主および他の閲覧者には名前が表示されません。
+            過度に攻撃的な内容にならないよう注意してください。
         </small>
     </div>
     <?php
