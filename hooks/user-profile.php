@@ -20,7 +20,7 @@ add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	$contact_methods[ 'favorite_authors' ] = '好きな作家';
 	$contact_methods[ 'favorite_words' ] = '好きな言葉';
 	$contact_methods[ 'allow_contact' ] = 'コンタクトを許可する';
-
+	$contact_methods[ 'optin' ] = '破滅派通信を受けとる';
 	return $contact_methods;
 }, '_hide_profile_fields', 10, 1 );
 
@@ -90,6 +90,11 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 				'label' => '読者からのコンタクト',
 			],
 			'allow_contact' => 0,
+			'email_sep' => [
+				'type' => 'separator',
+				'label' => '破滅派からのお知らせ',
+			],
+			'optin' => 0,
 
 		];
 		foreach ( $fields as $key => $val ) {
@@ -142,6 +147,14 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 						'1' => 'メールを受け取る'
 					];
 					$field[ 'description' ] = '読者から直接メールを受けるとることを許可します。返信しない限り、メールアドレスがバレることはありません。';
+					break;
+				case 'optin':
+					$field[ 'type' ] = 'select';
+					$field[ 'options' ] = [
+						'0' => '破滅派通信を受け取らない',
+						'1' => '破滅派通信を受け取る'
+					];
+					$field[ 'description' ] = '破滅派からのお得なお知らせ情報です。';
 					break;
 				default:
 					// Do nothing.

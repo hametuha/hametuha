@@ -221,6 +221,48 @@ SQL;
 		static::s( 'Done!' );
 	}
 
+	/**
+	 * Import mail chimp csv.
+	 *
+	 * ## OPTIONS
+	 *
+	 * : <file>
+	 *   CSV file.
+	 *
+	 * : [--execute]
+	 *   IF not specified, import will never happen.
+	 *
+	 * @param array $args
+	 * @param array $assoc
+	 * @synopsis <file> [--execute]
+	 */
+	public function mailchimp( $args, $assoc ) {
+		list( $file ) = $args;
+		$execute = ! empty( $assoc['execute'] );
+		if ( ! file_exists( $file ) ) {
+			\WP_CLI::error( sprintf( 'File %s does not exist.', $file ) );
+		}
+		$matched = 0;
+		$skipped = 0;
+		\WP_CLI::line( 'Importing CSV...(m = Matched, s = Skipped)' );
+		$fp = new \SplFileObject( $file );
+		$fp->setFlags( \SplFileObject::READ_CSV );
+		foreach ( $fp as $line ) {
+			list( $email ) = $line;
+			$user_id = email_exists( $email );
+			if ( $user_id ) {
+				if ( $execute ) {
+					update_user_meta( $user_id, 'optin', 1 );
+				}
+				$matched++;
+			} else {
+				$skipped++;
+			}
+			echo $user_id ? 'm' : 's';
+		}
+		\WP_CLI::line( '' );
+		\WP_CLI::success( sprintf( 'Matched: %d / Skipped: %d', $matched, $skipped ) );
+	}
 
 	/**
 	 * Test measurement protocol

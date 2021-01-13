@@ -99,8 +99,6 @@ include __DIR__ . '/functions/display.php';
 get_template_part( 'functions/hamazon' );
 // 暗号化
 get_template_part( 'functions/crypt' );
-// メール
-get_template_part( 'functions/mail' );
 // メニュー
 get_template_part( 'functions/menu' );
 // メタ情報
