@@ -118,6 +118,7 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
  */
 add_filter( 'hamail_user_field', function( $fields, $user ) {
    $fields['optin'] = (int) get_user_meta( $user->ID, 'optin', true );
+   $fields['pseudo'] = preg_match( '/@pseudo\./u', $user->user_email ) ? 'pseudo' : 'valid' ;
    return $fields;
 }, 10, 2 );
 
