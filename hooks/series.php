@@ -15,28 +15,29 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 		switch ( $post_type ) {
 			case 'news':
 				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
+				if ( 'title' === $key ) {
 					$new_columns['thumbnail'] = 'アイキャッチ';
 				}
 				break;
 			case 'series':
-				if ( 'author' == $key ) {
+				if ( 'author' === $key ) {
 					$val = '編集者';
 					if ( current_user_can( 'edit_others_posts' ) ) {
 						$new_columns['menu_order'] = '順';
 					}
 				}
 				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
-					$new_columns['thumbnail'] = '表紙画像';
+				if ( 'title' === $key ) {
+					$new_columns['char_count']   = __( '原稿用紙', 'hametuha' );
+					$new_columns['thumbnail']    = '表紙画像';
 					$new_columns['count']        = '作品数';
 					$new_columns['sales_status'] = '販売状況';
 				}
 				break;
 			case 'post':
 				$new_columns[ $key ] = $val;
-				if ( 'title' == $key ) {
-					$new_columns['series'] = '作品集';
+				if ( 'taxonomy-campaign' === $key ) {
+					$new_columns['char_count'] = __( '原稿用紙', 'hametuha' );
 				}
 				break;
 			default:
@@ -96,6 +97,9 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 				echo '<span style="color: lightgrey;">登録なし</span>';
 			}
 			break;
+		case 'char_count':
+			echo number_format_i18n( ceil( get_post_length( $post_id ) / 400 ) ) . '枚';
+			break;
 		case 'sales_status':
 			$status = Series::get_instance()->get_status( $post_id );
 			$extra = '';
@@ -122,23 +126,10 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 				echo "<code>{$asin}</code>";
 			}
 			break;
-		case 'series':
-			$post = get_post( $post_id );
-			if ( $post->post_parent && ( $parent = get_post( $post->post_parent ) ) ) {
-				// 親がある
-				if ( current_user_can( 'edit_post', $parent->ID ) ) {
-					$url = admin_url( "post.php?post={$parent->ID}&action=edit" );
-				} else {
-					$url = get_permalink( $parent );
-				}
-				printf( '<a href="%s">%s</a>', esc_url( $url ), get_the_title( $parent ) );
-			} else {
-				// なし
-				echo '<span style="color: #d3d3d3">--</span>';
-			}
-			break;
 		default:
 			// Do nothing.
 			break;
 	}
 }, 10, 2 );
+
+

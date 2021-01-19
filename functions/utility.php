@@ -223,8 +223,7 @@ EOS;
  * 投稿の長さを返す
  *
  * @global wpdb $wpdb
- *
- * @param mixed $post
+ * @param null|int|WP_Post $post
  *
  * @return int
  */
@@ -233,15 +232,15 @@ function get_post_length( $post = null ) {
 	$post = get_post( $post );
 	if ( $post->post_type == 'series' ) {
 		$sql = <<<EOS
-			SELECT SUM(CHAR_LENGTH(post_content)) FROM {$wpdb->posts}
-			WHERE post_type = 'post' AND post_status = 'publish' AND post_parent = %d
+			SELECT post_content FROM {$wpdb->posts}
+			WHERE post_type = 'post' AND post_status IN ( 'publish', 'private' ) AND post_parent = %d
 EOS;
 
-		return intval( $wpdb->get_var( $wpdb->prepare( $sql, $post->ID ) ) );
+		$content = implode( "\n", $wpdb->get_col( $wpdb->prepare( $sql, $post->ID ) ) );
 	} else {
-
-		return mb_strlen( preg_replace( '/[\s　]/u', '', strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $post->post_content ) ) ) ), 'utf-8' );
+	    $content = $post->post_content;
 	}
+    return mb_strlen( preg_replace( '/[\s　]/u', '', str_replace( "\n\n", "\n", strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $content ) ) ) ) ), 'utf-8' );
 }
 
 /**

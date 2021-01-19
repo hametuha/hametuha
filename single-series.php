@@ -142,7 +142,11 @@
 						<i class="icon-books ok"></i> <?= number_format( $query->post_count ) ?> 作品収録
 					</li>
 					<li>
-						<?php the_post_length( '<i class="icon-reading ok"></i> ', '文字', '<i class="icon-reading ng"></i> 文字数不明' ) ?>
+                        <i class="icon-reading ok"></i>
+						<?php
+                            $length = get_post_length();
+                            printf( '%1$s文字（400字詰原稿用紙%2$s枚）', number_format_i18n( $length ), number_format_i18n( ceil( $length / 400 ) ) );
+						?>
 					</li>
 					<?php
 					$afterwords = trim( $post->post_content );
@@ -418,7 +422,7 @@
 							<img src="https://ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00QJDOM6U&Format=_FMjpg_SL80_&ID=AsinImage&MarketPlace=JP&ServiceVersion=20070822&WS=1&tag=hametuha-22" style="vertical-align:middle;"/>
 						</a>
 						<img src="https://ir-jp.amazon-adsystem.com/e/ir?t=hametuha-22&l=msn&o=9&a=B00QJDOM6U" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-						
+
 
 						<br/>
 						<a href="http://www.amazon.co.jp/gp/feature.html?docId=3078592246">

@@ -1,8 +1,7 @@
 {
   "name": "hametuha",
-  "version": "4.0.1",
-  "homepage": "http://hametuha.com",
-  "description": "Hametuha Gulp task for themes",
+  "homepage": "https://hametuha.com",
+  "description": "A WordPress Theme for Hametuha.",
   "main": "gulpfile.js",
   "repository": {
     "type": "git",

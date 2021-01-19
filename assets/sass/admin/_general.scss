@@ -180,3 +180,12 @@ div.admin-notice{
     z-index: 3;
   }
 }
+
+// 文字数カラム
+th.column-char_count {
+  width: 4em;
+}
+td.column-char_count {
+  text-align: right;
+}
+
