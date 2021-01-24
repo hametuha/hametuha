@@ -18,7 +18,7 @@ class Calculator {
 	 *
 	 * @var float
 	 */
-	const VAT_RATIO = 0.08;
+	const VAT_RATIO = 0.1;
 
 	/**
 	 * 源泉徴収

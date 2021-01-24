@@ -121,16 +121,35 @@ add_action( 'sharee_after_table', function( $table_class ) {
                     年月
                 </th>
                 <td>
+                    <?php
+					$prev_month   = (int) date_i18n( 'm' ) - 1 ?: 12;
+					$current_year = (int) date_i18n( 'Y' );
+					if ( 12 === $prev_month ) {
+                        $current_year--;
+					}
+					?>
                     <select name="year">
-                        <?php foreach ( \Hametuha\Sharee\Models\RevenueModel::get_instance()->available_years() as $year ) : ?>
-                        <option value="<?= $year ?>"><?= $year ?>年</option>
-                        <?php endforeach; ?>
+                        <?php foreach ( \Hametuha\Sharee\Models\RevenueModel::get_instance()->available_years() as $year ) {
+                            printf(
+                                '<option value="%s"%s>%s</option>',
+                                esc_attr( $year ),
+                                selected( $year, $current_year, false ),
+                                sprintf( esc_html_x( '%d年', 'Year with suffix', 'hametuha' ), $year )
+                            );
+                        } ?>
                     </select>
 
                     <select name="month">
-                    <?php for( $i = 1; $i <= 12; $i++ ) : ?>
-                    <option value="<?= $i ?>"><?= $i ?>月</option>
-                    <?php endfor; ?>
+                    <?php
+					for ( $i = 0; $i <= 12; $i++ ) {
+						$label = $i ? sprintf( _x( '%d月', 'month num', 'hametuha' ), $i ) : esc_html__( 'すべての月', 'hametuha' );
+						printf(
+                            '<option value="%s"%s>%s</option>',
+                            esc_attr( $i ),
+                            selected( $i, $prev_month, false ),
+                            esc_html( $label )
+                        );
+                    } ?>
                     </select>
                 </td>
             </tr>
@@ -152,7 +171,9 @@ add_action( 'wp_ajax_hametuha_gensen', function() {
 		}
 		$list = \Hametuha\Sharee\Models\RevenueModel::get_instance()->get_fixed_billing(
             filter_input( INPUT_POST, 'year' ),
-			filter_input( INPUT_POST, 'month' )
+			filter_input( INPUT_POST, 'month' ),
+            [],
+            true
         );
 		if ( ! $list ) {
 			throw new Exception( '該当するデータがありませんでした。' );
