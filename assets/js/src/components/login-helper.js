@@ -27,4 +27,6 @@ jQuery( document ).ready( function( $ ) {
     .attr( 'placeholder', HametuhaLoginHelper.loginPlaceHolder )
     .after( '<span class="description">' + HametuhaLoginHelper.loginDescription + '</span>' );
 
+  $( '.login-action-register #user_email' )
+    .attr( 'placeholder', HametuhaLoginHelper.emailPlaceholder );
 });
