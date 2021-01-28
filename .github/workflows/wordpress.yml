@@ -64,7 +64,7 @@ jobs:
         with:
           php-version: '7.2'
 
-      - name: Install NPM
+      - name: Install Node
         uses: actions/setup-node@v1
         with:
           node-version: '10'
