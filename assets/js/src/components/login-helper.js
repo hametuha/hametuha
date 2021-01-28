@@ -8,8 +8,8 @@ jQuery( document ).ready( function( $ ) {
 
   'use strict';
 
+  // Fix divider order.
   var $divider = $( '.login-form-divider' );
-
   if ( $divider.length ) {
     $.each( [
       '#reg_passmail',
