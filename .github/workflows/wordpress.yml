@@ -49,7 +49,7 @@ jobs:
         run: composer test
 
   release:
-    name: Build Plugin
+    name: Build Hametuha Theme
     needs: test
     if: contains(github.ref, 'tags/')
     runs-on: ubuntu-16.04
