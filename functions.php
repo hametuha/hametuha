@@ -62,6 +62,8 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 
 /**
  * Allowed sites for API callback
+ *
+ * @todo Remove absence of hametuha.pics
  */
 add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
 	return false !== array_search($host, [
