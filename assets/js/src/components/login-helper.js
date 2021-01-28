@@ -8,8 +8,8 @@ jQuery( document ).ready( function( $ ) {
 
   'use strict';
 
+  // Fix divider order.
   var $divider = $( '.login-form-divider' );
-
   if ( $divider.length ) {
     $.each( [
       '#reg_passmail',
@@ -27,4 +27,6 @@ jQuery( document ).ready( function( $ ) {
     .attr( 'placeholder', HametuhaLoginHelper.loginPlaceHolder )
     .after( '<span class="description">' + HametuhaLoginHelper.loginDescription + '</span>' );
 
+  $( '.login-action-register #user_email' )
+    .attr( 'placeholder', HametuhaLoginHelper.emailPlaceholder );
 });

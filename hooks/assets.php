@@ -196,7 +196,7 @@ add_action( 'wp_enqueue_scripts', function() {
 		wp_dequeue_style( 'contact-form-7' );
 		wp_dequeue_script( 'contact-form-7' );
 		wp_dequeue_script( 'google-recaptcha' );
-		remove_action( 'wp_footer', 'wpcf7_recaptcha_onload_script', 40 );
+		wp_dequeue_script( 'wpcf7-recaptcha' );
 	}
 	// wp-pagenavi
 	wp_dequeue_style( 'wp-pagenavi' );

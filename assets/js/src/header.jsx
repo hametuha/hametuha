@@ -17,7 +17,7 @@ class HametuHeader extends Component {
     super(props);
     this.state = Object.assign( {
       login_url: '/wp-login.php?redirect_to=' + location.pathname,
-      register: '/wp-login.php?action=register&redirect_to=' + location.pathname,
+      register: '/wp-login.php?action=register',
       lastChecked: 0,
       notifications: [],
     }, this.getStateValue() );
@@ -95,7 +95,6 @@ class HametuHeader extends Component {
                 </a>
               </li>
 
-
               {this.state.isAuthor ? (
                 <li>
                   <a href="/wp-admin/edit.php">
@@ -104,8 +103,6 @@ class HametuHeader extends Component {
                   </a>
                 </li>
               ) : null }
-
-
 
               <li className="divider"/>
               <li>
@@ -149,8 +146,6 @@ class HametuHeader extends Component {
             </ul>
           </li>
         ) : null }
-
-
 
         {this.state.loggedIn ? (
           <li className="dropdown">
@@ -212,4 +207,4 @@ class HametuHeader extends Component {
   }
 }
 
-render(<HametuHeader/>, document.getElementById('user-info'));
+render( <HametuHeader/>, document.getElementById( 'user-info' ) );
