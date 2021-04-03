@@ -140,7 +140,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 				<label for="campaign_limit">応募期限</label>
 			</th>
 			<td>
-				<input id="campaign_limit" name="campaign_limit" type="text" class="regular-text"
+				<input id="campaign_limit" name="campaign_limit" type="date" class="regular-text"
 				       placeholder="YYYY-MM-DD"
 				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ) ?>"/>
 			</td>
@@ -150,7 +150,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 				<label for="campaign_range_end">評価〆切</label>
 			</th>
 			<td>
-				<input id="campaign_range_end" name="campaign_range_end" type="text" class="regular-text"
+				<input id="campaign_range_end" name="campaign_range_end" type="date" class="regular-text"
 				       placeholder="YYYY-MM-DD"
 				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ) ?>"/>
 			</td>
@@ -187,7 +187,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 				<label for="campaign_url">URL</label>
 			</th>
 			<td>
-				<input id="campaign_url" name="campaign_url" type="text" class="regular-text"
+				<input id="campaign_url" name="campaign_url" type="url" class="regular-text"
 				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ) ?>"/>
 			</td>
 		</tr>
