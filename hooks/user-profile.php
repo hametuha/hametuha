@@ -5,22 +5,22 @@
  *
  * @param array $contactmethods
  *
- * @return array
- * @author WP Beginners
  * @url http://www.wpbeginner.com/wp-tutorials/how-to-remove-default-author-profile-fields-in-wordpress/
+ * @author WP Beginners
+ * @return array
  */
-add_filter( 'user_contactmethods', function ( $contact_methods ) {
-	$contact_methods[ 'aim' ] = 'Webサイト名';
-	unset( $contact_methods[ 'jabber' ] );
-	unset( $contact_methods[ 'yim' ] );
-	$contact_methods[ 'twitter' ] = 'twitterアカウント';
-	$contact_methods[ 'slack' ] = 'Slack名';
-	$contact_methods[ 'location' ] = '場所';
-	$contact_methods[ 'birth_place' ] = '出身地';
-	$contact_methods[ 'favorite_authors' ] = '好きな作家';
-	$contact_methods[ 'favorite_words' ] = '好きな言葉';
-	$contact_methods[ 'allow_contact' ] = 'コンタクトを許可する';
-	$contact_methods[ 'optin' ] = '破滅派通信を受けとる';
+add_filter( 'user_contactmethods', function( $contact_methods ) {
+	$contact_methods['aim'] = 'Webサイト名';
+	unset( $contact_methods['jabber'] );
+	unset( $contact_methods['yim'] );
+	$contact_methods['twitter'] = 'twitterアカウント';
+	$contact_methods['slack'] = 'Slack名';
+	$contact_methods['location'] = '場所';
+	$contact_methods['birth_place'] = '出身地';
+	$contact_methods['favorite_authors'] = '好きな作家';
+	$contact_methods['favorite_words'] = '好きな言葉';
+	$contact_methods['allow_contact'] = 'コンタクトを許可する';
+	$contact_methods['optin'] = '破滅派通信を受けとる';
 	return $contact_methods;
 }, '_hide_profile_fields', 10, 1 );
 

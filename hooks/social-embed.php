@@ -14,8 +14,8 @@ add_action( 'after_setup_theme', function() {
 		if ( ! $post_id || false === array_search( get_post( $post_id )->post_type, $allowed_post_types ) ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
-				esc_attr( $url ),
-				esc_html( 20 < strlen( $url ) ? mb_substr( $url, 0, 30, 'utf-8' ) . '&hellip;' : $url )
+				esc_url( $url ),
+				esc_html( $url )
 			);
 		}
 		$post = get_post( $post_id );
