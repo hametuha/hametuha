@@ -11,10 +11,7 @@ if ( post_password_required() ) :
 	return;
 endif;
 
-
-//
-//
-//
+// todo: 安否情報の場合の処理を変更する
 ?>
 
 	<!-- You can start editing here. -->
@@ -24,8 +21,7 @@ endif;
 		<h2 id="comments">
 			<i class="icon-bubbles2"></i> &quot;<?php the_title(); ?>&quot;へのコメント
 			<small>
-				<span
-					itemprop="<?= is_singular( 'thread' ) ? 'answerCount' : 'commentCount' ?>"><?= number_format_i18n( get_comments_number() ); ?></span>件
+				<span itemprop="commentCount"><?= number_format_i18n( get_comments_number() ); ?></span>件
 			</small>
 		</h2>
 		<?php endif; ?>
@@ -84,25 +80,13 @@ endif;
 
 		<div class="panel-body">
 
-			<?php if ( is_user_logged_in() || get_post_type() == 'thread' ) : ?>
+			<?php if ( is_user_logged_in() ) : ?>
 
 				<div id="cancel-comment-reply">
 					<small><?php cancel_comment_reply_link( '返信をキャンセル' ) ?></small>
 				</div>
 
-				<?php
-				if ( is_user_logged_in() ) {
-					$action = home_url( '/wp-comments-post.php', 'https' );
-					$label  = sprintf( '%sとしてコメント', $user_identity );
-				} else {
-					//スレッドへの匿名投稿
-					$action = get_permalink();
-					show_thread_error();
-					$label = 'コメントを送信する';
-				}
-				?>
-
-				<form action="<?php echo $action; ?>" method="post" id="commentform" class="clearfix">
+				<form action="<?php echo esc_url( home_url( 'wp-comments-post.php' ) ) ?>" method="post" id="commentform" class="clearfix">
 					<p class="comment-text">
 						<textarea placeholder="ここにコメントを記載してください" name="comment" id="comment" class="form-control"
 						          rows="10" tabindex="4"><?= isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : '' ?></textarea>
@@ -113,25 +97,16 @@ endif;
 						<code class="mono"><?php echo allowed_tags(); ?></code>
 					</p>
 
-					<?php if ( ! is_user_logged_in() ) : ?>
-						<div class="comment-as clearfix">
-							<?= WPametu::recaptcha( 'clean', 'ja' ) ?>
-							<div class="alert alert-warning">
-								<p>
-									あなたはログインしていないので、匿名でコメントを行います。スパムロボットによるコメント投稿を防ぐため、キャプチャを入力してください。
-									これによって人間であると判断します。<br/>
-									ちなみに、<a class="alert-link"
-									        href="<?php echo wp_login_url( get_permalink() . '#respond' ); ?>">ログイン</a>して記名コメントにすると、キャプチャを入力しなくて済みますし、<strong>責任感があるように見えます</strong>。
-								</p>
-							</div>
-							<?php wp_nonce_field( 'thread_anonymous_reply', '_anonymous_comment_nonce' ); ?>
-						</div>
-					<?php endif; ?>
+                    <p class="comment-allowed-tags">
+                        <strong>コメント規約: </strong>
+                        コメントは一度投稿されると編集・削除できません。よく確認してから投稿してください。
+                        また、退会後は非表示の上で保存されますので、<a href="<?php echo home_url( 'copyright' ) ?>" target="_blank" rel="noopener noreferrer">著作権について</a>をご覧になってください。
+                    </p>
 
-
-					<p class="text-center">
+                    <p class="text-center">
 						<input class="btn btn-primary btn-block" name="submit" type="submit" id="submit" tabindex="5"
-						       value="<?= esc_attr( $label ) ?>" onclick="this.value = '送信中...';"/>
+						       value="<?php esc_attr_e( '規約に同意してコメントを投稿する', 'hametuha' ) ?>"
+                               onclick="this.value = '送信中...';" />
 						<?php comment_id_fields(); ?>
 					</p>
 

@@ -5,6 +5,8 @@
 
 /**
  * メルマガ購読ページはno cache headers
+ *
+ * @deprecated
  */
 add_action( 'template_redirect', function () {
 	if ( is_page( 'merumaga' ) ) {
@@ -30,12 +32,13 @@ add_filter( 'wp_mail_from', function ( $from_mail ) {
 	if ( 0 === strpos( $from_mail, 'wordpress@' ) ) {
 		$from_mail = 'no-reply@hametuha.com';
 	}
-
 	return $from_mail;
 } );
 
 /**
  * ALO Easy Mail を上書きするフォーム
+ *
+ * @deprecated
  */
 add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
 	ob_start();
@@ -105,3 +108,40 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
 
 	return $content;
 } );
+
+/**
+ * Add user fields.
+ *
+ * @apram array   $fields
+ * @param WP_User $user
+ * @return array
+ */
+add_filter( 'hamail_user_field', function( $fields, $user ) {
+   $fields['optin'] = (int) get_user_meta( $user->ID, 'optin', true );
+   $fields['pseudo'] = preg_match( '/@pseudo\./u', $user->user_email ) ? 'pseudo' : 'valid' ;
+   return $fields;
+}, 10, 2 );
+
+/**
+ * Register generic group.
+ *
+ * @param array $groups
+ * @return array
+ */
+add_filter( 'hamail_generic_user_group', function( $groups ) {
+    if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
+        $groups[] = [
+			'id'       => 'hamail_tag_authors',
+			'label'    => __( 'タグのついた投稿の作者', 'hametuha' ),
+			'endpoint' => 'hametuha/v1/recipients/tag-authors',
+        ];
+    }
+    return $groups;
+} );
+
+/**
+ * Enable hamail APIs.
+ */
+if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
+    \Hametuha\Plugins\Hamail\TagAuthor::get_instance();
+}

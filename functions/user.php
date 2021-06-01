@@ -513,3 +513,20 @@ TXT;
 	    'Reply-To: info@hametuha.com',
 	] );
 }
+
+/**
+ * Detect if this comment is
+ *
+ * @param int|null|WP_Comment $comment Comment object.
+ * @return bool Is deleted user's comment.
+ */
+function hametuha_is_deleted_users_comment( $comment ) {
+	$comment = get_comment( $comment );
+	if ( 0 < $comment->user_id ) {
+		$user = get_userdata( $comment->user_id );
+		if ( ! $user ) {
+			return true;
+		}
+	}
+	return false;
+}

@@ -76,19 +76,30 @@ class Post extends Command {
 	 * : <format>
 	 *   1 of xml, text, tag, csv. Default xml.
 	 *
-	 * @synopsis <taxonomy> <term> [--format=<format>]
+	 * : [--endmark]
+	 *   If set, add end mark.
+	 *
+	 * : [--endmark-string=<endmark-string>]
+	 *   Set to change default endmark "——了"
+	 *
+	 * @synopsis <taxonomy> <term> [--format=<format>] [--endmark] [--endmark-string=<endmark-string>]
 	 * @param array $args
 	 * @param array $assoc
 	 */
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
-		$format = isset( $assoc['format'] ) ? $assoc['format'] : 'xml';
+		$format = $assoc['format'] ?? 'xml';
 		if ( ! in_array( $format, [ 'xml', 'text', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
 		$term = get_term_by( 'id', $term_id, $taxonomy );
 		if ( ! $term ) {
 			self::e( sprintf( 'failed to get term %d of %s', $term_id, $taxonomy ) );
+		}
+		// End mark.
+		$endmark = ! empty( $assoc['endmark'] ) ? '<p style="text-align: right">——了</p>' : '';
+		if ( $endmark && ! empty( $assoc['endmark-string'] ) ) {
+			$endmark = $assoc['endmark-string'];
 		}
 		$upload_dir = wp_upload_dir();
 		$dir = $upload_dir['basedir'] . '/indesign/' . $taxonomy . '/' . $term->slug;
@@ -122,7 +133,7 @@ class Post extends Command {
 					echo '.';
 					break;
 				case 'text':
-					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post );
+					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post, $endmark );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					break;
@@ -203,11 +214,12 @@ class Post extends Command {
 	/**
 	 * Get tagged text for InDesign.
 	 *
-	 * @param null|int|\WP_Post $post
+	 * @param null|int|\WP_Post $post    Post object to compile.
+	 * @param string            $endmark Add endmark if set.
 	 *
 	 * @return string
 	 */
-	protected function to_text( $post = null ) {
+	protected function to_text( $post = null, $endmark = '' ) {
 		$post = get_post( $post );
 		// Fix double space.
 		$content = str_replace( "\r\n", "\n", $post->post_content );
@@ -216,11 +228,15 @@ class Post extends Command {
 		$content = trim( implode( "\n", array_map( function( $line ) {
 			return '&nbsp;' === $line ? '' : $line;
 		}, explode( "\n", $content ) ) ) );
+		if ( $endmark ) {
+			$content .= "\n" . $endmark;
+		}
 		// Convert Aside, blockquote.
 		foreach ( [
 			'#<strong>([^<]+)</strong>#u'                       => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
 			'#<em>([^<]+)</em>#u'                               => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<cite>([^<]+)</cite>#u'                           => '<CharStyle:Cite>$1<CharStyle:>',
 			'#<span class="text-emphasis">([^<]+)</span>#u'     => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
 			'#<del>([^<]+)</del>#u'                             => '<CharStyle:Del>$1<CharStyle:>',
 			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#'            => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',

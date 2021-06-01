@@ -1,8 +1,7 @@
 {
   "name": "hametuha",
-  "version": "4.0.1",
   "homepage": "https://hametuha.com",
-  "description": "WordPress Theme for hametuha.",
+  "description": "A WordPress Theme for Hametuha.",
   "main": "gulpfile.js",
   "repository": {
     "type": "git",
@@ -16,7 +15,8 @@
     "package": "gulp build",
     "watch": "gulp watch",
     "display": "gulp bs",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "gulp:task": "gulp --tasks"
   },
   "author": "Hametuha inc.",
   "license": "LGPL-3.0-or-later",

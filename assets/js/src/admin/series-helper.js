@@ -71,8 +71,8 @@
             }
         });
         // 希望小売価格
-        $( '#change-price' ).click(function(){
-            if ( $(this).attr('checked') ) {
+        $( '#change-price' ).change(function(){
+            if ( $(this).prop('checked') ) {
                 $('#change-price-box').removeClass('hidden');
             } else {
                 $('#change-price-box').addClass('hidden');

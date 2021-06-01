@@ -1,12 +1,11 @@
-
 // アバターのサイズ
-@mixin comment-avatar($avatar-size){
-  .avatar{
+@mixin comment-avatar($avatar-size) {
+  .avatar {
     width: $avatar-size;
     height: $avatar-size;
   }
-  li.author{
-    .label{
+  li.author {
+    .label {
       width: $avatar-size;
       top: $avatar-size + 20;
     }
@@ -14,52 +13,63 @@
 }
 
 // コメント
-#discussion{
+#discussion {
   margin-top: 20px;
-  #comments{
+
+  #comments {
     margin-bottom: 20px;
   }
-  ul.media-list{
+
+  ul.media-list {
     border-top: 1px solid $thin-border;
     // margin
-    li.media{
+    li.media {
       list-style: none;
       position: relative;
       margin-top: 0;
       padding: 15px;
       border-bottom: 1px solid $thin-border;
-      &:nth-child(even){
+
+      &:nth-child(even) {
         background-color: $zebra-bg;
       }
     }
-    .avatar{
+
+    .avatar {
       @extend .img-circle;
     }
-    li.author{
+
+    li.author {
       position: relative;
-      .label{
+
+      .label {
         display: block;
         text-align: center;
         position: absolute;
         right: 0;
       }
     }
-    li.deep-enough ul.children{
+
+    li.deep-enough ul.children {
       padding-left: 0;
-      li{
+
+      li {
         padding: 15px 0;
       }
     }
+
     @include comment-avatar(60px);
     // スレッド
-    ul.children{
+    ul.children {
       margin-top: 15px;
       border-top: 1px solid $thin-border;
       padding-left: 15px;
-      li{
+
+      li {
         overflow: visible;
         padding: 15px 0;
-        &:before{
+
+        &:before {
           position: absolute;
           font-family: hameticon;
           left: -30px;
@@ -69,22 +79,24 @@
           color: $thin-border;
           @extend .icon-forward:before;
         }
-        &:last-child{
+
+        &:last-child {
           padding-bottom: 0;
           border-bottom: none;
         }
       }
     }
   }
-  .reply{
-    a{
+
+  .reply {
+    a {
       @extend .btn;
       @extend .btn-default;
       @extend .btn-xs;
     }
   }
 
-  .comment-content{
+  .comment-content {
     line-height: 1.6;
     @include text-justify();
   }
@@ -92,8 +104,8 @@
 
 // スマートフォンのときはアバターを小さく
 @media only screen and (max-width: $screen-xs-max) {
-  #discussion{
-    ul.media-list{
+  #discussion {
+    ul.media-list {
       @include comment-avatar(40px);
     }
   }

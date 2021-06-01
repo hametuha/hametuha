@@ -30,6 +30,7 @@ add_action( 'login_head', function() {
         'submitLabel'      => __( 'Agree with Contract and Register', 'hametuha' ),
         'loginPlaceHolder' => __( 'e.g. hametu_tarou', 'hametuha' ),
         'loginDescription' => __( 'Login name will be used as a part of URL. Alphanumeric value and some symbols(.-_@) are allowed.', 'hametuha' ),
+        'emailPlaceholder' => __( 'e.g. hametuha@example.com', 'hametuha' ),
     ] );
 	$site_icon = get_site_icon_url( 84 );
 	if ( ! $site_icon ) {
@@ -44,8 +45,36 @@ add_action( 'login_head', function() {
         .login h1 a{
             background-image: url("<?= esc_url( $site_icon ) ?>");
         }
+        .hametuha-email-subscribe {
+            margin-bottom: 20px !important;
+        }
 	</style>
 	<?php
+} );
+
+/**
+ * Add mail magazine.
+ */
+add_action( 'register_form', function() {
+    ?>
+    <p class="hametuha-email-subscribe">
+      <label>
+          <input type="checkbox" name="optin" value="1" checked />
+          <?php esc_html_e( 'メールマガジンに登録する', 'hametuha' ) ?>
+      </label>
+    </p>
+    <?php
+}, 1 );
+
+/**
+ * Register mail magazine.
+ *
+ * @param int $user_id
+ */
+add_action( 'register_new_user', function( $user_id ) {
+    if ( filter_input( INPUT_POST, 'optin' ) ) {
+        update_user_meta( $user_id, 'optin', 1 );
+    }
 } );
 
 /**

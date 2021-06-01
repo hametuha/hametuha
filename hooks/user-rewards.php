@@ -39,8 +39,9 @@ add_action( 'wp_ajax_hametuha_user_reward', function() {
 		if ( ! ( $desc = $input->post( 'description' ) ) ) {
 			throw new \Exception( '適用が入力されていません。', 500 );
 		}
+		$needs_deducting = (bool) $input->post( 'deducting' );
 		$model = \Hametuha\Sharee\Models\RevenueModel::get_instance();
-		list( $price, $unit, $tax, $deducting, $total ) = \Hametuha\Master\Calculator::revenue( $price, $unit, ! $vat_excluded, true );
+		list( $price, $unit, $tax, $deducting, $total ) = \Hametuha\Master\Calculator::revenue( $price, $unit, ! $vat_excluded, $needs_deducting );
 		if ( ! $model->add_revenue( 'task', $user_id, $price, [
 			'total' => $total,
 			'unit'  => $unit,
@@ -130,6 +131,20 @@ add_action( 'sharee_after_table', function( $table_class ) {
 						</label>
 					</td>
 				</tr>
+                <tr>
+                    <th><?php esc_html_e( '源泉徴収', 'hametuha' ); ?></th>
+                    <td>
+                        <label>
+                            <input type="radio" name="deducting" value="1" checked />
+                            <?php esc_html_e( 'する', 'hametuha' ); ?>
+                        </label>
+                        <br />
+                        <label>
+                            <input type="radio" name="deducting" value="0" />
+							<?php esc_html_e( 'しない', 'hametuha' ); ?>
+                        </label>
+                    </td>
+                </tr>
 				<tr>
 					<th><label for="created">日付</label></th>
 					<td>

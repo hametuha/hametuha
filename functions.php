@@ -62,6 +62,8 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 
 /**
  * Allowed sites for API callback
+ *
+ * @todo Remove absence of hametuha.pics
  */
 add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
 	return false !== array_search($host, [
@@ -99,8 +101,6 @@ include __DIR__ . '/functions/display.php';
 get_template_part( 'functions/hamazon' );
 // 暗号化
 get_template_part( 'functions/crypt' );
-// メール
-get_template_part( 'functions/mail' );
 // メニュー
 get_template_part( 'functions/menu' );
 // メタ情報

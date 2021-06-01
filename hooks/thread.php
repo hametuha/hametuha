@@ -171,7 +171,8 @@ add_action( 'hamethread_after_comment_form', function( $args, $comment = null ) 
             匿名でコメントする
         </label>
         <small id="post_as_anonymous_description" class="form-text text-muted">
-            匿名でコメントすると、あとから編集できません。
+            匿名でコメントした場合、スレッド主および他の閲覧者には名前が表示されません。
+            過度に攻撃的な内容にならないよう注意してください。
         </small>
     </div>
     <?php
@@ -233,3 +234,44 @@ add_filter( 'hamethread_subscribers', function( $subscribers, $post ) {
     }
     return $subscribers;
 }, 10, 2 );
+
+/**
+ * Hide comment author name if removed.
+ *
+ * @param string     $author
+ * @param int        $comment_id
+ * @param WP_Comment $comment
+ * @return string
+ */
+add_filter( 'get_comment_author', function ( $author, $comment_id, $comment ) {
+    if ( hametuha_is_deleted_users_comment( $comment ) ) {
+        $author = __( '退会したユーザー', 'hametuha' );
+    }
+    return $author;
+}, 10, 3 );
+
+/**
+ * Hide user comment.
+ *
+ * @param string     $comment_text
+ * @param WP_Comment $comment
+ */
+add_filter( 'get_comment_text', function( $comment_text, $comment ) {
+    if ( hametuha_is_deleted_users_comment( $comment ) && ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
+        $comment_text = <<<HTML
+退会したユーザーのコメントは表示されません。
+<small>※管理者と投稿者には表示されます。</small>
+HTML;
+    }
+    return $comment_text;
+}, 10, 2 );
+
+/**
+ * Comments can only editable by editors.
+ */
+add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
+    if ( 'edit_comment' === $cap ) {
+      $caps = [ 'edit_others_posts' ];
+    }
+    return $caps;
+}, 10, 4 );

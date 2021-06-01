@@ -7,7 +7,6 @@
 
 
   $(document).ready(function () {
-
     // タグ
     var $tagInput = $('#hametuha-tag-input');
     if ( $tagInput.length ) {
@@ -16,11 +15,9 @@
       var updateTagValue = function(){
         var tags = [];
         // チェックボックスを取得
-        $inputs.each(function(index, input){
-          if ( $(input).attr('checked') ) {
+        $( '.hametuha-tag-cb:checked' ).each( function( index, input ) {
             tags.push( $(input).val() );
-          }
-        });
+        } );
         // テキストエリアを取得
         $.each( $extraInput.val().replace('、', ',').split(','), function(index, tag){
           var t = $.trim(tag);
@@ -28,10 +25,12 @@
             tags.push(t);
           }
         } );
-        $('#hametuha-tag-input').val( tags.join(', ') );
+        $( '#hametuha-tag-input' ).val( tags.join( ', ' ) );
       };
       // チェックボックスを監視
-      $inputs.click(updateTagValue);
+      $inputs.change( function() {
+        updateTagValue();
+      } );
       // テキストエリアに使われていないタグを移植
       var extraTags = [];
       $.each( $tagInput.val().split(', '), function(index, tag){
@@ -60,7 +59,5 @@
       $p.prev('input').val(tags.join(', '));
     });
   });
-
-
 
 })(jQuery);
