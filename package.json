@@ -1,26 +1,30 @@
 {
   "name": "hametuha",
   "version": "4.0.1",
-  "homepage": "http://hametuha.com",
-  "description": "Hametuha Gulp task for themes",
+  "homepage": "https://hametuha.com",
+  "description": "WordPress Theme for hametuha.",
   "main": "gulpfile.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/hametuha/hametuha.git"
+    "url": "https://github.com/hametuha/hametuha.git"
   },
   "scripts": {
-    "start": "gulp build && gulp watch",
+    "start": "wp-env start",
+    "update": "wp-env start --update",
+    "stop": "wp-env stop",
+    "cli": "wp-env run cli wp",
     "package": "gulp build",
     "watch": "gulp watch",
     "display": "gulp bs",
     "gulp": "gulp"
   },
   "author": "Hametuha inc.",
-  "license": "MIT",
+  "license": "LGPL-3.0-or-later",
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@wordpress/env": "^4.0",
     "angular": "^1.4.9",
     "angular-i18n": "^1.4.9",
     "angular-ui-bootstrap": "^1.1.2",
