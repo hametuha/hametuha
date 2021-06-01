@@ -29,33 +29,35 @@ class Post extends Command {
 	 */
 	public function statistic( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
-		$term = get_term_by( 'id', $term_id, $taxonomy );
+		$term                       = get_term_by( 'id', $term_id, $taxonomy );
 		if ( ! $term ) {
 			self::e( sprintf( 'failed to get term %d of %s', $term_id, $taxonomy ) );
 		}
-		$posts = get_posts([
-			'post_type' => 'post',
-			'post_status' => 'any',
-		    'tax_query' => [
-		    	[
-		    		'taxonomy' => $taxonomy,
-			        'terms' => (int) $term_id,
-			    ],
-		    ],
-		    'posts_per_page' => -1,
-		]);
+		$posts = get_posts(
+			[
+				'post_type'      => 'post',
+				'post_status'    => 'any',
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'terms'    => (int) $term_id,
+					],
+				],
+				'posts_per_page' => -1,
+			]
+		);
 		if ( ! $posts ) {
 			self::e( 'No post found.' );
 		}
 		$table = new Table();
 		$table->setHeaders( [ 'ID', 'Length', '' ] );
-		$total = 0;
+		$total  = 0;
 		$length = 0;
 		foreach ( $posts as $post ) {
 			$length++;
-			$content = strip_tags( apply_filters( 'the_content', $post->post_content ) );
+			$content     = strip_tags( apply_filters( 'the_content', $post->post_content ) );
 			$char_length = mb_strlen( $content, 'utf-8' );
-			$total += $char_length;
+			$total      += $char_length;
 			$table->addRow( [ $post->ID, $char_length, '-' ] );
 		}
 		$table->setFooters( [ sprintf( '%d posts', $length ), sprintf( 'Total: %d', $total ), sprintf( 'Average: %d', round( $total / $length ) ) ] );
@@ -88,7 +90,7 @@ class Post extends Command {
 	 */
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
-		$format = $assoc['format'] ?? 'xml';
+		$format                     = $assoc['format'] ?? 'xml';
 		if ( ! in_array( $format, [ 'xml', 'text', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
@@ -102,24 +104,26 @@ class Post extends Command {
 			$endmark = $assoc['endmark-string'];
 		}
 		$upload_dir = wp_upload_dir();
-		$dir = $upload_dir['basedir'] . '/indesign/' . $taxonomy . '/' . $term->slug;
+		$dir        = $upload_dir['basedir'] . '/indesign/' . $taxonomy . '/' . $term->slug;
 		if ( ! is_dir( $dir ) ) {
 			mkdir( $dir, 0755, true );
 		}
 		if ( ! is_dir( $dir ) ) {
 			self::e( sprintf( 'Directory %s missed.', $dir ) );
 		}
-		$posts = get_posts([
-			'post_type' => 'post',
-			'post_status' => 'any',
-			'tax_query' => [
-				[
-					'taxonomy' => $taxonomy,
-					'terms' => (int) $term_id,
+		$posts = get_posts(
+			[
+				'post_type'      => 'post',
+				'post_status'    => 'any',
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'terms'    => (int) $term_id,
+					],
 				],
-			],
-			'posts_per_page' => -1,
-		]);
+				'posts_per_page' => -1,
+			]
+		);
 		if ( ! $posts ) {
 			self::e( 'No post found.' );
 		}
@@ -175,8 +179,8 @@ class Post extends Command {
 					break;
 				case 'tags':
 					foreach ( $this->get_tags( $post ) as $tag ) {
-						$attributes = explode( ' ', $tag );
-						$tag_name = array_shift( $attributes );
+						$attributes        = explode( ' ', $tag );
+						$tag_name          = array_shift( $attributes );
 						$tags[ $tag_name ] = implode( ' ', $attributes );
 					}
 					break;
@@ -225,23 +229,31 @@ class Post extends Command {
 		$content = str_replace( "\r\n", "\n", $post->post_content );
 		$content = str_replace( "\n\n", "\n", $content );
 		// Remove empty line.
-		$content = trim( implode( "\n", array_map( function( $line ) {
-			return '&nbsp;' === $line ? '' : $line;
-		}, explode( "\n", $content ) ) ) );
+		$content = trim(
+			implode(
+				"\n",
+				array_map(
+					function( $line ) {
+						return '&nbsp;' === $line ? '' : $line;
+					},
+					explode( "\n", $content )
+				)
+			)
+		);
 		if ( $endmark ) {
 			$content .= "\n" . $endmark;
 		}
 		// Convert Aside, blockquote.
 		foreach ( [
-			'#<strong>([^<]+)</strong>#u'                       => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong>([^<]+)</strong>#u'            => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
-			'#<em>([^<]+)</em>#u'                               => '<CharStyle:Emphasis>$1<CharStyle:>',
-			'#<cite>([^<]+)</cite>#u'                           => '<CharStyle:Cite>$1<CharStyle:>',
-			'#<span class="text-emphasis">([^<]+)</span>#u'     => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
-			'#<del>([^<]+)</del>#u'                             => '<CharStyle:Del>$1<CharStyle:>',
-			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#'            => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
-			'#<small>([^<]+)</small>#u'                         => '〔<CharStyle:Notes>$1<CharStyle:>〕',
-				  ] as $regexp => $converted ) {
+			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
+			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
+			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
+			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<small>([^<]+)</small>#u'              => '〔<CharStyle:Notes>$1<CharStyle:>〕',
+		] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
 		// Headings
@@ -249,12 +261,22 @@ class Post extends Command {
 		// Block quote, Aside, pre.
 		foreach ( [ 'Aside', 'BlockQuote', 'Pre' ] as $tag ) {
 			$tag_name = strtolower( $tag );
-			$content = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
-				$lines = trim( str_replace( "\n\n", "\n", $match[1] ) );
-				return implode( "\n", array_map( function( $line ) use ( $tag ) {
-					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
-				}, explode( "\n", $lines ) ) );
-			}, $content );
+			$content  = preg_replace_callback(
+				"#<{$tag_name}>(.*?)</{$tag_name}>#us",
+				function( $match ) use ( $tag ) {
+					$lines = trim( str_replace( "\n\n", "\n", $match[1] ) );
+					return implode(
+						"\n",
+						array_map(
+							function( $line ) use ( $tag ) {
+								return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
+							},
+							explode( "\n", $lines )
+						)
+					);
+				},
+				$content
+			);
 		}
 		// paragraph
 		foreach ( [
@@ -272,13 +294,19 @@ class Post extends Command {
 		// Remove span
 		$content = preg_replace( '#<span([^>]*?>)(.*?)</span>#u', '$2', $content );
 		// Add normal style.
-		return implode( "\n", array_map( function( $line ) {
-			if ( 0 === strpos( $line, '<ParaStyle' ) ) {
-				return $line;
-			} else {
-				return '<ParaStyle:Normal>' . $line;
-			}
-		}, explode( "\n", $content ) ) );
+		return implode(
+			"\n",
+			array_map(
+				function( $line ) {
+					if ( 0 === strpos( $line, '<ParaStyle' ) ) {
+						  return $line;
+					} else {
+						return '<ParaStyle:Normal>' . $line;
+					}
+				},
+				explode( "\n", $content )
+			)
+		);
 	}
 
 	/**
@@ -329,21 +357,24 @@ class Post extends Command {
 	 */
 	public function share_pic( $args ) {
 		list( $job_id, $message ) = $args;
-		$jobs = Jobs::get_instance();
-		$job = $jobs->get( $job_id );
+		$jobs                     = Jobs::get_instance();
+		$job                      = $jobs->get( $job_id );
 		if ( ! $job || 'text_to_image' != $job->job_key ) {
 			self::e( 'エラー' );
 		}
-		try{
+		try {
 			$api = gianism_fb_page_api();
 			if ( is_wp_error( $api ) ) {
 				throw new \Exception( $api->get_error_message(), $api->get_error_code() );
 			}
-			$response = $api->post( 'me/feed', [
-				'message' => $message,
-			] );
+			$response = $api->post(
+				'me/feed',
+				[
+					'message' => $message,
+				]
+			);
 			self::s( $response->getGraphNode()->getField( 'id' ) );
-		} catch (\Exception $e ){
+		} catch ( \Exception $e ) {
 			self::e( $e->getCode() . ': ' . $e->getMessage() );
 		}
 	}

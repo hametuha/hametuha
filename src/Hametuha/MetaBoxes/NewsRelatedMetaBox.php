@@ -21,14 +21,14 @@ class NewsRelatedMetaBox extends EditMetaBox {
 	protected $context = 'advanced';
 
 	protected $priority = 'high';
-	
+
 	protected $fields = [
 		'_news_related_links' => [
 			'class'       => Textarea::class,
 			'label'       => '関連リンク',
-		    'description' => 'ニュースソース、引用元などの重要なリンクは本文中に書かず、こちらに記載してください。URLとタイトルをパイプ（|）でつなげてください。1行ごとに一つのリンクと判断されます。',
-		    'rows'        => 3,
-		    'placeholder' => 'http://example.jp/|関連するサイトの例',
+			'description' => 'ニュースソース、引用元などの重要なリンクは本文中に書かず、こちらに記載してください。URLとタイトルをパイプ（|）でつなげてください。1行ごとに一つのリンクと判断されます。',
+			'rows'        => 3,
+			'placeholder' => 'http://example.jp/|関連するサイトの例',
 		],
 		'_news_related_books' => [
 			'class'       => Textarea::class,

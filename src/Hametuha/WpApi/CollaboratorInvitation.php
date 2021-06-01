@@ -45,7 +45,7 @@ class CollaboratorInvitation extends WpApi {
 				'validate_callback' => function( $var ) {
 					if ( 'me' === $var ) {
 						return true;
-					} else if ( ! is_numeric( $var ) ) {
+					} elseif ( ! is_numeric( $var ) ) {
 						return false;
 					} else {
 						return (bool) get_userdata( $var );
@@ -55,27 +55,33 @@ class CollaboratorInvitation extends WpApi {
 		];
 		switch ( $method ) {
 			case 'GET':
-				$args = array_merge( $args, [
-					'paged' => [
-						'type' => 'integer',
-						'default' => 1,
-						'sanitize_callback' => function( $var ) {
-							return max( 1, (int) $var );
-						},
-					],
-				] );
+				$args = array_merge(
+					$args,
+					[
+						'paged' => [
+							'type'              => 'integer',
+							'default'           => 1,
+							'sanitize_callback' => function( $var ) {
+								return max( 1, (int) $var );
+							},
+						],
+					]
+				);
 				break;
 			case 'POST':
 			case 'DELETE':
-			$args = array_merge( $args, [
-				'series_id' => [
-					'type' => 'integer',
-					'required' => true,
-					'validate_callback' => function ( $var ) {
-						return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
-					},
-				],
-			] );
+				$args = array_merge(
+					$args,
+					[
+						'series_id' => [
+							'type'              => 'integer',
+							'required'          => true,
+							'validate_callback' => function ( $var ) {
+								return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
+							},
+						],
+					]
+				);
 				break;
 		}
 		return $args;
@@ -94,11 +100,13 @@ class CollaboratorInvitation extends WpApi {
 		$response   = new \WP_REST_Response( array_map( [ $this, 'to_array' ], $this->collaborators->get_invitations( $user_id, $cur_page, $per_page ) ) );
 		$total      = $this->collaborators->total_invitations( $user_id );
 		$total_page = ceil( $total / $per_page );
-		$response->set_headers( [
-			'X-WP-Total'        => $total,
-			'X-WP-Total-Pages'  => $total_page,
-			'X-WP-Current-Page' => $cur_page,
-		] );
+		$response->set_headers(
+			[
+				'X-WP-Total'        => $total,
+				'X-WP-Total-Pages'  => $total_page,
+				'X-WP-Current-Page' => $cur_page,
+			]
+		);
 		return $response;
 	}
 
@@ -111,28 +119,38 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_post( $request ) {
 		$collaborator = $this->get_invitation( $request );
-		$series_id = $request->get_param( 'series_id' );
+		$series_id    = $request->get_param( 'series_id' );
 		if ( 0 <= $collaborator->ratio ) {
-			return new \WP_Error( 'already_collaborator', 'すでにこの作品へは招待されています。', [
-				'status' => 403,
-			] );
+			return new \WP_Error(
+				'already_collaborator',
+				'すでにこの作品へは招待されています。',
+				[
+					'status' => 403,
+				]
+			);
 		}
 		$result = $this->collaborators->confirm_invitation( $series_id, $collaborator->ID );
 		if ( is_wp_error( $result ) ) {
 			return $result;
-		} elseif( ! $result ) {
-			return new \WP_Error( 'failed_update', 'リクエストを処理できませんでした。やりなおしてください。', [
-				'status' => 500,
-			] );
+		} elseif ( ! $result ) {
+			return new \WP_Error(
+				'failed_update',
+				'リクエストを処理できませんでした。やりなおしてください。',
+				[
+					'status' => 500,
+				]
+			);
 		} else {
 			/**
 			 * Executed when collaborators are approved.
 			 */
 			do_action( 'hametuha_collaborators_approved', $collaborator, $series_id );
-			return new \WP_REST_Response( [
-				'success' => true,
-				'message' => '作品集への招待を承認しました。',
-			] );
+			return new \WP_REST_Response(
+				[
+					'success' => true,
+					'message' => '作品集への招待を承認しました。',
+				]
+			);
 		}
 	}
 
@@ -145,8 +163,8 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_delete( $request ) {
 		$collaborator = $this->get_invitation( $request );
-		$series = get_post( $request->get_param( 'series_id' ) );
-		$result = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
+		$series       = get_post( $request->get_param( 'series_id' ) );
+		$result       = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
 		/**
 		 * Executed when user denied collaborator invitation.
 		 *
@@ -154,10 +172,12 @@ class CollaboratorInvitation extends WpApi {
 		 * @param \WP_User $user
 		 */
 		do_action( 'hametuha_collaborators_denied', $collaborator, $series );
-		return is_wp_error( $result ) ? $result : new \WP_REST_Response( [
-			'success' => true,
-			'message' => '作品集への参加を辞退しました。',
-		] );
+		return is_wp_error( $result ) ? $result : new \WP_REST_Response(
+			[
+				'success' => true,
+				'message' => '作品集への参加を辞退しました。',
+			]
+		);
 	}
 
 	/**
@@ -168,7 +188,7 @@ class CollaboratorInvitation extends WpApi {
 	 * @throws \Exception
 	 */
 	private function get_invitation( $request ) {
-		$user = $this->get_user( $request );
+		$user         = $this->get_user( $request );
 		$collaborator = $this->collaborators->collaborator( $request->get_param( 'series_id' ), $user );
 		if ( $collaborator ) {
 			return $collaborator;

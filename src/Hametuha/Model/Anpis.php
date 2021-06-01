@@ -25,26 +25,33 @@ class Anpis extends Model {
 	 */
 	public function create_tweet( $user_id, $content, $mention = [] ) {
 		$id      = $this->get_pseudo_name();
-		$post_id = wp_insert_post( [
-			'post_type'    => 'anpi',
-			'post_name'    => $id,
-			'post_title'   => "つぶやき{$id}",
-			'post_content' => '',
-			'post_excerpt' => $content,
-			'post_status'  => 'publish',
-		], true );
+		$post_id = wp_insert_post(
+			[
+				'post_type'    => 'anpi',
+				'post_name'    => $id,
+				'post_title'   => "つぶやき{$id}",
+				'post_content' => '',
+				'post_excerpt' => $content,
+				'post_status'  => 'publish',
+			],
+			true
+		);
 		if ( ! is_wp_error( $post_id ) ) {
 			wp_cache_delete( 'biggest_id', 'anpi' );
 			update_post_meta( $post_id, '_is_tweet', true );
 			if ( $mention ) {
 				foreach ( $mention as $m ) {
-					$this->insert( [
-						'rel_type'  => 'mention',
-					    'object_id' => $post_id,
-					    'user_id'   => $m,
-					    'location'  => 1,
-					    'updated'   => current_time( 'mysql' ),
-					], [ '%s', '%d', '%d', '%f', '%s' ], $this->user_content_relationships );
+					$this->insert(
+						[
+							'rel_type'  => 'mention',
+							'object_id' => $post_id,
+							'user_id'   => $m,
+							'location'  => 1,
+							'updated'   => current_time( 'mysql' ),
+						],
+						[ '%s', '%d', '%d', '%f', '%s' ],
+						$this->user_content_relationships
+					);
 				}
 			}
 		}
@@ -60,14 +67,17 @@ class Anpis extends Model {
 	 */
 	public function create_base_anpi( $user_id ) {
 		$id = $this->get_pseudo_name();
-		return wp_insert_post( [
-			'post_type'    => 'anpi',
-			'post_name'    => $id,
-			'post_title'   => 'ここにタイトルを入れてください',
-			'post_content' => '',
-			'post_author'  => $user_id,
-			'post_status'  => 'auto-draft',
-		], true );
+		return wp_insert_post(
+			[
+				'post_type'    => 'anpi',
+				'post_name'    => $id,
+				'post_title'   => 'ここにタイトルを入れてください',
+				'post_content' => '',
+				'post_author'  => $user_id,
+				'post_status'  => 'auto-draft',
+			],
+			true
+		);
 	}
 
 	/**
@@ -82,11 +92,11 @@ class Anpis extends Model {
 			return [];
 		}
 		$users  = $this->select( 'r.object_id, u.*' )
-		               ->from( "{$this->user_content_relationships} AS r" )
-		               ->join( "{$this->db->users} AS u" , 'u.ID = r.user_id', 'inner' )
-		               ->where( 'r.rel_type = %s', 'mention' )
-		               ->where_in( 'r.object_id', $post_ids, '%d' )
-		               ->result();
+					   ->from( "{$this->user_content_relationships} AS r" )
+					   ->join( "{$this->db->users} AS u", 'u.ID = r.user_id', 'inner' )
+					   ->where( 'r.rel_type = %s', 'mention' )
+					   ->where_in( 'r.object_id', $post_ids, '%d' )
+					   ->result();
 		$result = [];
 		foreach ( $users as $user ) {
 			if ( ! isset( $result[ $user->object_id ] ) ) {
@@ -116,9 +126,9 @@ class Anpis extends Model {
 		$cache = wp_cache_get( 'biggest_id', 'anpi' );
 		if ( false == $cache ) {
 			$cache = (int) $this->select( 'ID' )
-			                    ->from( $this->db->posts )
-			                    ->order_by( 'ID', 'DESC' )
-			                    ->limit( 1 )->get_var();
+								->from( $this->db->posts )
+								->order_by( 'ID', 'DESC' )
+								->limit( 1 )->get_var();
 			if ( $cache ) {
 				wp_cache_set( 'biggest_id', $cache, 'anpi', 0 );
 			}

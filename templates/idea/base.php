@@ -8,10 +8,10 @@
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?php echo home_url( '' ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 			&gt;
-			<a href="<?= get_post_type_archive_link( 'ideas' ) ?>">アイデア</a>
-			&gt; <?= $breadcrumb ?>
+			<a href="<?php echo get_post_type_archive_link( 'ideas' ); ?>">アイデア</a>
+			&gt; <?php echo $breadcrumb; ?>
 		</div>
 	</div>
 
@@ -23,7 +23,7 @@
 			<div class="row ideaList">
 
 				<div class="col-xs-12 ideaList__container" ng-controller="ideaList"
-				     ng-class="( loading ? 'ideaList__container--loading' : '')">
+					 ng-class="( loading ? 'ideaList__container--loading' : '')">
 
 					<div class="page-header">
 						あなたのアイデア帳
@@ -32,18 +32,18 @@
 
 					<div class="input-group ideaList__form">
 						<input type="text" class="form-control" placeholder="アイデアを絞りこみます..." ng-model="query">
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="button" ng-click="search(query)">絞り込み</button>
-                        </span>
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="button" ng-click="search(query)">絞り込み</button>
+						</span>
 					</div>
 
 					<!-- Idea List -->
 					<div class="alert alert-warning ideaList__alert" ng-if="ideasTotal < 1">
 						<p>
 							アイデア帳は空です。
-							<a href="<?= home_url( '/my/ideas/new/' ) ?>" class="alert-link"
+							<a href="<?php echo home_url( '/my/ideas/new/' ); ?>" class="alert-link"
 							   data-action="post-idea">投稿する</a>か、
-							<a href="<?= get_post_type_archive_link( 'ideas' ) ?>" class="alert-link">こちら</a>から見つけましょう。
+							<a href="<?php echo get_post_type_archive_link( 'ideas' ); ?>" class="alert-link">こちら</a>から見つけましょう。
 						</p>
 					</div>
 
@@ -139,4 +139,5 @@
 		</div>
 	</section>
 
-<?php get_footer();
+<?php
+get_footer();

@@ -32,7 +32,7 @@ function hametuha_author_name( $post = null ) {
 	}
 	switch ( $post->post_type ) {
 		case 'series':
-			$owner_label = get_post_meta( $post->ID, '_owner_label', true );
+			$owner_label  = get_post_meta( $post->ID, '_owner_label', true );
 			$display_name = get_post_meta( $post->ID, '_owner_label', true ) ?: $user->display_name;
 			return $display_name;
 		default:
@@ -47,7 +47,7 @@ function hametuha_author_name( $post = null ) {
  * @return string
  */
 function hametuha_author_url( $user_id ) {
-	return home_url( sprintf( 'doujin/detail/%s', get_the_author_meta( 'user_nicename', $user_id  ) ) );
+	return home_url( sprintf( 'doujin/detail/%s', get_the_author_meta( 'user_nicename', $user_id ) ) );
 }
 
 /**
@@ -66,15 +66,21 @@ function hametuha_user_write_actions() {
 		],
 	];
 	if ( current_user_can( 'read' ) ) {
-		$actions = array_merge( [
-			'megaphone' => [ '#', '安否報告をする', '最近活動が滞っている人は同人諸氏に安否をお知らせしましょう。', 'anpi-new', '' ],
-			'lamp'      => [ home_url( 'my/ideas/new/' ), 'アイデアを投稿', false, '', ' data-action="post-idea"' ],
-		], $actions );
+		$actions = array_merge(
+			[
+				'megaphone' => [ '#', '安否報告をする', '最近活動が滞っている人は同人諸氏に安否をお知らせしましょう。', 'anpi-new', '' ],
+				'lamp'      => [ home_url( 'my/ideas/new/' ), 'アイデアを投稿', false, '', ' data-action="post-idea"' ],
+			],
+			$actions
+		);
 	} else {
-		$actions = array_merge( [
-			'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', '' ],
-			'key3'  => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
-		], $actions );
+		$actions = array_merge(
+			[
+				'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', '' ],
+				'key3'  => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
+			],
+			$actions
+		);
 	}
 	if ( current_user_can( 'edit_posts' ) ) {
 		$editor_actions = [
@@ -84,9 +90,12 @@ function hametuha_user_write_actions() {
 			'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '', false ],
 		];
 		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
-			$editor_actions = array_merge( [
-				'pencil6' => [ get_edit_post_link( get_queried_object_id() ), 'このページを編集', false, '', false ],
-			], $editor_actions );
+			$editor_actions = array_merge(
+				[
+					'pencil6' => [ get_edit_post_link( get_queried_object_id() ), 'このページを編集', false, '', false ],
+				],
+				$editor_actions
+			);
 		}
 		$actions = array_merge( $editor_actions, $actions );
 	} elseif ( current_user_can( 'read' ) ) {
@@ -273,7 +282,7 @@ SQL;
 function is_pending_user() {
 	$user_id = get_current_user_id();
 	if ( $user_id ) {
-		return (boolean) ( false !== array_search( 'pending', get_userdata( $user_id )->roles ) );
+		return (bool) ( false !== array_search( 'pending', get_userdata( $user_id )->roles ) );
 	} else {
 		return false;
 	}
@@ -303,7 +312,7 @@ function is_doujin_profile_page() {
  */
 function hametuha_recent_authors( $num = 5, $days = 30 ) {
 	global $wpdb;
-	$now = current_time( 'timestamp' ) - $days * 60 * 60 * 24;
+	$now  = current_time( 'timestamp' ) - $days * 60 * 60 * 24;
 	$time = date_i18n( 'Y-m-d H:i:s', $now );
 	// 最近のユーザーを取得
 	$query = <<<EOS
@@ -320,9 +329,12 @@ function hametuha_recent_authors( $num = 5, $days = 30 ) {
 EOS;
 	$query = $wpdb->prepare( $query, $time, $time, $num );
 	$users = $wpdb->get_results( $query );
-	return array_map( function( $user ) {
-		return new WP_User( $user );
-	}, $users );
+	return array_map(
+		function( $user ) {
+			return new WP_User( $user );
+		},
+		$users
+	);
 }
 
 
@@ -339,7 +351,7 @@ function get_vigorous_author( $period = 0, $num = 5 ) {
 	global $wpdb;
 	$sub_query = '';
 	if ( $period ) {
-		$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
+		$date      = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
 		$sub_query = $wpdb->prepare( 'AND p.post_date >= %s', $date );
 	}
 	$subquery = $period > 0 ? 'AND TO_DAYS(NOW()) - TO_DAYS(p.post_date) <= 30' : '';
@@ -389,19 +401,24 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 		}
 		$args           = array(
 			"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key IN (" . implode( ', ', $placeholders ) . ") AND meta_value != ''",
-			$user_id
+			$user_id,
 		);
-		$meta_key_found = $wpdb->get_var( call_user_func_array( array(
-			$wpdb,
-			'prepare'
-		), array_merge( $args, $meta_keys ) ) );
+		$meta_key_found = $wpdb->get_var(
+			call_user_func_array(
+				array(
+					$wpdb,
+					'prepare',
+				),
+				array_merge( $args, $meta_keys )
+			)
+		);
 		//プロフィール写真
 		$total ++;
 		if ( has_original_picture( $user_id ) || has_gravatar( $user_id ) ) {
 			$filled ++;
 		}
 		//パーセントを計算
-		$total += count( $meta_keys );
+		$total  += count( $meta_keys );
 		$filled += $meta_key_found;
 
 		return min( 100, round( $filled / $total * 100 ) );
@@ -441,10 +458,14 @@ function hametuha_user_selector( $name, $selected = 0, $id = '', $mode = 'any', 
 		esc_attr( $id )
 	);
 	wp_enqueue_script( 'hametuha-user-select', get_template_directory_uri() . '/assets/js/dist/components/user-select.js', [ 'select2' ], hametuha_version(), true );
-	wp_localize_script( 'hametuha-user-select', 'HametuhaUserSelect', [
-		'endpoint' => rest_url( '/hametuha/v1/doujin/search/' ),
-		'nonce'    => wp_create_nonce( 'wp_rest' ),
-	] );
+	wp_localize_script(
+		'hametuha-user-select',
+		'HametuhaUserSelect',
+		[
+			'endpoint' => rest_url( '/hametuha/v1/doujin/search/' ),
+			'nonce'    => wp_create_nonce( 'wp_rest' ),
+		]
+	);
 	wp_enqueue_style( 'select2' );
 }
 
@@ -467,9 +488,12 @@ function hametuha_user_contact_url( $post = null ) {
 	$post = get_post( $post );
 	$page = get_page_by_path( 'inquiry/for-author' );
 	if ( $page ) {
-		return add_query_arg( [
-			'work' => $post->ID,
-		], get_permalink( $page ) );
+		return add_query_arg(
+			[
+				'work' => $post->ID,
+			],
+			get_permalink( $page )
+		);
 	} else {
 		return home_url( 'inquiry' );
 	}
@@ -508,10 +532,15 @@ https://hametuha.com/
 info@hametuha.com
 TXT;
 
-	wp_mail( $user->user_email, "[破滅派] $subject", $body, [
-		'From: 破滅派編集部 <no-reply@hametuha.com>',
-	    'Reply-To: info@hametuha.com',
-	] );
+	wp_mail(
+		$user->user_email,
+		"[破滅派] $subject",
+		$body,
+		[
+			'From: 破滅派編集部 <no-reply@hametuha.com>',
+			'Reply-To: info@hametuha.com',
+		]
+	);
 }
 
 /**

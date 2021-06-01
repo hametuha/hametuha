@@ -54,21 +54,21 @@ class Editor extends Singleton {
 				continue;
 			}
 			list( $file_name, $name ) = $match;
-			$block_name = 'hametuha/' . $name;
-			$handle     = 'hametuha-block-' . $name;
-			$file_path  = $asset_dir . '/' . $file;
+			$block_name               = 'hametuha/' . $name;
+			$handle                   = 'hametuha-block-' . $name;
+			$file_path                = $asset_dir . '/' . $file;
 			// Grab deps.
 			$deps    = $this->grab_deps( $file_path );
 			$version = filemtime( $file_path );
-			wp_register_script( $handle, get_template_directory_uri() . '/assets/js/dist/blocks/' . $file , $deps, $version, true );
-			$setting = [
+			wp_register_script( $handle, get_template_directory_uri() . '/assets/js/dist/blocks/' . $file, $deps, $version, true );
+			$setting  = [
 				'editor_script' => $handle,
 			];
 			$css_path = get_template_directory() . '/assets/css/blocks/' . $name . '.css';
 			if ( file_exists( $css_path ) ) {
 				$css_version = filemtime( $css_path );
 				wp_register_style( $handle, get_template_directory_uri() . '/assets/css/blocks' . $name . '.css', [], $css_version );
-				$setting[ 'editor_style' ] = $handle;
+				$setting['editor_style'] = $handle;
 			}
 			$setting = apply_filters( 'hametuha_editor_block_setting', $setting, $handle );
 			register_block_type( $block_name, $setting );
@@ -87,7 +87,7 @@ class Editor extends Singleton {
 			return $deps;
 		}
 		// @see {wp-includes/functions.php}
-		$fp = fopen( $path, 'r' );
+		$fp  = fopen( $path, 'r' );
 		$len = 0;
 		while ( $len < 10 && ( $line = fgets( $fp, 1024 ) ) ) {
 			$len++;
@@ -119,7 +119,7 @@ class Editor extends Singleton {
 			case 'page':
 				switch ( get_page_template_slug( $post ) ) {
 					case 'page-1column.php':
-						$post_states[ 'one-columns' ] = '1カラム';
+						$post_states['one-columns'] = '1カラム';
 						break;
 				}
 				break;

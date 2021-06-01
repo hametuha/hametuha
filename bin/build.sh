@@ -13,8 +13,13 @@ curl -L https://raw.githubusercontent.com/fumikito/wp-readme/master/wp-readme.ph
 rm -rf .git
 rm -rf .github
 rm -rf .gitignore
-rm -rf .phpcs.xml.dist
+rm -rf .browserslistrc
+rm -rf .editorconfig
+rm -rf .eslintrc
+rm -rf .gitignore
+rm -rf .wp-env.json
 rm -rf node_modules
 rm -rf tests
 rm -rf bin
+rm -rf phpcs.ruleset.xml
 rm -rf phpunit.xml.dist

@@ -26,15 +26,17 @@ class Statistics extends RestTemplate {
 		if ( 1 === $page ) {
 			// Top page
 			$this->title .= ' | アクセス';
-			$this->set_data( [
-				'breadcrumb' => false,
-				'current'    => false,
-				'graph'      => '',
-				'endpoint'   => [
-					'access' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaUserPvs::ACTION, \HametuhaUserPvs::get_nonce() ) ),
-					'popular' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaPopularPosts::ACTION, \HametuhaPopularPosts::get_nonce() ) ),
-				],
-			] );
+			$this->set_data(
+				[
+					'breadcrumb' => false,
+					'current'    => false,
+					'graph'      => '',
+					'endpoint'   => [
+						'access'  => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaUserPvs::ACTION, \HametuhaUserPvs::get_nonce() ) ),
+						'popular' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaPopularPosts::ACTION, \HametuhaPopularPosts::get_nonce() ) ),
+					],
+				]
+			);
 			$this->response();
 		} else {
 			$this->method_not_found();
@@ -43,44 +45,50 @@ class Statistics extends RestTemplate {
 
 	public function get_readers() {
 		$this->title .= ' | 読者層';
-		$this->set_data( [
-			'breadcrumb' => '読者層',
-			'current'    => 'readers',
-			'graph'      => 'readers',
-			'endpoint'   => [
-				'users' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderSegment::ACTION, \HametuhaReaderSegment::get_nonce() ) ),
-				'region' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderRegion::ACTION, \HametuhaReaderRegion::get_nonce() ) ),
-			],
-		] );
+		$this->set_data(
+			[
+				'breadcrumb' => '読者層',
+				'current'    => 'readers',
+				'graph'      => 'readers',
+				'endpoint'   => [
+					'users'  => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderSegment::ACTION, \HametuhaReaderSegment::get_nonce() ) ),
+					'region' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderRegion::ACTION, \HametuhaReaderRegion::get_nonce() ) ),
+				],
+			]
+		);
 		$this->response();
 	}
 
 	public function get_traffic() {
 		$this->title .= ' | 集客';
-		$this->set_data( [
-			'breadcrumb' => '読者層',
-			'current'    => 'traffic',
-			'graph'      => 'traffic',
-			'endpoint'   => [
-				'source'      => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficSource::ACTION, \HametuhaTrafficSource::get_nonce() ) ),
-				'contributor' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficContributor::ACTION, \HametuhaTrafficContributor::get_nonce() ) ),
-				'keyword' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficKeyword::ACTION, \HametuhaTrafficKeyword::get_nonce() ) ),
-			],
-		] );
+		$this->set_data(
+			[
+				'breadcrumb' => '読者層',
+				'current'    => 'traffic',
+				'graph'      => 'traffic',
+				'endpoint'   => [
+					'source'      => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficSource::ACTION, \HametuhaTrafficSource::get_nonce() ) ),
+					'contributor' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficContributor::ACTION, \HametuhaTrafficContributor::get_nonce() ) ),
+					'keyword'     => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficKeyword::ACTION, \HametuhaTrafficKeyword::get_nonce() ) ),
+				],
+			]
+		);
 		$this->response();
 	}
 
 	public function get_feedback() {
 		$this->title .= ' | 感想';
-		$this->set_data( [
-			'breadcrumb' => '感想',
-			'current'    => 'feedback',
-			'graph'      => 'feedback',
-			'endpoint'   => [
-				'review'      => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficSource::ACTION, \HametuhaTrafficSource::get_nonce() ) ),
-				'contributor' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficContributor::ACTION, \HametuhaTrafficContributor::get_nonce() ) ),
-			],
-		] );
+		$this->set_data(
+			[
+				'breadcrumb' => '感想',
+				'current'    => 'feedback',
+				'graph'      => 'feedback',
+				'endpoint'   => [
+					'review'      => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficSource::ACTION, \HametuhaTrafficSource::get_nonce() ) ),
+					'contributor' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficContributor::ACTION, \HametuhaTrafficContributor::get_nonce() ) ),
+				],
+			]
+		);
 		$this->response();
 	}
 
@@ -92,10 +100,16 @@ class Statistics extends RestTemplate {
 	 * @param array $data
 	 */
 	protected function format( $data ) {
-		wp_enqueue_script( 'hametu-analytics', get_stylesheet_directory_uri() . '/assets/js/dist/admin/analytics.js', [
-			'google-jsapi',
-			'jquery-ui-datepicker-i18n',
-		], filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/analytics.js' ), true );
+		wp_enqueue_script(
+			'hametu-analytics',
+			get_stylesheet_directory_uri() . '/assets/js/dist/admin/analytics.js',
+			[
+				'google-jsapi',
+				'jquery-ui-datepicker-i18n',
+			],
+			filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/analytics.js' ),
+			true
+		);
 		wp_enqueue_style( 'jquery-ui-mp6' );
 		$this->load_template( 'templates/statistics/base' );
 	}

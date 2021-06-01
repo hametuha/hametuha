@@ -19,15 +19,18 @@ function has_gravatar( $user_id ) {
 		$hash     = md5( strtolower( $mail ) );
 		$endpoint = "http://www.gravatar.com/avatar/{$hash}?s=1&d=404";
 		$ch       = curl_init();
-		curl_setopt_array( $ch, array(
-			CURLOPT_URL            => $endpoint,
-			CURLOPT_HEADER         => true,
-			CURLOPT_NOBODY         => true,
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_USERAGENT      => $_SERVER['HTTP_USER_AGENT'],
-			CURLOPT_TIMEOUT        => 5,
-			CURLOPT_FOLLOWLOCATION => false,
-		) );
+		curl_setopt_array(
+			$ch,
+			array(
+				CURLOPT_URL            => $endpoint,
+				CURLOPT_HEADER         => true,
+				CURLOPT_NOBODY         => true,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_USERAGENT      => $_SERVER['HTTP_USER_AGENT'],
+				CURLOPT_TIMEOUT        => 5,
+				CURLOPT_FOLLOWLOCATION => false,
+			)
+		);
 		$header = explode( "(\r\n|\r|\n){2}", curl_exec( $ch ), 2 );
 		curl_close( $ch );
 
@@ -57,15 +60,17 @@ function has_original_picture( $user_id ) {
  *
  * @param \WP_User $user
  */
-add_action( 'edit_user_profile', function ( \WP_User $user ) {
-	/** @var \Hametuha\User\Profile\Picture $instance */
-	$instance = \Hametuha\User\Profile\Picture::get_instance();
+add_action(
+	'edit_user_profile',
+	function ( \WP_User $user ) {
+		/** @var \Hametuha\User\Profile\Picture $instance */
+		$instance = \Hametuha\User\Profile\Picture::get_instance();
 
-	$src = get_template_directory_uri() . '/assets/img/mystery-man.png';
+		$src = get_template_directory_uri() . '/assets/img/mystery-man.png';
 
-	$avatar  = get_avatar( $user->ID, 80 );
-	$new_img = preg_replace( '/class=\'[^\']+\'/u', 'class="new-img" data-src="' . $src . '"', $avatar );
-	?>
+		$avatar  = get_avatar( $user->ID, 80 );
+		$new_img = preg_replace( '/class=\'[^\']+\'/u', 'class="new-img" data-src="' . $src . '"', $avatar );
+		?>
 	<hr/>
 
 	<h3><span class="dashicons dashicons-id-alt"></span> プロフィール写真</h3>
@@ -75,20 +80,21 @@ add_action( 'edit_user_profile', function ( \WP_User $user ) {
 			<th>プロフィール写真</th>
 			<td class="image-picker">
 				<p class="image-holder">
-					<?= $avatar ?>
+					<?php echo $avatar; ?>
 					<span class="dashicons dashicons-arrow-right-alt"></span>
-					<?= $new_img ?>
+					<?php echo $new_img; ?>
 				</p>
 				<input type="hidden" name="profile_pick_id"
-				       value="<?= $instance->has_profile_pic( $user->ID ) ?: '' ?>"/>
+					   value="<?php echo $instance->has_profile_pic( $user->ID ) ?: ''; ?>"/>
 				<a class="button-primary" href="#">変更</a>
 				<a class="button" href="#">削除</a>
 			</td>
 		</tr>
 	</table>
 
-	<?php
-} );
+		<?php
+	}
+);
 
 /**
  * プロフィール画像を代わりに更新する
@@ -96,27 +102,34 @@ add_action( 'edit_user_profile', function ( \WP_User $user ) {
  * @param int $user_id
  * @param object $old_user_data
  */
-add_action( 'profile_update', function ( $user_id, $old_user_data ) {
-	if ( isset( $_POST['profile_pick_id'] ) && current_user_can( 'edit_users' ) ) {
+add_action(
+	'profile_update',
+	function ( $user_id, $old_user_data ) {
+		if ( isset( $_POST['profile_pick_id'] ) && current_user_can( 'edit_users' ) ) {
 
-		/** @var \Hametuha\User\Profile\Picture $instance */
-		$instance = \Hametuha\User\Profile\Picture::get_instance();
+			/** @var \Hametuha\User\Profile\Picture $instance */
+			$instance = \Hametuha\User\Profile\Picture::get_instance();
 
-		$profile_pick_id = $_POST['profile_pick_id'];
-		if ( is_numeric( $profile_pick_id ) ) {
-			$attachment = get_post( $profile_pick_id );
-			if ( $attachment && 'attachment' == $attachment->post_type ) {
-				// 画像のID
-				$instance->assign_user_pic( $user_id, $attachment->ID );
-				wp_update_post( [
-					'ID'          => $attachment->ID,
-					'post_author' => $user_id,
-				] );
-				update_post_meta( $attachment->ID, $instance->post_meta_key, 1 );
+			$profile_pick_id = $_POST['profile_pick_id'];
+			if ( is_numeric( $profile_pick_id ) ) {
+				$attachment = get_post( $profile_pick_id );
+				if ( $attachment && 'attachment' == $attachment->post_type ) {
+					// 画像のID
+					$instance->assign_user_pic( $user_id, $attachment->ID );
+					wp_update_post(
+						[
+							'ID'          => $attachment->ID,
+							'post_author' => $user_id,
+						]
+					);
+					update_post_meta( $attachment->ID, $instance->post_meta_key, 1 );
+				}
+			} else {
+				$instance->detach_user_pic( $user_id );
 			}
-		} else {
-			$instance->detach_user_pic( $user_id );
 		}
-	}
-}, 10, 2 );
+	},
+	10,
+	2
+);
 

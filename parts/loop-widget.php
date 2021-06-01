@@ -1,6 +1,6 @@
 <li class="recent-post-list">
-	<a href="<?php the_permalink() ?>">
-		<h3><?= hametuha_censor( get_the_title() ) ?></h3>
+	<a href="<?php the_permalink(); ?>">
+		<h3><?php echo hametuha_censor( get_the_title() ); ?></h3>
 		<p class="meta">
 			<i class="icon-folder"></i>
 			<?php
@@ -21,15 +21,23 @@
 			}
 			if ( $tax && ! is_wp_error( $tax ) ) :
 				?>
-				<?= implode( ', ', array_map( function ( $cat ) {
-					return sprintf( '<span>%s</span>', esc_html( $cat->name ) );
-				}, $tax ) ) ?>
+				<?php
+				echo implode(
+					', ',
+					array_map(
+						function ( $cat ) {
+							return sprintf( '<span>%s</span>', esc_html( $cat->name ) );
+						},
+						$tax
+					)
+				)
+				?>
 			<?php endif; ?>
-			<i class="icon-calendar"></i> <?php the_time( 'Y年n月j日' ) ?>
+			<i class="icon-calendar"></i> <?php the_time( 'Y年n月j日' ); ?>
 		</p>
 		<p class="author">
-			<?= get_avatar( get_the_author_meta( 'ID' ), 48 ) ?>
-			<?= hametuha_censor( get_the_author() ) ?>
+			<?php echo get_avatar( get_the_author_meta( 'ID' ), 48 ); ?>
+			<?php echo hametuha_censor( get_the_author() ); ?>
 		</p>
 	</a>
 

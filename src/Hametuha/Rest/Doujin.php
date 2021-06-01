@@ -52,147 +52,167 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * Override this if you need rest API
 	 */
 	public function rest_api_init() {
-		register_rest_route( 'hametuha/v1', '/doujin/followers/(?P<id>\\d+|me)/?', [
+		register_rest_route(
+			'hametuha/v1',
+			'/doujin/followers/(?P<id>\\d+|me)/?',
 			[
-				'methods'             => 'GET',
-				'callback'            => [ $this, 'api_followers' ],
-				'args'                => [
-					'id'     => [
-						'validate_callback' => function ( $var ) {
-							return 'me' === $var || is_numeric( $var );
-						},
-						'default'           => 0,
+				[
+					'methods'             => 'GET',
+					'callback'            => [ $this, 'api_followers' ],
+					'args'                => [
+						'id'     => [
+							'validate_callback' => function ( $var ) {
+								return 'me' === $var || is_numeric( $var );
+							},
+							'default'           => 0,
+						],
+						'offset' => [
+							'validate_callback' => function( $var ) {
+								return is_numeric( $var );
+							},
+							'default'           => 0,
+						],
+						's'      => [
+							'default' => '',
+						],
 					],
-					'offset' => [
-						'validate_callback' => function($var){
-							return is_numeric( $var );
-						},
-						'default'           => 0,
-					],
-					's'      => [
-						'default' => '',
-					],
+					'permission_callback' => function () {
+						return current_user_can( 'read' );
+					},
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-		] );
-		register_rest_route( 'hametuha/v1', '/doujin/following/(?P<id>\\d+|me)/?', [
+			]
+		);
+		register_rest_route(
+			'hametuha/v1',
+			'/doujin/following/(?P<id>\\d+|me)/?',
 			[
-				'methods'             => 'GET',
-				'callback'            => [ $this, 'api_following' ],
-				'args'                => [
-					'id'     => [
-						'validate_callback' => function ( $var ) {
-							return 'me' === $var || is_numeric( $var );
-						},
-						'default'           => 0,
+				[
+					'methods'             => 'GET',
+					'callback'            => [ $this, 'api_following' ],
+					'args'                => [
+						'id'     => [
+							'validate_callback' => function ( $var ) {
+								return 'me' === $var || is_numeric( $var );
+							},
+							'default'           => 0,
+						],
+						'offset' => [
+							'validate_callback' => function( $var ) {
+								return is_numeric( $var );
+							},
+							'default'           => 0,
+						],
+						's'      => [
+							'default' => '',
+						],
 					],
-					'offset' => [
-						'validate_callback' => function($var){
-							return is_numeric( $var );
-						},
-						'default'           => 0,
-					],
-					's'      => [
-						'default' => '',
-					],
+					'permission_callback' => function () {
+						return current_user_can( 'read' );
+					},
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-		] );
+			]
+		);
 		// Follow/Unfollow.
-		register_rest_route( 'hametuha/v1', '/doujin/follow/(?P<id>\d+)/?', [
+		register_rest_route(
+			'hametuha/v1',
+			'/doujin/follow/(?P<id>\d+)/?',
 			[
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'api_add_follower' ],
-				'args'                => [
-					'id' => [
-						'required'          => true,
-						'validate_callback' => function($var){
-							return is_numeric( $var );
-						},
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'api_add_follower' ],
+					'args'                => [
+						'id' => [
+							'required'          => true,
+							'validate_callback' => function( $var ) {
+								return is_numeric( $var );
+							},
+						],
 					],
+					'permission_callback' => function () {
+						return current_user_can( 'read' );
+					},
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-			[
-				'methods'             => 'DELETE',
-				'callback'            => [ $this, 'api_remove_follower' ],
-				'args'                => [
-					'id' => [
-						'required'          => true,
-						'validate_callback' => function($var){
-							return is_numeric( $var );
-						},
+				[
+					'methods'             => 'DELETE',
+					'callback'            => [ $this, 'api_remove_follower' ],
+					'args'                => [
+						'id' => [
+							'required'          => true,
+							'validate_callback' => function( $var ) {
+								return is_numeric( $var );
+							},
+						],
 					],
+					'permission_callback' => function () {
+						return current_user_can( 'read' );
+					},
 				],
-				'permission_callback' => function () {
-					return current_user_can( 'read' );
-				},
-			],
-		] );
+			]
+		);
 		// Follow/Unfollow.
-		register_rest_route( 'hametuha/v1', '/doujin/search/(?P<mode>any|friends|authors)/?', [
+		register_rest_route(
+			'hametuha/v1',
+			'/doujin/search/(?P<mode>any|friends|authors)/?',
 			[
-				'methods'             => 'GET',
-				'callback'            => [ $this, 'api_search_user' ],
-				'args'                => [
-					'mode' => [
-						'required' => true,
-					    'validate_callback' => function( $var ) {
-						    return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
-					    },
+				[
+					'methods'             => 'GET',
+					'callback'            => [ $this, 'api_search_user' ],
+					'args'                => [
+						'mode' => [
+							'required'          => true,
+							'validate_callback' => function( $var ) {
+								return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
+							},
+						],
+						's'    => [
+							'required' => true,
+						],
 					],
-					's' => [
-						'required' => true,
-					],
+					'permission_callback' => function ( $request ) {
+						switch ( $request['mode'] ) {
+							case 'friends':
+								return current_user_can( 'read' );
+								break;
+							case 'authors':
+								return true;
+								break;
+							default:
+								return current_user_can( 'list_users' );
+								break;
+						}
+					},
 				],
-				'permission_callback' => function ( $request ) {
-					switch ( $request['mode'] ) {
-						case 'friends':
-							return current_user_can( 'read' );
-							break;
-						case 'authors':
-							return true;
-							break;
-						default:
-							return current_user_can( 'list_users' );
-							break;
-					}
-				},
-			],
-		] );
+			]
+		);
 
 		// Event Participant
-		register_rest_route( 'hametuha/v1', '/participants/(?P<post_id>\d+)/?', [
+		register_rest_route(
+			'hametuha/v1',
+			'/participants/(?P<post_id>\d+)/?',
 			[
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'api_participant_status' ],
-				'args'                => [
-					'post_id' => [
-						'required' => true,
-						'validate_callback' => function( $var ) {
-							return $var && is_numeric( $var );
-						},
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'api_participant_status' ],
+					'args'                => [
+						'post_id' => [
+							'required'          => true,
+							'validate_callback' => function( $var ) {
+								return $var && is_numeric( $var );
+							},
+						],
+						'status'  => [
+							'required' => true,
+						],
+						'text'    => [
+							'default' => '',
+						],
 					],
-					'status' => [
-						'required' => true,
-					],
-				    'text' => [
-				    	'default' => '',
-				    ],
+					'permission_callback' => function ( $request ) {
+						return current_user_can( 'read' );
+					},
 				],
-				'permission_callback' => function ( $request ) {
-					return current_user_can( 'read' );
-				},
-			],
-		] );
+			]
+		);
 	}
 
 	/**
@@ -246,10 +266,13 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				$users = [];
 				break;
 			default:
-				$users = array_map( [
-					$this,
-					'process_user_data',
-				], $this->author->search( $request['s'], 'any' != $request['mode'] ) );
+				$users = array_map(
+					[
+						$this,
+						'process_user_data',
+					],
+					$this->author->search( $request['s'], 'any' != $request['mode'] )
+				);
 				break;
 		}
 		return new \WP_REST_Response( $users );
@@ -275,11 +298,11 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			return new \WP_Error( 400, 'すでに定員に達しています。', [ 'status' => 400 ] );
 		}
 		$args = [
-			'comment_type'    => 'participant',
-			'comment_post_ID' => $request['post_id'],
-			'comment_content' => $request['text'],
+			'comment_type'     => 'participant',
+			'comment_post_ID'  => $request['post_id'],
+			'comment_content'  => $request['text'],
 			'comment_approved' => 1,
-		    'user_id' => get_current_user_id(),
+			'user_id'          => get_current_user_id(),
 		];
 		if ( $comment_id = $event->get_ticket_id( get_current_user_id() ) ) {
 			$args['comment_ID'] = $comment_id;
@@ -287,26 +310,36 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			$updated = true;
 		} else {
 			$comment_id = wp_insert_comment( $args );
-			$updated = false;
+			$updated    = false;
 		}
 		update_comment_meta( $comment_id, '_participating', $request['status'] );
 		if ( $comment_id ) {
 			$organizer = get_userdata( $post->post_author );
 			if ( get_current_user_id() != $post->post_author ) {
-				do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
-					'post'        => $post,
-					'status'      => $request['status'],
-					'organizer'   => $organizer,
-					'participant' => get_userdata( get_current_user_id() ),
-					'update'      => $updated,
-				    'message'     => $request['text'],
-				] );
+				do_action(
+					'hametuha_notification',
+					'participant',
+					"参加状況: {$post->post_title}",
+					$organizer->user_email,
+					[
+						'post'        => $post,
+						'status'      => $request['status'],
+						'organizer'   => $organizer,
+						'participant' => get_userdata( get_current_user_id() ),
+						'update'      => $updated,
+						'message'     => $request['text'],
+					]
+				);
 			}
 			return new \WP_REST_Response( $event->get_user_object( $comment_id ) );
 		} else {
-			return new \WP_Error( 500, 'ステータスの変更に失敗しました。', [
-				'status' => 500,
-			] );
+			return new \WP_Error(
+				500,
+				'ステータスの変更に失敗しました。',
+				[
+					'status' => 500,
+				]
+			);
 		}
 	}
 
@@ -319,13 +352,16 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	protected function process_user_data( $user, $context = 'api' ) {
 		$user_data = [
-			'ID'     => $user->ID,
-		    'name'   => $user->display_name,
-		    'avatar' => get_avatar_url( $user->ID, [
-		    	'size' => 96,
-		    ] ),
-		    'role' => hametuha_user_role( $user ),
-		    'profile_url' => $user->has_cap( 'edit_posts' ) ? home_url( "/doujin/detail/{$user->user_nicename}/" ) : '',
+			'ID'          => $user->ID,
+			'name'        => $user->display_name,
+			'avatar'      => get_avatar_url(
+				$user->ID,
+				[
+					'size' => 96,
+				]
+			),
+			'role'        => hametuha_user_role( $user ),
+			'profile_url' => $user->has_cap( 'edit_posts' ) ? home_url( "/doujin/detail/{$user->user_nicename}/" ) : '',
 		];
 		/**
 		 * ユーザーのデータを返すフィルター
@@ -436,12 +472,14 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	public function get_detail( $author_name ) {
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . ' | ' . $this->title;
-		$this->set_data( [
-			'breadcrumb' => false,
-			'current'    => false,
-			'template'   => '',
-			'reviews'    => $this->get_review_json(),
-		] );
+		$this->set_data(
+			[
+				'breadcrumb' => false,
+				'current'    => false,
+				'template'   => '',
+				'reviews'    => $this->get_review_json(),
+			]
+		);
 		$this->response();
 	}
 
@@ -453,11 +491,13 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		$this->auth_redirect();
 		$this->doujin = new \WP_User( get_current_user_id() );
 		$this->title  = 'フォロワー | ' . $this->title;
-		$this->set_data( [
-			'breadcrumb' => false,
-			'current'    => false,
-			'template'   => 'follower',
-		] );
+		$this->set_data(
+			[
+				'breadcrumb' => false,
+				'current'    => false,
+				'template'   => 'follower',
+			]
+		);
 		$this->response();
 	}
 
@@ -498,17 +538,29 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	protected function format( $data ) {
 		if ( isset( $data['reviews'] ) ) {
 			$path = '/assets/js/dist/admin/profile.js';
-			wp_enqueue_script( 'hametha-profile', get_stylesheet_directory_uri() . $path, [
-				'jquery',
-				'google-jsapi',
-			], filemtime( get_stylesheet_directory() . $path ), true );
+			wp_enqueue_script(
+				'hametha-profile',
+				get_stylesheet_directory_uri() . $path,
+				[
+					'jquery',
+					'google-jsapi',
+				],
+				filemtime( get_stylesheet_directory() . $path ),
+				true
+			);
 			wp_localize_script( 'hametha-profile', 'HametuhaReviews', $data['reviews'] );
 		} elseif ( isset( $data['template'] ) && 'follower' == $data['template'] ) {
 			$path = '/assets/js/dist/components/followers.js';
-			wp_enqueue_script( 'hametuha-follower', get_stylesheet_directory_uri() . $path, [
-				'angular',
-				'hametu-follow',
-			], filemtime( get_stylesheet_directory() . $path ), true );
+			wp_enqueue_script(
+				'hametuha-follower',
+				get_stylesheet_directory_uri() . $path,
+				[
+					'angular',
+					'hametu-follow',
+				],
+				filemtime( get_stylesheet_directory() . $path ),
+				true
+			);
 		}
 		$this->load_template( 'templates/doujin/base' );
 	}

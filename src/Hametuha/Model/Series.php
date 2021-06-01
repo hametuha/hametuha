@@ -172,13 +172,15 @@ class Series extends Model {
 	 * @return mixed|null
 	 */
 	public function get_series_range( $post_id ) {
-		return $this->select( "MAX(post_date) AS last_date, MIN(post_date) AS start_date" )
+		return $this->select( 'MAX(post_date) AS last_date, MIN(post_date) AS start_date' )
 					->from( $this->db->posts )
-					->wheres( [
-						"post_type = %s"   => 'post',
-						"post_status = %s" => 'publish',
-						"post_parent = %d" => $post_id,
-					] )->get_row();
+					->wheres(
+						[
+							'post_type = %s'   => 'post',
+							'post_status = %s' => 'publish',
+							'post_parent = %d' => $post_id,
+						]
+					)->get_row();
 	}
 
 	/**
@@ -190,11 +192,13 @@ class Series extends Model {
 		return (int) $this->select( 'COUNT(p.ID)' )
 						  ->from( "{$this->db->posts} AS p" )
 						  ->join( "{$this->db->postmeta} AS pm", "pm.post_id = p.ID AND pm.meta_key = '_kdp_status'" )
-						  ->wheres( [
-							  'p.post_type = %s'   => 'series',
-							  'p.post_status = %s' => 'publish',
-							  'pm.meta_value = %d' => 2,
-						  ] )->get_var();
+						->wheres(
+							[
+								'p.post_type = %s'   => 'series',
+								'p.post_status = %s' => 'publish',
+								'pm.meta_value = %d' => 2,
+							]
+						)->get_var();
 	}
 
 	/**
@@ -227,17 +231,25 @@ class Series extends Model {
 	 * @return int|string|array
 	 */
 	public function get_visibility( $series_id ) {
-		$key = get_post_meta( $series_id, '_visibility', true );
-		$values = array_unique( array_filter( array_map( function( $var ) {
-			$number = trim( $var );
-			if ( is_numeric( $var ) ) {
-				return (int) $var;
-			} else {
-				return '';
-			}
-		}, explode( ',', $key ) ), function( $numeric ) {
-			return is_numeric( $numeric );
-		} ) );
+		$key    = get_post_meta( $series_id, '_visibility', true );
+		$values = array_unique(
+			array_filter(
+				array_map(
+					function( $var ) {
+						$number = trim( $var );
+						if ( is_numeric( $var ) ) {
+							  return (int) $var;
+						} else {
+							return '';
+						}
+					},
+					explode( ',', $key )
+				),
+				function( $numeric ) {
+					return is_numeric( $numeric );
+				}
+			)
+		);
 		if ( empty( $values ) ) {
 			return '';
 		} elseif ( 1 === count( $values ) ) {
@@ -255,7 +267,7 @@ class Series extends Model {
 	 * @return bool
 	 */
 	public function should_hide( $post = null ) {
-		$post        = get_post( $post );
+		$post = get_post( $post );
 		if ( $external = hametuha_external_url( $post ) ) {
 			return true;
 		}
@@ -263,7 +275,7 @@ class Series extends Model {
 		// No limit
 		if ( 0 === $limit_index ) {
 			return true;
-		} else if ( ! $limit_index ) {
+		} elseif ( ! $limit_index ) {
 			return false;
 		}
 		$cur_index = $this->get_index( $post );
@@ -297,8 +309,8 @@ class Series extends Model {
 
 		return (int) $this->select( 'COUNT(ID)' )->from( $this->db->posts )
 						  ->where( 'post_type = %s', 'post' )
-						  ->where( "post_status = %s", 'publish' )
-						  ->where( "post_parent = %d", $post->ID )
+						  ->where( 'post_status = %s', 'publish' )
+						  ->where( 'post_parent = %d', $post->ID )
 						  ->get_var();
 	}
 
@@ -311,7 +323,7 @@ class Series extends Model {
 	 */
 	public function get_index( $post = null ) {
 		static $store = [];
-		$post = get_post( $post );
+		$post         = get_post( $post );
 		if ( ! $post || ! $post->post_parent ) {
 			return 1;
 		}
@@ -329,12 +341,15 @@ class Series extends Model {
 SQL;
 			$index              = (int) $this->select( 'COUNT(ID)' )
 											 ->from( $this->db->posts )
-											 ->where( $query, [
-												 $post->post_parent,
-												 $post->menu_order,
-												 $post->post_date,
-												 $post->menu_order
-											 ] )
+											->where(
+												$query,
+												[
+													$post->post_parent,
+													$post->menu_order,
+													$post->post_date,
+													$post->menu_order,
+												]
+											)
 											 ->get_var();
 			$store[ $post->ID ] = $index;
 		}
@@ -406,10 +421,10 @@ SQL;
 	 * @return string
 	 */
 	public function prev( $before = '<li>', $after = '</li>', $post = null, $next = false ) {
-		$post  = get_post( $post );
-		$index = $this->get_index( $post );
-		$icon = $next ? 'right2' : 'left';
-		$link = <<<'HTML'
+		$post    = get_post( $post );
+		$index   = $this->get_index( $post );
+		$icon    = $next ? 'right2' : 'left';
+		$link    = <<<'HTML'
 			<a class="series-pager-link" href="%3$s">
 				<small class="series-pager-nombre">第%2$s話</small>
 				<span class="series-pager-text hidden-xs">%1$s</span>
@@ -441,11 +456,17 @@ HTML;
 	 * @return bool
 	 */
 	public function update_order( $post_id, $order ) {
-		return (bool) $this->update( [
-			'menu_order' => $order,
-		], [
-			'ID' => $post_id
-		], [ '%d' ], [ '%d' ], $this->db->posts );
+		return (bool) $this->update(
+			[
+				'menu_order' => $order,
+			],
+			[
+				'ID' => $post_id,
+			],
+			[ '%d' ],
+			[ '%d' ],
+			$this->db->posts
+		);
 	}
 
 	/**
@@ -466,7 +487,7 @@ HTML;
 			$where1 = '';
 			$where2 = '';
 		}
-		$query  = <<<SQL
+		$query                = <<<SQL
         SELECT SQL_CALC_FOUND_ROWS
         cs.*, cm2.meta_value AS rank, cm.meta_value AS priority FROM (
             (
@@ -497,13 +518,18 @@ HTML;
                  cs.comment_date DESC
         LIMIT %d, %d
 SQL;
-		$return = [
-			'rows'     => $this->db->get_results( $this->db->prepare(
-				$query, $series_id, $series_id,
-				( $paged - 1 ) * $per_page, $per_page
-			) ),
+		$return               = [
+			'rows'     => $this->db->get_results(
+				$this->db->prepare(
+					$query,
+					$series_id,
+					$series_id,
+					( $paged - 1 ) * $per_page,
+					$per_page
+				)
+			),
 			'total'    => (int) $this->db->get_var( 'SELECT FOUND_ROWS()' ),
-			'cur_page'    => $paged,
+			'cur_page' => $paged,
 			'per_page' => $per_page,
 		];
 		$return['total_page'] = ceil( $return['total'] / $per_page );
@@ -556,7 +582,7 @@ SQL;
 	 * @return false|\WP_Error
 	 */
 	public function validate( $post = null ) {
-		$post = get_post( $post );
+		$post   = get_post( $post );
 		$errors = new \WP_Error();
 		if ( 'series' != $post->post_type ) {
 			$errors->add( 'fatal', 'これは作品集ではありません' );
@@ -580,17 +606,21 @@ SQL;
 		// 登録された文章
 		$length = get_post_length( $post );
 		if ( 2000 > $length ) {
-			if ( ! count( get_posts( [
-				'post_type'      => 'post',
-				'post_status'    => 'publish',
-				'post_parent'    => get_the_ID(),
-				'posts_per_page' => - 1,
-				'orderby'        => [
-					'menu_order' => 'DESC',
-					'date'       => 'ASC',
-				],
-				'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
-			] ) )
+			if ( ! count(
+				get_posts(
+					[
+						'post_type'      => 'post',
+						'post_status'    => 'publish',
+						'post_parent'    => get_the_ID(),
+						'posts_per_page' => - 1,
+						'orderby'        => [
+							'menu_order' => 'DESC',
+							'date'       => 'ASC',
+						],
+						'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
+					]
+				)
+			)
 			) {
 				$errors->add( 'fatal', '作品が1つも登録されていません。' );
 			} else {
@@ -634,7 +664,7 @@ SQL;
 	 * @return bool|\WP_Error
 	 */
 	public function safe_after_published( $series_id ) {
-		$error = new \WP_Error();
+		$error  = new \WP_Error();
 		$series = get_post( $series_id );
 		if ( ! $series || 'series' !== $series->post_type ) {
 			return false;
@@ -721,7 +751,7 @@ SQL;
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		switch( $name ) {
+		switch ( $name ) {
 			case 'files':
 				return CompiledFiles::get_instance();
 			default:

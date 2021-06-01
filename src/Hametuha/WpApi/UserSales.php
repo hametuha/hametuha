@@ -36,22 +36,22 @@ class UserSales extends WpApi {
 	public function get_arguments( $method ) {
 		$args = [
 			'user_id' => [
-				'required' => true,
+				'required'          => true,
 				'validate_callback' => function( $var ) {
 					return preg_match( '#^(total|me|\d+)$#', $var ) ?: new \WP_Error( 'malformat', 'ユーザーIDが不正です。' );
-				}
+				},
 			],
 		];
 		switch ( $method ) {
 			case 'GET':
-				$args['year'] = [
-					'default' => date_i18n( 'Y' ),
+				$args['year']  = [
+					'default'           => date_i18n( 'Y' ),
 					'validate_callback' => function( $var ) {
 						return preg_match( '#\d{4}#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
 				];
 				$args['month'] = [
-					'default' => date_i18n( 'm' ),
+					'default'           => date_i18n( 'm' ),
 					'validate_callback' => function( $var ) {
 						return preg_match( '#\d{1,2}#', $var ) ?: new \WP_Error( 'malformat', '月は2桁の整数です。' );
 					},
@@ -82,16 +82,18 @@ class UserSales extends WpApi {
 				break;
 		}
 		$response = [
-			'total'     => 0,
-			'records'   => [],
+			'total'   => 0,
+			'records' => [],
 		];
-		foreach ( $this->sales->get_records( [
-			'author' => $user_id,
-			'per_page' => 0,
-			'year' => $request['year'],
-			'month' => $request['month']
-		] ) as $sales ) {
-			$response['total'] += (float) $sales->royalty;
+		foreach ( $this->sales->get_records(
+			[
+				'author'   => $user_id,
+				'per_page' => 0,
+				'year'     => $request['year'],
+				'month'    => $request['month'],
+			]
+		) as $sales ) {
+			$response['total']    += (float) $sales->royalty;
 			$response['records'][] = $sales;
 		}
 		return new \WP_REST_Response( $response );

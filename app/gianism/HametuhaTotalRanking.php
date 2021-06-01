@@ -35,11 +35,11 @@ class HametuhaTotalRanking extends Daily {
 	public function do_cron() {
 		if ( ! self::SKIP_CRON && $this->ga ) {
 			$start_index = 1;
-			$did         = [ ];
+			$did         = [];
 			while ( $result = $this->retrieve( $start_index ) ) {
 				foreach ( $result as $row ) {
 					list( $post_id, $pv ) = $row;
-					$post_id = trim( $post_id, '/' );
+					$post_id              = trim( $post_id, '/' );
 					if ( false === array_search( $post_id, $did ) ) {
 						$did[]   = $post_id;
 						$old     = (int) get_post_meta( $post_id, '_old_pv', true );
@@ -67,13 +67,18 @@ class HametuhaTotalRanking extends Daily {
 	protected function retrieve( $offset ) {
 		$start_date = '2014-11-02';
 		$end_date   = date_i18n( 'Y-m-d', current_time( 'timestamp' ) - 60 * 60 * 24 * 3 ); // 2 days ago
-		return $this->fetch( $start_date, $end_date, 'ga:pageviews', array(
-			'dimensions'  => 'ga:pagePathLevel2',
-			'sort'        => '-ga:pageviews',
-			'max-results' => 200,
-			'filters'     => 'ga:dimension1==post;ga:pagePath!@preview',
-			'start-index' => $offset,
-		) );
+		return $this->fetch(
+			$start_date,
+			$end_date,
+			'ga:pageviews',
+			array(
+				'dimensions'  => 'ga:pagePathLevel2',
+				'sort'        => '-ga:pageviews',
+				'max-results' => 200,
+				'filters'     => 'ga:dimension1==post;ga:pagePath!@preview',
+				'start-index' => $offset,
+			)
+		);
 	}
 
 
@@ -88,11 +93,11 @@ class HametuhaTotalRanking extends Daily {
 		$result = $this->retrieve( 1 );
 		foreach ( $result as $row ) {
 			list( $post_id, $pv ) = $row;
-			$post_id  = trim( $post_id, '/' );
-			$old      = (int) get_post_meta( $post_id, '_old_pv', true );
-			$current  = (int) get_post_meta( $post_id, '_current_pv', true );
-			$latest   = $old + $pv;
-			$return[] = compact( 'path', 'post_id', 'pv', 'old', 'current', 'latest' );
+			$post_id              = trim( $post_id, '/' );
+			$old                  = (int) get_post_meta( $post_id, '_old_pv', true );
+			$current              = (int) get_post_meta( $post_id, '_current_pv', true );
+			$latest               = $old + $pv;
+			$return[]             = compact( 'path', 'post_id', 'pv', 'old', 'current', 'latest' );
 		}
 
 		return $return;

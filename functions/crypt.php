@@ -33,18 +33,20 @@ function hametuha_unique_id( $length ) {
  * @return bool
  */
 function hametuha_validate_web_hook( $slug, $token ) {
-	return (bool) get_posts( [
-		'post_type'   => 'web-hook',
-	    'post_status' => 'publish',
-	    'posts_per_page' => 1,
-	    'name'        => $slug,
-	    'meta_query' => [
-	    	[
-	    		'key' => '_webhook_token',
-		        'value' => $token,
-		    ],
-	    ],
-	] );
+	return (bool) get_posts(
+		[
+			'post_type'      => 'web-hook',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'name'           => $slug,
+			'meta_query'     => [
+				[
+					'key'   => '_webhook_token',
+					'value' => $token,
+				],
+			],
+		]
+	);
 }
 
 /**

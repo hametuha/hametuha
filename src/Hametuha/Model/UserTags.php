@@ -47,11 +47,13 @@ class UserTags extends TermUserRelationships {
 	public function add_user_tag( $user_id, $post_id, $term_taxonomy_id ) {
 		$existence = $this->record_exists( $user_id, $post_id, $term_taxonomy_id );
 		if ( ! $existence ) {
-			return (int) $this->insert( [
-				'user_id'          => $user_id,
-				'object_id'        => $post_id,
-				'term_taxonomy_id' => $term_taxonomy_id,
-			] );
+			return (int) $this->insert(
+				[
+					'user_id'          => $user_id,
+					'object_id'        => $post_id,
+					'term_taxonomy_id' => $term_taxonomy_id,
+				]
+			);
 		} else {
 			return - 1;
 		}
@@ -67,11 +69,13 @@ class UserTags extends TermUserRelationships {
 	 * @return bool
 	 */
 	public function remove_user_tag( $user_id, $post_id, $term_taxonomy_id ) {
-		return (bool) $this->delete_where( [
-			[ 'user_id', '=', $user_id, '%d' ],
-			[ 'object_id', '=', $post_id, '%d' ],
-			[ 'term_taxonomy_id', '=', $term_taxonomy_id, '%d' ],
-		] );
+		return (bool) $this->delete_where(
+			[
+				[ 'user_id', '=', $user_id, '%d' ],
+				[ 'object_id', '=', $post_id, '%d' ],
+				[ 'term_taxonomy_id', '=', $term_taxonomy_id, '%d' ],
+			]
+		);
 	}
 
 	/**
@@ -84,12 +88,14 @@ class UserTags extends TermUserRelationships {
 	 */
 	public function get_post_tags( $post_id, $user_id = 0 ) {
 		return $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*, COUNT({$this->table}.user_id) AS number" )
-		            ->select( sprintf( "SUM({$this->table}.user_id = %d) AS owning", $user_id ) )
-		            ->wheres( [
-			            "{$this->table}.object_id = %d"        => $post_id,
-			            "{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy
-		            ] )->order_by( "{$this->terms}.name", 'ASC' )
-		            ->group_by( "{$this->table}.term_taxonomy_id" )->result();
+					->select( sprintf( "SUM({$this->table}.user_id = %d) AS owning", $user_id ) )
+					->wheres(
+						[
+							"{$this->table}.object_id = %d" => $post_id,
+							"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
+						]
+					)->order_by( "{$this->terms}.name", 'ASC' )
+					->group_by( "{$this->table}.term_taxonomy_id" )->result();
 	}
 
 	/**
@@ -103,11 +109,13 @@ class UserTags extends TermUserRelationships {
 	 */
 	public function get_latest_tag( $post_id, $term_taxonomy_id, $user_id = 0 ) {
 		$row = $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*, COUNT({$this->table}.user_id) AS number" )
-		            ->select( sprintf( "SUM({$this->table}.user_id = %d) AS owning", $user_id ) )
-		            ->wheres( [
-			            "{$this->table}.object_id = %d"        => $post_id,
-			            "{$this->table}.term_taxonomy_id = %d" => $term_taxonomy_id
-		            ] )->group_by( "{$this->table}.term_taxonomy_id" )->get_row( '', true );
+					->select( sprintf( "SUM({$this->table}.user_id = %d) AS owning", $user_id ) )
+					->wheres(
+						[
+							"{$this->table}.object_id = %d" => $post_id,
+							"{$this->table}.term_taxonomy_id = %d" => $term_taxonomy_id,
+						]
+					)->group_by( "{$this->table}.term_taxonomy_id" )->get_row( '', true );
 
 		return $row;
 	}
@@ -123,12 +131,12 @@ class UserTags extends TermUserRelationships {
 	 */
 	public function tag_search( $query, $offset = 0, $per_page = 10 ) {
 		$result = $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*" )
-		               ->from( $this->terms )
-		               ->join( $this->term_taxonomy, "{$this->terms}.term_id = {$this->term_taxonomy}.term_id", 'INNER' )
-		               ->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
-		               ->where_like( "{$this->terms}.name", $query )
-		               ->order_by( "{$this->terms}.name", 'ASC' )
-		               ->limit( $per_page, $offset * $per_page )->result();
+					   ->from( $this->terms )
+					   ->join( $this->term_taxonomy, "{$this->terms}.term_id = {$this->term_taxonomy}.term_id", 'INNER' )
+					   ->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
+					   ->where_like( "{$this->terms}.name", $query )
+					   ->order_by( "{$this->terms}.name", 'ASC' )
+					   ->limit( $per_page, $offset * $per_page )->result();
 
 		return $result;
 	}

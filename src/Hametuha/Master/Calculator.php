@@ -42,8 +42,8 @@ class Calculator {
 	 * @return float|\WP_Error
 	 */
 	public static function get_exchange_ratio( $from, $base = 'JPY' ) {
-		$from = strtoupper( $from );
-		$base = strtoupper( $base );
+		$from  = strtoupper( $from );
+		$base  = strtoupper( $base );
 		$key   = "CURRENCY_FROM_{$base}";
 		$rates = get_transient( $key );
 		if ( false === $rates ) {
@@ -102,7 +102,7 @@ class Calculator {
 		// 通過が日本でない場合、換算する
 		$sub_total = self::exchange( $sub_total, $currency );
 		if ( $tax_included_in_price ) {
-			$vat = $sub_total / ( ( self::VAT_RATIO * 100 ) + 100 ) * ( self::VAT_RATIO * 100 );
+			$vat        = $sub_total / ( ( self::VAT_RATIO * 100 ) + 100 ) * ( self::VAT_RATIO * 100 );
 			$sub_total -= $vat;
 		} else {
 			$vat = $sub_total * self::VAT_RATIO;
@@ -126,13 +126,13 @@ class Calculator {
 	 * @return array
 	 */
 	public static function kdp_royalty( $sale, $prefix = '' ) {
-		$price = $sale->sub_total * self::BILL_RATIO / $sale->unit;
+		$price       = $sale->sub_total * self::BILL_RATIO / $sale->unit;
 		$margin_list = Collaborators::get_instance()->get_final_margin( $sale->post_id );
 		if ( ! $margin_list ) {
 			return [];
 		}
 		$series = get_post( $sale->post_id );
-		$sales = [];
+		$sales  = [];
 		foreach ( $margin_list as $user_id => $margin ) {
 			if ( ! $margin ) {
 				continue;

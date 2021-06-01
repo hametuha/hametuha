@@ -1,9 +1,13 @@
 <?php
 /** @var WP_Post $post */
-hameplate( 'templates/editor/header', '', [
-	'title'  => $this->title,
-	'return' => $post->ID ? get_permalink( $post ) : home_url( '/anpi/mine/', 'https' ),
-] );
+hameplate(
+	'templates/editor/header',
+	'',
+	[
+		'title'  => $this->title,
+		'return' => $post->ID ? get_permalink( $post ) : home_url( '/anpi/mine/', 'https' ),
+	]
+);
 ?>
 
 <div ng-controller="hametuhaEditor">
@@ -12,14 +16,14 @@ hameplate( 'templates/editor/header', '', [
 
 		<form class="hameditor hameditor--anpi" id="hameditor" data-post-type="anpi">
 
-			<input type="hidden" name="post_id" id="post_id" value="<?= esc_attr( $post->ID ) ?>" ng-model="post.id"/>
-			<input type="hidden" name="status" id="status" value="<?= esc_attr( $post->post_status ) ?>"
-			       ng-model="post.status"/>
+			<input type="hidden" name="post_id" id="post_id" value="<?php echo esc_attr( $post->ID ); ?>" ng-model="post.id"/>
+			<input type="hidden" name="status" id="status" value="<?php echo esc_attr( $post->post_status ); ?>"
+				   ng-model="post.status"/>
 
 			<div class="form-group">
 				<input class="form-control hameditor__title" type="text" name="post_title" id="post_title"
-				       value="<?= esc_attr( $post->post_title ) ?>" ng-model="post.title"
-				       placeholder="タイトルを入力してください" />
+					   value="<?php echo esc_attr( $post->post_title ); ?>" ng-model="post.title"
+					   placeholder="タイトルを入力してください" />
 			</div>
 
 			<div class="row" ng-cloak>
@@ -39,9 +43,13 @@ hameplate( 'templates/editor/header', '', [
 			</div>
 
 			<?php
-			wp_editor( $post->post_content, 'hamce', [
-				'quicktags' => false,
-			] )
+			wp_editor(
+				$post->post_content,
+				'hamce',
+				[
+					'quicktags' => false,
+				]
+			)
 			?>
 
 		</form>
@@ -63,13 +71,13 @@ hameplate( 'templates/editor/header', '', [
 			</a>
 
 			<button class="btn btn-link btn-link--danger" data-target="#hameditor"
-			        ng-click="private()"
-			        ng-if="-1 < ['publish', 'future'].indexOf(post.status)">
+					ng-click="private()"
+					ng-if="-1 < ['publish', 'future'].indexOf(post.status)">
 				非公開
 			</button>
 
 			<button class="btn btn-link btn-link--danger" data-target="#hameditor"
-			        ng-click="delete('<?= home_url( '/anpi/mine/' ) ?>')">
+					ng-click="delete('<?php echo home_url( '/anpi/mine/' ); ?>')">
 				削除
 			</button>
 
@@ -83,4 +91,4 @@ hameplate( 'templates/editor/header', '', [
 
 </div><!-- // hameditor -->
 
-<?php hameplate( 'templates/editor/footer' ) ?>
+<?php hameplate( 'templates/editor/footer' ); ?>

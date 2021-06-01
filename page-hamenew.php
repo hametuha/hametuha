@@ -5,15 +5,19 @@
 get_header();
 ?>
 
-<?php get_header( 'breadcrumb' ) ?>
+<?php get_header( 'breadcrumb' ); ?>
 
 	<div class="container single">
 
 		<div class="row">
 
-			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+			<?php
+			if ( have_posts() ) :
+				while ( have_posts() ) :
+					the_post();
+					?>
 
-				<article <?php post_class( 'col-xs-12 col-md-9 main-container' ) ?>>
+				<article <?php post_class( 'col-xs-12 col-md-9 main-container' ); ?>>
 
 					<!-- title -->
 					<div class="page-header">
@@ -25,17 +29,17 @@ get_header();
 					</div><!-- //.page-header -->
 
 					<!-- Meta data -->
-					<div <?php post_class( 'post-meta' ) ?>>
+					<div <?php post_class( 'post-meta' ); ?>>
 
-						<?php get_template_part( 'parts/meta', 'single' ) ?>
+						<?php get_template_part( 'parts/meta', 'single' ); ?>
 
 					</div><!-- //.post-meta -->
 
-					<?php get_template_part( 'parts/meta', 'thumbnail' ) ?>
+					<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
 
 					<?php if ( has_excerpt() ) : ?>
 						<div class="news-excerpt">
-							<?php the_excerpt() ?>
+							<?php the_excerpt(); ?>
 						</div>
 					<?php endif; ?>
 
@@ -44,33 +48,39 @@ get_header();
 					</div><!-- //.post-content -->
 
 					<?php
-					wp_link_pages( [
-						'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
-						'after'       => '</p></div>',
-						'link_before' => '<span>',
-						'link_after'  => '</span>',
-					] );
+					wp_link_pages(
+						[
+							'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
+							'after'       => '</p></div>',
+							'link_before' => '<span>',
+							'link_after'  => '</span>',
+						]
+					);
 					?>
 
 
 					<div class="row">
-							<?php google_adsense( 2 ) ?>
+											<?php google_adsense( 2 ); ?>
 							<p class="news-ad__title">Ads by Google</p>
 					</div>
 
 					<hr/>
 
-					<?php get_template_part( 'parts/jumbotron', 'news' ) ?>
+					<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
 
 				</article><!-- //.single-container -->
 
-			<?php endwhile; endif; ?>
+							<?php
+			endwhile;
+endif;
+			?>
 
-			<?php get_sidebar( 'news' ) ?>
+			<?php get_sidebar( 'news' ); ?>
 
 		</div><!-- //.row -->
 
 
 	</div><!-- //.container -->
 
-<?php get_footer();
+<?php
+get_footer();

@@ -58,16 +58,18 @@ class SalesReport extends Screen {
 				$values  = [];
 				$errors  = 0;
 				while ( $line = fgetcsv( $handle ) ) {
-                    if ( ! $counter ) {
-                        $counter++;
-                        continue;
-                    }
-				    switch ( ( $type = $this->input->post( 'type' ) ) ) {
-                        case 'kdp':
-								if ( count( $line ) !== 15 ) {
-									$errors ++;
-								} else {
-									$value = array_map( 'trim', [
+					if ( ! $counter ) {
+						$counter++;
+						continue;
+					}
+					switch ( ( $type = $this->input->post( 'type' ) ) ) {
+						case 'kdp':
+							if ( count( $line ) !== 15 ) {
+								$errors ++;
+							} else {
+								$value = array_map(
+									'trim',
+									[
 										'store'    => 'Amazon',
 										'date'     => date_i18n( 'Y-m-d', strtotime( $line[0] ) ),
 										'asin'     => $line[3],
@@ -76,45 +78,49 @@ class SalesReport extends Screen {
 										'unit'     => $line[5],
 										'royalty'  => $line[13],
 										'currency' => $line[14],
-									] );
-									if ( is_wp_error( $this->sales->validate( $value ) ) ) {
-										$errors ++;
-									} else {
-										$values[] = $value;
-									}
-								}
-                            break;
-                        case 'kenp':
-                            $date = $this->input->post( 'date' );
-                            if ( ! StringHelper::get_instance()->is_date( $date ) ) {
-                                var_dump( $date );
-                                exit;
-                                throw new \Exception( "{$date} は不正な日付です。" );
-                            }
-							if ( count( $line ) !== 7 ) {
-								$errors ++;
-							} else {
-								$value = array_map( 'trim', [
-									'store'    => 'KENP',
-									'date'     => $date,
-									'asin'     => $line[2],
-									'place'    => $line[3],
-									'type'     => '読み放題',
-									'unit'     => $line[4],
-									'royalty'  => $line[5],
-									'currency' => $line[6],
-								] );
+									]
+								);
 								if ( is_wp_error( $this->sales->validate( $value ) ) ) {
 									$errors ++;
 								} else {
 									$values[] = $value;
 								}
 							}
-                            break;
-                        default:
-                            throw new \Exception( "{$type}は不正なオペレーションです。" );
-                            break;
-                    }
+							break;
+						case 'kenp':
+							$date = $this->input->post( 'date' );
+							if ( ! StringHelper::get_instance()->is_date( $date ) ) {
+								var_dump( $date );
+								exit;
+								throw new \Exception( "{$date} は不正な日付です。" );
+							}
+							if ( count( $line ) !== 7 ) {
+								$errors ++;
+							} else {
+								$value = array_map(
+									'trim',
+									[
+										'store'    => 'KENP',
+										'date'     => $date,
+										'asin'     => $line[2],
+										'place'    => $line[3],
+										'type'     => '読み放題',
+										'unit'     => $line[4],
+										'royalty'  => $line[5],
+										'currency' => $line[6],
+									]
+								);
+								if ( is_wp_error( $this->sales->validate( $value ) ) ) {
+									$errors ++;
+								} else {
+									$values[] = $value;
+								}
+							}
+							break;
+						default:
+							throw new \Exception( "{$type}は不正なオペレーションです。" );
+							break;
+					}
 					$counter ++;
 				}
 				if ( $errors ) {
@@ -178,34 +184,34 @@ HTML;
 			KDP売り上げアップロード
 		</h3>
 		<form method="post" enctype="multipart/form-data"
-			  action="<?= esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ) ?>">
-			<?php wp_nonce_field( 'import_kdp_data' ) ?>
-            <input type="hidden" name="type" value="kdp" />
+			  action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
+			<?php wp_nonce_field( 'import_kdp_data' ); ?>
+			<input type="hidden" name="type" value="kdp" />
 			<input type="file" name="csv" value="選択してください"/>
-			<?php submit_button( '送信' ) ?>
+			<?php submit_button( '送信' ); ?>
 		</form>
-        <h3>
-            <span class="dashicons dashicons-upload"></span>
-            KENPアップロード
-        </h3>
-        <form method="post" enctype="multipart/form-data"
-              action="<?= esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ) ?>">
-			<?php wp_nonce_field( 'import_kdp_data' ) ?>
-            <input type="hidden" name="type" value="kenp" />
-            <p>
-                <label>
-                    年月
-                    <input type="text" name="date" value="" class="datepicker" placeholder="2017-01-15" />
-                </label>
-            </p>
-            <p>
-                <label>
-                    ファイル
-                    <input type="file" name="csv" value="選択してください"/>
-                </label>
-            </p>
-			<?php submit_button( '送信' ) ?>
-        </form>
+		<h3>
+			<span class="dashicons dashicons-upload"></span>
+			KENPアップロード
+		</h3>
+		<form method="post" enctype="multipart/form-data"
+			  action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
+			<?php wp_nonce_field( 'import_kdp_data' ); ?>
+			<input type="hidden" name="type" value="kenp" />
+			<p>
+				<label>
+					年月
+					<input type="text" name="date" value="" class="datepicker" placeholder="2017-01-15" />
+				</label>
+			</p>
+			<p>
+				<label>
+					ファイル
+					<input type="file" name="csv" value="選択してください"/>
+				</label>
+			</p>
+			<?php submit_button( '送信' ); ?>
+		</form>
 		<?php
 	}
 

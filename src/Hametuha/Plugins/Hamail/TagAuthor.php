@@ -31,17 +31,20 @@ class TagAuthor extends RecipientSelector {
 	 */
 	protected function get_from_ids( $ids ) {
 		$this->total = 0;
-		$term_ids  = array_map( function( $id ) {
-			$taxonomy = explode( '_', $id );
-			$term_id  = array_pop( $taxonomy );
-			return intval( $term_id );
-		}, $ids );
+		$term_ids    = array_map(
+			function( $id ) {
+				$taxonomy = explode( '_', $id );
+				$term_id  = array_pop( $taxonomy );
+				return intval( $term_id );
+			},
+			$ids
+		);
 		if ( empty( $term_ids ) ) {
 			return [];
 		}
 		$term_ids = implode( ',', $term_ids );
 		global $wpdb;
-		$query = <<<SQL
+		$query    = <<<SQL
 			SELECT p.post_author
 			FROM {$wpdb->term_relationships} AS tr
 			LEFT JOIN {$wpdb->posts} AS p
@@ -53,9 +56,11 @@ SQL;
 		if ( empty( $user_ids ) ) {
 			return [];
 		}
-		$result = $this->user_to_item( [
-			'include' => array_map( 'intval', $user_ids ),
-		] );
+		$result      = $this->user_to_item(
+			[
+				'include' => array_map( 'intval', $user_ids ),
+			]
+		);
 		$this->total = count( $result );
 		return $result;
 	}
@@ -84,13 +89,16 @@ SQL;
 		$query       = $wpdb->prepare( $query, $term, $term, ( $paged - 1 ) * $this->per_page, $this->per_page );
 		$results     = $wpdb->get_results( $query );
 		$this->total = parent::get_search_total( $term, $paged );
-		return array_map( function( $result ) {
-			$taxonomy_obj = get_taxonomy( $result->taxonomy );
-			$id    = sprintf( '%s_%d', $result->taxonomy, $result->term_id );
-			$type  = 'term';
-			$label = sprintf( 'Authors of posts in %1$s: %2$s(%3$d)', $taxonomy_obj->label, $result->name, $result->count );
-			return new SearchResultItem( $id, $label, 'term' );
-		}, $results );
+		return array_map(
+			function( $result ) {
+				$taxonomy_obj = get_taxonomy( $result->taxonomy );
+				$id           = sprintf( '%s_%d', $result->taxonomy, $result->term_id );
+				$type         = 'term';
+				$label        = sprintf( 'Authors of posts in %1$s: %2$s(%3$d)', $taxonomy_obj->label, $result->name, $result->count );
+				return new SearchResultItem( $id, $label, 'term' );
+			},
+			$results
+		);
 	}
 
 	protected function get_search_total( $term, $paged ) {

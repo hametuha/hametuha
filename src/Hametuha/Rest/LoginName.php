@@ -41,20 +41,25 @@ class LoginName extends RestTemplate {
 
 		$this->auth_redirect();
 
-		add_filter( 'body_class', function ( $classes ) {
-			$classes[] = 'page-template-page-login-php';
+		add_filter(
+			'body_class',
+			function ( $classes ) {
+				$classes[] = 'page-template-page-login-php';
 
-			return $classes;
-		} );
+				return $classes;
+			}
+		);
 
-		$this->set_data( [
-			'nonce'      => $this->nonce_field( '_wpnonce', true, false ),
-			'action'     => $this->url( '/update/', force_ssl_admin() ),
-			'check_url'  => $this->url( '/check/', force_ssl_admin() ),
-			'login_name' => $this->user->display_name,
-			'login'      => $this->user->user_login,
-			'nicename'   => $this->user->user_nicename,
-		] );
+		$this->set_data(
+			[
+				'nonce'      => $this->nonce_field( '_wpnonce', true, false ),
+				'action'     => $this->url( '/update/', force_ssl_admin() ),
+				'check_url'  => $this->url( '/check/', force_ssl_admin() ),
+				'login_name' => $this->user->display_name,
+				'login'      => $this->user->user_login,
+				'nicename'   => $this->user->user_nicename,
+			]
+		);
 
 		nocache_headers();
 		$this->load_template( 'templates/form', 'login' );
@@ -72,10 +77,12 @@ class LoginName extends RestTemplate {
 		if ( ! $this->login_available( $query ) ) {
 			$this->error( 'このログイン名は利用できません', 403 );
 		}
-		$this->set_data( [
-			'success'  => true,
-			'niceName' => sanitize_title( $query ),
-		] );
+		$this->set_data(
+			[
+				'success'  => true,
+				'niceName' => sanitize_title( $query ),
+			]
+		);
 		$this->response();
 	}
 
@@ -99,10 +106,12 @@ class LoginName extends RestTemplate {
 		}
 		// If object cache exists, delete it.
 		clean_user_cache( $this->user->ID );
-		$this->set_data( [
-			'message' => sprintf( 'ログイン名を変更しました。5秒後にログアウトしますので、ログインしなおしてください。（<a href="%s">いますぐログアウト</a>）', wp_logout_url() ),
-			'url'     => wp_logout_url(),
-		] );
+		$this->set_data(
+			[
+				'message' => sprintf( 'ログイン名を変更しました。5秒後にログアウトしますので、ログインしなおしてください。（<a href="%s">いますぐログアウト</a>）', wp_logout_url() ),
+				'url'     => wp_logout_url(),
+			]
+		);
 		nocache_headers();
 		$this->response();
 	}
@@ -135,4 +144,4 @@ class LoginName extends RestTemplate {
 		wp_enqueue_script( 'hametuha-login-changer' );
 	}
 
-} 
+}

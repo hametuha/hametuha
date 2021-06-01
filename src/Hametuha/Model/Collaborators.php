@@ -28,7 +28,7 @@ class Collaborators extends Singleton {
 		'designer'    => 'デザイン',
 		'illustrator' => 'イラスト',
 		'translator'  => '翻訳',
-		'producer'     => '監修',
+		'producer'    => '監修',
 	];
 
 	public $share_type = [
@@ -119,7 +119,7 @@ class Collaborators extends Singleton {
 	 * @return bool
 	 */
 	public function collaborator_exists( $series_id, $user_id, $only_valid = false ) {
-		$query = <<<SQL
+		$query  = <<<SQL
 			SELECT ID FROM {$this->relationships}
 			WHERE rel_type  = %d
 			  AND object_id = %d
@@ -149,37 +149,53 @@ SQL;
 			return $post;
 		}
 		if ( $this->collaborator( $post->ID, $user_id ) ) {
-			return new \WP_Error( 'existing_collaborator', 'そのユーザーはすでに登録されています。', [
-				'status' => 400,
-			] );
+			return new \WP_Error(
+				'existing_collaborator',
+				'そのユーザーはすでに登録されています。',
+				[
+					'status' => 400,
+				]
+			);
 		}
 		// Is it possible to add?
-		$margin = intval( $location * -100 );
+		$margin          = intval( $location * -100 );
 		$margin_is_valid = $this->is_margin_possible( $series_id, $margin, $user_id );
 		if ( is_wp_error( $margin_is_valid ) ) {
 			return $margin_is_valid;
 		}
 		// Insert.
-		$result = $this->db->insert( $this->relationships, [
-			'rel_type'  => $this->rel_type,
-			'object_id' => $post->ID,
-			'user_id'   => $user_id,
-			'location'  => $location,
-			'content'   => $type,
-			'updated'   => current_time( 'mysql' ),
-		], [ '%s', '%d', '%d', '%f', '%s', '%s' ] );
+		$result = $this->db->insert(
+			$this->relationships,
+			[
+				'rel_type'  => $this->rel_type,
+				'object_id' => $post->ID,
+				'user_id'   => $user_id,
+				'location'  => $location,
+				'content'   => $type,
+				'updated'   => current_time( 'mysql' ),
+			],
+			[ '%s', '%d', '%d', '%f', '%s', '%s' ]
+		);
 		if ( ! $result ) {
-			return new \WP_Error( 'failed_update', 'ユーザーを追加できませんでした。', [
-				'status' => 500,
-				'error'  => $this->db->last_error,
-				'query'  => $this->db->last_query,
-			] );
+			return new \WP_Error(
+				'failed_update',
+				'ユーザーを追加できませんでした。',
+				[
+					'status' => 500,
+					'error'  => $this->db->last_error,
+					'query'  => $this->db->last_query,
+				]
+			);
 		}
 		$actually_added = $this->collaborator( $post->ID, $user_id );
 		if ( ! $actually_added ) {
-			return new \WP_Error( 'invalid_collaborator', '追加した協力者を取得できませんでした。', [
-				'status' => 404,
-			] );
+			return new \WP_Error(
+				'invalid_collaborator',
+				'追加した協力者を取得できませんでした。',
+				[
+					'status' => 404,
+				]
+			);
 		}
 		/**
 		 * Executed when collaborator is added.
@@ -204,22 +220,32 @@ SQL;
 	public function confirm_invitation( $series_id, $user_id ) {
 		$invitation = $this->collaborator( $series_id, $user_id );
 		if ( ! $invitation ) {
-			return new \WP_Error( 'invitation_not_exists', '招待されていないようです。', [
-				'status' => 404,
-			] );
+			return new \WP_Error(
+				'invitation_not_exists',
+				'招待されていないようです。',
+				[
+					'status' => 404,
+				]
+			);
 		}
-		$margin = absint( $invitation->ratio * 100 );
+		$margin   = absint( $invitation->ratio * 100 );
 		$validity = $this->is_margin_possible( $series_id, $margin, $user_id );
 		if ( is_wp_error( $validity ) ) {
 			return $validity;
 		}
-		return (bool) $this->db->update( $this->relationships, [
-			'location' => $invitation->ratio * -1,
-		], [
-			'rel_type'  => $this->rel_type,
-			'object_id' => $series_id,
-			'user_id'   => $user_id,
-		], [ '%f' ], [ '%s', '%d', '%d' ] );
+		return (bool) $this->db->update(
+			$this->relationships,
+			[
+				'location' => $invitation->ratio * -1,
+			],
+			[
+				'rel_type'  => $this->rel_type,
+				'object_id' => $series_id,
+				'user_id'   => $user_id,
+			],
+			[ '%f' ],
+			[ '%s', '%d', '%d' ]
+		);
 	}
 
 	/**
@@ -232,7 +258,7 @@ SQL;
 	 * @return \WP_User[]
 	 */
 	private function get_list( $series_id = 0, $user_id = 0, $paged = 1, $per_page = 0 ) {
-		$query = <<<SQL
+		$query  = <<<SQL
 			SELECT
 			       u.*,
 			       r.object_id as post_id, r.location AS ratio, r.updated AS assigned, r.content AS `collaboration_type`,
@@ -244,22 +270,25 @@ SQL;
 SQL;
 		$wheres = [ $this->rel_type ];
 		if ( $series_id ) {
-			$query .= ' AND object_id = %d ';
+			$query   .= ' AND object_id = %d ';
 			$wheres[] = $series_id;
 		}
 		if ( $user_id ) {
-			$query .= ' AND user_id = %d';
+			$query   .= ' AND user_id = %d';
 			$wheres[] = $user_id;
 		}
 		if ( $per_page ) {
-			$query .= ' LIMIT %d, %d';
-			$wheres[] = ( max( 1, $paged ) -1 ) * $per_page;
+			$query   .= ' LIMIT %d, %d';
+			$wheres[] = ( max( 1, $paged ) - 1 ) * $per_page;
 			$wheres[] = $per_page;
 		}
 		array_unshift( $wheres, $query );
-		return array_map( function( \stdClass $collaborator ) {
-			return new \WP_User( $collaborator );
-		}, $this->db->get_results( call_user_func_array(  [$this->db, 'prepare' ], $wheres ) ) );
+		return array_map(
+			function( \stdClass $collaborator ) {
+				return new \WP_User( $collaborator );
+			},
+			$this->db->get_results( call_user_func_array( [ $this->db, 'prepare' ], $wheres ) )
+		);
 	}
 
 	/**
@@ -281,13 +310,13 @@ SQL;
 	 */
 	public function get_published_collaborators( $series_id ) {
 		$users = [];
-		$post = get_post( $series_id );
+		$post  = get_post( $series_id );
 		if ( 'series' !== $post->post_type && 'publish' != $post->post_status ) {
 			return $users;
 		}
-		$author = get_userdata( $post->post_author );
-		$author->type  = $this->owner_type( $post->ID );
-		$author->label = $this->get_collaborator_type( $author->type );
+		$author               = get_userdata( $post->post_author );
+		$author->type         = $this->owner_type( $post->ID );
+		$author->label        = $this->get_collaborator_type( $author->type );
 		$users[ $author->ID ] = $author;
 		// Add all children.
 		foreach ( Series::get_series_posts( $post->ID ) as $child ) {
@@ -356,16 +385,26 @@ SQL;
 			return $margin_is_valid;
 		}
 		global $wpdb;
-		$result = $wpdb->update( $this->relationships, [
-			'location' => $margin / 100,
-		], [
-			'rel_type'  => $this->rel_type,
-			'object_id' => $series_id,
-			'user_id'   => $user_id,
-		], [ '%f' ], [ '%s', '%d', '%d' ] );
-		return $result ?: new \WP_Error( 'failed_update', '報酬を更新できませんでした。', [
-			'status' => 500,
-		] );
+		$result = $wpdb->update(
+			$this->relationships,
+			[
+				'location' => $margin / 100,
+			],
+			[
+				'rel_type'  => $this->rel_type,
+				'object_id' => $series_id,
+				'user_id'   => $user_id,
+			],
+			[ '%f' ],
+			[ '%s', '%d', '%d' ]
+		);
+		return $result ?: new \WP_Error(
+			'failed_update',
+			'報酬を更新できませんでした。',
+			[
+				'status' => 500,
+			]
+		);
 	}
 
 	/**
@@ -376,16 +415,20 @@ SQL;
 	 * @param int $user_id_to_exclude
 	 * @return bool|\WP_Error
 	 */
-	public function is_margin_possible( $series_id, $margin, $user_id_to_exclude = 0) {
+	public function is_margin_possible( $series_id, $margin, $user_id_to_exclude = 0 ) {
 		$excluded = [];
 		if ( $user_id_to_exclude ) {
 			$excluded[] = $user_id_to_exclude;
 		}
 		$existing_margins = array_sum( array_values( $this->get_margin_list( $series_id, $excluded ) ) );
 		if ( 100 < $margin + $existing_margins ) {
-			return new \WP_Error( 'too_much_revenue', '報酬の合計が100%を超えています。', [
-				'status' => 400,
-			] );
+			return new \WP_Error(
+				'too_much_revenue',
+				'報酬の合計が100%を超えています。',
+				[
+					'status' => 400,
+				]
+			);
 		} else {
 			return true;
 		}
@@ -408,7 +451,7 @@ SQL;
 SQL;
 		if ( $excludes ) {
 			$excludes = (array) $excludes;
-			$query .= sprintf( ' AND user_id NOT IN (%s)', implode( ', ', array_map( 'intval', $excludes ) ) );
+			$query   .= sprintf( ' AND user_id NOT IN (%s)', implode( ', ', array_map( 'intval', $excludes ) ) );
 		}
 		$margins = [];
 		foreach ( $wpdb->get_results( $wpdb->prepare( $query, $this->rel_type, $series_id ) ) as $row ) {
@@ -429,11 +472,11 @@ SQL;
 			return [];
 		}
 		$margin_list = $this->get_margin_list( $series_id );
-		$total = 0;
+		$total       = 0;
 		foreach ( $margin_list as $user => $margin ) {
 			$total += $margin;
 		}
-		$total = min( 100, $total );
+		$total                               = min( 100, $total );
 		$margin_list[ $series->post_author ] = 100 - $total;
 		return $margin_list;
 	}
@@ -451,9 +494,13 @@ SQL;
 			return $post;
 		}
 		if ( $post->post_author == $user_id ) {
-			return new \WP_Error( 'invalid_collaborator_to_delete', '作品集の所有者は削除できません。', [
-				'status' => 404,
-			] );
+			return new \WP_Error(
+				'invalid_collaborator_to_delete',
+				'作品集の所有者は削除できません。',
+				[
+					'status' => 404,
+				]
+			);
 		}
 		$query = <<<SQL
 			DELETE FROM {$this->relationships}
@@ -462,9 +509,13 @@ SQL;
 			  AND user_id   = %d
 SQL;
 		if ( ! $this->db->query( $this->db->prepare( $query, $this->rel_type, $post->ID, $user_id ) ) ) {
-			return new \WP_Error( 'no_collaborator_deleted', '指定されたユーザーは存在しません。', [
-				'status' => 404,
-			] );
+			return new \WP_Error(
+				'no_collaborator_deleted',
+				'指定されたユーザーは存在しません。',
+				[
+					'status' => 404,
+				]
+			);
 		}
 		return true;
 	}
@@ -478,9 +529,13 @@ SQL;
 	private function validate_series( $series_id ) {
 		$post = get_post( $series_id );
 		if ( ! $post || 'series' !== $post->post_type ) {
-			return new \WP_Error( 'series_not_found', '作品集が見つかりません。', [
-				'status' => 404,
-			] );
+			return new \WP_Error(
+				'series_not_found',
+				'作品集が見つかりません。',
+				[
+					'status' => 404,
+				]
+			);
 		} else {
 			return $post;
 		}

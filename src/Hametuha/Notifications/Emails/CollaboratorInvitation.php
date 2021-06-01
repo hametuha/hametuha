@@ -45,17 +45,24 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_added', function( $user_id, $post, $margin, $type, $label ) {
-			static::exec( [
-				$user_id => [
-					'title'    => get_the_title( $post ),
-					'revenue'  => $margin,
-					'type'     => $label,
-					'url'      => home_url( 'dashboard/requests/collaborations' ),
-					'post_url' => get_permalink( $post ),
-				],
-			] );
-		}, 10, 5 );
+		add_action(
+			'hametuha_collaborators_added',
+			function( $user_id, $post, $margin, $type, $label ) {
+				static::exec(
+					[
+						$user_id => [
+							'title'    => get_the_title( $post ),
+							'revenue'  => $margin,
+							'type'     => $label,
+							'url'      => home_url( 'dashboard/requests/collaborations' ),
+							'post_url' => get_permalink( $post ),
+						],
+					]
+				);
+			},
+			10,
+			5
+		);
 	}
 
 

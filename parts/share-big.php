@@ -22,7 +22,7 @@ if ( is_preview() ) {
 			</div>
 		</div>
 
-		<?php get_template_part( 'parts/share' ) ?>
+		<?php get_template_part( 'parts/share' ); ?>
 
 	</div>
 </div>

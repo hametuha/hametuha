@@ -42,9 +42,9 @@ class Notifications extends Model {
 
 	const TYPE_FOLLOW = 'follow';
 
-	const TYPE_IDEA_STOCKED  = 'idea_stocked';
+	const TYPE_IDEA_STOCKED = 'idea_stocked';
 
-	const TYPE_IDEA_WRITTEN  = 'idea_written';
+	const TYPE_IDEA_WRITTEN = 'idea_written';
 
 	const USER_KEY = 'last_notification_checked';
 
@@ -90,7 +90,7 @@ class Notifications extends Model {
 				$url = home_url( '/doujin/follower/', 'https' );
 				break;
 			case 'idea_recommended':
-				$url = home_url('/my/ideas/', 'https');
+				$url = home_url( '/my/ideas/', 'https' );
 				break;
 			default:
 				$url = get_permalink( $object_id );
@@ -113,7 +113,7 @@ class Notifications extends Model {
 		$limit         = 5;
 		if ( false === $notifications ) {
 			$notifications = $this->where( 'recipient_id = %d', $user_id )
-			                      ->limit( $limit )->order_by( 'created', 'desc' )->result();
+								  ->limit( $limit )->order_by( 'created', 'desc' )->result();
 			if ( $notifications ) {
 				wp_cache_set( $user_id, $notifications, 'hametuha_notifications', 1800 );
 			}
@@ -122,21 +122,24 @@ class Notifications extends Model {
 			$general = wp_cache_get( 0, 'hametuha_notifications' );
 			if ( false === $general ) {
 				$general = $this->where( 'recipient_id = %d', 0 )
-				                ->limit( $limit )->order_by( 'created', 'desc' )->result();
+								->limit( $limit )->order_by( 'created', 'desc' )->result();
 				if ( $general ) {
 					wp_cache_set( 0, $general, 'hametuha_notifications', 1800 );
 				}
 			}
 			$notifications = array_merge( $general, $notifications );
-			usort( $notifications, function ( $a, $b ) {
-				$a_time = strtotime( $a->created );
-				$b_time = strtotime( $b->created );
-				if ( $a_time === $b_time ) {
-					return 0;
-				} else {
-					return $a_time < $b_time ?  1 : -1;
+			usort(
+				$notifications,
+				function ( $a, $b ) {
+					$a_time = strtotime( $a->created );
+					$b_time = strtotime( $b->created );
+					if ( $a_time === $b_time ) {
+						return 0;
+					} else {
+						return $a_time < $b_time ? 1 : -1;
+					}
 				}
-			} );
+			);
 			$notifications = array_slice( $notifications, 0, 5 );
 		}
 
@@ -186,14 +189,16 @@ class Notifications extends Model {
 	 */
 	public function add_notification( $type, $recipient, $object_id, $message, $avatar ) {
 		wp_cache_delete( $recipient, 'hametuha_notifications' );
-		return (bool) $this->insert( [
-			'recipient_id' => $recipient,
-			'type'         => $type,
-			'object_id'    => $object_id,
-			'message'      => $message,
-			'avatar'       => $avatar,
-			'created'      => current_time( 'mysql' ),
-		] );
+		return (bool) $this->insert(
+			[
+				'recipient_id' => $recipient,
+				'type'         => $type,
+				'object_id'    => $object_id,
+				'message'      => $message,
+				'avatar'       => $avatar,
+				'created'      => current_time( 'mysql' ),
+			]
+		);
 	}
 
 	/**

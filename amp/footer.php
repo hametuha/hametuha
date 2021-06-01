@@ -7,10 +7,12 @@
 	</div>
 	<div class="amp-hametuha-category">
 		<?php
-		$terms = get_terms( [
-			'taxonomy' => 'genre',
-			'parent'   => 0,
-		] );
+		$terms = get_terms(
+			[
+				'taxonomy' => 'genre',
+				'parent'   => 0,
+			]
+		);
 		foreach ( $terms as $term ) {
 			printf( '<a href="%s" class="amp-hametuha-category-link">%s</a>', get_term_link( $term ), esc_html( $term->name ) );
 		}
@@ -20,7 +22,7 @@
 		<p>
 			<a href="<?php echo esc_url( esc_html__( 'https://wordpress.org/', 'amp' ) ); ?>"><?php echo esc_html( sprintf( __( 'Powered by %s', 'amp' ), 'WordPress' ) ); ?></a>
 		</p>
-		<a href="<?= get_post_type_archive_link( 'news' ) ?>" class="back-to-top">
+		<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="back-to-top">
 			はめにゅーTOP
 		</a>
 	</div>

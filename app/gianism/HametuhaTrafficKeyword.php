@@ -63,8 +63,8 @@ class HametuhaTrafficKeyword extends Gabstract {
 		];
 		foreach ( $result as $row ) {
 			list( $page_title, $keyword, $pv ) = $row;
-			list( $title ) = array_map( 'trim', preg_split( '/[|｜]/u', $page_title ) );
-			$json['data'][] = [
+			list( $title )                     = array_map( 'trim', preg_split( '/[|｜]/u', $page_title ) );
+			$json['data'][]                    = [
 				$keyword,
 				$title,
 				intval( $pv ),

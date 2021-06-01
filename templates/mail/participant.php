@@ -8,7 +8,7 @@
  * @var string $message
  */
 ?>
-<?= esc_html( $participant->display_name ) ?> さんの参加状況です。
+<?php echo esc_html( $participant->display_name ); ?> さんの参加状況です。
 
 
 <?php
@@ -21,8 +21,8 @@ printf(
 
 
 ---------
-<?= $message ?>
+<?php echo $message; ?>
 
 ---------
 
-返信はこちら <?= $participant->user_email ?>
+返信はこちら <?php echo $participant->user_email; ?>

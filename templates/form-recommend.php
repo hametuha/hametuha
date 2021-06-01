@@ -1,12 +1,18 @@
 <?php /* @var WP_Post $idea */ ?>
-<form id="recommend-idea-form" data-post-id="<?= esc_attr( $idea->ID ) ?>">
+<form id="recommend-idea-form" data-post-id="<?php echo esc_attr( $idea->ID ); ?>">
 	<div class="form-group">
-		<label for="recommend_to"><?= get_the_title( $idea ) ?>を薦める</label>
-		<?php hameplate( 'parts/input', 'user', [
-			'id'  => 'recommend_to',
-		    'max' => 1,
-		    'min' => 1,
-		] ); ?>
+		<label for="recommend_to"><?php echo get_the_title( $idea ); ?>を薦める</label>
+		<?php
+		hameplate(
+			'parts/input',
+			'user',
+			[
+				'id'  => 'recommend_to',
+				'max' => 1,
+				'min' => 1,
+			]
+		);
+		?>
 		<span class="helper-block">フォローしているユーザーが表示されます。</span>
 	</div>
 	<div class="row">

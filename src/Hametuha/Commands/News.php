@@ -43,7 +43,7 @@ class News extends Command {
 			  	  AND meta_value != ''
 			  )
 SQL;
-		$done = 0;
+		$done  = 0;
 		foreach ( $wpdb->get_results( $query ) as $post ) {
 			update_post_meta( $post->ID, '_news_published', $post->post_date );
 			$done++;
@@ -66,27 +66,32 @@ SQL;
 	public function show_pv( $args, $assoc ) {
 		$start_date = $assoc['from'];
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
-		$author = isset( $assoc['author'] ) ? $assoc['author'] : 0;
-		$posts = $this->get_pv( $start_date, $end_date, $author );
+		$author     = isset( $assoc['author'] ) ? $assoc['author'] : 0;
+		$posts      = $this->get_pv( $start_date, $end_date, $author );
 		if ( ! $posts ) {
 			self::e( 'No results found.' );
 		}
 		$table = new \cli\Table();
 		$table->setHeaders( [ '#', 'ID', 'PV', 'Author', 'Date', 'Title' ] );
 		$index = 0;
-		$table->setRows( array_map( function( $row ) use ( &$index ) {
-			$index++;
-			list( $post_id, $pv ) = $row;
-			$post = get_post( $post_id );
-			return [
-				$index,
-				$post_id,
-			    $pv,
-			    get_the_author_meta( 'user_login', $post->post_author ),
-			    get_the_time( 'Y.m.d', $post ),
-				get_the_title( $post ),
-			];
-		}, $posts ) );
+		$table->setRows(
+			array_map(
+				function( $row ) use ( &$index ) {
+					$index++;
+					list( $post_id, $pv ) = $row;
+					$post                 = get_post( $post_id );
+					return [
+						$index,
+						$post_id,
+						$pv,
+						get_the_author_meta( 'user_login', $post->post_author ),
+						get_the_time( 'Y.m.d', $post ),
+						get_the_title( $post ),
+					];
+				},
+				$posts
+			)
+		);
 		$table->display();
 
 		self::s( sprintf( '%s News', number_format( count( $posts ) ) ) );
@@ -102,9 +107,9 @@ SQL;
 	public function update_pv( $args, $assoc ) {
 		$start_date = $assoc['from'];
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
-		$author = isset( $assoc['author'] ) ? $assoc['author'] : 0;
-		$posts = $this->get_pv( $start_date, $end_date, $author );
-		$done = 0;
+		$author     = isset( $assoc['author'] ) ? $assoc['author'] : 0;
+		$posts      = $this->get_pv( $start_date, $end_date, $author );
+		$done       = 0;
 		foreach ( $posts as $post ) {
 			update_post_meta( $post[0], '_current_pv', $post[1] );
 			$done++;
@@ -130,28 +135,31 @@ SQL;
 				throw new \Exception( 'Google Analytics is not connected.', 500 );
 			}
 			$start_index = 1;
-			$per_page = 200;
-			$args = [
+			$per_page    = 200;
+			$args        = [
 				'max-results' => $per_page,
-				'dimensions' => 'ga:pagePath',
-				'filters' => 'ga:dimension1==news',
-				'sort' => '-ga:pageviews',
+				'dimensions'  => 'ga:pagePath',
+				'filters'     => 'ga:dimension1==news',
+				'sort'        => '-ga:pageviews',
 			];
 			if ( $author ) {
-				$args['filters'] .= ',ga:dimension2=='.$author;
+				$args['filters'] .= ',ga:dimension2==' . $author;
 			}
 			$rows = [];
 			while ( true ) {
-				$loop_arg = array_merge( $args, [
-					'start-index' => $start_index,
-				] );
-				$result = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $loop_arg );
+				$loop_arg = array_merge(
+					$args,
+					[
+						'start-index' => $start_index,
+					]
+				);
+				$result   = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $loop_arg );
 				if ( ! $result || ! ( 0 < ( $count = count( $result->rows ) ) ) ) {
 					break;
 				}
 				foreach ( $result->rows as $row ) {
 					list( $path, $pv ) = $row;
-					$url     = home_url( $path );
+					$url               = home_url( $path );
 					if ( ! preg_match( '#/news/article/(\d+)/?#', $path, $matches ) ) {
 						continue;
 					}
@@ -200,7 +208,7 @@ SQL;
 			'_hametuha_announcement_point'    => '_event_point',
 			'_lwp_event_start'                => '_event_start',
 			'_lwp_event_end'                  => '_event_end',
-		] as $old_key => $new_key  ) {
+		] as $old_key => $new_key ) {
 			$replaced = $wpdb->query( $wpdb->prepare( $query, $new_key, $old_key ) );
 			self::l( sprintf( 'Change %s to %s: %d', $old_key, $new_key, $replaced ) );
 		}

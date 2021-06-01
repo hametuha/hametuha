@@ -37,10 +37,10 @@ class ProfileQuery extends QueryHighJack {
 	 * @var array
 	 */
 	protected $rewrites = [
-		'authors/page/([0-9]{1,})/?$' => 'index.php?profile_name=0&paged=$matches[1]',
-		'authors/?$'                  => 'index.php?profile_name=0',
-		'(series|anpi)/by/([^/]+)/page/([0-9]+)/?$'         => 'index.php?post_type=$matches[1]&author_name=$matches[2]&paged=$matches[3]',
-		'(series|anpi)/by/([^/]+)/?$'         => 'index.php?post_type=$matches[1]&author_name=$matches[2]',
+		'authors/page/([0-9]{1,})/?$'               => 'index.php?profile_name=0&paged=$matches[1]',
+		'authors/?$'                                => 'index.php?profile_name=0',
+		'(series|anpi)/by/([^/]+)/page/([0-9]+)/?$' => 'index.php?post_type=$matches[1]&author_name=$matches[2]&paged=$matches[3]',
+		'(series|anpi)/by/([^/]+)/?$'               => 'index.php?post_type=$matches[1]&author_name=$matches[2]',
 	];
 
 	/**
@@ -138,7 +138,7 @@ SQL;
 		if ( $this->is_valid_query( $wp_query ) ) {
 			$profile_name = $wp_query->get( 'profile_name' );
 			if ( ! empty( $profile_name ) ) {
-				$sql = <<<EOS
+				$sql    = <<<EOS
                     AND {$this->authors->table}.user_nicename = %s
 EOS;
 				$where .= $this->authors->db->prepare( $sql, $profile_name );
@@ -150,7 +150,7 @@ EOS;
 
 	public function posts_search( $search, \WP_Query $wp_query ) {
 		if ( $this->is_valid_query( $wp_query ) ) {
-			$new_query = [ ];
+			$new_query = [];
 			$sql       = <<<SQL
             (
               {$this->authors->table}.display_name LIKE %s
@@ -185,4 +185,4 @@ SQL;
 		return '0' === $profile_name || ! empty( $profile_name );
 	}
 
-} 
+}

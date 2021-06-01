@@ -75,7 +75,7 @@ class HametuhaPopularPosts extends Gabstract {
 			],
 		];
 		foreach ( $result as $row ) {
-			list( $title, $pv ) = $row;
+			list( $title, $pv )     = $row;
 			$json['data']['rows'][] = [
 				'c' => [
 					[

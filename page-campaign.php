@@ -13,32 +13,38 @@ get_header( 'breadcrumb' );
 
 			<div class="col-xs-12 col-sm-9 main-container">
 
-                <div class="archive-meta">
-                    <h1>
+				<div class="archive-meta">
+					<h1>
 						<?php get_template_part( 'parts/h1' ); ?>
-                    </h1>
-                    <div class="desc">
+					</h1>
+					<div class="desc">
 						<?php get_template_part( 'parts/meta-desc' ); ?>
-                    </div>
-                </div>
+					</div>
+				</div>
 
-                <?php the_post(); ?>
-                <div class="post-content clearfix" itemprop="articleBody">
-					<?php the_content() ?>
-                </div><!-- //.post-content -->
+				<?php the_post(); ?>
+				<div class="post-content clearfix" itemprop="articleBody">
+					<?php the_content(); ?>
+				</div><!-- //.post-content -->
 
-                <div class="widget-campaign-list">
-					<?php foreach ( hametuha_recent_campaigns( 0, false ) as $campaign ) {
-						hameplate( 'parts/loop', 'campaign', [
-							'campaign' => $campaign
-						] );
-					} ?>
-                </div>
+				<div class="widget-campaign-list">
+					<?php
+					foreach ( hametuha_recent_campaigns( 0, false ) as $campaign ) {
+						hameplate(
+							'parts/loop',
+							'campaign',
+							[
+								'campaign' => $campaign,
+							]
+						);
+					}
+					?>
+				</div>
 
 			</div>
 			<!-- //.main-container -->
 
-			<?php get_sidebar() ?>
+			<?php get_sidebar(); ?>
 
 		</div>
 		<!-- // .offcanvas -->

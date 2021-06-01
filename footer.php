@@ -8,12 +8,14 @@
 			<div class="row footer-links">
 
 				<div class="col-xs-12">
-					<?php wp_nav_menu( array(
-						'theme_location' => 'hametuha_global_about',
-						'container'      => false,
-						'menu_class'     => 'footer-links-nav',
-						'depth'          => 1,
-					) ); ?>
+					<?php wp_nav_menu(
+						array(
+							'theme_location' => 'hametuha_global_about',
+							'container'      => false,
+							'menu_class'     => 'footer-links-nav',
+							'depth'          => 1,
+						)
+					); ?>
 
 				</div>
 
@@ -30,11 +32,11 @@
 								'minicome'  => [ 'https://minico.me', 'ミニコミ通販', '' ],
 								'github3'   => [ 'https://github.com/hametuha/', 'Github', '' ],
 							] as $icon => list(
-							    $url, $label, $atts
+								$url, $label, $atts
 							) ) :
 							?>
 							<li>
-								<a href="<?= $url ?>" <?= $atts ?>><?= esc_html( $label ) ?></a>
+								<a href="<?php echo $url; ?>" <?php echo $atts; ?>><?php echo esc_html( $label ); ?></a>
 							</li>
 						<?php endforeach; ?>
 					</ul>
@@ -62,13 +64,13 @@
 		<ul class="write-panel__actions">
 			<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
 				<li class="write-panel__action">
-					<a class="write-panel__link <?= esc_attr( $class_name ) ?>" href="<?= $url ?>" <?= $data ?>>
+					<a class="write-panel__link <?php echo esc_attr( $class_name ); ?>" href="<?php echo $url; ?>" <?php echo $data; ?>>
 						<span class="write-panel__label">
-							<i class="icon-<?= $icon ?>"></i>
-							<?= esc_html( $label ) ?>
+							<i class="icon-<?php echo $icon; ?>"></i>
+							<?php echo esc_html( $label ); ?>
 						</span>
 						<?php if ( $desc ) : ?>
-							<p class="write-panel__desc"><?= esc_html( $desc ) ?></p>
+							<p class="write-panel__desc"><?php echo esc_html( $desc ); ?></p>
 						<?php endif; ?>
 					</a>
 				</li>
@@ -77,7 +79,7 @@
 	</div>
 </div>
 <?php endif; ?>
-<?php do_action( 'hametuha_after_whole_body' ) ?>
+<?php do_action( 'hametuha_after_whole_body' ); ?>
 </div><!-- //#whole-body -->
 
 

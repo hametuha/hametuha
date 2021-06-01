@@ -42,15 +42,22 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_approved', function( $collaborator, $post_id ) {
-			static::exec( [
-				get_post( $post_id )->post_author => [
-					'collaborator' => $collaborator->display_name,
-					'url'          => get_edit_post_link( $post_id, 'email' ),
-					'title'        => get_the_title( $post_id ),
-				],
-			] );
-		}, 10, 2 );
+		add_action(
+			'hametuha_collaborators_approved',
+			function( $collaborator, $post_id ) {
+				static::exec(
+					[
+						get_post( $post_id )->post_author => [
+							'collaborator' => $collaborator->display_name,
+							'url'          => get_edit_post_link( $post_id, 'email' ),
+							'title'        => get_the_title( $post_id ),
+						],
+					]
+				);
+			},
+			10,
+			2
+		);
 	}
 
 

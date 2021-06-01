@@ -7,14 +7,17 @@
  *
  * @param WP_Query $wp_query
  */
-add_filter( 'ajax_query_attachments_args', function ( array $query ) {
-	// 現在のユーザーが投稿者じゃなければ、自分のだけに限定
-	if ( ! current_user_can( 'edit_others_posts' ) ) {
-		$query['author'] = get_current_user_id();
-	}
+add_filter(
+	'ajax_query_attachments_args',
+	function ( array $query ) {
+		// 現在のユーザーが投稿者じゃなければ、自分のだけに限定
+		if ( ! current_user_can( 'edit_others_posts' ) ) {
+			$query['author'] = get_current_user_id();
+		}
 
-	return $query;
-} );
+		return $query;
+	}
+);
 
 
 // 管理画面でだけ実行
@@ -27,12 +30,15 @@ if ( is_admin() ) {
 	 *
 	 * @param WP_Comment_Query &$comment_query
 	 */
-	add_action( 'pre_get_comments', function ( WP_Comment_Query &$comment_query ) {
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( $screen && 'edit-comments' === $screen->id && ! current_user_can( 'edit_others_posts' ) ) {
-			$comment_query->query_vars['post_author'] = get_current_user_id();
+	add_action(
+		'pre_get_comments',
+		function ( WP_Comment_Query &$comment_query ) {
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $screen && 'edit-comments' === $screen->id && ! current_user_can( 'edit_others_posts' ) ) {
+				$comment_query->query_vars['post_author'] = get_current_user_id();
+			}
 		}
-	} );
+	);
 
 
 	/**
@@ -42,19 +48,26 @@ if ( is_admin() ) {
 	 *
 	 * @param WP_Query &$wp_query
 	 */
-	add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && ! current_user_can( 'edit_others_posts' ) && 'news' != $screen->post_type ) {
-			$wp_query->set( 'author', get_current_user_id() );
+	add_action(
+		'pre_get_posts',
+		function ( WP_Query &$wp_query ) {
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && ! current_user_can( 'edit_others_posts' ) && 'news' != $screen->post_type ) {
+				$wp_query->set( 'author', get_current_user_id() );
+			}
 		}
-	} );
+	);
 
 	/**
 	 * アドミンバーをカスタマイズ
 	 */
-	add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$wp_admin_bar ) {
-		$wp_admin_bar->remove_menu( 'wp-logo' );
-	}, 10000 );
+	add_action(
+		'admin_bar_menu',
+		function ( WP_Admin_Bar &$wp_admin_bar ) {
+			$wp_admin_bar->remove_menu( 'wp-logo' );
+		},
+		10000
+	);
 
 }
 
@@ -62,38 +75,46 @@ if ( is_admin() ) {
 /**
  * クエリバーのうち、メタキーを使えるようにする
  */
-add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
-	if ( $orderby = $wp_query->get( 'orderby' ) ) {
-		switch ( $orderby ) {
-			case 'popular':
-				$wp_query->set( 'orderby', 'meta_value_num' );
-				$wp_query->set( 'meta_key', '_current_pv' );
-				break;
-			case 'social':
-				$wp_query->set( 'orderby', 'meta_value_num' );
-				$wp_query->set( 'meta_key', '_sns_count_facebook' );
-				break;
-			default:
-				// Do nothing
-				break;
+add_action(
+	'pre_get_posts',
+	function ( WP_Query &$wp_query ) {
+		if ( $orderby = $wp_query->get( 'orderby' ) ) {
+			switch ( $orderby ) {
+				case 'popular':
+					$wp_query->set( 'orderby', 'meta_value_num' );
+					$wp_query->set( 'meta_key', '_current_pv' );
+					break;
+				case 'social':
+					$wp_query->set( 'orderby', 'meta_value_num' );
+					$wp_query->set( 'meta_key', '_sns_count_facebook' );
+					break;
+				default:
+					// Do nothing
+					break;
+			}
 		}
 	}
-} );
+);
 
 /**
  * Theme My Loginにno cache headersを吐かせる
  */
-add_action( 'login_init', function () {
-	nocache_headers();
-} );
+add_action(
+	'login_init',
+	function () {
+		nocache_headers();
+	}
+);
 
 /**
  * ツールボックスからPress Thisを消す
  *
  * @action tool_box
  */
-add_action( 'tool_box', function () {
-	echo <<<HTML
+add_action(
+	'tool_box',
+	function () {
+		echo <<<HTML
 <script>
 jQuery(document).ready(function($){
     $('.wrap .tool-box:eq(0)', '#wpbody-content').remove();
@@ -101,7 +122,8 @@ jQuery(document).ready(function($){
 </script>
 HTML;
 
-} );
+	}
+);
 
 
 
@@ -113,13 +135,21 @@ HTML;
  *
  * @return string
  */
-add_shortcode( 'file', function ( $atts, $content = '' ) {
-	extract( shortcode_atts( array(
-		'href' => ''
-	), $atts ) );
+add_shortcode(
+	'file',
+	function ( $atts, $content = '' ) {
+		extract(
+			shortcode_atts(
+				array(
+					'href' => '',
+				),
+				$atts
+			)
+		);
 
-	return '<p class="center"><a target="_blank" href="' . $href . '" class="button flash-button">フルサイズで表示</a></p>';
-} );
+		return '<p class="center"><a target="_blank" href="' . $href . '" class="button flash-button">フルサイズで表示</a></p>';
+	}
+);
 
 
 /**
@@ -152,7 +182,7 @@ function _hametuha_flash( $atts, $content = '' ) {
 <p class="center"><a target="_blank" href="{$atts[0]}" class="button flash-button">大きな画面で読む</a></p>
 EOS;
 	} else {
-		return "";
+		return '';
 	}
 }
 
@@ -167,7 +197,7 @@ add_shortcode( 'flash', '_hametuha_flash' );
  * @return string
  */
 function _hametuha_reply_cancel_link( $html ) {
-	return str_replace( "<a", '<a class="small-button"', $html );
+	return str_replace( '<a', '<a class="small-button"', $html );
 }
 
 add_filter( 'cancel_comment_reply_link', '_hametuha_reply_cancel_link' );
@@ -175,21 +205,26 @@ add_filter( 'cancel_comment_reply_link', '_hametuha_reply_cancel_link' );
 /**
  * コメントカウント数をコメントに限定
  */
-add_filter( 'get_comments_number', function ( $count, $post_id ) {
-	if ( ! is_admin() && ( $post = get_post( $post_id ) ) ) {
-		/** @var wpdb $wpdb */
-		global $wpdb;
-		$query = <<<SQL
+add_filter(
+	'get_comments_number',
+	function ( $count, $post_id ) {
+		if ( ! is_admin() && ( $post = get_post( $post_id ) ) ) {
+			/** @var wpdb $wpdb */
+			global $wpdb;
+			$query = <<<SQL
 			SELECT COUNT(comment_ID) FROM {$wpdb->comments}
 			WHERE comment_post_ID = %d
 			  AND comment_approved = '1'
 			  AND comment_type IN ( '', 'comment' )
 SQL;
-		$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $post_id ) );
-	}
+			$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $post_id ) );
+		}
 
-	return $count;
-}, 10, 2 );
+		return $count;
+	},
+	10,
+	2
+);
 
 
 /**
@@ -202,7 +237,7 @@ SQL;
  * @return string
  */
 function _hametuha_comment_reply_link( $html, $comment = null, $post = null ) {
-	return preg_replace( "/(class=['\"])/", "$1button ", $html );
+	return preg_replace( "/(class=['\"])/", '$1button ', $html );
 }
 
 add_filter( 'comment_reply_link', '_hametuha_comment_reply_link' );
@@ -216,7 +251,7 @@ add_filter( 'comment_reply_link', '_hametuha_comment_reply_link' );
  * @return string
  */
 function _hametuha_comment_edit_link( $html, $comment_id = 0 ) {
-	return str_replace( "class=\"", 'class="small-button ', $html );
+	return str_replace( 'class="', 'class="small-button ', $html );
 }
 
 add_filter( 'edit_comment_link', '_hametuha_comment_edit_link' );
@@ -232,11 +267,11 @@ add_filter( 'edit_comment_link', '_hametuha_comment_edit_link' );
  */
 function _hametuha_comment_message( $message, $comment_id ) {
 	//IPを削除
-	$message = preg_replace( "/\(IP.*$/m", '', $message );
+	$message = preg_replace( '/\(IP.*$/m', '', $message );
 	//Whoisを削除
-	$message = preg_replace( "/^Whois.*?$/m", '', $message );
+	$message = preg_replace( '/^Whois.*?$/m', '', $message );
 	//メールアドレスを削除
-	$message = preg_replace( "/^メール:.*$/m", '', $message );
+	$message = preg_replace( '/^メール:.*$/m', '', $message );
 
 	return $message;
 }
@@ -253,9 +288,9 @@ add_filter( 'comment_notification_text', '_hametuha_comment_message', 10, 2 );
  */
 function _hametuha_comment_message_header( $header, $comment_id ) {
 	//FROMを変更
-	$header = preg_replace( "/From: \".*?\" <[^>]*>/", "From: \"破滅派｜オンライン文芸誌\" <info@hametuha.com>", $header );
+	$header = preg_replace( '/From: ".*?" <[^>]*>/', 'From: "破滅派｜オンライン文芸誌" <info@hametuha.com>', $header );
 	//Reply-Toを変更
-	$header = preg_replace( "/Reply-To: \".*?\" <[^>]*>/", "Reply-To: info@hametuha.com", $header );
+	$header = preg_replace( '/Reply-To: ".*?" <[^>]*>/', 'Reply-To: info@hametuha.com', $header );
 
 	return $header;
 }
@@ -266,9 +301,12 @@ add_filter( 'comment_notification_headers', '_hametuha_comment_message_header', 
 /**
  * ALO NewsLetterが表示されないので、修正。
  */
-add_filter( 'alo_easymail_register_newsletter_args', function ( $args ) {
-	unset( $args['capabilities'] );
-	$args['capability_type'] = 'page';
+add_filter(
+	'alo_easymail_register_newsletter_args',
+	function ( $args ) {
+		unset( $args['capabilities'] );
+		$args['capability_type'] = 'page';
 
-	return $args;
-} );
+		return $args;
+	}
+);

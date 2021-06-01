@@ -29,19 +29,19 @@ class HotPost extends CronBase {
 			switch ( date_i18n( 'H' ) ) {
 				case 8:
 					$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
-					$params = [
-						'filters' => 'ga:dimension1==post',
+					$params  = [
+						'filters'    => 'ga:dimension1==post',
 						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
-					$start = $end = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
+					$start   = $end = date_i18n( 'Y-m-d', strtotime( 'Yesterday' ) );
 					break;
 				case 22:
 					$message = '【定期ポスト】今日人気があったニュースはこちらです。';
-					$params = [
-						'filters' => 'ga:dimension1==news',
+					$params  = [
+						'filters'    => 'ga:dimension1==news',
 						'dimensions' => 'ga:pageTitle,ga:pagePath',
 					];
-					$start = $end = date_i18n( 'Y-m-d' );
+					$start   = $end = date_i18n( 'Y-m-d' );
 					break;
 				default:
 					return; // Do nothing.

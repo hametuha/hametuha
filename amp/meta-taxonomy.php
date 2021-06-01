@@ -3,8 +3,8 @@
 <ul class="amp-hametuha-links">
 	<?php foreach ( $links as list( $title, $url ) ) : ?>
 		<li class="amp-hametuha-links-item">
-			<a href="<?= esc_url( $url ) ?>" class="amp-hametuha-links-link">
-				<?= esc_html( $title ) ?>
+			<a href="<?php echo esc_url( $url ); ?>" class="amp-hametuha-links-link">
+				<?php echo esc_html( $title ); ?>
 			</a>
 		</li>
 	<?php endforeach; ?>
@@ -16,9 +16,9 @@
 	<ul class="amp-hametuha-books">
 		<?php foreach ( $links as list( $title, $url, $src, $author, $publisher, $rank ) ) : ?>
 			<li class="amp-hametuha-books-item">
-				<a href="<?= esc_url( $url ) ?>" class="amp-hametuha-books-link">
+				<a href="<?php echo esc_url( $url ); ?>" class="amp-hametuha-books-link">
 					<?php if ( $src ) : ?>
-					<amp-img src="<?= $src ?>" alt="<?= esc_attr( $title ) ?>" class="amp-hametuha-books-img"
+					<amp-img src="<?php echo $src; ?>" alt="<?php echo esc_attr( $title ); ?>" class="amp-hametuha-books-img"
 							 width="66" height="100"
 							 layout="responsive"></amp-img>
 						<?php endif; ?>
@@ -41,7 +41,7 @@ if ( $related ) {
 	<ul class="amp-hametuha-related">
 		<?php foreach ( $related as $relate ) : ?>
 			<li class="amp-hametuha-related-item">
-				<a href="<?= get_permalink( $relate ) ?>" class="amp-hametuha-related-link">
+				<a href="<?php echo get_permalink( $relate ); ?>" class="amp-hametuha-related-link">
 
 					<?php if ( has_post_thumbnail( $relate ) ) : ?>
 						<div class="amp-hametuha-related-img">
@@ -60,17 +60,23 @@ if ( $related ) {
 
 					<div class="amp-hametuha-related-body">
 						<h3 class="amp-hametuha-related-title">
-							<?= get_the_title( $relate ) ?>
+							<?php echo get_the_title( $relate ); ?>
 						</h3>
 						<p class="amp-hametuha-related-meta">
 							<?php
 								echo mysql2date( 'Y.m.d', $relate->post_date );
 								$genre = get_the_terms( $relate, 'genre' );
-								if ( $genre && ! is_wp_error( $genre ) ) {
-									echo " | " . implode( ', ', array_map( function( $term ) {
-										return esc_html( $term->name );
-									}, $genre ) );
-								}
+							if ( $genre && ! is_wp_error( $genre ) ) {
+								echo ' | ' . implode(
+									', ',
+									array_map(
+										function( $term ) {
+											return esc_html( $term->name );
+										},
+										$genre
+									)
+								);
+							}
 							?>
 						</p>
 					</div>
@@ -82,13 +88,14 @@ if ( $related ) {
 }
 
 // 関連キーワード
-$keywords = get_the_terms( get_the_ID(), 'nouns' ); ?>
+$keywords = get_the_terms( get_the_ID(), 'nouns' );
+?>
 <?php if ( $keywords && ! is_wp_error( $keywords ) ) : ?>
 	<h2 class="amp-hametuha-title">関連キーワード</h2>
 	<div class="amp-hametuha-tag-list">
 		<?php foreach ( $keywords as $keyword ) : ?>
 			<a class="amp-hametuha-tag-link"
-			   href="<?= get_term_link( $keyword ) ?>"><?= esc_html( $keyword->name ) ?></a>
+			   href="<?php echo get_term_link( $keyword ); ?>"><?php echo esc_html( $keyword->name ); ?></a>
 		<?php endforeach; ?>
 	</div>
 <?php endif; ?>

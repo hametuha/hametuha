@@ -132,9 +132,14 @@ class Picture extends Singleton {
 			throw new \Exception( 'ディレクトリに書き込みできません。管理者に連絡してください', 500 );
 		}
 		$this->image->include_wp_libs();
-		$attachment_id = media_handle_sideload( $file, 0, '', [
-			'post_author' => $user_id,
-		] );
+		$attachment_id = media_handle_sideload(
+			$file,
+			0,
+			'',
+			[
+				'post_author' => $user_id,
+			]
+		);
 		if ( is_wp_error( $attachment_id ) || ! is_numeric( $attachment_id ) ) {
 			throw new \Exception( '画像の保存に失敗しました。やり直してください。', 500 );
 		}
@@ -153,19 +158,24 @@ class Picture extends Singleton {
 	 */
 	public function get_profile_pic( $user_id, $size = 'pinky', array $args = [] ) {
 		$pictures = [];
-		$query    = new \WP_Query( wp_parse_args( $args, [
-			'post_type'      => 'attachment',
-			'author'         => $user_id,
-			'post_mime_type' => 'image',
-			'posts_per_page' => - 1,
-			'post_status'    => 'inherit',
-			'meta_query'     => [
+		$query    = new \WP_Query(
+			wp_parse_args(
+				$args,
 				[
-					'key'   => $this->post_meta_key,
-					'value' => 1
+					'post_type'      => 'attachment',
+					'author'         => $user_id,
+					'post_mime_type' => 'image',
+					'posts_per_page' => - 1,
+					'post_status'    => 'inherit',
+					'meta_query'     => [
+						[
+							'key'   => $this->post_meta_key,
+							'value' => 1,
+						],
+					],
 				]
-			],
-		] ) );
+			)
+		);
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();

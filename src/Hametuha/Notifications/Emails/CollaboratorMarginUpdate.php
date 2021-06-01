@@ -44,15 +44,22 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_updated', function( $collaborator, $series_id, $margin ) {
-			static::exec( [
-				$collaborator->ID => [
-					'title'  => get_the_title( $series_id ),
-					'url'    => home_url( 'dashboard/requests/collaborations' ),
-					'margin' => $margin,
-				],
-			] );
-		}, 10, 3 );
+		add_action(
+			'hametuha_collaborators_updated',
+			function( $collaborator, $series_id, $margin ) {
+				static::exec(
+					[
+						$collaborator->ID => [
+							'title'  => get_the_title( $series_id ),
+							'url'    => home_url( 'dashboard/requests/collaborations' ),
+							'margin' => $margin,
+						],
+					]
+				);
+			},
+			10,
+			3
+		);
 	}
 
 

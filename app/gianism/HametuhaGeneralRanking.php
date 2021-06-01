@@ -19,12 +19,17 @@ class HametuhaGeneralRanking extends Daily {
 		// 48時間経たないとデータは取れないので、
 		// 3日前
 		$three_days_ago = date( 'Y-m-d', strtotime( '-3days' ) );
-		$result         = $this->fetch( $three_days_ago, $three_days_ago, 'ga:pageviews', array(
-			'max-results' => 200,
-			'dimensions'  => 'ga:pagePath',
-			'filters'     => 'ga:dimension1==post',
-			'sort'        => '-ga:pageviews',
-		) );
+		$result         = $this->fetch(
+			$three_days_ago,
+			$three_days_ago,
+			'ga:pageviews',
+			array(
+				'max-results' => 200,
+				'dimensions'  => 'ga:pagePath',
+				'filters'     => 'ga:dimension1==post',
+				'sort'        => '-ga:pageviews',
+			)
+		);
 		foreach ( $result as $key => $row ) {
 			// 日付情報を加える
 			$result[ $key ][] = $three_days_ago;

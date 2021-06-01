@@ -25,9 +25,12 @@ class AdsenseWidget extends Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
-		$atts = shortcode_atts( array(
-			'title' => '最新ニュース',
-		), $instance );
+		$atts = shortcode_atts(
+			array(
+				'title' => '最新ニュース',
+			),
+			$instance
+		);
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">

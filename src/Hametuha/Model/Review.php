@@ -81,12 +81,14 @@ class Review extends TermUserRelationships {
 	 */
 	public function is_user_vote_for( $user_id, $post_id, $tag_name ) {
 		return (bool) $this->select( "{$this->table}.object_id" )
-						   ->wheres( [
-							   "{$this->table}.user_id = %d"     => $user_id,
-							   "{$this->table}.object_id = %d"   => $post_id,
-							   "{$this->taxonomy}.taxonomy = %s" => $this->taxonomy,
-							   "{$this->terms}.name = %s"        => $tag_name,
-						   ] )->get_var();
+						->wheres(
+							[
+								"{$this->table}.user_id = %d" => $user_id,
+								"{$this->table}.object_id = %d" => $post_id,
+								"{$this->taxonomy}.taxonomy = %s" => $this->taxonomy,
+								"{$this->terms}.name = %s" => $tag_name,
+							]
+						)->get_var();
 	}
 
 	/**
@@ -109,7 +111,7 @@ class Review extends TermUserRelationships {
 	 * @return int
 	 */
 	public function update_review_count( $post_id, $increment = 1 ) {
-		$count = $this->get_review_count( $post_id );
+		$count  = $this->get_review_count( $post_id );
 		$count += $increment;
 		update_post_meta( $post_id, '_review_count', $count );
 
@@ -126,15 +128,17 @@ class Review extends TermUserRelationships {
 	 */
 	public function user_voted_tags( $user_id, $post_id ) {
 		if ( ! $user_id ) {
-			return [ ];
+			return [];
 		}
 
 		return (array) $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*" )
-							->wheres( [
-								"{$this->table}.user_id = %d"          => $user_id,
-								"{$this->table}.object_id = %d"        => $post_id,
-								"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
-							] )->result();
+							->wheres(
+								[
+									"{$this->table}.user_id = %d"          => $user_id,
+									"{$this->table}.object_id = %d"        => $post_id,
+									"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
+								]
+							)->result();
 	}
 
 	/**
@@ -146,10 +150,12 @@ class Review extends TermUserRelationships {
 	 * @return false|int
 	 */
 	public function clear_user_review( $user_id, $post_id ) {
-		$result = $this->delete_where( [
-			[ 'user_id', '=', $user_id, '%d' ],
-			[ 'object_id', '=', $post_id, '%d' ],
-		] );
+		$result = $this->delete_where(
+			[
+				[ 'user_id', '=', $user_id, '%d' ],
+				[ 'object_id', '=', $post_id, '%d' ],
+			]
+		);
 
 		return $result;
 	}
@@ -164,11 +170,13 @@ class Review extends TermUserRelationships {
 	 * @return false|int
 	 */
 	public function add_review( $user_id, $post_id, $term_taxonomy_id ) {
-		return $this->insert( [
-			'user_id'          => $user_id,
-			'object_id'        => $post_id,
-			'term_taxonomy_id' => $term_taxonomy_id
-		] );
+		return $this->insert(
+			[
+				'user_id'          => $user_id,
+				'object_id'        => $post_id,
+				'term_taxonomy_id' => $term_taxonomy_id,
+			]
+		);
 	}
 
 	/**
@@ -250,12 +258,12 @@ SQL;
 		// データ整形
 		$labels = [
 			[],
-		    [],
+			[],
 		];
 		foreach ( $this->feedback_tags as $key => $val ) {
 			list( $pos, $nega ) = $val;
-			$labels[0][] = $pos;
-			$labels[1][] = $nega;
+			$labels[0][]        = $pos;
+			$labels[1][]        = $nega;
 			for ( $i = 0, $l = count( $val ); $i < $l; $i ++ ) {
 				$score = 0;
 				foreach ( $points as $point ) {
@@ -266,16 +274,18 @@ SQL;
 				}
 				$score = min( $score * 20, 100 );
 				// TODO: 投稿数が少な過ぎてたぶん意味ないので、平均は取らない
-//                $avg = get_review_average($val[$i]);
-//                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
+				//                $avg = get_review_average($val[$i]);
+				//                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
 				$data['datasets'][ $i ]['data'][]      = $score;
 				$data['datasets'][ $i ]['label_set'][] = $val[ $i ];
 			}
 		}
-		$json = json_encode( [
-			'data' => $data,
-		    'labels' => $labels,
-		] );
+		$json = json_encode(
+			[
+				'data'   => $data,
+				'labels' => $labels,
+			]
+		);
 		$html = <<<HTML
 <div>
 <canvas id="single-radar" width="300" height="300"></canvas>
@@ -326,18 +336,20 @@ SQL;
 		}
 		$result = $this->select( "COUNT({$this->table}.user_id) AS score, {$this->terms}.name" )
 					   ->join( $this->posts, "{$this->table}.object_id = {$this->posts}.ID" )
-					   ->wheres( [
-						   "{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
-						   "{$this->posts}.post_author = %d"      => $user_id,
-					   ] )
+					->wheres(
+						[
+							"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
+							"{$this->posts}.post_author = %d"      => $user_id,
+						]
+					)
 					   ->group_by( "{$this->terms}.term_id" )
 					   ->result();
-		$json   = [ ];
+		$json   = [];
 		foreach ( $this->feedback_tags as $key => $terms ) {
 			$json[ $key ] = [
 				'genre'    => $this->review_tag_label( $key ),
-				'positive' => [ ],
-				'negative' => [ ],
+				'positive' => [],
+				'negative' => [],
 			];
 			for ( $i = 0; $i < 2; $i ++ ) {
 				$value = 0;

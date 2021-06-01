@@ -12,8 +12,8 @@ use WPametu\DB\Model;
  * @property-read string $users
  * @property-read string $usermeta
  */
-class Follower extends Model
-{
+class Follower extends Model {
+
 
 	protected $name = 'user_relationships';
 
@@ -25,12 +25,12 @@ class Follower extends Model
 	 * @var array
 	 */
 	protected $default_placeholder = [
-		'ID' => '%d',
-		'user_id' => '%s',
+		'ID'        => '%d',
+		'user_id'   => '%s',
 		'target_id' => '%d',
-		'status' => '%d',
-		'created' => '%s',
-		'updated' => '%s',
+		'status'    => '%d',
+		'created'   => '%s',
+		'updated'   => '%s',
 	];
 
 
@@ -44,11 +44,13 @@ class Follower extends Model
 	 */
 	public function follow( $user_id, $target_id ) {
 		if ( $this->is_blocked( $user_id, $target_id )
-		     || ! $this->insert( [
+			|| ! $this->insert(
+				[
 					'user_id'   => $user_id,
 					'target_id' => $target_id,
 					'created'   => current_time( 'mysql' ),
-				] )
+				]
+			)
 		) {
 			return new \WP_Error( 500, 'フォローできませんでした。' );
 		} else {
@@ -66,10 +68,12 @@ class Follower extends Model
 	 * @throws \Exception
 	 */
 	public function unfollow( $user_id, $target_id ) {
-		if ( $this->delete_where( [
+		if ( $this->delete_where(
+			[
 				[ 'user_id', '=', $user_id, '%d' ],
 				[ 'target_id', '=', $target_id, '%d' ],
-		] )
+			]
+		)
 		) {
 			return true;
 		} else {
@@ -87,10 +91,12 @@ class Follower extends Model
 	 */
 	public function is_following( $user_id, $target_id ) {
 		return (bool) $this->select( 'target_id' )
-		                   ->wheres( [
-				                   'user_id = %d'   => $user_id,
-				                   'target_id = %d' => $target_id,
-		                   ] )->get_var();
+						->wheres(
+							[
+								'user_id = %d'   => $user_id,
+								'target_id = %d' => $target_id,
+							]
+						)->get_var();
 	}
 
 	/**
@@ -115,14 +121,16 @@ class Follower extends Model
 SQL;
 		$sub_query = $this->db->prepare( $sub_query, $user_id );
 		$this->calc()->select( 'u.*, r2.following' )
-		     ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
-		     ->join( $sub_query, 'u.ID = r2.target_id', 'LEFT' )
-		     ->wheres( [
-			     "{$this->table}.target_id = %d" => $user_id,
-			     "{$this->table}.status = %d"    => 1,
-		     ] )
-		     ->order_by( "{$this->table}.updated", 'DESC' )
-		     ->limit( 20, $offset );
+			 ->join( "$this->users AS u", "u.ID = {$this->table}.user_id", 'INNER' )
+			 ->join( $sub_query, 'u.ID = r2.target_id', 'LEFT' )
+			->wheres(
+				[
+					"{$this->table}.target_id = %d" => $user_id,
+					"{$this->table}.status = %d"    => 1,
+				]
+			)
+			 ->order_by( "{$this->table}.updated", 'DESC' )
+			 ->limit( 20, $offset );
 		if ( $query ) {
 			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
 		}
@@ -147,13 +155,15 @@ SQL;
 			'users'  => [],
 		];
 		$this->calc()->select( 'u.*' )
-		     ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
-		     ->wheres( [
-			     "{$this->table}.user_id = %d" => $user_id,
-			     "{$this->table}.status = %d"  => 1,
-		     ] )
-		     ->order_by( "{$this->table}.updated", 'DESC' )
-		     ->limit( 20, $offset );
+			 ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
+			->wheres(
+				[
+					"{$this->table}.user_id = %d" => $user_id,
+					"{$this->table}.status = %d"  => 1,
+				]
+			)
+			 ->order_by( "{$this->table}.updated", 'DESC' )
+			 ->limit( 20, $offset );
 		if ( $query ) {
 			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
 		}
@@ -173,11 +183,13 @@ SQL;
 	 */
 	public function is_blocked( $user_id, $blocker_id ) {
 		return (bool) $this->select( 'target_id' )
-		                   ->wheres( [
-			                   'user_id = %d' => $blocker_id,
-			                   'target_id = %d'    => $user_id,
-			                   'status = %d'       => 0,
-		                   ] )->get_var();
+						->wheres(
+							[
+								'user_id = %d'   => $blocker_id,
+								'target_id = %d' => $user_id,
+								'status = %d'    => 0,
+							]
+						)->get_var();
 	}
 
 }

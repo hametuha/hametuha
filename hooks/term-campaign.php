@@ -4,38 +4,48 @@
 /**
  * タクソノミーを登録
  */
-add_action( 'init', function () {
-	// 応募
-	register_taxonomy( 'campaign', 'post', [
-		'label'             => '応募',
-		'hierarchical'      => true,
-		'public'            => true,
-		'show_admin_column' => true,
-		'capabilities'      => [
-			'manage_terms' => 'manage_categories',
-			'edit_terms'   => 'manage_categories',
-			'delete_terms' => 'manage_categories',
-			'assign_terms' => 'edit_posts',
-		],
-		'rewrite'           => [
-			'slug'       => 'campaign',
-			'with_front' => false,
-		],
-		'meta_box_cb'       => function ( WP_Post $post ) {
-			$terms          = get_terms( [
-				'taxonomy'   => 'campaign',
-				'hide_empty' => false,
-			] );
-			if ( ! $terms || is_wp_error( $terms ) ) :
-				?>
+add_action(
+	'init',
+	function () {
+		// 応募
+		register_taxonomy(
+			'campaign',
+			'post',
+			[
+				'label'             => '応募',
+				'hierarchical'      => true,
+				'public'            => true,
+				'show_admin_column' => true,
+				'capabilities'      => [
+					'manage_terms' => 'manage_categories',
+					'edit_terms'   => 'manage_categories',
+					'delete_terms' => 'manage_categories',
+					'assign_terms' => 'edit_posts',
+				],
+				'rewrite'           => [
+					'slug'       => 'campaign',
+					'with_front' => false,
+				],
+				'meta_box_cb'       => function ( WP_Post $post ) {
+					$terms = get_terms(
+						[
+							'taxonomy'   => 'campaign',
+							'hide_empty' => false,
+						]
+					);
+					if ( ! $terms || is_wp_error( $terms ) ) :
+						?>
 				<p class="description">応募できるものはありません。</p>
-				<?php
+						<?php
 			else :
-				$term_available = array_filter( $terms, function ( $term ) {
-					return hametuha_is_available_campaign( $term );
-				} );
-				$post_terms = get_the_terms( $post, 'campaign' );
-				$can_select = true;
+				$term_available = array_filter(
+					$terms,
+					function ( $term ) {
+						return hametuha_is_available_campaign( $term );
+					}
+				);
+				$post_terms     = get_the_terms( $post, 'campaign' );
+				$can_select     = true;
 				if ( $post_terms && ! is_wp_error( $post_terms ) ) {
 					foreach ( $post_terms as $term ) {
 						if ( ! hametuha_is_available_campaign( $term ) ) {
@@ -50,7 +60,7 @@ add_action( 'init', function () {
 						<li>
 							<label>
 								<input type="radio" name="tax_input[campaign][]"
-								       value="0" <?php checked( empty( $post_terms ) ) ?>/>
+									   value="0" <?php checked( empty( $post_terms ) ); ?>/>
 								応募しない
 							</label>
 						</li>
@@ -58,10 +68,10 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="radio" name="tax_input[campaign][]"
-									       value="<?= esc_attr( $term->term_id ) ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ) ?>/>
-									<?= esc_html( $term->name ) ?>
+										   value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?>/>
+									<?php echo esc_html( $term->name ); ?>
 									<?php if ( $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) : ?>
-										<small><?= mysql2date( 'Y年n月j日（D）まで', $limit ) ?></small>
+										<small><?php echo mysql2date( 'Y年n月j日（D）まで', $limit ); ?></small>
 									<?php else : ?>
 										<small>期限なし</small>
 									<?php endif; ?>
@@ -75,8 +85,8 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="hidden" name="tax_input[campaign][]"
-									       value="<?= esc_attr( $term->term_id ) ?>"/>
-									<strong>応募済み: </strong><?= esc_html( $term->name ) ?>
+										   value="<?php echo esc_attr( $term->term_id ); ?>"/>
+									<strong>応募済み: </strong><?php echo esc_html( $term->name ); ?>
 								</label>
 							</li>
 						<?php endforeach; ?>
@@ -84,65 +94,78 @@ add_action( 'init', function () {
 				<?php else : ?>
 					<p class="description">応募できるものはありません。</p>
 				<?php endif; ?>
-			<?php endif;
-		},
-	] );
-} );
+				<?php
+			endif;
+				},
+			]
+		);
+	}
+);
 
 /**
  * カラムに募集期限を追加
  */
-add_filter( 'manage_edit-campaign_columns', function ( $columns ) {
-	$new_columns = [];
-	foreach ( $columns as $col => $label ) {
-		if ( 'posts' == $col ) {
-			$new_columns['limit'] = '募集期限';
+add_filter(
+	'manage_edit-campaign_columns',
+	function ( $columns ) {
+		$new_columns = [];
+		foreach ( $columns as $col => $label ) {
+			if ( 'posts' == $col ) {
+				$new_columns['limit'] = '募集期限';
+			}
+			if ( 'description' !== $col ) {
+				$new_columns[ $col ] = $label;
+			}
 		}
-		if ( 'description' !== $col ) {
-			$new_columns[ $col ] = $label;
-		}
-	}
 
-	return $new_columns;
-} );
+		return $new_columns;
+	}
+);
 
 // 募集期限を出力
-add_filter( 'manage_campaign_custom_column', function ( $return, $column, $term_id ) {
-	switch ( $column ) {
-		case 'limit':
-			if ( ! hametuha_campaign_has_limit( $term_id ) ) {
-				$return = '<span style="color:lightgrey">---</span>';
-			} else {
-				if ( hametuha_is_available_campaign( get_term_by( 'id', $term_id, 'campaign' ) ) ) {
-					$label = '%s - <strong style="color:red;">募集中</strong>';
+add_filter(
+	'manage_campaign_custom_column',
+	function ( $return, $column, $term_id ) {
+		switch ( $column ) {
+			case 'limit':
+				if ( ! hametuha_campaign_has_limit( $term_id ) ) {
+					$return = '<span style="color:lightgrey">---</span>';
 				} else {
-					$label = '<span style="color:lightgrey">%s - 募集終了</span>';
+					if ( hametuha_is_available_campaign( get_term_by( 'id', $term_id, 'campaign' ) ) ) {
+						$label = '%s - <strong style="color:red;">募集中</strong>';
+					} else {
+						$label = '<span style="color:lightgrey">%s - 募集終了</span>';
+					}
+					$return = sprintf( $label, mysql2date( get_option( 'date_format' ), get_term_meta( $term_id, '_campaign_limit', true ) ) );
 				}
-				$return = sprintf( $label, mysql2date( get_option( 'date_format' ), get_term_meta( $term_id, '_campaign_limit', true ) ) );
-			}
-			break;
-		default:
-			// Do nothing.
-			break;
-	}
+				break;
+			default:
+				// Do nothing.
+				break;
+		}
 
-	return $return;
-}, 10, 3 );
+		return $return;
+	},
+	10,
+	3
+);
 
 /**
  * 日付を入力するフィールドを追加
  */
-add_action( 'edit_tag_form_fields', function ( $tag ) {
-	if ( 'campaign' == $tag->taxonomy ) {
-		?>
+add_action(
+	'edit_tag_form_fields',
+	function ( $tag ) {
+		if ( 'campaign' == $tag->taxonomy ) {
+			?>
 		<tr>
 			<th>
 				<label for="campaign_limit">応募期限</label>
 			</th>
 			<td>
 				<input id="campaign_limit" name="campaign_limit" type="date" class="regular-text"
-				       placeholder="YYYY-MM-DD"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ) ?>"/>
+					   placeholder="YYYY-MM-DD"
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -151,8 +174,8 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_range_end" name="campaign_range_end" type="date" class="regular-text"
-				       placeholder="YYYY-MM-DD"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ) ?>"/>
+					   placeholder="YYYY-MM-DD"
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -161,7 +184,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_min_length" name="campaign_min_length" type="number" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -170,7 +193,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_max_length" name="campaign_max_length" type="number" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -179,7 +202,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<textarea rows="3" style="width: 90%;" id="campaign_detail"
-				          name="campaign_detail"><?= esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ) ?></textarea>
+						  name="campaign_detail"><?php echo esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ); ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -188,19 +211,22 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_url" name="campaign_url" type="url" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ); ?>"/>
 			</td>
 		</tr>
-		<?php
+			<?php
+		}
 	}
-} );
+);
 
 /**
  * 応募要項を保存
  */
-add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
-	if ( 'campaign' == $taxonomy && isset( $_POST['campaign_limit'] ) ) {
-		foreach (
+add_action(
+	'edit_terms',
+	function ( $term_id, $taxonomy ) {
+		if ( 'campaign' == $taxonomy && isset( $_POST['campaign_limit'] ) ) {
+			foreach (
 			[
 				'campaign_limit',
 				'campaign_range_end',
@@ -209,27 +235,33 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 				'campaign_detail',
 				'campaign_url',
 			] as $key
-		) {
-			if ( isset( $_POST[ $key ] ) ) {
-				update_term_meta( $term_id, '_' . $key, $_POST[ $key ] );
+			) {
+				if ( isset( $_POST[ $key ] ) ) {
+					update_term_meta( $term_id, '_' . $key, $_POST[ $key ] );
+				}
 			}
+			// Clear cache
+			wp_cache_delete( $term_id, 'campaign_record' );
 		}
-		// Clear cache
-		wp_cache_delete( $term_id, 'campaign_record' );
-	}
-}, 10, 2 );
+	},
+	10,
+	2
+);
 /**
  * レビューが更新されたらキャッシュ削除
  *
  * @param WP_Post $post
  */
-add_action( 'hametuha_post_reviewed', function ( $post ) {
-	if ( ( $campaigns = get_the_terms( $post, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
-		foreach ( $campaigns as $campaign ) {
-			wp_cache_delete( $campaign->term_id, 'campaign_record' );
+add_action(
+	'hametuha_post_reviewed',
+	function ( $post ) {
+		if ( ( $campaigns = get_the_terms( $post, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
+			foreach ( $campaigns as $campaign ) {
+				wp_cache_delete( $campaign->term_id, 'campaign_record' );
+			}
 		}
 	}
-} );
+);
 
 /**
  * コメントが交信されたらキャッシュ削除
@@ -237,36 +269,47 @@ add_action( 'hametuha_post_reviewed', function ( $post ) {
  * @param int $comment_id
  * @param WP_Comment $comment
  */
-add_action( 'wp_insert_comment', function ( $comment_id, $comment ) {
-	if ( ( $campaigns = get_the_terms( $comment->comment_post_ID, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
-		foreach ( $campaigns as $campaign ) {
-			wp_cache_delete( $campaign->term_id, 'campaign_record' );
+add_action(
+	'wp_insert_comment',
+	function ( $comment_id, $comment ) {
+		if ( ( $campaigns = get_the_terms( $comment->comment_post_ID, 'campaign' ) ) && ! is_wp_error( $campaigns ) ) {
+			foreach ( $campaigns as $campaign ) {
+				wp_cache_delete( $campaign->term_id, 'campaign_record' );
+			}
 		}
-	}
-}, 10, 2 );
+	},
+	10,
+	2
+);
 
 
 /**
  * 合評会一覧を出力するショートコード
  */
-add_shortcode( 'campaign_list', function ( $atts ) {
-	$atts     = shortcode_atts( [
-		'year' => hametuha_financial_year(),
-	], $atts, 'campaign_list' );
-	$campaign = hametuha_review_terms( $atts['year'], false );
-	if ( ! $campaign ) {
-		return '';
-	}
-	$content = '<ol class="campaign-review">';
-	foreach ( $campaign as $term ) {
-		$link  = get_term_link( $term );
-		$label = esc_html( $term->name );
-		$desc  = nl2br( esc_html( $term->description ) );
-		$count = number_format_i18n( $term->count );
-		$limit = hametuha_is_available_campaign( $term )
+add_shortcode(
+	'campaign_list',
+	function ( $atts ) {
+		$atts     = shortcode_atts(
+			[
+				'year' => hametuha_financial_year(),
+			],
+			$atts,
+			'campaign_list'
+		);
+		$campaign = hametuha_review_terms( $atts['year'], false );
+		if ( ! $campaign ) {
+			return '';
+		}
+		$content = '<ol class="campaign-review">';
+		foreach ( $campaign as $term ) {
+			$link     = get_term_link( $term );
+			$label    = esc_html( $term->name );
+			$desc     = nl2br( esc_html( $term->description ) );
+			$count    = number_format_i18n( $term->count );
+			$limit    = hametuha_is_available_campaign( $term )
 			? sprintf( '<span class="label label-danger campaign-review__label">%s〆切</span>', mysql2date( get_option( 'date_format' ), get_term_meta( $term->term_id, '_campaign_limit', true ) ) )
 			: '<span class="label label-default campaign-review__label">募集終了</span>';
-		$content .= <<<HTML
+			$content .= <<<HTML
 		<li class="campaign-review__item">
 			<a href="{$link}" class="campaign-review__link block-link">
 				<strong class="campaign-review__title">
@@ -281,8 +324,9 @@ add_shortcode( 'campaign_list', function ( $atts ) {
 		</li>
 HTML;
 
-	}
-	$content .= '</ol>';
+		}
+		$content .= '</ol>';
 
-	return $content;
-} );
+		return $content;
+	}
+);

@@ -12,8 +12,8 @@ use WPametu\API\Rest\RestJSON;
  * @package Hametuha\Rest
  * @property-read Lists $lists
  */
-class ListCreator extends RestJSON
-{
+class ListCreator extends RestJSON {
+
 
 	/**
 	 * @var string
@@ -33,57 +33,57 @@ class ListCreator extends RestJSON
 	 * @param int $post_id
 	 * @return array
 	 */
-	public function post_create($post_id = 0){
-		try{
+	public function post_create( $post_id = 0 ) {
+		try {
 			// nonceチェック
-			if( !wp_verify_nonce($this->input->post('_wpnonce'), 'list-edit') ){
+			if ( ! wp_verify_nonce( $this->input->post( '_wpnonce' ), 'list-edit' ) ) {
 				$this->auth_error();
 			}
 			// 権限チェック
-			if( (!$post_id && !current_user_can('read')) || ($post_id && !current_user_can('edit_post', $post_id)) ){
+			if ( ( ! $post_id && ! current_user_can( 'read' ) ) || ( $post_id && ! current_user_can( 'edit_post', $post_id ) ) ) {
 				$this->auth_error();
 			}
 			// リストチェック
-			if( $post_id ){
-				$list = get_post($post_id);
-				if( 'lists' !== $list->post_type ){
-					throw new \Exception('不正なリストを編集しようとしています。');
+			if ( $post_id ) {
+				$list = get_post( $post_id );
+				if ( 'lists' !== $list->post_type ) {
+					throw new \Exception( '不正なリストを編集しようとしています。' );
 				}
 			}
 			// タイトルチェック
-			if( !$this->input->post('list-name') ){
-				throw new \Exception('タイトルは必須です。');
+			if ( ! $this->input->post( 'list-name' ) ) {
+				throw new \Exception( 'タイトルは必須です。' );
 			}
 			// 保存
 			$post_arr = [
-				'post_author' => get_current_user_id(),
-				'post_title' => $this->input->post('list-name'),
-				'post_excerpt' => $this->input->post('list-excerpt'),
-				'post_status' => $this->input->post('list-status') == 'publish' ? 'publish' : 'private',
-				'post_type' => 'lists',
+				'post_author'  => get_current_user_id(),
+				'post_title'   => $this->input->post( 'list-name' ),
+				'post_excerpt' => $this->input->post( 'list-excerpt' ),
+				'post_status'  => $this->input->post( 'list-status' ) == 'publish' ? 'publish' : 'private',
+				'post_type'    => 'lists',
 			];
-			if( $post_id ){
+			if ( $post_id ) {
 				$post_arr['ID'] = $post_id;
-				if( is_wp_error(wp_update_post($post_arr, true)) ){
-					throw new \Exception('保存に失敗しました。後でやり直してください。');
+				if ( is_wp_error( wp_update_post( $post_arr, true ) ) ) {
+					throw new \Exception( '保存に失敗しました。後でやり直してください。' );
 				}
-			}else{
-				$post_id = wp_insert_post($post_arr, true);
-				if( is_wp_error($post_id) ){
-					throw new \Exception('保存に失敗しました。後でやり直してください。');
+			} else {
+				$post_id = wp_insert_post( $post_arr, true );
+				if ( is_wp_error( $post_id ) ) {
+					throw new \Exception( '保存に失敗しました。後でやり直してください。' );
 				}
 			}
 			// オススメかどうか
-			if( current_user_can('edit_others_posts') && 'recommended' == $this->input->post('list-editor-option') ){
-				$this->lists->mark_as_recommended($post_id);
-			}else{
-				$this->lists->not_recommended($post_id);
+			if ( current_user_can( 'edit_others_posts' ) && 'recommended' == $this->input->post( 'list-editor-option' ) ) {
+				$this->lists->mark_as_recommended( $post_id );
+			} else {
+				$this->lists->not_recommended( $post_id );
 			}
 			return [
 				'success' => true,
-				'post' => get_post($post_id),
+				'post'    => get_post( $post_id ),
 			];
-		}catch ( \Exception $e ){
+		} catch ( \Exception $e ) {
 			return [
 				'success' => false,
 				'message' => $e->getMessage(),
@@ -98,32 +98,32 @@ class ListCreator extends RestJSON
 	 *
 	 * @return array
 	 */
-	public function post_save($post_id){
-		try{
+	public function post_save( $post_id ) {
+		try {
 			// 権限チェック
-			if( !current_user_can('read') || !wp_verify_nonce($this->input->post('_wpnonce'), 'list-save') ){
+			if ( ! current_user_can( 'read' ) || ! wp_verify_nonce( $this->input->post( '_wpnonce' ), 'list-save' ) ) {
 				$this->auth_error();
 			}
 			// 投稿をチェック
-			$post = get_post($post_id);
-			if( !$post || 'post' !== $post->post_type ){
-				throw new \Exception('指定された作品はリストに追加できません。');
+			$post = get_post( $post_id );
+			if ( ! $post || 'post' !== $post->post_type ) {
+				throw new \Exception( '指定された作品はリストに追加できません。' );
 			}
 			// リストをチェック
-			$lists = (array) $this->input->post('lists');
-			foreach( $lists as $list_id ){
-				$list = get_post($list_id);
-				if( 'lists' !== $list->post_type || !$this->lists->user_can($list->ID, get_current_user_id()) ){
-					throw new \Exception('あなたにはこのリストを編集する権限がありません。');
+			$lists = (array) $this->input->post( 'lists' );
+			foreach ( $lists as $list_id ) {
+				$list = get_post( $list_id );
+				if ( 'lists' !== $list->post_type || ! $this->lists->user_can( $list->ID, get_current_user_id() ) ) {
+					throw new \Exception( 'あなたにはこのリストを編集する権限がありません。' );
 				}
 			}
 			// O.K.
-			$this->lists->bulk_register($post->ID, $lists);
+			$this->lists->bulk_register( $post->ID, $lists );
 			return [
 				'success' => true,
 				'message' => '作品をリストに保存しました。',
 			];
-		}catch( \Exception $e ){
+		} catch ( \Exception $e ) {
 			return [
 				'success' => false,
 				'message' => $e->getMessage(),
@@ -138,27 +138,27 @@ class ListCreator extends RestJSON
 	 *
 	 * @return array
 	 */
-	public function post_delete($post_id){
-		try{
+	public function post_delete( $post_id ) {
+		try {
 			// 権限チェック
-			if( !$post_id || !wp_verify_nonce($this->input->get('_wpnonce'), 'list-delete') || !current_user_can('edit_post', $post_id) ){
+			if ( ! $post_id || ! wp_verify_nonce( $this->input->get( '_wpnonce' ), 'list-delete' ) || ! current_user_can( 'edit_post', $post_id ) ) {
 				$this->auth_error();
 			}
 			// 投稿タイプチェック
-			$list = get_post($post_id);
-			if( !$list || 'lists' !== $list->post_type ){
-				throw new \Exception('指定された作品はリストに追加できません。');
+			$list = get_post( $post_id );
+			if ( ! $list || 'lists' !== $list->post_type ) {
+				throw new \Exception( '指定された作品はリストに追加できません。' );
 			}
 			// 削除する
-			if( !wp_delete_post($post_id, true) ){
-				throw new \Exception('削除できませんでした。あとでやり直してください。');
+			if ( ! wp_delete_post( $post_id, true ) ) {
+				throw new \Exception( '削除できませんでした。あとでやり直してください。' );
 			}
 			return [
 				'success' => true,
 				'message' => '削除しました。あなたのリスト一覧に移動します。',
-				'url' => home_url('/your/lists/', 'https'),
+				'url'     => home_url( '/your/lists/', 'https' ),
 			];
-		}catch ( \Exception $e ){
+		} catch ( \Exception $e ) {
 			return [
 				'success' => false,
 				'message' => $e->getMessage(),
@@ -175,27 +175,27 @@ class ListCreator extends RestJSON
 	 *
 	 * @return array
 	 */
-	public function post_deregister($list_id, $post_id){
-		try{
+	public function post_deregister( $list_id, $post_id ) {
+		try {
 			// 権限チェック
-			if( !$post_id || !$list_id || !wp_verify_nonce($this->input->get('_wpnonce'), 'list-deregister') || !current_user_can('edit_post', $list_id) ){
+			if ( ! $post_id || ! $list_id || ! wp_verify_nonce( $this->input->get( '_wpnonce' ), 'list-deregister' ) || ! current_user_can( 'edit_post', $list_id ) ) {
 				$this->auth_error();
 			}
 			// 投稿タイプチェック
-			$list = get_post($list_id);
-			if( !$list || 'lists' !== $list->post_type ){
-				throw new \Exception('リストの指定が不正です。。');
+			$list = get_post( $list_id );
+			if ( ! $list || 'lists' !== $list->post_type ) {
+				throw new \Exception( 'リストの指定が不正です。。' );
 			}
 			// 削除する
-			if( !$this->lists->deregister($list_id, $post_id) ){
-				throw new \Exception('リストから削除できませんでした。あとでやり直してください。');
+			if ( ! $this->lists->deregister( $list_id, $post_id ) ) {
+				throw new \Exception( 'リストから削除できませんでした。あとでやり直してください。' );
 			}
 			return [
-				'success' => true,
-				'message' => '削除しました。あなたのリスト一覧に移動します。',
-				'home_url' => home_url('/your/lists/', 'https'),
+				'success'  => true,
+				'message'  => '削除しました。あなたのリスト一覧に移動します。',
+				'home_url' => home_url( '/your/lists/', 'https' ),
 			];
-		}catch ( \Exception $e ){
+		} catch ( \Exception $e ) {
 			return [
 				'success' => false,
 				'message' => $e->getMessage(),
@@ -209,36 +209,36 @@ class ListCreator extends RestJSON
 	 * @param int $post_id
 	 * @return array
 	 */
-	public function get_form( $post_id = 0 ){
+	public function get_form( $post_id = 0 ) {
 		nocache_headers();
-		try{
+		try {
 			// 追加の場合、ログイン必須
-			if( !$post_id && !current_user_can('read') ){
-				$url = esc_url(wp_login_url('/your/lists/'));
-				throw new \Exception('リストを作成するには<a href="{$url}" class="alert-link">ログイン</a>する必要があります。すぐ終わりますので、ご検討ください。');
+			if ( ! $post_id && ! current_user_can( 'read' ) ) {
+				$url = esc_url( wp_login_url( '/your/lists/' ) );
+				throw new \Exception( 'リストを作成するには<a href="{$url}" class="alert-link">ログイン</a>する必要があります。すぐ終わりますので、ご検討ください。' );
 			}
 			// 編集の場合、権限と投稿タイプをチェック
-			if( $post_id ){
-				if( !current_user_can('edit_post', $post_id) ){
-					throw new \Exception('あなたにはこのリストを編集する権限がありません。');
+			if ( $post_id ) {
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					throw new \Exception( 'あなたにはこのリストを編集する権限がありません。' );
 				}
-				$list = get_post($post_id);
-				if( 'lists' != $list->post_type ){
-					throw new \Exception('このリストは存在しません。');
+				$list = get_post( $post_id );
+				if ( 'lists' != $list->post_type ) {
+					throw new \Exception( 'このリストは存在しません。' );
 				}
-				$title = esc_attr($list->post_title);
-				$excerpt = esc_textarea($list->post_excerpt);
-				$published = 'publish' == $list->post_status ? ' selected' : '';
-				$private   = 'private' == $list->post_status ? ' selected' : '';
-				$recommended = $this->lists->is_recommended($list->ID) ? ' selected' : '';
-				$label  = '更新';
-			}else{
+				$title       = esc_attr( $list->post_title );
+				$excerpt     = esc_textarea( $list->post_excerpt );
+				$published   = 'publish' == $list->post_status ? ' selected' : '';
+				$private     = 'private' == $list->post_status ? ' selected' : '';
+				$recommended = $this->lists->is_recommended( $list->ID ) ? ' selected' : '';
+				$label       = '更新';
+			} else {
 				$title = $except = $published = $private = $recommended = '';
 				$label = '作成';
 			}
 			// フォームを作成する
-			$nonce = wp_nonce_field('list-edit', '_wpnonce', false, false);
-			$action = home_url('list/edit/create'.( $post_id ? '/'.$post_id : '' ));
+			$nonce  = wp_nonce_field( 'list-edit', '_wpnonce', false, false );
+			$action = home_url( 'list/edit/create' . ( $post_id ? '/' . $post_id : '' ) );
 
 			$html = <<<HTML
 <form action="{$action}" method="post" class="list-create-form">
@@ -259,7 +259,7 @@ class ListCreator extends RestJSON
   	</select>
   </div>
 HTML;
-			if( current_user_can('edit_others_posts') ){
+			if ( current_user_can( 'edit_others_posts' ) ) {
 				$html .= <<<HTML
   <div class="form-group">
   	<label for="list-editor-option">オプション <span class="label label-default">編集者専用</span></label>
@@ -277,13 +277,13 @@ HTML;
 </form>
 HTML;
 
-		}catch ( \Exception $e ){
-			$html = sprintf('<div class="alert alert-warning">%s</div>', $e->getMessage());
+		} catch ( \Exception $e ) {
+			$html = sprintf( '<div class="alert alert-warning">%s</div>', $e->getMessage() );
 		}
-		if( !$post_id && current_user_can('read') ){
+		if ( ! $post_id && current_user_can( 'read' ) ) {
 
 		}
-		return ['html' => $html];
+		return [ 'html' => $html ];
 	}
 
 
@@ -293,8 +293,8 @@ HTML;
 	 * @param int $post_id
 	 * @return string
 	 */
-	public static function form_link($post_id = 0){
-		return wp_nonce_url(home_url(self::$prefix.'/form'.($post_id ? '/'.intval($post_id) : '')), 'list-form');
+	public static function form_link( $post_id = 0 ) {
+		return wp_nonce_url( home_url( self::$prefix . '/form' . ( $post_id ? '/' . intval( $post_id ) : '' ) ), 'list-form' );
 	}
 
 	/**
@@ -304,8 +304,8 @@ HTML;
 	 *
 	 * @return string|void
 	 */
-	public static function save_link( $post_id ){
-		return home_url(sprintf('%s/save/%d/', self::$prefix, $post_id));
+	public static function save_link( $post_id ) {
+		return home_url( sprintf( '%s/save/%d/', self::$prefix, $post_id ) );
 	}
 
 	/**
@@ -315,8 +315,8 @@ HTML;
 	 *
 	 * @return string|void
 	 */
-	public static function delete_link($post_id){
-		return wp_nonce_url(home_url(sprintf('%s/delete/%d', self::$prefix, $post_id)), 'list-delete');
+	public static function delete_link( $post_id ) {
+		return wp_nonce_url( home_url( sprintf( '%s/delete/%d', self::$prefix, $post_id ) ), 'list-delete' );
 	}
 
 	/**
@@ -327,7 +327,7 @@ HTML;
 	 *
 	 * @return string
 	 */
-	public static function deregister_link($list_id, $post_id){
-		return wp_nonce_url(home_url(self::$prefix.'/deregister/'.$list_id.'/'.$post_id), 'list-deregister');
+	public static function deregister_link( $list_id, $post_id ) {
+		return wp_nonce_url( home_url( self::$prefix . '/deregister/' . $list_id . '/' . $post_id ), 'list-deregister' );
 	}
 }

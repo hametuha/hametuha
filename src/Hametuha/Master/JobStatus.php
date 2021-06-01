@@ -15,8 +15,8 @@ class JobStatus {
 
 	const EXPIRED = 'expired';
 
-	const CLOSE   = 'close';
+	const CLOSE = 'close';
 
-	const FAILED  = 'failed';
+	const FAILED = 'failed';
 
 }

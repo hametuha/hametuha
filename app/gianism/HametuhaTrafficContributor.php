@@ -62,7 +62,7 @@ class HametuhaTrafficContributor extends Gabstract {
 			],
 		];
 		foreach ( $result as $row ) {
-			$color = 'blue';
+			$color                = 'blue';
 			list( $user_id, $pv ) = $row;
 			if ( ! $user_id ) {
 				$label = 'ゲスト';

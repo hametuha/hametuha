@@ -1,5 +1,5 @@
 <div class="amp-wp-meta amp-wp-comments-link">
-	<a href="<?= home_url(); ?>?p=<?php the_ID() ?>">
+	<a href="<?php echo home_url(); ?>?p=<?php the_ID(); ?>">
 		オリジナル版を見る
 	</a>
 </div>

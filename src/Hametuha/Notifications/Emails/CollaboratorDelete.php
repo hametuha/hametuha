@@ -43,14 +43,21 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_deleted', function( $user_id, $post_id ) {
-			static::exec( [
-				$user_id => [
-					'title' => get_the_title( $post_id ),
-					'url'   => get_permalink( $post_id ),
-				],
-			] );
-		}, 10, 2 );
+		add_action(
+			'hametuha_collaborators_deleted',
+			function( $user_id, $post_id ) {
+				static::exec(
+					[
+						$user_id => [
+							'title' => get_the_title( $post_id ),
+							'url'   => get_permalink( $post_id ),
+						],
+					]
+				);
+			},
+			10,
+			2
+		);
 	}
 
 

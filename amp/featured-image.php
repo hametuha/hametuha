@@ -18,7 +18,7 @@ $caption  = $featured_image['caption'];
 </figure>
 
 <div class="amp-hametuha-excerpt">
-	<?php the_excerpt() ?>
+	<?php the_excerpt(); ?>
 </div>
 
 <div class="amp-ad-wrapper">

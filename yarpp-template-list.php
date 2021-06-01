@@ -1,6 +1,6 @@
 <?php
 /* @var WP_Post $post */
-if ( have_posts() ):
+if ( have_posts() ) :
 	?>
 	<div class="row row--recommend">
 		<h3 class="recommend__header">
@@ -9,8 +9,11 @@ if ( have_posts() ):
 			<small>横にスクロールできるよ</small>
 		</h3>
 		<ul class="recommend__list">
-			<?php while ( have_posts() ) : the_post(); ?>
-				<?php get_template_part( 'parts/loop', 'recommend' ) ?>
+			<?php
+			while ( have_posts() ) :
+				the_post();
+				?>
+				<?php get_template_part( 'parts/loop', 'recommend' ); ?>
 			<?php endwhile; ?>
 		</ul>
 	</div>

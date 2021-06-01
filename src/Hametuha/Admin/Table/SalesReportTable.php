@@ -17,11 +17,13 @@ class SalesReportTable extends \WP_List_Table {
 
 
 	function __construct() {
-		parent::__construct( array(
-			'singular' => 'sales_report',
-			'plural'   => 'sales_reports',
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'sales_report',
+				'plural'   => 'sales_reports',
+				'ajax'     => false,
+			)
+		);
 	}
 
 	public function get_columns() {
@@ -53,15 +55,19 @@ class SalesReportTable extends \WP_List_Table {
 			$this->get_sortable_columns(),
 		];
 
-		$this->items = $this->sales->get_records( [
-			'per_page' => 20,
-			'page'   => max( 0, $this->get_pagenum() - 1 ),
-		] );
+		$this->items = $this->sales->get_records(
+			[
+				'per_page' => 20,
+				'page'     => max( 0, $this->get_pagenum() - 1 ),
+			]
+		);
 
-		$this->set_pagination_args( [
-			'total_items' => $this->sales->total(),
-			'per_page'    => 20,
-		] );
+		$this->set_pagination_args(
+			[
+				'total_items' => $this->sales->total(),
+				'per_page'    => 20,
+			]
+		);
 	}
 
 	/**

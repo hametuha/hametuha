@@ -84,10 +84,12 @@ class RecordUserAction extends AbstractRecorders {
 	 * @param string $user_name
 	 */
 	public function login_failed( $user_name ) {
-		$this->analytics->measurement->event( [
-			'ea' => 'failed',
-			'ec' => 'account',
-			'el' => $user_name,
-		] );
+		$this->analytics->measurement->event(
+			[
+				'ea' => 'failed',
+				'ec' => 'account',
+				'el' => $user_name,
+			]
+		);
 	}
 }

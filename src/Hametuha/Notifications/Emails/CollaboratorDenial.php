@@ -41,15 +41,22 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_denied', function( $user, $post ) {
-			static::exec( [
-				$post->post_author => [
-					'collaborator' => $user->display_name,
-					'url'          => get_edit_post_link( $post->ID, 'email' ),
-					'title'        => get_the_title( $post ),
-				],
-			] );
-		}, 10, 2 );
+		add_action(
+			'hametuha_collaborators_denied',
+			function( $user, $post ) {
+				static::exec(
+					[
+						$post->post_author => [
+							'collaborator' => $user->display_name,
+							'url'          => get_edit_post_link( $post->ID, 'email' ),
+							'title'        => get_the_title( $post ),
+						],
+					]
+				);
+			},
+			10,
+			2
+		);
 	}
 
 

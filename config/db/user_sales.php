@@ -7,7 +7,7 @@ use WPametu\DB\Column;
 
 $table = [
 
-	'name' => 'user_sales',
+	'name'    => 'user_sales',
 
 	'version' => '1.0.2',
 
@@ -29,9 +29,9 @@ $table = [
 			'type'   => Column::FLOAT,
 			'signed' => false,
 		],
-		'unit' => [
-			'type' => Column::INT,
-		    'signed' => false,
+		'unit'        => [
+			'type'   => Column::INT,
+			'signed' => false,
 		],
 		'tax'         => [
 			'type'   => Column::FLOAT,
@@ -56,7 +56,7 @@ $table = [
 			'type' => Column::DATETIME,
 		],
 		'fixed'       => [
-			'type'  => Column::DATETIME,
+			'type' => Column::DATETIME,
 		],
 		'updated'     => [
 			'type' => Column::DATETIME,

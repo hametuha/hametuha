@@ -6,9 +6,12 @@
  *
  * @return string
  */
-add_filter( 'admin_footer_text', function ( $string ) {
-	return '<span id="footer-thankyou">破滅派は<a href="https://ja.wordpress.org/">WordPress</a>で動いています。</span>';
-} );
+add_filter(
+	'admin_footer_text',
+	function ( $string ) {
+		return '<span id="footer-thankyou">破滅派は<a href="https://ja.wordpress.org/">WordPress</a>で動いています。</span>';
+	}
+);
 
 
 /**
@@ -25,8 +28,8 @@ function _hametuha_admin_dashboard_metaboxes( $screen_id ) {
 			'side'   => array(
 				'dashboard_quick_press', // クイック投稿
 				'dashboard_primary', // WordPress 開発ブログ
-				'dashboard_secondary' // WordPress フォーラム
-			)
+				'dashboard_secondary', // WordPress フォーラム
+			),
 		);
 		foreach ( $meta_boxes as $context => $arr ) {
 			foreach ( $arr as $id ) {
@@ -76,31 +79,50 @@ add_action( 'do_meta_boxes', '_hametuha_remove_metabox', 100000, 3 );
  * @param string $option
  * @param WP_User $user
  */
-add_filter( 'get_user_option_metaboxhidden_post', function ( $result, $option, $user = null ) {
-	$result                  = (array) $result;
-	$box_to_hide_from_author = array( 'authordiv' );
-	foreach ( $box_to_hide_from_author as $option ) {
-		if ( ! current_user_can( 'edit_others_posts' ) && false === array_search( $option, $result ) ) {
-			$result[] = $option;
+add_filter(
+	'get_user_option_metaboxhidden_post',
+	function ( $result, $option, $user = null ) {
+		$result                  = (array) $result;
+		$box_to_hide_from_author = array( 'authordiv' );
+		foreach ( $box_to_hide_from_author as $option ) {
+			if ( ! current_user_can( 'edit_others_posts' ) && false === array_search( $option, $result ) ) {
+				$result[] = $option;
+			}
 		}
-	}
 
-	return $result;
-}, 1, 3 );
+		return $result;
+	},
+	1,
+	3
+);
 
 
 /**
  * 検閲用情報を入力する
  */
-add_action( 'admin_init', function() {
-	// 検閲
-	add_settings_section( 'censorship', '検閲', function () {
-		echo '<p>コンテンツの検閲を行うための設定です。正規表現が使えます。デリミタは<code>#</code>です。</p>';
-	}, 'discussion' );
-	// 検閲ブラックリスト
-	add_settings_field( 'four_words', '検閲対象文字列', function ($args) {
-		printf( '<textarea rows="10" style="width: 90%%;" name="four_words" id="four_words">%s</textarea>', esc_textarea( get_option( 'four_words', '' ) ) );
-	}, 'discussion', 'censorship' );
-	register_setting( 'discussion', 'four_words' );
-} );
+add_action(
+	'admin_init',
+	function() {
+		// 検閲
+		add_settings_section(
+			'censorship',
+			'検閲',
+			function () {
+				echo '<p>コンテンツの検閲を行うための設定です。正規表現が使えます。デリミタは<code>#</code>です。</p>';
+			},
+			'discussion'
+		);
+		// 検閲ブラックリスト
+		add_settings_field(
+			'four_words',
+			'検閲対象文字列',
+			function ( $args ) {
+				printf( '<textarea rows="10" style="width: 90%%;" name="four_words" id="four_words">%s</textarea>', esc_textarea( get_option( 'four_words', '' ) ) );
+			},
+			'discussion',
+			'censorship'
+		);
+		register_setting( 'discussion', 'four_words' );
+	}
+);
 

@@ -32,7 +32,7 @@ class Jobs extends Model {
 		'owner_id'  => '%d',
 		'issuer_id' => '%d',
 		'status'    => '%s',
-	    'created'   => '%s',
+		'created'   => '%s',
 		'updated'   => '%s',
 		'expires'   => '%s',
 	];
@@ -51,14 +51,14 @@ class Jobs extends Model {
 	 * @return \WP_Error|\stdClass
 	 */
 	public function add( $job_key, $title, $expires = '', $owner_id = 0, $issuer_id = 0, $status = JobStatus::ONGOING, array $metas = [] ) {
-		$now = current_time( 'mysql' );
+		$now  = current_time( 'mysql' );
 		$data = [
-			'job_key'  => $job_key,
-			'title'    => $title,
-			'owner_id' => $owner_id,
+			'job_key'   => $job_key,
+			'title'     => $title,
+			'owner_id'  => $owner_id,
 			'issuer_id' => $issuer_id,
-		    'status'   => $status,
-		    'created'  => $now,
+			'status'    => $status,
+			'created'   => $now,
 		];
 		if ( $expires ) {
 			$data['expires'] = $expires;
@@ -90,11 +90,14 @@ class Jobs extends Model {
 		if ( $new_status === $old_status ) {
 			return new \WP_Error( 400, 'ジョブのステータスに変化がありません。' );
 		}
-		$updated = $this->update( [
-			'status' => $new_status,
-		], [
-			'job_id' => $job_id,
-		] );
+		$updated = $this->update(
+			[
+				'status' => $new_status,
+			],
+			[
+				'job_id' => $job_id,
+			]
+		);
 		if ( $updated ) {
 			do_action( 'hametuha_job_updated', $job, $new_status, $old_status );
 			return true;
@@ -129,9 +132,11 @@ class Jobs extends Model {
 	 */
 	public function remove( $job_id ) {
 		if ( $this->delete_where( [ 'job_id' => $job_id ] ) ) {
-			return $this->job_meta->delete_where( [
-				'job_id' => $job_id,
-			] );
+			return $this->job_meta->delete_where(
+				[
+					'job_id' => $job_id,
+				]
+			);
 		} else {
 			return false;
 		}

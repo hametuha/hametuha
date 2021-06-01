@@ -19,7 +19,10 @@ function hametuha_get_nouns( $post = null, $filter = true ) {
 	if ( ! $filter ) {
 		return $terms;
 	}
-	return array_filter( $terms, function( $term ) {
-		return 1 < $term->count;
-	} );
+	return array_filter(
+		$terms,
+		function( $term ) {
+			return 1 < $term->count;
+		}
+	);
 }

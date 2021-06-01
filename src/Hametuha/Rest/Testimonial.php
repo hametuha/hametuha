@@ -55,7 +55,7 @@ class Testimonial extends RestTemplate {
 		$url    = $this->input->post( 'testimonial-url' );
 		$text   = $this->input->post( 'testimonial-text' );
 		$rank   = $this->input->post( 'testimonial-rank' );
-		$errors = [ ];
+		$errors = [];
 		if ( ! $this->series->is_service( $url, 'twitter' ) ) {
 			if ( empty( $title ) ) {
 				$errors[] = '名前・引用元が入力されていません。';
@@ -63,7 +63,6 @@ class Testimonial extends RestTemplate {
 			if ( empty( $text ) ) {
 				$errors[] = 'レビュー本文が入力されていません。';
 			}
-
 		}
 		if ( false === array_search( $rank, range( 0, 5 ) ) ) {
 			$errors[] = '五段階評価の値が不正です。';
@@ -77,18 +76,20 @@ class Testimonial extends RestTemplate {
 				'message' => implode( '<br />', $errors ),
 			];
 		} else {
-			$comment_id = wp_insert_comment( [
-				'comment_author'       => $title,
-				'user_id'              => get_current_user_id(),
-				'comment_content'      => $text,
-				'comment_post_ID'      => $series->ID,
-				'comment_type'         => 'review',
-				'comment_author_url'   => $url,
-				'comment_approved'     => current_user_can( 'edit_post', $series->ID ) ? '1' : '0',
-				'comment_author_email' => get_userdata( get_current_user_id() )->user_email,
-				'comment_agent'        => $_SERVER['HTTP_USER_AGENT'],
-				'comment_author_IP'    => $_SERVER['REMOTE_ADDR'],
-			] );
+			$comment_id = wp_insert_comment(
+				[
+					'comment_author'       => $title,
+					'user_id'              => get_current_user_id(),
+					'comment_content'      => $text,
+					'comment_post_ID'      => $series->ID,
+					'comment_type'         => 'review',
+					'comment_author_url'   => $url,
+					'comment_approved'     => current_user_can( 'edit_post', $series->ID ) ? '1' : '0',
+					'comment_author_email' => get_userdata( get_current_user_id() )->user_email,
+					'comment_agent'        => $_SERVER['HTTP_USER_AGENT'],
+					'comment_author_IP'    => $_SERVER['REMOTE_ADDR'],
+				]
+			);
 			update_comment_meta( $comment_id, 'testimonial_rank', $rank );
 			$json = [
 				'success' => true,
@@ -116,15 +117,20 @@ class Testimonial extends RestTemplate {
 		if ( ! current_user_can( 'edit_post', $series->ID ) ) {
 			$this->error( 'あなたには編集権限がありません', 403 );
 		}
-		$this->set_data( [
-			'post'         => $series,
-			'testimonials' => $this->series->get_reviews( $series->ID, false, $paged, 10 ),
-		] );
+		$this->set_data(
+			[
+				'post'         => $series,
+				'testimonials' => $this->series->get_reviews( $series->ID, false, $paged, 10 ),
+			]
+		);
 		// TODO: Remove body class.
-		add_filter( 'body_class', function( $classes ) {
-			$classes[] = 'no-modal-background';
-			return $classes;
-		} );
+		add_filter(
+			'body_class',
+			function( $classes ) {
+				$classes[] = 'no-modal-background';
+				return $classes;
+			}
+		);
 		$this->set_template( 'list' );
 		$this->response();
 	}
@@ -172,8 +178,8 @@ class Testimonial extends RestTemplate {
 				$excerpt = $this->input->post( 'comment-excerpt' );
 				if ( $excerpt ) {
 					foreach ( explode( "\r\n", $excerpt ) as $line ) {
-						$line = trim($line);
-						if( empty($line) ){
+						$line = trim( $line );
+						if ( empty( $line ) ) {
 							continue;
 						}
 						if ( false === strpos( $comment->comment_content, $line ) ) {

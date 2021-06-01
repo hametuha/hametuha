@@ -37,16 +37,16 @@ switch ( $orderby ) {
 ?>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs nav-tabs--archive">
-	<li role="presentation" class="<?= implode( ' ', $current['date'] ) ?>">
-		<a href="<?= add_query_arg( $args['date'], $base ) ?>" aria-controls="latest">
+	<li role="presentation" class="<?php echo implode( ' ', $current['date'] ); ?>">
+		<a href="<?php echo add_query_arg( $args['date'], $base ); ?>" aria-controls="latest">
 			新着順
 			<i class="icon-arrow-down"></i>
 			<i class="icon-arrow-up"></i>
 		</a>
 	</li>
 	<?php if ( is_tag() || is_category() || is_home() || ( is_search() && ! get_query_var( 'post_type' ) ) ) : ?>
-		<li role="presentation" class="<?= implode( ' ', $current['popular'] ) ?>">
-			<a href="<?= add_query_arg( $args['popular'], $base ) ?>" aria-controls="profile">
+		<li role="presentation" class="<?php echo implode( ' ', $current['popular'] ); ?>">
+			<a href="<?php echo add_query_arg( $args['popular'], $base ); ?>" aria-controls="profile">
 				人気
 				<i class="icon-arrow-down"></i>
 				<i class="icon-arrow-up"></i>

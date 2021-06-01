@@ -29,27 +29,34 @@ class CampaignWidget extends Widget {
 		ob_start();
 		$campaigns = hametuha_recent_campaigns( $number );
 		if ( $campaigns ) :
-		?>
+			?>
 		<div class="widget-campaign-lead text-center">
 			破滅派のイベント・キャンペーン
 		</div>
 		<div class="widget-campaign-list">
-			<?php foreach ( $campaigns as $campaign ) {
-			    hameplate( 'parts/loop', 'campaign', [
-                    'campaign' => $campaign
-                ] );
-            } ?>
+			<?php
+			foreach ( $campaigns as $campaign ) {
+				hameplate(
+					'parts/loop',
+					'campaign',
+					[
+						'campaign' => $campaign,
+					]
+				);
+			}
+			?>
 		</div>
 		<?php else : ?>
 			<div class="widget-campaign-lead text-center">
 				現在募集はありません。
 			</div>
-		<?php endif;
+			<?php
+		endif;
 		?>
-        <div>
-            <a href="<?= home_url( '/all-campaigns' ) ?>" class="btn btn-block btn-default">過去の募集を見る</a>
-        </div>
-        <?php
+		<div>
+			<a href="<?php echo home_url( '/all-campaigns' ); ?>" class="btn btn-block btn-default">過去の募集を見る</a>
+		</div>
+		<?php
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -57,10 +64,13 @@ class CampaignWidget extends Widget {
 	}
 
 	public function form( $instance ) {
-		$atts = shortcode_atts( array(
-			'title'          => '絶賛募集中！',
-			'number'         => 5,
-		), $instance );
+		$atts = shortcode_atts(
+			array(
+				'title'  => '絶賛募集中！',
+				'number' => 5,
+			),
+			$instance
+		);
 		extract( $atts );
 		?>
 		<p>

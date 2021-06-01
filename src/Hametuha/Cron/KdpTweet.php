@@ -5,8 +5,8 @@ namespace Hametuha\Cron;
 
 use WPametu\Utility\CronBase;
 
-class KdpTweet extends CronBase
-{
+class KdpTweet extends CronBase {
+
 
 	/**
 	 * スケジュール
@@ -61,7 +61,7 @@ class KdpTweet extends CronBase
 	 */
 	public function cron_schedule( $schedule ) {
 		$schedule['meet_everybody'] = [
-			'interval' => 60 * 60 * (18 + 24),
+			'interval' => 60 * 60 * ( 18 + 24 ),
 			'display'  => '1日と18時間おきにつぶやくと、いろんな人の目に入る',
 		];
 		return $schedule;

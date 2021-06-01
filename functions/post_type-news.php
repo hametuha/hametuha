@@ -110,9 +110,12 @@ function hamenew_related( $limit = 5, $post = null ) {
 		LIMIT %d
 SQL;
 
-	return array_map( function ( $post ) {
-		return new WP_Post( $post );
-	}, $wpdb->get_results( $wpdb->prepare( $query, $post->ID, $limit ) ) );
+	return array_map(
+		function ( $post ) {
+			return new WP_Post( $post );
+		},
+		$wpdb->get_results( $wpdb->prepare( $query, $post->ID, $limit ) )
+	);
 }
 
 /**
@@ -151,18 +154,24 @@ function hamenew_links( $post = null ) {
 		return [];
 	}
 
-	return array_filter( array_map( function ( $line ) {
-		$line = explode( '|', $line );
-		if ( 2 > count( $line ) ) {
-			return false;
-		}
-		$url   = array_shift( $line );
-		$title = implode( '|', $line );
+	return array_filter(
+		array_map(
+			function ( $line ) {
+				$line = explode( '|', $line );
+				if ( 2 > count( $line ) ) {
+					  return false;
+				}
+				$url   = array_shift( $line );
+				$title = implode( '|', $line );
 
-		return [ $title, $url ];
-	}, explode( "\r\n", $links ) ), function ( $var ) {
-		return $var && is_array( $var );
-	} );
+				return [ $title, $url ];
+			},
+			explode( "\r\n", $links )
+		),
+		function ( $var ) {
+			return $var && is_array( $var );
+		}
+	);
 }
 
 /**
@@ -183,51 +192,56 @@ function hamenew_books( $post = null ) {
 		return [];
 	}
 
-	return array_filter( array_map( function ( $code ) {
-		$cache_key = 'amazon_api5_' . $code;
-		$result    = get_transient( $cache_key );
-		if ( ! $result ) {
-			$result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
-			if ( is_wp_error( $result ) || ! $result ) {
-				return false;
-			}
-			set_transient( $cache_key, $result, 60 * 60 * 24 );
-		}
-		$url   = $result['url'];
-		$title = $result['title'];
-		if ( ! $url || ! $title ) {
-			return false;
-		}
-		$rank      = $result['rank'] ?: 'N/A';
-		$publisher = 'N/A';
-		foreach ( [ 'brand', 'manufacturer' ] as $key ) {
-			if ( ! empty( $result['attributes'][ $key ] ) ) {
-				$publisher = $result['attributes'][ $key ];
-				break;
-			}
-		}
-		$author= [];
-		if ( ! empty( $result['attributes']['contributors'] ) ) {
-			foreach ( $result['attributes']['contributors'] as $role => $names ) {
-				foreach ( $names as $name ) {
-					$author[] = $name;
-					if ( 2 < count( $author ) ) {
-						$author[] = 'ほか';
-						break 2;
+	return array_filter(
+		array_map(
+			function ( $code ) {
+				$cache_key = 'amazon_api5_' . $code;
+				$result    = get_transient( $cache_key );
+				if ( ! $result ) {
+					  $result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
+					if ( is_wp_error( $result ) || ! $result ) {
+						return false;
+					}
+					set_transient( $cache_key, $result, 60 * 60 * 24 );
+				}
+				$url   = $result['url'];
+				$title = $result['title'];
+				if ( ! $url || ! $title ) {
+					return false;
+				}
+				$rank      = $result['rank'] ?: 'N/A';
+				$publisher = 'N/A';
+				foreach ( [ 'brand', 'manufacturer' ] as $key ) {
+					if ( ! empty( $result['attributes'][ $key ] ) ) {
+						$publisher = $result['attributes'][ $key ];
+						break;
 					}
 				}
-			}
-		}
-		$author = implode( ' ', $author );
-		$src    = hamazon_no_image();
-		foreach ( [ 'large', 'medium' ] as $size ) {
-			if ( ! empty( $result['images'][ $size ] ) ) {
-				$src = $result['images'][ $size ];
-				break;
-			}
-		}
-		return [ $title, $url, $src, $author, $publisher, $rank ];
-	}, explode( "\r\n", $asin ) ) );
+				$author = [];
+				if ( ! empty( $result['attributes']['contributors'] ) ) {
+					foreach ( $result['attributes']['contributors'] as $role => $names ) {
+						foreach ( $names as $name ) {
+							$author[] = $name;
+							if ( 2 < count( $author ) ) {
+								$author[] = 'ほか';
+								break 2;
+							}
+						}
+					}
+				}
+				$author = implode( ' ', $author );
+				$src    = hamazon_no_image();
+				foreach ( [ 'large', 'medium' ] as $size ) {
+					if ( ! empty( $result['images'][ $size ] ) ) {
+						$src = $result['images'][ $size ];
+						break;
+					}
+				}
+				return [ $title, $url, $src, $author, $publisher, $rank ];
+			},
+			explode( "\r\n", $asin )
+		)
+	);
 }
 
 /**
@@ -241,7 +255,7 @@ function hamenew_books( $post = null ) {
 function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
 	global $wpdb;
 	$wheres = [
-		"( tt.taxonomy = 'nouns' )"
+		"( tt.taxonomy = 'nouns' )",
 	];
 	// Filter term id
 	if ( $term_id ) {
@@ -249,11 +263,11 @@ function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
 		if ( ! $term || is_wp_error( $term ) ) {
 			return [];
 		}
-		$ids      = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_id ) );
+		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_id ) );
 		if ( ! $ids ) {
 			return [];
 		}
-		$ids = implode( ', ', $ids );
+		$ids      = implode( ', ', $ids );
 		$wheres[] = $wpdb->prepare( '(tt.term_taxonomy_id != %d)', $term->term_taxonomy_id );
 		$wheres[] = <<<SQL
 			( tt.term_taxonomy_id IN (
@@ -265,7 +279,7 @@ SQL;
 	}
 	// Filter days
 	if ( $days ) {
-		$days = (int) $days;
+		$days     = (int) $days;
 		$wheres[] = <<<SQL
 			( tt.term_taxonomy_id IN (
 			  SELECT tr.term_taxonomy_id FROM {$wpdb->term_relationships} AS tr
@@ -277,8 +291,8 @@ SQL;
 			) )
 SQL;
 	}
-	$wheres = $wheres ? " WHERE " . implode( ' AND ', $wheres ) : '';
-	$query = <<<SQL
+	$wheres = $wheres ? ' WHERE ' . implode( ' AND ', $wheres ) : '';
+	$query  = <<<SQL
 		SELECT t.*, tt.* FROM {$wpdb->terms} AS t
 		INNER JOIN {$wpdb->term_taxonomy} AS tt
 		ON t.term_id = tt.term_id

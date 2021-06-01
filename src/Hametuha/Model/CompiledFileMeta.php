@@ -35,10 +35,12 @@ class CompiledFileMeta extends Model {
 	 * @return \stdClass
 	 */
 	public function get_meta( $file_id, $key ) {
-		return $this->wheres( [
-			'file_id  = %d' => $file_id,
-			'meta_key = %s' => $key,
-		] )->get_row();
+		return $this->wheres(
+			[
+				'file_id  = %d' => $file_id,
+				'meta_key = %s' => $key,
+			]
+		)->get_row();
 	}
 
 	/**
@@ -49,10 +51,12 @@ class CompiledFileMeta extends Model {
 	 * @return array
 	 */
 	public function get_metas( $file_id, $key ) {
-		return $this->wheres( [
-			'file_id'  => $file_id,
-			'meta_key' => $key,
-		] )->result();
+		return $this->wheres(
+			[
+				'file_id'  => $file_id,
+				'meta_key' => $key,
+			]
+		)->result();
 	}
 
 	/**
@@ -62,9 +66,11 @@ class CompiledFileMeta extends Model {
 	 * @return array|mixed|null
 	 */
 	public function get_all( $file_id ) {
-		return $this->wheres( [
-			'file_id'  => $file_id,
-		] )->result();
+		return $this->wheres(
+			[
+				'file_id' => $file_id,
+			]
+		)->result();
 	}
 
 	/**
@@ -76,10 +82,12 @@ class CompiledFileMeta extends Model {
 	 * @throws \Exception
 	 */
 	public function delete_meta( $file_id, $key ) {
-		return $this->delete_where( [
-			[ 'file_id', '=', $file_id, '%d' ],
-			[ 'meta_key', '=', $key, '%s' ],
-		] );
+		return $this->delete_where(
+			[
+				[ 'file_id', '=', $file_id, '%d' ],
+				[ 'meta_key', '=', $key, '%s' ],
+			]
+		);
 	}
 
 	/**
@@ -93,19 +101,24 @@ class CompiledFileMeta extends Model {
 	public function update_meta( $file_id, $key, $value ) {
 		$existing = $this->get_meta( $file_id, $key );
 		if ( $existing ) {
-			return (bool) $this->update( [
-				'meta_value' => $value,
-			], [
-				'file_id'  => $file_id,
-				'meta_key' => $key,
-			] );
+			return (bool) $this->update(
+				[
+					'meta_value' => $value,
+				],
+				[
+					'file_id'  => $file_id,
+					'meta_key' => $key,
+				]
+			);
 		} else {
-			return (bool) $this->insert( [
-				'file_id'    => $file_id,
-				'meta_key'   => $key,
-				'meta_value' => $value,
-				'created'    => current_time( 'mysql' ),
-			] );
+			return (bool) $this->insert(
+				[
+					'file_id'    => $file_id,
+					'meta_key'   => $key,
+					'meta_value' => $value,
+					'created'    => current_time( 'mysql' ),
+				]
+			);
 		}
 	}
 }

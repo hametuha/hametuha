@@ -1,9 +1,12 @@
 <?php
 
-add_filter( 'body_class', function( $classes ) {
-	$classes[] = 'quote-style-' . ( ( isset( $_GET['style'] ) ) ? (int) $_GET['style'] : rand( 1, 3 ) );
-	return $classes;
-} );
+add_filter(
+	'body_class',
+	function( $classes ) {
+		$classes[] = 'quote-style-' . ( ( isset( $_GET['style'] ) ) ? (int) $_GET['style'] : rand( 1, 3 ) );
+		return $classes;
+	}
+);
 
 /** @var WP_Post $post */
 /** @var string  $text */
@@ -23,9 +26,15 @@ setup_postdata( $post );
 				if ( is_wp_error( $separated ) ) {
 					echo esc_html( $text );
 				} else {
-					echo implode( '', array_map( function ( $text ) {
-						return sprintf( '<span class="quote-token">%s</span>', esc_html( $text ) );
-					}, $separated ) );
+					echo implode(
+						'',
+						array_map(
+							function ( $text ) {
+								return sprintf( '<span class="quote-token">%s</span>', esc_html( $text ) );
+							},
+							$separated
+						)
+					);
 				}
 				?>
 			</td>
@@ -35,12 +44,12 @@ setup_postdata( $post );
 	<div class="quote-meta">
 
 		<div class="quote-title">
-			<strong>『<?php the_title() ?>』</strong>
-			<?php the_author() ?>
+			<strong>『<?php the_title(); ?>』</strong>
+			<?php the_author(); ?>
 		</div>
 
 		<div class="quote-via">
-			Quoted by <?= esc_html( $user->display_name ) ?>
+			Quoted by <?php echo esc_html( $user->display_name ); ?>
 		</div>
 
 	</div>

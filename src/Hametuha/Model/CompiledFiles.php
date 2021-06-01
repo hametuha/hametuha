@@ -46,11 +46,13 @@ class CompiledFiles extends Model {
 	 * @return false|int
 	 */
 	public function add_record( $type, $post_id, $name ) {
-		return $this->insert( [
-			'type'    => $type,
-			'post_id' => $post_id,
-			'name'    => $name,
-		] );
+		return $this->insert(
+			[
+				'type'    => $type,
+				'post_id' => $post_id,
+				'name'    => $name,
+			]
+		);
 	}
 
 	/**
@@ -61,7 +63,7 @@ class CompiledFiles extends Model {
 	 * @return mixed|null
 	 */
 	public function get_file( $file_id ) {
-		return $this->where( "file_id = %d", $file_id )->get_row();
+		return $this->where( 'file_id = %d', $file_id )->get_row();
 	}
 
 	public function get_children_files( $post_id ) {
@@ -99,12 +101,16 @@ class CompiledFiles extends Model {
 			return false;
 		}
 		$path = $this->build_file_path( $file );
-		$this->delete_where( [
-			[ 'file_id', '=', $file_id, '%d' ],
-		] );
-		$this->meta->delete_where( [
-			[ 'file_id', '=', $file_id, '%d' ],
-		] );
+		$this->delete_where(
+			[
+				[ 'file_id', '=', $file_id, '%d' ],
+			]
+		);
+		$this->meta->delete_where(
+			[
+				[ 'file_id', '=', $file_id, '%d' ],
+			]
+		);
 		if ( ! unlink( $path ) ) {
 			return false;
 		}
@@ -124,16 +130,19 @@ class CompiledFiles extends Model {
 	public function get_files( array $args, $limit = 20, $page = 0 ) {
 		$results = [];
 		$this->calc()
-		     ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
-		     ->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
-		     ->limit( $limit, $page )
-		     ->order_by( "{$this->table}.updated", 'DESC' );
-		$args = wp_parse_args( $args, [
-			's'      => '',
-			'p'      => 0,
-			'author' => 0,
-		    'secret' => false,
-		] );
+			 ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
+			 ->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
+			 ->limit( $limit, $page )
+			 ->order_by( "{$this->table}.updated", 'DESC' );
+		$args = wp_parse_args(
+			$args,
+			[
+				's'      => '',
+				'p'      => 0,
+				'author' => 0,
+				'secret' => false,
+			]
+		);
 		if ( $args['p'] ) {
 			$this->where( "{$this->table}.post_id = %d", $args['p'] );
 		}
@@ -147,11 +156,14 @@ class CompiledFiles extends Model {
 			$this->where( "{$this->posts}.ID IN ( SELECT post_id FROM {$this->db->postmeta} WHERE meta_key = %s AND meta_value = 1 )", '_is_secret_book' );
 		}
 
-		return array_map( function( $row ) {
-			$row->label = $this->type_labels[ $row->type ];
-			$row->path  = $this->build_file_path( $row );
-			return $row;
-		}, $this->result() );
+		return array_map(
+			function( $row ) {
+				$row->label = $this->type_labels[ $row->type ];
+				$row->path  = $this->build_file_path( $row );
+				return $row;
+			},
+			$this->result()
+		);
 	}
 
 	/**
@@ -196,10 +208,13 @@ class CompiledFiles extends Model {
 			// アップロードディレクトリを取得
 			$file     = $this->validate_file( $file_id );
 			$path     = $this->build_file_path( $file );
-			$response = wp_remote_post( 'https://lint.hametuha.pub/validator', [
-				'timeout' => 60,
-				'body' => base64_encode( file_get_contents( $path ) ),
-			] );
+			$response = wp_remote_post(
+				'https://lint.hametuha.pub/validator',
+				[
+					'timeout' => 60,
+					'body'    => base64_encode( file_get_contents( $path ) ),
+				]
+			);
 			if ( is_wp_error( $response ) ) {
 				return $response;
 			}
@@ -217,9 +232,13 @@ class CompiledFiles extends Model {
 				return $error;
 			}
 		} catch ( \Exception $e ) {
-			$error->add( 'epub_failed_validation', $e->getMessage(), [
-				'status' => $e->getCode(),
-			] );
+			$error->add(
+				'epub_failed_validation',
+				$e->getMessage(),
+				[
+					'status' => $e->getCode(),
+				]
+			);
 			return $error;
 		}
 	}
@@ -230,7 +249,7 @@ class CompiledFiles extends Model {
 	 * @return int
 	 */
 	public function total() {
-		return (int) $this->db->get_var( "SELECT FOUND_ROWS()" );
+		return (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
 	}
 
 	/**
@@ -249,19 +268,26 @@ class CompiledFiles extends Model {
 				throw new \Exception( sprintf( '%s にファイルが見つかりませんでした。', $file_path ), 404 );
 			}
 			set_time_limit( 0 );
-			foreach ( array_merge( wp_get_nocache_headers(), [
-				'Content-Type'        => $mime_type,
-				'Content-Disposition' => sprintf( 'attachment; filename="%s"', $file_name ),
-				'Content-Length'      => filesize( $file_path ),
-			] ) as $header => $value ) {
+			foreach ( array_merge(
+				wp_get_nocache_headers(),
+				[
+					'Content-Type'        => $mime_type,
+					'Content-Disposition' => sprintf( 'attachment; filename="%s"', $file_name ),
+					'Content-Length'      => filesize( $file_path ),
+				]
+			) as $header => $value ) {
 				header( "{$header}: {$value}" );
 			}
 			readfile( $file_path );
 			exit;
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'failed_to_print_epub', $e->getMessage(), [
-				'status' => $e->getCode(),
-			] );
+			return new \WP_Error(
+				'failed_to_print_epub',
+				$e->getMessage(),
+				[
+					'status' => $e->getCode(),
+				]
+			);
 		}
 	}
 
@@ -275,10 +301,12 @@ class CompiledFiles extends Model {
 		return $this
 			->select( "{$this->table}.*, {$this->meta->table}.meta_value AS published" )
 			->join( $this->meta->table, "{$this->table}.file_id = {$this->meta->table}.file_id AND {$this->meta->table}.meta_key = 'published'", 'innder' )
-			->wheres( [
-				"{$this->table}.post_id = %d" => $post_id,
-				"{$this->meta->table}.meta_value != %s" => '',
-			] )
+			->wheres(
+				[
+					"{$this->table}.post_id = %d" => $post_id,
+					"{$this->meta->table}.meta_value != %s" => '',
+				]
+			)
 			->order_by( "{$this->meta->table}.meta_value", 'DESC' )
 			->get_row();
 	}
@@ -293,9 +321,9 @@ class CompiledFiles extends Model {
 	 */
 	public function record_exists( $post_id, $type = '' ) {
 		$this->select( 'COUNT(file_id)' )
-		     ->where( "post_id = %d", $post_id );
+			 ->where( 'post_id = %d', $post_id );
 		if ( $type ) {
-			$this->where( "type = %s", $type );
+			$this->where( 'type = %s', $type );
 		}
 
 		return (bool) $this->get_var();

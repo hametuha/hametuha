@@ -39,7 +39,7 @@ class TestCommands extends Command {
 	 */
 	public function mail( $args, $assoc_args ) {
 		list( $to, $subject ) = $args;
-		$body = <<<TEXT
+		$body                 = <<<TEXT
 This is a test mail.
 この部分は日本語で書かれています。
 正しく届いているでしょうか。
@@ -85,7 +85,7 @@ TEXT;
 	 */
 	public function fb( $args, $assoc_args ) {
 		list( $message ) = $args;
-		$param = [
+		$param           = [
 			'message' => $message,
 		];
 		if ( isset( $assoc_args['link'] ) ) {
@@ -114,9 +114,13 @@ TEXT;
 	 */
 	public function ga( $args, $assoc_args ) {
 		list( $start, $end ) = $args;
-		$rankings = hametuha_ga_ranking( $start, $end, [
-			'dimensions' => 'ga:pageTitle,ga:pagePath',
-		] );
+		$rankings            = hametuha_ga_ranking(
+			$start,
+			$end,
+			[
+				'dimensions' => 'ga:pageTitle,ga:pagePath',
+			]
+		);
 		if ( is_wp_error( $rankings ) ) {
 			self::e( $rankings->get_error_message() );
 		}
@@ -238,7 +242,7 @@ SQL;
 	 */
 	public function mailchimp( $args, $assoc ) {
 		list( $file ) = $args;
-		$execute = ! empty( $assoc['execute'] );
+		$execute      = ! empty( $assoc['execute'] );
 		if ( ! file_exists( $file ) ) {
 			\WP_CLI::error( sprintf( 'File %s does not exist.', $file ) );
 		}
@@ -249,7 +253,7 @@ SQL;
 		$fp->setFlags( \SplFileObject::READ_CSV );
 		foreach ( $fp as $line ) {
 			list( $email ) = $line;
-			$user_id = email_exists( $email );
+			$user_id       = email_exists( $email );
 			if ( $user_id ) {
 				if ( $execute ) {
 					update_user_meta( $user_id, 'optin', 1 );
@@ -269,11 +273,13 @@ SQL;
 	 */
 	public function measurement() {
 		$analytics = Analytics::get_instance();
-		$analytics->measurement->event( [
-			'ec'  => 'edit',
-			'ea'  => 'publish',
-			'el'  =>100,
-			Analytics::DIMENSION_AUTHOR => 66,
-		] );
+		$analytics->measurement->event(
+			[
+				'ec'                        => 'edit',
+				'ea'                        => 'publish',
+				'el'                        => 100,
+				Analytics::DIMENSION_AUTHOR => 66,
+			]
+		);
 	}
 }

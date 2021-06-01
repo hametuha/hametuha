@@ -42,9 +42,9 @@ class Statistics extends Screen {
 	 */
 	protected function default_children() {
 		return [];
-//			'statistics' => 'アクセス',
-//			'readers'    => '読者層',
-//			'traffic'    => '集客経路',
+		//          'statistics' => 'アクセス',
+		//          'readers'    => '読者層',
+		//          'traffic'    => '集客経路',
 	}
 
 	/**
@@ -55,26 +55,42 @@ class Statistics extends Screen {
 	public function render( $page = '' ) {
 		switch ( $page ) {
 			case 'readers':
-				hameplate( 'templates/dashboard/analytics', 'readers', [
-					'page' => $page,
-					'endpoint' => rest_url( "hametuha/v1/sales/history/me" ),
-				] );
+				hameplate(
+					'templates/dashboard/analytics',
+					'readers',
+					[
+						'page'     => $page,
+						'endpoint' => rest_url( 'hametuha/v1/sales/history/me' ),
+					]
+				);
 				break;
 			case 'payments':
-				hameplate( 'templates/dashboard/sales', 'payments', [
-					'endpoint' => rest_url( "hametuha/v1/sales/payments/me" ),
-				] );
+				hameplate(
+					'templates/dashboard/sales',
+					'payments',
+					[
+						'endpoint' => rest_url( 'hametuha/v1/sales/payments/me' ),
+					]
+				);
 				break;
 			default:
 				wp_enqueue_script( 'hametuha-hb-stats-pv' );
-				hameplate( 'templates/dashboard/analytics', 'access', [
-					'endpoint' => rest_url( "hametuha/v1/stats/access/me" ),
-				] );
+				hameplate(
+					'templates/dashboard/analytics',
+					'access',
+					[
+						'endpoint' => rest_url( 'hametuha/v1/stats/access/me' ),
+					]
+				);
 				break;
 		}
-		hameplate( 'templates/dashboard/footer', '', [
-			'slug' => 'dashboard-analytics-footer',
-		] );
+		hameplate(
+			'templates/dashboard/footer',
+			'',
+			[
+				'slug' => 'dashboard-analytics-footer',
+			]
+		);
 	}
 
 

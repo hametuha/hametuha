@@ -8,9 +8,9 @@
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?php echo home_url( '' ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 			&gt;
-			<a href="<?= get_permalink( $post->ID ) ?>"><?= get_the_title( $post ) ?></a>
+			<a href="<?php echo get_permalink( $post->ID ); ?>"><?php echo get_the_title( $post ); ?></a>
 			&gt; レビュー管理
 		</div>
 	</div>
@@ -23,25 +23,31 @@
 			<div class="col-xs-12">
 
 				<h2>
-					<?= get_the_title( $post ) ?>のレビュー管理
-					<small><?= number_format( $testimonials['cur_page'] ) ?>
-						/ <?= number_format( $testimonials['total_page'] ) ?>P</small>
-					<a href="<?= get_permalink($post) ?>" class="btn btn-primary">
+					<?php echo get_the_title( $post ); ?>のレビュー管理
+					<small><?php echo number_format( $testimonials['cur_page'] ); ?>
+						/ <?php echo number_format( $testimonials['total_page'] ); ?>P</small>
+					<a href="<?php echo get_permalink( $post ); ?>" class="btn btn-primary">
 						<i class="icon-return"></i> 戻る
 					</a>
 				</h2>
 
-				<?= hametuha_format_pagination(paginate_links([
-					'base' => home_url('/testimonials/manage/'.$post->ID.'/%_%', 'https'),
-					'format' => 'page/%#%/',
-					'total' => $testimonials['total_page'],
-					'current' => $testimonials['cur_page']
-				])) ?>
+				<?php
+				echo hametuha_format_pagination(
+					paginate_links(
+						[
+							'base'    => home_url( '/testimonials/manage/' . $post->ID . '/%_%', 'https' ),
+							'format'  => 'page/%#%/',
+							'total'   => $testimonials['total_page'],
+							'current' => $testimonials['cur_page'],
+						]
+					)
+				)
+				?>
 
 
 				<div class="alert alert-info">
 					このページで<strong>表示する</strong>となっているレビューが
-					<a href="<?= get_permalink($post) ?>" class="alert-link">作品集ページ</a>に表示されます。作品の魅力を伝えるレビューをたくさん表示しましょう。
+					<a href="<?php echo get_permalink( $post ); ?>" class="alert-link">作品集ページ</a>に表示されます。作品の魅力を伝えるレビューをたくさん表示しましょう。
 				</div>
 
 				<div>
@@ -72,11 +78,11 @@
 												</li>
 												<li>
 													<strong
-														class="name"><?= esc_html( $comment->comment_author ) ?></strong>
+														class="name"><?php echo esc_html( $comment->comment_author ); ?></strong>
 												</li>
 												<li>
 													<strong>公開日</strong>
-													<?= mysql2date( get_option( 'date_format' ), $comment->comment_date ) ?>
+													<?php echo mysql2date( get_option( 'date_format' ), $comment->comment_date ); ?>
 												</li>
 												<li>
 													<strong>種別</strong>
@@ -96,7 +102,7 @@
 												<li>
 													<strong>評価</strong>
 													<?php if ( $comment->rank ) : ?>
-														<i class="icon-star6"></i> &times; <?= $comment->rank ?>
+														<i class="icon-star6"></i> &times; <?php echo $comment->rank; ?>
 													<?php else : ?>
 														<span class="text-muted">評価なし</span>
 													<?php endif; ?>
@@ -113,7 +119,7 @@
 												</li>
 												<li>
 													<strong>優先順位</strong>
-													<?= number_format( $comment->priority ) ?>
+													<?php echo number_format( $comment->priority ); ?>
 												</li>
 											</ul>
 
@@ -123,35 +129,35 @@
 
 											<div class="testimonialList__content col-xs-10">
 											<?php if ( $comment->twitter ) : ?>
-												<?php show_twitter_status( $comment->comment_author_url ) ?>
+												<?php show_twitter_status( $comment->comment_author_url ); ?>
 											<?php else : ?>
 												<div class="testimonialList__content--inner">
-													<?= wpautop( get_comment_meta($comment->comment_ID, 'comment_excerpt', true) ?: $comment->comment_content ) ?>
+													<?php echo wpautop( get_comment_meta( $comment->comment_ID, 'comment_excerpt', true ) ?: $comment->comment_content ); ?>
 												</div>
 											<?php endif; ?>
 											</div>
 
 											<div class="testimonialList__controller col-xs-2 clearfix">
 												<button data-toggle="modal"
-														data-target="#comment-modal-<?= $comment->comment_ID ?>"
+														data-target="#comment-modal-<?php echo $comment->comment_ID; ?>"
 														class="testimonialList__link testimonialList__link--edit btn btn-block btn-primary">
 													編集
 												</button>
 												<?php if ( $comment->comment_post_ID == $post->ID ) : ?>
-												<a href="<?= home_url('/testimonials/delete/'.$comment->comment_ID.'/', 'https') ?>"
+												<a href="<?php echo home_url( '/testimonials/delete/' . $comment->comment_ID . '/', 'https' ); ?>"
 												   class="testimonialList__link testimonailList__link--delete btn btn-block btn-danger">削除</a>
-											    <?php else : ?>
-											    <button class="btn btn-block btn-danger" disabled>削除</button>
+												<?php else : ?>
+												<button class="btn btn-block btn-danger" disabled>削除</button>
 												<?php endif; ?>
 											</div>
 
 										</div>
 
-										<div class="modal fade" id="comment-modal-<?= $comment->comment_ID ?>"
+										<div class="modal fade" id="comment-modal-<?php echo $comment->comment_ID; ?>"
 											 tabindex="-1" role="dialog">
 											<form class="form-horizontal" method="post"
-												  action="<?= home_url( '/testimonials/edit/' . $comment->comment_ID . '/', 'https' ) ?>">
-												<?php wp_nonce_field('manage_testimonial') ?>
+												  action="<?php echo home_url( '/testimonials/edit/' . $comment->comment_ID . '/', 'https' ); ?>">
+												<?php wp_nonce_field( 'manage_testimonial' ); ?>
 												<div class="modal-dialog" role="document">
 													<div class="modal-content">
 														<div class="modal-body">
@@ -165,7 +171,7 @@
 																		<input type="text" name="comment-author"
 																			   id="comment-author"
 																			   class="form-control"
-																			   value="<?= esc_attr( $comment->comment_author ) ?>"/>
+																			   value="<?php echo esc_attr( $comment->comment_author ); ?>"/>
 																	</div>
 																</div>
 																<div class="form-group">
@@ -202,7 +208,7 @@
 																		<input type="text" name="comment-url"
 																			   id="comment-url"
 																			   class="form-control"
-																			   value="<?= esc_attr( $comment->comment_author_url ) ?>"/>
+																			   value="<?php echo esc_attr( $comment->comment_author_url ); ?>"/>
 																	</div>
 																</div>
 															<?php endif; ?>
@@ -213,12 +219,12 @@
 																<div class="col-sm-8">
 																	<label class="radio-inline">
 																		<input type="radio" name="comment-status"
-																			   value="0" <?php checked( ! $comment->display ) ?>>
+																			   value="0" <?php checked( ! $comment->display ); ?>>
 																		公開しない
 																	</label>
 																	<label class="radio-inline">
 																		<input type="radio" name="comment-status"
-																			   value="1" <?php checked( $comment->display ) ?>>
+																			   value="1" <?php checked( $comment->display ); ?>>
 																		公開する
 																	</label>
 																</div>
@@ -233,9 +239,9 @@
 																<div class="col-sm-8">
 																	<input type="number" name="comment-priority"
 																		   id="comment-priority"
-																		   value="<?= esc_attr( $comment->priority ) ?>"
+																		   value="<?php echo esc_attr( $comment->priority ); ?>"
 																		   min="0">
-																	<?php help_tip( 'コメントは「優先順位の高さ＞日付の新しい順」で表示されます。重要なものの順位を高くしてください。' ) ?>
+																	<?php help_tip( 'コメントは「優先順位の高さ＞日付の新しい順」で表示されます。重要なものの順位を高くしてください。' ); ?>
 																</div>
 															</div>
 
@@ -250,17 +256,17 @@
 																		<textarea class="form-control"
 																				  id="comment-content"
 																				  name="comment-content"
-																				  rows="5"><?= esc_textarea( $comment->comment_content ) ?></textarea>
+																				  rows="5"><?php echo esc_textarea( $comment->comment_content ); ?></textarea>
 																	<?php else : ?>
 																		<textarea class="form-control"
 																			id="comment-content"
 																			name="comment-excerpt"
-																			rows="3"><?= esc_textarea( get_comment_meta($comment->comment_ID, 'comment_excerpt', true) ) ?></textarea>
+																			rows="3"><?php echo esc_textarea( get_comment_meta( $comment->comment_ID, 'comment_excerpt', true ) ); ?></textarea>
 																		<span class="help-block">
 																			投稿へ付けられたコメントの一部を抜粋できます。含まれていない文字列は無効です。
 																			抜粋がない場合は全文が表示されます。
 																		</span>
-																		<pre><?= esc_html( $comment->comment_content ) ?></pre>
+																		<pre><?php echo esc_html( $comment->comment_content ); ?></pre>
 																	<?php endif; ?>
 																</div>
 															</div>

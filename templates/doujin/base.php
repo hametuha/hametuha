@@ -8,21 +8,22 @@
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?php echo home_url( '' ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 			&gt;
-			<a href="<?= home_url( '/authors/') ?>">執筆者</a>
+			<a href="<?php echo home_url( '/authors/' ); ?>">執筆者</a>
 			&gt;
 			<?php if ( $breadcrumb ) : ?>
-				<a href="<?= home_url( '/doujin/' . $this->doujin->user_nicename . '/') ?>">
-					<?= esc_html( $this->doujin->display_name ) ?>
+				<a href="<?php echo home_url( '/doujin/' . $this->doujin->user_nicename . '/' ); ?>">
+					<?php echo esc_html( $this->doujin->display_name ); ?>
 				</a>
-				&gt; <?= $breadcrumb ?>
+				&gt; <?php echo $breadcrumb; ?>
 			<?php else : ?>
-				<?= esc_html( $this->doujin->display_name ) ?>
+				<?php echo esc_html( $this->doujin->display_name ); ?>
 			<?php endif; ?>
 		</div>
 	</div>
 
-	<?php $this->load_template( 'templates/doujin/profile', $template ) ?>
+	<?php $this->load_template( 'templates/doujin/profile', $template ); ?>
 
-<?php get_footer();
+<?php
+get_footer();

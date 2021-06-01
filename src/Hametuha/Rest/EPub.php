@@ -55,53 +55,61 @@ class EPub extends RestTemplate {
 	 * Get list of series
 	 */
 	public function rest_api_init() {
-		register_rest_route( 'hametuha/v1', '/covers/(?P<id>\\d+|me)/?', [
-			'methods'             => 'GET',
-			'callback'            => [ $this, 'api_series_list' ],
-			'args'                => [
-				'id'       => [
-					'validate_callback' => function ( $var ) {
-						return 'me' === $var || is_numeric( $var );
-					},
-					'default'           => 0,
-				],
-				'paged'    => [
-					'validate_callback' => 'is_numeric',
-					'default'           => 0,
-				],
-				'per_page' => [
-					'validate_callback' => 'is_numeric',
-					'default'           => 0,
-				],
-			],
-			'permission_callback' => function () {
-				return current_user_can( 'edit_posts' );
-			},
-		] );
-		register_rest_route( 'hametuha/v1', '/cover/(?P<id>\\d+)/?', [
+		register_rest_route(
+			'hametuha/v1',
+			'/covers/(?P<id>\\d+|me)/?',
 			[
-				'methods'  => 'POST',
-			    'callback' => [ $this, 'api_post_cover' ],
-			    'args'     => [
-				    'id' => [
-					    'validate_callback' => 'is_numeric',
-				        'required' => true,
-				    ],
-			        'url' => [
-				        'required' => true,
-				        'validate_callback' => function( $url ) {
-					        return preg_match( '#^https?://#', $url );
-				        },
-			        ],
-			        'title' => [
-				        'default' => '',
-			        ],
-			    ],
-			    'permission_callback' => function() {
-				    return current_user_can( 'edit_posts' );
-			    },
-			],
-		] );
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'api_series_list' ],
+				'args'                => [
+					'id'       => [
+						'validate_callback' => function ( $var ) {
+							return 'me' === $var || is_numeric( $var );
+						},
+						'default'           => 0,
+					],
+					'paged'    => [
+						'validate_callback' => 'is_numeric',
+						'default'           => 0,
+					],
+					'per_page' => [
+						'validate_callback' => 'is_numeric',
+						'default'           => 0,
+					],
+				],
+				'permission_callback' => function () {
+					return current_user_can( 'edit_posts' );
+				},
+			]
+		);
+		register_rest_route(
+			'hametuha/v1',
+			'/cover/(?P<id>\\d+)/?',
+			[
+				[
+					'methods'             => 'POST',
+					'callback'            => [ $this, 'api_post_cover' ],
+					'args'                => [
+						'id'    => [
+							'validate_callback' => 'is_numeric',
+							'required'          => true,
+						],
+						'url'   => [
+							'required'          => true,
+							'validate_callback' => function( $url ) {
+								return preg_match( '#^https?://#', $url );
+							},
+						],
+						'title' => [
+							'default' => '',
+						],
+					],
+					'permission_callback' => function() {
+						return current_user_can( 'edit_posts' );
+					},
+				],
+			]
+		);
 	}
 
 
@@ -117,29 +125,31 @@ class EPub extends RestTemplate {
 		$paged    = max( 1, $params['paged'] );
 		$posts    = [];
 		$user_id  = 'me' === $params['id'] ? get_current_user_id() : $params['id'];
-		$query    = new \WP_Query( [
+		$query    = new \WP_Query(
+			[
 				'post_type'      => 'series',
 				'author'         => $user_id,
 				'posts_per_page' => $per_page,
 				'offset'         => max( 0, $paged - 1 ) * $per_page,
-		] );
+			]
+		);
 		global $post;
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			$data = [
-					'id'     => get_the_ID(),
-					'title'  => get_the_title(),
-					'status' => $post->post_status,
+				'id'     => get_the_ID(),
+				'title'  => get_the_title(),
+				'status' => $post->post_status,
 			];
 			if ( has_post_thumbnail( get_the_ID() ) ) {
 				$data['thumbnails'] = [
-						'full'   => wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full' )[0],
-						'medium' => wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'medium' )[0],
+					'full'   => wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'full' )[0],
+					'medium' => wp_get_attachment_image_src( get_post_thumbnail_id( get_the_ID() ), 'medium' )[0],
 				];
 			} else {
 				$data['thumbnails'] = [
-						'full'   => false,
-						'medium' => false,
+					'full'   => false,
+					'medium' => false,
 				];
 			}
 			$posts[] = $data;
@@ -159,21 +169,23 @@ class EPub extends RestTemplate {
 		if ( ! current_user_can( 'edit_post', $params['id'] ) ) {
 			return new \WP_Error( 'permission_denied', 'この投稿を編集する権限がありません。', [ 'status' => 403 ] );
 		}
-		$post = get_post( $params['id'] );
+		$post          = get_post( $params['id'] );
 		$attachment_id = hametuha_sideload_image( $params['url'], $post->ID, $params['title'] );
 		if ( is_wp_error( $attachment_id ) ) {
 			return $attachment_id;
 		}
 		if ( set_post_thumbnail( $params['id'], $attachment_id ) ) {
-			return new \WP_REST_Response( [
-				'id' => $post->ID,
-			    'title' => get_the_title( $post ),
-			    'status' => $post->post_status,
-			    'thumbnails' => [
-					'full'   => wp_get_attachment_image_src( $attachment_id, 'full' )[0],
-					'medium' => wp_get_attachment_image_src( $attachment_id, 'medium' )[0],
-			    ],
-			] );
+			return new \WP_REST_Response(
+				[
+					'id'         => $post->ID,
+					'title'      => get_the_title( $post ),
+					'status'     => $post->post_status,
+					'thumbnails' => [
+						'full'   => wp_get_attachment_image_src( $attachment_id, 'full' )[0],
+						'medium' => wp_get_attachment_image_src( $attachment_id, 'medium' )[0],
+					],
+				]
+			);
 		} else {
 			return new \WP_Error( 'save_failure', '表紙画像の保存に失敗しました。', [ 'status' => 500 ] );
 		}
@@ -196,18 +208,26 @@ class EPub extends RestTemplate {
 		}
 		nocache_headers();
 		$this->title = get_the_title( $series_id );
-		add_filter( 'body_class', function( $classes ) {
-			$classes[] = 'single-post';
-			$classes[] = 'series-print';
-			return $classes;
-		} );
-		add_filter( 'the_content', function( $content ) {
-			return preg_replace( "#<p>([^{$this->no_indent}])#u", '<p class="indent">$1', $content );
-		} );
-		$this->set_data([
-			'series' => get_post( $series_id ),
-			'query'  => $query,
-		]);
+		add_filter(
+			'body_class',
+			function( $classes ) {
+				$classes[] = 'single-post';
+				$classes[] = 'series-print';
+				return $classes;
+			}
+		);
+		add_filter(
+			'the_content',
+			function( $content ) {
+				return preg_replace( "#<p>([^{$this->no_indent}])#u", '<p class="indent">$1', $content );
+			}
+		);
+		$this->set_data(
+			[
+				'series' => get_post( $series_id ),
+				'query'  => $query,
+			]
+		);
 		$this->load_template( 'templates/epub/print' );
 	}
 
@@ -266,10 +286,10 @@ class EPub extends RestTemplate {
 			$direction = $this->series->get_direction( $series->ID );
 			// Get HTMLs
 			$html = [];
-//			$html['cover'] = [
-//				'label' => '表紙',
-//				'html'  => $this->get_content( $series_id, $series, 'cover', $direction )
-//			];
+			//          $html['cover'] = [
+			//              'label' => '表紙',
+			//              'html'  => $this->get_content( $series_id, $series, 'cover', $direction )
+			//          ];
 			$html['titlepage'] = [
 				'label' => '扉',
 				'html'  => $this->get_content( $series_id, $series, 'titlepage', $direction ),
@@ -314,7 +334,7 @@ class EPub extends RestTemplate {
 			}
 			// Add ads
 			if ( ! hametuha_is_secret_book( $series ) ) {
-				$html[ 'ads' ] = [
+				$html['ads'] = [
 					'label' => '電子書籍近刊',
 					'html'  => $this->get_content( $series_id, $series, 'ads', $direction ),
 				];
@@ -455,11 +475,13 @@ class EPub extends RestTemplate {
 		remove_action( 'epub_body_attr', [ $this, 'epub_attr' ] );
 		$post->post_content = $this->page_break( $post->post_content );
 		setup_postdata( $post );
-		$this->set_data( [
-			'authors'     => Collaborators::get_instance()->get_published_collaborators( $post->ID ),
-			'post'        => $post,
-			'is_vertical' => 'rtl' == $direction,
-		] );
+		$this->set_data(
+			[
+				'authors'     => Collaborators::get_instance()->get_published_collaborators( $post->ID ),
+				'post'        => $post,
+				'is_vertical' => 'rtl' == $direction,
+			]
+		);
 		switch ( $template ) {
 			case 'cover':
 				$this->title = '表紙';
@@ -481,11 +503,13 @@ class EPub extends RestTemplate {
 				break;
 			case 'content':
 				$this->title = get_post_meta( $post->ID, '_series_override', true ) ?: get_the_title( $post );
-				$this->set_data( [
-					'show_title'     => $this->series->get_title_visibility( $post->post_parent ),
-					'filtered_title' => 'rtl' == $direction ? $this->factory( $id )->parser->tcyiz( $this->title ) : $this->title,
-					'series_type'    => $this->series->get_series_type( $post->post_parent ),
-				] );
+				$this->set_data(
+					[
+						'show_title'     => $this->series->get_title_visibility( $post->post_parent ),
+						'filtered_title' => 'rtl' == $direction ? $this->factory( $id )->parser->tcyiz( $this->title ) : $this->title,
+						'series_type'    => $this->series->get_series_type( $post->post_parent ),
+					]
+				);
 				break;
 			case 'toc':
 				$this->title = '目次';
@@ -524,9 +548,13 @@ class EPub extends RestTemplate {
 		$content = ob_get_contents();
 		if ( 'rtl' === $direction ) {
 			// Fix style="padding-left: npx"
-			$content = preg_replace_callback( '#style="padding-left: ([0-9]+)px;"#u', function ( array $match ) {
-				return sprintf( 'style="padding-top: %dpx;"', $match[1] );
-			}, $content );
+			$content = preg_replace_callback(
+				'#style="padding-left: ([0-9]+)px;"#u',
+				function ( array $match ) {
+					return sprintf( 'style="padding-top: %dpx;"', $match[1] );
+				},
+				$content
+			);
 		}
 		$content = preg_replace( '# sizes="[^"]+"#u', '', $content );
 		remove_filter( 'the_content', [ $this, 'fix_wptexturize' ], 99998 );

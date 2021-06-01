@@ -1,11 +1,11 @@
-<li data-post-id="<?php the_ID() ?>" <?php post_class( 'media loop-lists' ) ?>>
+<li data-post-id="<?php the_ID(); ?>" <?php post_class( 'media loop-lists' ); ?>>
 
-	<a class="media__link media__link--nopad" href="<?php the_permalink() ?>">
+	<a class="media__link media__link--nopad" href="<?php the_permalink(); ?>">
 
 
 		<?php if ( has_post_thumbnail() ) : ?>
 			<div class="pull-right">
-				<?= get_the_post_thumbnail( null, 'thumbnail', array( 'class' => 'media-object' ) ) ?>
+				<?php echo get_the_post_thumbnail( null, 'thumbnail', array( 'class' => 'media-object' ) ); ?>
 			</div>
 		<?php endif; ?>
 
@@ -26,7 +26,7 @@
 					<?php the_author(); ?> 編
 				</li>
 				<li class="date">
-					<i class="icon-calendar2"></i> <?= hametuha_passed_time( $post->post_date ) ?>
+					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
 					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="label label-danger">New!</span>
 					<?php elseif ( is_recent_date( $post->post_modified, 7 ) ) : ?>
@@ -34,15 +34,15 @@
 					<?php endif; ?>
 				</li>
 				<li>
-					<span class="<?= $post->num_children ? '' : 'text-danger' ?>">
-						<i class="icon-books"></i> <?= number_format_i18n( $post->num_children ); ?>作収録
+					<span class="<?php echo $post->num_children ? '' : 'text-danger'; ?>">
+						<i class="icon-books"></i> <?php echo number_format_i18n( $post->num_children ); ?>作収録
 					</span>
 				</li>
 			</ul>
 
 			<!-- Excerpt -->
 			<div class="archive-excerpt">
-				<p class="text-muted"><?= trim_long_sentence( get_the_excerpt(), 98 ); ?></p>
+				<p class="text-muted"><?php echo trim_long_sentence( get_the_excerpt(), 98 ); ?></p>
 			</div>
 
 		</div>
