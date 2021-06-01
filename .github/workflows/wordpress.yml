@@ -15,9 +15,9 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ ubuntu-16.04 ]  # OS. ubuntu-18.04 is also available.
-        php: [ '7.2' ]        # PHP versions to check.
-        wp: [ 'latest', '5.2' ]             # WordPress version to check.
+        operating-system: [ ubuntu-18.04 ]  # OS. ubuntu-18.04 is also available.
+        php: [ '7.2', '7.4' ]        # PHP versions to check.
+        wp: [ 'latest', '5.5' ]             # WordPress version to check.
     services:
       mysql:
         image: mysql:5.7
@@ -67,7 +67,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: '10'
+          node-version: '12'
 
       - name: Build package.
         run: bash bin/build.sh

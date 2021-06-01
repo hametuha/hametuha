@@ -2,7 +2,7 @@
   "name": "hametuha/hametuha",
   "description": "A WordPress theme for hametuha",
   "minimum-stability": "stable",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "test": "phpunit"
   },

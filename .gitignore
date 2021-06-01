@@ -8,6 +8,7 @@ composer.lock
 composer-dev.lock
 .sass-cache
 .svn
+/wordpress/
 package-lock.json
 assets/img/*
 !assets/img/src
