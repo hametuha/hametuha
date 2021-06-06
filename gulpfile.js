@@ -32,12 +32,9 @@ gulp.task( 'sass', function () {
 				'./vendor/hametuha'
 			]
 		} ) )
-		.pipe( $.autoprefixer( {
-			grid: true,
-			browsers: [ 'last 2 versions', 'ie 11' ]
-		} ) )
+		.pipe( $.autoprefixer() )
 		.pipe( $.sourcemaps.write( './map' ) )
-		.pipe( gulp.dest( './assets/css' ) );
+		.pipe( gulp.dest( './dist/css' ) );
 } );
 
 // Style lint.
@@ -58,7 +55,7 @@ gulp.task( 'stylelint', function () {
 
 // Minify All
 gulp.task( 'js', function () {
-	return gulp.src( [ './assets/js/src/**/*.js', '!./assets/js/src/common/*.js' ] )
+	return gulp.src( [ './assets/js/**/*.js', '!./assets/js/src/common/*.js' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -76,8 +73,8 @@ gulp.task( 'js', function () {
 
 // Package jsx.
 gulp.task( 'jsx', function () {
-	var tmp = {};
-	return gulp.src( [ './assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx' ] )
+	const tmp = {};
+	return gulp.src( [ './assets/js/**/*.jsx', '!./assets/js/**/_*.jsx' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -112,8 +109,9 @@ gulp.task( 'jsx', function () {
 			}
 			return path;
 		} ) )
-		.pipe( gulp.dest( './assets/js/dist' ) );
+		.pipe( gulp.dest( './dist/js' ) );
 } );
+
 
 // Build app
 gulp.task( 'commonjs', function () {
@@ -125,12 +123,12 @@ gulp.task( 'commonjs', function () {
 // JS Hint
 gulp.task( 'eslint', function () {
 	let task = gulp.src( [
-		'./assets/js/src/**/*.js',
-		'!./assets/js/src/modernizr.js',
-		'!./assets/js/src/common/headroom.js',
-		'!./assets/js/src/common/slick.js',
-		'!./assets/js/src/common.js',
-		'!./assets/js/src/common/jquery.mmenu.custom.js',
+		'./assets/js/**/*.js',
+		'!./assets/js/modernizr.js',
+		'!./assets/js/common/headroom.js',
+		'!./assets/js/common/slick.js',
+		'!./assets/js/common.js',
+		'!./assets/js/common/jquery.mmenu.custom.js',
 	] );
 	if ( plumber ) {
 		task = task.pipe( $.plumber() );
@@ -142,14 +140,14 @@ gulp.task( 'eslint', function () {
 // Build modernizr
 gulp.task( 'copylib', function () {
 	return mergeStream(
-		// Build Bootstrap
+		// Build Bootstrap`
 		gulp.src( [
 			'./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
 			'./node_modules/bootbox/bootbox.js'
 		] )
 			.pipe( $.concat( 'bootstrap.js' ) )
 			.pipe( $.uglify() )
-			.pipe( gulp.dest( './assets/js/dist' ) ),
+			.pipe( gulp.dest( './dist/vendor/bootstrap' ) ),
 		// Build Angular
 		gulp.src( [
 			'./node_modules/angular/angular.js',
@@ -158,36 +156,29 @@ gulp.task( 'copylib', function () {
 		] )
 			.pipe( $.concat( 'angular.js' ) )
 			.pipe( $.uglify() )
-			.pipe( gulp.dest( './assets/js/dist' ) ),
-		// Build unpacked Libraries.
-		gulp.src( [
-			'./node_modules/html5shiv/dist/html5shiv.js',
-			'./node_modules/respond.js/dest/respond.src.js',
-		] )
-			.pipe( $.uglify() )
-			.pipe( gulp.dest( './assets/js/dist/' ) ),
+			.pipe( gulp.dest( './dist/vendor/angular' ) ),
 		gulp.src( [
 			'./node_modules/select2/dist/js/select2.min.js',
 		] )
-			.pipe( gulp.dest( './assets/js/dist/select2' ) ),
+			.pipe( gulp.dest( './dist/vendor/select2' ) ),
 		gulp.src( [
 			'./node_modules/select2/dist/js/i18n/ja.js'
 		] )
-			.pipe( gulp.dest( './assets/js/dist/select2/i18n' ) ),
+			.pipe( gulp.dest( './dist/vendor/select2/i18n' ) ),
 		gulp.src( [
 			'./node_modules/select2/dist/css/select2.min.css'
 		] )
-			.pipe( gulp.dest( './assets/css' ) ),
+			.pipe( gulp.dest( './dist/vendor/select2' ) ),
 		gulp.src( [
 			'./node_modules/prop-types/prop-types.min.js'
 		] )
-			.pipe( gulp.dest( './assets/js/dist' ) )
+			.pipe( gulp.dest( './dist/vendor/prop-types' ) )
 	);
 } );
 
 // Image min
 gulp.task( 'imagemin', function () {
-	return gulp.src( './assets/img/src/**/*' )
+	return gulp.src( './assets/img/**/*' )
 		.pipe( $.imagemin( [
 			pngquant( {
 				quality: '65-80',
@@ -202,7 +193,7 @@ gulp.task( 'imagemin', function () {
 			$.imagemin.optipng(),
 			$.imagemin.gifsicle()
 		] ) )
-		.pipe( gulp.dest( './assets/img' ) );
+		.pipe( gulp.dest( './dist/img' ) );
 } );
 
 // Jade

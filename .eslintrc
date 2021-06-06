@@ -5,7 +5,14 @@
 		"jquery": true
 	},
 	"globals": {
-		"wp": false
+		"wp": false,
+		"jQuery": false,
+		"angular": false,
+		"Hametuha": true,
+		"wpApiSettings": false,
+		"ga": false,
+		"Hashboard": true,
+		"Vue": false
 	},
 	"extends": [
 		"plugin:@wordpress/eslint-plugin/recommended"

@@ -2,14 +2,11 @@ vendor
 vendor-dev
 node_modules
 bower_components
-assets/html/*.html
-assets/js/dist
+/dist
 composer.lock
 composer-dev.lock
 .sass-cache
 .svn
 /wordpress/
 package-lock.json
-assets/img/*
-!assets/img/src
 assets/css

@@ -9,9 +9,6 @@ add_action(
 	'init',
 	function () {
 
-		// Modernizr
-		wp_register_script( 'modernizr', get_template_directory_uri() . '/assets/js/dist/modernizr.js', null, '2.8.3', false );
-
 		// Twitter Bootstrap
 		wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/js/dist/bootstrap.js', [ 'jquery' ], '3.3.4', true );
 
@@ -90,134 +87,6 @@ JS;
 				'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ) . '/assets/js/tpl/',
 			]
 		);
-
-		// シングルページ用JS
-		wp_register_script(
-			'hametuha-single',
-			get_template_directory_uri() . '/assets/js/dist/single-post.js',
-			[
-				'hametuha-common',
-				'chart-js',
-				'jquery-form',
-				'jquery-touch-punch',
-				'jquery-ui-slider',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// ログイン名変更用JS
-		wp_register_script(
-			'hametuha-login-changer',
-			get_template_directory_uri() . '/assets/js/dist/components/login-change-helper.js',
-			[
-				'jquery-form',
-				'hametuha-common',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// 同人になる用JS
-		wp_register_script(
-			'hametuha-become-author',
-			get_template_directory_uri() . '/assets/js/dist/components/become-author.js',
-			[
-				'jquery-form',
-				'hametuha-common',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// フロントページ用JS
-		wp_register_script(
-			'hametuha-front',
-			get_template_directory_uri() . '/assets/js/dist/components/front-helper.js',
-			[
-				'jquery-masonry',
-				'imagesloaded',
-				'chart-js',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// シリーズ用JS
-		wp_register_script(
-			'hametuha-series',
-			get_template_directory_uri() . '/assets/js/dist/components/series-helper.js',
-			[
-				'jquery-masonry',
-				'jquery-form',
-			],
-			hametuha_version(),
-			true
-		);
-
-		/// Editor
-		wp_register_script(
-			'hameditor',
-			get_template_directory_uri() . '/assets/js/dist/editor/common.js',
-			[
-				'jquery',
-				'angular',
-				'wp-api',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// ソーシャル計測
-		wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
-
-		// イベント参加
-		wp_register_script(
-			'hamevent',
-			get_template_directory_uri() . '/assets/js/dist/components/event-participate.js',
-			[
-				'angular',
-				'wp-api',
-			],
-			hametuha_version(),
-			true
-		);
-
-		// メインCSS
-		wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );
-
-		// 管理画面用CSS
-		wp_register_style( 'hametuha-admin', get_template_directory_uri() . '/assets/css/admin.css', null, hametuha_version() );
-
-		// プロフィール変更用JS
-		wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/dist/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
-
-		// フォローボタン
-		$path = '/assets/js/dist/components/follow-toggle.js';
-		wp_register_script(
-			'hametu-follow',
-			get_stylesheet_directory_uri() . $path,
-			[
-				'twitter-bootstrap',
-				'wp-api',
-			],
-			filemtime( get_stylesheet_directory() . $path ),
-			true
-		);
-
-		// 投稿編集画面
-		wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery' ], hametuha_version(), true );
-
-		// Watermark
-		wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
-
-		// Register all hashboard.
-		wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
-		$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
-		\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
-
-		// Register all new modules.
-		\Hametuha\WpEnqueueManager::register_js( get_template_directory() . '/assets/js/dist/modules', 'hametuha-module-', hametuha_version(), true );
 	},
 	9
 );
@@ -294,68 +163,39 @@ add_action(
 
 /**
  * 管理画面でアセットを読み込む
- */
-add_action(
-	'admin_enqueue_scripts',
-	function ( $page = '' ) {
-
-		$screen = get_current_screen();
-
-		wp_enqueue_style( 'hametuha-admin' );
-
-		// 編集画面
-		if ( 'post' == $screen->base ) {
-			wp_enqueue_script( 'hametuha-edit-form' );
-		}
-
-		// プロフィール編集画面
-		if ( 'user-edit.php' == $page ) {
-			wp_enqueue_media();
-			wp_enqueue_script( 'hametuha-user-edit' );
-		}
-	},
-	200
-);
-
-
-/**
- * IE8以下用のJS
  *
- * @action wp_head
+ * @param string $page Page name.
  */
-add_action(
-	'wp_head',
-	function () {
-		$shiv    = get_template_directory_uri() . '/assets/js/dist/html5shiv.js';
-		$respond = get_template_directory_uri() . '/assets/js/dist/respond.src.js';
-		echo <<<EOS
-<!--[if lt IE 9]>
-  <script src="{$shiv}?ver=3.7.0"></script>
-  <script src="{$respond}?ver=1.4.2"></script>
-<![endif]-->
-EOS;
-	},
-	20
-);
+add_action( 'admin_enqueue_scripts', function( $page = '' ) {
+	$screen = get_current_screen();
+	wp_enqueue_style( 'hametuha-admin' );
 
+	// 編集画面
+	if ( 'post' == $screen->base ) {
+		wp_enqueue_script( 'hametuha-edit-form' );
+	}
+
+	// プロフィール編集画面
+	if ( 'user-edit.php' == $page ) {
+		wp_enqueue_media();
+		wp_enqueue_script( 'hametuha-user-edit' );
+	}
+}, 200 );
 
 /**
  * jQueryをフッターに動かす
  */
-add_action(
-	'init',
-	function() {
-		if ( is_admin() || 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
-			return;
-		}
-		global $wp_scripts;
-		$jquery     = $wp_scripts->registered['jquery-core'];
-		$jquery_ver = $jquery->ver;
-		$jquery_src = $jquery->src;
-		// Register jQuery again.
-		wp_deregister_script( 'jquery' );
-		wp_register_script( 'jquery', false, [ 'jquery-core' ], $jquery_ver, true );
-		wp_deregister_script( 'jquery-core' );
-		wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, true );
+add_action( 'init', function() {
+	if ( is_admin() || 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
+		return;
 	}
-);
+	global $wp_scripts;
+	$jquery     = $wp_scripts->registered['jquery-core'];
+	$jquery_ver = $jquery->ver;
+	$jquery_src = $jquery->src;
+	// Register jQuery again.
+	wp_deregister_script( 'jquery' );
+	wp_register_script( 'jquery', false, [ 'jquery-core' ], $jquery_ver, true );
+	wp_deregister_script( 'jquery-core' );
+	wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, true );
+} );
