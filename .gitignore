@@ -9,4 +9,4 @@ composer-dev.lock
 .svn
 /wordpress/
 package-lock.json
-assets/css
+wp-dependencies.json

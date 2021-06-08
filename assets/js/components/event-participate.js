@@ -6,8 +6,6 @@
  */
 
 /* global HamEvent: true*/
-/* global Hametuha: true*/
-/* global wpApiSettings: false */
 
 angular.module( 'hametuha' )
 	.controller( 'hameventStatus', [ '$scope', '$http', '$timeout', function ( $scope, $http, $timeout ) {

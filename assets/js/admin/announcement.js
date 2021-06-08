@@ -1,7 +1,8 @@
 /*!
  * 告知ページのヘルパースクリプト
  *
- *
+ * @handle hametuha-announcement-helper
+ * @deps gmap, jquery
  */
 
 /*global google:true */
@@ -41,7 +42,7 @@ jQuery(document).ready(function ($) {
     }
     if ($('input[name=commit_type]').length > 0) {
         $('input[name=commit_type]').click(function (e) {
-            for (var i = 0, l = $('input[name=commit_type]').length; i < l; i++) {
+            for (let i = 0, l = $('input[name=commit_type]').length; i < l; i++) {
                 if ($(this).val() != i + 1) {
                     $('#commit_' + (i + 1)).css('display', 'none');
                 } else {
@@ -52,7 +53,7 @@ jQuery(document).ready(function ($) {
     }
     if ($('input[name=commit_post_type]').length > 0) {
         $('input[name=commit_post_type]').click(function (e) {
-            var id = 'commit_cat_' + $(this).val();
+            const id = 'commit_cat_' + $(this).val();
             $('p[id^=commit_cat_]').each(function (index, elt) {
                 if ($(elt).attr('id') == id) {
                     $(elt).fadeIn();
@@ -75,18 +76,18 @@ jQuery(document).ready(function ($) {
              * @return {LatLng}
              */
             get: function () {
-                var latlng = $('input[name=announcement_latlng]').val().split(':');
+                const latlng = $('input[name=announcement_latlng]').val().split(':');
                 if (latlng.length > 1) {
-                    var lat = latlng[0];
-                    var lng = latlng[1];
+                    const lat = latlng[0];
+                    const lng = latlng[1];
                     if (lat.match(/^[0-9\-\.]+$/) && lng.match(/^[0-9\-\.]+$/)) {
                         return new google.maps.LatLng(lat, lng);
-                    } else {
+                    } 
                         return null;
-                    }
-                } else {
+                    
+                } 
                     return null;
-                }
+                
             },
 
             /**
@@ -126,7 +127,7 @@ jQuery(document).ready(function ($) {
             map      : map,
             draggable: false
         });
-        var msg = function (string, result) {
+        const msg = function (string, result) {
             window.alert(string + ': ' + result);
         };
         //空じゃなかったらマーカーを移動
@@ -142,7 +143,7 @@ jQuery(document).ready(function ($) {
 
     // Google Mapの描画（公開画面）
     if ($('#gmap-announcement').length > 0) {
-        var address = $('#gmap-announcement').text();
+        const address = $('#gmap-announcement').text();
         $('#gmap-announcement').text('');
         defaultLatLng = new google.maps.LatLng(35.671435, 139.720863);
         //地図を描画

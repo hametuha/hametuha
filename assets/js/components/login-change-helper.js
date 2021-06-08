@@ -5,8 +5,6 @@
  * @deps jquery-form,hametuha-common
  */
 
-/*global Hametuha: true*/
-
 const $ = jQuery;
 
 $( document ).ready( function () {

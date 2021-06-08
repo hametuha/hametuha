@@ -1,5 +1,8 @@
-/**
- * Follower application
+/*!
+ * Idea UI
+ *
+ * @handle hametuha-idea
+ * @deps angular, wp-api
  */
 
 /* global wpApiSettings:false */
@@ -9,7 +12,7 @@ angular.module('hametuha')
 
         'use strict';
 
-        var endpoint = wpApiSettings.root + 'hametuha/v1/idea/mine/';
+        const endpoint = wpApiSettings.root + 'hametuha/v1/idea/mine/';
 
         // ideas
         $scope.loading = false;
@@ -26,7 +29,7 @@ angular.module('hametuha')
 
         // Get ideas
         $scope.getIdeas = function (offset) {
-            var params = {
+            const params = {
                 offset: offset
             };
             if( $scope.query.length ){
@@ -64,7 +67,7 @@ angular.module('hametuha')
         // Add query and refresh search
         $scope.search = function(query){
             $scope.query = query;
-            for( var i = $scope.ideas.length - 1; i >= 0; i--){
+            for( let i = $scope.ideas.length - 1; i >= 0; i--){
                 delete $scope.ideas[i];
             }
             $scope.ideas = [];
@@ -81,8 +84,8 @@ angular.module('hametuha')
 
         // Stock recommended
         $scope.stock = function(id){
-            var indexToUpdate = null;
-            for(var i = 0, l = $scope.ideas.length; i < l; i++){
+            let indexToUpdate = null;
+            for(let i = 0, l = $scope.ideas.length; i < l; i++){
                 if( $scope.ideas[i].ID == id ){
                     indexToUpdate = i;
                     break;
@@ -111,7 +114,7 @@ angular.module('hametuha')
 
         // Unstock idea
         $scope.unstock = function(id){
-            var indexToRemove = null;
+            let indexToRemove = null;
             for(var i = 0, l = $scope.ideas.length; i < l; i++){
                 if( $scope.ideas[i].ID == id ){
                     indexToRemove = i;
@@ -129,7 +132,7 @@ angular.module('hametuha')
                         }
                     }).then(
                         function (response) {
-                            var idea = $scope.ideas[indexToRemove];
+                            const idea = $scope.ideas[indexToRemove];
                             if( ! idea.own ){
                                 $scope.ideas.splice(indexToRemove, 1);
                                 $scope.ideasTotal--;
@@ -152,9 +155,9 @@ angular.module('hametuha')
         // Remove idea
         $scope.removeIdea = function (id) {
             Hametuha.confirm('このアイデアを削除してよろしいですか？', function () {
-                var indexToRemove = null;
+                let indexToRemove = null;
 
-                for (var i = 0, l = $scope.ideas.length; i < l; i++) {
+                for (let i = 0, l = $scope.ideas.length; i < l; i++) {
                     if ($scope.ideas[i].ID == id) {
                         indexToRemove = i;
                         break;

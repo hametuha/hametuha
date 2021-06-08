@@ -52,7 +52,7 @@ Hametuha.views.Scroll = Backbone.View.extend( {
 		this.limit = $( '#post-author' );
 		this.bindScroll = true;
 		this.scrollTop = $( window ).scrollTop();
-		let position = 0;
+		const position = 0;
 
 		this.slider.slider( {
 			max: this.max,
@@ -153,7 +153,7 @@ Hametuha.views.Scroll = Backbone.View.extend( {
 	scrollHandler: function () {
 		if ( this.bindScroll ) {
 			this.scrollTop = $( window ).scrollTop();
-			var offset = $( document ).height() - $( window ).height(),
+			const offset = $( document ).height() - $( window ).height(),
 				percent = Math.min( 1, Math.max( 0, this.scrollTop / offset ) ),
 				limitPos = this.limit.offset().top + 50;
 			if ( !this.animating ) {
@@ -200,7 +200,7 @@ jQuery( document ).ready( function ( $ ) {
 			// 全部オフにする
 			$nav.find( 'a' ).removeClass( 'active' );
 			$( this ).addClass( 'active' );
-			var target = $( this ).attr( 'href' ).replace( '#', '' );
+			const target = $( this ).attr( 'href' ).replace( '#', '' );
 			if ( target.match( /reading-nav/ ) ) {
 				// ビューをデフォルトに戻す
 				$article.attr( 'id', defaultView ).addClass( 'show-nav' );
@@ -272,7 +272,7 @@ jQuery( document ).ready( function ( $ ) {
 
 	// スターレーティング
 	$( document ).on( 'click', '.star-rating i', function () {
-		var value = parseInt( $( this ).attr( 'data-value' ), 10 );
+		const value = parseInt( $( this ).attr( 'data-value' ), 10 );
 		$( '.star-rating i' ).each( function ( index, elt ) {
 			if ( parseInt( $( elt ).attr( 'data-value' ), 10 ) <= value ) {
 				$( elt ).addClass( 'active' );

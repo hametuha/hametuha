@@ -1,8 +1,9 @@
-/**
+/*!
  * リスト作成用のフォーム
+ *
+ * @handle hametuha-list
+ * @deps jquery
  */
-
-/*global Hametuha: true*/
 
 jQuery(document).ready( function ($) {
 
@@ -11,7 +12,7 @@ jQuery(document).ready( function ($) {
     // リスト作成用モーダル
     $(document).on('click', 'a.list-creator', function (e) {
         e.preventDefault();
-        var url = $(this).attr('href');
+        const url = $(this).attr('href');
         Hametuha.modal.open($(this).attr('title'), function (box) {
             $.get(url, {}, function (result) {
                 box.removeClass('loading');
@@ -23,7 +24,7 @@ jQuery(document).ready( function ($) {
     // リスト作成フォーム
     $(document).on('submit', '.list-create-form', function (e) {
         e.preventDefault();
-        var form = $(this);
+        const form = $(this);
         form.addClass('loading');
         form.ajaxSubmit({
             success: function (result) {
@@ -50,13 +51,13 @@ jQuery(document).ready( function ($) {
     // リスト追加フォーム
     $(document).on('submit', '.list-save-manager', function (e) {
         e.preventDefault();
-        var form = $(this);
+        const form = $(this);
         form.addClass('loading');
         form.ajaxSubmit({
             success: function (result) {
                 form.find('input[type=submit]').attr('disabled', false);
                 form.removeClass('loading');
-                var msg = $('<div class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button></div>');
+                const msg = $('<div class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button></div>');
                 msg.addClass('alert-' + ( result.success ? 'success' : 'danger' ))
                     .append('<span>' + result.message + '</span>');
                 form.prepend(msg);
@@ -81,7 +82,7 @@ jQuery(document).ready( function ($) {
     });
 
     // リストから投稿を削除
-    var listTpl = $('#my-list-deleter');
+    const listTpl = $('#my-list-deleter');
     if (listTpl.length) {
         // ボタンを追加
         $('ol.media-list > li').each(function (index, elt) {
@@ -92,7 +93,7 @@ jQuery(document).ready( function ($) {
         // イベントリスナー
         $('ol.media-list').on('click', '.deregister-button', function (e) {
             e.preventDefault();
-            var btn = $(this);
+            const btn = $(this);
             Hametuha.confirm('リストからこの作品を削除します。この操作は取り消せませんが、よろしいですか？', function(){
                 $.post(btn.attr('href'), {}, function (result) {
                     if (result.success) {

@@ -1,8 +1,8 @@
-/**
- * Description
+/*!
+ * Epub helper
+ *
+ * @handle hametuha-epub
  */
-
-/*global hoge: true*/
 
 (function ($) {
     'use strict';

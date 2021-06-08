@@ -123,7 +123,7 @@ angular.module( 'hametuha' )
 			link: function ( $scope, $elem, attr ) {
 
 				$scope.ask = function () {
-					var modal = $uibModal.open( {
+					const modal = $uibModal.open( {
 						animation: true,
 						templateUrl: Hametuha.template( 'post-date-selector.html' ),
 						controller: 'postDateSelector',

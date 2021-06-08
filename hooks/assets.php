@@ -5,161 +5,136 @@
  *
  * @action init
  */
-add_action(
-	'init',
-	function () {
+add_action( 'init', function() {
 
-		// Twitter Bootstrap
-		wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/js/dist/bootstrap.js', [ 'jquery' ], '3.3.4', true );
+	// FontPlus.
+	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
 
-		// FontPlus
-		wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1', null, null, false );
+	// Angular.
+	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.8', true );
 
-		// Angular
-		wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.8', true );
+	// Bootbox.
+	wp_register_script( 'bootbox', get_template_directory_uri() . '/dist/vendor/bootbox/bootbox.all.min.js', [ 'jquery', 'bootstrap' ], '5.2.2', true );
 
-		// FontAwesome
-		wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
-		add_filter(
-			'style_loader_tag',
-			function( $tag, $handle, $src, $media ) {
-				if ( 'font-awesome' !== $handle ) {
-					return $tag;
-				}
-				return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
+	// Headroom
+	wp_register_script( 'headroom', get_template_directory_uri() . '/dist/vendor/headroom/headroom.min.js', [], '0.12.0', true );
+
+	// FontAwesome
+	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
+	add_filter( 'style_loader_tag', function ( $tag, $handle, $src, $media ) {
+		if ( 'font-awesome' !== $handle ) {
+			return $tag;
+		}
+
+		return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
+	}, 10, 4 );
+
+	// Prop Types.
+	wp_register_script( 'prop-types', get_template_directory() . '/dist/vendor/prop-types/prop-types.min.js', [ 'wp-element' ], '15.7.2', true );
+
+	// jQuery mmenu
+	wp_register_script( 'jquery.mmenu', get_template_directory() . '/dist/vendor/mmenu/prop-types.min.js', [ 'jquery' ], '5.6.3', true );
+
+	/**
+	 * hametuha_angular_extensions
+	 *
+	 * @param array $modules Default ui.bootstrap
+	 *
+	 * @return array
+	 * @since 5.2.24
+	 * @package hametuha
+	 */
+	$modules = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
+	$modules = implode(
+		', ',
+		array_map(
+			function ( $module ) {
+				return sprintf( "'%s'", esc_js( $module ) );
 			},
-			10,
-			4
-		);
-
-		// Prop Types
-		wp_register_script( 'prop-types', get_template_directory() . '/assets/js/dist/prop-types.min.js', [ 'wp-element' ], '15.7.2', true );
-
-		// Header script.
-		wp_register_script( 'hametuheader', get_template_directory_uri() . '/assets/js/dist/header.js', [ 'cookie-tasting-heartbeat', 'wp-element' ], hametuha_version(), true );
-
-		/**
-		 * hametuha_angular_extensions
-		 *
-		 * @since 5.2.24
-		 * @package hametuha
-		 * @param array $modules Default ui.bootstrap
-		 * @return array
-		 */
-		$modules         = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
-		$modules         = implode(
-			', ',
-			array_map(
-				function( $module ) {
-					return sprintf( "'%s'", esc_js( $module ) );
-				},
-				$modules
-			)
-		);
-		$angular_scripts = <<<JS
+			$modules
+		)
+	);
+	$angular_scripts = <<<JS
 angular.module('hametuha', [{$modules}]);
 JS;
-		wp_add_inline_script( 'angular', $angular_scripts );
+	wp_add_inline_script( 'angular', $angular_scripts );
 
-		// Select2
-		wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
-		wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
+	// Select2
+	wp_register_script( 'select2', get_template_directory_uri() . '/dist/vendor/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
+	wp_register_style( 'select2', get_template_directory_uri() . '/dist/vendor/select2/select2.min.css', [], '4.0.3' );
 
-		// メインJS
-		wp_register_script(
-			'hametuha-common',
-			get_template_directory_uri() . '/assets/js/dist/common.js',
-			[
-				'twitter-bootstrap',
-				'wp-api',
-				'modernizr',
-				'font-plus',
-				'jsrender',
-				'hametuheader',
-			],
-			hametuha_version(),
-			true
-		);
-		wp_localize_script(
-			'hametuha-common',
-			'HametuhaGlobal',
-			[
-				'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ) . '/assets/js/tpl/',
-			]
-		);
-	},
-	9
-);
+	// メインJS
+	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
+			'twitter-bootstrap',
+			'wp-api',
+			'font-plus',
+			'jsrender',
+			'hametuheader',
+		],
+		hametuha_version(),
+		true
+	);
+	wp_localize_script( 'hametuha-common', 'HametuhaGlobal', [
+		'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ) . '/assets/js/tpl/',
+	] );
+}, 9 );
 
 /**
  * Load Hashboard assets.
  */
-add_action(
-	'hashboard_head',
-	function() {
-		wp_enqueue_style( 'hametuha-hashboard' );
-	}
-);
+add_action( 'hashboard_head', function() {
+	wp_enqueue_style( 'hametuha-hashboard' );
+} );
 
 /**
  * スクリプトを読み込む
  *
  */
-add_action(
-	'wp_enqueue_scripts',
-	function () {
-		// Common Style.
-		wp_enqueue_style( 'hametuha-app' );
-
-		// Social scripts
-		wp_enqueue_script( 'hametuha-social' );
-
-		// Common Scripts
-		wp_enqueue_script( 'hametuha-common' );
-		// Single post.
-		if ( is_singular( 'post' ) ) {
-			wp_enqueue_script( 'hametuha-single' );
-		}
-		// Front page.
-		if ( is_front_page() ) {
-			wp_enqueue_script( 'hametuha-front' );
-		}
-		// Series.
-		if ( is_singular( 'series' ) ) {
-			wp_enqueue_script( 'hametuha-series' );
-		}
-		// Comment.
-		if ( is_singular() && ! is_page() ) {
-			wp_enqueue_script( 'comment-reply' );
-		}
-	},
-	1000
-);
+add_action( 'wp_enqueue_scripts', function() {
+	// Common Style.
+	wp_enqueue_style( 'hametuha-app' );
+	// Social scripts
+	wp_enqueue_script( 'hametuha-social' );
+	// Common Scripts
+	wp_enqueue_script( 'hametuha-common' );
+	// Single post.
+	if ( is_singular( 'post' ) ) {
+		wp_enqueue_script( 'hametuha-single' );
+	}
+	// Front page.
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'hametuha-front' );
+	}
+	// Series.
+	if ( is_singular( 'series' ) ) {
+		wp_enqueue_script( 'hametuha-series' );
+	}
+	// Comment.
+	if ( is_singular() && ! is_page() ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}, 1000 );
 
 /**
  * Dequeue Assets.
  */
-add_action(
-	'wp_enqueue_scripts',
-	function() {
-		// If contact form is not
-		if ( ! is_singular() || ! has_shortcode( get_queried_object()->post_content, 'contact-form-7' ) ) {
-			wp_dequeue_style( 'contact-form-7' );
-			wp_dequeue_script( 'contact-form-7' );
-			wp_dequeue_script( 'google-recaptcha' );
-			wp_dequeue_script( 'wpcf7-recaptcha' );
-		}
-		// wp-pagenavi
-		wp_dequeue_style( 'wp-pagenavi' );
-		// iframe
-		if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
-			wp_dequeue_style( 'admin-bar' );
-		}
-		// Single Page.
-		wp_dequeue_style( 'wp-tmkm-amazon' );
-	},
-	1001
-);
+add_action( 'wp_enqueue_scripts', function() {
+	// If contact form is not
+	if ( ! is_singular() || ! has_shortcode( get_queried_object()->post_content, 'contact-form-7' ) ) {
+		wp_dequeue_style( 'contact-form-7' );
+		wp_dequeue_script( 'contact-form-7' );
+		wp_dequeue_script( 'google-recaptcha' );
+		wp_dequeue_script( 'wpcf7-recaptcha' );
+	}
+	// wp-pagenavi
+	wp_dequeue_style( 'wp-pagenavi' );
+	// iframe
+	if ( isset( $_GET['iframe'] ) && $_GET['iframe'] ) {
+		wp_dequeue_style( 'admin-bar' );
+	}
+	// Single Page.
+	wp_dequeue_style( 'wp-tmkm-amazon' );
+}, 1001 );
 
 /**
  * 管理画面でアセットを読み込む

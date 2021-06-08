@@ -1,5 +1,5 @@
-/**
- * Description
+/*!
+ * TinuMCE helper
  */
 
 /*global tinymce: true*/
@@ -12,10 +12,10 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
      * Apply CSS to TinyMCE editor
      *
      * @param {Document} d
-     * @param {String} css
+     * @param {string} css
      */
     function applyStyle(d, css){
-        var style;
+        let style;
         if( !(style = d.getElementById('hametuha-mce')) ){
             style = d.createElement('style');
             style.type = 'text/css';
@@ -29,7 +29,7 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
      * Detect if this element requires indent
      *
      * @param {Object} node
-     * @return {Boolean}
+     * @return {boolean}
      */
     function needIndent(node){
         return !(/^[ 　【】《〔〝『「（”"'’\(\)]/.test(node.textContent));
@@ -41,7 +41,7 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
      * @param {Object} e
      */
     function setP(e){
-        var dom = editor.dom,
+        const dom = editor.dom,
             selectors = [],
             nodes = dom.doc.body.childNodes;
         jQuery.each(nodes, function(i, node){
@@ -53,7 +53,7 @@ tinymce.PluginManager.add('hametuha', function(editor, url) {
                     break;
                 case 'BLOCKQUOTE':
                     var children = node.childNodes;
-                    for (var j = 0, k = children.length; j < k; j++) {
+                    for (let j = 0, k = children.length; j < k; j++) {
                         if ('P' === children[j].nodeName && !needIndent(children[j])) {
                             selectors.push('body > blockquote:nth-child(' + (i + 1) + ') > p:nth-child(' + ( j + 1 ) + ')');
                         }

@@ -1,15 +1,16 @@
 /*!
  * Login helper
+ *
+ * @handle hametuha-login-helper
+ * @deps jquery
  */
 
 /* global HametuhaLoginHelper: false */
 
 jQuery( document ).ready( function( $ ) {
 
-  'use strict';
-
   // Fix divider order.
-  var $divider = $( '.login-form-divider' );
+  const $divider = $( '.login-form-divider' );
   if ( $divider.length ) {
     $.each( [
       '#reg_passmail',

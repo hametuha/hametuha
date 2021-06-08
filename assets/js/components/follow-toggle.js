@@ -51,5 +51,4 @@ $( document ).on( 'click', 'a.btn-follow', function ( e ) {
 			$btn.removeClass( 'btn-follow--loading' );
 		} );
 	}
-
 } );

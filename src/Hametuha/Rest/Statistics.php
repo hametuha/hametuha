@@ -100,16 +100,7 @@ class Statistics extends RestTemplate {
 	 * @param array $data
 	 */
 	protected function format( $data ) {
-		wp_enqueue_script(
-			'hametu-analytics',
-			get_stylesheet_directory_uri() . '/assets/js/dist/admin/analytics.js',
-			[
-				'google-jsapi',
-				'jquery-ui-datepicker-i18n',
-			],
-			filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/analytics.js' ),
-			true
-		);
+		wp_enqueue_script( 'hametu-analytics' );
 		wp_enqueue_style( 'jquery-ui-mp6' );
 		$this->load_template( 'templates/statistics/base' );
 	}

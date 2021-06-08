@@ -21,7 +21,6 @@ class Announcement extends Singleton {
 
 	const NOTICE = '_hametuha_announcement_notice';
 
-
 	const PLACE = '_hametuha_announcement_place';
 
 	const ADDRESS = '_hametuha_announcement_address';
@@ -67,7 +66,7 @@ class Announcement extends Singleton {
 	public function admin_enqueue_scripts( $page ) {
 		$screen = get_current_screen();
 		if ( 'post' == $screen->base && 'announcement' == $screen->post_type ) {
-			wp_enqueue_script( 'announcement-helper', get_template_directory_uri() . '/assets/js/dist/admin/announcement.js', array( 'gmap' ), $this->version, false );
+			wp_enqueue_script( 'announcement-helper' );
 			wp_enqueue_style( 'jquery-ui-mp6' );
 		}
 	}
@@ -133,25 +132,25 @@ class Announcement extends Singleton {
 			<tr>
 				<th>募集形態</th>
 				<td>
-					<label><input type="radio" name="commit_type" value="0" 
+					<label><input type="radio" name="commit_type" value="0"
 					<?php
 					if ( ! get_post_meta( $post->ID, self::COMMIT_TYPE, true ) ) {
 						echo ' checked="checked"';}
 					?>
 					/>募集はしない</label>
-					<label><input type="radio" name="commit_type" value="1" 
+					<label><input type="radio" name="commit_type" value="1"
 					<?php
 					if ( 1 == get_post_meta( $post->ID, self::COMMIT_TYPE, true ) ) {
 						echo ' checked="checked"';}
 					?>
 					/>メールでの応募</label>
-					<label><input type="radio" name="commit_type" value="2" 
+					<label><input type="radio" name="commit_type" value="2"
 					<?php
 					if ( 2 == get_post_meta( $post->ID, self::COMMIT_TYPE, true ) ) {
 						echo ' checked="checked"';}
 					?>
 					/>特定の投稿を期間内に行う</label>
-					<label><input type="radio" name="commit_type" value="3" 
+					<label><input type="radio" name="commit_type" value="3"
 					<?php
 					if ( 3 == get_post_meta( $post->ID, self::COMMIT_TYPE, true ) ) {
 						echo ' checked="checked"';}
@@ -232,13 +231,13 @@ class Announcement extends Singleton {
 			<tr>
 				<th>指定する投稿タイプ</th>
 				<td>
-					<label><input type="radio" name="commit_post_type" value="post" 
+					<label><input type="radio" name="commit_post_type" value="post"
 					<?php
 					if ( 'post' == get_post_meta( $post->ID, self::COMMIT_POST_TYPE, true ) ) {
 						echo 'checked="checked" ';}
 					?>
 					/>投稿</label>
-					<label><input type="radio" name="commit_post_type" value="anpi" 
+					<label><input type="radio" name="commit_post_type" value="anpi"
 					<?php
 					if ( 'anpi' == get_post_meta( $post->ID, self::COMMIT_POST_TYPE, true ) ) {
 						echo 'checked="checked" ';}
@@ -262,7 +261,7 @@ class Announcement extends Singleton {
 														?>
 						>
 																						<?php foreach ( get_terms( $cateogry, array( 'hide_empty' => false ) ) as $tax ) : ?>
-								<label><input type="checkbox" name="commit_<?php echo $post_type; ?>[]" value="<?php echo $tax->term_id; ?>" 
+								<label><input type="checkbox" name="commit_<?php echo $post_type; ?>[]" value="<?php echo $tax->term_id; ?>"
 																							<?php
 																							if ( is_array( $categories ) && false !== array_search( $tax->term_id, $categories ) ) {
 																								echo 'checked="checked"';}

@@ -1,3 +1,9 @@
+/*!
+ *  Global header component
+ *
+ * @handle hametuheader
+ * @deps cookie-tasting-heartbeat, wp-element
+ */
 /* global CookieTasting: false */
 
 const {Component, render} = wp.element;

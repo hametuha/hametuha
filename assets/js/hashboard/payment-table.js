@@ -56,7 +56,7 @@ Vue.filter( 'addSuffix', function ( value, store ) {
 	return value + getUnitSuffix( store );
 } );
 
-var getLabel = function ( string ) {
+const getLabel = function ( string ) {
 	switch ( string ) {
 		case 'Amazon':
 			return 'KDP';
@@ -119,9 +119,9 @@ new Vue( {
 					label: function ( tooltipItems, data ) {
 						if ( tooltipItems.datasetIndex ) {
 							return tooltipItems.yLabel + getUnitSuffix( data.datasets[ tooltipItems.datasetIndex ].label );
-						} else {
+						} 
 							return displayMoney( tooltipItems.yLabel );
-						}
+						
 					}
 				}
 			}
@@ -220,7 +220,7 @@ new Vue( {
 						fill: false
 					}
 				];
-				var colors = [
+				const colors = [
 					'#039BE5',
 					'#388E3C',
 					'#7B1FA2',
@@ -228,8 +228,8 @@ new Vue( {
 					'#0097A7',
 					'#455A64'
 				];
-				var colorIndex = 0;
-				for ( var prop in datasets ) {
+				let colorIndex = 0;
+				for ( const prop in datasets ) {
 					if ( datasets.hasOwnProperty( prop ) ) {
 						chartData.datasets.push( {
 							type: 'bar',
@@ -265,7 +265,7 @@ new Vue( {
 		},
 
 		getPayments: function () {
-			var self = this;
+			const self = this;
 			this.loading = true;
 			$.hbRest( 'GET', this.endpoint, {
 				year: this.currentYear

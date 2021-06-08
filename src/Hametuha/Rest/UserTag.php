@@ -134,7 +134,7 @@ class UserTag extends RestJSON {
 	 */
 	protected function lazy_scripts() {
 		// タグのJS
-		wp_enqueue_script( 'hametuha-user-tag', $this->get_theme_uri() . '/assets/js/dist/components/user-tag.js', [ 'backbone', 'jquery-ui-autocomplete' ], hametuha_version(), true );
+		wp_enqueue_script( 'hametuha-user-tag' );
 		wp_localize_script(
 			'hametuha-user-tag',
 			'HametuhaUserTag',

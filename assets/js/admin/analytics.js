@@ -1,5 +1,8 @@
-/**
- * Description
+/*!
+ * Analytics files
+ *
+ * @handle hametu-analytics
+ * @deps google-jsapi, jquery-ui-datepicker-i18n
  */
 
 /*global google: true*/
@@ -25,11 +28,11 @@
     google.setOnLoadCallback(function(){
 
         // Stats store
-        var stats = {};
+        const stats = {};
 
         // Bind ajax event
         $('.stat').on('update.analytics.hametuha', function(e, url, from, to){
-            var $stat = $(this),
+            const $stat = $(this),
                 id = $stat.attr('id');
             $stat.removeClass('no-data').addClass('loading');
             $.get($stat.attr('data-endpoint'), {
@@ -47,7 +50,7 @@
                     if( result.data.cols ){
                         stats[id].setDataTable(result.data);
                     }else{
-                        var dataSet = google.visualization.arrayToDataTable(result.data);
+                        const dataSet = google.visualization.arrayToDataTable(result.data);
                         stats[id].setDataTable(dataSet);
                     }
                     stats[id].draw();
@@ -63,10 +66,10 @@
 
 
         // Bind form event and trigger immediately
-        var initialized = false;
+        let initialized = false;
         $('#analytics-date-form').submit(function(e){
             e.preventDefault();
-            var from = $(this).find("input[name=from]").val(),
+            const from = $(this).find("input[name=from]").val(),
                 to =  $(this).find("input[name=to]").val();
             $('.stat').trigger('update.analytics.hametuha', [$(this).attr('action'), from, to]);
             // Push state( So you can reload)
@@ -84,13 +87,13 @@
 
 
         // Resize chart
-        var timer = null;
+        let timer = null;
         $(window).resize(function(){
             if( timer ){
                 clearTimeout(timer);
             }
             timer = setTimeout(function(){
-                for( var id in stats ){
+                for( const id in stats ){
                     if( stats.hasOwnProperty(id) ){
                         stats[id].draw();
                     }

@@ -1,15 +1,16 @@
-/**
+/*!
  * Follower application
+ *
+ * @handle hametuha-followers
+ * @deps angular, hametu-follow
  */
-
-/* global wpApiSettings: false */
 
 angular.module('hametuha')
     .controller('followed', ['$scope', '$http', function ($scope, $http) {
 
         'use strict';
 
-        var endpoint = wpApiSettings.root + 'hametuha/v1/doujin/';
+        const endpoint = wpApiSettings.root + 'hametuha/v1/doujin/';
 
         $scope.tabs = [
             {
@@ -26,7 +27,7 @@ angular.module('hametuha')
 
         // Activate tab
         $scope.detectTab = function () {
-            var hash = document.location.hash;
+            const hash = document.location.hash;
             switch (hash) {
                 case '#following':
                     $scope.tabs[1].active = true;
@@ -140,9 +141,9 @@ angular.module('hametuha')
         // Remove Follower
         $scope.removeFollowing = function (id) {
             Hametuha.confirm('フォローを解除してよろしいですか？', function () {
-                var indexToRemove = null;
+                let indexToRemove = null;
 
-                for (var i = 0, l = $scope.followings.length; i < l; i++) {
+                for (let i = 0, l = $scope.followings.length; i < l; i++) {
                     if ($scope.followings[i].ID == id) {
                         indexToRemove = i;
                         break;
