@@ -1,0 +1,17 @@
+{
+	"name":  "Brands Allow List",
+	"description": "SVG files of the brands listed below are copied from simple-icons",
+	"brands": [
+		"amazon",
+		"facebook",
+		"feedly",
+		"hatenabookmark",
+		"instagram",
+		"line",
+		"pinterest",
+		"pixiv",
+		"twitter",
+		"wordpress",
+		"youtube"
+	]
+}

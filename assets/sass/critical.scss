@@ -1,0 +1,22 @@
+/*!
+ * Hamtuha Critical CSS
+ *
+ * @handle hametuha-critical
+ */
+
+// Bootstrap.
+@import "functions";
+
+// Default variable overrides.
+@import "custom/variables";
+@import "custom/mixins";
+// Bootstrap.
+@import "variables";
+@import "mixins";
+
+// These are critical CSS.
+@import "root";
+@import "reboot";
+
+// Header.
+@import "custom/components/header";

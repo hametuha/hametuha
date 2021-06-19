@@ -119,14 +119,3 @@
 	text-emphasis-style: $style;
 }
 
-%block-link {
-	display: block;
-	&:link,
-	&:visited {
-		text-decoration: none;
-	}
-	&:hover,
-	&:active {
-		text-decoration: none;
-	}
-}

@@ -28,9 +28,8 @@ gulp.task( 'sass', function () {
 			sourcemap: true,
 			includePaths: [
 				'./assets/sass',
-				'./vendor',
-				'./node_modules/bootstrap-sass/assets/stylesheets',
-				'./vendor/hametuha'
+				'./node_modules/bootstrap/scss',
+				'./vendor'
 			]
 		} ) )
 		.pipe( $.autoprefixer() )
@@ -163,9 +162,9 @@ gulp.task( 'imagemin', function () {
 gulp.task( 'pug', function () {
 	const list = fs.readdirSync( './assets/pug' )
 		.filter( function ( file ) {
-			return /^[^_].*\.jade$/.test( file );
+			return /^[^_].*\.pug$/.test( file );
 		} ).map( function ( f ) {
-			return f.replace( '.jade', '.html' );
+			return f.replace( '.pug', '.html' );
 		} );
 	const json = require( './assets/pug/setting.json' );
 	json.list = list;
@@ -173,7 +172,9 @@ gulp.task( 'pug', function () {
 		'./assets/pug/**/*.pug',
 		'!./assets/pug/**/_*.pug'
 	] )
-		.pipe( $.plumber() )
+		.pipe( $.plumber( {
+			errorHandler: $.notify.onError( '<%= error.message %>' )
+		} ) )
 		.pipe( $.pug( {
 			pretty: true,
 			locals: json,
@@ -262,7 +263,7 @@ gulp.task( 'default', gulp.series( 'watch' ) );
 gulp.task( 'bs', gulp.series( 'bs-init', 'bs-watch' ) );
 
 // Static assets development.
-gulp.task( 'statics', gulp.series( 'build', gulp.parallel( 'watch', 'bs' ) ) );
+gulp.task( 'statics', gulp.parallel( 'watch', 'bs' ) );
 
 // Lint
 gulp.task( 'lint', gulp.series( 'noplumber', gulp.parallel( 'stylelint', 'eslint' ) ) );
