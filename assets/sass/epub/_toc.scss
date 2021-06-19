@@ -7,8 +7,8 @@ $toc-link-border: 1px solid #444;
 		padding: 0;
 		counter-reset: section;
 		border-top: $toc-link-border;
-		& > li {
-			font-weight: bold;
+		> li {
+			font-weight: $font-weight-bold;
 			list-style: none;
 			padding: 0.5em;
 			border-bottom: $toc-link-border;
@@ -29,8 +29,8 @@ $toc-link-border: 1px solid #444;
 		}
 		ol {
 			border-top: none;
-			& > li {
-				font-weight: normal;
+			> li {
+				font-weight: $font-weight-regular;
 				padding-left: 2em;
 				border-bottom: none;
 				&:last-child {

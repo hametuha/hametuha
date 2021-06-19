@@ -7,16 +7,6 @@
 
 const $ = jQuery;
 
-/**
- * Get parent container
- *
- * @param {Object} element
- * @returns {jQuery}
- */
-function getParent( element ) {
-	return $( element ).parents( '.user-picker' );
-}
-
 /*
  * Avoid Enter
  */
@@ -32,7 +22,7 @@ $( document ).on( 'keydown', '.user-picker__input', function ( e ) {
  */
 let userPickerTimer,
 	userPicking = false;
-$( document ).on( 'keyup', '.user-picker__input', function ( e ) {
+$( document ).on( 'keyup', '.user-picker__input', function () {
 	if ( userPicking ) {
 		return;
 	}

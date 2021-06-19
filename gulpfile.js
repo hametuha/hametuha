@@ -39,8 +39,8 @@ gulp.task( 'sass', function () {
 } );
 
 // Style lint.
-gulp.task( 'stylelint', function () {
-	let task = gulp.src( [ './assets/sass/**/*.scss' ] );
+const stylelintFunction = ( src ) => {
+	let task = gulp.src( src );
 	if ( plumber ) {
 		task = task.pipe( $.plumber() );
 	}
@@ -52,6 +52,11 @@ gulp.task( 'stylelint', function () {
 			},
 		],
 	} ) );
+};
+
+// Lint all.
+gulp.task( 'stylelint', function () {
+	return stylelintFunction( [ './assets/sass/**/*.scss' ] );
 } );
 
 // Package jsx.
@@ -72,16 +77,21 @@ gulp.task( 'jsx', function () {
 } );
 
 // ESLint
-gulp.task( 'eslint', function () {
-	let task = gulp.src( [
-		'./assets/js/**/*.{js,jsx}',
-		'!./assets/js/vendor/**/*.js',
-	] );
+const eslintFunction = ( src ) => {
+	let task = gulp.src( src );
 	if ( plumber ) {
 		task = task.pipe( $.plumber() );
 	}
 	return task.pipe( $.eslint( { useEslintrc: true } ) )
 		.pipe( $.eslint.format() );
+};
+
+// Register as task.
+gulp.task( 'eslint', function () {
+	return eslintFunction( [
+		'./assets/js/**/*.{js,jsx}',
+		'!./assets/js/vendor/**/*.js',
+	] );
 } );
 
 // Build modernizr
@@ -244,20 +254,36 @@ gulp.task( 'jade', function () {
 } );
 
 // watch
-gulp.task( 'watch', function () {
+gulp.task( 'watch', ( done ) => {
 	// Make SASS
-	gulp.watch( 'assets/sass/**/*.scss', gulp.parallel( 'sass', 'stylelint' ) );
-	// Bundle JS
-	gulp.watch( [ 'assets/js/**/*.{js,jsx}' ], gulp.parallel( 'jsx', 'eslint' ) );
+	const stylelintWatcher = gulp.watch( 'assets/sass/**/*.scss', gulp.task( 'sass' ) );
+	const stylelintHandler = ( path ) => {
+		return stylelintFunction( path );
+	};
+	stylelintWatcher.on( 'change', stylelintHandler );
+	stylelintWatcher.on( 'add', stylelintHandler );
+
+	// Bundle JS and Lint only changed.
+	const eslintWatcher = gulp.watch( [ 'assets/js/**/*.{js,jsx}' ], gulp.task( 'jsx' ) );
+	const eslintHandler = ( path ) => {
+		return eslintFunction( path );
+	};
+	eslintWatcher.on( 'change', eslintHandler );
+	eslintWatcher.on( 'add', eslintHandler );
+
 	// Minify Image
 	gulp.watch( 'assets/img/**/*', gulp.task( 'imagemin' ) );
+
 	// Dump JSON
 	gulp.watch( [
 		'dist/js/**/*.js',
 		'dist/css/**/*.css',
 	], gulp.task( 'dump' ) );
+
 	// Build Jade
 	gulp.watch( 'assets/jade/**/*.jade', gulp.task( 'jade' ) );
+
+	done();
 } );
 
 // Watch browsersync changes.
