@@ -95,6 +95,7 @@ gulp.task( 'eslint', function () {
 
 // Build modernizr
 gulp.task( 'copylib', function () {
+	const icons = require( './icons.json' );
 	return mergeStream(
 		// Bootbox
 		gulp.src( [
@@ -134,7 +135,19 @@ gulp.task( 'copylib', function () {
 		gulp.src( [
 			'./node_modules/prop-types/prop-types.min.js'
 		] )
-			.pipe( gulp.dest( './dist/vendor/prop-types' ) )
+			.pipe( gulp.dest( './dist/vendor/prop-types' ) ),
+		// Simple icons
+		gulp.src( icons.brands.map( ( brand ) => {
+			return `./node_modules/simple-icons/icons/${brand}.svg`;
+		} ) )
+			.pipe( gulp.dest( './dist/img/brand' ) ),
+		// Bootstrap icons
+		gulp.src( icons.bootstrap.map( ( icon ) => {
+			return `./node_modules/bootstrap-icons/icons/${icon}.svg`;
+		} ).concat( [
+			'./node_modules/bootstrap-icons/bootstrap-icons.svg',
+		] ) )
+			.pipe( gulp.dest( './dist/img/bi' ) )
 	);
 } );
 

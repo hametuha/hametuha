@@ -62,6 +62,7 @@
 		"merge-stream": "^2.0.0",
 		"prop-types": "^15.7.2",
 		"select2": "^4.0.5",
+		"simple-icons": "^5.2.0",
 		"slick-carousel": "^1.8.1",
 		"stylelint": "^13.13.1",
 		"stylelint-config-wordpress": "^17.0.0",

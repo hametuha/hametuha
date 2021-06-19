@@ -13,5 +13,11 @@
 		"twitter",
 		"wordpress",
 		"youtube"
+	],
+	"bootstrap": [
+		"list",
+		"vector-pen",
+		"bell",
+		"bell-fill"
 	]
 }
