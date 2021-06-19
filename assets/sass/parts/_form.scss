@@ -1,108 +1,110 @@
 
 // フォームのローディング
-form{
-  legend{
-    padding-bottom: 10px;
-  }
-  position: relative;
-  &.loading{
-    @extend %loading-indicator;
-  }
+form {
+	legend {
+		padding-bottom: 10px;
+	}
+	position: relative;
+	&.loading {
+		@extend %loading-indicator;
+	}
 }
 
-.form{
-  &-legend{
-    color: #888;
-    text-align: center;
-    font-weight: bold;
-  }
-  &-fieldset{
-  }
-  &-helper{
-    font-size: 14px;
-    color: #666;
-    @at-root span#{&}{
-      margin-left: 1em;
-      font-size: 12px;
-    }
-    &-link{
-        margin: 0 0.5em;
-    }
-    &-sep{
-      color: #ccc;
-    }
-  }
-  &-required{
-    color: $brand-danger;
-  }
+.form {
+	&-legend {
+		color: #888;
+		text-align: center;
+		font-weight: bold;
+	}
+	&-fieldset{
+	}
+	&-helper {
+		font-size: 14px;
+		color: #666;
+		@at-root span#{&} {
+			margin-left: 1em;
+			font-size: 12px;
+		}
+		&-link {
+			margin: 0 0.5em;
+		}
+		&-sep {
+			color: #ccc;
+		}
+	}
+	&-required {
+		color: $brand-danger;
+	}
 }
 
-.mc-form{
-  label{
-    display: block;
-  }
+.mc-form {
+	label {
+		display: block;
+	}
 }
 
-#login-form{
+#login-form {
 
-  h1{
-    padding-top: 40px;
-    font-size: 80px;
-    a{
-      transition: opacity .3s linear;
-      &:link, &:visited{
-        color: #000;
-        text-decoration: none;
-      }
-      &:hover, &:active{
-        opacity: .8;
-        text-decoration: none;
-      }
-    }
-  }
+	h1 {
+		padding-top: 40px;
+		font-size: 80px;
+		a {
+			transition: opacity .3s linear;
+			&:link,
+			&:visited {
+				color: #000;
+				text-decoration: none;
+			}
+			&:hover,
+			&:active {
+				opacity: .8;
+				text-decoration: none;
+			}
+		}
+	}
 
 }
 
-#login-body{
-  max-width: 760px;
-  margin: 0 auto;
+#login-body {
+	max-width: 760px;
+	margin: 0 auto;
 }
 
 #become-author{
 
 }
 
-.post-content .wpcf7{
+.post-content .wpcf7 {
 
-  &-response-output{
-    color: #fff;
-    border: none;
-    padding: 1em 2em;
-    border-radius: 2px;
-    margin: 2em 0;
-    background-color: $brand-danger;
-  }
-  &-mail-sent-ok{
-    background-color: $brand-success;
-  }
-  &-mail-sent-ng,
-  &-aborted {
-    background: $brand-danger;
-  }
-  &-spam-blocked,
-  &-validation-errors,
-  &-acceptance-missing {
-    background: $brand-warning;
-  }
+	&-response-output {
+		color: #fff;
+		border: none;
+		padding: 1em 2em;
+		border-radius: 2px;
+		margin: 2em 0;
+		background-color: $brand-danger;
+	}
+	&-mail-sent-ok {
+		background-color: $brand-success;
+	}
+	&-mail-sent-ng,
+	&-aborted {
+		background: $brand-danger;
+	}
+	&-spam-blocked,
+	&-validation-errors,
+	&-acceptance-missing {
+		background: $brand-warning;
+	}
 
-  &-not-valid-tip{
-    color: $brand-danger;
-  }
-  .use-floating-validation-tip span.wpcf7-not-valid-tip{
-    border-color: $brand-danger;
-  }
+	&-not-valid-tip {
+		color: $brand-danger;
+	}
+	.use-floating-validation-tip span.wpcf7-not-valid-tip {
+		border-color: $brand-danger;
+	}
 }
-.grecaptcha-badge{
-  z-index: 20;
+.grecaptcha-badge {
+	z-index: 20;
 }
 

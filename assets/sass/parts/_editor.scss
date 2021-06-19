@@ -1,91 +1,92 @@
 .container--hameditor {
-  padding-top: $navbar-height + 10;
-  padding-bottom: 40px;
+	padding-top: $navbar-height + 10;
+	padding-bottom: 40px;
 
 }
 
 //
 // Fix media uploader
 //
-.screen-reader-text{
-  display: none;
+.screen-reader-text {
+	display: none;
 }
 
 //
 // Fix tinyMCE
 //
 #wp-hamce {
-  &-media-buttons {
-    margin-bottom: 10px;
-  }
+	&-media-buttons {
+		margin-bottom: 10px;
+	}
 }
 
 //
 // Editor
 //
 .hameditor {
-  &--anpi {
-  }
-  &__title {
-    font-size: 24px;
-    height: auto;
-    padding: 10px 15px;
-    display: block;
-    border: none;
-    color: #888;
-    border-bottom: 3px solid #ddd;
-    @include box-shadow(none);
-    margin-bottom: 20px;
-    @include transition(border-color .3s ease-in 0, color .3s ease-in 0, box-shadow .3s ease-in 0);
-    &:hover{
-      border-color: $brand-danger;
-      &:after{
-        font-family: "hameticon";
-        @extend .icon-pencil:before;
-        position: absolute;
-        right: 0;
-        top: 0;
-        color: $more-shade-font;
-      }
-    }
-    &:focus {
-      color: #000;
-      border-bottom-color: $brand-primary;
-      @include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.2));
-      background: #fff;
-    }
-  }
+	&--anpi {
+	}
+	&__title {
+		font-size: 24px;
+		height: auto;
+		padding: 10px 15px;
+		display: block;
+		border: none;
+		color: #888;
+		border-bottom: 3px solid #ddd;
+		@include box-shadow(none);
+		margin-bottom: 20px;
+		@include transition(border-color .3s ease-in 0, color .3s ease-in 0, box-shadow .3s ease-in 0);
+		&:hover {
+			border-color: $brand-danger;
+			&::after {
+				font-family: "hameticon";
+				@extend .icon-pencil:before;
+				position: absolute;
+				right: 0;
+				top: 0;
+				color: $more-shade-font;
+			}
+		}
+		&:focus {
+			color: #000;
+			border-bottom-color: $brand-primary;
+			@include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.2));
+			background: #fff;
+		}
+	}
 
-  &__actions{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width:100%;
-    height: 40px;
-    box-sizing: border-box;
-    padding: 4px 10px 0;
-    border-top: 1px solid #ddd;
-    background: $navbar-default-bg;
-    .indicator{
-      display: none;
-    }
-    &--loading{
-      @extend %loading-indicator;
-      display: block;
-      &:after{
-        font-size: 20px;
-        margin-top: -15px;
-        margin-left: -15px;
-      }
-    }
-  }
+	&__actions {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 40px;
+		box-sizing: border-box;
+		padding: 4px 10px 0;
+		border-top: 1px solid #ddd;
+		background: $navbar-default-bg;
+		.indicator {
+			display: none;
+		}
+		&--loading {
+			@extend %loading-indicator;
+			display: block;
+			&::after {
+				font-size: 20px;
+				margin-top: -15px;
+				margin-left: -15px;
+			}
+		}
+	}
 
-  &__date, &__modified{
-    margin-right: 1em;
-    color: #888;
-    i{
-      color: #aaa;
-    }
-  }
+	&__date,
+	&__modified {
+		margin-right: 1em;
+		color: #888;
+		i {
+			color: #aaa;
+		}
+	}
 
 }

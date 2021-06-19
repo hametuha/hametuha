@@ -1,40 +1,45 @@
-body.error{
+body.error {
 
-  .container{
-    padding-top: 100px;
-    max-width: 640px;
-  }
+	.container {
+		padding-top: 100px;
+		max-width: 640px;
+	}
 
-  #login-logo{
-    font-size: 100px;
-    &:hover{
-      text-decoration: none;
-    }
-  }
+	#login-logo {
+		font-size: 100px;
+		&:hover {
+			text-decoration: none;
+		}
+	}
 
-  h1{
-    font-size: 18px;
-  }
+	h1 {
+		font-size: 18px;
+	}
 
-  .error-container{
-    @extend .alert;
-    @extend .alert-danger;
-    a{
-      &:link, &:visited{
-        color: darken($brand-danger, 10);
-        text-decoration: underline;
-      }
-      &:hover, &:active{
-        color: lighten($brand-danger, 10);
-        text-decoration: none;
-      }
-    }
-    .btn{
-      &:link, &:visited, &:hover, &:active{
-        color: #fff;
-        text-decoration: none;
-      }
-    }
-  }
+	.error-container {
+		@extend .alert;
+		@extend .alert-danger;
+		a {
+			&:link,
+			&:visited {
+				color: darken($brand-danger, 10);
+				text-decoration: underline;
+			}
+			&:hover,
+			&:active {
+				color: lighten($brand-danger, 10);
+				text-decoration: none;
+			}
+		}
+		.btn {
+			&:link,
+			&:visited,
+			&:hover,
+			&:active {
+				color: #fff;
+				text-decoration: none;
+			}
+		}
+	}
 
 }

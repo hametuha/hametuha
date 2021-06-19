@@ -1,181 +1,190 @@
 // TODO: remove this variable override
 $brand-warning: #f0ad4e !default;
 
-.post-content{
-  .campaign-review{
-    padding: 0;
-    margin: 20px 0;
-    &__item{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      border: 1px solid #aaa;
-      border-bottom-width: 0;
-      &:last-child{
-        border-bottom-width: 1px;
-      }
-    }
-    &__link{
-      position: relative;
-      display: block;
-      padding: 10px 30px 15px 10px;
-      &:link, &:visited{
-        color: #000;
-        text-decoration: none;
-      }
-      &:hover, &:active{
-        background: #f1f1f1;
-        color: #444;
-      }
-      i{
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        color: #aaa;
-        font-size: 24px;
-        transform: translateY(-50%);
-      }
-    }
-    &__title{
-      font-size: 1.2em;
-    }
-    &__label{
-      font-size: 0.7em;
-      font-weight: normal;
-    }
+.post-content {
+	.campaign-review {
+		padding: 0;
+		margin: 20px 0;
+		&__item {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			border: 1px solid #aaa;
+			border-bottom-width: 0;
+			&:last-child {
+				border-bottom-width: 1px;
+			}
+		}
+		&__link {
+			position: relative;
+			display: block;
+			padding: 10px 30px 15px 10px;
+			&:link,
+			&:visited {
+				color: #000;
+				text-decoration: none;
+			}
+			&:hover,
+			&:active {
+				background: #f1f1f1;
+				color: #444;
+			}
+			i {
+				position: absolute;
+				right: 15px;
+				top: 50%;
+				color: #aaa;
+				font-size: 24px;
+				transform: translateY(-50%);
+			}
+		}
+		&__title {
+			font-size: 1.2em;
+		}
+		&__label {
+			font-size: 0.7em;
+			font-weight: normal;
+		}
 
-    &__desc{
-      margin: 10px 0 0;
-      font-size: 0.85em;
-      color: #888;
-    }
+		&__desc {
+			margin: 10px 0 0;
+			font-size: 0.85em;
+			color: #888;
+		}
 
-  }
+	}
 }
 
-.campaign-score{
-  &-wrapper{
-    width: 100%;
-    overflow-x: scroll;
-  }
-  table-layout: fixed !important;
-  border-collapse: collapse;
-  th, td{
-    padding: 10px;
-  }
-  thead, tfoot{
-    th, td{
-      border: 1px dotted #ddd;
-      border-bottom: 3px double #ddd;
-    }
-  }
-  tbody{
-    th, td{
-      border: 1px dotted #ddd;
-      border-bottom-style: solid;
-      border-top-style: solid;
-    }
-    th{
-      border-right: 3px double #ddd;
-    }
-    tr:first-child{
-      th, td{
-        border-top: 3px double #ddd;
-      }
-    }
-    tr:last-child{
-      th, td{
-        border-bottom: 3px double #ddd;
-      }
-    }
-    tr:nth-child(odd){
-      background-color: #f9f9f9;
-    }
-  }
-  &-user{
-    text-align: center;
-    .avatar{
-      max-width: 60px;
-      width: auto;
-      height: auto;
-      border-radius: 50%;
-    }
-    &-title{
-      margin-top: 3px;
-      font-size: 12px;
-      display: block;
-    }
-  }
-  &-work{
-    max-width: 8em;
-    a{
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  &-post{
-    text-align: right;
-    tfoot &{
-      font-weight: bold;
-    }
-  }
-  &-own{
-    color: #aaa;
-  }
+.campaign-score {
+	&-wrapper {
+		width: 100%;
+		overflow-x: scroll;
+	}
+	table-layout: fixed !important;
+	border-collapse: collapse;
+	th,
+	td {
+		padding: 10px;
+	}
+	thead,
+	tfoot {
+		th,
+		td {
+			border: 1px dotted #ddd;
+			border-bottom: 3px double #ddd;
+		}
+	}
+	tbody {
+		th,
+		td {
+			border: 1px dotted #ddd;
+			border-bottom-style: solid;
+			border-top-style: solid;
+		}
+		th {
+			border-right: 3px double #ddd;
+		}
+		tr:first-child {
+			th,
+			td {
+				border-top: 3px double #ddd;
+			}
+		}
+		tr:last-child {
+			th,
+			td {
+				border-bottom: 3px double #ddd;
+			}
+		}
+		tr:nth-child(odd) {
+			background-color: #f9f9f9;
+		}
+	}
+	&-user {
+		text-align: center;
+		.avatar {
+			max-width: 60px;
+			width: auto;
+			height: auto;
+			border-radius: 50%;
+		}
+		&-title {
+			margin-top: 3px;
+			font-size: 12px;
+			display: block;
+		}
+	}
+	&-work {
+		max-width: 8em;
+		a {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	&-post {
+		text-align: right;
+		tfoot & {
+			font-weight: bold;
+		}
+	}
+	&-own {
+		color: #aaa;
+	}
 }
-
 
 
 // キャンペーン
-.widget{
-  &-campaign{
-    &-lead{
-      margin: 10px 0;
-      font-size: 16px;
-      font-family: $work-body-sans;
-      color: $brand-warning;
-    }
-    &-list{
-      border: 1px solid $thin-border;
-      border-radius: $border-radius-base;
-    }
-    &-item{
-      border-bottom: 1px solid $thin-border;
-      &:last-child{
-        border-bottom: none;
-      }
-      a{
-        @extend %block-link;
-        padding: 20px 10px;
-        &:link, &:visited{
-          color: #000;
-          background: #fff;
-        }
-        &:hover, &:active{
-          color: $link-active;
-          background: $hover-bg;
-        }
-      }
-    }
-    &-title{
-      font-size: 18px;
-      margin-right: 5px;
-    }
-    &-date{
-      display: block;
-      font-size: 14px;
-      margin: 5px 0;
-      color: #888;
-      i{
-        color: #aaa;
-        margin-right: 5px;
-      }
-    }
-    &-desc{
-      font-size: 14px;
-      color: #666;
-    }
-  }
+.widget {
+	&-campaign {
+		&-lead {
+			margin: 10px 0;
+			font-size: 16px;
+			font-family: $work-body-sans;
+			color: $brand-warning;
+		}
+		&-list {
+			border: 1px solid $thin-border;
+			border-radius: $border-radius-base;
+		}
+		&-item {
+			border-bottom: 1px solid $thin-border;
+			&:last-child {
+				border-bottom: none;
+			}
+			a {
+				@extend %block-link;
+				padding: 20px 10px;
+				&:link,
+				&:visited {
+					color: #000;
+					background: #fff;
+				}
+				&:hover,
+				&:active {
+					color: $link-active;
+					background: $hover-bg;
+				}
+			}
+		}
+		&-title {
+			font-size: 18px;
+			margin-right: 5px;
+		}
+		&-date {
+			display: block;
+			font-size: 14px;
+			margin: 5px 0;
+			color: #888;
+			i {
+				color: #aaa;
+				margin-right: 5px;
+			}
+		}
+		&-desc {
+			font-size: 14px;
+			color: #666;
+		}
+	}
 }

@@ -1,82 +1,82 @@
-body.quote{
-  width: 1200px;
-  height: 1200px;
-  overflow: hidden;
-  position: relative;
-  &:before {
-    position: absolute;
-    content: "";
-    display: block;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
-  $styles: ( #fff, red, .2, "MatissePro-M" ),
-          ( #000, #eee, .05, $work-body ),
-          ( #444, #ffda76, .05, "TsukuAOldMinPr6N-M" );
-  @for $i from 1 through length($styles) {
-    $vars: nth($styles, $i);
-    &-style-#{$i} {
-      color: nth($vars, 1);
-      background-color: nth($vars, 2);
-      &:before{
-        opacity: nth($vars, 3);
-        background-image: url("../img/quote/style-0#{$i}.png");
-      }
-      .quote-body{
-        font-family: nth($vars, 4);
-      }
-    }
-  }
+body.quote {
+	width: 1200px;
+	height: 1200px;
+	overflow: hidden;
+	position: relative;
+	&::before {
+		position: absolute;
+		content: "";
+		display: block;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+	$styles: ( #fff, red, .2, "MatissePro-M" ),
+		( #000, #eee, .05, $work-body ),
+		( #444, #ffda76, .05, "TsukuAOldMinPr6N-M" );
+	@for $i from 1 through length($styles) {
+		$vars: nth($styles, $i);
+		&-style-#{$i} {
+			color: nth($vars, 1);
+			background-color: nth($vars, 2);
+			&::before {
+				opacity: nth($vars, 3);
+				background-image: url("../img/quote/style-0#{$i}.png");
+			}
+			.quote-body {
+				font-family: nth($vars, 4);
+			}
+		}
+	}
 }
 
-.quote{
-  //zoom: 0.5;
-  &-container{
-    height: 1200px;
-    padding: 0;
-    text-align: center;
-    position: relative;
-  }
+.quote {
+	//zoom: 0.5;
+	&-container {
+		height: 1200px;
+		padding: 0;
+		text-align: center;
+		position: relative;
+	}
 
-  &-token{
-    display: inline-block;
-  }
+	&-token {
+		display: inline-block;
+	}
 
-  &-body{
-    line-height: 1.8;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    &-cell{
-      margin: 0;
-      padding: 50px;
-      box-sizing: border-box;
-      width: 1200px;
-      height: 1200px;
-      vertical-align: middle;
-    }
-  }
+	&-body {
+		line-height: 1.8;
+		position: relative;
+		margin: 0;
+		padding: 0;
+		&-cell {
+			margin: 0;
+			padding: 50px;
+			box-sizing: border-box;
+			width: 1200px;
+			height: 1200px;
+			vertical-align: middle;
+		}
+	}
 
-  &-meta{
-    position: absolute;
-    bottom: 0;
-    padding: 50px;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, .2);
-    font-family: $work-body-sans;
-  }
+	&-meta {
+		position: absolute;
+		bottom: 0;
+		padding: 50px;
+		left: 0;
+		right: 0;
+		background: rgba(0, 0, 0, .2);
+		font-family: $work-body-sans;
+	}
 
-  &-title{
-    strong{
-      font-family: $work-bold-sans;
-      display: block;
-      font-size: 24px;
-    }
-  }
+	&-title {
+		strong {
+			font-family: $work-bold-sans;
+			display: block;
+			font-size: 24px;
+		}
+	}
 
 }

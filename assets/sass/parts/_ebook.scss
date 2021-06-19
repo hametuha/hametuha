@@ -1,32 +1,32 @@
 // eBookList
 .ebookList {
-  border-top: none;
-  background: #ddd;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  &__wrap {
-    margin-right: 20px;
-    margin-left: 20px;
-    height: 300px;
-    &.slick-initialized{
-      height: auto;
-    }
-  }
-  &__item {
-    @include transition( opacity 1s linear );
-    opacity: 0;
-    max-width: 150px;
-    margin: 0 5px;
-    float: left;
-    .slick-initialized &{
-      opacity: 1;
-    }
-  }
-  .caption {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  &__button {
-    padding-top: 10px;
-  }
+	border-top: none;
+	background: #ddd;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	&__wrap {
+		margin-right: 20px;
+		margin-left: 20px;
+		height: 300px;
+		&.slick-initialized {
+			height: auto;
+		}
+	}
+	&__item {
+		@include transition( opacity 1s linear );
+		opacity: 0;
+		max-width: 150px;
+		margin: 0 5px;
+		float: left;
+		.slick-initialized & {
+			opacity: 1;
+		}
+	}
+	.caption {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	&__button {
+		padding-top: 10px;
+	}
 }

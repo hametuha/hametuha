@@ -1,47 +1,47 @@
 // Sortable
-#series-posts-list{
-  padding: 0;
-  counter-reset: series-order;
-  li{
-    margin: 0;
-    padding: 0.5em 40px 0.5em 3em;
-    list-style: none;
-    background: #fff;
-    position: relative;
-    &:nth-child(odd){
-      background: #f9f9f9;
-    }
-    $size: 32px;
-    &:before{
-      counter-increment: series-order;
-      display: block;
-      width: $size;
-      text-align: center;
-      min-width: $size;
-      content: counter(series-order);
-      position: absolute;
-      left: 0.5em;
-      color: #ccc;
-      top: 50%;
-      margin-top: $size / -2;
-      height: $size;
-    }
-    &.sortable-placeholder{
-      height: $size;
-      border: 5px dashed #ddd;
-      padding: 0.5em;
-    }
-    .dashicons{
-      cursor: move;
-      position: absolute;
-      right: 0.5em;
-      top: 50%;
-      font-size: $size;
-      margin-top: $size / -2;
-    }
-    input[type=text]{
-      width: 80%;
-    }
-  }
+#series-posts-list {
+	padding: 0;
+	counter-reset: series-order;
+	li {
+		margin: 0;
+		padding: 0.5em 40px 0.5em 3em;
+		list-style: none;
+		background: #fff;
+		position: relative;
+		&:nth-child(odd) {
+			background: #f9f9f9;
+		}
+		$size: 32px;
+		&::before {
+			counter-increment: series-order;
+			display: block;
+			width: $size;
+			text-align: center;
+			min-width: $size;
+			content: counter(series-order);
+			position: absolute;
+			left: 0.5em;
+			color: #ccc;
+			top: 50%;
+			margin-top: $size / -2;
+			height: $size;
+		}
+		&.sortable-placeholder {
+			height: $size;
+			border: 5px dashed #ddd;
+			padding: 0.5em;
+		}
+		.dashicons {
+			cursor: move;
+			position: absolute;
+			right: 0.5em;
+			top: 50%;
+			font-size: $size;
+			margin-top: $size / -2;
+		}
+		input[type="text"] {
+			width: 80%;
+		}
+	}
 }
 

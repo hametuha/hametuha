@@ -248,7 +248,7 @@ gulp.task( 'watch', function () {
 	// Make SASS
 	gulp.watch( 'assets/sass/**/*.scss', gulp.parallel( 'sass', 'stylelint' ) );
 	// Bundle JS
-	gulp.watch( [ 'assets/js/src/**/*.{js,jsx}' ], gulp.parallel( 'jsx', 'eslint' ) );
+	gulp.watch( [ 'assets/js/**/*.{js,jsx}' ], gulp.parallel( 'jsx', 'eslint' ) );
 	// Minify Image
 	gulp.watch( 'assets/img/**/*', gulp.task( 'imagemin' ) );
 	// Dump JSON

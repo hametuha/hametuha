@@ -1,27 +1,27 @@
-.nlmg{
+.nlmg {
 
-  &-error{
-    @extend .alert;
-    @extend .alert-danger;
+	&-error {
+		@extend .alert;
+		@extend .alert-danger;
 
-    &-title{
-      text-align: center;
-      border-bottom: 1px solid $alert-danger-text;
-      padding-bottom: 15px;
-      font-size: 1.2em;
-    }
-  }
+		&-title {
+			text-align: center;
+			border-bottom: 1px solid $alert-danger-text;
+			padding-bottom: 15px;
+			font-size: 1.2em;
+		}
+	}
 
 }
 
-#nlmg-resign-form{
-  p.submit{
-    text-align: center;
-  }
+#nlmg-resign-form {
+	p.submit {
+		text-align: center;
+	}
 }
 
-.button-nlmg{
-  @extend .btn;
-  @extend .btn-danger;
-  @extend .btn-lg;
+.button-nlmg {
+	@extend .btn;
+	@extend .btn-danger;
+	@extend .btn-lg;
 }

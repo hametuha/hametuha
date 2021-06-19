@@ -3,27 +3,28 @@ $canvas-pad: 20px;
 $subnavbar-height: 0;
 
 // メインコンテナの設定
-.container{
-  &.archive{
-    padding-bottom: $canvas-pad;
-  }
-  .row-offcanvas,
-  .sidebar-offcanvas{
-    padding-top: $canvas-pad;
-  }
-  .sidebar-offcanvas{
-    background-color: #fff;
-  }
+.container {
+	&.archive {
+		padding-bottom: $canvas-pad;
+	}
+	.row-offcanvas,
+	.sidebar-offcanvas {
+		padding-top: $canvas-pad;
+	}
+	.sidebar-offcanvas {
+		background-color: #fff;
+	}
 }
 
 // Offcanvas
+
 /*
  * Style tweaks
  * --------------------------------------------------
  */
 html,
 body {
-  overflow-x: hidden; /* Prevent scroll on narrow devices */
+	overflow-x: hidden; /* Prevent scroll on narrow devices */
 }
 
 /*
@@ -32,79 +33,80 @@ body {
  */
 @media only screen and (max-width: $screen-xs-max) {
 
-  $offcanvas-width: 85%;
+	$offcanvas-width: 85%;
 
-  .row-offcanvas {
-    position: relative;
-    -webkit-transition: all .25s ease-out;
-    -moz-transition: all .25s ease-out;
-    transition: all .25s ease-out;
-  }
+	.row-offcanvas {
+		position: relative;
+		-webkit-transition: all .25s ease-out;
+		-moz-transition: all .25s ease-out;
+		transition: all .25s ease-out;
+	}
 
-  .row-offcanvas-right {
-    right: 0;
-    .sidebar-offcanvas {
-      right: $offcanvas-width * -1; /* 6 columns */
-    }
-  }
+	.row-offcanvas-right {
+		right: 0;
+		.sidebar-offcanvas {
+			right: $offcanvas-width * -1; /* 6 columns */
+		}
+	}
 
-  .row-offcanvas-left {
-    left: 0;
-    .sidebar-offcanvas {
-      left: $offcanvas-width * -1; /* 6 columns */
-    }
-  }
+	.row-offcanvas-left {
+		left: 0;
+		.sidebar-offcanvas {
+			left: $offcanvas-width * -1; /* 6 columns */
+		}
+	}
 
-  // トグルボタン
-  #offcanvas-toggle{
-    position: fixed;
-    right: 0;
-    top: 50%;
-    width: 1em;
-    padding: 3em 1em;
-    @include border-radius(0);
-    opacity: 0.8;
-    .open{
-      display: inline;
-    }
-    .toggle{
-      display: none;
-    }
-  }
+	// トグルボタン
+	#offcanvas-toggle {
+		position: fixed;
+		right: 0;
+		top: 50%;
+		width: 1em;
+		padding: 3em 1em;
+		@include border-radius(0);
+		opacity: 0.8;
+		.open {
+			display: inline;
+		}
+		.toggle {
+			display: none;
+		}
+	}
 
-  // オフキャンバスがオンになったとき
-  .offcanvas-on{
-    .row-offcanvas-right{
-      right: $offcanvas-width; /* 6 columns */
-      .row-offcanvas-left{
-        left: $offcanvas-width; /* 6 columns */
-      }
-    }
-    .main-container, #footer{
-      opacity: 0.3;
-      [data-toggle="offcanvas"]{
-        opacity: 1.0;
-      }
-    }
-    .sidebar-offcanvas {
-      @include box-shadow(-5px 0 20px 20px rgba(0, 0, 0, .2));
-    }
-    #offcanvas-toggle{
-      right: auto;
-      left: 0;
-      .open{
-        display: none;
-      }
-      .toggle{
-        display: inline;
-      }
-    }
-  }
+	// オフキャンバスがオンになったとき
+	.offcanvas-on {
+		.row-offcanvas-right {
+			right: $offcanvas-width; /* 6 columns */
+			.row-offcanvas-left {
+				left: $offcanvas-width; /* 6 columns */
+			}
+		}
+		.main-container,
+		#footer {
+			opacity: 0.3;
+			[data-toggle="offcanvas"] {
+				opacity: 1;
+			}
+		}
+		.sidebar-offcanvas {
+			@include box-shadow(-5px 0 20px 20px rgba(0, 0, 0, .2));
+		}
+		#offcanvas-toggle {
+			right: auto;
+			left: 0;
+			.open {
+				display: none;
+			}
+			.toggle {
+				display: inline;
+			}
+		}
+	}
 
 
-  .sidebar-offcanvas {
-    position: absolute;
-    top: 0;
-    width: $offcanvas-width; /* 6 columns */
-  }
+	.sidebar-offcanvas {
+		position: absolute;
+		top: 0;
+		width: $offcanvas-width; /* 6 columns */
+	}
 }

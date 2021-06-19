@@ -10,21 +10,23 @@ $danger: #dc3232;
 $warning: #eb763c;
 
 @mixin small-screen() {
-  @media only screen and (max-width: $break-point){
-    @content;
-  }
+	@media only screen and (max-width: $break-point) {
+		@content;
+	}
 }
 
-%delete-link{
-  transition: color .3s linear;
-  &:link, &:visited{
-    color: $danger;
-    text-decoration: underline;
-  }
-  &:hover, &:active{
-    color: lighten( $danger, 10 );
-    text-decoration: underline;
-  }
+%delete-link {
+	transition: color .3s linear;
+	&:link,
+	&:visited {
+		color: $danger;
+		text-decoration: underline;
+	}
+	&:hover,
+	&:active {
+		color: lighten($danger, 10);
+		text-decoration: underline;
+	}
 }
 
 @import "admin/*";

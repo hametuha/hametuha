@@ -1,98 +1,98 @@
-@media only print{
+@media only print {
 
-  body.single-post{
-    padding-top: 0;
-    .container{
-      max-width: 100%;
-    }
-    .work-content{
-      font-size: 12pt;
-      padding-right: 5em;
-      padding-left: 5em;
-      line-height: 2;
-    }
-  }
+	body.single-post {
+		padding-top: 0;
+		.container {
+			max-width: 100%;
+		}
+		.work-content {
+			font-size: 12pt;
+			padding-right: 5em;
+			padding-left: 5em;
+			line-height: 2;
+		}
+	}
 
 
-  // リンクのURLを出さない
-  .work-meta,
-  .series-pager-title{
-    a::after{
-      content: "";
-    }
-  }
+	// リンクのURLを出さない
+	.work-meta,
+	.series-pager-title {
+		a::after {
+			content: "";
+		}
+	}
 
-  // 非表示にする要素
-  .single-post-thumbnail,
-  .footer-wrapper,
-  .ebookList,
-  .finish-nav,
-  .series-pager,
-  .work-wrapper ~ div,
-  #footer-single{
-    display: none;
-  }
+	// 非表示にする要素
+	.single-post-thumbnail,
+	.footer-wrapper,
+	.ebookList,
+	.finish-nav,
+	.series-pager,
+	.work-wrapper ~ div,
+	#footer-single {
+		display: none;
+	}
 
 }
 
-body.series-print{
-  padding-top: 0;
+body.series-print {
+	padding-top: 0;
 }
 
-.print{
-  &-header{
-    background: #f9f9f9;
-    border-bottom: 1px solid #ddd;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    @media only print{
-      display: none;
-    }
-  }
-  &-title{
-    margin-top: 3em;
-    font-weight: bold;
-    font-size: 2em;
-    text-align: center;
-    white-space: nowrap;
-    overflow-x: hidden;
-    @include text-overflow();
-  }
-  &-meta{
-    border-bottom: 3px solid #ddd;
-    margin-bottom: 3em;
-    padding-top: 2em;
-    padding-bottom: 2em;
-  }
-  &-letter{
+.print {
+	&-header {
+		background: #f9f9f9;
+		border-bottom: 1px solid #ddd;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		margin-bottom: 20px;
+		@media only print {
+			display: none;
+		}
+	}
+	&-title {
+		margin-top: 3em;
+		font-weight: bold;
+		font-size: 2em;
+		text-align: center;
+		white-space: nowrap;
+		overflow-x: hidden;
+		@include text-overflow();
+	}
+	&-meta {
+		border-bottom: 3px solid #ddd;
+		margin-bottom: 3em;
+		padding-top: 2em;
+		padding-bottom: 2em;
+	}
+	&-letter{
 
-  }
-  &-author{
-    text-align: center;
-  }
-  &-date{
-    text-align: right;
-  }
-  &-content{
-    position: relative;
-    page-break-after: always;
-  }
-  &-wedge{
-    position: absolute;
-    min-width: 4em;
-    text-align: center;
-    transform: translateY(-50%);
-    right: 0;
-    border-top: 3px solid #ddd;
-    color: #ddd;
-    background: rgba(255, 255, 255, .6 );
-  }
-  &-footer{
-    margin-top: 3em;
-    padding-top: 3em;
-    padding-bottom: 3em;
-    border-top: 3px solid #ddd;
-    font-size: 14pt;
-  }
+	}
+	&-author {
+		text-align: center;
+	}
+	&-date {
+		text-align: right;
+	}
+	&-content {
+		position: relative;
+		page-break-after: always;
+	}
+	&-wedge {
+		position: absolute;
+		min-width: 4em;
+		text-align: center;
+		transform: translateY(-50%);
+		right: 0;
+		border-top: 3px solid #ddd;
+		color: #ddd;
+		background: rgba(255, 255, 255, .6);
+	}
+	&-footer {
+		margin-top: 3em;
+		padding-top: 3em;
+		padding-bottom: 3em;
+		border-top: 3px solid #ddd;
+		font-size: 14pt;
+	}
 }

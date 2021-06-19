@@ -1,132 +1,137 @@
 
 
-.embed{
-  &-wrap{
-    clear: both;
-    margin: 10px auto;
-    border: 1px solid #ddd;
-  }
+.embed {
+	&-wrap {
+		clear: both;
+		margin: 10px auto;
+		border: 1px solid #ddd;
+	}
 
-  &-body {
-    display: flex;
-    flex-wrap: nowrap;
-  }
+	&-body {
+		display: flex;
+		flex-wrap: nowrap;
+	}
 
-  &-thumbnail{
-    width: 150px;
-    padding: 10px;
-    a{
-      display: block;
-      img{
-        max-width: 100%;
-        width: auto;
-        height: auto;
-      }
-    }
-  }
+	&-thumbnail {
+		width: 150px;
+		padding: 10px;
+		a {
+			display: block;
+			img {
+				max-width: 100%;
+				width: auto;
+				height: auto;
+			}
+		}
+	}
 
-  &-content{
-    padding: 10px;
-    flex: 1;
-  }
+	&-content {
+		padding: 10px;
+		flex: 1;
+	}
 
-  // On small screen.
-  @media only screen and (max-width: $screen-xs-max){
-    &-body {
-      display: block;
-    }
-    &-thumbnail {
-      display: none;
-      margin: 0 auto;
-      text-align: center;
-      padding-bottom: 0;
-      width: auto;
-      max-width: 200px;
-    }
-    &-minicome .embed-thumbnail {
-      display: block;
-    }
-  }
-  &-title{
-    margin: 0 !important;
-    font-size: 20px;
-    font-weight: normal;
-    color: #000;
-    font-family: $font-family-base !important;
-    &-price{
-      font-family: $font-family-monospace;
-      color: $brand-warning;
-      font-size: 0.8em;
-      margin-left: 0.5em;
-      font-weight: normal;
-    }
-  }
-  &-author{
-    padding: 5px 0;
-    i{
-      vertical-align: middle;
-    }
-    &-img{
-      max-width: 20px !important;
-      width: auto;
-      height: auto;
-      border-radius: 50%;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-    &-name{
-      font-size: 14px;
-      font-family: $font-family-base;
-    }
-  }
-  &-excerpt{
-    p{
-      font-size: 14px;
-      color: #666;
-      line-height: 1.2;
-      font-family: $font-family-base;
-    }
-  }
-  &-action{
-    padding: 10px 0 0;
-    .btn{
-      font-family: $font-family-base !important;
-      margin-right: 0.5em;
-      &:link, &:visited, &:hover, &:active{
-        text-decoration: none;
-      }
-    }
-  }
-  &-footer {
-    border-top: 1px solid #ddd;
-    padding: 10px;
-    font-size: 12px;
-    background: #f9f9f9;
-    &-label{
-      float: right;
-      font-family: sans-serif;
-      color: #888;
-      font-weight: bold;
-    }
-    &:after{
-      content: "";
-      display: block;
-      clear: both;
-    }
-  }
-  &-credit{
-    &-link{
-      margin-left: 0.5em;
-      transition: color .3s linear;
-      font-family: sans-serif;
-      &:link, &:visited{
-        color: #888;
-        text-decoration: none;
-      }
-      &:hover, &:active{
-        color: #06c;
-        text-decoration: none;
-      }
-    }
-  }
+	// On small screen.
+	@media only screen and (max-width: $screen-xs-max) {
+		&-body {
+			display: block;
+		}
+		&-thumbnail {
+			display: none;
+			margin: 0 auto;
+			text-align: center;
+			padding-bottom: 0;
+			width: auto;
+			max-width: 200px;
+		}
+		&-minicome .embed-thumbnail {
+			display: block;
+		}
+	}
+	&-title {
+		margin: 0 !important;
+		font-size: 20px;
+		font-weight: normal;
+		color: #000;
+		font-family: $font-family-base !important;
+		&-price {
+			font-family: $font-family-monospace;
+			color: $brand-warning;
+			font-size: 0.8em;
+			margin-left: 0.5em;
+			font-weight: normal;
+		}
+	}
+	&-author {
+		padding: 5px 0;
+		i {
+			vertical-align: middle;
+		}
+		&-img {
+			max-width: 20px !important;
+			width: auto;
+			height: auto;
+			border-radius: 50%;
+			margin-right: 10px;
+			vertical-align: middle;
+		}
+		&-name {
+			font-size: 14px;
+			font-family: $font-family-base;
+		}
+	}
+	&-excerpt {
+		p {
+			font-size: 14px;
+			color: #666;
+			line-height: 1.2;
+			font-family: $font-family-base;
+		}
+	}
+	&-action {
+		padding: 10px 0 0;
+		.btn {
+			font-family: $font-family-base !important;
+			margin-right: 0.5em;
+			&:link,
+			&:visited,
+			&:hover,
+			&:active {
+				text-decoration: none;
+			}
+		}
+	}
+	&-footer {
+		border-top: 1px solid #ddd;
+		padding: 10px;
+		font-size: 12px;
+		background: #f9f9f9;
+		&-label {
+			float: right;
+			font-family: sans-serif;
+			color: #888;
+			font-weight: bold;
+		}
+		&::after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+	}
+	&-credit {
+		&-link {
+			margin-left: 0.5em;
+			transition: color .3s linear;
+			font-family: sans-serif;
+			&:link,
+			&:visited {
+				color: #888;
+				text-decoration: none;
+			}
+			&:hover,
+			&:active {
+				color: #06c;
+				text-decoration: none;
+			}
+		}
+	}
 }

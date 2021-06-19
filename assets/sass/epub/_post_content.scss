@@ -1,396 +1,413 @@
-.content--script{
+.content--script {
 
-  $text-base: #242424;
-  color: $text-base;
+	$text-base: #242424;
+	color: $text-base;
 
-  // Block
-  .ltr &{
-    padding-bottom: 2em;
-  }
-  .rtl &{
-    padding-left: 2em;
-  }
+	// Block
+	.ltr & {
+		padding-bottom: 2em;
+	}
+	.rtl & {
+		padding-left: 2em;
+	}
 
-  // Basic Typography
-  @extend %serif;
-  line-height: 2;
-  text-align: justify;
-  text-justify: inter-ideograph;
+	// Basic Typography
+	@extend %serif;
+	line-height: 2;
+	text-align: justify;
+	text-justify: inter-ideograph;
 
-  // Text decoration
-  strong{
-    font-family: sans-serif;
-    font-weight: bold;
-  }
+	// Text decoration
+	strong {
+		font-family: sans-serif;
+		font-weight: bold;
+	}
 
-  em{
-    font-style: normal;
-    font-family: sans-serif;
-  }
+	em {
+		font-style: normal;
+		font-family: sans-serif;
+	}
 
-  ins{
-    text-decoration: none;
-    color: lighten($text-base, 20);
-    &:before{
-      content: "〔";
-      color: lighten($text-base, 40);
-    }
-    &:after{
-      content: "〕";
-      color: lighten($text-base, 40);
-    }
-  }
+	ins {
+		text-decoration: none;
+		color: lighten($text-base, 20);
+		&::before {
+			content: "〔";
+			color: lighten($text-base, 40);
+		}
+		&::after {
+			content: "〕";
+			color: lighten($text-base, 40);
+		}
+	}
 
-  big, .big{
-    font-size: 4em;
-  }
-  small{
-    font-size: 1em;
-    color: #666;
-    &:before{
-      content: "〔";
-    }
-    &:after{
-      content: "〕";
-    }
-  }
+	big,
+	.big {
+		font-size: 4em;
+	}
+	small {
+		font-size: 1em;
+		color: #666;
+		&::before {
+			content: "〔";
+		}
+		&::after {
+			content: "〕";
+		}
+	}
 
-  del, strike, .strike{
-    color: #aaa;
-    text-decoration: line-through;
-  }
+	del,
+	strike,
+	.strike {
+		color: #aaa;
+		text-decoration: line-through;
+	}
 
-  address{
-    font-style: normal;
-    font-family: sans-serif;
-  }
-
-
-  // Paragraph
-  p{
-    margin: 0;
-    text-indent: 1em;
-    &.no-indent{
-      text-indent: 0;
-    }
-    &.has-drop-cap{
-      text-indent: 0;
-      &:first-letter{
-        font-size: 2.4em;
-        float: left;
-        display: inline-block;
-        line-height: 1;
-        .ltr &{
-          padding: 0.2em 0.2em 0.2em 0;
-        }
-        .rtl &{
-          padding: 0 0.2em 0.2em 0.2em;
-        }
-      }
-    }
-  }
-
-  // Divider
-  hr{
-    $border: 6px double #ddd;
-    @include logical-property(2em 0);
-    border: none;
-    border-top: $border;
-    .rtl &{
-      width: 0;
-      height: 100%;
-      border-top: none;
-      border-right: $border;
-    }
-  }
-
-  // Lists
-  dl{
-    @include logical-property(1em 0 1em 0);
-    dt{
-      @extend %sans;
-      @include logical-property(0 0 0 1em);
-    }
-    dd{
-      @include logical-property(0 0 0 2em);
-      & + dt{
-        @include logical-property(1em 0 0 1em);
-      }
-    }
-  }
-
-  // Quotation
-  blockquote{
-    color: #444;
-    margin: 0;
-    @include logical-property(1em 0);
-    @include logical-property(0 0 0 2em, false);
-    cite{
-      display: block;
-      font-style: normal;
-      font-size: 0.85em;
-      .ltr &{
-        text-align: right;
-      }
-      .rtl &{
-        @include logical-property(0 0 0 3em, false);
-      }
-
-    }
-  }
-  cite{
-    font-style: italic;
-  }
-  aside{
-    padding: 1em;
-    background: #f9f9f9;
-    color: #000;
-    font-size: 0.85em;
-    font-family: sans-serif;
-    .ltr &{
-      margin: 1em 0;
-    }
-    .rtl & {
-      margin: 0 1em;
-    }
-    h1, h2, h3, h4, h5, h6{
-      &:first-child{
-        margin-top: 0;
-      }
-    }
-  }
-  q{
-    &:before{
-      content: "“";
-    }
-    &:after{
-      content: "”";
-    }
-    .rtl &{
-        &:before{
-          content: "〝";
-        }
-        &:after{
-          content: "〟";
-        }
-    }
-  }
+	address {
+		font-style: normal;
+		font-family: sans-serif;
+	}
 
 
+	// Paragraph
+	p {
+		margin: 0;
+		text-indent: 1em;
+		&.no-indent {
+			text-indent: 0;
+		}
+		&.has-drop-cap {
+			text-indent: 0;
+			&::first-letter {
+				font-size: 2.4em;
+				float: left;
+				display: inline-block;
+				line-height: 1;
+				.ltr & {
+					padding: 0.2em 0.2em 0.2em 0;
+				}
+				.rtl & {
+					padding: 0 0.2em 0.2em 0.2em;
+				}
+			}
+		}
+	}
 
-  // Code format
-  pre {
-    line-height: 1.1;
-    overflow: auto;
-  }
-  code, tt, .tt{
-    font-family: monospace;
-    border: 1px solid $active-color;
-    color: $active-color;
-    border-radius: 2px;
-    padding: 2px;
-  }
-  var{
-    font-family: monospace;
-    font-style: normal;
-    background: #ccc;
-    border-radius: 2px;
-    padding: 2px;
-  }
+	// Divider
+	hr {
+		$border: 6px double #ddd;
+		@include logical-property(2em 0);
+		border: none;
+		border-top: $border;
+		.rtl & {
+			width: 0;
+			height: 100%;
+			border-top: none;
+			border-right: $border;
+		}
+	}
 
-  // table
-  table{
-    border-collapse: collapse;
-    .rtl &{
-      height: 100%;
-    }
-    .ltr &{
-      width: 100%;
-    }
-    th, td{
-      border: 1px solid #ddd;
-      padding: 1em;
-    }
-    th{
-      font-weight: bold;
-    }
-  }
+	// Lists
+	dl {
+		@include logical-property(1em 0 1em 0);
+		dt {
+			@extend %sans;
+			@include logical-property(0 0 0 1em);
+		}
+		dd {
+			@include logical-property(0 0 0 2em);
+			& + dt {
+				@include logical-property(1em 0 0 1em);
+			}
+		}
+	}
 
-  // Headers
-  h1, h2, h3, h4, h5, h6{
-    clear: both;
-    margin: 1.5em 0 0.5em;
-    line-height: 1.1;
-    font-weight: normal;
-    .rtl &{
-      margin: 0 1.5em 0 0.5em;
-    }
-  }
-  h1{
-    font-size: 2em;
-    padding: 0.25em;
-    background: #444;
-    color: #fff;
-  }
-  h2{
-    $h2-border: 3px double #444;
-    font-size: 1.8em;
-    .ltr &{
-      border-bottom: $h2-border;
-      padding-bottom: 0.5em;
-      margin-top: 3em;
-    }
-    .rtl & {
-      margin-right: 3em;
-      padding-left: 0.5em;
-      border-left: $h2-border;
-    }
-  }
-  h3{
-    $h3-border:  5px #666 solid;
-    font-size: 1.5em;
-    .ltr &{
-      border-left: $h3-border;
-      padding-left: 0.5em;
+	// Quotation
+	blockquote {
+		color: #444;
+		margin: 0;
+		@include logical-property(1em 0);
+		@include logical-property(0 0 0 2em, false);
+		cite {
+			display: block;
+			font-style: normal;
+			font-size: 0.85em;
+			.ltr & {
+				text-align: right;
+			}
+			.rtl & {
+				@include logical-property(0 0 0 3em, false);
+			}
 
-    }
-    .rtl &{
-      border-top: $h3-border;
-      padding-top: 0.5em;
-    }
-  }
-  h4{
-    font-size: 1.2em;
-    color: #666;
-    @extend %sans;
-  }
-  h5{
-    font-size: 1.1em;
-    font-weight: bold;
-  }
-  h6{
-    font-size: 1em;
-    font-weight: bold;
-  }
+		}
+	}
+	cite {
+		font-style: italic;
+	}
+	aside {
+		padding: 1em;
+		background: #f9f9f9;
+		color: #000;
+		font-size: 0.85em;
+		font-family: sans-serif;
+		.ltr & {
+			margin: 1em 0;
+		}
+		.rtl & {
+			margin: 0 1em;
+		}
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			&:first-child {
+				margin-top: 0;
+			}
+		}
+	}
+	q {
+		&::before {
+			content: "“";
+		}
+		&::after {
+			content: "”";
+		}
+		.rtl & {
+			&::before {
+				content: "〝";
+			}
+			&::after {
+				content: "〟";
+			}
+		}
+	}
 
-  // WP Required
-  // Image
-  img{
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-  }
-  // Avoid overflow.
-  .wp-caption,
-  img{
-    max-height: 100%;
-    max-width: 100%;
-  }
-  .wp-caption-text{
-    color: #888;
-    font-size: 0.85em;
-  }
-  // Alignment
-  .alignright{
-    float: right;
-    clear: left;
-    .ltr &{
-      margin: 1em 0 1em 2em;
-    }
-    .rtl &{
-      margin: 2em 1em 0 1em;
-    }
-  }
-  .alignleft{
-    float: left;
-    clear: right;
-    .ltr &{
-      margin: 1em 2em 1em 0;
-    }
-    .rtl &{
-      margin: 0 1em 2em 1em;
-    }
-  }
-  // Limit alignment size when floating.
-  img.alignleft,
-  .alignleft img,
-  img.alignright,
-  .alignright img{
-    .ltr & {
-      max-width: 33vw;
-    }
-    .rtl & {
-      max-height: 33vh;
-    }
-  }
-  img.size-large{
-    .ltr &{
-      max-width: 80vw;
-    }
-    .rtl &{
-      max-height: 80vh;
-    }
-  }
-  img.size-medium{
-    .ltr &{
-      max-width: 33vw;
-    }
-    .rtl &{
-      max-height: 33vh;
-    }
-  }
-  img.size-thumbnail,
-  img.size-small{
-    .ltr &{
-      max-width: 20vw;
-    }
-    .rtl &{
-      max-height: 20vh;
-    }
-  }
-  .alignnone{
-    float: none;
-  }
-  .aligncenter{
-    float: none;
-    clear: both;
-    display: block;
-    .ltr & {
-      margin: 1em auto;
-    }
-    .rtl &{
-      margin: auto 1em;
-    }
-  }
-  // Block elements always clear float.
-  blockquote, pre, hr, table{
-    clear: both;
-  }
+
+	// Code format
+	pre {
+		line-height: 1.1;
+		overflow: auto;
+	}
+	code,
+	tt,
+	.tt {
+		font-family: monospace;
+		border: 1px solid $active-color;
+		color: $active-color;
+		border-radius: 2px;
+		padding: 2px;
+	}
+	var {
+		font-family: monospace;
+		font-style: normal;
+		background: #ccc;
+		border-radius: 2px;
+		padding: 2px;
+	}
+
+	// table
+	table {
+		border-collapse: collapse;
+		.rtl & {
+			height: 100%;
+		}
+		.ltr & {
+			width: 100%;
+		}
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 1em;
+		}
+		th {
+			font-weight: bold;
+		}
+	}
+
+	// Headers
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		clear: both;
+		margin: 1.5em 0 0.5em;
+		line-height: 1.1;
+		font-weight: normal;
+		.rtl & {
+			margin: 0 1.5em 0 0.5em;
+		}
+	}
+	h1 {
+		font-size: 2em;
+		padding: 0.25em;
+		background: #444;
+		color: #fff;
+	}
+	h2 {
+		$h2-border: 3px double #444;
+		font-size: 1.8em;
+		.ltr & {
+			border-bottom: $h2-border;
+			padding-bottom: 0.5em;
+			margin-top: 3em;
+		}
+		.rtl & {
+			margin-right: 3em;
+			padding-left: 0.5em;
+			border-left: $h2-border;
+		}
+	}
+	h3 {
+		$h3-border:  5px #666 solid;
+		font-size: 1.5em;
+		.ltr & {
+			border-left: $h3-border;
+			padding-left: 0.5em;
+
+		}
+		.rtl & {
+			border-top: $h3-border;
+			padding-top: 0.5em;
+		}
+	}
+	h4 {
+		font-size: 1.2em;
+		color: #666;
+		@extend %sans;
+	}
+	h5 {
+		font-size: 1.1em;
+		font-weight: bold;
+	}
+	h6 {
+		font-size: 1em;
+		font-weight: bold;
+	}
+
+	// WP Required
+	// Image
+	img {
+		max-height: 100%;
+		max-width: 100%;
+		width: auto;
+		height: auto;
+	}
+	// Avoid overflow.
+	.wp-caption,
+	img {
+		max-height: 100%;
+		max-width: 100%;
+	}
+	.wp-caption-text {
+		color: #888;
+		font-size: 0.85em;
+	}
+	// Alignment
+	.alignright {
+		float: right;
+		clear: left;
+		.ltr & {
+			margin: 1em 0 1em 2em;
+		}
+		.rtl & {
+			margin: 2em 1em 0 1em;
+		}
+	}
+	.alignleft {
+		float: left;
+		clear: right;
+		.ltr & {
+			margin: 1em 2em 1em 0;
+		}
+		.rtl & {
+			margin: 0 1em 2em 1em;
+		}
+	}
+	// Limit alignment size when floating.
+	img.alignleft,
+	.alignleft img,
+	img.alignright,
+	.alignright img {
+		.ltr & {
+			max-width: 33vw;
+		}
+		.rtl & {
+			max-height: 33vh;
+		}
+	}
+	img.size-large {
+		.ltr & {
+			max-width: 80vw;
+		}
+		.rtl & {
+			max-height: 80vh;
+		}
+	}
+	img.size-medium {
+		.ltr & {
+			max-width: 33vw;
+		}
+		.rtl & {
+			max-height: 33vh;
+		}
+	}
+	img.size-thumbnail,
+	img.size-small {
+		.ltr & {
+			max-width: 20vw;
+		}
+		.rtl & {
+			max-height: 20vh;
+		}
+	}
+	.alignnone {
+		float: none;
+	}
+	.aligncenter {
+		float: none;
+		clear: both;
+		display: block;
+		.ltr & {
+			margin: 1em auto;
+		}
+		.rtl & {
+			margin: auto 1em;
+		}
+	}
+	// Block elements always clear float.
+	blockquote,
+	pre,
+	hr,
+	table {
+		clear: both;
+	}
 }
 
 
-
 // 縦書きの場合
-.rtl{
-  .content--script{
+.rtl {
+	.content--script {
 
-    pre{
-      //    -webkit-writing-mode: horizontal-tb;
-    }
-    sup{
-      top: 0;
-      right: -0.5em;
-    }
-    sub{
-      bottom: 0;
-      left: -0.5em;
-    }
+		pre {
+			//    -webkit-writing-mode: horizontal-tb;
+		}
+		sup {
+			top: 0;
+			right: -0.5em;
+		}
+		sub {
+			bottom: 0;
+			left: -0.5em;
+		}
 
-    .wp-caption{
-      -webkit-writing-mode: horizontal-tb;
-      text-align: center;
-    }
-  }
+		.wp-caption {
+			-webkit-writing-mode: horizontal-tb;
+			text-align: center;
+		}
+	}
 
 }

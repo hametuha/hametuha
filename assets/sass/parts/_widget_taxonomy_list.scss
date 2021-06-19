@@ -1,24 +1,24 @@
-.widget-tax-list{
+.widget-tax-list {
 
 
-  & &{
-    padding-left: 1em !important;
-    margin-bottom: 0 !important;
-  }
+	& & {
+		padding-left: 1em !important;
+		margin-bottom: 0 !important;
+	}
 
-  &-item{
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.25em;
-    margin-bottom: 0.25em;
-    &:last-child{
-      border-bottom: none;
-    }
-    & &{
-      font-size: 0.85em;
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-  }
+	&-item {
+		border-bottom: 1px solid #eee;
+		padding-bottom: 0.25em;
+		margin-bottom: 0.25em;
+		&:last-child {
+			border-bottom: none;
+		}
+		& & {
+			font-size: 0.85em;
+			margin-bottom: 0;
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+	}
 
 }

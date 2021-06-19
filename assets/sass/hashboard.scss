@@ -9,8 +9,8 @@ body{
 
 }
 
-.minHeight{
-  min-height: 150px;
+.minHeight {
+	min-height: 150px;
 }
 
 $hover-bg: #fcfcfc;
@@ -19,13 +19,13 @@ $navbar-default-bg: #f9f9f9;
 $brand-primary: blue;
 $brand-danger: red;
 
-.clearfix{
-  &:after{
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-  }
+.clearfix {
+	&::after {
+		content: "";
+		display: block;
+		height: 0;
+		clear: both;
+	}
 }
 @import "variables";
 @import "mixins";

@@ -5,101 +5,101 @@
  */
 
 
-.statistics{
-  &--main{
-    padding: 0.5em;
-  }
-  &__form{
-    margin: 1em 0;
-    text-align: right;
-  }
+.statistics {
+	&--main {
+		padding: 0.5em;
+	}
+	&__form {
+		margin: 1em 0;
+		text-align: right;
+	}
 }
 
-.analytics-date-changer{
-  text-align: right;
-  margin: 0.5em 0 1em;
-  padding-bottom: 1em;
-  border-bottom: 1px solid #f9f9f9;
+.analytics-date-changer {
+	text-align: right;
+	margin: 0.5em 0 1em;
+	padding-bottom: 1em;
+	border-bottom: 1px solid #f9f9f9;
 }
 
-.stat{
-  margin: 1em 0;
-  min-height: 200px;
-  position: relative;
-  &.col2{
-    width: 45%;
-    float: left;
-    &.gap{
-      margin-right: 10%;
-    }
-  }
-  $inner-height: 400px;
-  &__coming{
-    height: $inner-height;
-    background: #f1f1f1;
-    line-height: $inner-height;
-    text-align: center;
-    color: #ddd;
-    text-shadow: 1px 1px 3px #fff;
-    font-size: 2em;
-  }
-  &__container{
-    height: $inner-height;
-    background: url("../img/ajax-loader-stats.gif") center center no-repeat;
-  }
-  // Loading icons
-  $dashicon-width: 80px;
+.stat {
+	margin: 1em 0;
+	min-height: 200px;
+	position: relative;
+	&.col2 {
+		width: 45%;
+		float: left;
+		&.gap {
+			margin-right: 10%;
+		}
+	}
+	$inner-height: 400px;
+	&__coming {
+		height: $inner-height;
+		background: #f1f1f1;
+		line-height: $inner-height;
+		text-align: center;
+		color: #ddd;
+		text-shadow: 1px 1px 3px #fff;
+		font-size: 2em;
+	}
+	&__container {
+		height: $inner-height;
+		background: url("../img/ajax-loader-stats.gif") center center no-repeat;
+	}
+	// Loading icons
+	$dashicon-width: 80px;
 
-  & > .dashicons{
-    display: none;
-    color: #ddd;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: $dashicon-width;
-    width: $dashicon-width;
-    height: $dashicon-width;
-    margin-left: $dashicon-width / -2;
-    margin-top: $dashicon-width / -2;
-  }
+	& > .dashicons {
+		display: none;
+		color: #ddd;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		font-size: $dashicon-width;
+		width: $dashicon-width;
+		height: $dashicon-width;
+		margin-left: $dashicon-width / -2;
+		margin-top: $dashicon-width / -2;
+	}
 
-  &.loading{
-    & > .dashicons{
-      display: block;
-      @include animation(rotation 2s linear infinite);
-    }
-  }
-  // Error message
-  &.no-data{
-    p.error,
-    canvas{
-      display: block;
-    }
-  }
-  p.error{
-    display: none;
-    height: 200px;
-    line-height: 200px;
-    color: red;
-    border-color: rgba(0,116,162,0.2);
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.5em;
-  }
-  .male{
-    color: #47bceb;
-  }
-  .female{
-    color: #eb6b47;
-  }
+	&.loading {
+		& > .dashicons {
+			display: block;
+			@include animation(rotation 2s linear infinite);
+		}
+	}
+	// Error message
+	&.no-data {
+		p.error,
+		canvas {
+			display: block;
+		}
+	}
+	p.error {
+		display: none;
+		height: 200px;
+		line-height: 200px;
+		color: red;
+		border-color: rgba(0, 116, 162, 0.2);
+		text-align: center;
+		font-weight: bold;
+		font-size: 1.5em;
+	}
+	.male {
+		color: #47bceb;
+	}
+	.female {
+		color: #eb6b47;
+	}
 }
 
-@media only screen and (max-width: 768px){
-  .stat.col2{
-    width: auto;
-    float: none;
-    &.gap{
-      margin-right: 0;
-    }
-  }
+@media only screen and (max-width: 768px) {
+	.stat.col2 {
+		width: auto;
+		float: none;
+		&.gap {
+			margin-right: 0;
+		}
+	}
 }

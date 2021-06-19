@@ -9,33 +9,33 @@ $thin-border: 1px solid #ccc;
 //
 // -----------------------------------
 //
-%serif{
-  font-family: YuMincho, '游明朝', serif;
+%serif {
+	font-family: YuMincho, "游明朝", serif;
 }
-%sans{
-  font-family : YuGothic, '游ゴシック', sans-serif;
+%sans {
+	font-family: YuGothic, "游ゴシック", sans-serif;
 }
 
-body{
-  @extend %sans;
+body {
+	@extend %sans;
 }
 
 // alignment
-.text{
-  &-left{
-    text-align: left;
-  }
-  &-right{
-    text-align: right;
-  }
-  &-center{
-    text-align: center;
-  }
+.text {
+	&-left {
+		text-align: left;
+	}
+	&-right {
+		text-align: right;
+	}
+	&-center {
+		text-align: center;
+	}
 }
 
 // Visibility
-.hidden{
-  display: none;
+.hidden {
+	display: none;
 }
 
 //
@@ -44,64 +44,62 @@ body{
 // -----------------------------------
 //
 // 縦書き
-.rtl{
-  -webkit-writing-mode: vertical-rl;
-  writing-mode: vertical-rl;
-  // 縦中横
-  .tcy{
-    -webkit-text-combine:horizontal;
-    text-combine: horizontal;
-  }
+.rtl {
+	-webkit-writing-mode: vertical-rl;
+	writing-mode: vertical-rl;
+	// 縦中横
+	.tcy {
+		-webkit-text-combine: horizontal;
+		text-combine: horizontal;
+	}
 }
 // 圏点
-.text-emphasis{
-  text-emphasis: sesame filled;
+.text-emphasis {
+	text-emphasis: sesame filled;
 }
-
 
 
 //
 // Link
 // ----------------
 //
-a{
-  &:link, &:visited{
-    color: $link-color;
-    text-decoration: underline;
-  }
-  &:visited{
-    color: $visited-color;
-    text-decoration: underline;
-  }
-  &:hover{
-    color: lighten($link-color, 10);
-    text-decoration: underline;
-  }
-  &:active{
-    color: $active-color;
-    text-decoration: none;
-  }
-  .rtl &{
-    &:link{
-      color: $link-color;
-      text-decoration: overline;
-    }
-    &:visited{
-      color: $visited-color;
-      text-decoration: overline;
-    }
-    &:hover{
-      color: lighten($link-color, 10);
-      text-decoration: overline;
-    }
-    &:active{
-      color: $active-color;
-      text-decoration: none;
-    }
-  }
+a {
+	&:link,
+	&:visited {
+		color: $link-color;
+		text-decoration: underline;
+	}
+	&:visited {
+		color: $visited-color;
+		text-decoration: underline;
+	}
+	&:hover {
+		color: lighten($link-color, 10);
+		text-decoration: underline;
+	}
+	&:active {
+		color: $active-color;
+		text-decoration: none;
+	}
+	.rtl & {
+		&:link {
+			color: $link-color;
+			text-decoration: overline;
+		}
+		&:visited {
+			color: $visited-color;
+			text-decoration: overline;
+		}
+		&:hover {
+			color: lighten($link-color, 10);
+			text-decoration: overline;
+		}
+		&:active {
+			color: $active-color;
+			text-decoration: none;
+		}
+	}
 }
-
-
 
 
 //
@@ -110,102 +108,101 @@ a{
 //
 .header {
 
-  @extend %sans;
+	@extend %sans;
 
-  .title {
-    font-size: 2em;
-    line-height: 1.1;
-    small {
-      display: block;
-      font-size: 0.6em;
-      color: #888;
-    }
-  }
+	.title {
+		font-size: 2em;
+		line-height: 1.1;
+		small {
+			display: block;
+			font-size: 0.6em;
+			color: #888;
+		}
+	}
 
-  .meta {
-    text-align: right;
-    color: #888;
-  }
+	.meta {
+		text-align: right;
+		color: #888;
+	}
 
-  &__lead{
-    $lead-padding: 6em;
-    color: #666;
-    p{
-      font-size: 0.9em;
-      line-height: 1.8;
-    }
-    .ltr &{
-      padding: 1em 2em 1em $lead-padding;
-    }
-    .rtl & {
-      padding: $lead-padding 1em 2em 1em;
-    }
-  }
+	&__lead {
+		$lead-padding: 6em;
+		color: #666;
+		p {
+			font-size: 0.9em;
+			line-height: 1.8;
+		}
+		.ltr & {
+			padding: 1em 2em 1em $lead-padding;
+		}
+		.rtl & {
+			padding: $lead-padding 1em 2em 1em;
+		}
+	}
 
-  .ltr &{
-    .title{
-      padding: 1em 2em;
-      border-bottom: $thin-border;
-      @media only screen and (max-width: $screen-sm-max){
-        padding: 1em 0.5em;
-      }
-      small{
-        padding-top: 0.5em;
-      }
-    }
-    .meta{
-      padding: 0 2em;
-    }
-  }
+	.ltr & {
+		.title {
+			padding: 1em 2em;
+			border-bottom: $thin-border;
+			@media only screen and (max-width: $screen-sm-max) {
+				padding: 1em 0.5em;
+			}
+			small {
+				padding-top: 0.5em;
+			}
+		}
+		.meta {
+			padding: 0 2em;
+		}
+	}
 
-  .rtl &{
-    .title{
-      margin: 0 0.67em;
-      padding: 2em 1em;
-      border-left: $thin-border;
-      @media only screen and (max-width: $screen-sm-max) {
-        padding: 0.5em 1em;
-      }
-        small{
-        padding-right: 0.5em;
-      }
-    }
-    .meta{
-      padding: 2em 0;
-    }
-  }
+	.rtl & {
+		.title {
+			margin: 0 0.67em;
+			padding: 2em 1em;
+			border-left: $thin-border;
+			@media only screen and (max-width: $screen-sm-max) {
+				padding: 0.5em 1em;
+			}
+			small {
+				padding-right: 0.5em;
+			}
+		}
+		.meta {
+			padding: 2em 0;
+		}
+	}
 
-  &__author{
-    text-align: right;
-    font-size: 1.4em;
-    @include logical-property(0 1em 0 0);
-  }
+	&__author {
+		text-align: right;
+		font-size: 1.4em;
+		@include logical-property(0 1em 0 0);
+	}
 }
-
 
 
 //
 // Main Content
 // ----------------
 //
-article{
-  .rtl &{
-    margin: 2em 1em;
-  }
+article {
+	.rtl & {
+		margin: 2em 1em;
+	}
 
 }
-.content{
-  .rtl &{
-    padding-left: 2em;
-  }
-  .ltr &{
-    padding-bottom: 2em;
-  }
+.content {
+	.rtl & {
+		padding-left: 2em;
+	}
+	.ltr & {
+		padding-bottom: 2em;
+	}
 }
 
 // 改ページ
-.pagebreak{
-  page-break-after: always;
+.pagebreak {
+	page-break-after: always;
 }
 
 
@@ -213,37 +210,34 @@ article{
 // Footer
 // ----------------
 //
-.footer{
-  color: #6e6e6e;
-  .ltr &{
-    padding: 1em 2em;
-    border-top: $thin-border;
-    text-align: center;
-  }
-  .rtl &{
-    padding: 2em 1em;
-    border-right: $thin-border;
-    text-align: right;
-  }
+.footer {
+	color: #6e6e6e;
+	.ltr & {
+		padding: 1em 2em;
+		border-top: $thin-border;
+		text-align: center;
+	}
+	.rtl & {
+		padding: 2em 1em;
+		border-right: $thin-border;
+		text-align: right;
+	}
 }
-
-
-
-
-
 
 
 //
 // 横書き
 // ----------------
 //
-.ltr{
-  .header, .content, .footer{
-    max-width: $screen-desktop;
-    margin: 0 auto;
-  }
-  // Table
-  table{
-    width: 100%;
-  }
+.ltr {
+	.header,
+	.content,
+	.footer {
+		max-width: $screen-desktop;
+		margin: 0 auto;
+	}
+	// Table
+	table {
+		width: 100%;
+	}
 }

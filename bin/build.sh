@@ -17,9 +17,12 @@ rm -rf .browserslistrc
 rm -rf .editorconfig
 rm -rf .eslintrc
 rm -rf .gitignore
+rm -rf .node-version
+rm -rf .stylelintrc.json
 rm -rf .wp-env.json
 rm -rf node_modules
 rm -rf tests
 rm -rf bin
 rm -rf phpcs.ruleset.xml
 rm -rf phpunit.xml.dist
+rm -rf webpack.config.js

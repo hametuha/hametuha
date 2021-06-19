@@ -23,7 +23,7 @@ $shade-font: #888;
 $more-shade-font: #aaa;
 $clear-font: #000;
 $inverse-body: #fff;
-$start-font: #ffff00;
+$start-font: #ff0;
 $hover-bg: #feffd3;
 
 // リンク
@@ -32,18 +32,18 @@ $link-hover-bg: #fffcde;
 $link-active-bg: #fffecc;
 
 // ソーシャルアイコンの色
-$hametuha-color: #000000;
-$facebook-color: #3C5A95;
-$twitter-color: #58ACEB;
-$google-color: #DB4B3E;
-$line-color: #00DA13;
-$youtube-color: #D70000;
-$hatena-color: #576CEA;
+$hametuha-color: #000;
+$facebook-color: #3c5a95;
+$twitter-color: #58aceb;
+$google-color: #db4b3e;
+$line-color: #00da13;
+$youtube-color: #d70000;
+$hatena-color: #576cea;
 $instagram-color: #833ab4;
-$github-color: #333333;
+$github-color: #333;
 $minicome-color: #252525;
-$ustream-color: #2F7BFF;
-$pocket-color: #F04057;
+$ustream-color: #2f7bff;
+$pocket-color: #f04057;
 
 // Button colors
 $border-radius-base: 2px;
@@ -52,7 +52,7 @@ $border-radius-small: 3px;
 
 // アイコンの色を決める
 @each $brand in (
-  facebook $facebook-color,
+	facebook $facebook-color,
   twitter $twitter-color,
   google $google-color,
   line $line-color,
@@ -65,29 +65,30 @@ $border-radius-small: 3px;
   ustream $ustream-color,
   pocket $pocket-color,
   hatena $hatena-color,
-){
-  [class^="icon-#{nth($brand, 1)}"]{
-    color: nth($brand, 2) !important;
-  }
+) {
+	[class^="icon-#{nth($brand, 1)}"] {
+		color: nth($brand, 2) !important;
+	}
 }
 
 // ボーダー
 $divide-border: 3px double $thin-border;
 
 // アイコンを読み込む
-@mixin hameticon(){
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  font-family: "hameticon";
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@mixin hameticon() {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	font-family: "hameticon";
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -98,17 +99,17 @@ $divide-border: 3px double $thin-border;
 // ----------------------
 //
 // Boostrap
-$font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,'游ゴシック',sans-serif;
-$font-family-serif:       Georgia, "游明朝体", "Yu Mincho", YuMincho, serif;;
+$font-family-sans-serif:  "Helvetica Neue", helvetica, yugothic,"游ゴシック",sans-serif;
+$font-family-serif:       georgia, "游明朝体", "Yu Mincho", yumincho, serif;
 // type square
-$work-body: TsukuAOldMinPr6N-R, serif;
-$work-bold: TsukuAOldMinPr6-E, serif;
-$work-title: TsukuBOldMinPr6-R, serif;
-$work-body-sans: DNPShueiGoKinStd-L, sans-serif;
-$work-bold-sans: TsukuOldGothicStd-B, sans-serif;
+$work-body: tsukuaoldminpr6n-r, serif;
+$work-bold: tsukuaoldminpr6-e, serif;
+$work-title: tsukuboldminpr6-r, serif;
+$work-body-sans: dnpshueigokinstd-l, sans-serif;
+$work-bold-sans: tsukuoldgothicstd-b, sans-serif;
 
-.text-justify{
-  text-align: justify;
-  text-justify: inter-ideograph;
+.text-justify {
+	text-align: justify;
+	text-justify: inter-ideograph;
 }
 

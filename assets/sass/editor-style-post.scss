@@ -8,18 +8,18 @@
 @import "mixins";
 @import "post_body";
 
-body{
-  margin: 20px;
-  line-height: 1.8;
-  font-family: $font-family-serif;
-  & > p,
-  blockquote p{
-    text-indent: 1em;
-    &[style]{
-      text-indent: 0;
-    }
-  }
-  @include post-style(true);
-  @include text-justify();
-  @import "parts/embed";
+body {
+	margin: 20px;
+	line-height: 1.8;
+	font-family: $font-family-serif;
+	& > p,
+	blockquote p {
+		text-indent: 1em;
+		&[style] {
+			text-indent: 0;
+		}
+	}
+	@include post-style(true);
+	@include text-justify();
+	@import "parts/embed";
 }

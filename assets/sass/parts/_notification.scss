@@ -1,112 +1,117 @@
 $hametuha-border-style: 1px solid #ddd !default;
 
-.hametuha-hb-notifications{
-  position: relative;
+.hametuha-hb-notifications {
+	position: relative;
 }
 
-.notification-loop{
-  border: $hametuha-border-style;
-  border-top: none;
-  &:first-child{
-    border-top: $hametuha-border-style;
-  }
-  &-container{
-    margin-bottom: 20px;
-  }
-  &-small{
-    .notification__item{
-      font-size: 0.85em;
-      .notification__link{
-        padding: 0.5em;
-        img{
-          max-width: 32px;
-          & + .notification__text {
-            margin-left: 48px;
-          }
-        }
-      }
-    }
-  }
+.notification-loop {
+	border: $hametuha-border-style;
+	border-top: none;
+	&:first-child {
+		border-top: $hametuha-border-style;
+	}
+	&-container {
+		margin-bottom: 20px;
+	}
+	&-small {
+		.notification__item {
+			font-size: 0.85em;
+			.notification__link {
+				padding: 0.5em;
+				img {
+					max-width: 32px;
+					& + .notification__text {
+						margin-left: 48px;
+					}
+				}
+			}
+		}
+	}
 }
 
 // 通知エリア
-.notification{
-  // ヘッダーにあるとき
-  &__container{
-    width: 320px;
-  }
-  // メインカラムに表示される時
-  &__item{
-    .notification__link{
-      padding: 1em;
-      display: block;
-      @extend .clearfix;
-      &:link, &:visited{
-        text-decoration: none;
-      }
-      &:hover{
-        text-decoration: none;
-        background-color: $hover-bg;
-      }
-      &:active {
-        text-decoration: none;
-        background-color: darken($hover-bg, 10);
-      }
-    }
-    // If notification is in header
-    &--header{
-      font-size: 12px;
-      border-bottom: 1px solid $thin-border;
-      .notification__link img{
-        max-width: 32px;
-        margin-right: 10px;
-      }
-      .notification__link{
-        padding: 10px;
-      }
-    }
-  }
-  &__link{
-    &--new{
-      &:link, &:visited{
-        background-color: $hover-bg;
-      }
-      &:hover, &:active{
-        background-color: darken($hover-bg, 10);
-      }
-    }
-    img{
-      width: auto;
-      height: auto;
-      max-width: 48px;
+.notification {
+	// ヘッダーにあるとき
+	&__container {
+		width: 320px;
+	}
+	// メインカラムに表示される時
+	&__item {
+		.notification__link {
+			padding: 1em;
+			display: block;
+			@extend .clearfix;
+			&:link,
+			&:visited {
+				text-decoration: none;
+			}
+			&:hover {
+				text-decoration: none;
+				background-color: $hover-bg;
+			}
+			&:active {
+				text-decoration: none;
+				background-color: darken($hover-bg, 10);
+			}
+		}
+		// If notification is in header
+		&--header {
+			font-size: 12px;
+			border-bottom: 1px solid $thin-border;
+			.notification__link img {
+				max-width: 32px;
+				margin-right: 10px;
+			}
+			.notification__link {
+				padding: 10px;
+			}
+		}
+	}
+	&__link {
+		&--new {
+			&:link,
+			&:visited {
+				background-color: $hover-bg;
+			}
+			&:hover,
+			&:active {
+				background-color: darken($hover-bg, 10);
+			}
+		}
+		img {
+			width: auto;
+			height: auto;
+			max-width: 48px;
 
-      float: left;
-      margin-right: 12px;
-    }
-  }
-  &__text{
-    white-space: normal;
-    img + &{
-      margin-left: 60px;
-      @at-root .notification__item--header &{
-        margin-left: 42px;
-      }
-    }
-  }
-  &__time{
-    color: $shade-font;
-  }
-  &__more{
-    font-weight: bold;
-    a{
-      &:link, &:visited{
-        color: $brand-primary !important;
-        background-color: darken($navbar-default-bg, 10);
-      }
-      &:hover, &:active{
-        color: $brand-danger !important;
-        background-color: $navbar-default-bg;
-      }
-    }
-  }
+			float: left;
+			margin-right: 12px;
+		}
+	}
+	&__text {
+		white-space: normal;
+		img + & {
+			margin-left: 60px;
+			@at-root .notification__item--header & {
+				margin-left: 42px;
+			}
+		}
+	}
+	&__time {
+		color: $shade-font;
+	}
+	&__more {
+		font-weight: bold;
+		a {
+			&:link,
+			&:visited {
+				color: $brand-primary !important;
+				background-color: darken($navbar-default-bg, 10);
+			}
+			&:hover,
+			&:active {
+				color: $brand-danger !important;
+				background-color: $navbar-default-bg;
+			}
+		}
+	}
 }

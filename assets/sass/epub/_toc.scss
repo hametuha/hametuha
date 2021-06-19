@@ -1,79 +1,80 @@
 $toc-link-border: 1px solid #444;
 
 
-
-.content--toc{
-  ol{
-    margin: 0;
-    padding: 0;
-    counter-reset: section;
-    border-top: $toc-link-border;
-    & > li{
-      font-weight: bold;
-      list-style: none;
-      padding: 0.5em;
-      border-bottom: $toc-link-border;
-      &:before{
-        //content : counters(section, '-') '. ';
-        //counter-increment : section;
-      }
-      a:link, a:hover{
-        text-decoration: none;
-        color: $link-color;
-      }
-      a:hover, a:active{
-        color: $active-color;
-        text-decoration: underline;
-      }
-    }
-    ol{
-      border-top: none;
-      & > li{
-        font-weight: normal;
-        padding-left: 2em;
-        border-bottom: none;
-        &:last-child{
-          border-bottom: none;
-        }
-        list-style: disc inside;
-        li{
-          list-style-type: circle;
-        }
-      }
-    }
-  }
+.content--toc {
+	ol {
+		margin: 0;
+		padding: 0;
+		counter-reset: section;
+		border-top: $toc-link-border;
+		& > li {
+			font-weight: bold;
+			list-style: none;
+			padding: 0.5em;
+			border-bottom: $toc-link-border;
+			&::before {
+				//content : counters(section, '-') '. ';
+				//counter-increment : section;
+			}
+			a:link,
+			a:hover {
+				text-decoration: none;
+				color: $link-color;
+			}
+			a:hover,
+			a:active {
+				color: $active-color;
+				text-decoration: underline;
+			}
+		}
+		ol {
+			border-top: none;
+			& > li {
+				font-weight: normal;
+				padding-left: 2em;
+				border-bottom: none;
+				&:last-child {
+					border-bottom: none;
+				}
+				list-style: disc inside;
+				li {
+					list-style-type: circle;
+				}
+			}
+		}
+	}
 }
 
 // 縦書きの場合
-.rtl{
-  .content--toc{
-    ol{
-      border-top: none;
-      border-right: none;
-      li{
-        padding-top: 1em;
-        border-bottom: none;
-        border-right: none;
-        border-left: $toc-link-border;
-      }
-      ol > li{
-        padding-left: 0;
-        border-left-style: none;
-        &:last-child{
-          border-left: none;
-        }
-      }
-    }
-  }
+.rtl {
+	.content--toc {
+		ol {
+			border-top: none;
+			border-right: none;
+			li {
+				padding-top: 1em;
+				border-bottom: none;
+				border-right: none;
+				border-left: $toc-link-border;
+			}
+			ol > li {
+				padding-left: 0;
+				border-left-style: none;
+				&:last-child {
+					border-left: none;
+				}
+			}
+		}
+	}
 }
 
 // 横書きの場合
-.ltr{
-  .content--toc{
-    ol{
-      li{
-        padding-left: 1em;
-      }
-    }
-  }
+.ltr {
+	.content--toc {
+		ol {
+			li {
+				padding-left: 1em;
+			}
+		}
+	}
 }

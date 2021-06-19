@@ -6,9 +6,9 @@
 
 @import "post_body";
 
-body{
-  margin: 20px;
-  @include post-style();
+body {
+	margin: 20px;
+	@include post-style();
 
-  @import "parts/embed";
+	@import "parts/embed";
 }

@@ -1,125 +1,129 @@
-.help-center{
+.help-center {
 
-  &-latest{
-    background: url('../img/jumbotron/help.jpg') center center no-repeat;
-    background-size: cover;
-    padding: 40px 0;
-    &-list{
-      margin: 20px 0;
-      padding: 0;
-    }
-    &-item{
-      list-style: none;
-      margin: 20px 0;
-    }
-    a{
-      display: inline-block;
-      background: $hametuha-color;
-      color: #fff;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-  }
+	&-latest {
+		background: url("../img/jumbotron/help.jpg") center center no-repeat;
+		background-size: cover;
+		padding: 40px 0;
+		&-list {
+			margin: 20px 0;
+			padding: 0;
+		}
+		&-item {
+			list-style: none;
+			margin: 20px 0;
+		}
+		a {
+			display: inline-block;
+			background: $hametuha-color;
+			color: #fff;
+			padding: 10px 20px;
+			font-size: 16px;
+		}
+	}
 
-  &-topic{
-    padding: 40px 0;
-    h2{
-      margin-bottom: 40px;
-    }
-  }
+	&-topic {
+		padding: 40px 0;
+		h2 {
+			margin-bottom: 40px;
+		}
+	}
 
-  &-list{
-    background-color: #eee;
-    padding: 40px 0;
-    &-items{
-      margin: 20px 0;
-    }
-    &-item{
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    &-link{
-      &:link, &:visited{
-        text-decoration: underline;
-        color: black;
-      }
-      &:hover, &:active {
-        text-decoration: none;
-        color: $link-color;
-      }
-    }
-  }
+	&-list {
+		background-color: #eee;
+		padding: 40px 0;
+		&-items {
+			margin: 20px 0;
+		}
+		&-item {
+			margin: 10px 0;
+			font-size: 16px;
+		}
+		&-link {
+			&:link,
+			&:visited {
+				text-decoration: underline;
+				color: black;
+			}
+			&:hover,
+			&:active {
+				text-decoration: none;
+				color: $link-color;
+			}
+		}
+	}
 
-  &-misc{
-    background-color: #eee;
-    padding: 40px 0;
+	&-misc {
+		background-color: #eee;
+		padding: 40px 0;
 
-    &-lead{
-      font-size: 18px;
-      margin-bottom: 40px;
-    }
-    &-item{
-      i{
-        font-size: 80px;
-        &.icon-users4{
-          color: $facebook-color;
-        }
-        &.icon-hand{
-          color: sandybrown !important;
-        }
-        &.icon-phone6{
-          color: $google-color;
-        }
-      }
-    }
-  }
+		&-lead {
+			font-size: 18px;
+			margin-bottom: 40px;
+		}
+		&-item {
+			i {
+				font-size: 80px;
+				&.icon-users4 {
+					color: $facebook-color;
+				}
+				&.icon-hand {
+					color: sandybrown !important;
+				}
+				&.icon-phone6 {
+					color: $google-color;
+				}
+			}
+		}
+	}
 }
 
 
-.faq{
-  &__cat{
-    font-size: 22px;
-    font-weight: bold;
-    margin: 40px 0 10px;
-    &:first-child{
-      margin-top: 0;
-    }
-  }
-  &__desc{
-    display: block;
-    margin-top: 10px;
-    font-size: 0.6em;
-    font-weight: normal;
-    color: $shade-font;
-  }
-  &__content{
-    padding: 0;
-    margin: 10px 0 20px;
-  }
-  &__items{
-    padding: 0;
-    margin: 0;
-  }
-  &__item{
-    list-style: none;
-    margin: 0;
-    border-top: 1px solid $thin-border;
-  }
-  &__link{
-    display: block;
-    padding: 10px 15px;
-    position: relative;
-    &:link, &:visited{
-      color: #000;
-      text-decoration: none;
-    }
-    &:hover, &:active{
-      color: $brand-primary;
-      text-decoration: none;
-      background: #f9f9f9;
-    }
-  }
-  &__btn{
-    border-radius: 0;
-  }
+.faq {
+	&__cat {
+		font-size: 22px;
+		font-weight: bold;
+		margin: 40px 0 10px;
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	&__desc {
+		display: block;
+		margin-top: 10px;
+		font-size: 0.6em;
+		font-weight: normal;
+		color: $shade-font;
+	}
+	&__content {
+		padding: 0;
+		margin: 10px 0 20px;
+	}
+	&__items {
+		padding: 0;
+		margin: 0;
+	}
+	&__item {
+		list-style: none;
+		margin: 0;
+		border-top: 1px solid $thin-border;
+	}
+	&__link {
+		display: block;
+		padding: 10px 15px;
+		position: relative;
+		&:link,
+		&:visited {
+			color: #000;
+			text-decoration: none;
+		}
+		&:hover,
+		&:active {
+			color: $brand-primary;
+			text-decoration: none;
+			background: #f9f9f9;
+		}
+	}
+	&__btn {
+		border-radius: 0;
+	}
 }

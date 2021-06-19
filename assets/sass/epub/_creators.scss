@@ -1,47 +1,47 @@
-.epub-creators{
+.epub-creators {
 
-  -webkit-writing-mode: horizontal-tb;
+	-webkit-writing-mode: horizontal-tb;
 
 }
 
-.author-box{
-  padding: 1.5em 2em;
-  border-bottom: 3px dashed #ddd;
-  @include clearfix();
-  h2{
-    margin-bottom: 2em;
-    small{
-      color: #888;
-      margin-left: 0.25em;
-    }
-  }
-  .avatar{
-    width: 100px;
-    height: 100px;
-    max-width: 100px;
-    float: right;
-    margin: 0.5em 0 1.5em 1.5em;
-    border-radius: 50%;
-    @media only screen and (max-width: $screen-xs-max) {
-      max-width: 60px;
-      width: 60px;
-      height: 60px;
-    }
-  }
-  dl{
-    $dt-width: 8em;
-    @media only screen and (max-width: $screen-sm-max) {
-      clear: both;
-    }
-    dt{
-      color: #666;
-      display: inline-block;
-      width: $dt-width;
-      float: left;
-      clear: left;
-    }
-    dd{
-      margin-left: $dt-width + 2em;
-    }
-  }
+.author-box {
+	padding: 1.5em 2em;
+	border-bottom: 3px dashed #ddd;
+	@include clearfix();
+	h2 {
+		margin-bottom: 2em;
+		small {
+			color: #888;
+			margin-left: 0.25em;
+		}
+	}
+	.avatar {
+		width: 100px;
+		height: 100px;
+		max-width: 100px;
+		float: right;
+		margin: 0.5em 0 1.5em 1.5em;
+		border-radius: 50%;
+		@media only screen and (max-width: $screen-xs-max) {
+			max-width: 60px;
+			width: 60px;
+			height: 60px;
+		}
+	}
+	dl {
+		$dt-width: 8em;
+		@media only screen and (max-width: $screen-sm-max) {
+			clear: both;
+		}
+		dt {
+			color: #666;
+			display: inline-block;
+			width: $dt-width;
+			float: left;
+			clear: left;
+		}
+		dd {
+			margin-left: $dt-width + 2em;
+		}
+	}
 }

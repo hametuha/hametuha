@@ -10,7 +10,7 @@
 @import "bootstrap/print";
 //@import "bootstrap/glyphicons";
 // Load icomoon
-@import 'icon';
+@import "icon";
 
 // Core CSS
 @import "bootstrap/scaffolding";
@@ -55,4 +55,9 @@
 @import "bootstrap/responsive-utilities";
 
 // Bootstrap Override for Angular
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.nav,
+.pagination,
+.carousel,
+.panel-title a {
+	cursor: pointer;
+}

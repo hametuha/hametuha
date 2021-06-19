@@ -1,37 +1,38 @@
 .jumbotron {
-  overflow: hidden;
-  background-position: center center;
-  background-size: cover;
-  @include bg-sheet();
-  h1, p {
-    position: relative;
-    z-index: 2;
-    color: $inverse-body;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-  }
-  .btn {
-    @extend .btn-trans;
-  }
-  .btn + .btn{
-    margin-left: 1em;
-  }
+	overflow: hidden;
+	background-position: center center;
+	background-size: cover;
+	@include bg-sheet();
+	h1,
+	p {
+		position: relative;
+		z-index: 2;
+		color: $inverse-body;
+		text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+	}
+	.btn {
+		@extend .btn-trans;
+	}
+	.btn + .btn {
+		margin-left: 1em;
+	}
 }
 
 @media only screen and (max-width: $screen-sm-max) {
-  .jumbotron {
-    h1 {
-      font-size: 48px;
-    }
-    p {
-      font-size: 14px;
-    }
-  }
+	.jumbotron {
+		h1 {
+			font-size: 48px;
+		}
+		p {
+			font-size: 14px;
+		}
+	}
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .jumbotron {
-    h1 {
-      font-size: 32px;
-    }
-  }
+	.jumbotron {
+		h1 {
+			font-size: 32px;
+		}
+	}
 }

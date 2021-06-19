@@ -2,81 +2,81 @@
 // Typography
 //-------------------
 //
-@mixin logical-property($values, $is-margin: true){
-  @if ($is-margin) {
-    $property: margin;
-  }
-  $property: padding !default;
-  @each $vendor in (-moz-, -webkit-, '' ) {
-    @if (4 == length($values))  {
-      #{$vendor}#{$property}-before: nth($values, 1);
-      #{$vendor}#{$property}-end: nth($values, 2);
-      #{$vendor}#{$property}-after: nth($values, 3);
-      #{$vendor}#{$property}-start: nth($values, 4);
-    } @else if( 3 == length($values) ){
-      #{$vendor}#{$property}-before: nth($values, 1);
-      #{$vendor}#{$property}-end: nth($values, 2);
-      #{$vendor}#{$property}-after: nth($values, 3);
-      #{$vendor}#{$property}-start: nth($values, 2);
-    } @else if( 2 == length($values) ){
-      #{$vendor}#{$property}-before: nth($values, 1);
-      #{$vendor}#{$property}-end: nth($values, 2);
-      #{$vendor}#{$property}-after: nth($values, 1);
-      #{$vendor}#{$property}-start: nth($values, 2);
-    } @else{
-      #{$vendor}#{$property}-before: nth($values, 1);
-      #{$vendor}#{$property}-end: nth($values, 1);
-      #{$vendor}#{$property}-after: nth($values, 1);
-      #{$vendor}#{$property}-start: nth($values, 1);
-    }
-  }
+@mixin logical-property($values, $is-margin: true) {
+	@if ($is-margin) {
+		$property: margin;
+	}
+	$property: padding !default;
+	@each $vendor in (-moz-, -webkit-, "" ) {
+		@if (4 == length($values)) {
+			#{$vendor}#{$property}-before: nth($values, 1);
+			#{$vendor}#{$property}-end: nth($values, 2);
+			#{$vendor}#{$property}-after: nth($values, 3);
+			#{$vendor}#{$property}-start: nth($values, 4);
+		} @else if( 3 == length($values) ) {
+			#{$vendor}#{$property}-before: nth($values, 1);
+			#{$vendor}#{$property}-end: nth($values, 2);
+			#{$vendor}#{$property}-after: nth($values, 3);
+			#{$vendor}#{$property}-start: nth($values, 2);
+		} @else if( 2 == length($values) ) {
+			#{$vendor}#{$property}-before: nth($values, 1);
+			#{$vendor}#{$property}-end: nth($values, 2);
+			#{$vendor}#{$property}-after: nth($values, 1);
+			#{$vendor}#{$property}-start: nth($values, 2);
+		} @else {
+			#{$vendor}#{$property}-before: nth($values, 1);
+			#{$vendor}#{$property}-end: nth($values, 1);
+			#{$vendor}#{$property}-after: nth($values, 1);
+			#{$vendor}#{$property}-start: nth($values, 1);
+		}
+	}
 }
 
-@mixin mq-max($screen){
-  @media only screen and (max-width: $screen){
-    @content;
-  }
+@mixin mq-max($screen) {
+	@media only screen and (max-width: $screen) {
+		@content;
+	}
 }
 
-@mixin mq-min($screen){
-  @media only screen and (min-width: $screen){
-    @content;
-  }
+@mixin mq-min($screen) {
+	@media only screen and (min-width: $screen) {
+		@content;
+	}
 }
 
-@mixin mq($screen-min, $screen-max){
-  @media only screen and (min-width: $screen-sm-min) and (max-width: $screen-max){
-    @content;
-  }
+@mixin mq($screen-min, $screen-max) {
+	@media only screen and (min-width: $screen-sm-min) and (max-width: $screen-max) {
+		@content;
+	}
 }
 
 //
 // Responsive utility
 //-------------------
 //
-@mixin head-room(){
-  @media only screen and ( max-width: $screen-xs-max ) {
-    @content;
-  }
+@mixin head-room() {
+	@media only screen and ( max-width: $screen-xs-max ) {
+		@content;
+	}
 }
 
 //
 // Background sheet
 //-------------------
 //
-@mixin bg-sheet( $color: rgba(0, 0, 0, 0.2), $position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $z-index: 1 ){
-  position: $position;
-  &:after {
-    z-index: 1;
-    position: absolute;
-    display: block;
-    content: "";
-    top: $top;
-    left: $left;
-    right: $right;
-    bottom: $bottom;
-    background-color: $color;
-  }
+@mixin bg-sheet( $color: rgba(0, 0, 0, 0.2), $position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $z-index: 1 ) {
+	position: $position;
+	&::after {
+		z-index: 1;
+		position: absolute;
+		display: block;
+		content: "";
+		top: $top;
+		left: $left;
+		right: $right;
+		bottom: $bottom;
+		background-color: $color;
+	}
 }
 
 
@@ -84,22 +84,22 @@
 // Backward compats
 //-------------------
 //
-@mixin border-radius($radius){
-  border-radius: $radius;
+@mixin border-radius($radius) {
+	border-radius: $radius;
 }
 
-@mixin inline-block(){
-  display: inline-block;
+@mixin inline-block() {
+	display: inline-block;
 }
 
-@mixin ellipsis(){
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+@mixin ellipsis() {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
-@mixin background-size($size){
-  background-size: $size;
+@mixin background-size($size) {
+	background-size: $size;
 }
 
 
@@ -108,23 +108,25 @@
 //-------------------
 //
 
-@mixin text-justify(){
-  text-align: justify;
-  text-justify: inter-ideograph;
+@mixin text-justify() {
+	text-align: justify;
+	text-justify: inter-ideograph;
 }
 
-@mixin text-emphasis($style: sesame filled){
-  -webkit-text-emphasis-style: $style;
-  -moz-text-emphasis-style: $style;
-  text-emphasis-style: $style;
+@mixin text-emphasis($style: sesame filled) {
+	-webkit-text-emphasis-style: $style;
+	-moz-text-emphasis-style: $style;
+	text-emphasis-style: $style;
 }
 
-%block-link{
-  display: block;
-  &:link, &:visited{
-    text-decoration: none;
-  }
-  &:hover, &:active{
-    text-decoration: none;
-  }
+%block-link {
+	display: block;
+	&:link,
+	&:visited {
+		text-decoration: none;
+	}
+	&:hover,
+	&:active {
+		text-decoration: none;
+	}
 }

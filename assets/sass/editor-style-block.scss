@@ -2,38 +2,38 @@
 
 
 .editor-styles-wrapper {
-  @import "bootstrap";
-  @import "mixins";
-  @import "post_body";
-  font-family: $font-family-serif;
+	@import "bootstrap";
+	@import "mixins";
+	@import "post_body";
+	font-family: $font-family-serif;
 
-  .editor-block-list {
+	.editor-block-list {
 
-    &__block {
+		&__block {
 
-    }
+		}
 
-    &__layout {
-      @media screen and ( min-width: 600px ) {
-        padding: 0 43px !important;
-      }
-      .editor-block-list__layout{
-        padding-right: 0 !important;
-        padding-left: 0 !important;
-      }
-      @include post-style();
-      @import "parts/embed";
+		&__layout {
+			@media screen and ( min-width: 600px ) {
+				padding: 0 43px !important;
+			}
+			.editor-block-list__layout {
+				padding-right: 0 !important;
+				padding-left: 0 !important;
+			}
+			@include post-style();
+			@import "parts/embed";
 
-      .wp-block {
-        max-width: 1180px;
-        @at-root .editing-in-page-1column & {
-          max-width: none;
-        }
-      }
-    }
-  }
+			.wp-block {
+				max-width: 1180px;
+				@at-root .editing-in-page-1column & {
+					max-width: none;
+				}
+			}
+		}
+	}
 
-  .wp-block-hametuha-section .container{
-    max-width: 100%;
-  }
+	.wp-block-hametuha-section .container {
+		max-width: 100%;
+	}
 }

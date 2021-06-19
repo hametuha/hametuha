@@ -1,52 +1,54 @@
-.epub-colophon{
+.epub-colophon {
 
-  -webkit-writing-mode: horizontal-tb;
+	-webkit-writing-mode: horizontal-tb;
 
-  .text-center{
-    text-align: center;
-    img{
-      max-width: 100%;
-    }
-  }
+	.text-center {
+		text-align: center;
+		img {
+			max-width: 100%;
+		}
+	}
 
-  table.colophon{
-    $border-color: #999;
-    $border: 1px solid $border-color;
-    width: 100%;
+	table.colophon {
+		$border-color: #999;
+		$border: 1px solid $border-color;
+		width: 100%;
 
-    margin: 2em 0;
+		margin: 2em 0;
 
-    caption{
-      background-color: $border-color;
-      padding: 1em 2em;
-      color: #fff;
-    }
+		caption {
+			background-color: $border-color;
+			padding: 1em 2em;
+			color: #fff;
+		}
 
 
-    th, td{
-      padding: 1em 1.5em;
-      border-bottom: $border;
-    }
+		th,
+		td {
+			padding: 1em 1.5em;
+			border-bottom: $border;
+		}
 
-    th{
-      white-space: nowrap;
-      text-align: right;
-      width: 5em;
-    }
-    a.url{
-      display: block;
-      word-break: break-all;
-      white-space: pre-wrap;
-    }
-    tr:first-child{
-      th, td{
-        border-top: $border;
-      }
-    }
-    address{
-      font-style: normal;
-    }
-  }
+		th {
+			white-space: nowrap;
+			text-align: right;
+			width: 5em;
+		}
+		a.url {
+			display: block;
+			word-break: break-all;
+			white-space: pre-wrap;
+		}
+		tr:first-child {
+			th,
+			td {
+				border-top: $border;
+			}
+		}
+		address {
+			font-style: normal;
+		}
+	}
 
 
 }

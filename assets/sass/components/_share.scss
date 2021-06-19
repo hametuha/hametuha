@@ -6,58 +6,60 @@
 //
 .share {
 
-  $height: 80px;
+	$height: 80px;
 
-  &__container {
-    padding-top: $height / 2;
-    padding-bottom: $height / 2;
-  }
+	&__container {
+		padding-top: $height / 2;
+		padding-bottom: $height / 2;
+	}
 
-  &__item {
-    width: 25%;
-    float: left;
-    text-align: center;
-    height: $height;
-    @each $var in (
-            facebook $facebook-color 0,
+	&__item {
+		width: 25%;
+		float: left;
+		text-align: center;
+		height: $height;
+		@each $var in (
+			facebook $facebook-color 0,
             twitter $twitter-color 0,
             hatena $hatena-color 0,
             line $line-color 0,
     ) {
-      $brand: nth($var, 1);
-      $color: nth($var, 2);
-      $pad: nth($var, 3);
-      &--#{$brand} {
-        @extend .share__item;
-        background-color: $color;
-        padding-top: $pad;
-      }
-    }
-  }
-  &__button {
-    display: block;
-    height: $height;
-    line-height: $height;
-    &:link, &:visited {
-      color: #fff;
-      text-decoration: none;
-    }
-    &:hover, &:active {
-      color: #fff;
-      background-color: rgba(255, 255, 255, .2);
-    }
-    i {
-      color: #fff !important;
-      line-height: 1;
-      font-size: 24px;
-      vertical-align: middle;
-    }
-  }
-  &__text {
-    margin-left: 0.5em;
-    @media only screen and (max-width: $screen-xs-max) {
-      display: none;
-    }
-  }
+			$brand: nth($var, 1);
+			$color: nth($var, 2);
+			$pad: nth($var, 3);
+			&--#{$brand} {
+				@extend .share__item;
+				background-color: $color;
+				padding-top: $pad;
+			}
+		}
+	}
+	&__button {
+		display: block;
+		height: $height;
+		line-height: $height;
+		&:link,
+		&:visited {
+			color: #fff;
+			text-decoration: none;
+		}
+		&:hover,
+		&:active {
+			color: #fff;
+			background-color: rgba(255, 255, 255, .2);
+		}
+		i {
+			color: #fff !important;
+			line-height: 1;
+			font-size: 24px;
+			vertical-align: middle;
+		}
+	}
+	&__text {
+		margin-left: 0.5em;
+		@media only screen and (max-width: $screen-xs-max) {
+			display: none;
+		}
+	}
 
 }

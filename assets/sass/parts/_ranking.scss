@@ -2,132 +2,134 @@
 
 
 // 背景色が点滅
-@include keyframes( ranker ){
-  0%, 100%{
-    color: yellow;
-  }
-  50%{
-    color: orange;
-  }
+@include keyframes( ranker ) {
+	0%,
+	100% {
+		color: yellow;
+	}
+	50% {
+		color: orange;
+	}
 }
 
 
 // リスト
-.rank-list{
-  position: relative;
-  .pull-left{
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-    position: relative;
-    font-size: 40px;
-    color: white;
-    .icon-circle2{
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-size: 80px;
-      color: $thin-border;
-      z-index: 1;
-    }
-    strong{
-      position: relative;
-      z-index: 2;
-    }
-    .rank-status{
-      position: absolute;
-      top: 110%;
-      left: 50%;
-      font-size: 30px;
-      margin-left: -15px;
-      z-index: 5;
-      color: $more-shade-font;
-      &.icon-new{
-        color: $brand-warning;
-      }
-      &.icon-arrow-up-right2{
-        color: $brand-danger;
-      }
-      &.icon-arrow-down-right2{
-        color: $brand-primary;
-      }
-    }
-  }
-  &.king{
-    .pull-left{
-      color: black;
-      .icon-circle2{
-        color: #ffff00;;
-      }
-    }
-  }
-  &.ranker{
-    .pull-left{
-      .icon-circle2{
-        color: #ba5c00;
-      }
-    }
-  }
-  .rank-icon{
-    position: absolute;
-    display: block;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
-    @include animation( ranker 3s linear infinite );
-  }
+.rank-list {
+	position: relative;
+	.pull-left {
+		width: 80px;
+		height: 80px;
+		line-height: 80px;
+		text-align: center;
+		position: relative;
+		font-size: 40px;
+		color: white;
+		.icon-circle2 {
+			position: absolute;
+			top: 0;
+			left: 0;
+			font-size: 80px;
+			color: $thin-border;
+			z-index: 1;
+		}
+		strong {
+			position: relative;
+			z-index: 2;
+		}
+		.rank-status {
+			position: absolute;
+			top: 110%;
+			left: 50%;
+			font-size: 30px;
+			margin-left: -15px;
+			z-index: 5;
+			color: $more-shade-font;
+			&.icon-new {
+				color: $brand-warning;
+			}
+			&.icon-arrow-up-right2 {
+				color: $brand-danger;
+			}
+			&.icon-arrow-down-right2 {
+				color: $brand-primary;
+			}
+		}
+	}
+	&.king {
+		.pull-left {
+			color: black;
+			.icon-circle2 {
+				color: #ff0;
+			}
+		}
+	}
+	&.ranker {
+		.pull-left {
+			.icon-circle2 {
+				color: #ba5c00;
+			}
+		}
+	}
+	.rank-icon {
+		position: absolute;
+		display: block;
+		top: 10px;
+		right: 10px;
+		width: 40px;
+		height: 40px;
+		font-size: 40px;
+		@include animation( ranker 3s linear infinite );
+	}
 }
 
 @include bg-blink(cell-blink, white, yellow);
 
 // カレンダー
-.calendar-year{
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  caption{
-    padding: 1em;
-    font-size: 1.25em;
-    color: $shade-font;
-    border-top: 3px double $thin-border;
-  }
-  th, td{
-    border: 1px solid $thin-border;
-    text-align: center;
-    padding: 0;
-    a{
-      display: block;
-      padding: 0.5em;
-      &:hover{
-        text-decoration: none;
-        background-color: $zebra-bg;
-      }
-    }
-    span{
-      display: block;
-      padding: 0.5em;
-      color: $more-shade-font;
-      &.on{
-        color: $link-color;
-        @include animation(cell-blink 3s linear infinite);
-      }
-    }
-  }
+.calendar-year {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+	caption {
+		padding: 1em;
+		font-size: 1.25em;
+		color: $shade-font;
+		border-top: 3px double $thin-border;
+	}
+	th,
+	td {
+		border: 1px solid $thin-border;
+		text-align: center;
+		padding: 0;
+		a {
+			display: block;
+			padding: 0.5em;
+			&:hover {
+				text-decoration: none;
+				background-color: $zebra-bg;
+			}
+		}
+		span {
+			display: block;
+			padding: 0.5em;
+			color: $more-shade-font;
+			&.on {
+				color: $link-color;
+				@include animation(cell-blink 3s linear infinite);
+			}
+		}
+	}
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .rank-list{
-    .pull-left{
-      width: 60px;
-      height: 60px;
-      line-height: 60px;
-      font-size: 32px;
-      .icon-circle2{
-        font-size: 60px;
-      }
-    }
-  }
+	.rank-list {
+		.pull-left {
+			width: 60px;
+			height: 60px;
+			line-height: 60px;
+			font-size: 32px;
+			.icon-circle2 {
+				font-size: 60px;
+			}
+		}
+	}
 }

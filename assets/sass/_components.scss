@@ -1,247 +1,252 @@
 body.modal-open {
-  padding-right: 0 !important;
+	padding-right: 0 !important;
 }
 
-a[disabled], input[disabled] {
-  cursor: not-allowed;
+a[disabled],
+input[disabled] {
+	cursor: not-allowed;
 }
 
 .m20 {
-  margin-top: 20px;
-  margin-bottom: 20px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 // ヘルプボタン
 .help-tip {
-  padding: 1px 5px;
-  @include border-radius(10px);
-  margin-left: 1em;
+	padding: 1px 5px;
+	@include border-radius(10px);
+	margin-left: 1em;
 }
 
 .btn {
-  // 半透明のボタン
-  &-trans {
-    background-color: rgba(0, 0, 0, .4);
-    @include border-radius(0);
-    border: 2px solid $inverse-body;
-    color: $inverse-body;
-    &:hover {
-      color: $inverse-body;
-      background-color: #000;
-    }
-  }
-  // Amazon
-  &-amazon {
-    &:link, &:visited {
-      color: #fff;
-      background-color: #000;
-    }
-    &:hover, &:active {
-      color: #fff;
-      background-color: darken(orange, 20);
-    }
-    i {
-      color: orange;
-    }
-  }
-  &-link {
-    @each $var in (danger $brand-danger, warning $brand-warning) {
-      $name: nth($var, 1);
-      $color: nth($var, 2);
-      &--#{$name} {
-        color: $color;
-        &:link, &:visited {
-          color: $color;
-          text-decoration: none;
-        }
-        &:hover, &:active {
-          color: lighten($color, 10);
-          text-decoration: underline;
-        }
-      }
-    }
-  }
+	// 半透明のボタン
+	&-trans {
+		background-color: rgba(0, 0, 0, .4);
+		@include border-radius(0);
+		border: 2px solid $inverse-body;
+		color: $inverse-body;
+		&:hover {
+			color: $inverse-body;
+			background-color: #000;
+		}
+	}
+	// Amazon
+	&-amazon {
+		&:link,
+		&:visited {
+			color: #fff;
+			background-color: #000;
+		}
+		&:hover,
+		&:active {
+			color: #fff;
+			background-color: darken(orange, 20);
+		}
+		i {
+			color: orange;
+		}
+	}
+	&-link {
+		@each $var in (danger $brand-danger, warning $brand-warning) {
+			$name: nth($var, 1);
+			$color: nth($var, 2);
+			&--#{$name} {
+				color: $color;
+				&:link,
+				&:visited {
+					color: $color;
+					text-decoration: none;
+				}
+				&:hover,
+				&:active {
+					color: lighten($color, 10);
+					text-decoration: underline;
+				}
+			}
+		}
+	}
 }
 
-%btn-hollow{
-  @extend .btn;
-  $btn-color: #000;
-  display: inline-block;
-  @include border-radius(3px);
-  padding: 9px 4px;
-  border: 1px solid $btn-color;
-  font-size: 14px;
-  line-height: 1;
-  transition: color .3s linear, background-color .3s linear, border-color .3s linear;
-  position: relative;
-  &:link, &:visited{
-    color: $btn-color !important;
-    background: transparent !important;
-  }
-  &:hover{
-    color: #fff !important;
-    background-color: $btn-color !important;
-  }
-  &:active{
-    top: 1px;
-  }
+%btn-hollow {
+	@extend .btn;
+	$btn-color: #000;
+	display: inline-block;
+	@include border-radius(3px);
+	padding: 9px 4px;
+	border: 1px solid $btn-color;
+	font-size: 14px;
+	line-height: 1;
+	transition: color .3s linear, background-color .3s linear, border-color .3s linear;
+	position: relative;
+	&:link,
+	&:visited {
+		color: $btn-color !important;
+		background: transparent !important;
+	}
+	&:hover {
+		color: #fff !important;
+		background-color: $btn-color !important;
+	}
+	&:active {
+		top: 1px;
+	}
 }
 
 // 回転
 .rotation {
-  @include animation(rotation 1.5s linear infinite);
+	@include animation(rotation 1.5s linear infinite);
 }
 
 i.rotation {
-  display: inline-block;
+	display: inline-block;
 }
 
 // ハイライト
 @include bg-blink(highlight, #fff, #fff7ab);
 .highlighting {
-  @include animation(highlight 1.5s linear infinite);
+	@include animation(highlight 1.5s linear infinite);
 }
 
 // サムネイル
 .pseudo-thumbnail {
-  background-size: cover;
-  background-color: #737373;
-  background-position: center center;
+	background-size: cover;
+	background-color: #737373;
+	background-position: center center;
 }
 
 .pager {
-  a {
-    max-width: 45%;
-  }
+	a {
+		max-width: 45%;
+	}
 }
 
 @include mq-max($screen-xs-max) {
-  .pager {
-    font-size: 12px;
-  }
+	.pager {
+		font-size: 12px;
+	}
 }
 
 .tag-cloud {
-  font-family: $work-title;
+	font-family: $work-title;
 }
 
 // フィードバック
 .has-feedback {
-  .icon-checkmark,
-  .icon-spam,
-  .icon-close,
-  .icon-loop3 {
-    display: none;
-  }
-  .help-text {
-    display: none;
-    color: $inverse-body;
-  }
-  &.loading {
-    .icon-loop3 {
-      display: block;
-      color: $more-shade-font;
-    }
-  }
-  &.has-warning {
-    .icon-spam {
-      display: block;
-    }
-    .help-warning {
-      display: inline;
-      background-color: $brand-warning;
-    }
-  }
-  &.has-error {
-    .icon-close {
-      display: block;
-    }
-    .help-error {
-      display: inline;
-      background-color: $brand-danger;
-    }
-  }
-  &.has-success {
-    .icon-checkmark {
-      display: block;
-    }
-    .help-success {
-      display: inline;
-      background-color: $brand-success;
-    }
-  }
+	.icon-checkmark,
+	.icon-spam,
+	.icon-close,
+	.icon-loop3 {
+		display: none;
+	}
+	.help-text {
+		display: none;
+		color: $inverse-body;
+	}
+	&.loading {
+		.icon-loop3 {
+			display: block;
+			color: $more-shade-font;
+		}
+	}
+	&.has-warning {
+		.icon-spam {
+			display: block;
+		}
+		.help-warning {
+			display: inline;
+			background-color: $brand-warning;
+		}
+	}
+	&.has-error {
+		.icon-close {
+			display: block;
+		}
+		.help-error {
+			display: inline;
+			background-color: $brand-danger;
+		}
+	}
+	&.has-success {
+		.icon-checkmark {
+			display: block;
+		}
+		.help-success {
+			display: inline;
+			background-color: $brand-success;
+		}
+	}
 }
 
 // ツールチップ
 .tooltip-inner {
-  text-align: left;
+	text-align: left;
 }
 
 // タグコンテナ
 .tag-container {
-  a {
-    margin-top: 5px;
-    margin-right: 5px;
-    @extend .btn;
-    @extend .btn-default;
-    @extend .btn-xs;
-    i {
-      &:before {
-        @include hameticon();
-        @extend .icon-plus-circle2:before;
-      }
-      vertical-align: middle;
-      color: $clear-font;
-      &:hover {
-        color: $brand-success;
-      }
-    }
-    &.me {
-      @extend .btn-danger;
-      i {
-        &:before {
-          @extend .icon-close3:before;
-        }
-        color: inherit;
-        &:hover {
-          color: darken($brand-danger, 20);
-        }
-      }
-    }
-  }
-  & + .alert {
-    display: none;
-  }
-  &.no-tag + .alert {
-    display: block;
-  }
+	a {
+		margin-top: 5px;
+		margin-right: 5px;
+		@extend .btn;
+		@extend .btn-default;
+		@extend .btn-xs;
+		i {
+			&::before {
+				@include hameticon();
+				@extend .icon-plus-circle2:before;
+			}
+			vertical-align: middle;
+			color: $clear-font;
+			&:hover {
+				color: $brand-success;
+			}
+		}
+		&.me {
+			@extend .btn-danger;
+			i {
+				&::before {
+					@extend .icon-close3:before;
+				}
+				color: inherit;
+				&:hover {
+					color: darken($brand-danger, 20);
+				}
+			}
+		}
+	}
+	& + .alert {
+		display: none;
+	}
+	&.no-tag + .alert {
+		display: block;
+	}
 }
 
 // スピナー
 .ui-autocomplete-input {
-  & + .form-control-feedback {
-    top: 0;
-    right: 50px;
-    color: $more-shade-font;
-    display: none;
-  }
+	& + .form-control-feedback {
+		top: 0;
+		right: 50px;
+		color: $more-shade-font;
+		display: none;
+	}
 }
 
 .ui-autocomplete-loading {
-  & + .form-control-feedback {
-    @include inline-block();
-  }
+	& + .form-control-feedback {
+		@include inline-block();
+	}
 }
 
 
-
 .container-subtitle {
-  font-size: 14px;
-  font-weight: bold;
-  border-bottom: 1px dotted $more-shade-font;
-  margin: 1em 0.5em;
-  color: $shade-font;
-  padding-bottom: 0.5em;
+	font-size: 14px;
+	font-weight: bold;
+	border-bottom: 1px dotted $more-shade-font;
+	margin: 1em 0.5em;
+	color: $shade-font;
+	padding-bottom: 0.5em;
 }
 
 //
@@ -249,32 +254,33 @@ i.rotation {
 // -------------------
 //
 .nav-sub {
-  & > li {
-    a {
-      margin-right: 5px;
-      margin-left: 5px;
-      transition: color .5s ease-in-out, background-color .5s ease-in-out;
-      border-radius: 0;
-      &:link, &:visited {
-        color: #fff;
-        text-decoration: none;
-        background-color: $brand-primary;
-      }
-      &:hover, &:active {
-        color: #fff;
-        text-decoration: none;
-        background-color: lighten($brand-primary, 10);
-      }
-    }
-    &:first-child a {
-      margin-left: 0;
-    }
-    &:last-child a {
-      margin-right: 0;
-    }
-  }
+	& > li {
+		a {
+			margin-right: 5px;
+			margin-left: 5px;
+			transition: color .5s ease-in-out, background-color .5s ease-in-out;
+			border-radius: 0;
+			&:link,
+			&:visited {
+				color: #fff;
+				text-decoration: none;
+				background-color: $brand-primary;
+			}
+			&:hover,
+			&:active {
+				color: #fff;
+				text-decoration: none;
+				background-color: lighten($brand-primary, 10);
+			}
+		}
+		&:first-child a {
+			margin-left: 0;
+		}
+		&:last-child a {
+			margin-right: 0;
+		}
+	}
 }
-
 
 
 //
@@ -285,69 +291,70 @@ i.rotation {
 
 // 個別管理するためのミックスイン
 @mixin author-profile($image-size) {
-  $image-pad: $image-size / 4;
-  padding: $image-pad $image-pad $image-pad $image-pad * 2 + $image-size;
-  margin: $image-pad 0;
-  .avatar {
-    width: $image-size;
-    height: $image-size;
-    left: $image-pad;
-    margin-top: -0.5 * $image-size;
-  }
+	$image-pad: $image-size / 4;
+	padding: $image-pad $image-pad $image-pad $image-pad * 2 + $image-size;
+	margin: $image-pad 0;
+	.avatar {
+		width: $image-size;
+		height: $image-size;
+		left: $image-pad;
+		margin-top: -0.5 * $image-size;
+	}
 }
 
 @mixin long-desc($color) {
-  max-height: 6em;
-  overflow: hidden;
-  z-index: 2;
-  position: relative;
-  &:after {
-    position: absolute;
-    content: "";
-    display: block;
-    height: 2em;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    @include gradient-vertical(transparentize($color, 1), $color);
-  }
+	max-height: 6em;
+	overflow: hidden;
+	z-index: 2;
+	position: relative;
+	&::after {
+		position: absolute;
+		content: "";
+		display: block;
+		height: 2em;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		@include gradient-vertical(transparentize($color, 1), $color);
+	}
 }
 
 // 共通
 .author-profile {
-  $border: 1px solid $navbar-default-border;
-  background-color: $navbar-default-bg;
-  border-top: $border;
-  border-bottom: $border;
-  position: relative;
-  h3 {
-    margin-top: 0;
-    small {
-      @media only screen and (max-width: $screen-xs-max) {
-        display: block;
-      }
-    }
-  }
-  .avatar {
-    @extend .img-circle;
-  }
-  padding-top: 20px;
-  padding-bottom: 20px;
-  .author-desc {
-    margin-bottom: 1em;
-    line-height: 1.2;
-    &--long {
-      @include long-desc($navbar-default-bg);
-    }
-  }
-  &__actions{
-    a, button{
-      margin-right: 10px;
-      &:last-child{
-        margin-right: 0;
-      }
-    }
-  }
+	$border: 1px solid $navbar-default-border;
+	background-color: $navbar-default-bg;
+	border-top: $border;
+	border-bottom: $border;
+	position: relative;
+	h3 {
+		margin-top: 0;
+		small {
+			@media only screen and (max-width: $screen-xs-max) {
+				display: block;
+			}
+		}
+	}
+	.avatar {
+		@extend .img-circle;
+	}
+	padding-top: 20px;
+	padding-bottom: 20px;
+	.author-desc {
+		margin-bottom: 1em;
+		line-height: 1.2;
+		&--long {
+			@include long-desc($navbar-default-bg);
+		}
+	}
+	&__actions {
+		a,
+		button {
+			margin-right: 10px;
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
 }
 
 //
@@ -355,9 +362,9 @@ i.rotation {
 //
 .page-header {
 
-  .single & {
-    margin-bottom: 0;
-  }
+	.single & {
+		margin-bottom: 0;
+	}
 }
 
 //
@@ -366,27 +373,27 @@ i.rotation {
 // --------------------
 //
 ul.metadata {
-  border-bottom: 1px solid #eee;
-  color: #999;
-  padding: 7px 15px;
-  margin-bottom: 20px;
-  @media only screen and (max-width: $screen-xs-max) {
-    padding-right: 0;
-    padding-left: 0;
-  }
-  .single-news & {
-    margin-bottom: 0;
-  }
-  li {
-    border-left: 1px solid #eee;
-    padding: 0.25em 0.5em;
-    &:first-child {
-      border-left: none;
-      @media only screen and (max-width: $screen-xs-max) {
-        border-left: 1px solid #ddd;
-      }
-    }
-  }
+	border-bottom: 1px solid #eee;
+	color: #999;
+	padding: 7px 15px;
+	margin-bottom: 20px;
+	@media only screen and (max-width: $screen-xs-max) {
+		padding-right: 0;
+		padding-left: 0;
+	}
+	.single-news & {
+		margin-bottom: 0;
+	}
+	li {
+		border-left: 1px solid #eee;
+		padding: 0.25em 0.5em;
+		&:first-child {
+			border-left: none;
+			@media only screen and (max-width: $screen-xs-max) {
+				border-left: 1px solid #ddd;
+			}
+		}
+	}
 }
 
 //
@@ -395,50 +402,50 @@ ul.metadata {
 // --------------------
 //
 .archive-meta {
-  h1 {
-    font-size: 28px;
-    font-family: $work-title;
-    .label {
-      font-family: sans-serif;
-      margin-left: 0.5em;
-    }
-  }
-  .desc {
-    font-family: $work-title;
-    p {
-      margin-bottom: 1em;
-      color: $little-shade-font;
-      padding-left: 1em;
-      padding-right: 1em;
-      &:first-child {
-        padding-top: 2em;
-        margin-top: 2em;
-        border-top: $divide-border;
-      }
-      &:last-child {
-        padding-bottom: 2em;
-        margin-bottom: 2em;
-        border-bottom: $divide-border;
-      }
-    }
-  }
+	h1 {
+		font-size: 28px;
+		font-family: $work-title;
+		.label {
+			font-family: sans-serif;
+			margin-left: 0.5em;
+		}
+	}
+	.desc {
+		font-family: $work-title;
+		p {
+			margin-bottom: 1em;
+			color: $little-shade-font;
+			padding-left: 1em;
+			padding-right: 1em;
+			&:first-child {
+				padding-top: 2em;
+				margin-top: 2em;
+				border-top: $divide-border;
+			}
+			&:last-child {
+				padding-bottom: 2em;
+				margin-bottom: 2em;
+				border-bottom: $divide-border;
+			}
+		}
+	}
 }
 
 .meta {
-  &--series {
-    margin-bottom: 1em;
-    border-bottom: $divide-border;
-    padding-bottom: 1em;
-  }
-  &__thumbnail {
-    padding-top: 0.5em;
-    text-align: center;
-    img {
-      max-width: 100%;
-      height: auto;
-      width: auto;
-    }
-  }
+	&--series {
+		margin-bottom: 1em;
+		border-bottom: $divide-border;
+		padding-bottom: 1em;
+	}
+	&__thumbnail {
+		padding-top: 0.5em;
+		text-align: center;
+		img {
+			max-width: 100%;
+			height: auto;
+			width: auto;
+		}
+	}
 }
 
 //
@@ -448,173 +455,177 @@ ul.metadata {
 //
 // タブ
 .nav-tabs--archive {
-  li {
-    .icon-arrow-up {
-      display: none;
-    }
-    &.active {
-      a:hover {
-        cursor: pointer;
-        .icon-arrow-up {
-          display: inline-block;
-        }
-        .icon-arrow-down {
-          display: none;
-        }
-      }
-    }
-    &.asc {
-      .icon-arrow-up {
-        display: inline-block;
-      }
-      .icon-arrow-down {
-        display: none;
-      }
-      &.active {
-        a:hover {
-          .icon-arrow-down {
-            display: inline-block;
-          }
-          .icon-arrow-up {
-            display: none;
-          }
-        }
-      }
-    }
-  }
+	li {
+		.icon-arrow-up {
+			display: none;
+		}
+		&.active {
+			a:hover {
+				cursor: pointer;
+				.icon-arrow-up {
+					display: inline-block;
+				}
+				.icon-arrow-down {
+					display: none;
+				}
+			}
+		}
+		&.asc {
+			.icon-arrow-up {
+				display: inline-block;
+			}
+			.icon-arrow-down {
+				display: none;
+			}
+			&.active {
+				a:hover {
+					.icon-arrow-down {
+						display: inline-block;
+					}
+					.icon-arrow-up {
+						display: none;
+					}
+				}
+			}
+		}
+	}
 }
 
 // コンテナ
 .archive-container {
-  margin: 20px 0;
-  border-top: 1px solid $thin-border;
-  // タブが上にある場合はマージンなし
-  .nav-tabs--archive + .tab-content & {
-    border-top: none;
-    margin-top: 0;
-  }
-  & > li {
-    margin-top: 0;
-    padding: 0;
-    border-bottom: 1px solid $thin-border;
-    &:nth-child(even) {
-      background-color: $zebra-bg;
-    }
-    .media__link {
-      @extend .clearfix;
-      display: block;
-      padding: 1em;
-      @media only screen and (max-width: $screen-sm-max) {
-        padding: 1em 0.5em;
-      }
-      &:link {
-        text-decoration: none;
-      }
-      &:visited {
-        text-decoration: none;
-      }
-      &:hover {
-        background: $link-active-bg;
-        text-decoration: none;
-      }
-      &:active {
-        color: $link-active;
-        background: #fffecc;
-        text-decoration: none;
-      }
-    }
-  }
-  // 見出し
-  h3, h2 {
-    margin-top: 0;
-  }
-  // アバター
-  .pull-left, .pull-right {
-    img {
-      height: auto;
-      width: auto;
-      max-width: 160px;
-      @media only screen and (max-width: $screen-sm-max) {
-        max-width: 80px;
-      }
-    }
-    .avatar {
-      width: 80px;
-      height: 80px;
-      @extend .img-circle;
-    }
-  }
-  .pull-left {
-    margin-right: 1em;
-  }
-  .pull-right {
-    margin-left: 1em;
-  }
-  .author-info .avatar {
-    width: 20px;
-    height: 20px;
-    @extend .img-circle;
-  }
-  // リスト（メタ情報）
-  ul.list-inline {
-    color: #666;
-    margin-bottom: 10px;
-    i {
-      color: #aaa;
-    }
-    li {
-      border-left: 1px solid #ddd;
-      &:first-child {
-        border-left: none;
-      }
-    }
-  }
+	margin: 20px 0;
+	border-top: 1px solid $thin-border;
+	// タブが上にある場合はマージンなし
+	.nav-tabs--archive + .tab-content & {
+		border-top: none;
+		margin-top: 0;
+	}
+	& > li {
+		margin-top: 0;
+		padding: 0;
+		border-bottom: 1px solid $thin-border;
+		&:nth-child(even) {
+			background-color: $zebra-bg;
+		}
+		.media__link {
+			@extend .clearfix;
+			display: block;
+			padding: 1em;
+			@media only screen and (max-width: $screen-sm-max) {
+				padding: 1em 0.5em;
+			}
+			&:link {
+				text-decoration: none;
+			}
+			&:visited {
+				text-decoration: none;
+			}
+			&:hover {
+				background: $link-active-bg;
+				text-decoration: none;
+			}
+			&:active {
+				color: $link-active;
+				background: #fffecc;
+				text-decoration: none;
+			}
+		}
+	}
+	// 見出し
+	h3,
+	h2 {
+		margin-top: 0;
+	}
+	// アバター
+	.pull-left,
+	.pull-right {
+		img {
+			height: auto;
+			width: auto;
+			max-width: 160px;
+			@media only screen and (max-width: $screen-sm-max) {
+				max-width: 80px;
+			}
+		}
+		.avatar {
+			width: 80px;
+			height: 80px;
+			@extend .img-circle;
+		}
+	}
+	.pull-left {
+		margin-right: 1em;
+	}
+	.pull-right {
+		margin-left: 1em;
+	}
+	.author-info .avatar {
+		width: 20px;
+		height: 20px;
+		@extend .img-circle;
+	}
+	// リスト（メタ情報）
+	ul.list-inline {
+		color: #666;
+		margin-bottom: 10px;
+		i {
+			color: #aaa;
+		}
+		li {
+			border-left: 1px solid #ddd;
+			&:first-child {
+				border-left: none;
+			}
+		}
+	}
 }
 
 // リード
 .excerpt {
-  margin: 2em 1em;
-  p {
-    @extend .lead;
-  }
+	margin: 2em 1em;
+	p {
+		@extend .lead;
+	}
 }
 
 // シングルページのページャ
 .post-pager {
-  margin: 20px 0;
+	margin: 20px 0;
 }
 
 // ページネーション
 .link-pages {
-  margin: 1.5em 0 2em !important;
-  text-align: center;
-  font-family: sans-serif;
-  text-indent: 0 !important;
-  & > span, a {
-    font-size: 12px;
-    @include inline-block();
-    margin-left: 0.5em;
-    padding: 0.4em 0.75em;
-    @include border-radius(2px);
-    color: #fff;
-  }
-  & > span {
-    background-color: $shade-font;
-  }
-  a {
-    &:link, &:visited {
-      background-color: $link-color;
-      text-decoration: none;
-    }
-    &:hover {
-      background-color: $link-active;
-      text-decoration: none;
-    }
-    &:active {
-      background-color: lighten($link-active, 10);
-      text-decoration: none;
-    }
-  }
+	margin: 1.5em 0 2em !important;
+	text-align: center;
+	font-family: sans-serif;
+	text-indent: 0 !important;
+	& > span,
+	a {
+		font-size: 12px;
+		@include inline-block();
+		margin-left: 0.5em;
+		padding: 0.4em 0.75em;
+		@include border-radius(2px);
+		color: #fff;
+	}
+	& > span {
+		background-color: $shade-font;
+	}
+	a {
+		&:link,
+		&:visited {
+			background-color: $link-color;
+			text-decoration: none;
+		}
+		&:hover {
+			background-color: $link-active;
+			text-decoration: none;
+		}
+		&:active {
+			background-color: lighten($link-active, 10);
+			text-decoration: none;
+		}
+	}
 }
 
 
@@ -624,200 +635,202 @@ ul.metadata {
 // ---------------
 //
 .event-detail {
-  border-top: 2px solid $thin-border;
-  border-bottom: 2px solid $thin-border;
-  padding: 15px;
-  &-title{
-    margin-top: 0;
-    text-align: center;
-    color: $shade-font;
-    font-weight: bold;
-    font-size: 1.8em;
-  }
-  &-alert{
-    margin-top: 20px;
-    p:first-child{
-      margin-bottom: 20px;
-    }
-  }
-  .dl-horizontal {
-    dt, dd {
-      margin-bottom: 10px;
-    }
-  }
-  &-comment{
-    margin-top: 20px;
-    textarea{
-      margin-bottom: 10px;
-    }
-  }
-  &-list{
-    margin: 10px 0 0;
-  }
-  &-user{
-    display: inline-block;
-    width: 64px;
-    height: 64px;
-    margin-right: 10px;
-    text-align: center;
-    .help-tip{
-      margin: 0;
-      padding: 0;
-      display: block;
-    }
-    img{
-      max-width: 32px;
-      width: auto;
-      height: auto;
-    }
-    strong{
-      display: block;
-      font-size: 10px;
-      white-space:nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  .loading{
-    position: relative;
-    @extend %loading-indicator;
-  }
+	border-top: 2px solid $thin-border;
+	border-bottom: 2px solid $thin-border;
+	padding: 15px;
+	&-title {
+		margin-top: 0;
+		text-align: center;
+		color: $shade-font;
+		font-weight: bold;
+		font-size: 1.8em;
+	}
+	&-alert {
+		margin-top: 20px;
+		p:first-child {
+			margin-bottom: 20px;
+		}
+	}
+	.dl-horizontal {
+		dt,
+		dd {
+			margin-bottom: 10px;
+		}
+	}
+	&-comment {
+		margin-top: 20px;
+		textarea {
+			margin-bottom: 10px;
+		}
+	}
+	&-list {
+		margin: 10px 0 0;
+	}
+	&-user {
+		display: inline-block;
+		width: 64px;
+		height: 64px;
+		margin-right: 10px;
+		text-align: center;
+		.help-tip {
+			margin: 0;
+			padding: 0;
+			display: block;
+		}
+		img {
+			max-width: 32px;
+			width: auto;
+			height: auto;
+		}
+		strong {
+			display: block;
+			font-size: 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+	}
+	.loading {
+		position: relative;
+		@extend %loading-indicator;
+	}
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .event-detail {
-    .dl-horizontal {
-      dt {
-        margin-bottom: 5px;
-      }
-    }
-  }
+	.event-detail {
+		.dl-horizontal {
+			dt {
+				margin-bottom: 5px;
+			}
+		}
+	}
 }
 
 caption.outdated {
-  @extend .text-danger;
+	@extend .text-danger;
 }
 
 #gmap-announcement {
-  height: 250px;
-  background-color: $navbar-default-bg;
-  margin-bottom: 20px;
+	height: 250px;
+	background-color: $navbar-default-bg;
+	margin-bottom: 20px;
 }
 
 // フィードバック
 .afb_container {
-  .good, .bad {
-    @extend .btn;
-    @extend .btn-sm;
-    &:link {
-      text-decoration: none;
-    }
-  }
-  .good {
-    @extend .btn-success;
-  }
-  .bad {
-    @extend .btn-default;
-  }
+	.good,
+	.bad {
+		@extend .btn;
+		@extend .btn-sm;
+		&:link {
+			text-decoration: none;
+		}
+	}
+	.good {
+		@extend .btn-success;
+	}
+	.bad {
+		@extend .btn-default;
+	}
 }
 
 // アラート
 .alert-sticky {
-  border-radius: 0;
-  position: fixed;
-  opacity: 0;
-  transform: translateY(-100%);
-  top: $navbar-height;
-  left: 0;
-  right: 0;
-  height: auto;
-  z-index: $zindex-navbar-fixed - 1;
-  will-change: transform, opacity, top;
-  transition: transform .3s ease-in-out, opacity .3s ease-in-out, top .3s ease-in-out;
-  .header-hidden & {
-    @include head-room() {
-      top: 0;
-    }
-  }
-  .no-header & {
-    top: 0;
-  }
-  &-on {
-    transform: translateY(0);
-    opacity: 1;
-  }
+	border-radius: 0;
+	position: fixed;
+	opacity: 0;
+	transform: translateY(-100%);
+	top: $navbar-height;
+	left: 0;
+	right: 0;
+	height: auto;
+	z-index: $zindex-navbar-fixed - 1;
+	will-change: transform, opacity, top;
+	transition: transform .3s ease-in-out, opacity .3s ease-in-out, top .3s ease-in-out;
+	.header-hidden & {
+		@include head-room() {
+			top: 0;
+		}
+	}
+	.no-header & {
+		top: 0;
+	}
+	&-on {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
 
 .widget_sp_image-image-link,
 .widget_sp_image-link {
-  display: block;
-  text-align: center;
+	display: block;
+	text-align: center;
 }
 
 .widget_sp_image-description {
-  margin-top: 0.5em;
-  line-height: 1.2;
+	margin-top: 0.5em;
+	line-height: 1.2;
 }
 
 // Instagram
 .ig-b- {
-  display: inline-block;
-  img {
-    visibility: hidden;
-  }
-  &:hover {
-    background-position: 0 -60px;
-  }
+	display: inline-block;
+	img {
+		visibility: hidden;
+	}
+	&:hover {
+		background-position: 0 -60px;
+	}
 
-  &:active {
-    background-position: 0 -120px;
-  }
+	&:active {
+		background-position: 0 -120px;
+	}
 
-  &v-24 {
-    width: 137px;
-    height: 24px;
-    background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0;
-  }
+	&v-24 {
+		width: 137px;
+		height: 24px;
+		background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0;
+	}
 
-  @media only screen and (-webkit-min-device-pixel-ratio: 2),
-  only screen and (min--moz-device-pixel-ratio: 2),
+	@media only screen and (-webkit-min-device-pixel-ratio: 2),
+		only screen and (min--moz-device-pixel-ratio: 2),
   only screen and (-o-min-device-pixel-ratio: 2 / 1),
   only screen and (min-device-pixel-ratio: 2),
   only screen and (min-resolution: 192dpi),
   only screen and (min-resolution: 2dppx) {
-    &v-24 {
-      background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);
-      background-size: 160px 178px;
-    }
-  }
+		&v-24 {
+			background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);
+			background-size: 160px 178px;
+		}
+	}
 }
 
 .post-content {
-  .row-block {
-    &__link {
-      display: block;
-    }
-    &__icon {
-      line-height: 1;
-      text-align: center;
-      padding: 20px 0;
-      color: #000;
-      font-size: 60px;
-    }
-    &__desc {
-      text-align: center;
-      font-size: 0.85em;
-      color: $shade-font;
-      padding-bottom: 20px;
-      margin: 0;
-    }
-  }
+	.row-block {
+		&__link {
+			display: block;
+		}
+		&__icon {
+			line-height: 1;
+			text-align: center;
+			padding: 20px 0;
+			color: #000;
+			font-size: 60px;
+		}
+		&__desc {
+			text-align: center;
+			font-size: 0.85em;
+			color: $shade-font;
+			padding-bottom: 20px;
+			margin: 0;
+		}
+	}
 }
 
 // Jetpack Gallery
-.gallery-row{
-  .type-rectangular &{
-    margin-right: auto;
-    margin-left: auto;
-  }
+.gallery-row {
+	.type-rectangular & {
+		margin-right: auto;
+		margin-left: auto;
+	}
 }
