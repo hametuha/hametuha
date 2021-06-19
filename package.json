@@ -13,13 +13,13 @@
 		"stop": "wp-env stop",
 		"cli": "wp-env run cli wp",
 		"package": "gulp build",
-		"watch": "gulp watch",
-		"display": "gulp bs",
 		"gulp": "gulp",
-		"lint": "gulp lint",
 		"gulp:task": "gulp --tasks",
+		"lint": "gulp lint",
 		"fix:js": "eslint --fix -c .eslintrc assets/js",
-		"fix:css": "stylelint --fix assets/sass"
+		"fix:css": "stylelint --fix assets/sass",
+		"watch:wp": "gulp watch",
+		"watch:statics": "gulp statics"
 	},
 	"author": "Hametuha inc.",
 	"license": "LGPL-3.0-or-later",

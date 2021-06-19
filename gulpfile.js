@@ -160,95 +160,23 @@ gulp.task( 'imagemin', function () {
 } );
 
 // Jade
-gulp.task( 'jade', function () {
-	const list = fs.readdirSync( './assets/jade' )
+gulp.task( 'pug', function () {
+	const list = fs.readdirSync( './assets/pug' )
 		.filter( function ( file ) {
 			return /^[^_].*\.jade$/.test( file );
 		} ).map( function ( f ) {
 			return f.replace( '.jade', '.html' );
 		} );
-
-	return gulp.src( [ './assets/jade/**/*.jade', '!./assets/jade/**/_*.jade' ] )
+	const json = require( './assets/pug/setting.json' );
+	json.list = list;
+	return gulp.src( [
+		'./assets/pug/**/*.pug',
+		'!./assets/pug/**/_*.pug'
+	] )
 		.pipe( $.plumber() )
 		.pipe( $.pug( {
 			pretty: true,
-			locals: {
-				list: list,
-				scripts: [
-					'https://code.jquery.com/jquery-1.11.3.min.js',
-					'../js/bootstrap.js',
-					'../js/common.js',
-				],
-
-				labels: {
-					"default": "デフォルト",
-					"primary": "重要",
-					"success": "成功",
-					"info": "お知らせ",
-					"warning": "警告",
-					"danger": "危険"
-				},
-				"msgs": {
-					"success": {
-						"strong": "登録成功！",
-						"body": "これであなたは大金持ちになりました。"
-					},
-					"info": {
-						"strong": "お知らせ",
-						"body": "これはみても見なくてもどっちでもいいお知らせです。"
-					},
-					"warning": {
-						"strong": "注意！",
-						"body": "なにかおかしなことが起きたのでこのメッセージが表示されています。"
-					},
-					"danger": {
-						"strong": "警告！",
-						"body": "あなたはなにかとんでもないことをしてしまったので、メッセージが出ています。。"
-					}
-				},
-				carousels: [
-					{
-						"active": "active",
-						"url": "./img/photo1.jpg",
-						"alt": "最初のスライド",
-						"caption": "これは日向山の山頂付近です。"
-					},
-					{
-						"active": "",
-						"url": "./img/photo2.jpg",
-						"alt": "二番目のスライド",
-						"caption": "これは八ヶ岳の山中です。"
-					},
-					{
-						"active": "",
-						"url": "./img/photo3.jpg",
-						"alt": "三番目のスライド",
-						"caption": "富山県の日本海に沈む夕日です。"
-					}
-				],
-				lists: [
-					{
-						"title": "その他雑記",
-						"body": "どうでもいいことが書いてあります。当サイトの人気コンテンツ。",
-						"active": true
-					},
-					{
-						"title": "Twitter",
-						"body": "Twitterのコンテンツをただコピーしただけのページですが、二番目に人気があります。",
-						"active": false
-					},
-					{
-						"title": "料理と狩猟",
-						"body": "私の趣味である料理と狩猟について書いています。同じ趣味を持っている方は共有してください",
-						"active": false
-					},
-					{
-						"title": "読書記録",
-						"body": "私が読んだ本の感想について記してあります。ただし、一度も本を読んだことはありません。",
-						"active": false
-					}
-				]
-			}
+			locals: json,
 		} ) )
 		.pipe( gulp.dest( './dist/' ) );
 } );
@@ -280,32 +208,36 @@ gulp.task( 'watch', ( done ) => {
 		'dist/css/**/*.css',
 	], gulp.task( 'dump' ) );
 
-	// Build Jade
-	gulp.watch( 'assets/jade/**/*.jade', gulp.task( 'jade' ) );
+	// Build pug
+	gulp.watch( [
+		'assets/pug/**/*.pug',
+		'assets/pug/setting.json',
+	], gulp.task( 'pug' ) );
 
 	done();
 } );
 
 // Watch browsersync changes.
-gulp.task( 'bs-watch', function () {
-	return gulp.watch( [
-		'dist/**/*',
-	], gulp.task( 'bs-reload' ) );
+gulp.task( 'bs-watch', ( done ) => {
+	gulp.watch( [ 'dist/**/*' ], gulp.task( 'bs-reload' ) );
+	done();
 } );
 
 // BrowserSync
-gulp.task( 'browser-sync', function () {
-	return browserSync( {
+gulp.task( 'bs-init', function ( done ) {
+	browserSync( {
 		server: {
 			baseDir: "./dist/"       //対象ディレクトリ
 			, index: "index.html"      //インデックスファイル
 		},
 		reloadDelay: 500
 	} );
+	done();
 } );
 
-gulp.task( 'bs-reload', function () {
-	return browserSync.reload();
+gulp.task( 'bs-reload', function ( done ) {
+	browserSync.reload();
+	done();
 } );
 
 // Toggle plumber.
@@ -327,8 +259,10 @@ gulp.task( 'build', gulp.series( gulp.parallel( 'copylib', 'jsx', 'sass', 'image
 gulp.task( 'default', gulp.series( 'watch' ) );
 
 // Browser sync( not working?)
-gulp.task( 'bs', gulp.series( 'browser-sync', 'bs-watch' ) );
+gulp.task( 'bs', gulp.series( 'bs-init', 'bs-watch' ) );
 
+// Static assets development.
+gulp.task( 'statics', gulp.series( 'build', gulp.parallel( 'watch', 'bs' ) ) );
 
 // Lint
 gulp.task( 'lint', gulp.series( 'noplumber', gulp.parallel( 'stylelint', 'eslint' ) ) );

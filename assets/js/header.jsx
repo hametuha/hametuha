@@ -9,6 +9,7 @@
 const {Component, render} = wp.element;
 const { addQueryArgs } = wp.url;
 
+
 class HametuHeaderEmpty extends Component {
   render() {
     return (
