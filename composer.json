@@ -5,12 +5,17 @@
 	"license": "GPL-3.0-or-later",
 	"scripts": {
 		"test": "phpunit",
-		"phpcs": [
-			"phpcs --config-set installed_paths $(pwd)/vendor/wp-coding-standards/wpcs",
+		"cs-config": "phpcs --config-set installed_paths $(pwd)/vendor/wp-coding-standards/wpcs",
+		"lint": [
+			"@cs-config",
 			"phpcs --standard=phpcs.ruleset.xml $(find ./ -name '*.php')"
 		],
-		"phpcs-fix": [
-			"phpcs --config-set installed_paths $(pwd)/vendor/wp-coding-standards/wpcs",
+		"lint:file": [
+			"@cs-config",
+			"phpcs --standard=phpcs.ruleset.xml "
+		],
+		"fix": [
+			"@cs-config",
 			"phpcbf --standard=phpcs.ruleset.xml $(find ./ -name '*.php')"
 		]
 
@@ -28,7 +33,8 @@
 		"hametuha/wpametu": "^1.0.0",
 		"hametuha/hamepub": "^1.0.0",
 		"hametuha/hashboard": "^0.9",
-		"hametuha/sharee": "^0.8.4"
+		"hametuha/sharee": "^0.8.4",
+		"kunoichi/set-menu": "^1.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^5.7|^6",

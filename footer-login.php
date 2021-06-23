@@ -1,8 +1,15 @@
+<?php
+/**
+ * Footer for login screen.
+ *
+ * @package hametuha
+ */
 
-
-	<div id="footer-login" class="footer-note">
-		<p class="text-center">&copy; 2007 破滅派</p>
-	</div>
+get_template_part( 'templates/footer', 'colophon', [
+	'id'     => 'footer-login',
+	'suffix' => 'login',
+] );
+?>
 
 </div><!-- // #login-form -->
 

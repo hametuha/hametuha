@@ -35,6 +35,22 @@ add_action( 'init', function() {
 	// jQuery mmenu
 	wp_register_script( 'jquery.mmenu', get_template_directory() . '/dist/vendor/mmenu/prop-types.min.js', [ 'jquery' ], '5.6.3', true );
 
+	// Load wp-scripts.
+	$json = get_template_directory() . '/wp-dependencies.json';
+	if ( file_exists( $json ) ) {
+		foreach ( json_decode( file_get_contents( $json ), true ) as $setting ) {
+			$url = get_template_directory_uri() . '/' . $setting['path'];
+			switch ( $setting['ext'] ) {
+				case 'css':
+					wp_register_style( $setting['handle'], $url, $setting['deps'], $setting['hash'], $setting['media'] );
+					break;
+				case 'js':
+					wp_register_script( $setting['handle'], $url, $setting['deps'], $setting['hash'], $setting['footer'] );
+					break;
+			}
+		}
+	}
+
 	/**
 	 * hametuha_angular_extensions
 	 *
@@ -91,6 +107,7 @@ add_action( 'hashboard_head', function() {
  *
  */
 add_action( 'wp_enqueue_scripts', function() {
+	wp_enqueue_style( 'hametuha-critical' );
 	// Common Style.
 	wp_enqueue_style( 'hametuha-app' );
 	// Social scripts

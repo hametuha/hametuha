@@ -2,16 +2,16 @@
 //
 // アイコンの点滅
 //
-@include keyframes( icon-blink ) {
-	0% {
-		color: $navbar-default-link-color;
-		background-color: $navbar-default-bg;
-	}
-	100% {
-		color: $brand-danger;
-		background-color: lighten($brand-danger, 30);
-	}
-}
+//@include keyframes( icon-blink ) {
+//	0% {
+//		color: $navbar-default-link-color;
+//		background-color: $navbar-default-bg;
+//	}
+//	100% {
+//		color: $brand-danger;
+//		background-color: lighten($brand-danger, 30);
+//	}
+//}
 
 #header {
 	will-change: transform;
@@ -39,9 +39,9 @@
 		float: left;
 		margin-right: 0;
 		margin-left: 10px;
-		@media (min-width: $grid-float-breakpoint) {
-			display: block;
-		}
+		//@media (min-width: $grid-float-breakpoint) {
+		//	display: block;
+		//}
 		border: none;
 	}
 	&-write {
@@ -52,8 +52,8 @@
 	&-status {
 		position: absolute;
 		width: 100%;
-		height: $navbar-height;
-		line-height: $navbar-height;
+		//height: $navbar-height;
+		//line-height: $navbar-height;
 		left: 0;
 		top: 0;
 		text-align: center;
@@ -77,22 +77,22 @@
 		&.navbar-right > li {
 			float: right;
 			& > a {
-				$avatar-pad: ($navbar-height - $avatar-size) / 2;
-				padding: $avatar-pad $avatar-pad / 2;
-				line-height: 1;
-				&.dropdown--notify {
-					height: $navbar-height;
-					vertical-align: middle;
-				}
-				& > i {
-					$icon-pad: 4px;
-					font-size: $avatar-size - (2 * $icon-pad);
-					line-height: $avatar-size;
-					vertical-align: middle;
-				}
-				&.has-notify {
-					@include animation(icon-blink 1s linear 0 infinite alternate);
-				}
+				//$avatar-pad: ($navbar-height - $avatar-size) / 2;
+				//padding: $avatar-pad $avatar-pad / 2;
+				//line-height: 1;
+				//&.dropdown--notify {
+				//	height: $navbar-height;
+				//	vertical-align: middle;
+				//}
+				//& > i {
+				//	$icon-pad: 4px;
+				//	font-size: $avatar-size - (2 * $icon-pad);
+				//	line-height: $avatar-size;
+				//	vertical-align: middle;
+				//}
+				//&.has-notify {
+				//	@include animation(icon-blink 1s linear 0 infinite alternate);
+				//}
 			}
 			.dropdown-menu {
 				min-width: 240px;
@@ -110,7 +110,7 @@
 				padding-right: 0;
 			}
 		}
-		@media only screen and (max-width: $screen-xs-max) {
+		@include media-breakpoint-down(sm) {
 			position: absolute;
 			top: 0;
 			margin-top: 0;
@@ -125,9 +125,9 @@
 						right: -40px;
 					}
 					left: auto;
-					background-color: $navbar-default-bg;
-					border: 1px solid $navbar-default-border;
-					@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+					//background-color: $navbar-default-bg;
+					//border: 1px solid $navbar-default-border;
+					//@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
 				}
 			}
 		}
@@ -219,7 +219,7 @@
 // ロゴマーク
 //
 .logo {
-	$logo-width: $navbar-height;
+	//$logo-width: $navbar-height;
 	position: absolute;
 	display: block;
 	width: $logo-width;
@@ -237,7 +237,7 @@
 	&:active {
 		text-decoration: none;
 		i {
-			color: $brand-danger !important;
+			//color: $brand-danger !important;
 		}
 	}
 	span {
@@ -264,7 +264,7 @@
 #header {
 	& + #breadcrumb,
 	& + .sub-header {
-		padding-top: $navbar-height + $subnavbar-height;
+		//padding-top: $navbar-height + $subnavbar-height;
 	}
 }
 
@@ -294,14 +294,14 @@
 	a {
 		&:link,
 		&:visited {
-			color: $little-shade-font;
+			//color: $little-shade-font;
 			text-decoration: none;
 		}
 		&:hover {
-			color: $link-color;
+			//color: $link-color;
 		}
 		&:active {
-			color: $link-active;
+			//color: $link-active;
 		}
 	}
 }
@@ -333,7 +333,7 @@
 	@include transition( top 0.3s ease-in-out );
 	&.open {
 		display: block;
-		top: $navbar-height;
+		//top: $navbar-height;
 	}
 	&__inner {
 		width: 90%;
@@ -352,9 +352,9 @@
 	&__actions {
 		padding: 0;
 		margin: 20px 0;
-		@media only screen and ( max-width: $screen-xs-max ) {
-			margin: 10px 0;
-		}
+		//@media only screen and ( max-width: $screen-xs-max ) {
+		//	margin: 10px 0;
+		//}
 		border-top: 1px solid $thin-border;
 	}
 	&__action {
@@ -367,7 +367,7 @@
 		display: block;
 		padding: 20px;
 		font-size: 20px;
-		@media only screen and ( max-width: $screen-xs-max ) {
+		@include media-breakpoint-down(sm){
 			padding: 10px;
 			font-size: 14px;
 		}
@@ -378,7 +378,7 @@
 		}
 		&:hover,
 		&:active {
-			color: $brand-primary;
+			//color: $brand-primary;
 			text-decoration: none;
 			background-color: #f9f9f9;
 		}

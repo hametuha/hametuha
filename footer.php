@@ -1,62 +1,57 @@
-<footer id="footer" class="footer-wrapper">
+<footer id="footer" class="footer-wrapper footer-wrapper-general">
 	<div class="footer-links-wrapper">
-		<p class="footer-hametuha text-center">
-			<i class="icon-hametuha"></i>
+		<p class="footer-logo text-center">
+			<img class="footer-logo-img" src="<?php echo get_template_directory_uri(); ?>/dist/img/brand/hametuha.svg"
+				width="380" height="147" loading="lazy" alt="<?php esc_attr_e( '破滅派', 'hametuha' ); ?>" />
+			<span class="footer-logo-desc">
+				<?php esc_html_e( 'オンライン文芸誌', 'hametuha' ); ?>
+			</span>
 		</p>
 		<div class="container">
 
 			<div class="row footer-links">
 
-				<div class="col-xs-12">
-					<?php wp_nav_menu(
-						array(
-							'theme_location' => 'hametuha_global_about',
-							'container'      => false,
-							'menu_class'     => 'footer-links-nav',
-							'depth'          => 1,
-						)
-					); ?>
-
-				</div>
-
-				<div class="col-xs-12">
-					<ul class="footer-links-nav">
-						<?php
-						foreach (
-							[
-								'ha'        => [ 'https://hametuha.co.jp', '株式会社破滅派', '' ],
-								'twitter'   => [ 'https://twitter.com/minico_me', 'twitter', '' ],
-								'facebook'  => [ 'https://facebook.com/minicome', 'facebook', '' ],
-								'instagram' => [ 'https://instagram.com/minico_hametuha', 'Instagram', '' ],
-								'youtube'   => [ 'https://www.youtube.com/user/hametuha', 'Youtube', '' ],
-								'minicome'  => [ 'https://minico.me', 'ミニコミ通販', '' ],
-								'github3'   => [ 'https://github.com/hametuha/', 'Github', '' ],
-							] as $icon => list(
-								$url, $label, $atts
-							) ) :
-							?>
-							<li>
-								<a href="<?php echo $url; ?>" <?php echo $atts; ?>><?php echo esc_html( $label ); ?></a>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				</div>
+				<?php
+				// About links.
+				if ( has_nav_menu( 'hametuha_global_about' ) ) {
+					Kunoichi\SetMenu::nav_menu( [
+						'theme_location'  => 'hametuha_global_about',
+						'container'       => 'nav',
+						'container_class' => 'col-12 col-md-6',
+						'menu_class'      => 'footer-links-about',
+						'depth'           => 1,
+					] );
+				}
+				// Social links.
+				if ( has_nav_menu( 'hametuha_socials' ) ) {
+					Kunoichi\SetMenu::nav_menu( [
+						'theme_location'  => 'hametuha_socials',
+						'container_class' => 'col-12 col-md-6',
+						'container'       => 'nav',
+						'menu_class'      => 'footer-links-social',
+						'depth'           => 1,
+					] );
+				}
+				?>
 
 			</div><!-- //.row -->
 		</div><!-- //.container -->
 
 	</div>
 
-	<div class="footer-copynote">
-		<p class="copy-right text-center">
-			&copy; <span itemprop="copyrightYear">2007</span> 破滅派
-		</p>
-	</div><!-- copynote -->
+	<?php
+	get_template_part( 'templates/footer', 'colophon', [
+		'suffix' => 'general',
+	] );
+	?>
 
 </footer>
 
-<?php if ( ! is_hamenew() ) : ?>
-<div id="write-panel" class="write-panel">
+<?php
+// TODO: Remove action menu from footer.
+if ( ! is_hamenew() ) :
+	?>
+	<div id="write-panel" class="write-panel">
 	<div class="write-panel__inner">
 		<p class="text-right">
 			<button class="write-panel__close write-panel-btn btn btn-link"><i class="icon-cancel-circle"></i></button>

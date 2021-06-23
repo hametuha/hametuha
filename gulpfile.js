@@ -15,7 +15,7 @@ let plumber = true;
 // Sassのタスク
 gulp.task( 'sass', function () {
 
-	return gulp.src( [ './assets/sass/**/*.scss' ] )
+	return gulp.src( [ './assets/sass/**/critical.scss' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -140,6 +140,10 @@ gulp.task( 'copylib', function () {
 		gulp.src( icons.brands.map( ( brand ) => {
 			return `./node_modules/simple-icons/icons/${brand}.svg`;
 		} ) )
+			.pipe( $.replace( /<svg([^>]+)>/, ( match, p1 ) => {
+				return `<svg${p1}><symbol id="simple-icon">`;
+			} ) )
+			.pipe( $.replace( '</svg>', '</symbol></svg>' ) )
 			.pipe( gulp.dest( './dist/img/brand' ) ),
 		// Bootstrap icons
 		gulp.src( icons.bootstrap.map( ( icon ) => {

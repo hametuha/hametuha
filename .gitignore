@@ -7,6 +7,6 @@ composer.lock
 composer-dev.lock
 .sass-cache
 .svn
-/wordpress/
 package-lock.json
 wp-dependencies.json
+/wordpress/

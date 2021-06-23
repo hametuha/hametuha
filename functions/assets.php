@@ -112,3 +112,71 @@ function hametuha_sideload_image( $file, $post_id, $desc = null ) {
 	}
 	return $id;
 }
+
+/**
+ * Get SVG url.
+ *
+ * @param string    $class   Class name.
+ * @param string    $url     URL of SVG.
+ * @param int|int[] $size    Icon size. If array, used as width & height.
+ * @param int[]     $viewbox Array of width and height. If empty, use width & height.
+ *
+ * @return string
+ */
+function hametuha_svg( $class, $url, $size, $viewbox = [] ) {
+	if ( is_array( $size ) ) {
+		list( $width, $height ) = $size;
+	} else {
+		$width = $height = $size;
+	}
+	if ( empty( $viewbox ) ) {
+		$v_w = $width;
+		$v_h = $height;
+	} else {
+		list( $v_w, $v_h ) = $viewbox;
+	}
+	return sprintf(
+		'<svg class="%1$s" width="%2$d" height="%3$d" fill="currentColor" viewBox="0, 0, %5$d, %6$d"><use xlink:href="%4$s" /></svg>',
+		esc_attr( $class ),
+		esc_attr( $width ),
+		esc_attr( $height ),
+		esc_url( $url ),
+		esc_attr( $v_w ),
+		esc_attr( $v_h )
+	);
+}
+
+/**
+ * Get Bootstrap icon.
+ *
+ * @param string $name Icon name.
+ * @param int    $size Icon size.
+ * @return string
+ */
+function hametuha_bs_svg( $name, $size ) {
+	$url = get_template_directory_uri() . '/dist/img/bi/bootstrap-icons.svg#' . $name;
+	return hametuha_svg( sprintf( 'hametuha-bi hametuha-bi-%s', $name ), $url, $size, [ 16, 16 ] );
+}
+
+/**
+ * Render brand svg.
+ *
+ * @param string $name     Brand name.
+ * @param int    $size     icon size.
+ * @param string $id       If to use.
+ * @param int[]  $view_box Width and height. If not set, [ 24, 24 ] will be the default.
+ * @return string
+ */
+function hametuha_brand_svg( $name, $size, $id = 'simple-icon', $view_box = [] ) {
+	$rel = '/dist/img/brand/' . $name . '.svg';
+	if ( empty( $view_box ) ) {
+		$view_box = [ 24, 24 ];
+	}
+	if ( file_exists( get_template_directory() . $rel ) ) {
+		$inline = str_replace( '<svg ', '<svg ', file_get_contents( get_template_directory() . $rel ) );
+		$url    = get_template_directory_uri() . '/dist/img/brand/' . $name . '.svg#' . $id;
+		return hametuha_svg( sprintf( 'hametuha-brand hametuha-brand-%s', esc_attr( $name ) ), $url, $size, $view_box );
+	} else {
+		return hametuha_bs_svg( 'link-45deg', $size );
+	}
+}

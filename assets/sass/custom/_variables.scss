@@ -3,6 +3,13 @@ $slick-loader-path: "../img/" !default;
 $slick-arrow-color: #888;
 
 
+$gutter: 40px;
+$gutter-lg: $gutter * 1.5;
+$gutter-xl: $gutter * 2;
+$gutter-md: $gutter / 2;
+$gutter-sm: $gutter / 3;
+$gutter-xs: $gutter / 4;
+
 //
 //
 // 色の設定
@@ -10,9 +17,9 @@ $slick-arrow-color: #888;
 // ----------------------
 //
 $base-color: #444;
-
 $thin-border: #eee;
 $zebra-bg: #f9f9f9;
+$solid-border: $base-color;
 
 $footer-navbar-bg: #242424;
 
@@ -32,6 +39,7 @@ $link-hover-bg: #fffcde;
 $link-active-bg: #fffecc;
 
 // ソーシャルアイコンの色
+$amazon-color: #f90;
 $hametuha-color: #000;
 $facebook-color: #3c5a95;
 $twitter-color: #58aceb;
@@ -42,8 +50,22 @@ $hatena-color: #576cea;
 $instagram-color: #833ab4;
 $github-color: #333;
 $minicome-color: #252525;
-$ustream-color: #2f7bff;
 $pocket-color: #f04057;
+$pinterest-color: #e70023;
+$brand-colors: (
+	"amazon": $amazon-color,
+	"hametuha": $hametuha-color,
+	"facebook": $facebook-color,
+	"twitter": $twitter-color,
+	"google": $google-color,
+	"line": $line-color,
+	"hatena": $hatena-color,
+	"instagram": $instagram-color,
+	"github": $github-color,
+	"minicome": $minicome-color,
+	"pocket": $pocket-color,
+	"pinterest": $pinterest-color,
+);
 
 // Button colors
 $border-radius-base: 2px;
@@ -62,7 +84,6 @@ $border-radius-small: 3px;
   github $github-color,
   minicome $minicome-color,
   youtube $youtube-color,
-  ustream $ustream-color,
   pocket $pocket-color,
   hatena $hatena-color,
 ) {

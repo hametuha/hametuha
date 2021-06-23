@@ -17,6 +17,17 @@
 // These are critical CSS.
 @import "root";
 @import "reboot";
+@import "containers";
+@import "grid";
 
 // Header.
-@import "custom/components/header";
+// @import "custom/components/header";
+@import "custom/components/footer";
+
+.sr-only {
+	@include visually-hidden();
+}
+
+.skip-navigation {
+	@include visually-hidden-focusable();
+}

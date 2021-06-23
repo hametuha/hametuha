@@ -2,6 +2,15 @@
  * Hametuha Single Post
  *
  * @handle hametuha-post
+ * @deps hametuha-critical
  */
 
+// Bootstrap.
+@import "functions";
 
+// Default variable overrides.
+@import "custom/variables";
+@import "custom/mixins";
+// Bootstrap.
+@import "variables";
+@import "mixins";
