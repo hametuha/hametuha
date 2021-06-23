@@ -279,8 +279,5 @@ gulp.task( 'default', gulp.series( 'watch' ) );
 // Browser sync( not working?)
 gulp.task( 'bs', gulp.series( 'bs-init', 'bs-watch' ) );
 
-// Static assets development.
-gulp.task( 'statics', gulp.parallel( 'watch', 'bs' ) );
-
 // Lint
 gulp.task( 'lint', gulp.series( 'noplumber', gulp.parallel( 'stylelint', 'eslint' ) ) );

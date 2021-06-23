@@ -16,7 +16,34 @@ $gutter-xs: $gutter / 4;
 //
 // ----------------------
 //
-$base-color: #444;
+$gray-100: #f7f8f6;
+$gray-700: #444;
+$gray-900: #212529;
+
+$yellow: #E8BA73;
+
+$primary:       #346ea2;
+$secondary:     #9FAC9E;
+$success:       #8fb38e;
+$info:          #93ccdD;
+$warning:       #b6a076;
+$danger:        #D63B31;
+$light:         $gray-100;
+$dark:          $gray-900;
+
+$theme-colors: (
+	"primary":    $primary,
+	"secondary":  $secondary,
+	"success":    $success,
+	"info":       $info,
+	"warning":    $warning,
+	"danger":     $danger,
+	"light":      $light,
+	"dark":       $dark,
+	"default":    $gray-700,
+);
+
+$base-color: $gray-700;
 $thin-border: #eee;
 $zebra-bg: #f9f9f9;
 $solid-border: $base-color;
@@ -67,12 +94,7 @@ $brand-colors: (
 	"pinterest": $pinterest-color,
 );
 
-// Button colors
-$border-radius-base: 2px;
-$border-radius-large: 3px;
-$border-radius-small: 3px;
-
-// アイコンの色を決める
+// Brand colors.
 @each $brand in (
 	facebook $facebook-color,
   twitter $twitter-color,
@@ -94,6 +116,12 @@ $border-radius-small: 3px;
 
 // ボーダー
 $divide-border: 3px double $thin-border;
+$border-radius-base: 2px;
+$border-radius-large: 3px;
+$border-radius-small: 3px;
+$border-radius:    4px;
+$border-radius-sm: 2px;
+$border-radius-lg: 5px;
 
 // アイコンを読み込む
 @mixin hameticon() {

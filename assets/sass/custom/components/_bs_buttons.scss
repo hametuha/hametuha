@@ -1,0 +1,42 @@
+//
+// Buttons.
+//
+
+
+@import "buttons";
+
+.btn-round {
+	border-radius: $border-radius-pill;
+}
+
+.btn {
+	min-width: calc( 4em + 1rem );
+
+	& + & {
+		margin-left: 1em;
+	}
+}
+
+.btn-block {
+	display: block;
+	width: 100%;
+
+	& + & {
+		margin-left: 0;
+		margin-top: 1em;
+	}
+}
+
+.btn-circle {
+	min-width: 0;
+	box-sizing: content-box;
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	padding: 0.5em;
+	line-height: 1em;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+	&:hover {
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0);
+	}
+}

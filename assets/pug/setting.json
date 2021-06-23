@@ -7,10 +7,13 @@
 	"labels": {
 		"default": "デフォルト",
 		"primary": "重要",
+		"secondary": "二番手",
 		"success": "成功",
 		"info": "お知らせ",
 		"warning": "警告",
-		"danger": "危険"
+		"danger": "危険",
+		"light": "明るい",
+		"dark": "暗い"
 	},
 	"msgs": {
 		"success": {
