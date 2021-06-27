@@ -57,18 +57,6 @@ $( document ).ready( function () {
 		$( '#write-panel' ).toggleClass( 'open' );
 	} );
 
-	// スクロール
-	const header = document.getElementById( 'header' );
-	if ( header ) {
-		const headroom = new Headroom( header, {
-			onPin: function () {
-				$( 'body' ).removeClass( 'header-hidden' );
-			},
-			onUnpin: function () {
-				$( 'body' ).addClass( 'header-hidden' );
-			}
-		} );
-		headroom.init();
-	}
+
 
 } );

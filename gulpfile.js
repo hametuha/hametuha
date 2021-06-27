@@ -15,7 +15,7 @@ let plumber = true;
 // Sassのタスク
 gulp.task( 'sass', function () {
 
-	return gulp.src( [ './assets/sass/**/critical.scss' ] )
+	return gulp.src( [ './assets/sass/**/login.scss' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -228,8 +228,7 @@ gulp.task( 'watch', ( done ) => {
 
 	// Build pug
 	gulp.watch( [
-		'assets/pug/**/*.pug',
-		'assets/pug/setting.json',
+		'assets/pug/**/*',
 	], gulp.task( 'pug' ) );
 
 	done();

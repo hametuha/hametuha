@@ -31,6 +31,8 @@ class ShortLinks extends Model {
 		'path'    => '%s',
 		'args'    => '%s',
 		'created' => '%s',
+		'expires' => '%s',
+		'file_id' => '%d',
 	];
 
 	/**

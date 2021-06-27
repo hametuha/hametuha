@@ -17,7 +17,7 @@ add_action( 'init', function() {
 	wp_register_script( 'bootbox', get_template_directory_uri() . '/dist/vendor/bootbox/bootbox.all.min.js', [ 'jquery', 'bootstrap' ], '5.2.2', true );
 
 	// Headroom
-	wp_register_script( 'headroom', get_template_directory_uri() . '/dist/vendor/headroom/headroom.min.js', [], '0.12.0', true );
+	wp_register_script( 'headroom', get_template_directory_uri() . '/dist/vendor/headroom/headroom.min.js', [ 'jquery' ], '0.12.0', true );
 
 	// FontAwesome
 	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
@@ -49,7 +49,7 @@ add_action( 'init', function() {
 					break;
 			}
 		}
-	}
+	};
 
 	/**
 	 * hametuha_angular_extensions

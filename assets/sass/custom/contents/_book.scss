@@ -1,0 +1,181 @@
+//
+// 作品のスタイル
+//
+// ------------------------
+//
+
+
+& > *:first-child {
+	margin-top: 0;
+}
+
+// 本文
+p {
+	margin: 0;
+	&.indent {
+		text-indent: 1em;
+	}
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 1.5em 0 0.5em;
+	font-weight: normal;
+	font-family: $work-bold;
+	clear: both;
+}
+
+h1 {
+	font-size: 2em;
+}
+h2 {
+	margin-top: 3em;
+	color: $clear-font;
+	font-size: 1.8em;
+	padding-bottom: 0.5em;
+	border-bottom: 3px double $clear-font;
+}
+h3 {
+	font-size: 1.4em;
+	color: $blue-font;
+}
+h4 {
+	font-size: 1.2em;
+	color: $shade-font;
+	padding-bottom: 0.5em;
+	border-bottom: 1px dotted $thin-border;
+}
+h5 {
+	font-size: 1.2em;
+}
+h6 {
+	font-size: 1em;
+}
+
+// 引用
+blockquote {
+	margin: 1em 0 1em 2em;
+	color: #444;
+	border-left: none;
+	padding: 0;
+	font-size: inherit;
+	cite {
+		display: block;
+		font-size: 0.85em;
+		text-align: right;
+		&::before {
+			content: "“";
+		}
+		&::after {
+			content: "”";
+		}
+	}
+	p cite {
+		text-indent: -1em;
+	}
+}
+q {
+	&::before {
+		content: "“";
+	}
+	&::after {
+		content: "”";
+	}
+}
+
+// コラム
+aside {
+	font-family: $work-body-sans;
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: $work-bold-sans;
+	}
+}
+
+// テーブル
+table {
+	width: 100%;
+	table-layout: auto;
+	border-collapse: collapse;
+	margin: 1em 0;
+	thead {
+		th {
+			color: $shade-font;
+			border-bottom: 3px double $shade-font;
+			font-family: sans-serif;
+			font-weight: bold;
+		}
+	}
+	th,
+	td {
+		border-bottom: 1px solid $shade-font;
+		padding: 0.5em;
+	}
+	tbody {
+		th {
+			border-right: 1px dotted $shade-font;
+		}
+	}
+}
+
+// リスト
+ul,
+dl,
+ol {
+	margin: 1em 0;
+}
+
+dl {
+	dt {
+		font-family: $work-bold;
+		margin-top: 0.5em;
+	}
+	dd {
+		margin-left: 1em;
+		&:last-child {
+			margin-bottom: 0.5em;
+		}
+	}
+}
+
+
+// その他
+acronym,
+abbr {
+	cursor: help;
+	border-bottom: 2px dashed $shade-font;
+}
+big {
+	font-size: 4em;
+}
+cite {
+	font-style: italic;
+}
+del,
+s,
+strike {
+	color: $more-shade-font;
+	text-decoration: line-through;
+}
+ins,
+small {
+	color: $shade-font;
+	text-decoration: none;
+	&::before {
+		content: "〔";
+	}
+	&::after {
+		content: "〕";
+	}
+}
+strong {
+	font-family: $work-bold;
+}

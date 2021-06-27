@@ -1,109 +1,112 @@
 doctype html
 html
-    block vars
-    head
-        meta(charset='utf8')
-        title #{title} | Kitchen Sink
-        link(rel='stylesheet' href='./css/critical.css')
-        if scripts
-            for s in scripts
-                script(src=s)
+  block vars
+  head
+    meta(charset='utf8')
+    meta(name='viewport' content='width=device-width,initial-scale=1')
+    title #{title} | Kitchen Sink
+    link(rel='stylesheet' href='./css/critical.css')
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap')
 
-    body
-        .navbar.navbar-default.navbar-fixed-top
-            .container
-                .navbar-header
-                    button.navbar-toggle(type='button' data-toggle='collapse' data-target='#header-navigation')
-                        span.sr-only Toggle Navigation
-                        span.icon-bar
-                        span.icon-bar
-                        span.icon-bar
+    if scripts
+      for s in scripts
+        script(src=s)
 
-
-                a.logo(rel='home' href='./index.html')
-                    i.icon-hametuha
-                    span 破滅派
-
-                ul#user-info.navbar-nav.navbar-right.navbar-login.navbar-login--user.nav.nav-pills.col-sm-1
-                    li.dropdown
-                        a.dropdown-toggle(href='#' data-toggle='dropdown')
-                            img.avatar(src='./img/dammy/300.png' width=60 height=60)
-                        ul.dropdown-menu
-                            li.greeting
-                                strong ◯◯
-                                | さん
-                                br
-                                span 管理者
-                    li#notification-link.dropdown
-                        a.dropdown-toggle.dropdown--notify(href='#' data-toggle='dropdown')
-                            i.icon-earth
-                        ul#notification-containr.dropdown-menu.notification__container
-                            li
-                                span お知らせはなにもありません。
-
-                nav#header-navigation.collapse
-                    ul.nav
-                        li.dropdown
-                         a.dropdown-toggle(href='#' data-toggle='dropdown')
-                            i.icon-menu2
-                            | メニュー
-                         ul.dropdown-menu
-                             li
-                                a(href='#') メニュー
-        .subnav
-            .container
-                .subnav__nav
-                    .subnav__list.row
-                        .subnav__item
-                            a.subnav__link(href='#' data-toggle='collapse' data-target='#write-links')
-                                i.icon-quill3
-                                span 書く
-                        .subnav__item
-                            a.subnav__link(href='#' data-toggle='collapse' data-target='#read-links')
-                                i.icon-book
-                                span 読む
-                        .subnav__item
-                            a.subnav__link(href='#' data-toggle='collapse' data-target='#search-links')
-                                i.icon-search2
-                                span 探す
-                    .subnav__wrap.col-xs-12
-                        ul.subnav__child.collapse#write-links
-                            li
-                                a(href='#')
-                                    i.icon-earth
-                                    | リンク
-                            li.divider aaaaa
-                            li
-                                a(href='#') リンク
-                            li
-                                a(href='#') リンク
-                        ul.subnav__child.collapse#read-links
-                            li
-                                a(href='#') リンク
-                            li
-                                a(href='#') リンク
-                            li
-                                a(href='#') リンク
-                        ul.subnav__child.collapse#search-links
-                            li
-                                a(href='#') リンク
-                            li
-                                a(href='#') リンク
-                            li
-                                a(href='#') リンク
+body
+  .navbar.navbar-default.navbar-fixed-top
+    .container
+      .navbar-header
+        button.navbar-toggle(type='button' data-toggle='collapse' data-target='#header-navigation')
+          span.sr-only Toggle Navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
 
 
+      a.logo(rel='home' href='./index.html')
+        i.icon-hametuha
+        span 破滅派
 
-        #breadcrumb
-            .container
-                i.icon-location5
-                a(href='./index.html') Top
-                |  &gt;
-                span=title
+      ul#user-info.navbar-nav.navbar-right.navbar-login.navbar-login--user.nav.nav-pills.col-sm-1
+        li.dropdown
+          a.dropdown-toggle(href='#' data-toggle='dropdown')
+            img.avatar(src='./img/dammy/300.png' width=60 height=60)
+          ul.dropdown-menu
+            li.greeting
+              strong ◯◯
+              | さん
+              br
+              span 管理者
+        li#notification-link.dropdown
+          a.dropdown-toggle.dropdown--notify(href='#' data-toggle='dropdown')
+            i.icon-earth
+          ul#notification-containr.dropdown-menu.notification__container
+            li
+              span お知らせはなにもありません。
 
-        .container
-            .page-header
-                h1=title
+      nav#header-navigation.collapse
+        ul.nav
+          li.dropdown
+            a.dropdown-toggle(href='#' data-toggle='dropdown')
+              i.icon-menu2
+              | メニュー
+            ul.dropdown-menu
+              li
+                a(href='#') メニュー
+  .subnav
+    .container
+      .subnav__nav
+        .subnav__list.row
+          .subnav__item
+            a.subnav__link(href='#' data-toggle='collapse' data-target='#write-links')
+              i.icon-quill3
+              span 書く
+          .subnav__item
+            a.subnav__link(href='#' data-toggle='collapse' data-target='#read-links')
+              i.icon-book
+              span 読む
+          .subnav__item
+            a.subnav__link(href='#' data-toggle='collapse' data-target='#search-links')
+              i.icon-search2
+              span 探す
+        .subnav__wrap.col-xs-12
+          ul.subnav__child.collapse#write-links
+            li
+              a(href='#')
+                i.icon-earth
+                | リンク
+            li.divider aaaaa
+            li
+              a(href='#') リンク
+            li
+              a(href='#') リンク
+          ul.subnav__child.collapse#read-links
+            li
+              a(href='#') リンク
+            li
+              a(href='#') リンク
+            li
+              a(href='#') リンク
+          ul.subnav__child.collapse#search-links
+            li
+              a(href='#') リンク
+            li
+              a(href='#') リンク
+            li
+              a(href='#') リンク
 
-        block content
+
+
+  #breadcrumb
+    .container
+      i.icon-location5
+      a(href='./index.html') Top
+      |  &gt;
+      span=title
+
+  .container
+    .page-header
+      h1=title
+
+    block content
 

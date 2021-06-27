@@ -1,0 +1,111 @@
+.has-text-align-right {
+	text-align: right;
+}
+.has-text-align-left {
+	text-align: left;
+}
+.has-text-align-center{
+	text-align: center;
+}
+
+// section
+.wp-block-hametuha-section {
+	padding-top: 80px;
+	padding-bottom: 80px;
+	@include media-breakpoint-down(sm) {
+		padding-top: 40px;
+		padding-bottom: 40px;
+	}
+}
+
+.has-drop-cap {
+	text-indent: 0 !important;
+	&::first-letter {
+		line-height: 1;
+		font-size: 2.4em;
+		float: left;
+		display: inline-block;
+		padding: 0.2em 0.2em 0.2em 0;
+		margin: 0;
+	}
+}
+
+
+// Button
+.wp-block-button {
+	a {
+		transition: color .3s linear, background-color .3s linear, border-bottom-color .3s linear;
+		border: 2px solid transparent;
+		&:link,
+		&:visited {
+			text-decoration: none;
+			color: #fff;
+			border-color: #000;
+			background-color: #000;
+		}
+		&:hover,
+		&:active {
+			text-decoration: none;
+			color: #000;
+			border-color: #000;
+			background-color: transparent;
+		}
+	}
+	&.is-style-outline {
+		a {
+			&:link,
+			&:visited {
+				color: #000;
+				border-color: #000;
+				background-color: transparent;
+			}
+			&:hover,
+			&:active {
+				color: #fff;
+				border-color: #000;
+				background-color: #000;
+			}
+		}
+	}
+	@each $setting in (
+			( primary $primary ),
+			( success $success ),
+			( danger $danger ),
+			( warning $warning )
+	) {
+		$class-name: nth($setting, 1);
+		$color: nth($setting, 2);
+		&.#{$class-name}, &.is-style-squared.#{$class-name} {
+			a.wp-block-button__link {
+				&:link,
+				&:visited {
+					color: #fff;
+					background-color: $color;
+					border-color: $color;
+				}
+				&:hover,
+				&:active {
+					color: $color;
+					background-color: transparent;
+					border-color: $color;
+				}
+			}
+		}
+		&.is-style-outline.#{$class-name} {
+			a {
+				&:link,
+				&:visited {
+					color: $color;
+					border-color: $color;
+					background-color: transparent;
+				}
+				&:hover,
+				&:active {
+					color: #fff;
+					border-color: $color;
+					background-color: $color;
+				}
+			}
+		}
+	}
+}

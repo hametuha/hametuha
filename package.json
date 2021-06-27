@@ -60,6 +60,7 @@
 		"headroom.js": "^0.12.0",
 		"imagemin-mozjpeg": "^8.0.0",
 		"imagemin-pngquant": "^6.0.1",
+		"jstransformer-markdown-it": "^2.1.0",
 		"merge-stream": "^2.0.0",
 		"prop-types": "^15.7.2",
 		"select2": "^4.0.5",

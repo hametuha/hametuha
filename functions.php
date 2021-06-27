@@ -23,12 +23,12 @@ define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 /**
  * Register i18n.
  */
-add_action(
-	'after_setup_theme',
-	function() {
-		load_theme_textdomain( 'hametuha', get_template_directory() . '/languages' );
-	}
-);
+add_action( 'after_setup_theme', function() {
+	load_theme_textdomain( 'hametuha', get_template_directory() . '/languages' );
+} );
+
+// Avoid admin bar.
+add_filter( 'show_admin_bar', '__return_false' );
 
 /**
  * Bootstrap for theme

@@ -1,0 +1,232 @@
+//
+// 普通の投稿
+//
+// ------------------------
+//
+// リンク
+a:link,
+a:visited {
+	text-decoration: underline;
+}
+// 文章
+p {
+	margin: 1em 0;
+	&:first-child {
+		margin-top: 0;
+	}
+}
+// 見出し
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-top: 2em;
+	margin-bottom: 1em;
+	clear: both;
+	&:first-child {
+		margin-top: 0;
+	}
+}
+h1 {
+	font-size: 3em;
+	font-weight: normal;
+	padding-bottom: 0.5em;
+	position: relative;
+	&::after {
+		position: absolute;
+		display: block;
+		content: "";
+		height: 3px;
+		background-color: #000;
+		bottom: 0;
+		left: 0;
+		width: 30%;
+		max-width: 150px;
+	}
+	&[style*="center"]::after,
+	&.has-text-align-center::after {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	&[style*="right"]::after,
+	&.has-text-align-right::after {
+		left: auto;
+		right: 0;
+	}
+}
+h2 {
+	font-size: 2em;
+	font-weight: $font-weight-normal;
+	border-top: 2px solid $black;
+	border-bottom: 2px solid $black;
+	padding: 0.5em;
+}
+h3 {
+	font-size: 1.6em;
+	font-weight: $font-weight-bold;
+}
+h4 {
+	$h4-border-style: 5px solid $black;
+	$h4-border-padding: 0.5em;
+	font-size: 1.6em;
+	font-weight: $font-weight-normal;
+	border-left: $h4-border-style;
+	padding-left: $h4-border-padding;
+	&[style*="center"],
+	&.has-text-align-center {
+		position: relative;
+		border-left: none;
+		padding-left: 0;
+		padding-top: $h4-border-padding * 2;
+		&::after {
+			content: "";
+			width: 1.5em;
+			height: 5px;
+			background-color: $black;
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+
+	}
+	&[style*="right"],
+	&.has-text-align-right {
+		border-left: none;
+		border-right: $h4-border-style;
+		padding-left: 0;
+		padding-right: $h4-border-padding;
+	}
+}
+h5 {
+	font-size: 1.4em;
+	font-weight: normal;
+	border-bottom: 1px solid #000;
+	padding-bottom: 0.5em;
+}
+h6 {
+	color: #000;
+	font-size: 1em;
+	font-weight: bold;
+}
+// 引用
+blockquote {
+	font-style: normal;
+	color: $black;
+	position: relative;
+	border-left: none;
+	padding: 1.5em;
+	margin: 1.5em 0;
+	p,
+	cite {
+		position: relative;
+		z-index: 2;
+	}
+	cite {
+		display: block;
+		text-align: right;
+		font-style: normal;
+	}
+	&::before {
+		content: "“";
+		position: absolute;
+		line-height: 1;
+		top: 0;
+		left: 0;
+		color: $thin-border;
+		font-size: 8em;
+		z-index: 1;
+	}
+	&.is-large {
+		font-size: 2em;
+	}
+}
+
+cite,
+q {
+	font-style: italic;
+	&::before {
+		content: "“";
+	}
+	&::after {
+		content: "”";
+	}
+}
+small {
+	color: #666;
+	font-size: 1em;
+	&::before {
+		content: "〔";
+	}
+	&::after {
+		content: "〕";
+	}
+}
+// テーブル
+table {
+	font-size: 0.85em;
+
+	@extend .table;
+	@extend .table-striped;
+}
+// リスト
+ul,
+ol,
+dl {
+	margin: 1em 0;
+}
+dl {
+	$border:  2px solid $thin-border;
+	dt {
+		border-bottom: 1px solid $thin-border;
+		border-left: $border;
+		padding: 0.25em 0.5em 0.25em 15px;
+		margin-top: 1em;
+	}
+	dd {
+		border-left: $border;
+		padding: 0.25em 0.5em 0.25em 15px;
+		margin-bottom: 0.5em;
+	}
+	margin: 1em 0;
+}
+// インライン要素
+abbr,
+acronym {
+	border-bottom: 3px dashed $thin-border;
+	font-weight: bold;
+	font-family: $font-family-serif;
+	cursor: help;
+}
+big {
+	font-size: 2em;
+}
+del,
+strike {
+	text-decoration: line-through;
+	color: #aaa;
+}
+ins {
+	background-color: #fdffbf;
+	text-decoration: none;
+}
+em {
+	font-style: normal;
+	@include text-emphasis(sesame filled);
+}
+// iframe
+iframe {
+	display: block;
+	margin: 1em auto;
+	max-width: 100%;
+}
+object,
+iframe {
+	max-width: 100%;
+}
+
+// 引用
+blockquote {
+}

@@ -70,17 +70,7 @@ class Idea extends RestTemplate {
 	 * @param string $page Available only on admin screen
 	 */
 	public function enqueue_assets( $page = '' ) {
-		$path = '/assets/js/dist/components/ideas.js';
-		wp_enqueue_script(
-			'hametuha-follower',
-			get_stylesheet_directory_uri() . $path,
-			[
-				'angular',
-				'wp-api',
-			],
-			filemtime( get_stylesheet_directory() . $path ),
-			true
-		);
+		wp_enqueue_script( 'hametuha-idea-button' );
 	}
 
 

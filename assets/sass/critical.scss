@@ -21,9 +21,29 @@
 @import "grid";
 
 // Header.
-// @import "custom/components/header";
+@import "custom/components/header";
+@import "custom/components/submenu";
+
+// Not critical. for debug.
 @import "custom/components/footer";
 @import "custom/components/bs_buttons";
+@import "custom/wp_things";
+
+@import "tables";
+.post-content {
+	font-size: 18px;
+	@include media-breakpoint-down(sm) {
+		font-size: 16px;
+	}
+	line-height: 2.2;
+	padding-top: 30px;
+	padding-bottom: 30px;
+	@include text-justify();
+
+	@import "custom/contents/common_elements";
+	@import "custom/contents/blocks";
+	@import "custom/contents/web";
+}
 
 .sr-only {
 	@include visually-hidden();
@@ -31,4 +51,8 @@
 
 .skip-navigation {
 	@include visually-hidden-focusable();
+}
+
+.no-appearance {
+	-webkit-appearance: none;
 }

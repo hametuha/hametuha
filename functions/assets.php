@@ -153,9 +153,32 @@ function hametuha_svg( $class, $url, $size, $viewbox = [] ) {
  * @param int    $size Icon size.
  * @return string
  */
-function hametuha_bs_svg( $name, $size ) {
+function hametuha_bi_svg( $name, $size ) {
 	$url = get_template_directory_uri() . '/dist/img/bi/bootstrap-icons.svg#' . $name;
 	return hametuha_svg( sprintf( 'hametuha-bi hametuha-bi-%s', $name ), $url, $size, [ 16, 16 ] );
+}
+
+/**
+ * Embed SVG as HTML.
+ *
+ * @param string $name SVG name.
+ * @param int    $size Size.
+ *
+ * @return string
+ */
+function hametuha_embed_bi_svg( $name, $size = 16 ) {
+	$path = sprintf( '%s/dist/img/bi/%s.svg', get_template_directory(), $name );
+	if ( ! file_exists( $path ) ) {
+		return '';
+	}
+	$svg = file_get_contents( $path );
+	// remove namespace.
+	$svg = preg_replace( '# xmlns="[^"]+"#', '', $svg );
+	// $replace width and height.
+	if ( 16 !== $size ) {
+		$svg = preg_replace( '#(width|height)="(\d+)"#u', sprintf( '$1="%d"', $size ), $svg );
+	}
+	return $svg;
 }
 
 /**
@@ -177,6 +200,6 @@ function hametuha_brand_svg( $name, $size, $id = 'simple-icon', $view_box = [] )
 		$url    = get_template_directory_uri() . '/dist/img/brand/' . $name . '.svg#' . $id;
 		return hametuha_svg( sprintf( 'hametuha-brand hametuha-brand-%s', esc_attr( $name ) ), $url, $size, $view_box );
 	} else {
-		return hametuha_bs_svg( 'link-45deg', $size );
+		return hametuha_bi_svg( 'link-45deg', $size );
 	}
 }

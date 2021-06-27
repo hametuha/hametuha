@@ -1,12 +1,6 @@
 .submenu {
-	&-wrapper {
-		#header + & {
-			padding-top: $navbar-height;
-		}
-		background-color: #fff;
-	}
 	display: flex;
-	@include mq-max( $screen-md-min ) {
+	@include media-breakpoint-down(md) {
 		flex-wrap: wrap;
 	}
 	padding: 0;
@@ -32,6 +26,9 @@
 		}
 		&:hover::before {
 			width: 50%;
+		}
+		&:first-child::after {
+			content: none;
 		}
 		&::after {
 			content: "";
@@ -62,5 +59,4 @@
 			color: #000;
 		}
 	}
-
 }

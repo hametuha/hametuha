@@ -2,7 +2,7 @@
  * アイデアを表示するボタン
  *
  * @handle hametuha-idea-button
- * @deps jquery
+ * @deps jquery, angular, wp-api
  */
 
 const $ = jQuery;

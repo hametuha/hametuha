@@ -49,6 +49,6 @@ $table = [
 
 	'indexes' => [
 		'url'       => [ 'url(20)' ],
-		'url_owner' => [ 'url(20)', 'owner(200)' ],
+		'url_owner' => [ 'url(20)', 'file_id(200)' ],
 	],
 ];

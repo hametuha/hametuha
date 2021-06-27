@@ -1,138 +1,236 @@
+$header-height: 50px;
+$header-padding: 5px;
+$header-z-index: 10;
+$header-bg: $white;
+$header-divider-color: $gray-900;
+$header-button-bg: $gray-200;
 
-//
-// アイコンの点滅
-//
-//@include keyframes( icon-blink ) {
-//	0% {
-//		color: $navbar-default-link-color;
-//		background-color: $navbar-default-bg;
-//	}
-//	100% {
-//		color: $brand-danger;
-//		background-color: lighten($brand-danger, 30);
-//	}
-//}
-
-#header {
+.site-navigation {
 	will-change: transform;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: $header-z-index;
 	transition: transform .3s ease-in-out;
-	&.headroom--unpinned {
-		@include head-room() {
-			transform: translateY(-100%);
+	background-color: $header-bg;
+	border-bottom: 1px solid $header-divider-color;
+
+	// Hide with scroll
+	@include media-breakpoint-down(sm) {
+		@at-root .header-hidden &{
+			@include head-room() {
+				transform: translateY(-100%);
+			}
 		}
+	}
+
+	.container {
+		position: relative;
+		height: $header-height;
+	}
+
+	+ * {
+		margin-top: $header-height + 1;
 	}
 }
 
-.navbar {
-	&-header {
-		position: relative;
+// Header buttons.
+%header-buttons {
+	height: $header-height;
+	background-color: $header-bg;
+	border: none;
+	color: $black;
+
+	// actions.
+	transition: color .3s ease-in-out, background-color .3s ease-in-out;
+	&:hover {
+		background-color: $dark;
+		color: $white;
 	}
-	// 編集ボタン
-	&-edit-btn {
+	&.active,
+	&:active {
+		background-color: $header-button-bg;
+		color: $black;
+	}
+}
+
+// Toggle navigation
+.header-toggle {
+
+	@extend %header-buttons;
+
+	width: $header-height;
+	position: absolute;
+	left: 0;
+	cursor: pointer;
+
+	@include media-breakpoint-down(sm) {
+		border-left: none;
+	}
+}
+
+// User actions.
+.user-login {
+	$avatar-size: 24px;
+
+	&-wrapper {
 		position: absolute;
-		top: 10px;
-		left: 60px;
-	}
-	// ヘッダーのトグルボタンを左にする
-	&-toggle {
-		position: relative;
-		float: left;
-		margin-right: 0;
-		margin-left: 10px;
-		//@media (min-width: $grid-float-breakpoint) {
-		//	display: block;
-		//}
-		border: none;
-	}
-	&-write {
-		line-height: 14px;
-		margin-left: 5px;
-	}
-	// ステータス表示
-	&-status {
-		position: absolute;
-		width: 100%;
-		//height: $navbar-height;
-		//line-height: $navbar-height;
-		left: 0;
+		right: 0;
 		top: 0;
-		text-align: center;
-		font-weight: bold;
-		color: #666;
+		height: $header-height;
+
+		ul {
+			padding: 0;
+			margin: 0;
+		}
+
+		li {
+			list-style: none;
+		}
 	}
 
-	// ユーザー情報
-	&-login {
-		$avatar-size: 30px;
-		width: 150px;
-		& > li:first-child .avatar {
-			width: $avatar-size;
-			height: $avatar-size;
-			border-radius: 4px;
+	&-avatar {
+		width: $avatar-size;
+		height: $avatar-size;
+		border-radius: 50%;
+	}
+
+	&-actions {
+		position: relative;
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: right;
+		height: $header-height;
+
+		@include media-breakpoint-down(sm) {
+			border-right: none;
 		}
-		i {
-			margin-right: 0.5em;
+	}
+
+	&-action {
+
+	}
+
+	&-dropdown {
+		@extend %header-buttons;
+
+		padding-right: 8px;
+		padding-left: 8px;
+	}
+
+	&-dropdown-menu {
+		position: absolute;
+		right: 0;
+		top: $header-height + 1;
+		width: 400px;
+		max-width: 100vw;
+		background-color: $white;
+		box-shadow: 0 5px 5px rgba( 0, 0, 0, .3 );
+		border-right: 1px solid $header-divider-color;
+		border-left: 1px solid $header-divider-color;
+
+		@at-root .header-hidden & {
+			display: none;
 		}
 
-		&.navbar-right > li {
-			float: right;
-			& > a {
-				//$avatar-pad: ($navbar-height - $avatar-size) / 2;
-				//padding: $avatar-pad $avatar-pad / 2;
-				//line-height: 1;
-				//&.dropdown--notify {
-				//	height: $navbar-height;
-				//	vertical-align: middle;
-				//}
-				//& > i {
-				//	$icon-pad: 4px;
-				//	font-size: $avatar-size - (2 * $icon-pad);
-				//	line-height: $avatar-size;
-				//	vertical-align: middle;
-				//}
-				//&.has-notify {
-				//	@include animation(icon-blink 1s linear 0 infinite alternate);
-				//}
-			}
-			.dropdown-menu {
-				min-width: 240px;
-			}
-		}
-		.greeting {
-			padding: 10px 20px;
-			strong {
-				font-size: 1.2em;
-				margin-right: 0.25em;
-			}
-			.role {
-				color: $shade-font;
-				padding-left: 0;
-				padding-right: 0;
-			}
-		}
 		@include media-breakpoint-down(sm) {
-			position: absolute;
-			top: 0;
-			margin-top: 0;
-			margin-bottom: 0;
+			width: 100vw;
 			right: 0;
-			& > li.open {
-				.dropdown-menu {
-					position: absolute;
-					right: 0;
-					width: 320px;
-					&.notification__container {
-						right: -40px;
-					}
-					left: auto;
-					//background-color: $navbar-default-bg;
-					//border: 1px solid $navbar-default-border;
-					//@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+			border-right: none;
+			border-left: none;
+		}
+
+		li{
+			margin: 0;
+			padding: 0;
+			border-top: 1px solid $thin-border;
+
+			&:first-child {
+				border-top: none;
+			}
+
+			&:last-child {
+				border-bottom: 1px solid $header-divider-color;
+			}
+
+			&.divider {
+				border-top: 1px solid $header-divider-color;
+
+				+ li {
+					border-top: none;
+				}
+			}
+
+			&.greeting {
+				padding: $gutter-xs $gutter-xs * 2;
+				strong {
+					font-size: 1.2em;
+					margin-right: 0.25em;
+				}
+				.role {
+					color: $shade-font;
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			a {
+				display: block;
+				padding: $gutter-sm;
+				transition: color .3s ease-in-out, background-color .3s ease-in-out;
+
+				&:link,
+				&:visited {
+					text-decoration: none;
+					color: $body-color;
+					background-color: $white;
+				}
+
+				&:hover,
+				&:active {
+					text-decoration: none;
+					color: $link-color;
+					background-color: $header-button-bg;
+				}
+				svg {
+					margin-right: 0.5em;
+					color: $shade-font;
+					vertical-align: top;
 				}
 			}
 		}
 	}
+
+	&-links {
+		a {
+			box-sizing: content-box;
+			height: 1em;
+			line-height: 1em;
+			vertical-align: middle;
+
+			@include ellipsis();
+		}
+	}
 }
+
+.notification {
+
+	&__empty {
+		span {
+			display: block;
+			padding: $gutter-sm;
+			color: $more-shade-font;
+			text-align: center;
+		}
+	}
+
+	&__more {
+		text-align: center;
+	}
+}
+
+
 
 //
 // Sub header
@@ -185,7 +283,7 @@
 		top: 15px;
 		left: 15px;
 		font-size: 28px;
-		@extend .icon-close:before;
+		// @extend .icon-close:before;
 		font-family: "hameticon";
 		color: #fff;
 		cursor: pointer;
@@ -222,11 +320,11 @@
 	//$logo-width: $navbar-height;
 	position: absolute;
 	display: block;
-	width: $logo-width;
-	height: $logo-width;
+	width: auto;
+	height: $header-height - $header-padding * 2;
 	left: 50%;
-	top: 0;
-	margin-left: $logo-width  / -10 * 9;
+	top: 50%;
+	transform: translate(-50%, -50%);
 	&:link,
 	&:visited {
 		text-decoration: none;
@@ -240,11 +338,15 @@
 			//color: $brand-danger !important;
 		}
 	}
-	span {
-		display: none;
+	&-img {
+		height: $header-height - $header-padding * 2;
+		width: auto;
 	}
-	i {
-		font-size: $logo-width;
+	@include media-breakpoint-down(sm) {
+		height: 32px;
+		&-img {
+			height: 32px;
+		}
 	}
 }
 
@@ -260,14 +362,6 @@
 	padding: 3px 20px;
 	clear: both;
 }
-
-#header {
-	& + #breadcrumb,
-	& + .sub-header {
-		//padding-top: $navbar-height + $subnavbar-height;
-	}
-}
-
 
 //
 // ぱんくずリスト
@@ -308,7 +402,6 @@
 
 // ログインボタン
 .login-buttons a {
-	@extend %btn-hollow;
 	float: right;
 	margin-top: 8px;
 	background-color: transparent;

@@ -45,3 +45,11 @@ add_filter( 'nav_menu_item_title', function( $title, $item, $args, $depth ) {
 	}
 	return $title;
 }, 10, 4 );
+
+/**
+ * Add count class for menues.
+ */
+add_filter( 'wp_nav_menu_args', function( $args ) {
+	var_dump( $args );
+	return $args;
+} );

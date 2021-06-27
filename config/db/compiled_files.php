@@ -36,6 +36,6 @@ $table = [
 
 	'indexes' => [
 		'post_only' => [ 'post_id' ],
-		'type_post' => [ 'type', 'post_id', 'published_for' ],
+		'type_post' => [ 'type', 'post_id', 'updated' ],
 	],
 ];

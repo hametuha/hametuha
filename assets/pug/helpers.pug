@@ -1,13 +1,12 @@
 extends _layout
 
 block vars
+    -
+        var textColors = JSON.parse(JSON.stringify(labels));;
+        delete textColors['default'];
+        textColors.muted = 'ミュート';
 
--
-    var textColors = JSON.parse(JSON.stringify(labels));;
-    delete textColors['default'];
-    textColors.muted = 'ミュート';
-
-section
+block content
     .container
         .page-header
             h1 ヘルパークラス

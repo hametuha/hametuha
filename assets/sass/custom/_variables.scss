@@ -17,7 +17,13 @@ $gutter-xs: $gutter / 4;
 // ----------------------
 //
 $gray-100: #f7f8f6;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
 $gray-700: #444;
+$gray-800: #343a40;
 $gray-900: #212529;
 
 $yellow: #E8BA73;
@@ -52,9 +58,9 @@ $footer-navbar-bg: #242424;
 
 // 文字
 $blue-font: #173e59;
-$little-shade-font: #444;
-$shade-font: #888;
-$more-shade-font: #aaa;
+$little-shade-font: $gray-700;
+$shade-font: $gray-600;
+$more-shade-font: $gray-500;
 $clear-font: #000;
 $inverse-body: #fff;
 $start-font: #ff0;
@@ -148,8 +154,8 @@ $border-radius-lg: 5px;
 // ----------------------
 //
 // Boostrap
-$font-family-sans-serif:  "Helvetica Neue", helvetica, yugothic,"游ゴシック",sans-serif;
-$font-family-serif:       georgia, "游明朝体", "Yu Mincho", yumincho, serif;
+$font-family-sans-serif:  "Helvetica Neue", helvetica, 'Noto Sans JP', yugothic,"游ゴシック",sans-serif;
+$font-family-serif:       georgia, 'Noto Serif JP', "游明朝体", "Yu Mincho", yumincho, serif;
 // type square
 $work-body: tsukuaoldminpr6n-r, serif;
 $work-bold: tsukuaoldminpr6-e, serif;

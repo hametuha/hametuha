@@ -1,0 +1,62 @@
+// Avoid overflow.
+img {
+	width: auto;
+	height: auto;
+	max-width: 100%;
+}
+
+aside {
+	margin: 1em 0;
+	padding: 1em;
+	background: #f9f9f9;
+	color: #000;
+	font-size: 0.85em;
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+}
+
+// 強調
+.text-emphasis {
+	-webkit-text-emphasis-style: filled sesame;
+}
+
+
+
+// 罫線
+hr {
+	&.wp-block-separator {
+		border-color: #000;
+		margin-top: 80px;
+		margin-bottom: 80px;
+		@include media-breakpoint-down(sm) {
+			margin-top: 40px;
+			margin-bottom: 40px;
+		}
+		width: 30%;
+		max-width: 150px;
+		&.is-style-wide,
+		&.is-style-dots {
+			width: 100%;
+			max-width: none;
+		}
+	}
+}
+
+
+.interviewer {
+	color: #777;
+	font-style: italic;
+	font-family: $font-family-sans-serif;
+}
+.interviewee {
+	font-weight: bold;
+	color: #000;
+}

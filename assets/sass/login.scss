@@ -1,6 +1,53 @@
-$color-red: #d54e21;
-$color-orange: #d54e21;
-$gap: 8px;
+/*!
+ * Login helper.
+ *
+ * @package hametuha
+ * @handle hametuha-login-screen
+ * @deps login
+ */
+
+// Bootstrap.
+@import "functions";
+
+// Default variable overrides.
+@import "custom/variables";
+@import "custom/mixins";
+// Bootstrap.
+@import "variables";
+@import "mixins";
+
+// Use buttons.
+@import "custom/components/bs_buttons";
+
+$color-red: $danger;
+$color-orange: $warning;
+
+body {
+	background-color: $gray-100;
+}
+
+.login h1 a {
+	transition: opacity .2s ease-in-out;
+
+	&:hover {
+		opacity: .6;
+	}
+}
+
+div#login {
+
+	form {
+		border-radius: $border-radius-lg;
+		border: none;
+		box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+	}
+
+	.button-primary {
+		font-weight: $font-weight-bold;
+		background-color: $primary;
+		border-color: $primary;
+	}
+}
 
 .login-form {
 
@@ -14,10 +61,10 @@ $gap: 8px;
 		display: flex;
 		align-items: center;
 		color: #ccc;
-		margin: $gap * 4 0;
+		margin: $gutter 0;
 		&::before,
 		&::after {
-			border-top: 1px solid #eee;
+			border-top: 1px solid $thin-border;
 			content: "";
 			flex-grow: 1;
 		}
@@ -30,7 +77,7 @@ $gap: 8px;
 	}
 
 	&-recaptcha {
-		margin: 0 $gap*-3 $gap * 2;
+		margin: 0 5 $gutter-sm;
 		.g-recaptcha > div {
 			margin: 0 auto;
 		}
@@ -40,33 +87,41 @@ $gap: 8px;
 
 .login {
 
+	.message {
+		border-left-color: $primary;
+	}
+
+	#login_error {
+		border-left-color: $danger;
+	}
+
 	&-tagline {
-		color: #888;
+		color: $gray-600;
 		text-align: center;
-		& + p {
-			margin-top: 10px;
+		+ p {
+			margin-top: $gutter-xs;
 		}
 	}
 
 	form {
 
 		#reg_passmail {
-			margin-bottom: $gap * 2;
+			margin-bottom: $gutter-md;
 			color: $color-orange;
 			text-align: center;
 		}
 
 		.forgetmenot {
-			margin-bottom: $gap * 2 !important;
+			margin-bottom: $gutter-md !important;
 		}
 
 		p.submit {
-			margin-top: $gap * 2 !important;
+			margin-top: $gutter-md !important;
 			input.button-primary {
 				height: auto;
 				box-sizing: border-box;
 				width: 100%;
-				padding: $gap 0;
+				padding: $gutter-xs 0;
 				display: block;
 				float: none;
 			}
@@ -76,10 +131,26 @@ $gap: 8px;
 
 .login-action-register #user_login {
 	margin-bottom: 5px;
-	& + span {
+	+ span {
 		display: block;
 		margin-bottom: 16px;
-		color: #888;
-		font-size: 11px;
+		color: $gray-600;
+		font-size: $font-size-sm;
+	}
+}
+
+.login-note {
+	width: 280px;
+	padding: $gutter-sm 0 $gutter;
+	margin: $gutter-sm auto 0;
+	border-top: 1px solid $gray-300;
+	text-align: center;
+
+	&-text {
+		text-align: left;
+		color: $more-shade-font;
+		display: block;
+		margin-bottom: $gutter-sm;
+		font-size: $font-size-base;
 	}
 }

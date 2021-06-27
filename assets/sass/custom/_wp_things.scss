@@ -1,0 +1,29 @@
+// 共通要素
+.alignleft {
+	float: left;
+	margin: 1em 1em 1em 0;
+}
+.alignright {
+	float: right;
+	margin: 1em 0 1em 1em;
+}
+.aligncenter {
+	margin: 1em auto;
+}
+
+img.aligncenter {
+	display: block;
+}
+
+.wp-caption {
+	max-width: 100%;
+	&.alignnone {
+		margin: 1em auto;
+		text-align: center;
+	}
+}
+.wp-caption-text {
+	font-size: 0.8em;
+	color: $text-muted;
+}
+

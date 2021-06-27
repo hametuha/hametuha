@@ -5,9 +5,6 @@
 
 @import "buttons";
 
-.btn-round {
-	border-radius: $border-radius-pill;
-}
 
 .btn {
 	min-width: calc( 4em + 1rem );
@@ -15,28 +12,84 @@
 	& + & {
 		margin-left: 1em;
 	}
-}
 
-.btn-block {
-	display: block;
-	width: 100%;
-
-	& + & {
-		margin-left: 0;
-		margin-top: 1em;
+	// Round button.
+	&-round {
+		border-radius: $border-radius-pill;
 	}
-}
 
-.btn-circle {
-	min-width: 0;
-	box-sizing: content-box;
-	width: 1em;
-	height: 1em;
-	border-radius: 50%;
-	padding: 0.5em;
-	line-height: 1em;
-	box-shadow: 0 0 5px rgba(0, 0, 0, .4);
-	&:hover {
-		box-shadow: 0 0 5px rgba(0, 0, 0, 0);
+	// Block button.
+	&-block {
+		display: block;
+		width: 100%;
+
+		& + & {
+			margin-left: 0;
+			margin-top: 1em;
+		}
+	}
+
+	// Circle button
+	&-circle {
+		min-width: 0;
+		box-sizing: content-box;
+		width: 1em;
+		height: 1em;
+		border-radius: 50%;
+		padding: 0.5em;
+		line-height: 1em;
+		box-shadow: 0 0 5px rgba(0, 0, 0, .4);
+		&:hover {
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0);
+		}
+	}
+
+	// Transparent.
+	&-trans {
+		background-color: rgba(0, 0, 0, .4);
+		@include border-radius(0);
+		border: 2px solid $inverse-body;
+		color: $inverse-body;
+		&:hover {
+			color: $inverse-body;
+			background-color: #000;
+		}
+	}
+
+	// Amazon
+	&-amazon {
+		&:link,
+		&:visited {
+			color: #fff;
+			background-color: #000;
+		}
+		&:hover,
+		&:active {
+			color: #fff;
+			background-color: darken(orange, 20);
+		}
+		i {
+			color: orange;
+		}
+	}
+
+	&-link {
+		@each $var in (danger $danger, warning $warning) {
+			$name: nth($var, 1);
+			$color: nth($var, 2);
+			&--#{$name} {
+				color: $color;
+				&:link,
+				&:visited {
+					color: $color;
+					text-decoration: none;
+				}
+				&:hover,
+				&:active {
+					color: lighten($color, 10);
+					text-decoration: underline;
+				}
+			}
+		}
 	}
 }
