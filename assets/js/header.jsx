@@ -79,7 +79,6 @@ class HametuHeader extends Component {
 		return addQueryArgs( '/wp-login.php', {
 			action: 'logout',
 			_wpnonce: CookieTasting.get( 'logout' ),
-			redirect_to: encodeURIComponent( window.location.pathname ),
 		} );
 	}
 
@@ -218,12 +217,12 @@ class HametuHeader extends Component {
 
 				{ this.state.loggedIn ? null : (
 					<li className="user-login-action">
-						<a className="user-login-link" href={ this.state.login_url } onClick={ ( e ) => {
+						<a className="user-login-link-login" href={ this.state.login_url } onClick={ ( e ) => {
 							this.handleClick( e )
-						} }>ログイン</a>
-						<a className="user-login-link" href={ this.state.register } onClick={ ( e ) => {
+						} }>{ __( 'ログイン', 'hametuha' ) }</a>
+						<a className="user-login-link-register" href={ this.state.register } onClick={ ( e ) => {
 							this.handleClick( e )
-						} }>登録</a>
+						} }>{ __( '登録', 'hametuha' ) }</a>
 					</li>
 				) }
 

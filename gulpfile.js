@@ -15,7 +15,7 @@ let plumber = true;
 // Sassのタスク
 gulp.task( 'sass', function () {
 
-	return gulp.src( [ './assets/sass/**/login.scss' ] )
+	return gulp.src( [ './assets/sass/**/critical.scss' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )

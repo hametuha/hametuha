@@ -3,6 +3,15 @@
  * アイキャッチに関する処理
  */
 
+
+//投稿サムネイルを許可(970px)
+global $content_width;
+add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news' ] );
+set_post_thumbnail_size( $content_width, 696, false );
+
+// サムネイルの倍の大きさ
+add_image_size( 'post-thumbnail-lg', $content_width * 2, 696 * 2, false );
+
 //画像のサイズ（小さい）を追加
 add_image_size( 'pinky', 160, 160, true );
 
@@ -19,19 +28,10 @@ add_image_size( 'kindle-cover', 1200, 1920, true );
  *
  * @return array
  */
-add_filter(
-	'image_size_names_choose',
-	function ( $sizes ) {
-		$sizes['pinky'] = '小型正方形';
-		return $sizes;
-	}
-);
-
-//投稿サムネイルを許可
-global $content_width;
-add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news' ] );
-set_post_thumbnail_size( $content_width, 696, false );
-
+add_filter( 'image_size_names_choose', function ( $sizes ) {
+	$sizes['pinky'] = '小型正方形';
+	return $sizes;
+} );
 
 /**
  * Pixivの埋め込みタグを出力する

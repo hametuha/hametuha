@@ -126,13 +126,15 @@ add_filter( 'login_message', function( $messages ) {
 	$messages = preg_replace_callback(
 		'#<p class="message register">([^<]+)</p>#u',
 		function( $matches ) {
-			return sprintf(
+			return wp_kses_post( sprintf(
 				'<p class="message register">%s</p>',
 				sprintf(
-					__( '<a href="%s" target="_blank" rel="noopener noreferrer">利用規約</a>に同意の上、破滅派に登録してください。' ),
-					home_url( 'contract' )
+					// translators: %s is terms-of-service link.
+					__( '<a href="%s" target="_blank" rel="noopener noreferrer">利用規約</a>に同意の上、破滅派に登録してください。すでに登録済みの方は<a href="%s">ログイン</a>してください。', 'hametuha' ),
+					home_url( 'contract' ),
+					wp_login_url( $_GET['redirect_to'] ?? '' )
 				)
-			);
+			) );
 		},
 		$messages
 	);
@@ -150,15 +152,17 @@ add_filter( 'login_site_html_link', function( $link ) {
  * Rendered in login footer.
  */
 add_action( 'login_footer', function() {
-	$interim_login = isset( $_REQUEST['interim-login'] );
+	$interim_login = ! empty( $_REQUEST['interim-login'] );
 	switch ( filter_input( INPUT_GET, 'action' ) ) {
 		case null:
-			echo wp_kses_post( sprintf(
-				'<p class="login-note"><span class="login-note-text">%s</span><a class="btn btn-outline-primary" href="%s">%s</a></p>',
-				__( 'まだアカウントをお持ちでない方は新規登録してください。', 'hametuha' ),
-				wp_registration_url(),
-				__( '新規登録', 'hametuha' )
-			) );
+			if ( ! $interim_login ) {
+				echo wp_kses_post( sprintf(
+					'<p class="login-note"><span class="login-note-text">%s</span><a class="btn btn-outline-primary" href="%s">%s</a></p>',
+					__( 'まだアカウントをお持ちでない方は新規登録してください。', 'hametuha' ),
+					wp_registration_url(),
+					__( '新規登録', 'hametuha' )
+				) );
+			}
 			break;
 		default:
 			// Do nothing.

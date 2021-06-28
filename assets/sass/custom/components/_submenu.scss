@@ -1,16 +1,15 @@
 .submenu {
 	display: flex;
-	@include media-breakpoint-down(md) {
-		flex-wrap: wrap;
-	}
 	padding: 0;
 	margin: 0;
+
 	li {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 		flex-grow: 1;
 		position: relative;
+
 		&::before {
 			transition: width .3s linear;
 			z-index: 1;
@@ -24,12 +23,15 @@
 			transform: translateX(-50%);
 			background-color: #000;
 		}
+
 		&:hover::before {
 			width: 50%;
 		}
+
 		&:first-child::after {
 			content: none;
 		}
+
 		&::after {
 			content: "";
 			position: absolute;
@@ -42,21 +44,38 @@
 			background-color: #eee;
 		}
 	}
+
 	a {
 		position: relative;
 		z-index: 2;
 		display: block;
 		text-align: center;
 		padding: 1em;
+
 		&:link,
 		&:visited {
 			text-decoration: none;
 			color: #222;
 		}
+
 		&:hover,
 		&:active {
 			text-decoration: none;
 			color: #000;
+		}
+	}
+
+
+	@include media-breakpoint-down(md) {
+		flex-wrap: wrap;
+
+		li {
+			flex: 0 1 33%;
+
+
+			&:nth-child(3n+1)::after {
+				content: none;
+			}
 		}
 	}
 }

@@ -1,12 +1,53 @@
+$jumbotron-bg-color: $gray-200 !default;
+
 .jumbotron {
+	position: relative;
 	overflow: hidden;
 	background-position: center center;
 	background-size: cover;
+	background-color: $jumbotron-bg-color;
+	padding-top: 4rem;
+	padding-bottom: 4rem;
+
 	@include bg-sheet();
+
+	&-container {
+
+	}
+
+	// Normal container.
+	.container {
+		position: relative;
+		z-index: 3;
+	}
+
+	&-img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		z-index: 1;
+	}
+
 	h1,
+	&-title {
+		font-size: 48px;
+		margin-bottom: 1em;
+	}
+
+	&-excerpt {
+		margin-bottom: 32px;
+	}
+
+
+	h1,
+	&-title,
 	p {
 		position: relative;
-		z-index: 2;
 		color: $inverse-body;
 		text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 	}
@@ -16,22 +57,20 @@
 	.btn + .btn {
 		margin-left: 1em;
 	}
-}
 
-@media only screen and (max-width: $screen-sm-max) {
-	.jumbotron {
-		h1 {
+	@include media-breakpoint-down(sm){
+		h1,
+		&-title {
 			font-size: 48px;
 		}
 		p {
 			font-size: 14px;
 		}
 	}
-}
 
-@media only screen and (max-width: $screen-xs-max) {
-	.jumbotron {
-		h1 {
+	@include tiny_breakpoint() {
+		h1,
+		&-title {
 			font-size: 32px;
 		}
 	}

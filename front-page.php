@@ -1,20 +1,32 @@
-<?php get_header(); ?>
-
-
 <?php
+/**
+ * Template Name: フロントページ
+ *
+ * Front page template.
+ * @package hametuha
+ */
+get_header();
+
 the_post();
-$style = '';
-if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ) {
-	$style = "background-image: url('{$thumbnail[0]}')";
-}
 ?>
-<div class="front-container" style="<?php echo $style; ?>">
-	<div class="container">
-		<div class="jumbotron">
-			<h1>後ろ向きのまま前へ進め！</h1>
-			<?php the_excerpt(); ?>
+<div class="jumbotron">
+	<?php
+	if ( has_post_thumbnail() ) {
+		the_post_thumbnail( 'post-thumbnail', [
+			'class'   => 'jumbotron-img',
+			'loading' => 'eager',
+		] );
+	}
+	?>
+
+	<div class="jumbotron-inner">
+		<div class="container">
+			<h1><?php esc_html_e( '後ろ向きのまま前へ進め！', 'hametuha' ); ?></h1>
+			<div class="jumbotron-excerpt">
+				<?php the_excerpt(); ?>
+			</div>
 			<p>
-				<a class="btn btn-success btn-lg" href="#about-us">破滅派とは？</a>
+				<a class="btn btn-success btn-lg" href="#about-us"><?php esc_html_e( '破滅派とは？', 'hametuha' ); ?></a>
 				<?php if ( ! is_user_logged_in() ) : ?>
 					<a class="btn btn-success btn-lg" href="<?php echo wp_registration_url(); ?>" rel="nofollow">登録する</a>
 				<?php elseif ( ! current_user_can( 'edit_posts' ) ) : ?>

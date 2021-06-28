@@ -18,7 +18,7 @@ $header-button-bg: $gray-200;
 
 	// Hide with scroll
 	@include media-breakpoint-down(sm) {
-		@at-root .header-hidden &{
+		@at-root .header-hidden & {
 			@include head-room() {
 				transform: translateY(-100%);
 			}
@@ -108,10 +108,6 @@ $header-button-bg: $gray-200;
 		}
 	}
 
-	&-action {
-
-	}
-
 	&-dropdown {
 		@extend %header-buttons;
 
@@ -126,7 +122,7 @@ $header-button-bg: $gray-200;
 		width: 400px;
 		max-width: 100vw;
 		background-color: $white;
-		box-shadow: 0 5px 5px rgba( 0, 0, 0, .3 );
+		box-shadow: 0 5px 5px rgba(0, 0, 0, .3);
 		border-right: 1px solid $header-divider-color;
 		border-left: 1px solid $header-divider-color;
 
@@ -350,6 +346,63 @@ $header-button-bg: $gray-200;
 	}
 }
 
+
+// ログインボタン
+%user-login-link {
+	font-size: $font-size-sm;
+	display: inline-block;
+	margin: 10px 5px 10px 0;
+	padding: 4px;
+	line-height: 20px;
+	text-decoration: none;
+	border-radius: $border-radius-lg;
+	border: 1px solid transparent;
+	transition: color .3s ease-in-out, border-color .3s ease-in-out, background-color .3s ease-in-out;
+	color: $base-color;
+	background-color: $white;
+}
+.user-login-link {
+
+	&-login {
+		@extend %user-login-link;
+
+		&:hover,
+		&:active {
+			color: $primary;
+			background-color: $gray-200;
+		}
+
+		// not dispalyed on mobile.
+		@include tiny_breakpoint(){
+			display: none;
+		}
+	}
+
+	&-register {
+		@extend %user-login-link;
+
+		border-color: $base-color;
+
+		&:hover,
+		&:active {
+			color: $white;
+			background-color: $base-color;
+		}
+	}
+}
+
+.login-buttons a {
+	float: right;
+	margin-top: 8px;
+	background-color: transparent;
+	margin-right: 10px;
+	&:last-child {
+		@media only screen and (max-width: 400px) {
+			display: none;
+		}
+	}
+}
+
 // メニューが有効でないときは隠す
 #header-navigation {
 	header + & {
@@ -396,19 +449,6 @@ $header-button-bg: $gray-200;
 		}
 		&:active {
 			//color: $link-active;
-		}
-	}
-}
-
-// ログインボタン
-.login-buttons a {
-	float: right;
-	margin-top: 8px;
-	background-color: transparent;
-	margin-right: 10px;
-	&:last-child {
-		@media only screen and (max-width: 400px) {
-			display: none;
 		}
 	}
 }
@@ -466,26 +506,26 @@ $header-button-bg: $gray-200;
 		}
 		&:link,
 		&:visited {
-			color: #000;
+			color: $black;
 			text-decoration: none;
 		}
 		&:hover,
 		&:active {
 			//color: $brand-primary;
 			text-decoration: none;
-			background-color: #f9f9f9;
+			background-color: $gray-100;
 		}
 	}
 	&__label {
-		font-weight: bold;
+		font-weight: $font-weight-bold;
 		i {
-			color: #aaa;
+			color: $gray-500;
 		}
 	}
 	&__desc {
 		margin: 10px 0 0;
 		font-size: 0.85em;
-		color: #888;
+		color: $gray-600;
 		line-height: 1.2;
 	}
 }

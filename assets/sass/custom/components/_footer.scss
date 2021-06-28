@@ -18,7 +18,7 @@ $footer-inverse-color: $white;
 		&-img {
 			width: 180px;
 			height: auto;
-			@include media-breakpoint-down(md) {
+			@include media-breakpoint-down(sm) {
 				width: 120px;
 			}
 		}
@@ -83,7 +83,7 @@ $footer-inverse-color: $white;
 		// social links
 		&-social {
 			text-align: right;
-			@include media-breakpoint-down(md) {
+			@include media-breakpoint-down(sm) {
 				text-align: left;
 			}
 

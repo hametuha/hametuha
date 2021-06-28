@@ -32,6 +32,10 @@
 	}
 }
 
+//
+// Media Queries
+//------------------
+//
 @mixin mq-max($screen) {
 	@media only screen and (max-width: $screen) {
 		@content;
@@ -46,6 +50,12 @@
 
 @mixin mq($screen-min, $screen-max) {
 	@media only screen and (min-width: $screen-sm-min) and (max-width: $screen-max) {
+		@content;
+	}
+}
+
+@mixin tiny_breakpoint() {
+	@media only screen and (max-width: $minimum-screen) {
 		@content;
 	}
 }
@@ -67,7 +77,7 @@
 @mixin bg-sheet( $color: rgba(0, 0, 0, 0.2), $position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $z-index: 1 ) {
 	position: $position;
 	&::after {
-		z-index: 1;
+		z-index: 2;
 		position: absolute;
 		display: block;
 		content: "";
