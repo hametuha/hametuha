@@ -28,8 +28,15 @@ class PostReadMore extends EditMetaBox {
 			'class' => Text::class,
 			'label' => '外部参照URL',
 			'required' => false,
-			'description' => '書籍化などで外部のURLで続きを読んで欲しい場合はこちらにURLを入力してください。',
+			'description' => '書籍化などで外部のURLで続きを読んで欲しい場合はこちらにURLを入力してください。投稿がチラ見せ状態になります。',
 			'placeholder' => '例）https://amazon.co.jp/example',
+		],
+		'_external_url_limit' => [
+			'class' => Text::class,
+			'label' => '外部参照期限',
+			'required' => false,
+			'description' => '外部参照URLを設定し、その発売日まで投稿を読めるようにしておくには、ここに日付を入力してください。',
+			'placeholder' => '例）2024-12-31',
 		],
 		'_first_collected' => [
 			'class' => Text::class,
@@ -46,4 +53,4 @@ class PostReadMore extends EditMetaBox {
 			'placeholder' => '例）https://ncode.syosetu.com/n5943h/',
 		],
 	];
-} 
+}

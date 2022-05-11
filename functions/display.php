@@ -455,6 +455,40 @@ function hametuha_external_url( $post = null ) {
 }
 
 /**
+ * Get external limit if set.
+ *
+ * @param string           $format Date format.
+ * @param int|null|WP_Post $post   Post object
+ * @return string
+ */
+function hametuha_external_url_limit( $format = '', $post = null ) {
+	$post           = get_post( $post );
+	$external_limit = trim( get_post_meta( $post->ID, '_external_url_limit', true ) );
+	$external_limit =  preg_match( '#^\d{4}-\d{2}-\d{2}$#u', $external_limit ) ? $external_limit : '';
+	if ( ! $external_limit ) {
+		return '';
+	} elseif( $format ) {
+		return mysql2date( $format, $external_limit . ' 00:00:00' );
+	} else {
+		return $external_limit;
+	}
+}
+
+/**
+ * Can external link post be read?
+ *
+ * @param int|null|WP_Post $post Post object.
+ * @return bool
+ */
+function hametuha_external_url_is_active( $post = null ) {
+	$limit = hametuha_external_url_limit( '', $post );
+	if ( ! $limit ) {
+		return false;
+	}
+	return str_replace( '-', '', $limit ) >= date_i18n( 'Ymd' );
+}
+
+/**
  * URLを取得する
  *
  * @param string $url

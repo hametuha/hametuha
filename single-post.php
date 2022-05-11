@@ -97,16 +97,22 @@ HTML;
 				</div>
 				<!-- //.single-post-content -->
 
-				<?php if ( $external = hametuha_external_url() ) : ?>
+				<?php if ( $external = hametuha_external_url() ) :
+					if ( hametuha_external_url_is_active() ) {
+						$limit_message = sprintf( __( 'この作品は%sまで破滅派で読むことができます。', 'hametuha' ), hametuha_external_url_limit( get_option( 'date_format' ) ) );
+					} else {
+						$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
+					}
+					?>
                     <div class="alert alert-info text-center">
-                        この作品の続きは外部にて読むことができます。
+						<?php echo esc_html( $limit_message ); ?>
                     </div>
                     <?php if ( $ogp = hametuha_remote_ogp( $external ) ) : ?>
                         <div class="external-link">
                             <div class="row">
                                 <?php if ( $ogp['img'] ) : ?>
                                 <div class="col-xs-12 col-sm-3">
-                                    <img src="<?= esc_url( $ogp['img'] ) ?>" class="img-responsive" alt="<?= esc_attr( $ogp['title'] ) ?>"/>
+                                    <img loading="lazy" src="<?= esc_url( $ogp['img'] ) ?>" class="img-responsive" alt="<?= esc_attr( $ogp['title'] ) ?>"/>
                                 </div>
                                 <?php endif; ?>
                                 <div class="col-xs-12 col-sm-9">
