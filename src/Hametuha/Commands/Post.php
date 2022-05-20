@@ -244,6 +244,19 @@ class Post extends Command {
 				  ] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
+
+		// UL, OL
+		foreach ( [
+			'#<ul>(.*?)</ul>#us' => 'OrderedList',
+			'#<ol>(.*?)</ol>#us' => 'UnorderedList',
+		] as $preg => $style ) {
+			$content = preg_replace_callback( $preg, function( $matches ) use ( $style ) {
+				list( $match, $lists ) = $matches;
+				$lists = preg_replace( '#^\s*?<li>(.*?)</li>#um', '<ParaStyle:' . $style . '>$1', $lists );
+				return $lists;
+			}, $content );
+		}
+
 		// Headings
 		$content = preg_replace( '#<h(\d)>([^<]+)</h(\d)>#u', '<ParaStyle:Heading$1>$2', $content );
 		// Block quote, Aside, pre.
