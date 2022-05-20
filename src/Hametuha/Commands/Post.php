@@ -247,8 +247,8 @@ class Post extends Command {
 
 		// UL, OL
 		foreach ( [
-			'#<ul>(.*?)</ul>#us' => 'OrderedList',
-			'#<ol>(.*?)</ol>#us' => 'UnorderedList',
+			'#<ul>(.*?)</ul>#us' => 'UnorderedList',
+			'#<ol>(.*?)</ol>#us' => 'OrderedList',
 		] as $preg => $style ) {
 			$content = preg_replace_callback( $preg, function( $matches ) use ( $style ) {
 				list( $match, $lists ) = $matches;
