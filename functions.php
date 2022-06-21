@@ -97,6 +97,7 @@ get_template_part( 'functions/campaign' );
 get_template_part( 'functions/calculate' );
 // 表示
 include __DIR__ . '/functions/display.php';
+include __DIR__ . '/functions/external.php';
 // amazon
 get_template_part( 'functions/hamazon' );
 // 暗号化
