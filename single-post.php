@@ -74,7 +74,7 @@ HTML;
 					}
 				} ?>
 
-				<div class="work-content row" itemprop="articleBody" ng-controller="workContent" ng-mouseup="updateText()">
+				<div class="work-content row" itemprop="articleBody">
 
 					<?php the_content(); ?>
 
@@ -176,6 +176,8 @@ HTML;
 				</div>
 
 				<?php get_template_part( 'parts/list', 'author' ) ?>
+
+				<?php get_sidebar( 'books' ); ?>
 
 				<?php
 				// Yarpp関連記事
@@ -420,4 +422,5 @@ HTML;
 		<!-- //.container -->
 	</footer>
 
-<?php get_footer();
+<?php
+get_footer();

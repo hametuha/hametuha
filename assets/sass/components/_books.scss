@@ -1,0 +1,64 @@
+.books {
+
+	&-full {
+		margin: 40px  0;
+	}
+
+	background-color: $gray-lighter;
+
+	&-wrapper {
+		margin-top: 40px;
+		min-height: 420px;
+
+		.books-list:not(.slick-slider) {
+			overflow: hidden;
+			max-height: 420px;
+		}
+
+		@media screen and (max-width: 769px) {
+			min-height: 330px;
+			.books-list:not(.slick-slider) {
+				max-height: 330px;
+			}
+		}
+
+		@media screen and (max-width: 480px) {
+			min-height: 250px;
+			.books-list:not(.slick-slider) {
+				max-height: 250px;
+			}
+		}
+	}
+
+	&-list {
+	}
+
+	&-item {
+		width: 25%;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+
+	&-link {
+		position: relative;
+		display: block;
+
+		&::before {
+			content: "";
+			position: relative;
+			display: block;
+			width: 100%;
+			padding-top: 188% / 127 * 100;
+		}
+	}
+
+	&-cover {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+}

@@ -16,8 +16,8 @@
     "php": "^7.2",
     "ext-simplexml": "*",
     "ext-curl": "*",
-    "hametuha/wpametu": "0.8.x-dev",
-    "hametuha/hamepub": "1.0.x-dev",
+    "hametuha/wpametu": "^0.8.0",
+    "hametuha/hamepub": "^1.0.0",
     "hametuha/hashboard": "^0.9",
     "hametuha/sharee": "^0.8.4"
   },

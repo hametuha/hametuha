@@ -351,7 +351,11 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 			</div>
 
 		</div>
+	</div>
 
+	<?php get_footer( 'books' ) ?>
+
+	<div>
 		<div id="about-us" class="clearfix">
 
 			<h2 class="page-header text-center">
