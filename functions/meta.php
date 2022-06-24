@@ -383,8 +383,7 @@ HTML;
 	"logo": "{$css_dir}/assets/img/hametuha-logo.png",
 	"sameAs" : [
 		"https://www.facebook.com/hametuha.inc",
-		"https://www.twitter.com/hametuha",
-		"https://plus.google.com/+HametuhaCom"
+		"https://www.twitter.com/hametuha"
 	]
 }
 </script>
@@ -393,6 +392,9 @@ HTML;
 
 /**
  * 検索エンジン対策
+ *
+ * 特定の投稿で「検索エンジンに表示しない」がオンになっていたら、
+ * noindexを出力する。
  */
 add_action( 'wp_head', function() {
     if ( ! is_singular( 'post' ) ) {
