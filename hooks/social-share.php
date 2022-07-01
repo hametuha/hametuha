@@ -12,53 +12,64 @@
  * @param object $post
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
+	if ( WP_DEBUG ) {
+		// Do nothing on debug mode.
+		return;
+	}
+	if ( ( 'publish' !== $new_status ) || ! function_exists( 'gianism_update_twitter_status' ) ) {
+		// Do nothing. if available.
+		return;
+	}
+	if ( hametuha_user_has_flag( $post->post_author, 'spam') ) {
+		// This is spam user.
+		return;
+	}
+
 	//はじめて公開にしたときだけ
-	if ( ! WP_DEBUG  && ( 'publish' === $new_status ) && function_exists( 'gianism_update_twitter_status' ) ) {
-		$title  = hametuha_censor( get_the_title( $post ) );
-		$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
-		switch ( $old_status ) {
-			case 'new':
-			case 'draft':
-			case 'pending':
-			case 'auto-draft':
-			case 'future':
-				switch ( $post->post_type ) {
-					case 'post':
-						// 投稿の状態をチェック
-						if ( ! hametuha_is_valid_post( $post ) ) {
-							return;
-						}
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
-						break;
-					case 'announcement':
-						$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
-							$string = "#破滅派 編集部からのお知らせです > {$post->post_title} {$url}";
-						} else {
-							$author = get_the_author_meta( 'display_name', $post->post_author );
-							$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
-						}
-						// Slackで通知
-						hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
-						break;
-					case 'info':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
-						break;
-					case 'thread':
-						$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-						$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
-						break;
-					default:
-						$string = false;
-						break;
-				}
-				if ( $string ) {
-					gianism_update_twitter_status( $string );
-				}
-				break;
-		}
+	$title  = hametuha_censor( get_the_title( $post ) );
+	$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
+	switch ( $old_status ) {
+		case 'new':
+		case 'draft':
+		case 'pending':
+		case 'auto-draft':
+		case 'future':
+			switch ( $post->post_type ) {
+				case 'post':
+					// 投稿の状態をチェック
+					if ( ! hametuha_is_valid_post( $post ) ) {
+						return;
+					}
+					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+					$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
+					break;
+				case 'announcement':
+					$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+					if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
+						$string = "#破滅派 編集部からのお知らせです > {$post->post_title} {$url}";
+					} else {
+						$author = get_the_author_meta( 'display_name', $post->post_author );
+						$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
+					}
+					// Slackで通知
+					hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
+					break;
+				case 'info':
+					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+					$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
+					break;
+				case 'thread':
+					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+					$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
+					break;
+				default:
+					$string = false;
+					break;
+			}
+			if ( $string ) {
+				gianism_update_twitter_status( $string );
+			}
+			break;
 	}
 }, 10, 3 );
 
