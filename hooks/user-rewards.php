@@ -11,6 +11,7 @@ add_filter( 'sharee_labels', function( $labels ) {
 		'kdp'  => 'KDP',
 		'task' => '依頼',
 		'news' => 'ニュース',
+		'lent' => '立替金'
 	] );
 } );
 
@@ -20,12 +21,17 @@ add_filter( 'sharee_labels', function( $labels ) {
 add_action( 'wp_ajax_hametuha_user_reward', function() {
 	$input = \WPametu\Http\Input::get_instance();
 	try {
+		$model = \Hametuha\Sharee\Models\RevenueModel::get_instance();
 		if ( ! $input->verify_nonce( 'add_user_reward' ) || ! current_user_can( 'administrator' ) ) {
 			throw new \Exception( 'あなたには権限がありません。', 401 );
 		}
 		$user_id = $input->post( 'user_id' );
 		if ( ! ( $user = get_userdata( $user_id ) ) ) {
 			throw new \Exception( '該当するユーザーは存在しません。', 404 );
+		}
+		$type = $input->post( 'reward-type' );
+		if ( ! array_key_exists( $type, $model->get_labels()) ) {
+			throw new \Exception( '無効な支払い種別です。', 404 );
 		}
 		if ( ! ( $created = $input->post( 'created' ) ) ) {
 			$created = current_time( 'mysql' );
@@ -34,20 +40,20 @@ add_action( 'wp_ajax_hametuha_user_reward', function() {
 		if ( ! $price || ! is_numeric( $price ) ) {
 			throw new \Exception( sprintf( '金額が不正です: %s', $price ), 500 );
 		}
-		$vat_excluded = (bool) $input->post( 'vat' );
-		$unit = max( 1, $input->post( 'unit' ) );
+		$vat_status = (int) $input->post( 'vat' );
+		$unit       = max( 1, $input->post( 'unit' ) );
 		if ( ! ( $desc = $input->post( 'description' ) ) ) {
 			throw new \Exception( '適用が入力されていません。', 500 );
 		}
 		$needs_deducting = (bool) $input->post( 'deducting' );
-		$model = \Hametuha\Sharee\Models\RevenueModel::get_instance();
-		list( $price, $unit, $tax, $deducting, $total ) = \Hametuha\Master\Calculator::revenue( $price, $unit, ! $vat_excluded, $needs_deducting );
-		if ( ! $model->add_revenue( 'task', $user_id, $price, [
-			'total' => $total,
-			'unit'  => $unit,
-			'tax'   => $tax,
-			'deducting' => $deducting,
+		list( $price, $unit, $tax, $deducting, $total ) = \Hametuha\Master\Calculator::revenue( $price, $unit, $vat_status, $needs_deducting );
+		if ( ! $model->add_revenue( $type, $user_id, $price, [
+			'total'       => $total,
+			'unit'        => $unit,
+			'tax'         => $tax,
+			'deducting'   => $deducting,
 			'description' => $desc,
+			'created'     => $created,
 		] ) ) {
 			throw new \Exception( 'データの保存に失敗しました。', 500 );
 		}
@@ -100,6 +106,15 @@ add_action( 'sharee_after_table', function( $table_class ) {
 					</td>
 				</tr>
 				<tr>
+					<th><label for="reward-type">種別</label></th>
+					<td>
+						<select id="reward-type" name="reward-type">
+							<option value="task">報酬</option>
+							<option value="lent">立替金</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
 					<th><label for="description">適用</label></th>
 					<td>
 						<input class="regular-text" type="text" name="description" id="description" value="" />
@@ -121,13 +136,18 @@ add_action( 'sharee_after_table', function( $table_class ) {
 					<th>消費税</th>
 					<td>
 						<label>
-							<input type="radio" name="vat" value="0" checked />
+							<input type="radio" name="vat" value="1" checked />
 							内税
 						</label>
 						<br />
 						<label>
-							<input type="radio" name="vat" value="1" />
+							<input type="radio" name="vat" value="0" />
 							外税
+						</label>
+						<br />
+						<label>
+							<input type="radio" name="vat" value="-1" />
+							非課税
 						</label>
 					</td>
 				</tr>
@@ -146,9 +166,9 @@ add_action( 'sharee_after_table', function( $table_class ) {
                     </td>
                 </tr>
 				<tr>
-					<th><label for="created">日付</label></th>
+					<th><label for="created">支払い日</label></th>
 					<td>
-						<input class="regular-text" type="text" name="created" id="created" value="" />
+						<input class="regular-text" type="date" name="created" id="created" value="" />
 					</td>
 				</tr>
 			</table>

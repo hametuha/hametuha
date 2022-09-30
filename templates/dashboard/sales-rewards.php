@@ -7,11 +7,15 @@
         <tr>
             <th class="cell-2 text-right">#</th>
             <th class="text-left">適用</th>
+			<th class="text-left">単価</th>
             <th class="cell-3 text-right">数量</th>
+			<th class="text-right">消費税</th>
             <th class="text-right">源泉徴収</th>
             <th class="text-right">入金額</th>
             <th class="text-right">登録日</th>
-            <th class="text-right">支払日</th>
+			<?php if ( 'rewards' == $page ) : ?>
+            	<th class="text-right">支払日</th>
+			<?php endif; ?>
         </tr>
         </thead>
         <tfoot>
@@ -40,14 +44,21 @@
         <tr v-for="record in records">
             <th>{{record.revenue_id}}</th>
             <td>{{record.description}}</td>
+			<td class="text-right">{{record.price | monetize}}</td>
             <td class="text-right">{{record.unit}}</td>
+			<td class="text-right">{{record.tax | monetize}}</td>
             <td class="text-right">{{record.deducting | monetize}}</td>
             <td class="text-right">{{record.total | monetize}}</td>
             <td class="text-right">{{record.created | moment('YYYY/MM/DD')}}</td>
-            <td class="text-right">{{(record.paid ? record.fixed : '---' )| moment('YYYY/MM/DD') }}</td>
+			<?php if ( 'rewards' === $page ) : ?>
+			<td class="text-right">
+				<span v-if="'0000-00-00 00:00:00' == record.fixed">---</span>
+				<span v-else>{{ record.fixed | moment('YYYY/MM/DD') }}</span>
+			</td>
+			<?php endif ?>
         </tr>
         <tr v-if="!records.length">
-            <td class="error text-center disabled" colspan="7">
+            <td class="error text-center disabled" colspan="<?php echo 'rewards' === $page ? '9' : '8' ?>">
                 記録がありません。
             </td>
         </tr>
