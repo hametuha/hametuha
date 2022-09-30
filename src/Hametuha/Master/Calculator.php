@@ -88,24 +88,30 @@ class Calculator {
 	 *
 	 * `list($price, $unit, $tax, $deducting, $total) = Calculator::revenue( $price, $unit, true, true )` と使う。
 	 *
-	 * @param float  $price
-	 * @param int    $unit
-	 * @param bool   $tax_included_in_price
-	 * @param bool   $deduction
-	 * @param string $currency Default JPY
+	 * @param float    $price                 Price.
+	 * @param int      $amount                Amount.
+	 * @param bool|int $tax_included_in_price If less than 0, it's tax-free.
+	 * @param bool     $deduction             Deducting price.
+	 * @param string   $currency              Default JPY
 	 *
 	 * @return array
 	 */
-	public static function revenue( $price, $unit, $tax_included_in_price = false, $deduction = true, $currency = 'JPY' ) {
-		// 消費税と小計を出す
-		$sub_total = $unit * $price;
-		// 通過が日本でない場合、換算する
+	public static function revenue( $price, $amount, $tax_included_in_price = false, $deduction = true, $currency = 'JPY' ) {
+		// Get subtotal.
+		$sub_total = $amount * $price;
+		// If currency is not JPY, convert.
 		$sub_total = self::exchange( $sub_total, $currency );
-		if ( $tax_included_in_price ) {
-			$vat = $sub_total / ( ( self::VAT_RATIO * 100 ) + 100 ) * ( self::VAT_RATIO * 100 );
-			$sub_total -= $vat;
-		} else {
+		// Calculate tax.
+		if ( ! $tax_included_in_price ) {
 			$vat = $sub_total * self::VAT_RATIO;
+		} elseif ( $tax_included_in_price < 0 ) {
+			// TAX free.
+			$vat = 0;
+		} else {
+			// VAT is included.
+			$price = $price / ( self::VAT_RATIO + 1 );
+			$vat   = $sub_total / ( self::VAT_RATIO  + 1 ) * ( self::VAT_RATIO );
+			$sub_total -= $vat;
 		}
 		// 源泉徴収税を出す
 		if ( $deduction ) {
@@ -115,7 +121,7 @@ class Calculator {
 		}
 		// 振込額を出す
 		$total = $sub_total - $deduction_price + $vat;
-		return [ $price, (int) $unit, $vat, $deduction_price, $total ];
+		return [ $price, (int) $amount, $vat, $deduction_price, $total ];
 	}
 
 	/**

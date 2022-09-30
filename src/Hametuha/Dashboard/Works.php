@@ -74,7 +74,7 @@ class Works extends Screen {
 			case 'rewards':
             case 'deposit':
 		        hameplate( 'templates/dashboard/sales', 'rewards', [
-                    'page' => $page,
+                    'page'     => $page,
                     'endpoint' => rest_url( "hametuha/v1/sales/rewards/me" ),
                 ] );
 				break;
