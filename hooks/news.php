@@ -126,36 +126,6 @@ HTML;
 } );
 
 /**
- * XMLサイトマップを追加
- *
- * @todo いまのところ、Googleに無視されているので、あとでやる
- */
-add_filter( 'bwp_gxs_external_sitemaps', function ( $data ) {
-	/** @var wpdb $wpdb */
-	global $wpdb;
-	$query = <<<SQL
-		SELECT COUNT(ID) FROM {$wpdb->posts}
-		WHERE post_type = 'news'
-          AND post_status = 'publish'
-SQL;
-	$total = (int) $wpdb->get_var( $query );
-	$per_page = get_option( 'posts_per_rss', 20 );
-	for ( $i = 0, $l = ceil( $total / $per_page ); $i < $l; $i++ ) {
-		$url = home_url( '/amp_sitemap/' ).( $i ? sprintf( '?paged=%d', $i + 1 ) : '' );
-		$data[] = [
-			'location' => $url,
-		];
-	}
-	$post = get_posts( [
-		'post_type' => 'news',
-		'post_status' => 'publish',
-		'posts_per_page' => 1,
-		'orderby' => [ 'date' => 'DESC' ],
-	] );
-	return $data;
-} );
-
-/**
  * RSSのタイトルを変更
  *
  * @param string $title
