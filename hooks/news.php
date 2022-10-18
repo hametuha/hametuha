@@ -46,9 +46,6 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 	if ( ! $wp_query->is_main_query() || is_admin() ) {
 		return;
 	}
-	if ( $wp_query->is_singular( 'news' ) ) {
-
-	}
 	if (
 		$wp_query->is_tax( [ 'nouns', 'genre' ] )
 		||
