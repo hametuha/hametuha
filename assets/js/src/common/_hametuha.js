@@ -1,4 +1,4 @@
-/* 
+/*
  * 破滅派サイト全体で共通して読み込まれるファイル
  */
 
@@ -24,16 +24,13 @@
                     if ('undefined' === typeof value) {
                         value = 1;
                     }
-                    ga('send', {
-                        hitType       : 'event',
-                        eventCategory : category,
-                        eventAction   : action,
-                        eventLabel    : label,
-                        eventValue    : value,
-                        nonInteraction: !!nonInteraction
+                    gtag( 'event', action, {
+                        event_category : category,
+                        event_label : label,
+                        value : value,
+                        non_interaction: !!nonInteraction
                     });
-                } catch (err) {
-                }
+                } catch (err) {}
             },
 
             /**
@@ -52,22 +49,12 @@
                         value = 1;
                     }
                     // Send event
-                    ga('send', {
-                        hitType      : 'event',
-                        eventCategory: category,
-                        eventAction  : action,
-                        eventLabel   : label,
-                        eventValue   : value,
-                        hitCallback  : function () {
-                            if (Modernizr.touch) {
-                                window.location.href = url;
-                            } else {
-                                if ('share' === category) {
-                                    window.open(url, 'outbound', "width=520, height=350");
-                                } else {
-                                    window.open(url, 'outbound');
-                                }
-                            }
+                    gtag( 'event', action, {
+                        event_category : category,
+                        event_label : label,
+                        value : value,
+                        hitCallback: function() {
+                            window.location.href = url;
                         }
                     });
                     // stopEvent

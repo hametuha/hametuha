@@ -14,8 +14,9 @@
     "WP_API_Settings": false,
     "Modernizr": false,
     "bootbox": false,
-    "ga": false,
+    "gtag": false,
     "FB": false
   }
 
 }
+c
