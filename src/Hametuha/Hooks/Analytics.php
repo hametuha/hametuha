@@ -64,7 +64,6 @@ class Analytics extends Singleton {
 		add_action( 'login_enqueue_scripts', [ $this, 'enqueue_script' ] );
         // Do analytics tag.
 	    add_action( 'wp_head', [ $this, 'do_tracking_code' ], 19 );
-		var_dump( 'oho' );
 		add_action( 'admin_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'hashboard_footer', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'login_head', [ $this, 'do_tracking_code' ] );
