@@ -24,6 +24,11 @@ class Analytics extends Singleton {
 	protected $ua = 'UA-1766751-2';
 
 	/**
+	 * @var string Google Analytics 4 ID.
+	 */
+	protected $ga = 'G-GX6ZTNEEW8';
+
+	/**
 	 * @var string Facebook pixel ID.
 	 */
 	protected $pixel_id = '956989844374988';
@@ -92,7 +97,7 @@ class Analytics extends Singleton {
         // If not set, generate via uuid4 and overwrite it.
 		?>
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ua ); ?>"></script>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
@@ -175,6 +180,7 @@ class Analytics extends Singleton {
 			}
 			<?php do_action( 'hametuha_before_ga_send_pageviews' ); ?>
 			gtag('config', '<?php echo esc_js( $this->ua ); ?>', config );
+			gtag('config', '<?php echo esc_js( $this->ga ); ?>', config );
 		</script>
 		<?php
         do_action( 'hametuha_after_tracking_code' );

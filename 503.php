@@ -34,18 +34,19 @@ $theme_dir = '/wp-content/themes/hametuha/assets/';
     <link rel="stylesheet" type="text/css" href="<?php echo $theme_dir; ?>/css/app.css?ver=1.0" />
 	<link rel="shortcut icon" href="<?php echo $theme_dir; ?>/img/favicon.ico" />
 	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-1766751-2"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-GX6ZTNEEW8"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
 		function gtag(){dataLayer.push(arguments);}
 		gtag('js', new Date());
-
-		gtag('config', 'UA-1766751-2', {
+		var config = {
 			link_attribution: true,
 			custom_map: {
 				dimension2: '<?php echo $error_code; ?>'
 			}
-		} );
+		};
+		gtag('config', 'UA-1766751-2', config );
+		gtag('config', 'G-GX6ZTNEEW8', config );
 	</script>
 </head>
 <body class="error error<?= $error_code ?>">
