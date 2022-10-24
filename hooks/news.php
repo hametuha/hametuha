@@ -46,9 +46,6 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 	if ( ! $wp_query->is_main_query() || is_admin() ) {
 		return;
 	}
-	if ( $wp_query->is_singular( 'news' ) ) {
-
-	}
 	if (
 		$wp_query->is_tax( [ 'nouns', 'genre' ] )
 		||
@@ -123,36 +120,6 @@ add_action( 'admin_head', function () {
 </ul>
 HTML;
 	$screen->set_help_sidebar( $sidebar );
-} );
-
-/**
- * XMLサイトマップを追加
- *
- * @todo いまのところ、Googleに無視されているので、あとでやる
- */
-add_filter( 'bwp_gxs_external_sitemaps', function ( $data ) {
-	/** @var wpdb $wpdb */
-	global $wpdb;
-	$query = <<<SQL
-		SELECT COUNT(ID) FROM {$wpdb->posts}
-		WHERE post_type = 'news'
-          AND post_status = 'publish'
-SQL;
-	$total = (int) $wpdb->get_var( $query );
-	$per_page = get_option( 'posts_per_rss', 20 );
-	for ( $i = 0, $l = ceil( $total / $per_page ); $i < $l; $i++ ) {
-		$url = home_url( '/amp_sitemap/' ).( $i ? sprintf( '?paged=%d', $i + 1 ) : '' );
-		$data[] = [
-			'location' => $url,
-		];
-	}
-	$post = get_posts( [
-		'post_type' => 'news',
-		'post_status' => 'publish',
-		'posts_per_page' => 1,
-		'orderby' => [ 'date' => 'DESC' ],
-	] );
-	return $data;
 } );
 
 /**

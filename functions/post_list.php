@@ -12,30 +12,36 @@
  *
  * @return array
  */
-function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 900 ) {
-	$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
-	/** @var wpdb $wpdb */
-	global $wpdb;
-	$sql    = <<<SQL
-      SELECT * FROM (
-        SELECT * FROM {$wpdb->posts}
-        WHERE post_type = %s
-          AND post_status = 'publish'
-          AND post_date >= %s
-        ORDER BY post_date DESC
-	    LIMIT %d
-    ) AS p
-    GROUP BY post_author
-    ORDER BY post_date DESC
-    LIMIT %d
-
-SQL;
-	$result = [];
-	foreach ( $wpdb->get_results( $wpdb->prepare( $sql, $post_type, $date, $limit * 100, $limit ) ) as $row ) {
-		$result[] = new WP_Post( $row );
+function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) {
+	$date = current_time( 'timestamp' ) - 60 * 60 * 24 * $period;
+	$posts = [];
+	$query = new WP_Query( [
+		'post_type'      => $post_type,
+		'post_status'    => 'publish',
+		'posts_per_page' => $limit * 5,
+		'date_query'     => [
+			[
+				'after' => [
+					'year'  => (int) date_i18n( 'Y', $date ),
+					'month' => (int) date_i18n( 'M', $date ),
+					'day'   => (int) date_i18n( 'D', $date ),
+				],
+			],
+		],
+	] );
+	$already = [];
+	foreach ( $query->posts as $post ) {
+		if ( in_array( $post->poat_author, $already, true ) ) {
+			continue;
+		}
+		$already[] = $post->post_author;
+		$posts[]   = $post;
+		if ( count( $posts ) >= $limit ) {
+			break;
+		}
 	}
 
-	return $result;
+	return $posts;
 }
 
 /**

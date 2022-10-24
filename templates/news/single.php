@@ -90,26 +90,26 @@
 								<ul class="news-books__list">
 									<?php foreach ( $links as list( $title, $url, $src, $author, $publisher, $rank ) ) : ?>
 										<li class="news-books__item">
-											<a href="<?= esc_url( $url ) ?>" target="_blank"
+											<a href="<?php echo esc_url( $url ) ?>" target="_blank"
 											   class="news-books__link clearfix">
 												<?php if ( $src ) : ?>
-													<img src="<?= $src ?>" alt="<?= esc_attr( $title ) ?>"
+													<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo esc_attr( $title ) ?>"
 													     class="news-books__image">
 												<?php endif; ?>
 												<p class="news-books__desc">
-													<span class="news-books__name"><?= esc_html( $title ) ?></span>
+													<span class="news-books__name"><?php echo esc_html( $title ) ?></span>
 													<?php if ( $author ) : ?>
 														<span class="news-books__author">
-															<i class="icon-user"></i> <?= esc_html( $author ) ?>
+															<i class="icon-user"></i> <?php echo esc_html( $author ) ?>
 														</span>
 													<?php endif; ?>
 													<?php if ( $publisher ) : ?>
 														<span class="news-books__publisher">
-															<i class="icon-office"></i> <?= esc_html( $publisher ) ?>
+															<i class="icon-office"></i> <?php echo esc_html( $publisher ) ?>
 														</span>
 													<?php endif; ?>
 													<span class="news-books__rank">
-														<i class="icon-crown"></i> <?= $rank ? number_format_i18n( $rank ) : '-' ?>
+														<i class="icon-crown"></i> <?php echo is_numeric( $rank ) ? number_format_i18n( (int) $rank ) : '-' ?>
 														位
 													</span><br/>
 													<span class="label label-warning">

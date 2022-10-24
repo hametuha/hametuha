@@ -239,6 +239,13 @@ function hamenew_books( $post = null ) {
  * @return array
  */
 function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
+	return get_terms( [
+		'taxonomy' => 'nouns',
+		'number'   => 12,
+		'orderby'  => 'count',
+		'order'    => 'DESC',
+	] );
+	// TODO: Get popular nouns.
 	global $wpdb;
 	$wheres = [
 		"( tt.taxonomy = 'nouns' )"

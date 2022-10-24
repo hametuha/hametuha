@@ -51,11 +51,10 @@
       FB.Event.subscribe( prop, function (url) {
         var href = url.hasOwnProperty('href') ? url.href : url;
         try {
-          ga('send', {
-            hitType      : 'social',
-            socialNetwork: 'facebook',
-            socialAction : action,
-            socialTarget : href.replace(/^https?:\/\/hametuha\.(com|info)/, '')
+          gtag( 'event', 'share', {
+            method: 'facebook',
+            content_type: 'article',
+            item_id: href.replace( /^https?:\/\/hametuha\.(com|info)/, '' )
           });
         } catch (err) {
         }
@@ -101,11 +100,10 @@
     $.each(['follow', 'tweet', 'retweet', 'click', 'favorite'], function (index, key) {
       twttr.events.bind(key, function (event) {
         try {
-          ga('send', {
-            hitType      : 'social',
-            socialNetwork: 'twitter',
-            socialAction : key,
-            socialTarget : window.location.pathname
+          gtag( 'event', 'share', {
+            method: 'twitter',
+            content_type: 'article',
+            item_id: window.location.pathname
           });
         } catch (err) {
           // Do nothing

@@ -24,6 +24,11 @@ class Analytics extends Singleton {
 	protected $ua = 'UA-1766751-2';
 
 	/**
+	 * @var string Google Analytics 4 ID.
+	 */
+	protected $ga = 'G-GX6ZTNEEW8';
+
+	/**
 	 * @var string Facebook pixel ID.
 	 */
 	protected $pixel_id = '956989844374988';
@@ -91,31 +96,27 @@ class Analytics extends Singleton {
 	    // Get cookie and if set, use it.
         // If not set, generate via uuid4 and overwrite it.
 		?>
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
 		<script>
-		// Adsense connection.
-		window.google_analytics_uacct = "<?= esc_js( $this->ua ) ?>";
-		// analytics.js
-		(function (i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r;
-			i[r] = i[r] || function () {
-					(i[r].q = i[r].q || []).push(arguments)
-				}, i[r].l = 1 * new Date();
-			a = s.createElement(o),
-				m = s.getElementsByTagName(o)[0];
-			a.async = 1;
-			a.src = g;
-			m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-        ga('create', '<?= $this->ua ?>', 'auto');
-        ga('require', 'displayfeatures');
-        ga('require', 'linkid', 'linkid.js');
-        var uid = CookieTasting.get( 'uuid' );
-        ga('set', "userId", uid);
-        ga('set', "<?= self::DIMENSION_UID ?>", uid);
-        <?php
-            // Set user type.
-            if ( ! is_singular( 'news' ) ) {
-				if ( !is_user_logged_in() ) {
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag( 'js', new Date() );
+			// Custom dimensions.
+			var customMap = {};
+			try {
+				// Set user id.
+				var uid = CookieTasting.get( 'uuid' );
+				gtag( 'set', {
+					user_id: uid
+				} );
+				customMap['<?php echo esc_js( self::DIMENSION_UID ); ?>'] = uid;
+			} catch ( err ) {}
+        	<?php
+			// Set dimension as possible.
+			// Set user type.
+			if ( ! is_singular( 'news' ) ) {
+				if ( ! is_user_logged_in() ) {
 					$role = 'anonymous';
 				} else if ( current_user_can( 'edit_others_posts' ) ) {
 					$role = 'editor';
@@ -125,52 +126,61 @@ class Analytics extends Singleton {
 					$role = 'subscriber';
 				}
 				$this->set_dimension( self::DIMENSION_USER_TYPE, $role );
-            }
-            // Set contents attribution.
-            if ( ( is_singular() || is_page() ) && ! is_preview() ) {
-                // Set page attributes.
-                $this->set_dimension( self::DIMENSION_POST_TYPE, get_queried_object()->post_type );
+			}
+			// Set contents attribution.
+			if ( ( is_singular() || is_page() ) && !is_preview() ) {
+				// Set page attributes.
+				$this->set_dimension( self::DIMENSION_POST_TYPE, get_queried_object()->post_type );
 				$this->set_dimension( self::DIMENSION_AUTHOR, get_queried_object()->post_author );
 				$this->set_dimension( self::METRIC_CHAR_LENGTH, get_post_length( get_queried_object() ) );
 				// Set category.
-                $cat = 0;
-                foreach ( [
-                            'post'   => 'category',
-                            'news'   => 'genre',
-                            'faq'    => 'faq_cat',
-							'thread' => 'topic',
-                          ] as $post_type => $taxonomy ) {
-                    if ( $post_type !== get_queried_object()->post_type ) {
-                        continue;
-                    }
-                    $terms = get_the_terms( get_queried_object(), $taxonomy );
-                    if ( ! $terms || is_wp_error( $terms ) ) {
-                        continue;
-                    }
-                    foreach ( $terms as $term ) {
-                        $cat = $term->term_id;
-                        break;
-                    }
-                }
-                if ( $cat ) {
-                    $this->set_dimension( self::DIMENSION_CATEGORY, $cat );
-                }
-            }
-            if ( is_404() ) {
-                $type = '404';
-            } elseif ( is_admin() ) {
-                $type = 'admin';
-            } elseif ( did_action( 'hashboard_head' ) ) {
-                $type = 'dashboard';
-            } elseif ( is_singular( 'news' ) || is_tax( [ 'noun', 'genre' ] ) || is_post_type_archive( 'news' ) ) {
-                $type = 'news';
-            } else {
-                $type = 'public';
-            }
-            $this->set_dimension( self::DIMENSION_PAGE_TYPE, $type );
-            do_action( 'hametuha_before_ga_send_pageviews' );
-        ?>
-        ga('send', 'pageview');
+				$cat = 0;
+				foreach ( [
+							  'post' => 'category',
+							  'news' => 'genre',
+							  'faq' => 'faq_cat',
+							  'thread' => 'topic',
+						  ] as $post_type => $taxonomy ) {
+					if ( $post_type !== get_queried_object()->post_type ) {
+						continue;
+					}
+					$terms = get_the_terms( get_queried_object(), $taxonomy );
+					if ( !$terms || is_wp_error( $terms ) ) {
+						continue;
+					}
+					foreach ( $terms as $term ) {
+						$cat = $term->term_id;
+						break;
+					}
+				}
+				if ( $cat ) {
+					$this->set_dimension( self::DIMENSION_CATEGORY, $cat );
+				}
+			}
+			if ( is_404() ) {
+				$type = '404';
+			} elseif ( is_admin() ) {
+				$type = 'admin';
+			} elseif ( did_action( 'hashboard_head' ) ) {
+				$type = 'dashboard';
+			} elseif ( is_singular( 'news' ) || is_tax( [ 'noun', 'genre' ] ) || is_post_type_archive( 'news' ) ) {
+				$type = 'news';
+			} else {
+				$type = 'public';
+			}
+			$this->set_dimension( self::DIMENSION_PAGE_TYPE, $type );
+			?>
+
+			// Setup config.
+			var config = {
+				link_attribution: true
+			};
+			if ( 0 < Object.keys( customMap ).length ) {
+				config.custom_map = customMap;
+			}
+			<?php do_action( 'hametuha_before_ga_send_pageviews' ); ?>
+			gtag('config', '<?php echo esc_js( $this->ua ); ?>', config );
+			gtag('config', '<?php echo esc_js( $this->ga ); ?>', config );
 		</script>
 		<?php
         do_action( 'hametuha_after_tracking_code' );
@@ -206,11 +216,11 @@ class Analytics extends Singleton {
 	 */
     protected function set_dimension( $dimension, $value, $action = 'set' ) {
         if ( is_numeric( $value ) ) {
-			$str = 'ga( "%s", "%s", %d );';
+			$str = 'customMap["%s"] = %d;';
         } else {
-			$str = 'ga( "%s", "%s", "%s" );';
+			$str = 'customMap["%s"] = "%s";';
         }
-	    printf( $str, esc_js( $action ), esc_js( $dimension ), esc_js( $value ) );
+	    printf( $str, esc_js( $dimension ), esc_js( $value ) );
     }
 
 
@@ -258,9 +268,10 @@ class Analytics extends Singleton {
 		$data = <<<'JS'
 			document.addEventListener( 'wpcf7mailsent', function( event ) {
 				try {
-					var action = jQuery( event.target ).find( 'form' ).attr( 'action' ).split('#')[0].split( '?' );
-					action[0] = action[0].replace( /\/$/, '' ) + '/success';
-			  		ga( 'send', 'pageview', action.join( '?' ) );
+					gtag( 'event', 'wpcf7_submission', {
+        				'event_category': event.detail.contactFormId,
+						'event_label': event.detail.unitTag
+    				} );
 				} catch ( err ) {}
 			}, false );
 JS;
