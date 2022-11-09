@@ -55,7 +55,7 @@ function hametuha_get_footer_notes( $post = null ) {
 		}
 	}
 
-	return empty( $footernotes ) ? '' : sprintf( "<ol class='footernote-list'>\n%s\n</ol>", implode( "\n", $footernotes ) );
+	return empty( $footernotes ) ? '' : sprintf( "<ol class=\"footernote-list\">\n%s\n</ol>", implode( "\n", $footernotes ) );
 }
 
 /**
