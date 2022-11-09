@@ -67,10 +67,13 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
 
-      - name: Build package.
+      - name: Build Package
         run: bash bin/build.sh
+
+      - name: Clean Package
+        run: bash bin/clean.sh
 
       - name: Deploy Release
         id: create_release
