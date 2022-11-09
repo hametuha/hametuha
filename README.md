@@ -1,17 +1,26 @@
-hametuha
-========
+# hametuha
+
+Contributors: Takahashi_Fumiki, hametuha  
+Requires at least: 5.8  
+Tested up to: 6.0  
+Requires PHP: 7.2  
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
 
 [破滅派](https://hametuha.com)のWordPressテーマです。
 
-## 貢献の方法
+## Description
+
+## FAQ
 
 破滅派に貢献をしたいという奇特な方がいらっしゃったら、以下の方法で貢献いただけますと嬉しいです。
 
-## イシューを立てる
+### イシューを立てる
 
 イシュー（課題）を立てていただくと、「あ、そういう問題があるのだな」と気づくことができます。やり方は[Githubのマニュアル](https://help.github.com/articles/creating-an-issue/)をご覧ください。
 
-## プルリクエストを送る
+### プルリクエストを送る
 
 破滅派ではプルリクエストを受け付けています。やり方は[Githubのマニュアル](https://help.github.com/articles/creating-a-pull-request/)をご覧ください。
 

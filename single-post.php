@@ -78,6 +78,8 @@ HTML;
 
 					<?php the_content(); ?>
 
+					<?php hametuha_footer_notes(); ?>
+
 					<?php if ( is_last_page() ) : ?>
 						<p id="work-end-ranker" class="text-center" data-post="<?php the_ID() ?>"><i
 								class="icon-ha"></i></p>

@@ -68,6 +68,11 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 			    'title'   => '編注',
 		        'inline'  => 'small',
 			],
+			[
+				'title'   => '脚注',
+				'inline'  => 'small',
+				'classes' => 'footernote-ref',
+			],
 		],
 	];
 	// ブロック

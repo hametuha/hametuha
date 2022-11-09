@@ -133,9 +133,24 @@ class Post extends Command {
 					echo '.';
 					break;
 				case 'text':
+					// Post content.
 					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post, $endmark );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
+					// Footernotes.
+					ob_start();
+					hametuha_footer_notes( '<aside>', '</aside>', '', $post );
+					$footernote = trim( ob_get_contents() );
+					ob_end_clean();
+					if ( $footernote ) {
+						// Rmove footer note link.
+						$footernote = preg_replace( '#<a class="footernote-link"[^>]+>(.*?)</a>#u', '', $footernote );
+						file_put_contents( "{$dir}/post-{$post->ID}-footernote.xml", '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" . $footernote );
+					}
+					// Excerpt.
+					if ( ! empty( $post->post_excerpt ) ) {
+						file_put_contents( "{$dir}/post-{$post->ID}-excerpt.txt", $post->post_excerpt );
+					}
 					break;
 				case 'csv':
 					if ( ! $lines ) {
@@ -236,12 +251,13 @@ class Post extends Command {
 			'#<strong>([^<]+)</strong>#u'                       => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
 			'#<em>([^<]+)</em>#u'                               => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<s>(.*?)</s>#u'                                   => '<CharStyle:Strike>$1<CharStyle:>',
 			'#<cite>([^<]+)</cite>#u'                           => '<CharStyle:Cite>$1<CharStyle:>',
 			'#<span class="text-emphasis">([^<]+)</span>#u'     => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
 			'#<del>([^<]+)</del>#u'                             => '<CharStyle:Del>$1<CharStyle:>',
 			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#'            => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
 			'#<small>([^<]+)</small>#u'                         => '〔<CharStyle:Notes>$1<CharStyle:>〕',
-				  ] as $regexp => $converted ) {
+		] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
 

@@ -555,3 +555,20 @@ function hametuha_first_corrected( $format = false, $post = null ) {
         return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $corrected ) );
     }
 }
+
+/**
+ * Format markdown.
+ *
+ * @param string $markdown Markdown text.
+ * @return string
+ */
+function hametuha_parse_markdown( $markdown ) {
+	$converter = new \League\CommonMark\GithubFlavoredMarkdownConverter( [
+		'allow_unsafe_links' => false,
+	] );
+	if ( method_exists( $converter, 'convert' ) ) {
+		return $converter->convert( $markdown );
+	} else {
+		return $converter->convertToHtml( $markdown );
+	}
+}
