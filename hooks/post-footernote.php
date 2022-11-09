@@ -27,11 +27,7 @@ function hametuha_footer_notes( $before = '<aside class="footernote">', $after =
 	} else {
 		$title_html = '';
 	}
-	// TODO: Make markdown formatter abstract.
-	$converter = new \League\CommonMark\GithubFlavoredMarkdownConverter( [
-		'allow_unsafe_links' => false,
-	] );
-	printf( '%s%s%s%s', $before, $title_html, $converter->convert( $footer_notes ), $after );
+	printf( '%s%s%s%s', $before, $title_html, hametuha_parse_markdown( $footer_notes ), $after );
 }
 
 /**
