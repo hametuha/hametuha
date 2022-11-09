@@ -70,7 +70,7 @@ jobs:
           node-version: '14'
 
       - name: Build Package
-        run: bash bin/build.sh
+        run: bash bin/build.sh ${{ github.ref }}
 
       - name: Clean Package
         run: bash bin/clean.sh
