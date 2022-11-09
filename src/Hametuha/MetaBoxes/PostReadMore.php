@@ -5,6 +5,7 @@ namespace Hametuha\MetaBoxes;
 
 use WPametu\UI\Admin\EditMetaBox;
 use WPametu\UI\Field\Text;
+use WPametu\UI\Field\TextArea;
 
 /**
  * 続きを読むが存在する場合、リンクを表示できる。
@@ -24,10 +25,17 @@ class PostReadMore extends EditMetaBox {
 	protected $priority = 'low';
 
 	protected $fields = [
+		'_footernotes' => [
+			'class'       => TextArea::class,
+			'label'       => '脚注',
+			'required'    => false,
+			'description' => '脚注を入れる場合は入力してください。Markdownに対応しています。',
+			'placeholder' => '',
+		],
 		'_external_url' => [
-			'class' => Text::class,
-			'label' => '外部参照URL',
-			'required' => false,
+			'class'       => Text::class,
+			'label'       => '外部参照URL',
+			'required'    => false,
 			'description' => '書籍化などで外部のURLで続きを読んで欲しい場合はこちらにURLを入力してください。投稿がチラ見せ状態になります。',
 			'placeholder' => '例）https://amazon.co.jp/example',
 		],

@@ -1,5 +1,7 @@
 @mixin post-style($book: false){
 
+  counter-reset: noteref-id 0 notetext-id 0;
+
   // section
   .wp-block-hametuha-section{
     padding-top: 80px;
@@ -53,15 +55,96 @@
     font-size: 0.8em;
     color: $text-muted;
   }
+
+  // コラム
   aside{
     margin: 1em 0;
     padding: 1em;
     background: #f9f9f9;
     color: #000;
     font-size: 0.85em;
+
     h1, h2, h3, h4, h5, h6{
       &:first-child{
         margin-top: 0;
+      }
+    }
+
+    // 脚注
+    &.footernote {
+      margin: 2em;
+      padding: 2em 0;
+      background-color: transparent;
+      font-size: 0.85em;
+      border-top: 1px solid $thin-border;
+      border-bottom: 1px solid $thin-border;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        padding: 0;
+        border: none;
+      }
+    }
+  }
+
+  // 註
+  small,
+  ins {
+    color: $shade-font;
+    text-decoration: none;
+    font-size: 0.8em;
+
+    &:before{
+      content: '〔';
+    }
+    &:after{
+      content: '〕';
+    }
+
+    &.footernote-ref {
+      counter-increment: noteref-id;
+
+      &::before {
+        content: counter(noteref-id) '. ';
+      }
+      &::after{
+        content: none;
+      }
+    }
+  }
+
+  // 脚注リンク
+  .noteref-link {
+    margin-right: 0.25em;
+  }
+
+  // 脚注
+  .footernote {
+
+    &-item {
+      list-style: none;
+      position: relative;
+    }
+
+    &-link {
+      position: absolute;
+      top: 0;
+      right: 100%;
+
+      &:link,
+      &:visited {
+        color: #000;
+        text-decoration: none;
+      }
+
+      &:hover,
+      &:active {
+        color: $link-color;
+        text-decoration: none;
       }
     }
   }
@@ -296,16 +379,6 @@
         content: '”';
       }
     }
-    small{
-      color: #666;
-      font-size: 1em;
-      &:before{
-        content: '〔';
-      }
-      &:after{
-        content: '〕';
-      }
-    }
     // テーブル
     table{
       font-size: 0.85em;
@@ -364,7 +437,7 @@
     }
   }@else{
     //
-    // 作品のスタイル
+    // 電子書籍
     //
     // ------------------------
     //
@@ -448,7 +521,7 @@
     }
 
     // コラム
-    aside{
+    aside {
       font-family: $work-body-sans;
       h1, h2, h3, h4, h5, h6{
         font-family: $work-bold-sans;
@@ -513,16 +586,6 @@
     del, s, strike{
       color: $more-shade-font;
       text-decoration: line-through;
-    }
-    ins, small{
-      color: $shade-font;
-      text-decoration: none;
-      &:before{
-        content: '〔';
-      }
-      &:after{
-        content: '〕';
-      }
     }
     strong{
       font-family: $work-bold;
