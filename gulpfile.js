@@ -309,8 +309,8 @@ gulp.task( 'bs-watch', function () {
 gulp.task( 'browser-sync', function () {
 	return browserSync( {
 		server: {
-			baseDir: "./assets/"       //対象ディレクトリ
-			, index: "html/index.html"      //インデックスファイル
+			baseDir: "./assets/",
+			index: "html/index.html"
 		},
 		reloadDelay: 500
 	} );
