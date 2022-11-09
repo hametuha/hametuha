@@ -566,6 +566,9 @@ function hametuha_parse_markdown( $markdown ) {
 	$converter = new \League\CommonMark\GithubFlavoredMarkdownConverter( [
 		'allow_unsafe_links' => false,
 	] );
-
-	return $converter->convert( $markdown );
+	if ( method_exists( $converter, 'convert' ) ) {
+		return $converter->convert( $markdown );
+	} else {
+		return $converter->convertToHtml( $markdown );
+	}
 }
