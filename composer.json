@@ -16,10 +16,10 @@
     "php": "^7.2",
     "ext-simplexml": "*",
     "ext-curl": "*",
-    "hametuha/wpametu": "^1.0.0",
+    "hametuha/wpametu": "^1.0.1",
     "hametuha/hamepub": "^1.0.0",
-    "hametuha/hashboard": "^0.9",
-    "hametuha/sharee": "^0.8.4",
+    "hametuha/hashboard": "^0.9.1",
+    "hametuha/sharee": "^0.8.5",
     "league/commonmark": "^1.6|^2.3"
   },
   "require-dev": {
