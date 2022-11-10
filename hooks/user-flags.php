@@ -37,7 +37,7 @@ function hametuha_user_flags() {
 	return [
 		[
 			'id'    => 'spam',
-			'label' => __( 'スパム', 'hametuha' ),
+			'label' => __( '告知なし', 'hametuha' ),
 			'admin' => false,
 		],
 		[
