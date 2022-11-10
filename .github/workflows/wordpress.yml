@@ -17,7 +17,7 @@ jobs:
       matrix:
         operating-system: [ ubuntu-18.04 ]  # OS. ubuntu-18.04 is also available.
         php: [ '7.2', '7.4' ]        # PHP versions to check.
-        wp: [ 'latest', '5.5' ]             # WordPress version to check.
+        wp: [ 'latest', '5.8' ]             # WordPress version to check.
     services:
       mysql:
         image: mysql:5.7
@@ -53,9 +53,6 @@ jobs:
     needs: test
     if: contains(github.ref, 'tags/')
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        zip: [ 'hametuha' ] # Zip name.
     steps:
       - uses: actions/checkout@master
 
@@ -89,7 +86,7 @@ jobs:
           prerelease: false
 
       - name: Create Zip
-        run: zip -r ${{ matrix.zip }}.zip ./
+        run: zip -r ${{ github.event.repository.name }}.zip ./
 
       - name: Upload Release Zip
         id: upload-release-asset
@@ -98,6 +95,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./${{ matrix.zip }}.zip
-          asset_name: ${{ matrix.zip }}.zip
+          asset_path: ${{ github.workspace }}/${{ github.event.repository.name }}.zip
+          asset_name: ${{ github.event.repository.name }}.zip
           asset_content_type: application/zip
