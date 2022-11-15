@@ -239,6 +239,11 @@ class Post extends Command {
 		// Fix double space.
 		$content = str_replace( "\r\n", "\n", $post->post_content );
 		$content = str_replace( "\n\n", "\n", $content );
+		// Remove Image and link
+		// TODO: link should be saved as footernote.
+		$content = preg_replace( '#<a[^>]+>(.*?)</a>#u', '$1', $content );
+		$content = preg_replace( '#<img[^>]+>#u', '', $content );
+
 		// Remove empty line.
 		$content = trim( implode( "\n", array_map( function( $line ) {
 			return '&nbsp;' === $line ? '' : $line;
@@ -246,9 +251,16 @@ class Post extends Command {
 		if ( $endmark ) {
 			$content .= "\n" . $endmark;
 		}
-		// Convert Aside, blockquote.
+		// Convert Footernote.
+		$note_id = 0;
+		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function( $matches ) use ( &$note_id ) {
+			$note_id++;
+			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
+		}, $content );
+
+		// Inline elemnets.
 		foreach ( [
-			'#<strong>([^<]+)</strong>#u'                       => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong>(.*?)</strong>#u'                         => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
 			'#<em>([^<]+)</em>#u'                               => '<CharStyle:Emphasis>$1<CharStyle:>',
 			'#<s>(.*?)</s>#u'                                   => '<CharStyle:Strike>$1<CharStyle:>',
@@ -259,6 +271,11 @@ class Post extends Command {
 			'#<small>([^<]+)</small>#u'                         => '〔<CharStyle:Notes>$1<CharStyle:>〕',
 		] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
+		}
+
+		// Convert Dashes.
+		foreach ( [ '—', '―' ] as $char ) {
+			$content = str_replace( $char.$char, sprintf( '<CharStyle:Dash>%s<CharStyle:>', '―' ), $content );
 		}
 
 		// UL, OL
