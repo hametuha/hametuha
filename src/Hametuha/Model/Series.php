@@ -255,8 +255,9 @@ class Series extends Model {
 	 * @return bool
 	 */
 	public function should_hide( $post = null ) {
-		$post        = get_post( $post );
-		if ( $external = hametuha_external_url( $post ) ) {
+		$post     = get_post( $post );
+		$external = hametuha_external_url( $post );
+		if ( $external ) {
 			return ! hametuha_external_url_is_active( $post );
 		}
 		$limit_index = $this->get_visibility( $post->post_parent );

@@ -60,7 +60,9 @@ get_header(); ?>
 				</div>
 				<!-- //.post-meta-single -->
 
-				<?php if ( ( $should_hide = $series->should_hide() ) ) {
+				<?php
+				$should_hide = $series->should_hide();
+				if ( $should_hide ) {
 					if ( ! current_user_can( 'edit_post', get_the_ID() ) ) {
 						add_filter( 'the_content', 'hametuha_series_hide', 100 );
 					} else {
@@ -78,7 +80,9 @@ HTML;
 
 					<?php the_content(); ?>
 
-					<?php hametuha_footer_notes(); ?>
+					<?php if ( ! $should_hide ) {
+						hametuha_footer_notes();
+					} ?>
 
 					<?php if ( is_last_page() ) : ?>
 						<p id="work-end-ranker" class="text-center" data-post="<?php the_ID() ?>"><i
