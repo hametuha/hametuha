@@ -31,7 +31,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) 
 	] );
 	$already = [];
 	foreach ( $query->posts as $post ) {
-		if ( in_array( $post->poat_author, $already, true ) ) {
+		if ( in_array( $post->post_author, $already, true ) ) {
 			continue;
 		}
 		$already[] = $post->post_author;

@@ -102,6 +102,10 @@ class Analytics extends Singleton {
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag( 'js', new Date() );
+			// Setup config.
+			var config = {
+				link_attribution: true
+			};
 			// Custom dimensions.
 			var customMap = {};
 			try {
@@ -110,7 +114,8 @@ class Analytics extends Singleton {
 				gtag( 'set', {
 					user_id: uid
 				} );
-				customMap['<?php echo esc_js( self::DIMENSION_UID ); ?>'] = uid;
+				customMap['<?php echo esc_js( self::DIMENSION_UID ); ?>'] = 'user_id';
+				config.user_id = uid;
 			} catch ( err ) {}
         	<?php
 			// Set dimension as possible.
@@ -125,14 +130,14 @@ class Analytics extends Singleton {
 				} else {
 					$role = 'subscriber';
 				}
-				$this->set_dimension( self::DIMENSION_USER_TYPE, $role );
+				$this->set_dimension( self::DIMENSION_USER_TYPE, 'user_type', $role );
 			}
 			// Set contents attribution.
 			if ( ( is_singular() || is_page() ) && !is_preview() ) {
 				// Set page attributes.
-				$this->set_dimension( self::DIMENSION_POST_TYPE, get_queried_object()->post_type );
-				$this->set_dimension( self::DIMENSION_AUTHOR, get_queried_object()->post_author );
-				$this->set_dimension( self::METRIC_CHAR_LENGTH, get_post_length( get_queried_object() ) );
+				$this->set_dimension( self::DIMENSION_POST_TYPE, 'post_type', get_queried_object()->post_type );
+				$this->set_dimension( self::DIMENSION_AUTHOR, 'author', get_queried_object()->post_author );
+				$this->set_dimension( self::METRIC_CHAR_LENGTH, 'content_length', get_post_length( get_queried_object() ) );
 				// Set category.
 				$cat = 0;
 				foreach ( [
@@ -154,7 +159,7 @@ class Analytics extends Singleton {
 					}
 				}
 				if ( $cat ) {
-					$this->set_dimension( self::DIMENSION_CATEGORY, $cat );
+					$this->set_dimension( self::DIMENSION_CATEGORY, 'category', $cat );
 				}
 			}
 			if ( is_404() ) {
@@ -168,13 +173,8 @@ class Analytics extends Singleton {
 			} else {
 				$type = 'public';
 			}
-			$this->set_dimension( self::DIMENSION_PAGE_TYPE, $type );
+			$this->set_dimension( self::DIMENSION_PAGE_TYPE, 'page_type', $type );
 			?>
-
-			// Setup config.
-			var config = {
-				link_attribution: true
-			};
 			if ( 0 < Object.keys( customMap ).length ) {
 				config.custom_map = customMap;
 			}
@@ -210,17 +210,19 @@ class Analytics extends Singleton {
 	/**
      * Echo set dimension function.
      *
-	 * @param string $dimension
-	 * @param string $value
-     * @param string $action
+	 * @param string $dimension Dimension index.
+	 * @param string $label     Dimension label.
+	 * @param string $value     Dimension value.
+     * @param string $action    Action. will be deprecated.
 	 */
-    protected function set_dimension( $dimension, $value, $action = 'set' ) {
+    protected function set_dimension( $dimension, $label, $value, $action = 'set' ) {
+		printf( 'customMap["%s"] = "%s";', esc_js( $dimension ), esc_js( $label ) );
         if ( is_numeric( $value ) ) {
-			$str = 'customMap["%s"] = %d;';
+			$str = 'config["%s"] = %d;';
         } else {
-			$str = 'customMap["%s"] = "%s";';
+			$str = 'config["%s"] = "%s";';
         }
-	    printf( $str, esc_js( $dimension ), esc_js( $value ) );
+	    printf( $str, esc_js( $label ), esc_js( $value ) );
     }
 
 
