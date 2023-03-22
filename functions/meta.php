@@ -14,78 +14,106 @@
  * @return string
  */
 add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
-    // 著者名を追加する
-    if ( is_singular( [ 'post', 'series' ] ) ) {
-        $title .= sprintf( '%s %s ', hametuha_author_name( get_queried_object() ), $sep );
-    }
-    // その他
-	if ( is_singular( 'post' ) ) {
-	    // 投稿の場合はカテゴリーを追加
-		$cats = get_the_category( get_queried_object_id() );
-		if ( ! empty( $cats ) ) {
-		    $title .= sprintf( '%s %s ', current( $cats )->name, $sep );
-		}
+	$sep = '｜';
+	if ( is_front_page() ) {
+		// フロントページ
+		return implode( $sep, [ get_bloginfo( 'name' ), get_bloginfo( 'description' ) ] );
+	} elseif ( is_singular( 'post' ) ) {
+		// 投稿ページ
+		return sprintf(
+			'「%s」%s（%s, %s, %s年）',
+			get_the_title( get_queried_object() ),
+			hametuha_author_name( get_queried_object() ),
+			hametuha_taxonomy_for_title( 'category', get_queried_object() ),
+			get_bloginfo( 'name' ),
+			mysql2date( 'Y', get_queried_object()->post_date )
+		);
 	} elseif ( is_singular( 'series' ) ) {
-	    // 作品集の場合は電子書籍だったら電子書籍
-        $label = \Hametuha\Model\Series::get_instance()->get_status( get_queried_object_id() ) ? '電子書籍' : '作品集';
-		$title .= sprintf( '%s %s ', $label, $sep );
+		// 連載
+		return sprintf(
+			'%s『%s』（%s, %d年-, %s）',
+			hametuha_author_name( get_queried_object() ),
+			get_the_title( get_queried_object() ),
+			get_bloginfo( 'name' ),
+			mysql2date( 'Y', get_queried_object()->post_date ),
+			\Hametuha\Model\Series::get_instance()->is_finished( get_queried_object_id() ) ? '完結' : '連載中'
+		);
+	} elseif ( is_singular( 'news' ) ) {
+		// ニュース
+		return implode( $sep, [
+			get_the_title( get_queried_object() ),
+			hametuha_taxonomy_for_title( 'genre', get_queried_object() ) . 'ニュース',
+			get_bloginfo( 'name' )
+		] );
+	}
+	if ( is_category() ) {
+		$title = get_queried_object()->name;
+	} elseif ( is_tag() ) {
+		$title = sprintf( 'タグ「%s」を含む作品',  get_queried_object()->name );
 	} elseif ( is_ranking() ) {
 		$title = ranking_title() . " {$sep} ";
 	} elseif ( is_singular( 'info' ) ) {
 		$title .= "おしらせ {$sep} ";
 	} elseif ( is_singular( 'faq' ) ) {
-		$title .= "よくある質問 {$sep} ";
-	} elseif ( is_singular( 'announcement' ) ) {
-		$title .= "告知 {$sep} ";
-	} elseif ( is_singular( 'anpi' ) ) {
-		$title .= "安否情報 {$sep} ";
-	} elseif ( is_singular( 'ideas' ) ) {
-		$title .= "アイデア {$sep} ";
-	} elseif ( is_post_type_archive( 'ideas' ) ) {
-		$title = "アイデア {$sep}";
-	} elseif ( is_singular( 'thread' ) ) {
-		$title .= "BBS {$sep} ";
-	} elseif ( is_category() ) {
-		$title = "ジャンル: {$title}";
-	} elseif ( is_tag() ) {
-		$title = "タグ: $title";
+		$title = get_the_title() . $sep . "よくある質問";
 	} elseif ( is_tax( 'faq_cat' ) ) {
-		$title = "よくある質問: {$title}";
+		$title = sprintf(
+			'%1$sに関するよくある質問',
+			get_queried_object()->name
+		);
+	} elseif ( is_post_type_archive( 'announcement' ) ) {
+		$title = '告知';
+	} elseif ( is_singular( 'announcement' ) ) {
+		$title = get_the_title( get_queried_object() ) . $sep . '告知';
+	} elseif ( is_singular( 'anpi' ) ) {
+		$title .= "安否情報";
+	} elseif ( is_singular( 'ideas' ) || is_post_type_archive( 'ideas' ) ) {
+		$title .= "アイデア";
+	} elseif ( is_singular( 'thread' ) ) {
+		$title = sprintf(
+			'%s%s掲示板',
+			get_the_title( get_queried_object() ),
+			$sep
+		);
 	} elseif ( is_post_type_archive( 'thread' ) ) {
-		$title = "破滅派BBS {$sep} ";
+		$title = "掲示板";
 	} elseif ( is_tax( 'topic' ) ) {
-		$title = "破滅派BBSトピック: {$title}";
+		$title = sprintf( 'トピック「%s」を含む掲示板', get_queried_object()->name );
+	} elseif ( is_author() ) {
+		$title = get_queried_object()->display_name . 'の作品一覧';
+	} elseif ( is_search() ) {
+		$title = sprintf( '「%s」の検索結果', get_search_query() );
+	} elseif ( is_page() ) {
+		$title = get_the_title( get_queried_object() );
 	}
+	// Merge title.
+	$titles   = [ $title ];
 
-	return $title;
+	$titles[] = get_bloginfo( 'name' );
+	return implode( $sep, $titles );
 }, 10, 3 );
 
 /**
- * タイトルを変更
+ * Return taxonomy name combined with separator.
  *
- * @todo get_document_titleが標準になったら消す
- * @param array
+ * @param string           $taxonomy Taxonomy name.
+ * @param null|int|WP_Post $post     Post object.
+ * @param string           $sep      Separator.
+ * @return string
  */
-add_filter( 'document_title_parts', function( $title ){
-	if ( is_singular( 'news' ) ) {
-		$title = [ hamenew_copy( get_the_title() ) ];
-	}
-	return $title;
-} );
-
-/**
- * タイトルタグのセパレータを変更
- */
-add_filter( 'document_title_separator', function(){
-	return '|';
-} );
+function hametuha_taxonomy_for_title( $taxonomy, $post = null, $sep = '・' ) {
+	$terms = get_the_terms( get_post( $post ), $taxonomy );
+	return ( ! $terms || is_wp_error( $terms ) ) ? '' : implode( $sep, array_map( function( $term ) {
+		return $term->name;
+	}, $terms ) );
+}
 
 /**
  * Faviconの表示
  */
 function _hametuha_favicon() {
 	?>
-	<link rel="shortcut icon" href="<?= get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico"/>
+	<link rel="shortcut icon" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/favicon.ico"/>
 	<?php
 }
 add_action( 'admin_head', '_hametuha_favicon' );
@@ -123,31 +151,7 @@ add_action( 'wp_head', function () {
 add_action( 'wp_head', function () {
 	//初期値を設定
 	$image    = get_template_directory_uri() . '/assets/img/facebook-logo-2016.png';
-	if ( is_hamenew() ) {
-		if ( is_tax( 'nouns' ) || is_tax( 'genre' ) ) {
-			$object = get_queried_object();
-			$taxonomy = get_taxonomy( $object->taxonomy );
-			$label = is_tax( 'nouns' ) ? 'キーワード' : esc_html( $taxonomy->label );
-			$title = hamenew_copy( sprintf( '%2$s「%1$s」のニュース', esc_html( $object->name ), $label ) );
-		} elseif ( is_singular( 'news' ) ) {
-			$terms = get_the_terms( get_queried_object(), 'genre' );
-			$seg   = [];
-			if ( $terms && ! is_wp_error( $terms ) ) {
-				foreach ( $terms as $term ) {
-					$seg[] = esc_html( $term->name ) . 'ニュース';
-					break;
-				}
-			}
-			array_unshift( $seg, esc_html( get_the_title() ) );
-			$title = hamenew_copy( implode( ' | ', $seg ) );
-		} elseif ( is_page_template( 'page-hamenew.php' ) ) {
-			$title = hamenew_copy( get_the_title() );
-		} else {
-			$title = hamenew_copy( );
-		}
-	} else {
-		$title    = wp_title( '|', false, 'right' ) . get_bloginfo( 'name' );
-	}
+	$title    = wp_title( '|', false, 'right' );
 	$url      = false;
 	$type     = 'article';
 	$creator  = '@hametuha';
@@ -176,7 +180,6 @@ add_action( 'wp_head', function () {
 	} elseif ( is_author() ) {
 		global $wp_query;
 		$user   = get_userdata( $wp_query->query_vars['author'] );
-		$title  = $user->display_name;
 		$type   = 'profile';
 		$url    = get_author_posts_url( $user->ID, $user->user_nice_name );
 		$image  = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $user->ID, 300 ) );
@@ -348,9 +351,9 @@ HTML;
   "headline": "<?= esc_js( get_the_title() ) ?>",
   "image": {
     "@type": "ImageObject",
-    "url": "<?= $image[0] ?>",
-    "height": <?= $image[1] ?>,
-    "width": <?= $image[2] ?>
+    "url": "<?php echo $image[0] ?>",
+    "height": <?php echo $image[1] ?>,
+    "width": <?php echo $image[2] ?>
   },
   "datePublished": "<?php the_date( DateTime::ATOM ) ?>",
   "dateModified": "<?php the_modified_date( DateTime::ATOM ) ?>",
@@ -363,12 +366,12 @@ HTML;
     "name": "<?php bloginfo( 'name' ) ?>",
     "logo": {
       "@type": "ImageObject",
-      "url": "<?= get_template_directory_uri() ?>/assets/img/ogp/hamenew-company.png",
+      "url": "<?php echo get_template_directory_uri() ?>/assets/img/ogp/hamenew-company.png",
       "width": 600,
       "height": 60
     }
   },
-  "description": "<?= esc_js( $excerpt ) ?>"
+  "description": "<?php echo esc_js( $excerpt ) ?>"
 }
 </script>
 		<?php
@@ -407,6 +410,8 @@ add_action( 'wp_head', function() {
 
 /**
  * サイトマップから削除
+ *
+ * @deprecated BWG.
  */
 add_filter( 'bwp_gxs_excluded_posts', function( $excludes, $requested ) {
     global $wpdb;

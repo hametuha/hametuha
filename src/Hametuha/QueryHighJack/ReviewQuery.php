@@ -51,7 +51,7 @@ class ReviewQuery extends QueryHighJack
 	 * @return string
 	 */
 	public function wp_title($title, $sep, $sep_location){
-		return "レビューした作品 {$sep} ";
+		return "レビューした作品 {$sep} " . get_bloginfo( 'name' );
 	}
 
     /**

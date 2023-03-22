@@ -18,15 +18,9 @@
 
 		</div>
 
-		<?php if ( is_hamenew() ) : ?>
-			<a class="logo" rel="home" href="<?= home_url( '/news' ); ?>">
-				<img src="<?= get_template_directory_uri() ?>/assets/img/hamenew-logo.png" alt="はめにゅー" width="90" height="50" />
-			</a>
-		<?php else : ?>
-			<a class="logo" rel="home" href="<?= home_url( '/' ); ?>">
-				<i class="icon-hametuha"></i><span>破滅派</span>
-			</a>
-		<?php endif; ?>
+		<a class="logo" rel="home" href="<?= home_url( '/' ); ?>">
+			<i class="icon-hametuha"></i><span><?php bloginfo( 'name' ); ?></span>
+		</a>
 
         <div id="user-info"></div>
 

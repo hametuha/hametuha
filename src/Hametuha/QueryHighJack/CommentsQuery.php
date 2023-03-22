@@ -45,7 +45,7 @@ class CommentsQuery extends QueryHighJack
 	 * @return string
 	 */
 	public function wp_title($title, $sep, $sep_location){
-		return "あなたのコメント {$sep} ";
+		return "あなたのコメント {$sep} " . get_bloginfo( 'name' );
 	}
 
     /**

@@ -435,7 +435,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	public function get_detail( $author_name ) {
 		$this->set_member( $author_name );
-		$this->title = $this->doujin->display_name . ' | ' . $this->title;
+		$this->title = $this->doujin->display_name . 'のプロフィール | ' . get_bloginfo( 'name' );
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,

@@ -25,7 +25,7 @@ class Statistics extends RestTemplate {
 	protected function pager( $page = 1 ) {
 		if ( 1 === $page ) {
 			// Top page
-			$this->title .= ' | アクセス';
+			$this->title .= ' | アクセス | 破滅派';
 			$this->set_data( [
 				'breadcrumb' => false,
 				'current'    => false,
@@ -42,7 +42,7 @@ class Statistics extends RestTemplate {
 	}
 
 	public function get_readers() {
-		$this->title .= ' | 読者層';
+		$this->title .= ' | 読者層 | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => '読者層',
 			'current'    => 'readers',
@@ -56,7 +56,7 @@ class Statistics extends RestTemplate {
 	}
 
 	public function get_traffic() {
-		$this->title .= ' | 集客';
+		$this->title .= ' | 集客 | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => '読者層',
 			'current'    => 'traffic',
@@ -71,7 +71,7 @@ class Statistics extends RestTemplate {
 	}
 
 	public function get_feedback() {
-		$this->title .= ' | 感想';
+		$this->title .= ' | 感想 | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => '感想',
 			'current'    => 'feedback',

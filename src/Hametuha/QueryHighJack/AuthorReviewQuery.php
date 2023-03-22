@@ -60,7 +60,7 @@ class AuthorReviewQuery extends QueryHighJack
 			return '';
 		}
 		$auth = get_query_var('authenticated') ? '登録ユーザーから' : '';
-		return sprintf("「%s」という評価を%s受けた作者 %s ", $term->name, $auth, $sep);
+		return sprintf("「%s」という評価を%s受けた作者 %s %s", $term->name, $auth, $sep, get_bloginfo( 'name' ) );
 	}
 
 	/**
