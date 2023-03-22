@@ -64,9 +64,9 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
  */
 add_filter( 'single_term_title', function ( $name ) {
 	if ( is_tax( 'nouns' ) ) {
-		$name = sprintf( 'キーワード「%s」を含む記事', $name );
+		$name = sprintf( 'キーワード「%s」を含むニュース', $name );
 	} elseif ( is_tax( 'genre' ) ) {
-		$name = sprintf( 'ジャンル「%s」の記事', $name );
+		$name = sprintf( 'ジャンル「%s」のニュース', $name );
 	}
 
 	return $name;

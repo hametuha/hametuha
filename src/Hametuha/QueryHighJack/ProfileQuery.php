@@ -53,7 +53,7 @@ class ProfileQuery extends QueryHighJack {
 	 * @return string
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		return "執筆者一覧 {$sep} ";
+		return "執筆者一覧 {$sep} " . get_bloginfo( 'name' );
 	}
 
 	/**
@@ -185,4 +185,4 @@ SQL;
 		return '0' === $profile_name || ! empty( $profile_name );
 	}
 
-} 
+}
