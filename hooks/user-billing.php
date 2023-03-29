@@ -227,6 +227,7 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 				round( $line->tax ),
 				round( $line->total ),
 				$address->format_line(),
+				get_the_author_meta( 'display_name', $line->object_id ),
 			], $delimiter );
 		}
 		exit;
