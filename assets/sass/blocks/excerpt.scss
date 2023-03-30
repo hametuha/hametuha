@@ -1,0 +1,34 @@
+.hametuha-block-lead {
+
+	&-text {
+		font-weight: 700;
+	}
+
+	&-status {
+		font-size: 0.75em;
+		display: block;
+		line-height: 20px;
+		height: 20px;
+		text-align: right;
+
+		.dashicons {
+			marign-right: 1.5em;
+			vertical-align: middle;
+		}
+
+		&.ok {
+			color: green;
+		}
+
+		&.ng {
+			color: red;
+		}
+	}
+}
+
+.wp-block-hametuha-excerpt-container {
+	padding: 40px 0;
+	margin: 40px 0;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
+}
