@@ -4,6 +4,6 @@
 			破滅派の書籍<br/>
 			<small>Books</small>
 		</h2>
+		<?php get_sidebar( 'books' ); ?>
 	</div>
-	<?php get_sidebar( 'books' ); ?>
 </section>

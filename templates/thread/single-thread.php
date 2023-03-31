@@ -3,7 +3,7 @@
 	<div class="container single">
 
 		<div class="row row-offcanvas row-offcanvas-right">
-			
+
 			<?php if ( have_posts() ): while ( have_posts() ): the_post(); ?>
 
 				<article itemscope
@@ -65,7 +65,7 @@
                                     <?php the_title(); ?>
                                 </span>
                             </h1>
-							
+
 							<?php get_template_part( 'parts/meta', 'single' ) ?>
 
 							<div class="thread-inner" itemprop="text">
@@ -76,8 +76,8 @@
 						</div><!-- //.thread-body -->
 
 					</div><!-- //.thread-header -->
-					
-					
+
+
 					<div class="more">
 						<?php comments_template(); ?>
 					</div>
@@ -85,12 +85,14 @@
 					<?php get_template_part( 'templates/thread/thread-block' ) ?>
 
 				</article><!-- //.single-container -->
-			
+
 			<?php endwhile; endif; ?>
 
 			<?php get_template_part( 'templates/thread/sidebar-thread' ) ?>
 
 		</div><!-- //.row-offcanvas -->
 	</div><!-- //.container -->
+
+<?php get_footer( 'books' ) ?>
 
 <?php get_footer() ?>

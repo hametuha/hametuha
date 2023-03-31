@@ -56,4 +56,6 @@
 
 	</div><!-- //.container -->
 
+<?php get_footer( 'books' ) ?>
+
 <?php get_footer();
