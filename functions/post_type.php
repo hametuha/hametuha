@@ -159,23 +159,6 @@ add_filter( 'post_type_link', function ( $post_link, $post ) {
 }, 10, 2 );
 
 /**
- * タームリンクを変更
- *
- * @param string $term_link
- * @param WP_Term $term
- * @param string $taxonomy
- * @return string
- */
-add_filter( 'term_link', function ($term_link, $term, $taxonomy) {
-	switch ( $taxonomy ) {
-		default:
-			// Do nothing
-			break;
-	}
-	return $term_link;
-}, 10, 3 );
-
-/**
  * 削除
  *
  * @param int $post_id
@@ -388,22 +371,6 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 	}
 }, 10, 2 );
 
-/**
- * FAQの閲覧を制限する
- */
-add_filter( 'hamelp_access_type', function( $types ) {
-    if ( isset( $types[ 'contributor' ] ) ) {
-        unset( $types['contributor'] );
-    }
-    unset( $types['author'] );
-    $types['writer'] = [
-        'label' => '著者',
-        'callback' => function() {
-            return current_user_can( 'edit_posts' );
-        },
-    ];
-    return $types;
-} );
 
 /**
  * 投稿本文をREST APIから削除
