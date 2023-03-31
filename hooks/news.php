@@ -269,3 +269,34 @@ add_filter( 'bloginfo_rss', function($value, $show){
 	}
 	return $value;
 }, 10, 2);
+
+/**
+ * ニュースの関連記事を追加
+ */
+add_filter( 'related_posts_post_types', function( $post_types ) {
+	$post_types[] = 'news';
+	return $post_types;
+}  );
+
+/**
+ * ニュースの関連記事スコア測定用静的解析を追加
+ */
+add_filter( 'related_posts_taxonomy_score', function ( $scores, $post_type ) {
+	if ( 'news' === $post_type ) {
+		$scores = [
+			'nouns' => 3,
+			'genre' => 1,
+		];
+	}
+	return $scores;
+}, 10, 2 );
+
+/**
+ * ニュース関連記事のタクソノミーを追加する
+ */
+add_filter( 'related_post_patch_main_taxonomy', function( $taxonomy, $post ) {
+	if ( 'news' === $post->post_type ) {
+		$taxonomy = 'genre';
+	}
+	return $taxonomy;
+}, 10, 2 );
