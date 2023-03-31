@@ -26,7 +26,7 @@ add_filter( 'image_size_names_choose', function ( $sizes ) {
 
 //投稿サムネイルを許可
 global $content_width;
-add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news' ] );
+add_theme_support( 'post-thumbnails', [ 'post', 'page', 'series', 'announcement', 'news', 'related-post-ad' ] );
 set_post_thumbnail_size( $content_width, 696, false );
 
 
