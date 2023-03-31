@@ -27,7 +27,7 @@
                 <?php else : ?>
 					<?php get_template_part( 'parts/no', 'content' ) ?>
                 <?php endif; ?>
-                <?php google_adsense( 'related' ) ?>
+                <?php google_adsense( 'archive_bottom' ) ?>
             </div>
             <!-- //.main-container -->
 			<?php get_template_part( 'templates/faq/sidebar-faq' ); ?>

@@ -1,5 +1,5 @@
 <div id="sales-container" data-endpoint="<?= esc_url( $endpoint ) ?>" data-slug="<?= esc_attr( $page ) ?>">
-	<?php if ( 'rewards' == $page ) : ?>
+	<?php if ( 'rewards' === $page ) : ?>
         <hb-month-selector v-on:date-updated="getReward" label="日付"></hb-month-selector>
 	<?php endif; ?>
     <table :class="{table: true, 'table-striped': true, loading: loading, highlight: true}">
@@ -20,11 +20,11 @@
         </thead>
         <tfoot>
         <tr>
-            <th colspan="3">&nbsp;</th>
-            <th class="text-right">{{tax | monetize}}</th>
+            <th colspan="5">&nbsp;</th>
+			<th class="text-right">{{tax | monetize}}</th>
             <th class="text-right">{{total | monetize}}</th>
 			<?php if ( 'rewards' == $page ) : ?>
-                <th colspan="2">&nbsp;</th>
+                <th>&nbsp;</th>
 			<?php else : ?>
                 <th class="text-right">
                             <span v-if="available" class="text-success">
@@ -36,14 +36,13 @@
                                 金額不足
                             </span>
                 </th>
-                <th>&nbsp;</th>
 			<?php endif; ?>
         </tr>
         </tfoot>
         <tbody>
         <tr v-for="record in records">
             <th>{{record.revenue_id}}</th>
-            <td>{{record.description}}</td>
+			<td><strong>【{{record.label}}】</strong>{{record.description}}</td>
 			<td class="text-right">{{record.price | monetize}}</td>
             <td class="text-right">{{record.unit}}</td>
 			<td class="text-right">{{record.tax | monetize}}</td>

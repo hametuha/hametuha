@@ -169,17 +169,12 @@ HTML;
 			break;
         case 6:
         case 'related':
-            echo <<<HTML
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-format="autorelaxed"
-     data-ad-client="ca-pub-0087037684083564"
-     data-ad-slot="4525538727"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-HTML;
+			if ( function_exists( 'get_the_related_post_patch' ) ) {
+				$result = get_the_related_post_patch();
+				if ( $result ) {
+					echo $result;
+				}
+			}
             break;
 	}
 }

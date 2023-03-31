@@ -83,6 +83,7 @@ class UserPayments extends WpApi {
 		foreach ( $this->sales->get_payment_list( $request->get_param( 'year' ), $user_id ) as $record ) {
 			$response['total'] += $record->total;
 			$response['deducting'] += $record->deducting;
+			$record->label = $this->sales->type_label( $record->revenue_type );
 			$response['records'][] = $record;
 		}
 		return new \WP_REST_Response( $response );

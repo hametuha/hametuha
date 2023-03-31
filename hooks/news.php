@@ -6,6 +6,131 @@
  */
 
 /**
+ * ニュース関連の投稿タイプを作成する。
+ */
+add_action( 'init', function() {
+
+	// キーワード
+	register_taxonomy( 'nouns', 'news', [
+		'label' => 'タグ（固有名詞）',
+		'description' => 'ニュースに出てくる作家名、雑誌名、出版社名などの固有名詞。',
+		'hierarchical' => false,
+		'public' => true,
+		'show_in_rest' => true,
+		'show_admin_column' => true,
+		'rewrite' => [
+			'slug' => 'news/nouns',
+		],
+		'capabilities' => [
+			'manage_terms' => 'edit_posts',
+			'edit_terms' => 'edit_posts',
+			'delete_terms' => 'edit_others_posts',
+			'assign_terms' => 'edit_posts',
+		],
+	] );
+
+	// 形式
+	register_taxonomy( 'genre', 'news', array(
+		'label'        => 'ジャンル',
+		'public'       => true,
+		'hierarchical' => true,
+		'show_in_rest'    => true,
+		'capabilities' => [
+			'manage_terms' => 'edit_others_posts',
+			'edit_terms'   => 'edit_others_posts',
+			'delete_terms' => 'edit_others_posts',
+			'assign_terms' => 'edit_posts',
+		],
+		'show_admin_column' => true,
+		'rewrite'      => [
+			'slug' => 'news/genre',
+			'hierarchical' => true,
+		],
+	) );
+
+	// ニュース
+
+	register_post_type('news', [
+		'label'           => 'ニュース',
+		'description'     => 'はめにゅーはオンライン文芸誌サイト破滅派が提供する文学関連ニュースです。コンテキスト無き文学の世界で道標となることを目指しています。',
+		'public'          => true,
+		'menu_position'   => 6,
+		'menu_icon'       => 'dashicons-admin-site',
+		'supports'        => [ 'title', 'excerpt', 'editor', 'author', 'thumbnail', 'revisions', 'amp' ],
+		'has_archive'     => true,
+		'taxonomies'      => [ 'genre', 'nouns' ],
+		'map_meta_cap'    => true,
+		'capability_type' => [ 'news_post', 'news_posts' ],
+		'show_in_rest'    => true,
+		'template'        => [
+			[
+				'hametuha/excerpt', [],
+			],
+			[
+				'core/paragraph',
+				[
+                	'placeholder' => __( 'ここからニュースの本文を入力してください……', 'hametuha' ),
+            	]
+			],
+        ],
+	]);
+} );
+
+function wpb_change_title_text( $title ){
+	$screen = get_current_screen();
+
+	if  ( 'movie' == $screen->post_type ) {
+		$title = 'Enter movie name with release year';
+	}
+
+	return $title;
+}
+
+/**
+ * エディターのプレースホルダーでを変更。
+ *
+ * @param string $title プレースホルダー
+ * @param WP_Post $post 投稿オブジェクト
+ * @return string
+ */
+add_filter( 'enter_title_here', function( $title, $post ) {
+	if ( 'news' === $post->post_type ) {
+		$title = __( 'タイトル例・【快挙！】破滅派2000号がノーベル文学賞を受賞！', 'hametuha' );
+	}
+	return $title;
+}, 10, 2 );
+
+/**
+ * ニュースのリライトルールを追加
+ *
+ */
+add_filter( 'rewrite_rules_array', function ( array $rules ) {
+	return array_merge( [
+		'^news/article/([0-9]+)/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&page=$matches[2]',
+		'^news/article/([0-9]+)/amp/?$' => 'index.php?p=$matches[1]&post_type=news&amp=true', // AMPはもう使っていないが後方互換で残す
+		'^news/article/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news',
+	], $rules );
+} );
+
+/**
+ *
+ * パーマリンクをIDに
+ *
+ * @since 3.0.0
+ *
+ * @param string $post_link The post's permalink.
+ * @param WP_Post $post The post in question.
+ * @param bool $leavename Whether to keep the post name.
+ * @param bool $sample Is it a sample permalink.
+ */
+add_filter( 'post_type_link', function ( $post_link, $post ) {
+	if ( 'news' === $post->post_type ) {
+		$post_link = home_url( "/news/article/{$post->ID}/" );
+	}
+	return $post_link;
+}, 10, 2 );
+
+/**
  * 広告を挿入する
  */
 add_action( 'wp_head', function () {
@@ -144,3 +269,34 @@ add_filter( 'bloginfo_rss', function($value, $show){
 	}
 	return $value;
 }, 10, 2);
+
+/**
+ * ニュースの関連記事を追加
+ */
+add_filter( 'related_posts_post_types', function( $post_types ) {
+	$post_types[] = 'news';
+	return $post_types;
+}  );
+
+/**
+ * ニュースの関連記事スコア測定用静的解析を追加
+ */
+add_filter( 'related_posts_taxonomy_score', function ( $scores, $post_type ) {
+	if ( 'news' === $post_type ) {
+		$scores = [
+			'nouns' => 3,
+			'genre' => 1,
+		];
+	}
+	return $scores;
+}, 10, 2 );
+
+/**
+ * ニュース関連記事のタクソノミーを追加する
+ */
+add_filter( 'related_post_patch_main_taxonomy', function( $taxonomy, $post ) {
+	if ( 'news' === $post->post_type ) {
+		$taxonomy = 'genre';
+	}
+	return $taxonomy;
+}, 10, 2 );

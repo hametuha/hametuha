@@ -77,19 +77,19 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 		<tr>
 			<th>郵便番号</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?= esc_attr( $address->get_value( 'zip' ) ) ?>"/></td>
+					   value="<?php echo esc_attr( $address->get_value( 'zip' ) ) ?>"/></td>
 		</tr>
 		<tr>
 			<th>住所</th>
 			<td>
 				<textarea class="regular-text"
-						  readonly><?= esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ) ?></textarea>
+						  readonly><?php echo esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ) ?></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th>氏名</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?= esc_attr( $address->get_value( 'name' ) ) ?>"/></td>
+					   value="<?php echo esc_attr( $address->get_value( 'name' ) ) ?>"/></td>
 		</tr>
 		<tr>
 			<th>電話</th>
@@ -106,7 +106,7 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 } );
 
 /**
- * 厳選出力用フォームを作成
+ * 源泉出力用フォームを作成
  */
 add_action( 'sharee_after_table', function ( $table_class ) {
 	if ( \Hametuha\Sharee\Table\BillingListTable::class !== $table_class ) {
@@ -207,7 +207,7 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 			[],
 			true
 		);
-		if ( !$list ) {
+		if ( ! $list ) {
 			throw new Exception( '該当するデータがありませんでした。' );
 		}
 		header( "Content-Type: application/octet-stream" );
@@ -227,6 +227,7 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 				round( $line->tax ),
 				round( $line->total ),
 				$address->format_line(),
+				get_the_author_meta( 'display_name', $line->object_id ),
 			], $delimiter );
 		}
 		exit;

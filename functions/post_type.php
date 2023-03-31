@@ -118,57 +118,6 @@ add_action( 'init', function () {
 		'taxonomies'      => [ 'post_tag' ],
 		'capability_type' => 'page',
 	] );
-
-	// キーワード
-	register_taxonomy( 'nouns', 'news', [
-		'label'        => 'タグ（固有名詞）',
-		'description'  => 'ニュースに出てくる作家名、雑誌名、出版社名などの固有名詞。',
-		'hierarchical' => false,
-		'public'      => true,
-		'show_admin_column' => true,
-		'rewrite'      => [
-			'slug' => 'news/nouns',
-		],
-		'capabilities' => [
-			'manage_terms' => 'edit_posts',
-			'edit_terms'   => 'edit_posts',
-			'delete_terms' => 'edit_others_posts',
-			'assign_terms' => 'edit_posts',
-		],
-	] );
-
-	// 形式
-	register_taxonomy( 'genre', 'news', array(
-		'label'        => 'ジャンル',
-		'public'       => true,
-		'hierarchical' => true,
-		'capabilities' => [
-			'manage_terms' => 'edit_others_posts',
-			'edit_terms'   => 'edit_others_posts',
-			'delete_terms' => 'edit_others_posts',
-			'assign_terms' => 'edit_posts',
-		],
-		'show_admin_column' => true,
-		'rewrite'      => [
-			'slug' => 'news/genre',
-		    'hierarchical' => true,
-		],
-	) );
-
-	// ニュース
-	register_post_type('news', [
-		'label'       => 'はめにゅー',
-		'description' => 'はめにゅーはオンライン文芸誌サイト破滅派が提供する文学関連ニュースです。コンテキスト無き文学の世界で道標となることを目指しています。',
-		'public'      => true,
-		'menu_position' => 6,
-		'menu_icon'   => 'dashicons-admin-site',
-		'supports'    => [ 'title', 'editor', 'author', 'thumbnail', 'revisions', 'amp' ],
-		'has_archive' => true,
-		'taxonomies'  => [ 'genre', 'nouns' ],
-		'map_meta_cap' => true,
-		'capability_type' => [ 'news_post', 'news_posts' ],
-	]);
-
 } );
 
 /**
@@ -177,9 +126,6 @@ add_action( 'init', function () {
  */
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
-		'^news/article/([0-9]+)/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&page=$matches[2]',
-		'^news/article/([0-9]+)/amp/?$' => 'index.php?p=$matches[1]&post_type=news&amp=true',
-		'^news/article/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news',
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
 		'^lists/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists',
 		'^idea/(\\d+)/?' => 'index.php?p=$matches[1]&post_type=ideas',
@@ -202,9 +148,6 @@ add_filter( 'post_type_link', function ( $post_link, $post ) {
 		case 'lists':
 			$post_link = home_url( "/{$post->post_type}/{$post->ID}/" );
 			break;
-		case 'news':
-			$post_link = home_url( "/news/article/{$post->ID}/" );
-			break;
 		case 'ideas':
 			$post_link = home_url( "/idea/{$post->ID}/" );
 			break;
@@ -214,23 +157,6 @@ add_filter( 'post_type_link', function ( $post_link, $post ) {
 
 	return $post_link;
 }, 10, 2 );
-
-/**
- * タームリンクを変更
- *
- * @param string $term_link
- * @param WP_Term $term
- * @param string $taxonomy
- * @return string
- */
-add_filter( 'term_link', function ($term_link, $term, $taxonomy) {
-	switch ( $taxonomy ) {
-		default:
-			// Do nothing
-			break;
-	}
-	return $term_link;
-}, 10, 3 );
 
 /**
  * 削除
@@ -266,8 +192,8 @@ add_filter( 'single_template', function ( $template ) {
 
 /**
  * サブページじゃなければfalse、 サブページの場合は親の投稿IDを返す
- * @global object $post
  *
+ * @global object $post
  * @param mixed $post
  *
  * @return int
@@ -380,7 +306,7 @@ function hametuha_page_type() {
 }
 
 /**
- * Show field on amdmin screen
+ * Show field on admin screen
  *
  * @param stdClass $term
  * @param string $taxonomy
@@ -445,22 +371,6 @@ add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 	}
 }, 10, 2 );
 
-/**
- * FAQの閲覧を制限する
- */
-add_filter( 'hamelp_access_type', function( $types ) {
-    if ( isset( $types[ 'contributor' ] ) ) {
-        unset( $types['contributor'] );
-    }
-    unset( $types['author'] );
-    $types['writer'] = [
-        'label' => '著者',
-        'callback' => function() {
-            return current_user_can( 'edit_posts' );
-        },
-    ];
-    return $types;
-} );
 
 /**
  * 投稿本文をREST APIから削除

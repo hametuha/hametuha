@@ -85,15 +85,16 @@ class UserReward extends WpApi {
 		$status = $request->get_param( 'status' );
 
 		foreach ( $this->sales->search( [
-			'year' => $request->get_param( 'year' ),
-			'month' => $request->get_param( 'month' ),
-			'status' => $request->get_param( 'status' ),
+			'year'      => $request->get_param( 'year' ),
+			'month'     => $request->get_param( 'month' ),
+			'status'    => $request->get_param( 'status' ),
 			'object_id' => $user_id,
-			'per_page' => 0,
+			'per_page'  => 0,
 		] ) as $sales ) {
 			$response['total'] += $sales->total;
 			$response['deducting'] += $sales->deducting;
 			$sales->paid = '0000-00-00 00:00:00' != $sales->fixed;
+			$sales->label = $this->sales->type_label( $sales->revenue_type );
 			$response['records'][] = $sales;
 		}
 		$response['enough'] = $response['total'] > hametuha_minimum_payment();

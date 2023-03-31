@@ -12,7 +12,7 @@ use WPametu\Pattern\Singleton;
  */
 class Editor extends Singleton {
 
-	public $post_type_to_exclude = [ 'post', 'news', 'series', 'announcement' ];
+	public $post_type_to_exclude = [ 'post', 'series', 'announcement' ];
 
 	/**
 	 * Constructor
@@ -67,8 +67,27 @@ class Editor extends Singleton {
 			$css_path = get_template_directory() . '/assets/css/blocks/' . $name . '.css';
 			if ( file_exists( $css_path ) ) {
 				$css_version = filemtime( $css_path );
-				wp_register_style( $handle, get_template_directory_uri() . '/assets/css/blocks' . $name . '.css', [], $css_version );
+				wp_register_style( $handle, get_template_directory_uri() . '/assets/css/blocks/' . $name . '.css', [], $css_version );
 				$setting[ 'editor_style' ] = $handle;
+			}
+			// TODO: Attributes can define from js.
+			switch ( $name ) {
+				case 'excerpt':
+					$setting['attributes'] = [
+						'placeholder' => [
+							'type' => 'string',
+							'default' => __( 'リード文を入力してください', 'hametuha' ),
+						],
+						'max' => [
+							'type'    => 'number',
+							'default' => 200,
+						],
+						'min' => [
+							'type'    => 'number',
+							'default' => 40,
+						],
+					];
+					break;
 			}
 			$setting = apply_filters( 'hametuha_editor_block_setting', $setting, $handle );
 			register_block_type( $block_name, $setting );

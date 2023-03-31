@@ -8,10 +8,11 @@
  */
 add_filter( 'sharee_labels', function( $labels ) {
 	return array_merge( $labels, [
-		'kdp'  => 'KDP',
-		'task' => '依頼',
-		'news' => 'ニュース',
-		'lent' => '立替金'
+		'kdp'  => __( 'KDP', 'hametuha' ),
+		'task' => __( '依頼', 'hametuha' ),
+		'news' => __( 'ニュース', 'hametuha' ),
+		'lent' => __( '立替金', 'hametuha' ),
+		'prize' => __( '懸賞金', 'hametuha' ),
 	] );
 } );
 
@@ -111,6 +112,7 @@ add_action( 'sharee_after_table', function( $table_class ) {
 						<select id="reward-type" name="reward-type">
 							<option value="task">報酬</option>
 							<option value="lent">立替金</option>
+							<option value="prize">懸賞金</option>
 						</select>
 					</td>
 				</tr>
