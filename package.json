@@ -60,7 +60,7 @@
     "respond.js": "^1.4.2",
     "select2": "^4.0.5",
     "vinyl-named": "^1.1.0",
-    "webpack": "^4.19.1",
+    "webpack": "^5.82.1",
     "webpack-stream": "^5.1.1"
   },
   "dependencies": {}
