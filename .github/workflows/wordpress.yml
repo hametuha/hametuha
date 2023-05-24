@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [ ubuntu-18.04 ]  # OS. ubuntu-18.04 is also available.
+        operating-system: [ ubuntu-20.04 ]  # OS. ubuntu-18.04 is also available.
         php: [ '7.2', '7.4' ]        # PHP versions to check.
         wp: [ 'latest', '5.8' ]             # WordPress version to check.
     services:
@@ -28,10 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Setup PHP
-        uses: nanasess/setup-php@master
+
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -48,21 +52,32 @@ jobs:
       - name: Run test suite
         run: composer test
 
+  status-check:
+    name: Status Check
+    needs: [test]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Display Status
+        run: echo "All Green"
+
   release:
     name: Build Hametuha Theme
-    needs: test
+    needs: status-check
     if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@master
 
-      - name: Setup PHP
-        uses: nanasess/setup-php@master
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.2'
+          php-version: 7.2
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
 

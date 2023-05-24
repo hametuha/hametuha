@@ -263,7 +263,7 @@
         } ).done(function(response){
           self.total = response.total;
           self.tax = response.deducting;
-          self.available = response.enough,
+          self.available = response.enough;
           self.records = response.records;
         }).fail($.hbRestError()).always(function(){
           self.loading = false;
