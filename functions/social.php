@@ -346,3 +346,75 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 		<a class="btn btn-primary" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">フォローする</a>
 	<?php endif;
 }
+
+/**
+ * 破滅派がシェアするメッセージ内容
+ *
+ * @param WP_Post|int|null $post  Post object.
+ * @param int              $limit Limit of message.
+ * @return string
+ */
+function hametuha_social_share_message( $post = null, $limit = 120 ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return '';
+	}
+	$title       = hametuha_censor( get_the_title( $post ) );
+	$author      = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
+	$screen_name = get_user_meta( $post->post_author, 'twitter', true );
+	$screen_name = $screen_name ? " @{$screen_name} "  : '';
+	$taxonomies  = [];
+	switch ( $post->post_type ) {
+		case 'post':
+			// 投稿の状態をチェック
+			if ( ! hametuha_is_valid_post( $post ) ) {
+				return '';
+			}
+			$url         = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			$string      = "{$author}さん{$screen_name}が #破滅派 に新作「{$title}」を投稿しました！\n{$url}\n#文学";
+			$taxonomies  = [ 'category', 'post_tag' ];
+			break;
+		case 'announcement':
+			$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
+				$string = "#破滅派 編集部からのお知らせです > {$post->post_title}\n{$url}";
+			} else {
+				$author = get_the_author_meta( 'display_name', $post->post_author );
+				$string = "{$author}さん{$screen_name}から告知があります #破滅派 > {$post->post_title} {$url}";
+			}
+			// Slackで通知
+			hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
+			break;
+		case 'info':
+			$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			$string = " #破滅派 からのお知らせ > {$post->post_title}\n{$url}";
+			break;
+		case 'thread':
+			$url        = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			$string     = "{$author}さん{$screen_name}が #破滅派 掲示板にスレッドを立てました > 「{$title}」\n{$url}";
+			$taxonomies = [ 'faq_cat' ];
+			break;
+		case 'faq':
+			$url        = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			$string     = "よくある質問が公開されました　> {$title}\n{$url}\n";
+			$taxonomies = [ 'faq_cat' ];
+			break;
+		case 'news':
+			$string = sprintf( "%s\n%s\n#はめにゅー", get_the_title( $post ), get_permalink( $post ) );
+			$taxonomies = [ 'nouns', 'genre' ];
+			break;
+		default:
+			$string = '';
+			break;
+	}
+	if ( ! $string ) {
+		return $string;
+	}
+	// Add taxonomies as many as possible.
+	foreach ( hametuha_terms_to_hashtag( $taxonomies, $post ) as $term ) {
+		if ( $limit > mb_strlen( $string ) + mb_strlen( $term ) ) {
+			$string .= ' ' . $term;
+		}
+	}
+	return $string;
+}

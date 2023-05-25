@@ -24,50 +24,23 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 		// This is spam user.
 		return;
 	}
-
-	//はじめて公開にしたときだけ
-	$title  = hametuha_censor( get_the_title( $post ) );
-	$author = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
+	//はじめて公開にしたときだけシェア
 	switch ( $old_status ) {
 		case 'new':
 		case 'draft':
 		case 'pending':
 		case 'auto-draft':
 		case 'future':
-			switch ( $post->post_type ) {
-				case 'post':
-					// 投稿の状態をチェック
-					if ( ! hametuha_is_valid_post( $post ) ) {
-						return;
-					}
-					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-					$string = "{$author}さんが #破滅派 に新作「{$title}」を投稿しました {$url}";
-					break;
-				case 'announcement':
-					$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-					if ( user_can( $post->post_author, 'edit_others_posts' ) ) {
-						$string = "#破滅派 編集部からのお知らせです > {$post->post_title} {$url}";
-					} else {
-						$author = get_the_author_meta( 'display_name', $post->post_author );
-						$string = "{$author}さんから告知があります #破滅派 > {$post->post_title} {$url}";
-					}
-					// Slackで通知
-					hametuha_slack( sprintf( '告知が公開されました: <%s|%s>', get_permalink( $post ), get_the_title( $post ) ) );
-					break;
-				case 'info':
-					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-					$string = " #破滅派 からのお知らせ > {$post->post_title} {$url}";
-					break;
-				case 'thread':
-					$url    = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-					$string = "{$author}さんが #破滅派 BBSにスレッドを立てました > {$title} {$url}";
-					break;
-				default:
-					$string = false;
-					break;
+			if ( has_post_thumbnail( $post ) ) {
+				$limit = 120;
+				$media = get_post_thumbnail_id( $post );
+			} else {
+				$limit = 130;
+				$media = null;
 			}
+			$string = hametuha_social_share_message( $post, $limit );
 			if ( $string ) {
-				gianism_update_twitter_status( $string );
+				gianism_update_twitter_status( $string, $media );
 			}
 			break;
 	}
@@ -142,10 +115,11 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 			break;
 		case 'publish':
 			// 投稿が公開された
-			// まだpost_metaがなかったら保存
-			if ( ! get_post_meta( $post->ID, '_news_published', true ) ) {
-				update_post_meta( $post->ID, '_news_published', $post->post_date );
+			// 一度告知していたら終了
+			if ( get_post_meta( $post->ID, '_news_published', true ) ) {
+				return;
 			}
+			update_post_meta( $post->ID, '_news_published', $post->post_date );
 			// なにかする
 			switch ( $old_status ) {
 				case 'publish':
@@ -155,8 +129,8 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					break;
 				default:
 					// 公開された
-					$string = sprintf( '#はめにゅー 更新 「%s」 %s', get_the_title( $post ), get_permalink( $post ) );
-					if ( function_exists( 'gianism_update_twitter_status' ) && ! WP_DEBUG ) {
+					$string = hametuha_social_share_message( $post, 140 );
+					if ( function_exists( 'gianism_update_twitter_status' ) && ! WP_DEBUG && $string ) {
 						gianism_update_twitter_status( $string );
 					}
 					// Slackに通知
