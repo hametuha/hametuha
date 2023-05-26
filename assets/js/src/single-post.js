@@ -298,7 +298,6 @@ Chart.defaults.global.responsive = true;
 
     });
 
-
     // 脚注
     $( document ).on( 'click', '.noteref-link,.footernote-link', function( e ) {
         e.preventDefault();
