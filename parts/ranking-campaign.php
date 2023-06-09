@@ -57,7 +57,7 @@ if ( ! ( $records = hametuha_campaign_record() ) ) {
 					<?php foreach ( $records['posts'] as $post_id => $author ) : ?>
 						<td class="campaign-score-post <?php echo $author == $user_id ? 'campaign-score-own' : ''; ?>">
 							<?php
-							$score = $var['rate_total'] > 0 ? ( $var['comment_total'] + 1 ) * $var['records'][ $post_id ] / $var['rate_total'] : 0;
+							$score = ( isset( $var['rate_total'] ) && $var['rate_total'] > 0 ) ? ( $var['comment_total'] + 1 ) * $var['records'][ $post_id ] / $var['rate_total'] : 0;
 							if ( ! isset( $total[ $post_id ] ) ) {
 								$total[ $post_id ] = 0;
 							}
