@@ -115,7 +115,7 @@ HTML;
  */
 add_shortcode( 'file', function ( $atts, $content = '' ) {
 	extract( shortcode_atts( array(
-		'href' => ''
+		'href' => '',
 	), $atts ) );
 
 	return '<p class="center"><a target="_blank" href="' . $href . '" class="button flash-button">フルサイズで表示</a></p>';
@@ -152,7 +152,7 @@ function _hametuha_flash( $atts, $content = '' ) {
 <p class="center"><a target="_blank" href="{$atts[0]}" class="button flash-button">大きな画面で読む</a></p>
 EOS;
 	} else {
-		return "";
+		return '';
 	}
 }
 
@@ -167,7 +167,7 @@ add_shortcode( 'flash', '_hametuha_flash' );
  * @return string
  */
 function _hametuha_reply_cancel_link( $html ) {
-	return str_replace( "<a", '<a class="small-button"', $html );
+	return str_replace( '<a', '<a class="small-button"', $html );
 }
 
 add_filter( 'cancel_comment_reply_link', '_hametuha_reply_cancel_link' );
@@ -202,7 +202,7 @@ SQL;
  * @return string
  */
 function _hametuha_comment_reply_link( $html, $comment = null, $post = null ) {
-	return preg_replace( "/(class=['\"])/", "$1button ", $html );
+	return preg_replace( "/(class=['\"])/", '$1button ', $html );
 }
 
 add_filter( 'comment_reply_link', '_hametuha_comment_reply_link' );
@@ -216,7 +216,7 @@ add_filter( 'comment_reply_link', '_hametuha_comment_reply_link' );
  * @return string
  */
 function _hametuha_comment_edit_link( $html, $comment_id = 0 ) {
-	return str_replace( "class=\"", 'class="small-button ', $html );
+	return str_replace( 'class="', 'class="small-button ', $html );
 }
 
 add_filter( 'edit_comment_link', '_hametuha_comment_edit_link' );
@@ -232,11 +232,11 @@ add_filter( 'edit_comment_link', '_hametuha_comment_edit_link' );
  */
 function _hametuha_comment_message( $message, $comment_id ) {
 	//IPを削除
-	$message = preg_replace( "/\(IP.*$/m", '', $message );
+	$message = preg_replace( '/\(IP.*$/m', '', $message );
 	//Whoisを削除
-	$message = preg_replace( "/^Whois.*?$/m", '', $message );
+	$message = preg_replace( '/^Whois.*?$/m', '', $message );
 	//メールアドレスを削除
-	$message = preg_replace( "/^メール:.*$/m", '', $message );
+	$message = preg_replace( '/^メール:.*$/m', '', $message );
 
 	return $message;
 }
@@ -253,9 +253,9 @@ add_filter( 'comment_notification_text', '_hametuha_comment_message', 10, 2 );
  */
 function _hametuha_comment_message_header( $header, $comment_id ) {
 	//FROMを変更
-	$header = preg_replace( "/From: \".*?\" <[^>]*>/", "From: \"破滅派｜オンライン文芸誌\" <info@hametuha.com>", $header );
+	$header = preg_replace( '/From: ".*?" <[^>]*>/', 'From: "破滅派｜オンライン文芸誌" <info@hametuha.com>', $header );
 	//Reply-Toを変更
-	$header = preg_replace( "/Reply-To: \".*?\" <[^>]*>/", "Reply-To: info@hametuha.com", $header );
+	$header = preg_replace( '/Reply-To: ".*?" <[^>]*>/', 'Reply-To: info@hametuha.com', $header );
 
 	return $header;
 }

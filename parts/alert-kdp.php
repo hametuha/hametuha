@@ -13,11 +13,11 @@ if ( is_numeric( $limit ) || is_array( $limit ) ) {
 	$permalink = get_permalink( $series_id );
 	$title     = get_the_title( $series_id );
 	if ( is_array( $limit ) ) {
-	    sort( $limit );
+		sort( $limit );
 		$msg = sprintf( '%sは%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function( $number ) {
-		    return sprintf( '%d話', $number );
-        }, $limit ) ) );
-    } elseif ( $limit ) {
+			return sprintf( '%d話', $number );
+		}, $limit ) ) );
+	} elseif ( $limit ) {
 		$msg = sprintf( '%sは%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
 	} else {
 		$msg = sprintf( '%sの全文は電子書籍でご覧頂けます。', esc_html( $title ) );
@@ -26,19 +26,19 @@ if ( is_numeric( $limit ) || is_array( $limit ) ) {
 		case 2:
 			?>
 			<div class="series__row--single text-center">
-				<a href="<?= get_permalink( $series_id ) ?>">
-					<img src="<?= wp_get_attachment_image_src( get_post_thumbnail_id( $series_id ), 'medium' )[0] ?>"
-					     alt="<?= esc_attr( $title ) ?>" class="series__single--image"/>
+				<a href="<?php echo get_permalink( $series_id ); ?>">
+					<img src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( $series_id ), 'medium' )[0]; ?>"
+						 alt="<?php echo esc_attr( $title ); ?>" class="series__single--image"/>
 				</a>
 				<p class="text-muted">
-					<?= $msg ?>
+					<?php echo $msg; ?>
 					続きはAmazonでご利用ください。
 				</p>
-				<a class="btn btl-lg btn-trans btn-amazon" href="<?= $series->get_kdp_url( $series_id ) ?>"
+				<a class="btn btl-lg btn-trans btn-amazon" href="<?php echo $series->get_kdp_url( $series_id ); ?>"
 				   data-outbound="kdp"
-				   data-action="<?= esc_attr( $series->get_asin( $series_id ) ) ?>"
-				   data-label="<?php the_ID() ?>"
-				   data-value="<?= get_series_price( $series_id ) ?>">
+				   data-action="<?php echo esc_attr( $series->get_asin( $series_id ) ); ?>"
+				   data-label="<?php the_ID(); ?>"
+				   data-value="<?php echo get_series_price( $series_id ); ?>">
 					<i class="icon-amazon"></i> Amazonへ行く
 				</a>
 			</div>
@@ -48,7 +48,7 @@ if ( is_numeric( $limit ) || is_array( $limit ) ) {
 			?>
 			<div class="alert alert-danger text-center">
 				<p>
-					<?= $msg ?>
+					<?php echo $msg; ?>
 					続きは現在販売準備中です。乞うご期待。
 				</p>
 			</div>

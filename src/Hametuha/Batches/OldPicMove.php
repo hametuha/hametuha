@@ -12,8 +12,8 @@ use WPametu\Tool\BatchResult;
  *
  * @package Hametuha\Batches
  */
-class OldPicMove extends Batch
-{
+class OldPicMove extends Batch {
+
 
 	/**
 	 * @var int
@@ -48,41 +48,41 @@ class OldPicMove extends Batch
 	 */
 	public function process( $page ) {
 		/** @var Picture $picture */
-		$picture = Picture::get_instance();
-		$offset = (max($page, 1) - 1) * $this->per_process;
-		$base_dir = $picture->get_dir();
-		$total = 0;
-		$index = 0;
+		$picture           = Picture::get_instance();
+		$offset            = ( max( $page, 1 ) - 1 ) * $this->per_process;
+		$base_dir          = $picture->get_dir();
+		$total             = 0;
+		$index             = 0;
 		$maximum_processed = 0;
-		foreach( scandir($base_dir) as $dir ){
-			if( is_numeric($dir) ){
+		foreach ( scandir( $base_dir ) as $dir ) {
+			if ( is_numeric( $dir ) ) {
 				$total++;
 				$index++;
-				if( $offset < $index && $offset + $this->per_process >= $index ){
-					$user_id = $dir;
+				if ( $offset < $index && $offset + $this->per_process >= $index ) {
+					$user_id      = $dir;
 					$picture_path = '';
-					foreach( preg_grep('/profile\.(png|jpe?g|gif)$/u', scandir($base_dir."/{$user_id}")) as $file ){
-						$picture_path = $base_dir."/{$user_id}/{$file}";
+					foreach ( preg_grep( '/profile\.(png|jpe?g|gif)$/u', scandir( $base_dir . "/{$user_id}" ) ) as $file ) {
+						$picture_path = $base_dir . "/{$user_id}/{$file}";
 					}
-					if( $picture_path && file_exists($picture_path) ){
-						$info = getimagesize($picture_path);
-						$mime = image_type_to_mime_type($info['2']);
+					if ( $picture_path && file_exists( $picture_path ) ) {
+						$info  = getimagesize( $picture_path );
+						$mime  = image_type_to_mime_type( $info['2'] );
 						$files = [
-							'name' => basename($picture_path),
-							'type' => $mime,
+							'name'     => basename( $picture_path ),
+							'type'     => $mime,
 							'tmp_name' => $picture_path,
-							'error' => 0,
-							'size' => filesize($picture_path),
+							'error'    => 0,
+							'size'     => filesize( $picture_path ),
 						];
-						$picture->upload($files, $user_id);
+						$picture->upload( $files, $user_id );
 					}
-					$maximum_processed = max($maximum_processed, $index);
+					$maximum_processed = max( $maximum_processed, $index );
 				}
 			}
 		}
 
 		$has_next = $total > $maximum_processed;
-		return new BatchResult($maximum_processed, $total, $has_next);
+		return new BatchResult( $maximum_processed, $total, $has_next );
 	}
 
 

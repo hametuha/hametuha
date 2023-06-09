@@ -42,8 +42,8 @@ add_action( 'init', function () {
 	 * @param array $modules Default ui.bootstrap
 	 * @return array
 	 */
-	$modules = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
-	$modules = implode( ', ', array_map( function( $module ) {
+	$modules         = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
+	$modules         = implode( ', ', array_map( function( $module ) {
 		return sprintf( "'%s'", esc_js( $module ) );
 	}, $modules ) );
 	$angular_scripts = <<<JS
@@ -52,8 +52,8 @@ JS;
 	wp_add_inline_script( 'angular', $angular_scripts );
 
 	// Select2
-	wp_register_script( 'select2', get_template_directory_uri().'/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
-	wp_register_style( 'select2', get_template_directory_uri().'/assets/css/select2.min.css', [], '4.0.3' );
+	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
+	wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
@@ -65,7 +65,7 @@ JS;
 		'hametuheader',
 	], hametuha_version(), true );
 	wp_localize_script('hametuha-common', 'HametuhaGlobal', [
-		'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ).'/assets/js/tpl/',
+		'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ) . '/assets/js/tpl/',
 	]);
 
 	// シングルページ用JS
@@ -113,7 +113,7 @@ JS;
 	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
 
 	// イベント参加
-	wp_register_script( 'hamevent', get_template_directory_uri(). '/assets/js/dist/components/event-participate.js', [
+	wp_register_script( 'hamevent', get_template_directory_uri() . '/assets/js/dist/components/event-participate.js', [
 		'angular',
 		'wp-api',
 	], hametuha_version(), true );
@@ -141,7 +141,7 @@ JS;
 	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
 
 	// Register all hashboard.
-	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', ['bootstrap'], hametuha_version() );
+	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
 	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
 
@@ -236,7 +236,7 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
  * @action wp_head
  */
 add_action( 'wp_head', function () {
-	$shiv = get_template_directory_uri() . '/assets/js/dist/html5shiv.js';
+	$shiv    = get_template_directory_uri() . '/assets/js/dist/html5shiv.js';
 	$respond = get_template_directory_uri() . '/assets/js/dist/respond.src.js';
 	echo <<<EOS
 <!--[if lt IE 9]>
@@ -255,12 +255,12 @@ add_action( 'init', function() {
 		return;
 	}
 	global $wp_scripts;
-	$jquery = $wp_scripts->registered['jquery-core'];
+	$jquery     = $wp_scripts->registered['jquery-core'];
 	$jquery_ver = $jquery->ver;
 	$jquery_src = $jquery->src;
 	// Register jQuery again.
 	wp_deregister_script( 'jquery' );
-	wp_register_script( 'jquery', false, ['jquery-core'], $jquery_ver, true );
+	wp_register_script( 'jquery', false, [ 'jquery-core' ], $jquery_ver, true );
 	wp_deregister_script( 'jquery-core' );
 	wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, true );
 } );

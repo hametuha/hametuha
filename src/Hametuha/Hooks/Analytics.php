@@ -43,19 +43,19 @@ class Analytics extends Singleton {
 	 */
 	protected $cookie_name = 'hametuhauid';
 
-	CONST DIMENSION_POST_TYPE = 'dimension1';
+	const DIMENSION_POST_TYPE = 'dimension1';
 
-	CONST DIMENSION_AUTHOR    = 'dimension2';
+	const DIMENSION_AUTHOR = 'dimension2';
 
-	CONST DIMENSION_CATEGORY  = 'dimension3';
+	const DIMENSION_CATEGORY = 'dimension3';
 
-	CONST DIMENSION_PAGE_TYPE = 'dimension4';
+	const DIMENSION_PAGE_TYPE = 'dimension4';
 
-	CONST DIMENSION_UID       = 'dimension5';
+	const DIMENSION_UID = 'dimension5';
 
-	CONST DIMENSION_USER_TYPE = 'dimension6';
+	const DIMENSION_USER_TYPE = 'dimension6';
 
-	CONST METRIC_CHAR_LENGTH  = 'metric1';
+	const METRIC_CHAR_LENGTH = 'metric1';
 
 	/**
 	 * Constructor
@@ -63,23 +63,23 @@ class Analytics extends Singleton {
 	 * @param array $setting
 	 */
 	protected function __construct( array $setting = [] ) {
-	    // Register setup script.
+		// Register setup script.
 		add_action( 'hashboard_enqueue_scripts', [ $this, 'enqueue_script' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_script' ] );
 		add_action( 'login_enqueue_scripts', [ $this, 'enqueue_script' ] );
-        // Do analytics tag.
-	    add_action( 'wp_head', [ $this, 'do_tracking_code' ], 19 );
+		// Do analytics tag.
+		add_action( 'wp_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'admin_head', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'hashboard_footer', [ $this, 'do_tracking_code' ], 19 );
 		add_action( 'login_head', [ $this, 'do_tracking_code' ] );
 		// Facebook pixels.
-        add_action( 'hametha_after_tracking_code', [ $this, 'facebook_pixel' ] );
-        // Contact Form 7
+		add_action( 'hametha_after_tracking_code', [ $this, 'facebook_pixel' ] );
+		// Contact Form 7
 		add_action( 'wp_enqueue_scripts', [ $this, 'add_inline_script' ] );
 		// Add filter for Cookie Tasting.
-        add_filter( 'cookie_tasting_uuid_key', function() {
+		add_filter( 'cookie_tasting_uuid_key', function() {
 			return 'google_analytics_id';
-        } );
+		} );
 	}
 
 	/**
@@ -87,14 +87,14 @@ class Analytics extends Singleton {
 	 */
 	public function enqueue_script() {
 		wp_enqueue_script( 'cookie-tasting-heartbeat' );
-    }
+	}
 
 	/**
 	 * Render tracking code.
 	 */
 	public function do_tracking_code() {
-	    // Get cookie and if set, use it.
-        // If not set, generate via uuid4 and overwrite it.
+		// Get cookie and if set, use it.
+		// If not set, generate via uuid4 and overwrite it.
 		?>
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
@@ -117,13 +117,13 @@ class Analytics extends Singleton {
 				customMap['<?php echo esc_js( self::DIMENSION_UID ); ?>'] = 'user_id';
 				config.user_id = uid;
 			} catch ( err ) {}
-        	<?php
+			<?php
 			// Set dimension as possible.
 			// Set user type.
 			if ( ! is_singular( 'news' ) ) {
 				if ( ! is_user_logged_in() ) {
 					$role = 'anonymous';
-				} else if ( current_user_can( 'edit_others_posts' ) ) {
+				} elseif ( current_user_can( 'edit_others_posts' ) ) {
 					$role = 'editor';
 				} elseif ( current_user_can( 'edit_posts' ) ) {
 					$role = 'author';
@@ -133,7 +133,7 @@ class Analytics extends Singleton {
 				$this->set_dimension( self::DIMENSION_USER_TYPE, 'user_type', $role );
 			}
 			// Set contents attribution.
-			if ( ( is_singular() || is_page() ) && !is_preview() ) {
+			if ( ( is_singular() || is_page() ) && ! is_preview() ) {
 				// Set page attributes.
 				$this->set_dimension( self::DIMENSION_POST_TYPE, 'post_type', get_queried_object()->post_type );
 				$this->set_dimension( self::DIMENSION_AUTHOR, 'author', get_queried_object()->post_author );
@@ -141,16 +141,16 @@ class Analytics extends Singleton {
 				// Set category.
 				$cat = 0;
 				foreach ( [
-							  'post' => 'category',
-							  'news' => 'genre',
-							  'faq' => 'faq_cat',
-							  'thread' => 'topic',
-						  ] as $post_type => $taxonomy ) {
+					'post'   => 'category',
+					'news'   => 'genre',
+					'faq'    => 'faq_cat',
+					'thread' => 'topic',
+				] as $post_type => $taxonomy ) {
 					if ( $post_type !== get_queried_object()->post_type ) {
 						continue;
 					}
 					$terms = get_the_terms( get_queried_object(), $taxonomy );
-					if ( !$terms || is_wp_error( $terms ) ) {
+					if ( ! $terms || is_wp_error( $terms ) ) {
 						continue;
 					}
 					foreach ( $terms as $term ) {
@@ -183,47 +183,47 @@ class Analytics extends Singleton {
 			gtag('config', '<?php echo esc_js( $this->ga ); ?>', config );
 		</script>
 		<?php
-        do_action( 'hametuha_after_tracking_code' );
+		do_action( 'hametuha_after_tracking_code' );
 	}
 
 	/**
 	 * Render Facebook pixels.
 	 */
 	public function facebook_pixel() {
-	    ?>
-        <!-- Facebook Pixel Code -->
-        <script>
-          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-            n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-            document,'script','//connect.facebook.net/en_US/fbevents.js');
-          fbq('init', '<?= $this->pixel_id ?>');
-          fbq('track', "PageView");</script>
-        <noscript><img height="1" width="1" style="display:none"
-                       src="https://www.facebook.com/tr?id=<?= $this->pixel_id ?>&ev=PageView&noscript=1"
-            /></noscript>
-        <!-- End Facebook Pixel Code -->
-        <?php
-    }
+		?>
+		<!-- Facebook Pixel Code -->
+		<script>
+		  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+			n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+			n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+			t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+			document,'script','//connect.facebook.net/en_US/fbevents.js');
+		  fbq('init', '<?php echo $this->pixel_id; ?>');
+		  fbq('track', "PageView");</script>
+		<noscript><img height="1" width="1" style="display:none"
+					   src="https://www.facebook.com/tr?id=<?php echo $this->pixel_id; ?>&ev=PageView&noscript=1"
+			/></noscript>
+		<!-- End Facebook Pixel Code -->
+		<?php
+	}
 
 	/**
-     * Echo set dimension function.
-     *
+	 * Echo set dimension function.
+	 *
 	 * @param string $dimension Dimension index.
 	 * @param string $label     Dimension label.
 	 * @param string $value     Dimension value.
-     * @param string $action    Action. will be deprecated.
+	 * @param string $action    Action. will be deprecated.
 	 */
-    protected function set_dimension( $dimension, $label, $value, $action = 'set' ) {
+	protected function set_dimension( $dimension, $label, $value, $action = 'set' ) {
 		printf( 'customMap["%s"] = "%s";', esc_js( $dimension ), esc_js( $label ) );
-        if ( is_numeric( $value ) ) {
+		if ( is_numeric( $value ) ) {
 			$str = 'config["%s"] = %d;';
-        } else {
+		} else {
 			$str = 'config["%s"] = "%s";';
-        }
-	    printf( $str, esc_js( $label ), esc_js( $value ) );
-    }
+		}
+		printf( $str, esc_js( $label ), esc_js( $value ) );
+	}
 
 
 	/**
@@ -281,18 +281,18 @@ JS;
 	}
 
 	/**
-     * Getter
-     *
+	 * Getter
+	 *
 	 * @param string $name
 	 * @return mixed
 	 */
 	public function __get( $name ) {
 		switch ( $name ) {
-            case 'measurement':
-                return AnalyticsMesurementApi::get_instance( [
-                    'ua'  => $this->ua,
-                ] );
-                break;
-        }
+			case 'measurement':
+				return AnalyticsMesurementApi::get_instance( [
+					'ua' => $this->ua,
+				] );
+				break;
+		}
 	}
 }

@@ -7,7 +7,8 @@ get_template_part( 'parts/event', 'address' )
 
 ?>
 
-<?php if ( $announcement->is_participating() ) :
+<?php
+if ( $announcement->is_participating() ) :
 	$rest_time_for_limit = $announcement->left_second_to_participate();
 	// enqueue
 	wp_enqueue_script( 'hamevent' );
@@ -27,7 +28,7 @@ get_template_part( 'parts/event', 'address' )
 			<tr>
 				<th>募集期間</th>
 				<td>
-					<?= $announcement->get_participating_period() ?>
+					<?php echo $announcement->get_participating_period(); ?>
 					<?php if ( 0 === $rest_time_for_limit ) : ?>
 						<span class="label label-danger">終了</span>
 					<?php endif; ?>
@@ -36,13 +37,13 @@ get_template_part( 'parts/event', 'address' )
 			<tr>
 				<th>応募条件</th>
 				<td>
-					<?= $announcement->participating_condition() ?>
+					<?php echo $announcement->participating_condition(); ?>
 				</td>
 			</tr>
 			<tr>
 				<th>参加費用</th>
 				<td>
-					<?= $announcement->participating_cost() ?>
+					<?php echo $announcement->participating_cost(); ?>
 				</td>
 			</tr>
 			<tr>
@@ -94,10 +95,10 @@ get_template_part( 'parts/event', 'address' )
 				<?php else : ?>
 					<div class="alert alert-warning event-detail-alert">
 						<p class="text-center">
-							イベントに参加するには<a href="<?= wp_login_url( get_permalink() ) ?>" class="alert-link">ログイン</a>する必要があります。
+							イベントに参加するには<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link">ログイン</a>する必要があります。
 						</p>
 						<p class="text-center">
-							<a class="btn btn-success btn-lg" href="<?= wp_login_url( get_permalink() ) ?>">ログインして参加</a>
+							<a class="btn btn-success btn-lg" href="<?php echo wp_login_url( get_permalink() ); ?>">ログインして参加</a>
 						</p>
 					</div>
 				<?php endif; ?>
@@ -110,21 +111,29 @@ get_template_part( 'parts/event', 'address' )
 	</div>
 <?php endif; ?>
 
-<?php if ( 2 == $announcement->commit_type ) : $committed_posts = $announcement->get_committed_posts(); ?>
+<?php
+if ( 2 == $announcement->commit_type ) :
+	$committed_posts = $announcement->get_committed_posts();
+	?>
 	<?php if ( ! empty( $committed_posts ) ) : ?>
 		<h2>参加している投稿
 			<small><?php echo number_format_i18n( count( $committed_posts ) ); ?>件</small>
 		</h2>
 		<ol class="participating-posts">
-			<?php $counter = 0;
-			foreach ( $committed_posts as $p ) : ?>
+			<?php
+			$counter = 0;
+			foreach ( $committed_posts as $p ) :
+				?>
 				<li class="<?php echo ( 0 == $counter % 2 ) ? 'even' : 'odd'; ?>">
 					<?php echo get_avatar( $p->post_author, 20 ); ?>
 					<?php echo get_the_author_meta( 'ID', $p->post_author ); ?>:
-					<a href="<?php echo get_permalink( $p->ID ); ?>"><?= $p->post_title; ?></a>
-					<small>@<?php echo mysql2date( "Y/m/d", $p->post_date ); ?></small>
+					<a href="<?php echo get_permalink( $p->ID ); ?>"><?php echo $p->post_title; ?></a>
+					<small>@<?php echo mysql2date( 'Y/m/d', $p->post_date ); ?></small>
 				</li>
-				<?php $counter ++; endforeach; ?>
+				<?php
+				$counter ++;
+endforeach;
+			?>
 		</ol>
 	<?php endif; ?>
 <?php endif; ?>

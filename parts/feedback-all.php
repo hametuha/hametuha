@@ -9,15 +9,15 @@
 		$star = round( $all_rating * 2 ) / 2;
 		?>
 		<p class="post-rank-counter text-center" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
-	        <span class="back-ground">
-	            <?php
+			<span class="back-ground">
+				<?php
 				for ( $i = 0; $i < 5; $i ++ ) {
 					echo '<i class="icon-star6"></i>';
 				}
 				?>
-	        </span>
-	        <span class="fore-ground">
-	            <?php
+			</span>
+			<span class="fore-ground">
+				<?php
 				while ( $star > 0 ) {
 					if ( $star > 0.5 ) {
 						$star_class = 6;
@@ -28,10 +28,10 @@
 					$star -= 1;
 				}
 				?>
-	        </span>
-			<strong itemprop="ratingValue"><?= ( number_format_i18n( $all_rating, 1 ) ); ?></strong>
+			</span>
+			<strong itemprop="ratingValue"><?php echo ( number_format_i18n( $all_rating, 1 ) ); ?></strong>
 			<?php if ( $total ) : ?>
-				<small>(<?= number_format_i18n( $total ); ?>件の評価)</small>
+				<small>(<?php echo number_format_i18n( $total ); ?>件の評価)</small>
 			<?php endif; ?>
 		</p><!-- //.post-rank-counter -->
 		<?php
@@ -41,10 +41,10 @@
 
 
 
-<?= $chart ?>
+<?php echo $chart; ?>
 
 <p class="text-center text-muted">
-    <small>破滅チャートとは<?php help_tip('破滅派読者が入力した感想を元に生成されるチャートです。赤いほど破滅度が高く、青いほど健全な作品です。');?></small>
+	<small>破滅チャートとは<?php help_tip( '破滅派読者が入力した感想を元に生成されるチャートです。赤いほど破滅度が高く、青いほど健全な作品です。' ); ?></small>
 </p>
 
 </div>

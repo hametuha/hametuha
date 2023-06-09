@@ -40,10 +40,10 @@ class Anpis extends Model {
 				foreach ( $mention as $m ) {
 					$this->insert( [
 						'rel_type'  => 'mention',
-					    'object_id' => $post_id,
-					    'user_id'   => $m,
-					    'location'  => 1,
-					    'updated'   => current_time( 'mysql' ),
+						'object_id' => $post_id,
+						'user_id'   => $m,
+						'location'  => 1,
+						'updated'   => current_time( 'mysql' ),
 					], [ '%s', '%d', '%d', '%f', '%s' ], $this->user_content_relationships );
 				}
 			}
@@ -82,11 +82,11 @@ class Anpis extends Model {
 			return [];
 		}
 		$users  = $this->select( 'r.object_id, u.*' )
-		               ->from( "{$this->user_content_relationships} AS r" )
-		               ->join( "{$this->db->users} AS u" , 'u.ID = r.user_id', 'inner' )
-		               ->where( 'r.rel_type = %s', 'mention' )
-		               ->where_in( 'r.object_id', $post_ids, '%d' )
-		               ->result();
+					   ->from( "{$this->user_content_relationships} AS r" )
+					   ->join( "{$this->db->users} AS u", 'u.ID = r.user_id', 'inner' )
+					   ->where( 'r.rel_type = %s', 'mention' )
+					   ->where_in( 'r.object_id', $post_ids, '%d' )
+					   ->result();
 		$result = [];
 		foreach ( $users as $user ) {
 			if ( ! isset( $result[ $user->object_id ] ) ) {
@@ -116,9 +116,9 @@ class Anpis extends Model {
 		$cache = wp_cache_get( 'biggest_id', 'anpi' );
 		if ( false == $cache ) {
 			$cache = (int) $this->select( 'ID' )
-			                    ->from( $this->db->posts )
-			                    ->order_by( 'ID', 'DESC' )
-			                    ->limit( 1 )->get_var();
+								->from( $this->db->posts )
+								->order_by( 'ID', 'DESC' )
+								->limit( 1 )->get_var();
 			if ( $cache ) {
 				wp_cache_set( 'biggest_id', $cache, 'anpi', 0 );
 			}

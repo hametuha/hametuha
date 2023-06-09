@@ -15,7 +15,7 @@
  * @return int
  */
 function hametuha_minimum_payment() {
-    return 3000;
+	return 3000;
 }
 
 
@@ -32,7 +32,7 @@ add_action( 'edit_user_profile', function( WP_User $user ) {
 			<tr>
 				<th><label for="news_guarantee">ニュース最低保証</label></th>
 				<td>
-					<input class="regular-text" type="number" name="news_guarantee" id="news_guarantee" value="<?= esc_attr( \Hametuha\Model\Sales::get_instance()->get_guarantee( $user->ID, 'news' ) ) ?>" />円
+					<input class="regular-text" type="number" name="news_guarantee" id="news_guarantee" value="<?php echo esc_attr( \Hametuha\Model\Sales::get_instance()->get_guarantee( $user->ID, 'news' ) ); ?>" />円
 				</td>
 			</tr>
 		</table>

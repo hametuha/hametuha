@@ -2,8 +2,8 @@
 /** @var \Hametuha\Rest\Testimonial $this */
 ?>
 <form id="testimonial-form"
-	  action="<?= home_url( '/testimonials/add/' . $post->ID . '/', is_ssl() ? 'https' : 'http' ) ?>" method="post">
-	<?php wp_nonce_field( $this->action ) ?>
+	  action="<?php echo home_url( '/testimonials/add/' . $post->ID . '/', is_ssl() ? 'https' : 'http' ); ?>" method="post">
+	<?php wp_nonce_field( $this->action ); ?>
 
 	<div class="form-group">
 		<label for="testimonial-source">
@@ -11,7 +11,7 @@
 			<small class="label label-danger">twitter以外必須</small>
 		</label>
 		<input type="text" class="form-control" id="testimonial-source" name="testimonial-source"
-			   value="<?= esc_attr( get_userdata( get_current_user_id() )->display_name ) ?>" placeholder="ex. 破滅太郎"/>
+			   value="<?php echo esc_attr( get_userdata( get_current_user_id() )->display_name ); ?>" placeholder="ex. 破滅太郎"/>
 	</div>
 
 	<div class="form-group">
@@ -22,7 +22,7 @@
 		<input type="text" class="form-control" id="testimonial-url" name="testimonial-url" value=""
 			   placeholder="ex. http://example.jp/review/1234"/>
 		<p class="help-block">twitterの場合はURLを入れるだけで大丈夫です。
-			<a href="<?= home_url( '/faq/how-to-get-twitter-url/') ?>">詳しく&raquo;</a>
+			<a href="<?php echo home_url( '/faq/how-to-get-twitter-url/' ); ?>">詳しく&raquo;</a>
 		</p>
 	</div>
 

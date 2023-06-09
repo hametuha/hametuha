@@ -102,7 +102,7 @@ abstract class Gabstract extends Ga {
 	 *
 	 * @return string
 	 */
-	protected function  hsl2rgb( $hsl ) {
+	protected function hsl2rgb( $hsl ) {
 		// Fill variables $h, $s, $l by array given.
 		list( $h, $s, $l ) = $hsl;
 
@@ -122,15 +122,15 @@ abstract class Gabstract extends Ga {
 
 			if ( $h_ >= 0 && $h_ < 1 ) {
 				$rgb = array( ( $chroma + $m ), ( $x + $m ), $m );
-			} else if ( $h_ >= 1 && $h_ < 2 ) {
+			} elseif ( $h_ >= 1 && $h_ < 2 ) {
 				$rgb = array( ( $x + $m ), ( $chroma + $m ), $m );
-			} else if ( $h_ >= 2 && $h_ < 3 ) {
+			} elseif ( $h_ >= 2 && $h_ < 3 ) {
 				$rgb = array( $m, ( $chroma + $m ), ( $x + $m ) );
-			} else if ( $h_ >= 3 && $h_ < 4 ) {
+			} elseif ( $h_ >= 3 && $h_ < 4 ) {
 				$rgb = array( $m, ( $x + $m ), ( $chroma + $m ) );
-			} else if ( $h_ >= 4 && $h_ < 5 ) {
+			} elseif ( $h_ >= 4 && $h_ < 5 ) {
 				$rgb = array( ( $x + $m ), $m, ( $chroma + $m ) );
-			} else if ( $h_ >= 5 && $h_ < 6 ) {
+			} elseif ( $h_ >= 5 && $h_ < 6 ) {
 				$rgb = array( ( $chroma + $m ), $m, ( $x + $m ) );
 			}
 		}
@@ -147,9 +147,9 @@ abstract class Gabstract extends Ga {
 	 */
 	protected function rgb2hex( $rgb ) {
 		list( $r, $g, $b ) = $rgb;
-		$r = round( 255 * $r );
-		$g = round( 255 * $g );
-		$b = round( 255 * $b );
+		$r                 = round( 255 * $r );
+		$g                 = round( 255 * $g );
+		$b                 = round( 255 * $b );
 
 		return '#' . sprintf( '%02X', $r ) . sprintf( '%02X', $g ) . sprintf( '%02X', $b );
 	}

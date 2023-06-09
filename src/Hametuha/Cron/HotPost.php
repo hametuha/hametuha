@@ -44,7 +44,7 @@ class HotPost extends CronBase {
 	 * つぶやく
 	 */
 	public function process() {
-		if ( defined( 'WP_DEBUG' )  && WP_DEBUG ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			// デバッグモードでは実行しない。
 			return;
 		}
@@ -58,15 +58,15 @@ class HotPost extends CronBase {
 		$channel   = '#general';
 		switch ( date_i18n( 'H' ) ) {
 			case '08':
-				$message   = '【定期ポスト】昨日一番人気があった作品はこちらです。';
-				$params    = [
+				$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
+				$params  = [
 					'filters'    => 'ga:dimension1==post',
 					'dimensions' => 'ga:pageTitle,ga:pagePath',
 				];
 				break;
 			case '22':
 				$message = '【定期ポスト】昨日人気があったニュースはこちらです。';
-				$params = [
+				$params  = [
 					'filters'    => 'ga:dimension1==news',
 					'dimensions' => 'ga:pageTitle,ga:pagePath',
 				];
@@ -77,7 +77,7 @@ class HotPost extends CronBase {
 		}
 		// 3件まで取得。
 		$params['max-results'] = 3;
-		$results = hametuha_ga_ranking( $start, $end, $params );
+		$results               = hametuha_ga_ranking( $start, $end, $params );
 		if ( is_wp_error( $results ) ) {
 			error_log( $results->get_error_message(), null );
 		} elseif ( empty( $results ) ) {
@@ -86,7 +86,7 @@ class HotPost extends CronBase {
 			$lines = [ $message ];
 			foreach ( $results as list( $title, $path, $pv ) ) {
 				list( $post_title ) = explode( '|', $title );
-				$lines[] = trim( $post_title ) . "\n" . home_url( $path );
+				$lines[]            = trim( $post_title ) . "\n" . home_url( $path );
 				break;
 			}
 			$message = implode( "\n\n", $lines );

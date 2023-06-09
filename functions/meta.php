@@ -43,19 +43,19 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		return implode( $sep, [
 			get_the_title( get_queried_object() ),
 			hametuha_taxonomy_for_title( 'genre', get_queried_object() ) . 'ニュース',
-			get_bloginfo( 'name' )
+			get_bloginfo( 'name' ),
 		] );
 	}
 	if ( is_category() ) {
 		$title = get_queried_object()->name;
 	} elseif ( is_tag() ) {
-		$title = sprintf( 'タグ「%s」を含む作品',  get_queried_object()->name );
+		$title = sprintf( 'タグ「%s」を含む作品', get_queried_object()->name );
 	} elseif ( is_ranking() ) {
 		$title = ranking_title() . " {$sep} ";
 	} elseif ( is_singular( 'info' ) ) {
 		$title .= "おしらせ {$sep} ";
 	} elseif ( is_singular( 'faq' ) ) {
-		$title = get_the_title() . $sep . "よくある質問";
+		$title = get_the_title() . $sep . 'よくある質問';
 	} elseif ( is_tax( 'faq_cat' ) ) {
 		$title = sprintf(
 			'%1$sに関するよくある質問',
@@ -66,9 +66,9 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 	} elseif ( is_singular( 'announcement' ) ) {
 		$title = get_the_title( get_queried_object() ) . $sep . '告知';
 	} elseif ( is_singular( 'anpi' ) ) {
-		$title .= "安否情報";
+		$title .= '安否情報';
 	} elseif ( is_singular( 'ideas' ) || is_post_type_archive( 'ideas' ) ) {
-		$title .= "アイデア";
+		$title .= 'アイデア';
 	} elseif ( is_singular( 'thread' ) ) {
 		$title = sprintf(
 			'%s%s掲示板',
@@ -76,7 +76,7 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 			$sep
 		);
 	} elseif ( is_post_type_archive( 'thread' ) ) {
-		$title = "掲示板";
+		$title = '掲示板';
 	} elseif ( is_tax( 'topic' ) ) {
 		$title = sprintf( 'トピック「%s」を含む掲示板', get_queried_object()->name );
 	} elseif ( is_author() ) {
@@ -87,7 +87,7 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		$title = get_the_title( get_queried_object() );
 	}
 	// Merge title.
-	$titles   = [ $title ];
+	$titles = [ $title ];
 
 	$titles[] = get_bloginfo( 'name' );
 	return implode( $sep, $titles );
@@ -164,7 +164,7 @@ add_action( 'wp_head', function () {
 
 	// はめにゅーのときだけ画像を設定
 	if ( is_hamenew() ) {
-		$image = get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png?201608';
+		$image = get_template_directory_uri() . '/assets/img/ogp/hamenew-ogp.png?201608';
 	}
 	//個別設定
 	if ( is_front_page() ) {
@@ -187,9 +187,9 @@ add_action( 'wp_head', function () {
 		$author = '<meta property="profile:username" content="' . $user->user_login . '" />';
 		$card   = 'summary';
 	} elseif ( is_singular() ) {
-		$post = get_queried_object();
-		$url = get_permalink( $post );
-		$desc = get_the_excerpt( $post );
+		$post   = get_queried_object();
+		$url    = get_permalink( $post );
+		$desc   = get_the_excerpt( $post );
 		$author = '<meta property="article:author" content="' . get_author_posts_url( $post->post_author ) . '" />';
 		if ( $screen_name = get_user_meta( $post->post_author, 'twitter', true ) ) {
 			$creator = '@' . $screen_name;
@@ -203,7 +203,7 @@ add_action( 'wp_head', function () {
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
 				$image = $src[0];
 				if ( $src[1] >= 696 ) {
-					$card  = 'summary_large_image';
+					$card = 'summary_large_image';
 				}
 			}
 			// Show product card
@@ -241,7 +241,7 @@ add_action( 'wp_head', function () {
 		}
 	} elseif ( is_tax() || is_category() || is_tag() ) {
 		$term = get_queried_object();
-		$url = get_term_link( $term );
+		$url  = get_term_link( $term );
 		$desc = $term->description;
 	} elseif ( is_ranking() ) {
 		$url   = home_url( $_SERVER['REQUEST_URI'] );
@@ -310,8 +310,8 @@ HTML;
  * リッチスニペット
  */
 add_action( 'wp_head', function () {
-	$url  = home_url( '/' );
-	$name = get_bloginfo( 'name' );
+	$url     = home_url( '/' );
+	$name    = get_bloginfo( 'name' );
 	$css_dir = get_template_directory_uri();
 	if ( is_front_page() ) {
 		echo <<<HTML
@@ -331,10 +331,10 @@ HTML;
 	}
 	if ( is_singular( 'news' ) ) {
 		$excerpt = preg_replace( '#[\r|\n]#', '', strip_tags( get_the_excerpt() ) );
-		$image = [
-			get_template_directory_uri().'/assets/img/ogp/hamenew-ogp.png',
-		    '1200',
-		    '696',
+		$image   = [
+			get_template_directory_uri() . '/assets/img/ogp/hamenew-ogp.png',
+			'1200',
+			'696',
 		];
 		if ( has_post_thumbnail() ) {
 			$image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
@@ -345,33 +345,33 @@ HTML;
   "@context": "http://schema.org",
   "@type": "NewsArticle",
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "<?php the_permalink() ?>"
+	"@type": "WebPage",
+	"@id": "<?php the_permalink(); ?>"
   },
-  "headline": "<?= esc_js( get_the_title() ) ?>",
+  "headline": "<?php echo esc_js( get_the_title() ); ?>",
   "image": {
-    "@type": "ImageObject",
-    "url": "<?php echo $image[0] ?>",
-    "height": <?php echo $image[1] ?>,
-    "width": <?php echo $image[2] ?>
+	"@type": "ImageObject",
+	"url": "<?php echo $image[0]; ?>",
+	"height": <?php echo $image[1]; ?>,
+	"width": <?php echo $image[2]; ?>
   },
-  "datePublished": "<?php the_date( DateTime::ATOM ) ?>",
-  "dateModified": "<?php the_modified_date( DateTime::ATOM ) ?>",
+  "datePublished": "<?php the_date( DateTime::ATOM ); ?>",
+  "dateModified": "<?php the_modified_date( DateTime::ATOM ); ?>",
   "author": {
-    "@type": "Person",
-    "name": "<?= esc_js( get_the_author() ) ?>"
+	"@type": "Person",
+	"name": "<?php echo esc_js( get_the_author() ); ?>"
   },
    "publisher": {
-    "@type": "Organization",
-    "name": "<?php bloginfo( 'name' ) ?>",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "<?php echo get_template_directory_uri() ?>/assets/img/ogp/hamenew-company.png",
-      "width": 600,
-      "height": 60
-    }
+	"@type": "Organization",
+	"name": "<?php bloginfo( 'name' ); ?>",
+	"logo": {
+	  "@type": "ImageObject",
+	  "url": "<?php echo get_template_directory_uri(); ?>/assets/img/ogp/hamenew-company.png",
+	  "width": 600,
+	  "height": 60
+	}
   },
-  "description": "<?php echo esc_js( $excerpt ) ?>"
+  "description": "<?php echo esc_js( $excerpt ); ?>"
 }
 </script>
 		<?php
@@ -400,12 +400,12 @@ HTML;
  * noindexを出力する。
  */
 add_action( 'wp_head', function() {
-    if ( ! is_singular( 'post' ) ) {
-        return;
-    }
-    if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
-        echo '<meta name="robots" content="noindex,noarchive" />';
-    }
+	if ( ! is_singular( 'post' ) ) {
+		return;
+	}
+	if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
+		echo '<meta name="robots" content="noindex,noarchive" />';
+	}
 } );
 
 /**
@@ -414,13 +414,13 @@ add_action( 'wp_head', function() {
  * @deprecated BWG.
  */
 add_filter( 'bwp_gxs_excluded_posts', function( $excludes, $requested ) {
-    global $wpdb;
-    $query = <<<SQL
+	global $wpdb;
+	$query = <<<SQL
         SELECT p.ID FROM {$wpdb->posts} AS p
         INNER JOIN {$wpdb->postmeta} AS pm
         ON p.ID = pm.post_id AND pm.meta_key = '_noindex'
         WHERE p.post_status = 'publish'
           AND pm.meta_value = 'noindex'
 SQL;
-    return array_map( 'intval', array_filter( array_merge( $excludes, $wpdb->get_col( $query ) ) ) );
+	return array_map( 'intval', array_filter( array_merge( $excludes, $wpdb->get_col( $query ) ) ) );
 }, 10, 2 );

@@ -64,9 +64,9 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 				'inline'  => 'strong',
 				'classes' => 'text-emphasis',
 			],
-		    [
-			    'title'   => '編注',
-		        'inline'  => 'small',
+			[
+				'title'  => '編注',
+				'inline' => 'small',
 			],
 			[
 				'title'   => '脚注',
@@ -80,21 +80,21 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 		'title' => 'ブロック',
 		'items' => [
 			[
-				'title' => 'コラム',
-				'block' => 'aside',
+				'title'   => 'コラム',
+				'block'   => 'aside',
 				'wrapper' => true,
 			],
 			[
-				'title' => 'ドロップキャップ',
-				'block' => 'p',
+				'title'   => 'ドロップキャップ',
+				'block'   => 'p',
 				'classes' => 'has-drop-cap',
 			],
-		    [
-		    	'title' => 'ROW',
-		        'block' => 'div',
-		        'classes' => 'row',
-			    'wrapper' => true,
-		    ],
+			[
+				'title'   => 'ROW',
+				'block'   => 'div',
+				'classes' => 'row',
+				'wrapper' => true,
+			],
 		],
 	];
 	if ( $screen ) {
@@ -104,13 +104,13 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 					'title' => 'インタビュー',
 					'items' => [
 						[
-							'title' => '回答者',
-							'inline' => 'span',
+							'title'   => '回答者',
+							'inline'  => 'span',
 							'classes' => 'interviewee',
 						],
 						[
-							'title' => '聞き手',
-							'block' => 'p',
+							'title'   => '聞き手',
+							'block'   => 'p',
 							'classes' => 'interviewer',
 						],
 					],

@@ -39,19 +39,20 @@ add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 				$value = '';
 			}
 			?>
-			<input id="hametuha-tag-input" type="hidden" name="tax_input[post_tag]" value="<?= esc_attr( $value ) ?>"/>
+			<input id="hametuha-tag-input" type="hidden" name="tax_input[post_tag]" value="<?php echo esc_attr( $value ); ?>"/>
 			<?php foreach ( $tags as $genre => $terms ) : ?>
-				<h4><?= esc_html( $genre ?: 'その他' ) ?></h4>
+				<h4><?php echo esc_html( $genre ?: 'その他' ); ?></h4>
 				<?php foreach ( $terms as $tag ) : ?>
 					<label class="hametuha-tag-label">
 						<input type="checkbox" class="hametuha-tag-cb"
-						       value="<?= esc_attr( $tag->name ) ?>" <?php checked( has_tag( $tag->term_id, $post ) ) ?>/> <?= esc_attr( $tag->name ) ?>
+							   value="<?php echo esc_attr( $tag->name ); ?>" <?php checked( has_tag( $tag->term_id, $post ) ); ?>/> <?php echo esc_attr( $tag->name ); ?>
 					</label>
 				<?php endforeach; ?>
 				<?php
-			endforeach; ?>
+			endforeach;
+			?>
 			<p class="description">
-				欲しいジャンルがない場合は<a href="<?= home_url( '/topic/feature-request/' ) ?>">掲示板</a>で要望を出してください。
+				欲しいジャンルがない場合は<a href="<?php echo home_url( '/topic/feature-request/' ); ?>">掲示板</a>で要望を出してください。
 			</p>
 			<hr />
 			<label>
@@ -73,8 +74,8 @@ foreach ( [ 'campaign', 'nouns' ] as $taxonomy ) {
 	add_action( $taxonomy . '_edit_form', function ( $tag, $taxonomy ) {
 		?>
 		<div>
-			<?php wp_nonce_field( 'update_term_content', '_term_content_nonce', false ) ?>
-			<?php wp_editor( get_term_meta( $tag->term_id, '_term_content', true ), 'term_content' ) ?>
+			<?php wp_nonce_field( 'update_term_content', '_term_content_nonce', false ); ?>
+			<?php wp_editor( get_term_meta( $tag->term_id, '_term_content', true ), 'term_content' ); ?>
 		</div>
 		<?php
 	}, 11, 2 );

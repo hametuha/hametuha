@@ -52,8 +52,8 @@ class HametuhaReaderRegion extends Gabstract {
 	protected function parse_result( array $result ) {
 		$json = [
 			'options' => [
-				'region' => 'JP',
-				'displayMode' => 'markers',
+				'region'          => 'JP',
+				'displayMode'     => 'markers',
 				'backgroundColor' => '#fff',
 			],
 			'data'    => [
@@ -62,7 +62,7 @@ class HametuhaReaderRegion extends Gabstract {
 		];
 		foreach ( $result as $row ) {
 			list( $region, $id, $pv ) = $row;
-			$json['data'][] = [
+			$json['data'][]           = [
 				$region,
 				intval( $pv ),
 			];

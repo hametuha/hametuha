@@ -11,11 +11,11 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
 			<i class="icon-location5"></i>
-			<a href="<?= home_url( '') ?>" rel="home"><?php bloginfo( 'name' ) ?></a>
+			<a href="<?php echo home_url( '' ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 			&gt;
 			<?php if ( $breadcrumb ) : ?>
-				<a href="<?= home_url( '/statistics/', 'https' ) ?>">統計情報</a>
-				&gt; <?= $breadcrumb ?>
+				<a href="<?php echo home_url( '/statistics/', 'https' ); ?>">統計情報</a>
+				&gt; <?php echo $breadcrumb; ?>
 			<?php else : ?>
 				統計情報
 			<?php endif; ?>
@@ -33,28 +33,30 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs nav-tabs--analytics">
-						<li role="presentation" class="<?= $current ? '' : 'active' ?>">
-							<a href="<?= home_url( '/statistics/', 'https' ) ?>" aria-controls="statistics">
+						<li role="presentation" class="<?php echo $current ? '' : 'active'; ?>">
+							<a href="<?php echo home_url( '/statistics/', 'https' ); ?>" aria-controls="statistics">
 								アクセス
 							</a>
 						</li>
-						<li role="presentation" class="<?= 'readers' == $current ? 'active' : '' ?>">
-							<a href="<?= home_url( '/statistics/readers/', 'https' ) ?>" aria-controls="readers">
+						<li role="presentation" class="<?php echo 'readers' == $current ? 'active' : ''; ?>">
+							<a href="<?php echo home_url( '/statistics/readers/', 'https' ); ?>" aria-controls="readers">
 								読者
 							</a>
 						</li>
-						<li role="presentation" class="<?= 'traffic' == $current ? 'active' : '' ?>">
-							<a href="<?= home_url( '/statistics/traffic/', 'https' ) ?>" aria-controls="traffic">
+						<li role="presentation" class="<?php echo 'traffic' == $current ? 'active' : ''; ?>">
+							<a href="<?php echo home_url( '/statistics/traffic/', 'https' ); ?>" aria-controls="traffic">
 								集客
 							</a>
 						</li>
-						<?php /*
+						<?php
+						/*
 						<li role="presentation" class="<?= 'feedback' == $current ? 'active' : '' ?>">
 							<a href="<?= home_url( '/statistics/feedback/', 'https' ) ?>" aria-controls="feedback">
 								感想
 							</a>
 						</li>
- 						*/ ?>
+						 */
+						?>
 					</ul>
 
 					<div class="statistics statistics--main">
@@ -63,12 +65,12 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 							  action="">
 							<div class="form-group">
 								<input type="text" class="form-control datepicker" id="from" name="from"
-									   value="<?= $from ?>"/>
+									   value="<?php echo $from; ?>"/>
 								<label for="from">から</label>
 							</div>
 							<div class="form-group">
 								<input type="text" class="form-control datepicker" id="to" name="to"
-									   value="<?= $to ?>"/>
+									   value="<?php echo $to; ?>"/>
 								<label for="to">まで</label>
 							</div>
 							<button type="submit" class="btn btn-primary">更新</button>
@@ -76,7 +78,7 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 
 						<hr />
 
-						<?php $this->load_template( 'templates/statistics/graph', $graph ) ?>
+						<?php $this->load_template( 'templates/statistics/graph', $graph ); ?>
 
 					</div>
 
@@ -84,7 +86,7 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 						このページでは、<strong>2014年11月以降から計測している統計情報</strong>を表示しています。
 						投稿を削除した場合、それらのアクセス統計も削除されているので、正確な値は出なくなります。
 						わからないことがあったら、
-						<a class="alert-link" href="<?= home_url( 'thread/機能要望/' ) ?>" target="_blank">スレッド</a>
+						<a class="alert-link" href="<?php echo home_url( 'thread/機能要望/' ); ?>" target="_blank">スレッド</a>
 						で質問してください。<br/>
 						<small class="description">
 							【編注】2015年6月25日〜7月12日ぐらいまで不具合で集計が取れていませんでした。

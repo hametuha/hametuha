@@ -22,55 +22,55 @@ class NewsEventMetaBox extends EditMetaBox {
 	protected $context = 'advanced';
 
 	protected $fields = [
-		'_event_title' => [
+		'_event_title'   => [
 			'class'       => Text::class,
 			'label'       => 'イベント名',
-		    'description' => '空白の場合はイベント自体が表示されません',
-		    'required'    => true,
+			'description' => '空白の場合はイベント自体が表示されません',
+			'required'    => true,
 		],
-		'_event_type'     => [
-			'class'       => Select::class,
-		    'label'       => '種別',
-		    'options'     => [
-			    ''  => 'リアルイベント',
-		        '1' => 'オンラインイベント',
-		        '2' => '公募',
-		        '3' => '文学賞',
-		    ],
-		    'default'     => '',
+		'_event_type'    => [
+			'class'   => Select::class,
+			'label'   => '種別',
+			'options' => [
+				''  => 'リアルイベント',
+				'1' => 'オンラインイベント',
+				'2' => '公募',
+				'3' => '文学賞',
+			],
+			'default' => '',
 		],
-		'_event_start' => [
+		'_event_start'   => [
 			'class'       => DateTime::class,
 			'label'       => '開始',
 			'description' => '空白の場合は表示されません。00:00の場合、時刻は表示されません。',
 		],
-		'_event_end' => [
+		'_event_end'     => [
 			'class'       => DateTime::class,
 			'label'       => '終了',
 			'description' => '空白の場合は表示されません。複数日にまたがる場合、00:00の場合、時刻は表示されません。',
 		],
 		'_event_address' => [
-			'class' => Text::class,
-			'label' => '住所',
+			'class'       => Text::class,
+			'label'       => '住所',
 			'placeholder' => 'ex. 東京都千代田区永田町2-4-11',
 			'description' => '建物を住所に含めると、正確に表示されません。建物名は「建物」に入れてください。',
 		],
-		'_event_bld' => [
-			'class' => Text::class,
-			'label' => '建物名',
+		'_event_bld'     => [
+			'class'       => Text::class,
+			'label'       => '建物名',
 			'placeholder' => 'ex. フレンドビル 3階',
 		],
-		'_event_point' => [
-			'class' => GeoChecker::class,
-			'label' => '住所チェック',
-			'target' => '_event_address',
+		'_event_point'   => [
+			'class'       => GeoChecker::class,
+			'label'       => '住所チェック',
+			'target'      => '_event_address',
 			'description' => '「住所」に入力した場所はこの地図のように表示されます。',
 		],
-	    '_event_desc' => [
-		    'class' => Textarea::class,
-	        'label' => '備考',
-	        'rows' => 3,
-	    ],
+		'_event_desc'    => [
+			'class' => Textarea::class,
+			'label' => '備考',
+			'rows'  => 3,
+		],
 	];
 
 	/**

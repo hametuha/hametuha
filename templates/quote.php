@@ -35,12 +35,12 @@ setup_postdata( $post );
 	<div class="quote-meta">
 
 		<div class="quote-title">
-			<strong>『<?php the_title() ?>』</strong>
-			<?php the_author() ?>
+			<strong>『<?php the_title(); ?>』</strong>
+			<?php the_author(); ?>
 		</div>
 
 		<div class="quote-via">
-			Quoted by <?= esc_html( $user->display_name ) ?>
+			Quoted by <?php echo esc_html( $user->display_name ); ?>
 		</div>
 
 	</div>

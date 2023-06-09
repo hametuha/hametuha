@@ -32,12 +32,12 @@ add_action( 'wp_footer', function() {
  * FAQの閲覧を制限する
  */
 add_filter( 'hamelp_access_type', function( $types ) {
-	if ( isset( $types[ 'contributor' ] ) ) {
+	if ( isset( $types['contributor'] ) ) {
 		unset( $types['contributor'] );
 	}
 	unset( $types['author'] );
 	$types['writer'] = [
-		'label' => '著者',
+		'label'    => '著者',
 		'callback' => function() {
 			return current_user_can( 'edit_posts' );
 		},

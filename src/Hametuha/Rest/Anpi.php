@@ -14,8 +14,8 @@ use WPametu\API\Rest\RestTemplate;
  * @property-read Anpis $anpis
  * @property-read Notifications $notifications
  */
-class Anpi extends RestTemplate
-{
+class Anpi extends RestTemplate {
+
 
 	public static $prefix = 'anpi/mine';
 
@@ -28,8 +28,8 @@ class Anpi extends RestTemplate
 	protected $content_type = 'text/html';
 
 	protected $models = [
-		'anpis' => Anpis::class,
-	    'notifications' => Notifications::class,
+		'anpis'         => Anpis::class,
+		'notifications' => Notifications::class,
 	];
 
 	protected $screen_name = false;
@@ -50,33 +50,33 @@ class Anpi extends RestTemplate
 	public function rest_api_init() {
 		register_rest_route( 'hametuha/v1', '/anpi/(?P<post_id>\\d|new)/?', [
 			[
-				'methods' => 'POST',
+				'methods'             => 'POST',
 				'callback'            => [ $this, 'api_create' ],
 				'permission_callback' => function () {
 					return current_user_can( 'read' );
 				},
 				'args'                => [
 					'post_id' => [
-						'validate_callback'  => function($var){
+						'validate_callback' => function( $var ) {
 							return 'new' === $var;
 						},
 						'required'          => true,
 					],
-				    'content' => [
-					    'validate_callback' => function($var){
-						    return ! empty( $var );
-					    },
-				        'required'          => true,
-				    ],
-				    'mention' => [
-				        'default'           => '',
-				        'sanitize_callback' => function( $mention ) {
-					        $mention = (string) $mention;
-					        return array_filter( array_map( 'intval', explode( ',', $mention ) ), function( $var ) {
-					            return $var;
-				            });
-				        },
-				    ],
+					'content' => [
+						'validate_callback' => function( $var ) {
+							return ! empty( $var );
+						},
+						'required'          => true,
+					],
+					'mention' => [
+						'default'           => '',
+						'sanitize_callback' => function( $mention ) {
+							$mention = (string) $mention;
+							return array_filter( array_map( 'intval', explode( ',', $mention ) ), function( $var ) {
+								return $var;
+							});
+						},
+					],
 				],
 			],
 		]);
@@ -95,7 +95,7 @@ class Anpi extends RestTemplate
 			return new \WP_Error( $post_id->get_error_code(), $post_id->get_error_message(), [ 'status' => 500 ] );
 		} else {
 			if ( $params['mention'] ) {
-				$user = get_userdata( get_current_user_id() );
+				$user    = get_userdata( get_current_user_id() );
 				$message = "{$user->display_name}さんがあなたに安否を報告しています。";
 				foreach ( $params['mention'] as $user_id ) {
 					$this->notifications->add_notification( 'mention', $user_id, $post_id, $message, get_current_user_id() );
@@ -170,22 +170,22 @@ class Anpi extends RestTemplate
 		if ( ! $post || 'anpi' !== $post->post_type || $this->anpis->is_tweet( $post ) ) {
 			wp_die('該当する安否情報は存在しません。', get_status_header_desc( 404 ), [
 				'back_link' => true,
-			    'response'    => 404,
+				'response'  => 404,
 			]);
 		}
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			wp_die('あなたにはこの投稿の編集権限がありません。', get_status_header_desc( 401 ), [
 				'back_link' => true,
-				'response'    => 401,
+				'response'  => 401,
 			]);
 		}
 		if ( 'trash' === $post->post_status ) {
 			wp_die( 'この投稿はゴミ箱に入っています。', get_status_header_desc( 403 ), [
 				'back_link' => true,
-				'response' => 403,
+				'response'  => 403,
 			]);
 		}
-		$this->title = '安否情報編集';
+		$this->title       = '安否情報編集';
 		$this->screen_name = 'editor';
 		nocache_headers();
 		$this->set_data( [
@@ -200,15 +200,15 @@ class Anpi extends RestTemplate
 			];
 		}
 		wp_localize_script('hameditor', 'HameditorPost', [
-			'id'       => $post->ID,
-			'type'     => 'anpi',
-		    'status'   => $post->post_status,
-		    'title'    => $post->post_title,
-		    'url'      => get_permalink( $post ),
-		    'date'     => get_gmt_from_date( $post->post_date, DATE_ISO8601 ),
-		    'modified' => get_gmt_from_date( $post->post_modified, DATE_ISO8601 ),
-		    'categories' => $terms,
-		    'content'  => $post->post_content,
+			'id'         => $post->ID,
+			'type'       => 'anpi',
+			'status'     => $post->post_status,
+			'title'      => $post->post_title,
+			'url'        => get_permalink( $post ),
+			'date'       => get_gmt_from_date( $post->post_date, DATE_ISO8601 ),
+			'modified'   => get_gmt_from_date( $post->post_modified, DATE_ISO8601 ),
+			'categories' => $terms,
+			'content'    => $post->post_content,
 		]);
 		$this->load_template( 'templates/editor/anpi', '' );
 	}
@@ -220,7 +220,7 @@ class Anpi extends RestTemplate
 	 */
 	public function enqueue_assets( $page = '' ) {
 		if ( 'editor' === $this->screen_name ) {
-			add_filter( 'editor_stylesheets', function($css){
+			add_filter( 'editor_stylesheets', function( $css ) {
 				$css[] = get_template_directory_uri() . '/assets/css/editor-style.css';
 				return $css;
 			} );
@@ -239,7 +239,7 @@ class Anpi extends RestTemplate
 			}
 			$response = [
 				'success' => true,
-				'html' => hameplate( 'templates/anpi/form', '', [
+				'html'    => hameplate( 'templates/anpi/form', '', [
 					'id'      => 0,
 					'content' => '',
 				], false ),

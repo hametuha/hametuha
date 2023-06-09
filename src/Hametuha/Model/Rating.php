@@ -11,8 +11,7 @@ use WPametu\DB\Model;
  * @package Hametuha\Model
  * @property-read string $posts
  */
-class Rating extends Model
-{
+class Rating extends Model {
 
     /**
      * ユーザーとコンテンツを紐づけるテーブル名
@@ -196,4 +195,4 @@ class Rating extends Model
             [$this->posts, "{$this->posts}.ID = {$this->table}.object_id", 'inner'],
         ];
     }
-} 
+}

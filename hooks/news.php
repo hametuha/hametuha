@@ -12,18 +12,18 @@ add_action( 'init', function() {
 
 	// キーワード
 	register_taxonomy( 'nouns', 'news', [
-		'label' => 'タグ（固有名詞）',
-		'description' => 'ニュースに出てくる作家名、雑誌名、出版社名などの固有名詞。',
-		'hierarchical' => false,
-		'public' => true,
-		'show_in_rest' => true,
+		'label'             => 'タグ（固有名詞）',
+		'description'       => 'ニュースに出てくる作家名、雑誌名、出版社名などの固有名詞。',
+		'hierarchical'      => false,
+		'public'            => true,
+		'show_in_rest'      => true,
 		'show_admin_column' => true,
-		'rewrite' => [
+		'rewrite'           => [
 			'slug' => 'news/nouns',
 		],
-		'capabilities' => [
+		'capabilities'      => [
 			'manage_terms' => 'edit_posts',
-			'edit_terms' => 'edit_posts',
+			'edit_terms'   => 'edit_posts',
 			'delete_terms' => 'edit_others_posts',
 			'assign_terms' => 'edit_posts',
 		],
@@ -31,19 +31,19 @@ add_action( 'init', function() {
 
 	// 形式
 	register_taxonomy( 'genre', 'news', array(
-		'label'        => 'ジャンル',
-		'public'       => true,
-		'hierarchical' => true,
-		'show_in_rest'    => true,
-		'capabilities' => [
+		'label'             => 'ジャンル',
+		'public'            => true,
+		'hierarchical'      => true,
+		'show_in_rest'      => true,
+		'capabilities'      => [
 			'manage_terms' => 'edit_others_posts',
 			'edit_terms'   => 'edit_others_posts',
 			'delete_terms' => 'edit_others_posts',
 			'assign_terms' => 'edit_posts',
 		],
 		'show_admin_column' => true,
-		'rewrite'      => [
-			'slug' => 'news/genre',
+		'rewrite'           => [
+			'slug'         => 'news/genre',
 			'hierarchical' => true,
 		],
 	) );
@@ -64,22 +64,23 @@ add_action( 'init', function() {
 		'show_in_rest'    => true,
 		'template'        => [
 			[
-				'hametuha/excerpt', [],
+				'hametuha/excerpt',
+				[],
 			],
 			[
 				'core/paragraph',
 				[
-                	'placeholder' => __( 'ここからニュースの本文を入力してください……', 'hametuha' ),
-            	]
+					'placeholder' => __( 'ここからニュースの本文を入力してください……', 'hametuha' ),
+				],
 			],
-        ],
+		],
 	]);
 } );
 
-function wpb_change_title_text( $title ){
+function wpb_change_title_text( $title ) {
 	$screen = get_current_screen();
 
-	if  ( 'movie' == $screen->post_type ) {
+	if ( 'movie' == $screen->post_type ) {
 		$title = 'Enter movie name with release year';
 	}
 
@@ -107,8 +108,8 @@ add_filter( 'enter_title_here', function( $title, $post ) {
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
 		'^news/article/([0-9]+)/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news&page=$matches[2]',
-		'^news/article/([0-9]+)/amp/?$' => 'index.php?p=$matches[1]&post_type=news&amp=true', // AMPはもう使っていないが後方互換で残す
-		'^news/article/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=news',
+		'^news/article/([0-9]+)/amp/?$'      => 'index.php?p=$matches[1]&post_type=news&amp=true', // AMPはもう使っていないが後方互換で残す
+		'^news/article/([0-9]+)/?$'          => 'index.php?p=$matches[1]&post_type=news',
 	], $rules );
 } );
 
@@ -220,7 +221,7 @@ add_action( 'admin_head', function () {
 			],
 			'contact'   => [
 				'連絡方法',
-				'<p>ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。</p>'
+				'<p>ニュースの連絡におけるすべてのやりとりは基本的にSLACKで行います。参加方法はよくある質問をご覧ください。</p>',
 			],
 		] as $id => list( $title, $content )
 	) {
@@ -263,7 +264,7 @@ add_filter( 'get_wp_title_rss', function( $title ) {
 /**
  * AMPを変更
  */
-add_filter( 'bloginfo_rss', function($value, $show){
+add_filter( 'bloginfo_rss', function( $value, $show ) {
 	if ( 'description' == $show && is_post_type_archive( 'news' ) ) {
 		$value = get_post_type_object( 'news' )->description;
 	}

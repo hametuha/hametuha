@@ -8,8 +8,8 @@
 add_action( 'pre_get_comments', function( &$comment_query ) {
 	if ( ! $comment_query->query_vars['type'] ) {
 		// コメントのタイプが指定されていなかったら、excludeを設定
-		$exclude = (array) $comment_query->query_vars['type__not_in'];
-		$exclude = array_merge( array_filter( $exclude ),  [ 'participant', 'review' ] );
+		$exclude                                   = (array) $comment_query->query_vars['type__not_in'];
+		$exclude                                   = array_merge( array_filter( $exclude ), [ 'participant', 'review' ] );
 		$comment_query->query_vars['type__not_in'] = $exclude;
 	}
 } );
@@ -136,9 +136,9 @@ add_action( 'init', function() {
 	add_action( $cron_action, function() {
 		switch ( date_i18n( 'N' ) ) {
 			case '5': // 金曜日（週間ランキング発表）
-				$message = '【お知らせ】おめでとうございます。%s付の週間ランキングで%d位になりました。';
+				$message                    = '【お知らせ】おめでとうございます。%s付の週間ランキングで%d位になりました。';
 				list( $year, $month, $day ) = explode( '/', get_latest_ranking_day( 'Y/m/d' ) );
-				$query = new \WP_Query( [
+				$query                      = new \WP_Query( [
 					'ranking'        => 'weekly',
 					'year'           => $year,
 					'monthnum'       => $month,

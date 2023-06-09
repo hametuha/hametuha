@@ -18,40 +18,40 @@ class SeriesPreview extends SeriesBase {
 		</p>
 		<ol id="series-additons-list">
 			<li>
-				<a href="<?= home_url( "epub/preview/titlepage/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/titlepage/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					扉
 				</a>
 			</li>
 			<li>
-				<a href="<?= home_url( "epub/preview/toc/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/toc/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					目次
 				</a>
 			</li>
 			<li>
-				<a href="<?= home_url( "epub/preview/foreword/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/foreword/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					序文
 				</a>
 			</li>
 			<li>
-				<a href="<?= home_url( "epub/preview/afterword/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/afterword/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					あとがき
 				</a>
 			</li>
 			<li>
-				<a href="<?= home_url( "epub/preview/contributors/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/contributors/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					著者一覧
 				</a>
 			</li>
 			<li>
-				<a href="<?= home_url( "epub/preview/colophon/{$post->ID}", 'https' ) ?>" target="epub-preview">
+				<a href="<?php echo home_url( "epub/preview/colophon/{$post->ID}", 'https' ); ?>" target="epub-preview">
 					奥付
 				</a>
 			</li>
-            <li>
-                <a href="<?= home_url( "epub/preview/ads/{$post->ID}", 'https' ) ?>" target="epub-preview">
-                    近刊書籍一覧
-                </a>
-            </li>
+			<li>
+				<a href="<?php echo home_url( "epub/preview/ads/{$post->ID}", 'https' ); ?>" target="epub-preview">
+					近刊書籍一覧
+				</a>
+			</li>
 		</ol>
 		<hr/>
 		<?php
@@ -62,7 +62,7 @@ class SeriesPreview extends SeriesBase {
 			'orderby'        => [
 				'menu_order' => 'DESC',
 				'post_date'  => 'ASC',
-			]
+			],
 		] );
 		if ( $sub_query->have_posts() ) {
 			$_old_post = $post;
@@ -74,7 +74,7 @@ HTML;
 			while ( $sub_query->have_posts() ) {
 				$sub_query->the_post();
 				?>
-				<option value="<?php the_ID() ?>"><?php the_title() ?></option>
+				<option value="<?php the_ID(); ?>"><?php the_title(); ?></option>
 				<?php
 			}
 			echo <<<HTML
@@ -88,7 +88,7 @@ HTML;
 		?>
 		<hr />
 		<h4>印刷確認</h4>
-		<a class="button" href="<?= home_url( "/epub/print/{$post->ID}" ) ?>" target="_blank">
+		<a class="button" href="<?php echo home_url( "/epub/print/{$post->ID}" ); ?>" target="_blank">
 			まとめて印刷
 		</a>
 		<?php

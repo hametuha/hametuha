@@ -22,7 +22,7 @@ add_action( 'init', function () {
 			'with_front' => false,
 		],
 		'meta_box_cb'       => function ( WP_Post $post ) {
-			$terms          = get_terms( [
+			$terms = get_terms( [
 				'taxonomy'   => 'campaign',
 				'hide_empty' => false,
 			] );
@@ -34,8 +34,8 @@ add_action( 'init', function () {
 				$term_available = array_filter( $terms, function ( $term ) {
 					return hametuha_is_available_campaign( $term );
 				} );
-				$post_terms = get_the_terms( $post, 'campaign' );
-				$can_select = true;
+				$post_terms     = get_the_terms( $post, 'campaign' );
+				$can_select     = true;
 				if ( $post_terms && ! is_wp_error( $post_terms ) ) {
 					foreach ( $post_terms as $term ) {
 						if ( ! hametuha_is_available_campaign( $term ) ) {
@@ -50,7 +50,7 @@ add_action( 'init', function () {
 						<li>
 							<label>
 								<input type="radio" name="tax_input[campaign][]"
-								       value="0" <?php checked( empty( $post_terms ) ) ?>/>
+									   value="0" <?php checked( empty( $post_terms ) ); ?>/>
 								応募しない
 							</label>
 						</li>
@@ -58,10 +58,10 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="radio" name="tax_input[campaign][]"
-									       value="<?= esc_attr( $term->term_id ) ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ) ?>/>
-									<?= esc_html( $term->name ) ?>
+										   value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?>/>
+									<?php echo esc_html( $term->name ); ?>
 									<?php if ( $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) : ?>
-										<small><?= mysql2date( 'Y年n月j日（D）まで', $limit ) ?></small>
+										<small><?php echo mysql2date( 'Y年n月j日（D）まで', $limit ); ?></small>
 									<?php else : ?>
 										<small>期限なし</small>
 									<?php endif; ?>
@@ -75,8 +75,8 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="hidden" name="tax_input[campaign][]"
-									       value="<?= esc_attr( $term->term_id ) ?>"/>
-									<strong>応募済み: </strong><?= esc_html( $term->name ) ?>
+										   value="<?php echo esc_attr( $term->term_id ); ?>"/>
+									<strong>応募済み: </strong><?php echo esc_html( $term->name ); ?>
 								</label>
 							</li>
 						<?php endforeach; ?>
@@ -84,7 +84,8 @@ add_action( 'init', function () {
 				<?php else : ?>
 					<p class="description">応募できるものはありません。</p>
 				<?php endif; ?>
-			<?php endif;
+				<?php
+			endif;
 		},
 	] );
 } );
@@ -141,8 +142,8 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_limit" name="campaign_limit" type="date" class="regular-text"
-				       placeholder="YYYY-MM-DD"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ) ?>"/>
+					   placeholder="YYYY-MM-DD"
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -151,8 +152,8 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_range_end" name="campaign_range_end" type="date" class="regular-text"
-				       placeholder="YYYY-MM-DD"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ) ?>"/>
+					   placeholder="YYYY-MM-DD"
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -161,7 +162,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_min_length" name="campaign_min_length" type="number" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -170,7 +171,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_max_length" name="campaign_max_length" type="number" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -179,7 +180,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<textarea rows="3" style="width: 90%;" id="campaign_detail"
-				          name="campaign_detail"><?= esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ) ?></textarea>
+						  name="campaign_detail"><?php echo esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ); ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -188,7 +189,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_url" name="campaign_url" type="url" class="regular-text"
-				       value="<?= esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ); ?>"/>
 			</td>
 		</tr>
 		<?php
@@ -259,11 +260,11 @@ add_shortcode( 'campaign_list', function ( $atts ) {
 	}
 	$content = '<ol class="campaign-review">';
 	foreach ( $campaign as $term ) {
-		$link  = get_term_link( $term );
-		$label = esc_html( $term->name );
-		$desc  = nl2br( esc_html( $term->description ) );
-		$count = number_format_i18n( $term->count );
-		$limit = hametuha_is_available_campaign( $term )
+		$link     = get_term_link( $term );
+		$label    = esc_html( $term->name );
+		$desc     = nl2br( esc_html( $term->description ) );
+		$count    = number_format_i18n( $term->count );
+		$limit    = hametuha_is_available_campaign( $term )
 			? sprintf( '<span class="label label-danger campaign-review__label">%s〆切</span>', mysql2date( get_option( 'date_format' ), get_term_meta( $term->term_id, '_campaign_limit', true ) ) )
 			: '<span class="label label-default campaign-review__label">募集終了</span>';
 		$content .= <<<HTML

@@ -91,7 +91,7 @@ class Announcement extends PostHelper {
 	 * @return bool
 	 */
 	public function has_place() {
-		return (boolean) get_post_meta( $this->post->ID, self::PLACE, true );
+		return (bool) get_post_meta( $this->post->ID, self::PLACE, true );
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Announcement extends PostHelper {
 	 * @return bool
 	 */
 	public function is_participating() {
-		return (boolean) get_post_meta( $this->post->ID, self::COMMIT_TYPE, true );
+		return (bool) get_post_meta( $this->post->ID, self::COMMIT_TYPE, true );
 	}
 
 	/**
@@ -184,7 +184,7 @@ class Announcement extends PostHelper {
 			'post_id' => $this->post->ID,
 			'type'    => 'participant',
 			'number'  => 1,
-			'status' => '1',
+			'status'  => '1',
 			'user_id' => $user_id,
 		] );
 		return $comments->comments ? $comments->comments[0]->comment_ID : 0;
@@ -205,14 +205,14 @@ class Announcement extends PostHelper {
 			return false;
 		}
 		$comments = new \WP_Comment_Query( [
-			'post_id' => $this->post->ID,
-			'type'    => 'participant',
-			'status'  => 1,
-			'number'  => 1,
-			'user_id' => $user_id,
+			'post_id'    => $this->post->ID,
+			'type'       => 'participant',
+			'status'     => 1,
+			'number'     => 1,
+			'user_id'    => $user_id,
 			'meta_query' => [
 				[
-					'key' => '_participating',
+					'key'   => '_participating',
 					'value' => 1,
 				],
 			],
@@ -227,13 +227,13 @@ class Announcement extends PostHelper {
 	 */
 	public function participating_count() {
 		$comments = new \WP_Comment_Query( [
-			'post_id' => $this->post->ID,
-			'type'    => 'participant',
-			'status'  => 1,
-			'number'  => false,
+			'post_id'    => $this->post->ID,
+			'type'       => 'participant',
+			'status'     => 1,
+			'number'     => false,
 			'meta_query' => [
 				[
-					'key' => '_participating',
+					'key'   => '_participating',
 					'value' => 1,
 				],
 			],
@@ -249,18 +249,18 @@ class Announcement extends PostHelper {
 	 */
 	public function get_participants( $with_mail = false ) {
 		$comments = new \WP_Comment_Query( [
-			'post_id' => $this->post->ID,
-			'type'    => 'participant',
-			'status'  => 1,
-			'number'  => false,
+			'post_id'    => $this->post->ID,
+			'type'       => 'participant',
+			'status'     => 1,
+			'number'     => false,
 			'meta_query' => [
 				[
-					'key' => '_participating',
+					'key'   => '_participating',
 					'value' => 1,
 				],
 			],
 		] );
-		$return = [];
+		$return   = [];
 		foreach ( $comments->comments as $comment ) {
 			if ( $user = $this->get_user_object( $comment, $with_mail ) ) {
 				$return[] = $user;
@@ -279,7 +279,7 @@ class Announcement extends PostHelper {
 	 */
 	public function get_user_object( $comment, $with_mail = false ) {
 		$comment = get_comment( $comment );
-		$user = get_userdata( $comment->user_id );
+		$user    = get_userdata( $comment->user_id );
 		if ( ! $user ) {
 			return [];
 		}
@@ -288,8 +288,8 @@ class Announcement extends PostHelper {
 			'name'   => $user->display_name,
 			'url'    => $user->has_cap( 'edit_posts' ) ? esc_url( home_url( "/doujin/detail/{$user->user_nicename}/" ) ) : '#',
 			'avatar' => get_avatar_url( $user->ID ),
-		    'text'   => $comment->comment_content,
-		    'mail'   => $with_mail ? $user->user_email : '',
+			'text'   => $comment->comment_content,
+			'mail'   => $with_mail ? $user->user_email : '',
 		];
 	}
 

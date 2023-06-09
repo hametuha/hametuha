@@ -98,20 +98,20 @@ class Idea extends RestTemplate {
 		// Update
 		register_rest_route( 'hametuha/v1', '/idea/mine/', [
 			[
-				'methods' => 'GET',
-			    'callback' => [ $this, 'api_list' ],
-			    'permission_callback' => function(){
-				    return current_user_can( 'read' );
-			    },
-			    'args' => [
-				    'offset' => [
-					    'validate_callback' => 'is_numeric',
-				        'default' => 0,
-				    ],
-			        's'      => [
-				        'default' => '',
-			        ],
-			    ],
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'api_list' ],
+				'permission_callback' => function() {
+					return current_user_can( 'read' );
+				},
+				'args'                => [
+					'offset' => [
+						'validate_callback' => 'is_numeric',
+						'default'           => 0,
+					],
+					's'      => [
+						'default' => '',
+					],
+				],
 			],
 			[
 				'methods'             => 'POST',
@@ -155,62 +155,62 @@ class Idea extends RestTemplate {
 					],
 				],
 			],
-		    [
-			    'methods' => 'PUT',
-			    'callback'            => [ $this, 'api_edit' ],
-			    'permission_callback' => function () {
-				    return current_user_can( 'read' );
-			    },
-			    'args'                => [
-				    'post_id' => [
-					    'validate_callback' => [ $this, 'is_idea' ],
-				        'required'          => true,
-				    ],
-				    'title'   => [
-					    'validate_callback' => function ( $var ) {
-						    return ! empty( $var );
-					    },
-					    'required'          => true,
-				    ],
-				    'content' => [
-					    'validate_callback' => function ( $var ) {
-						    return ! empty( $var );
-					    },
-					    'required'          => true,
-				    ],
-				    'status'  => [
-					    'validate_callback' => function ( $status ) {
-						    switch ( $status ) {
-							    case 'private':
-							    case 'publish':
-								    return true;
-								    break;
-							    default:
-								    return false;
-								    break;
-						    }
-					    },
-				    ],
-				    'genre'   => [
-					    'validate_callback' => function ( $var ) {
-						    $term = get_tag( $var );
-
-						    return $term && ! is_wp_error( $term ) && ( 'idea' === get_term_meta( $term->term_id, 'tag_type', true ) );
-					    },
-					    'required'          => true,
-				    ],
-			    ],
-			],
-		    [
-				'methods' => 'DELETE',
-				'callback' => [ $this, 'api_delete' ],
-				'permission_callback' => function(){
+			[
+				'methods'             => 'PUT',
+				'callback'            => [ $this, 'api_edit' ],
+				'permission_callback' => function () {
 					return current_user_can( 'read' );
 				},
-				'args' => [
+				'args'                => [
 					'post_id' => [
 						'validate_callback' => [ $this, 'is_idea' ],
-						'required' => true,
+						'required'          => true,
+					],
+					'title'   => [
+						'validate_callback' => function ( $var ) {
+							return ! empty( $var );
+						},
+						'required'          => true,
+					],
+					'content' => [
+						'validate_callback' => function ( $var ) {
+							return ! empty( $var );
+						},
+						'required'          => true,
+					],
+					'status'  => [
+						'validate_callback' => function ( $status ) {
+							switch ( $status ) {
+								case 'private':
+								case 'publish':
+									return true;
+									break;
+								default:
+									return false;
+									break;
+							}
+						},
+					],
+					'genre'   => [
+						'validate_callback' => function ( $var ) {
+							$term = get_tag( $var );
+
+							return $term && ! is_wp_error( $term ) && ( 'idea' === get_term_meta( $term->term_id, 'tag_type', true ) );
+						},
+						'required'          => true,
+					],
+				],
+			],
+			[
+				'methods'             => 'DELETE',
+				'callback'            => [ $this, 'api_delete' ],
+				'permission_callback' => function() {
+					return current_user_can( 'read' );
+				},
+				'args'                => [
+					'post_id' => [
+						'validate_callback' => [ $this, 'is_idea' ],
+						'required'          => true,
 					],
 				],
 			],
@@ -273,15 +273,15 @@ class Idea extends RestTemplate {
 	public function api_list( $params ) {
 		$results = $this->ideas->get_list( get_current_user_id(), $params['offset'], $params['s'] );
 		foreach ( $results['ideas'] as &$result ) {
-			$result->stocking     = $result->stocker == get_current_user_id() && $result->location == 1;
-			$result->recommendor  = $result->recommended_by ? get_the_author_meta( 'display_name', $result->recommended_by ) : false;
-			$result->own          = $result->post_author == get_current_user_id();
-			$result->date         = mysql2date( get_option( 'date_format' ), $result->post_date );
-			$result->permalink    = get_permalink( $result );
-			$result->status       = get_post_status_object( $result->post_status )->label;
-			$result->author       = get_the_author_meta( 'display_name', $result->post_author );
-			$result->avatar       = preg_replace( '#^.*src=[\'"]([^\'"]+)[\'"].*$#', '$1', get_avatar( $result->post_author, 96 ) );
-			$result->category     = implode(', ', array_map(function($term){
+			$result->stocking    = $result->stocker == get_current_user_id() && $result->location == 1;
+			$result->recommendor = $result->recommended_by ? get_the_author_meta( 'display_name', $result->recommended_by ) : false;
+			$result->own         = $result->post_author == get_current_user_id();
+			$result->date        = mysql2date( get_option( 'date_format' ), $result->post_date );
+			$result->permalink   = get_permalink( $result );
+			$result->status      = get_post_status_object( $result->post_status )->label;
+			$result->author      = get_the_author_meta( 'display_name', $result->post_author );
+			$result->avatar      = preg_replace( '#^.*src=[\'"]([^\'"]+)[\'"].*$#', '$1', get_avatar( $result->post_author, 96 ) );
+			$result->category    = implode(', ', array_map(function( $term ) {
 				return $term->name;
 			}, get_the_tags( $result->ID ) ) );
 		}
@@ -392,7 +392,7 @@ class Idea extends RestTemplate {
 			if ( get_current_user_id() != $post->post_author ) {
 				$notified = $this->notifications->add_idea_stocked( $post->post_author, $post->ID,
 					sprintf( '%sさんがあなたのアイデア「%s」をストックしました。', $current_user->display_name, $post->post_title ),
-					get_current_user_id() );
+				get_current_user_id() );
 			}
 		}
 
@@ -446,7 +446,7 @@ class Idea extends RestTemplate {
 		$current_user = get_userdata( get_current_user_id() );
 		$this->notifications->add_notification( 'idea_recommended', $user->ID, $post->ID,
 			sprintf( '%sさんから「%s」というアイデアが勧められています。', $current_user->display_name, $post->post_title ),
-			get_current_user_id() );
+		get_current_user_id() );
 
 		return new \WP_REST_Response( [
 			'success' => true,
@@ -494,7 +494,7 @@ class Idea extends RestTemplate {
 			}
 			$response = [
 				'success' => true,
-				'html' => hameplate( 'templates/form', 'idea', [
+				'html'    => hameplate( 'templates/form', 'idea', [
 					'id'      => 0,
 					'title'   => '',
 					'content' => '',
@@ -526,10 +526,10 @@ class Idea extends RestTemplate {
 			if ( ! $this->is_idea( $post_id ) ) {
 				throw new \Exception( '該当するアイデアは存在しません。', 404 );
 			}
-			$idea = get_post( $post_id );
+			$idea     = get_post( $post_id );
 			$response = [
 				'success' => true,
-				'html' => hameplate( 'templates/form', 'idea', [
+				'html'    => hameplate( 'templates/form', 'idea', [
 					'id'      => $idea->ID,
 					'title'   => $idea->post_title,
 					'content' => $idea->post_content,

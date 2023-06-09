@@ -54,7 +54,7 @@ class HametuhaTrafficSource extends Gabstract {
 			'options' => [
 				'pieHole'         => 0.4,
 				'backgroundColor' => '#fff',
-				'legend' => [
+				'legend'          => [
 					'position' => 'top',
 				],
 			],

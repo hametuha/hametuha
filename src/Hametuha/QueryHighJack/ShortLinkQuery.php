@@ -12,18 +12,18 @@ use WPametu\API\QueryHighJack;
  * @package Hametuha\Hametuha\QueryHighJack
  * @property-read ShortLinks $links
  */
-class ShortLinkQuery extends QueryHighJack
-{
+class ShortLinkQuery extends QueryHighJack {
+
 
 	/**
 	 * Query vars
 	 *
 	 * @var array
 	 */
-	protected $query_var = ['short_link'];
+	protected $query_var = [ 'short_link' ];
 
 	protected $models = [
-		'links' => ShortLinks::class
+		'links' => ShortLinks::class,
 	];
 
 	/**
@@ -33,7 +33,7 @@ class ShortLinkQuery extends QueryHighJack
 	 */
 	protected $rewrites = [
 		'^l/([^/]+)/?$' => 'index.php?short_link=$matches[1]',
-    ];
+	];
 
 	/**
 	 * Make short URL
@@ -42,11 +42,11 @@ class ShortLinkQuery extends QueryHighJack
 	 */
 	public function pre_get_posts( \WP_Query &$wp_query ) {
 		if ( $this->is_valid_query( $wp_query ) ) {
-			$original = $this->links->get_original($wp_query->get('short_link'));
+			$original = $this->links->get_original( $wp_query->get( 'short_link' ) );
 			if ( $original ) {
 				wp_redirect( $original, 301 );
 				exit;
-			}else{
+			} else {
 				$wp_query->set_404();
 			}
 		}
@@ -61,7 +61,7 @@ class ShortLinkQuery extends QueryHighJack
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return (bool) $wp_query->get('short_link');
+		return (bool) $wp_query->get( 'short_link' );
 	}
 
 

@@ -5,7 +5,7 @@
  */
 add_filter( 'hameslack_invite_args', function( $args, $user ) {
 	unset( $args['last_name'] );
-	$args[ 'first_name' ] = $user->user_login;
+	$args['first_name'] = $user->user_login;
 	return $args;
 }, 10, 2 );
 
@@ -15,24 +15,24 @@ add_filter( 'hameslack_invite_args', function( $args, $user ) {
  */
 add_filter( 'hamail_search_results', function( $results, $string ) {
 	$events = get_posts( [
-		'post_type' => [ 'announcement', 'news' ],
-	    'post_status' => [ 'publish', 'private' ],
-	    's' => $string,
-	    'posts_per_page' => 10,
-	    'meta_query' => [
-	    	[
-	    		'key' => '_hametuha_commit_type',
-		        'value' => 1,
-		    ],
-	    ],
+		'post_type'      => [ 'announcement', 'news' ],
+		'post_status'    => [ 'publish', 'private' ],
+		's'              => $string,
+		'posts_per_page' => 10,
+		'meta_query'     => [
+			[
+				'key'   => '_hametuha_commit_type',
+				'value' => 1,
+			],
+		],
 	] );
 	if ( $events ) {
 		foreach ( $events as $event ) {
 			array_unshift( $results, (object) [
-				'id'   => $event->ID,
-			    'type' => 'participants',
-			    'label' => "{$event->post_title}の参加者",
-			    'data' => '',
+				'id'    => $event->ID,
+				'type'  => 'participants',
+				'label' => "{$event->post_title}の参加者",
+				'data'  => '',
 			] );
 		}
 	}
@@ -67,17 +67,17 @@ add_filter( 'hamail_extra_search', function( $results, $type, $id ) {
  * Replace contact form output.
  */
 add_filter( 'sp4cf7_output', function( $out, $post, $error ) {
-    /** @var WP_Post $post */
+	/** @var WP_Post $post */
 	if ( ! $error ) {
 		ob_start();
 		?>
 		<div class="wpcf7-post-content">
 			<h3>
-				「<?= esc_html( get_the_title( $post ) ) ?>」の作者
-				<?=  esc_html( get_the_author_meta( 'display_name', $post->post_author ) ) ?>へのお問い合わせ
+				「<?php echo esc_html( get_the_title( $post ) ); ?>」の作者
+				<?php echo  esc_html( get_the_author_meta( 'display_name', $post->post_author ) ); ?>へのお問い合わせ
 			</h3>
 			<p class="text-right">
-				<a href="<?= esc_url( home_url( 'doujin/detail/' . get_the_author_meta( 'nicename', $post->post_author ) ) ); ?>" class="btn btn-outlined-secondary btn-sm">
+				<a href="<?php echo esc_url( home_url( 'doujin/detail/' . get_the_author_meta( 'nicename', $post->post_author ) ) ); ?>" class="btn btn-outlined-secondary btn-sm">
 					作者プロフィール
 				</a>
 			</p>

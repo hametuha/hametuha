@@ -12,8 +12,8 @@ use WPametu\DB\Model;
  *
  * @property-read string $posts
  */
-class Lists extends Model
-{
+class Lists extends Model {
+
 
 	/**
 	 * リコメンドのメタキー
@@ -34,7 +34,7 @@ class Lists extends Model
 	 *
 	 * @var array
 	 */
-	protected $related = ['posts'];
+	protected $related = [ 'posts' ];
 
 	/**
 	 * キー名
@@ -54,11 +54,11 @@ class Lists extends Model
 	 * @var array
 	 */
 	protected $default_placeholder = [
-		'ID' => '%d',
-		'rel_type' => '%s',
+		'ID'         => '%d',
+		'rel_type'   => '%s',
 		'subject_id' => '%d',
-		'object_id' => '%d',
-		'created' => '%d',
+		'object_id'  => '%d',
+		'created'    => '%d',
 	];
 
 
@@ -70,15 +70,15 @@ class Lists extends Model
 	 *
 	 * @return bool
 	 */
-	public function user_can($list_id, $user_id){
-		$list = get_post($list_id);
-		if( $list->post_author == $user_id ){
+	public function user_can( $list_id, $user_id ) {
+		$list = get_post( $list_id );
+		if ( $list->post_author == $user_id ) {
 			return true;
-		}else{
-			$user = new \WP_User($user_id);
-			if( $user->has_cap('edit_others_posts') ){
+		} else {
+			$user = new \WP_User( $user_id );
+			if ( $user->has_cap( 'edit_others_posts' ) ) {
 				return true;
-			}else{
+			} else {
 				// TODO: 公開リストの扱いなど
 				return false;
 			}
@@ -94,25 +94,25 @@ class Lists extends Model
 	 *
 	 * @return array
 	 */
-	public function save($list_id, array $post_ids){
-		$total = count($post_ids);
+	public function save( $list_id, array $post_ids ) {
+		$total = count( $post_ids );
 		$added = 0;
 		// ないヤツを追加
-		foreach( $post_ids as $post_id ){
-			if( !$this->exists_in($list_id, $post_id) ){
+		foreach ( $post_ids as $post_id ) {
+			if ( ! $this->exists_in( $list_id, $post_id ) ) {
 				$this->insert([
-					'rel_type' => 'list',
+					'rel_type'   => 'list',
 					'subject_id' => $list_id,
-					'object_id' => $post_id,
-					'created' => current_time('timestamp'),
+					'object_id'  => $post_id,
+					'created'    => current_time( 'timestamp' ),
 				]);
 				$added++;
 			}
 		}
 		// 指定したものの中になければ削除
-		$deleted = (int)$this->delete_not_in($post_ids, $list_id);
+		$deleted = (int) $this->delete_not_in( $post_ids, $list_id );
 		// 配列を返す
-		return compact('total', 'added', 'deleted');
+		return compact( 'total', 'added', 'deleted' );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Lists extends Model
 	 * @return int
 	 * @throws \Exception
 	 */
-	public function bulk_register($post_id, array $list_ids) {
+	public function bulk_register( $post_id, array $list_ids ) {
 		// 新規追加
 		foreach ( $list_ids as $list_id ) {
 			if ( ! $this->exists_in( $list_id, $post_id ) ) {
@@ -132,7 +132,7 @@ class Lists extends Model
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
-					'created' => current_time('timestamp'),
+					'created'    => current_time( 'timestamp' ),
 				] );
 			}
 		}
@@ -142,7 +142,7 @@ class Lists extends Model
 			[ 'subject_id', 'NOT IN', $list_ids, '%d' ],
 			[ 'object_id', '=', $post_id, '%d' ],
 		] );
-		return count($list_ids);
+		return count( $list_ids );
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Lists extends Model
 	 * @return false|int
 	 * @throws \Exception
 	 */
-	public function deregister($list_id, $post_id){
+	public function deregister( $list_id, $post_id ) {
 		return $this->delete_where([
 			[ 'rel_type', '=', 'list', '%s' ],
 			[ 'subject_id', '=', $list_id, '%d' ],
@@ -171,11 +171,11 @@ class Lists extends Model
 	 *
 	 * @return bool
 	 */
-	public function exists_in($list_id, $post_id){
-		return (bool)$this->wheres([
-			'rel_type = %s' => 'list',
+	public function exists_in( $list_id, $post_id ) {
+		return (bool) $this->wheres([
+			'rel_type = %s'   => 'list',
 			'subject_id = %d' => $list_id,
-			'object_id = %d' => $post_id,
+			'object_id = %d'  => $post_id,
 		])->get_row();
 	}
 
@@ -188,16 +188,16 @@ class Lists extends Model
 	 * @return false|int
 	 * @throws \Exception
 	 */
-	protected function delete_not_in(array $post_ids, $list_id){
+	protected function delete_not_in( array $post_ids, $list_id ) {
 		$wheres = [
-			['rel_type', '=', 'list', '%s'],
-			['subject_id', '=', $list_id, '%d'],
+			[ 'rel_type', '=', 'list', '%s' ],
+			[ 'subject_id', '=', $list_id, '%d' ],
 		];
-		if( !empty($post_ids) ){
-			$wheres[] = ['object_id', 'NOT IN', $post_ids, '%d'];
+		if ( ! empty( $post_ids ) ) {
+			$wheres[] = [ 'object_id', 'NOT IN', $post_ids, '%d' ];
 
 		}
-		return $this->delete_where($wheres);
+		return $this->delete_where( $wheres );
 	}
 
 	/**
@@ -207,16 +207,16 @@ class Lists extends Model
 	 *
 	 * @return array|mixed|null
 	 */
-	public function num_children($post_ids){
-		if( is_numeric($post_ids) ){
-			$post_ids = [$post_ids];
-		}else{
-			$post_ids = (array)$post_ids;
+	public function num_children( $post_ids ) {
+		if ( is_numeric( $post_ids ) ) {
+			$post_ids = [ $post_ids ];
+		} else {
+			$post_ids = (array) $post_ids;
 		}
-		return $this->select("subject_id, COUNT(object_id) AS count")
-			->where("rel_type = %s", 'list')
-			->where_in("subject_id", $post_ids, '%d')
-			->group_by("subject_id")->result();
+		return $this->select( 'subject_id, COUNT(object_id) AS count' )
+			->where( 'rel_type = %s', 'list' )
+			->where_in( 'subject_id', $post_ids, '%d' )
+			->group_by( 'subject_id' )->result();
 	}
 
 	/**
@@ -226,10 +226,10 @@ class Lists extends Model
 	 *
 	 * @return int
 	 */
-	public function count($list_id){
-		return (int) $this->select("COUNT(object_id)")
-			->where("rel_type = %s", 'list')
-			->where("subject_id = %d", $list_id)
+	public function count( $list_id ) {
+		return (int) $this->select( 'COUNT(object_id)' )
+			->where( 'rel_type = %s', 'list' )
+			->where( 'subject_id = %d', $list_id )
 			->get_var();
 	}
 
@@ -238,8 +238,8 @@ class Lists extends Model
 	 *
 	 * @param int $post_id
 	 */
-	public function mark_as_recommended($post_id){
-		update_post_meta($post_id, self::META_KEY_RECOMMEND, 1);
+	public function mark_as_recommended( $post_id ) {
+		update_post_meta( $post_id, self::META_KEY_RECOMMEND, 1 );
 	}
 
 	/**
@@ -247,8 +247,8 @@ class Lists extends Model
 	 *
 	 * @param int $post_id
 	 */
-	public function not_recommended($post_id){
-		delete_post_meta($post_id, self::META_KEY_RECOMMEND);
+	public function not_recommended( $post_id ) {
+		delete_post_meta( $post_id, self::META_KEY_RECOMMEND );
 	}
 
 	/**
@@ -258,8 +258,8 @@ class Lists extends Model
 	 *
 	 * @return bool
 	 */
-	public function is_recommended($post_id){
-		return (bool) get_post_meta($post_id, self::META_KEY_RECOMMEND, true);
+	public function is_recommended( $post_id ) {
+		return (bool) get_post_meta( $post_id, self::META_KEY_RECOMMEND, true );
 	}
 
 	/**
@@ -270,10 +270,10 @@ class Lists extends Model
 	 * @return false|int
 	 * @throws \Exception
 	 */
-	public function clear_relation($post_id){
+	public function clear_relation( $post_id ) {
 		return $this->delete_where([
-			['rel_type', '=', 'list', '%s'],
-			['subject_id', '=', $post_id, '%d']
+			[ 'rel_type', '=', 'list', '%s' ],
+			[ 'subject_id', '=', $post_id, '%d' ],
 		]);
 	}
 

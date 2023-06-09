@@ -38,13 +38,13 @@ class CampaignLimit extends CronBase {
 			return;
 		}
 		// 来週に締め切りを迎えるキャンペーンを取得
-		$tz = new \DateTimeZone( wp_timezone_string() );
+		$tz         = new \DateTimeZone( wp_timezone_string() );
 		$start_line = new \DateTime( 'now', $tz );
 		$start_line->add( new \DateInterval( 'P1D' ) );
 		$start_date = $start_line->format( 'Y-m-d' );
-		$deadline = new \DateTime( 'now', $tz );
+		$deadline   = new \DateTime( 'now', $tz );
 		$deadline->add( new \DateInterval( 'P7D' ) );
-		$end_date = $deadline->format( 'Y-m-d' );
+		$end_date  = $deadline->format( 'Y-m-d' );
 		$campaigns = hametuha_get_nearing_deadline_campaigns( $start_date, $end_date, 3 );
 		if ( empty( $campaigns ) ) {
 			// 該当する応募がない。

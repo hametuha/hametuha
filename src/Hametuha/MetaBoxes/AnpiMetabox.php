@@ -8,23 +8,23 @@ use WPametu\UI\Field\Radio;
 use WPametu\UI\Field\TaxonomySelect;
 use WPametu\UI\Field\TokenInputPost;
 
-class AnpiMetabox extends EditMetaBox
-{
+class AnpiMetabox extends EditMetaBox {
 
-    protected $post_types = ['anpi'];
 
-    protected $name = 'hametuha_anpi_format_helper';
+	protected $post_types = [ 'anpi' ];
 
-    protected $label = '設定';
+	protected $name = 'hametuha_anpi_format_helper';
 
-    protected $context = 'side';
+	protected $label = '設定';
 
-    protected $fields = [
-        'anpi_cat' => [
-            'class' => TaxonomySelect::class,
-            'label' => 'カテゴリー',
-            'required' => true,
-            'description' => '安否情報のカテゴリーを選んでください',
-        ],
-    ];
-} 
+	protected $context = 'side';
+
+	protected $fields = [
+		'anpi_cat' => [
+			'class'       => TaxonomySelect::class,
+			'label'       => 'カテゴリー',
+			'required'    => true,
+			'description' => '安否情報のカテゴリーを選んでください',
+		],
+	];
+}

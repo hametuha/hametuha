@@ -101,10 +101,10 @@ class Author extends Model {
 		return (int) $this->select( 'SUM( CHAR_LENGTH(post_content) )' )
 						  ->from( $this->posts )
 						  ->where_in( 'post_type', get_post_types( [ 'public' => true ] ) )
-						  ->wheres( [
-							  'post_status = %s' => 'publish',
-							  'post_author = %d' => $user_id,
-						  ] )
+						->wheres( [
+							'post_status = %s' => 'publish',
+							'post_author = %d' => $user_id,
+						] )
 						  ->get_var();
 	}
 
@@ -119,10 +119,10 @@ class Author extends Model {
 		return (int) $this->select( 'SUM(u.location * 10)' )
 						  ->from( "{$this->user_content_relationships} as u" )
 						  ->join( "{$this->posts} AS p", 'u.object_id = p.ID' )
-						  ->wheres( [
-							  'u.rel_type = %s'    => 'rank',
-							  'p.post_author = %d' => $user_id,
-						  ] )->get_var();
+						->wheres( [
+							'u.rel_type = %s'    => 'rank',
+							'p.post_author = %d' => $user_id,
+						] )->get_var();
 	}
 
 	/**
@@ -195,9 +195,9 @@ SQL;
 						  ->from( "{$this->postmeta} AS pm" )
 						  ->join( "{$this->posts} AS p", 'p.ID = pm.post_id' )
 						  ->where( 'p.post_author = %d', $user_id )
-						  ->where_in( 'pm.meta_key', array_map( function ( $b ) {
+						->where_in( 'pm.meta_key', array_map( function ( $b ) {
 							  return '_sns_count_' . $b;
-						  }, [ 'facebook', 'twitter', 'hatena', 'googleplus', 'googleplus' ] ) )
+						}, [ 'facebook', 'twitter', 'hatena', 'googleplus', 'googleplus' ] ) )
 						  ->get_var();
 	}
 
@@ -208,14 +208,14 @@ SQL;
 	 */
 	public function get_journalists() {
 		$users = $this->select( ', u.*' )
-		            ->distinct( 'u.ID' )
-		            ->from( "{$this->db->users} AS u" )
-		            ->join( "{$this->posts} AS p", 'p.post_author = u.ID', 'INNER' )
-		            ->wheres( [
-			            'p.post_type = %s'   => 'news',
-			            'p.post_status = %s' => 'publish',
-		            ] )
-		            ->result();
+					->distinct( 'u.ID' )
+					->from( "{$this->db->users} AS u" )
+					->join( "{$this->posts} AS p", 'p.post_author = u.ID', 'INNER' )
+					->wheres( [
+						'p.post_type = %s'   => 'news',
+						'p.post_status = %s' => 'publish',
+					] )
+					->result();
 		return $users;
 	}
 

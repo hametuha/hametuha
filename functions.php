@@ -69,7 +69,7 @@ add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
 	return false !== array_search($host, [
 		'local.hametuha.top',
 		'hametuha.pics',
-	    'local.hametuha.pics',
+		'local.hametuha.pics',
 	]);
 }, 10, 3 );
 

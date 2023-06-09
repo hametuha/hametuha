@@ -162,8 +162,8 @@ class Picture extends Singleton {
 			'meta_query'     => [
 				[
 					'key'   => $this->post_meta_key,
-					'value' => 1
-				]
+					'value' => 1,
+				],
 			],
 		] ) );
 		if ( $query->have_posts() ) {

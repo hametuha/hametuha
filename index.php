@@ -1,6 +1,6 @@
-<?php get_header() ?>
-<?php get_header( 'sub' ) ?>
-<?php get_header( 'breadcrumb' ) ?>
+<?php get_header(); ?>
+<?php get_header( 'sub' ); ?>
+<?php get_header( 'breadcrumb' ); ?>
 
 	<div class="container archive">
 
@@ -30,7 +30,7 @@
 				?>
 
 				<?php if ( is_author() ) : ?>
-					<?php get_template_part( 'parts/author' ) ?>
+					<?php get_template_part( 'parts/author' ); ?>
 				<?php endif; ?>
 
 
@@ -50,16 +50,18 @@
 						</div>
 
 						<?php if ( hametuha_is_profile_page() ) : ?>
-							<?php get_template_part( 'parts/search', 'author' ) ?>
+							<?php get_template_part( 'parts/search', 'author' ); ?>
 						<?php endif; ?>
 
 
 					</div>
 				<?php } ?>
 
-				<?php if ( is_tax( 'campaign' ) ) {
+				<?php
+				if ( is_tax( 'campaign' ) ) {
 					get_template_part( 'parts/meta', 'campaign' );
-				} ?>
+				}
+				?>
 				<div>
 
 					<?php
@@ -120,10 +122,12 @@
 
 					<?php else : ?>
 
-						<?php get_template_part( 'parts/no', 'content' ) ?>
+						<?php get_template_part( 'parts/no', 'content' ); ?>
 
-					<?php endif;
-					wp_reset_postdata(); ?>
+						<?php
+					endif;
+					wp_reset_postdata();
+					?>
 
 					<?php
 					// Extras
@@ -149,7 +153,7 @@
 			</div>
 			<!-- //.main-container -->
 
-			<?php get_sidebar() ?>
+			<?php get_sidebar(); ?>
 
 		</div>
 		<!-- // .offcanvas -->

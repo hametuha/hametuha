@@ -195,8 +195,8 @@ function google_ads( $type = 'default' ) {
 		default:
 			?>
 			<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=hametuha-22&o=9&p=13&l=ur1&category=books&f=ifr"
-			        width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;"
-			        frameborder="0"></iframe>
+					width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;"
+					frameborder="0"></iframe>
 			<?php
 			break;
 	}
@@ -238,9 +238,9 @@ EOS;
 
 		$content = implode( "\n", $wpdb->get_col( $wpdb->prepare( $sql, $post->ID ) ) );
 	} else {
-	    $content = $post->post_content;
+		$content = $post->post_content;
 	}
-    return mb_strlen( preg_replace( '/[\s　]/u', '', str_replace( "\n\n", "\n", strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $content ) ) ) ) ), 'utf-8' );
+	return mb_strlen( preg_replace( '/[\s　]/u', '', str_replace( "\n\n", "\n", strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $content ) ) ) ) ), 'utf-8' );
 }
 
 /**
@@ -303,7 +303,7 @@ function has_recent_post( $user_id, $post_type = 'post', $days = 30 ) {
 		LIMIT 1
 EOS;
 
-	return (boolean) $wpdb->get_var( $wpdb->prepare( $sql, $post_type, $user_id, $days ) );
+	return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $post_type, $user_id, $days ) );
 }
 
 /**
@@ -381,7 +381,7 @@ function get_post_children_count( $post_type = 'post', $status = 'publish', $pos
  * @return boolean
  */
 function needs_left_sidebar() {
-	return (boolean) (
+	return (bool) (
 		( is_archive() &&
 		  ! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
 		)

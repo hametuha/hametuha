@@ -12,35 +12,35 @@ use WPametu\API\Rest\RestTemplate;
  * @package Hametuha\Rest
  * @property-read Jobs $jobs
  */
-class ImageGen extends RestTemplate
-{
+class ImageGen extends RestTemplate {
+
 
 	public static $prefix = 'image-gen';
 
-    protected $title = '';
+	protected $title = '';
 
-    /**
-     * モデル
-     *
-     * @var array
-     */
-    protected $models = [
-        'jobs' => Jobs::class,
-    ];
+	/**
+	 * モデル
+	 *
+	 * @var array
+	 */
+	protected $models = [
+		'jobs' => Jobs::class,
+	];
 
-    /**
-     * フォーム表示
-     *
-     * @param int $page
-     */
-    public function pager($page = 1){
+	/**
+	 * フォーム表示
+	 *
+	 * @param int $page
+	 */
+	public function pager( $page = 1 ) {
 		$this->method_not_found();
-    }
+	}
 
 	/**
 	 * Get quote
 	 */
-    public function get_quote( $job_id ) {
+	public function get_quote( $job_id ) {
 		$job = $this->jobs->get( $job_id );
 		if ( ! $job || 'text_to_image' != $job->job_key ) {
 			throw new \Exception( '該当するクォートは存在しません。', 500 );
@@ -71,14 +71,14 @@ class ImageGen extends RestTemplate
 	 * @return array|\WP_Error
 	 */
 	protected function tokenize( $string ) {
-		$endpoint = 'https://punctuate.space/json?q='.rawurlencode( $string );
+		$endpoint = 'https://punctuate.space/json?q=' . rawurlencode( $string );
 		$response = wp_remote_get( $endpoint );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
 		$tokens = [];
-		$i = 0;
-		$store = '';
+		$i      = 0;
+		$store  = '';
 		foreach ( json_decode( $response['body'] ) as $token ) {
 			// If store exists, prepend it.
 			if ( $store ) {

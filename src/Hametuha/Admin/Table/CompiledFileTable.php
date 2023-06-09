@@ -98,15 +98,15 @@ class CompiledFileTable extends \WP_List_Table {
 			case 'post':
 				printf( '<a href="%s">%s</a>', admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $item->post_id ), get_the_title( $item ) );
 				$actions = [
-					'edit'     => sprintf( '<a href="%s">作品集の編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
-					'check'    => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
+					'edit'  => sprintf( '<a href="%s">作品集の編集</a>', admin_url( "post.php?post={$item->post_id}&action=edit" ) ),
+					'check' => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
 				];
 				if ( current_user_can( 'publish_epub', $item->post_id ) ) {
 					$actions = array_merge( $actions, [
-						'download' => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
+						'download'  => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
 							'_wpnonce' => wp_create_nonce( 'wp_rest' ),
 						], rest_url( 'hametuha/v1/epub/file/' . $item->file_id ) ) ),
-						'delete' => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
+						'delete'    => sprintf( '<a class="compiled-file-delete-btn" href="#" data-file-id="%d"">削除</a>', $item->file_id ),
 						'published' => sprintf(
 							'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
 							$item->file_id,
@@ -140,7 +140,7 @@ class CompiledFileTable extends \WP_List_Table {
 				);
 				break;
 			case 'updated':
-				$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+				$format  = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 				$updated = $this->files->meta->get_meta( $item->file_id, 'published' );
 				printf(
 					'%s<br /><small>販売日: <span class="compile-file-published">%s</span></small>',

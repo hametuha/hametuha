@@ -1,8 +1,8 @@
 <li class="news-list__item">
-	<a href="<?php the_permalink() ?>" class="news-list__link clearfix">
+	<a href="<?php the_permalink(); ?>" class="news-list__link clearfix">
 		<?php if ( has_post_thumbnail() ) : ?>
 			<div class="news-list__image">
-				<?php the_post_thumbnail( 'thumbnail', [ 'class' => 'news-list__thumbnail' ] ) ?>
+				<?php the_post_thumbnail( 'thumbnail', [ 'class' => 'news-list__thumbnail' ] ); ?>
 			</div>
 		<?php endif ?>
 
@@ -19,15 +19,18 @@
 			<p class="news-list__meta">
 
 				<span class="news-list__time">
-					<i class="icon-clock"></i> <?= hametuha_passed_time( $post->post_date ) ?>
+					<i class="icon-clock"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
 				</span>
 
 				<?php if ( ( $terms = get_the_terms( get_post(), 'genre' ) ) && ! is_wp_error( $terms ) ) : ?>
 
 					<span class="news-list__genre">
-						<i class="icon-tag5"></i> <?= implode( ', ', array_map( function ( $term ) {
+						<i class="icon-tag5"></i> 
+						<?php
+						echo implode( ', ', array_map( function ( $term ) {
 							return esc_html( $term->name );
-						}, $terms ) ); ?>
+						}, $terms ) );
+						?>
 					</span>
 
 				<?php endif; ?>

@@ -2,7 +2,7 @@
 // 人気作品
 $authors_ranking = hametuha_get_author_popular_works( null, 6 );
 // 前後の作品
-$authors_recent  = hametuha_get_author_work_siblings();
+$authors_recent = hametuha_get_author_work_siblings();
 
 ?>
 <?php if ( $authors_recent ) : ?>
@@ -12,9 +12,15 @@ $authors_recent  = hametuha_get_author_work_siblings();
 		</h3>
 
 		<ul class="post-list post-list-card">
-			<?php foreach ( $authors_recent as $post ) : setup_postdata( $post ); ?>
-				<?php get_template_part( 'parts/loop', 'front' ) ?>
-			<?php endforeach; wp_reset_postdata(); ?>
+			<?php
+			foreach ( $authors_recent as $post ) :
+				setup_postdata( $post );
+				?>
+				<?php get_template_part( 'parts/loop', 'front' ); ?>
+				<?php
+			endforeach;
+			wp_reset_postdata();
+			?>
 		</ul>
 </div>
 <?php endif; ?>
@@ -26,9 +32,15 @@ $authors_recent  = hametuha_get_author_work_siblings();
 	</h3>
 
 	<ul class="post-list post-list-card">
-		<?php foreach ( $authors_ranking as $post ) : setup_postdata( $post ); ?>
-			<?php get_template_part( 'parts/loop', 'front' ) ?>
-		<?php endforeach; wp_reset_postdata(); ?>
+		<?php
+		foreach ( $authors_ranking as $post ) :
+			setup_postdata( $post );
+			?>
+			<?php get_template_part( 'parts/loop', 'front' ); ?>
+			<?php
+		endforeach;
+		wp_reset_postdata();
+		?>
 	</ul>
 
 </div>
@@ -38,7 +50,7 @@ $authors_recent  = hametuha_get_author_work_siblings();
 
 	<div class="row">
 		<div class="col-xs-8 col-xs-offset-2">
-			<a href="<?php echo home_url( '/doujin/detail/'.get_the_author_meta( 'nicename' ).'/' ) ?>" class="btn btn-default btn-lg btn-block">
+			<a href="<?php echo home_url( '/doujin/detail/' . get_the_author_meta( 'nicename' ) . '/' ); ?>" class="btn btn-default btn-lg btn-block">
 				<?php esc_html_e( '著者詳細プロフィール', 'hametuha' ); ?>
 			</a>
 		</div>

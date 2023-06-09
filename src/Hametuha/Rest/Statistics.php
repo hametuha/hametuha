@@ -31,7 +31,7 @@ class Statistics extends RestTemplate {
 				'current'    => false,
 				'graph'      => '',
 				'endpoint'   => [
-					'access' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaUserPvs::ACTION, \HametuhaUserPvs::get_nonce() ) ),
+					'access'  => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaUserPvs::ACTION, \HametuhaUserPvs::get_nonce() ) ),
 					'popular' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaPopularPosts::ACTION, \HametuhaPopularPosts::get_nonce() ) ),
 				],
 			] );
@@ -48,7 +48,7 @@ class Statistics extends RestTemplate {
 			'current'    => 'readers',
 			'graph'      => 'readers',
 			'endpoint'   => [
-				'users' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderSegment::ACTION, \HametuhaReaderSegment::get_nonce() ) ),
+				'users'  => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderSegment::ACTION, \HametuhaReaderSegment::get_nonce() ) ),
 				'region' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaReaderRegion::ACTION, \HametuhaReaderRegion::get_nonce() ) ),
 			],
 		] );
@@ -64,7 +64,7 @@ class Statistics extends RestTemplate {
 			'endpoint'   => [
 				'source'      => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficSource::ACTION, \HametuhaTrafficSource::get_nonce() ) ),
 				'contributor' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficContributor::ACTION, \HametuhaTrafficContributor::get_nonce() ) ),
-				'keyword' => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficKeyword::ACTION, \HametuhaTrafficKeyword::get_nonce() ) ),
+				'keyword'     => admin_url( sprintf( 'admin-ajax.php?action=%s&_wpnonce=%s', \HametuhaTrafficKeyword::ACTION, \HametuhaTrafficKeyword::get_nonce() ) ),
 			],
 		] );
 		$this->response();
