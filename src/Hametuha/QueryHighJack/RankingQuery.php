@@ -241,6 +241,52 @@ SQL;
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return false !== array_search( $wp_query->get( 'ranking' ), [ 'yearly', 'monthly', 'daily', 'weekly', 'top', 'last_week' ] );
+		return in_array( $wp_query->get( 'ranking' ), [ 'yearly', 'monthly', 'daily', 'weekly', 'top', 'last_week' ], true );
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function wp_title( $title, $sep, $sep_location ) {
+		$titles = [];
+		switch ( get_query_var( 'ranking' ) ) {
+			case 'top':
+				$titles[] = '厳粛なランキング';
+				break;
+			case 'daily':
+			case 'monthly':
+			case 'yearly':
+			case 'weekly':
+				$titles[] = $this->get_ranking_title();
+				break;
+		}
+		$titles[] = get_bloginfo( 'name' );
+//		var_dump( $titles );
+//		exit;
+		return implode( ' ' . $sep . ' ', $titles );
+	}
+
+	/**
+	 * ランキングページのタイトル
+	 *
+	 * @return string
+	 */
+	protected function get_ranking_title() {
+		$year  = get_query_var( 'year' );
+		$month = get_query_var( 'monthnum' );
+		$day   = get_query_var( 'day' );
+		$title = $year . '年';
+		if ( $month ) {
+			$title .= sprintf( '%d月', $month );
+		}
+		if ( $day ) {
+			$title .= sprintf( '%d日', $day );
+		}
+		if ( 'weekly' === get_query_var( 'ranking' ) ) {
+			$title .= '付の週間ランキング';
+		} else {
+			$title .= 'のランキング';
+		}
+		return $title;
 	}
 }

@@ -45,11 +45,11 @@ class Series extends Model {
 		$users = [];
 		foreach (
 			$this->select( "{$this->db->users}.*" )
-				 ->from( $this->db->users )
-				 ->join( $this->db->posts, "{$this->db->posts}.post_author = {$this->db->users}.ID" )
-				 ->where( "{$this->db->posts}.post_parent = %d", $post_id )
-				 ->where( "{$this->db->posts}.post_type = %s", 'post' )
-				 ->group_by( "{$this->db->users}.ID" )->result() as $user
+				->from( $this->db->users )
+				->join( $this->db->posts, "{$this->db->posts}.post_author = {$this->db->users}.ID" )
+				->where( "{$this->db->posts}.post_parent = %d", $post_id )
+				->where( "{$this->db->posts}.post_type = %s", 'post' )
+				->group_by( "{$this->db->users}.ID" )->result() as $user
 		) {
 			$users[] = new \WP_User( $user );
 		}
@@ -66,11 +66,11 @@ class Series extends Model {
 	 */
 	public function get_owning_series( $author_id ) {
 		return (int) $this->select( "COUNT({$this->db->posts}.ID)" )
-						  ->from( $this->db->posts )
-						  ->join( $this->db->postmeta, "{$this->db->postmeta}.meta_key = '_kdp_status' AND {$this->db->postmeta}.post_id = {$this->db->posts}.ID" )
-						  ->where( "{$this->db->postmeta}.meta_value = %s", 2 )
-						  ->where( "{$this->db->posts}.post_author = %d", $author_id )
-						  ->get_var();
+						->from( $this->db->posts )
+						->join( $this->db->postmeta, "{$this->db->postmeta}.meta_key = '_kdp_status' AND {$this->db->postmeta}.post_id = {$this->db->posts}.ID" )
+						->where( "{$this->db->postmeta}.meta_value = %s", 2 )
+						->where( "{$this->db->posts}.post_author = %d", $author_id )
+						->get_var();
 	}
 
 	/**
@@ -82,10 +82,10 @@ class Series extends Model {
 	 */
 	public function social_score( $post_id ) {
 		return (int) $this->select( 'SUM( CAST(pm.meta_value AS SIGNED))' )
-						  ->from( "{$this->db->postmeta} as pm" )
-						  ->join( "{$this->db->posts} AS p", 'p.iD = pm.post_id' )
-						  ->where( 'p.post_parent = %d', $post_id )
-						  ->where_like( 'meta_key', '_feedback_' )->get_var();
+						->from( "{$this->db->postmeta} as pm" )
+						->join( "{$this->db->posts} AS p", 'p.iD = pm.post_id' )
+						->where( 'p.post_parent = %d', $post_id )
+						->where_like( 'meta_key', '_feedback_' )->get_var();
 	}
 
 	/**
