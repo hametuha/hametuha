@@ -87,53 +87,53 @@ if ( file_exists( $oauth_mo ) ) {
 $script_flg = array();
 
 // Assets
-get_template_part( 'functions/assets' );
-get_template_part( 'functions/assets', 'ssl' );
-get_template_part( 'functions/assets', 'analytics' );
-get_template_part( 'functions/assets', 'eyecatch' );
-get_template_part( 'functions/assets', 'tinymce' );
+include __DIR__ . '/functions/assets.php';
+include __DIR__ . '/functions/assets-ssl.php';
+include __DIR__ . '/functions/assets-analytics.php';
+include __DIR__ . '/functions/assets-eyecatch.php';
+include __DIR__ . '/functions/assets-tinymce.php';
 // キャンペーン
-get_template_part( 'functions/campaign' );
-get_template_part( 'functions/calculate' );
+include __DIR__ . '/functions/campaign.php';
+include __DIR__ . '/functions/calculate.php';
 // 表示
 include __DIR__ . '/functions/display.php';
 include __DIR__ . '/functions/external.php';
 // amazon
-get_template_part( 'functions/hamazon' );
+include __DIR__ . '/functions/hamazon.php';
 // 暗号化
-get_template_part( 'functions/crypt' );
+include __DIR__ . '/functions/crypt.php';
 // メニュー
-get_template_part( 'functions/menu' );
+include __DIR__ . '/functions/menu.php';
 // メタ情報
-get_template_part( 'functions/meta' );
+include __DIR__ . '/functions/meta.php';
 // 上書き処理
-get_template_part( 'functions/override' );
-get_template_part( 'functions/override', 'dashboard' );
-get_template_part( 'functions/override', 'error' );
-get_template_part( 'functions/override', 'feed' );
-get_template_part( 'functions/override', 'lwp' );
+include __DIR__ . '/functions/override.php';
+include __DIR__ . '/functions/override-dashboard.php';
+include __DIR__ . '/functions/override-error.php';
+include __DIR__ . '/functions/override-feed.php';
+include __DIR__ . '/functions/override-lwp.php';
 // 投稿リスト
-get_template_part( 'functions/post_list' );
-get_template_part( 'functions/post_list', 'admin' );
+include __DIR__ . '/functions/post_list.php';
+include __DIR__ . '/functions/post_list-admin.php';
 // 投稿タイプ
-get_template_part( 'functions/post_type' );
-get_template_part( 'functions/post_type', 'news' );
-get_template_part( 'functions/post_type', 'series' );
+include __DIR__ . '/functions/post_type.php';
+include __DIR__ . '/functions/post_type-news.php';
+include __DIR__ . '/functions/post_type-series.php';
 // ランキング
-get_template_part( 'functions/ranking' );
+include __DIR__ . '/functions/ranking.php';
 // Social
-get_template_part( 'functions/social' );
+include __DIR__ . '/functions/social.php';
 // User
-get_template_part( 'functions/user' );
+include __DIR__ . '/functions/user.php';
 include  __DIR__ . '/functions/user-anonymous.php';
-get_template_part( 'functions/user', 'affiliate' );
-get_template_part( 'functions/user', 'picture' );
-get_template_part( 'functions/user', 'secret' );
-get_template_part( 'functions/terms' );
+include __DIR__ . '/functions/user-affiliate.php';
+include __DIR__ . '/functions/user-picture.php';
+include __DIR__ . '/functions/user-secret.php';
+include __DIR__ . '/functions/terms.php';
 // ユーティリティ
-get_template_part( 'functions/utility' );
+include __DIR__ . '/functions/utility.php';
 // ウィジェット
-get_template_part( 'functions/widget' );
+include __DIR__ . '/functions/widget.php';
 
 // ディレクトリを全部読み込み
 foreach ( [ 'hooks' ] as $folder ) {

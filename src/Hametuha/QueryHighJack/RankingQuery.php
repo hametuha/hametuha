@@ -45,18 +45,18 @@ class RankingQuery extends QueryHighJack {
 	public static $cur_score = [];
 
 	/**
-	 * ランキングトップだけ別テンプレート
-	 *
-	 * @param \WP_Query $wp_query
+	 * {@inheritDoc}
 	 */
-	public function pre_get_posts( \WP_Query &$wp_query ) {
-		if ( $wp_query->is_main_query() && is_ranking( 'top' ) ) {
-			// クエリをハイジャックする
-			do_action( 'template_redirect' );
-			get_template_part( 'front', 'ranking' );
-			exit;
-		}
+	public function __construct() {
+		parent::__construct();
+		add_filter( 'template_include', function ( $template ) {
+			if ( is_ranking() ) {
+				$template = get_template_directory() . '/ranking.php';
+			}
+			return $template;
+		} );
 	}
+
 
 	/**
 	 * ランキング取得用にpost_requestを書き換え
@@ -261,8 +261,6 @@ SQL;
 				break;
 		}
 		$titles[] = get_bloginfo( 'name' );
-//		var_dump( $titles );
-//		exit;
 		return implode( ' ' . $sep . ' ', $titles );
 	}
 
