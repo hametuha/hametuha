@@ -7,9 +7,9 @@
 /**
  * 投稿が公開されたときにつぶやく
  *
- * @param string $new_status
- * @param string $old_status
- * @param object $post
+ * @param string  $new_status
+ * @param string  $old_status
+ * @param WP_Post $post
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, $post ) {
 	if ( WP_DEBUG ) {
@@ -18,6 +18,10 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 	}
 	if ( ( 'publish' !== $new_status ) || ! function_exists( 'gianism_update_twitter_status' ) ) {
 		// Do nothing. if available.
+		return;
+	}
+	if ( 'news' === $post->post_type) {
+		// ニュースでは何もしない
 		return;
 	}
 	if ( hametuha_user_has_flag( $post->post_author, 'spam') ) {
@@ -150,7 +154,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 
 // Facebookページのパーミッションを取得
 add_filter( 'gianism_facebook_permissions', function( $permissions, $action ) {
-	if ( false !== array_search( $action, [ 'publish', 'admin' ] ) ) {
+	if ( in_array( $action, [ 'publish', 'admin' ], true ) ) {
 		$permissions[] = 'publish_pages';
 	}
 	return $permissions;

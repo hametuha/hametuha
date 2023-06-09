@@ -1,7 +1,5 @@
 <?php
 
-use Hametuha\Model\Series;
-
 /**
  * 破滅派で紹介された書籍を取得する
  * @global int $paged
@@ -27,10 +25,6 @@ EOS;
 	return $wpdb->get_results( $sql );
 }
 
-function search_hamazon() {
-
-}
-
 /**
  * 投稿本文からamazonのリストだけ出力する
  * @global WP_Hamazon_List $hamazon_list
@@ -46,10 +40,3 @@ function echo_hamazon( $post_content ) {
 		}
 	}
 }
-
-/**
- * @return int
- */
-add_shortcode( 'kdp_count', function ( $atts, $content = '' ) {
-	return Series::get_instance()->get_published_count();
-} );
