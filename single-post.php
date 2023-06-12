@@ -173,16 +173,6 @@ HTML;
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
 				</div>
 
-					<?php
-					// 関連タグを取得
-					$terms = hametuha_terms_to_hashtag( [ 'nouns', 'post_tag', 'campaign', 'category' ], get_post(), true );
-					if ( $terms ) :
-						?>
-				<p class="post-tags">
-						<?php echo implode( ' ', $terms ); ?>
-				</p>
-					<?php endif; ?>
-
 				<p class="finish-nav">
 					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>
 						これは<?php the_terms( get_the_ID(), 'campaign' ); ?>の応募作品です。<br />
@@ -192,6 +182,21 @@ HTML;
 					<?php endif; ?>
 					<i class="icon-point-down"></i>
 				</p>
+
+				<?php
+				// 関連タグを取得
+				$terms = hametuha_terms_to_hashtag( [ 'nouns', 'post_tag', 'campaign', 'category' ], get_post(), true );
+				if ( $terms ) :
+					?>
+					<div>
+						<h3 class="text-center">この作品のタグ</h3>
+						<p class="post-tags">
+							<?php echo implode( ' ', $terms ); ?>
+						</p>
+					</div>
+				<?php endif; ?>
+
+				<?php get_header( 'breadcrumb' ); ?>
 
 			</div><!-- //.work-wrapper -->
 
@@ -213,72 +218,15 @@ HTML;
 
 			</section>
 
-			<div class="container recommend-wrapper">
-				<div class="row row--recommend row--catNav">
+			<?php get_sidebar( 'related' ); ?>
 
-					<div class="col-xs-12 col-sm-4">
-						<h3 class="list-title">オススメ</h3>
-						<ul class="post-list">
-							<?php
-								$lists = get_posts( [
-									'post_type'      => 'lists',
-									'meta_query'     => [
-										[
-											'key'   => '_recommended_list',
-											'value' => '1',
-										],
-									],
-									'post_status'    => 'publish',
-									'posts_per_page' => 1,
-									'orderby'        => [ 'date' => 'DESC' ],
-								] );
-							foreach ( $lists as $list ) :
-								$sub_query = new WP_Query( [
-									'post_type'      => 'in_list',
-									'post_status'    => 'publish',
-									'post_parent'    => $list->ID,
-									'posts_per_page' => '3',
-								] );
-								while ( $sub_query->have_posts() ) {
-									$sub_query->the_post();
-									get_template_part( 'parts/loop', 'front' );
-								}
-								wp_reset_postdata();
-								?>
-							<?php endforeach; ?>
-						</ul>
-
-					</div>
-
-					<div class="col-xs-12 col-sm-4">
-						<h3 class="list-title">新着</h3>
-						<ul class="post-list">
-							<?php
-							foreach ( hametuha_recent_posts( 3 ) as $post ) {
-								setup_postdata( $post );
-								get_template_part( 'parts/loop', 'front' );
-							}
-							wp_reset_postdata();
-							?>
-						</ul>
-					</div>
-
-					<div class="col-xs-12 col-sm-4">
-						<h3 class="list-title">タグ</h3>
-						<p class="tag-cloud">
-							<?php wp_tag_cloud(); ?>
-						</p>
-					</div>
-				</div>
-
+			<div class="container">
 				<h2 class="series__title--share text-center">
 					<small class="series__title--caption">Books</small>
 					<?php esc_html_e( '破滅派の書籍', 'hametuha' ); ?>
 				</h2>
 
 				<?php get_sidebar( 'books' ); ?>
-
-
 			</div>
 			<!-- // .work-wrapper -->
 

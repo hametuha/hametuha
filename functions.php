@@ -102,8 +102,6 @@ include __DIR__ . '/functions/external.php';
 include __DIR__ . '/functions/hamazon.php';
 // 暗号化
 include __DIR__ . '/functions/crypt.php';
-// メニュー
-include __DIR__ . '/functions/menu.php';
 // メタ情報
 include __DIR__ . '/functions/meta.php';
 // 上書き処理
@@ -132,8 +130,6 @@ include __DIR__ . '/functions/user-secret.php';
 include __DIR__ . '/functions/terms.php';
 // ユーティリティ
 include __DIR__ . '/functions/utility.php';
-// ウィジェット
-include __DIR__ . '/functions/widget.php';
 
 // ディレクトリを全部読み込み
 foreach ( [ 'hooks' ] as $folder ) {

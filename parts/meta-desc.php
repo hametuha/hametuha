@@ -11,28 +11,6 @@
 
 	<?php echo wpautop( '「' . get_search_query() . '」で破滅派内を検索しました。' ); ?>
 
-<?php elseif ( is_ranking() ) : ?>
-
-	<?php if ( is_ranking( 'best' ) ) : ?>
-		<p>
-			<span class="text-info">
-				<i class="icon-info"></i> このランキングは2008年から現在までのものを毎日集計しています。
-			</span>
-		</p>
-	<?php elseif ( ! is_fixed_ranking() ) : ?>
-		<p>
-			<span class="text-warning">
-				<i class="icon-info"></i> このランキングは現在集計中です。順位は変動する可能性があります。
-			</span>
-		</p>
-	<?php endif; ?>
-
-	<p class="description">
-		ページビューを元に計算しています。ページビューを出すと悲しいかな？　と思いまして、
-		出さないようにしています。
-		<strong>※ 今後、集計方法の変更などを予定しています。</strong>
-	</p>
-
 <?php elseif ( is_date() ) : ?>
 
 	<p>投稿作品を日付別に表示しています。</p>

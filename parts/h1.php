@@ -3,12 +3,6 @@ if ( hametuha_is_profile_page() ) {
 
 	echo '著者一覧';
 
-} elseif ( is_ranking() ) {
-
-	echo ranking_title();
-	if ( is_fixed_ranking() ) {
-		echo '<span class="label label-success">確定済み</span>';
-	}
 } elseif ( is_home() ) {
 
 	wp_title( '' );

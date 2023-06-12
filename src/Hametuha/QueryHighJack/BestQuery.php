@@ -10,10 +10,10 @@ class BestQuery extends QueryHighJack {
 	protected $query_var = [ 'ranking' ];
 
 	protected $rewrites = [
-		'best/page/([0-9]+)/?$'         => 'index.php?ranking=best&paged=$matches[1]',
-		'best/?$'                       => 'index.php?ranking=best',
-		'best/([^/]+)/page/([0-9]+)/?$' => 'index.php?ranking=best&category_name=$matches[1]&paged=$matches[2]',
-		'best/([^/]+)/?$'               => 'index.php?ranking=best&category_name=$matches[1]',
+		'ranking/best/page/([0-9]+)/?$'         => 'index.php?ranking=best&paged=$matches[1]',
+		'ranking/best/?$'                       => 'index.php?ranking=best',
+		'ranking/best/([^/]+)/page/([0-9]+)/?$' => 'index.php?ranking=best&category_name=$matches[1]&paged=$matches[2]',
+		'ranking/best/([^/]+)/?$'               => 'index.php?ranking=best&category_name=$matches[1]',
 	];
 
 	/**
@@ -89,5 +89,18 @@ SQL;
 		return 'best' == $wp_query->get( 'ranking' );
 	}
 
-
+	/**
+	 * @param $title
+	 * @param $sep
+	 * @param $sep_location
+	 * @return string
+	 */
+	public function wp_title( $title, $sep, $sep_location ) {
+		$titles = [ '歴代ベスト' ];
+		if ( is_category() ) {
+			$titles []= sprintf( '%s部門', get_queried_object()->name );
+		}
+		$titles []= get_bloginfo( 'name' );
+		return implode( ' ' . $sep . ' ', $titles );
+	}
 }

@@ -22,8 +22,6 @@
 					get_template_part( 'parts/jumbotron', 'thread' );
 				} elseif ( is_post_type_archive( 'lists' ) ) {
 					get_template_part( 'parts/jumbotron', 'lists' );
-				} elseif ( is_ranking() ) {
-					get_template_part( 'parts/jumbotron', 'ranking' );
 				} elseif ( is_post_type_archive( 'ideas' ) ) {
 					get_template_part( 'parts/jumbotron', 'ideas' );
 				}
@@ -94,11 +92,7 @@
 										$query->the_post();
 										$counter ++;
 										$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
-										if ( is_ranking() ) {
-											get_template_part( 'parts/loop', 'ranking' );
-										} else {
-											get_template_part( 'parts/loop', get_post_type() );
-										}
+										get_template_part( 'parts/loop', get_post_type() );
 									}
 									?>
 								</ol>
@@ -131,9 +125,7 @@
 
 					<?php
 					// Extras
-					if ( is_ranking() ) {
-						get_template_part( 'parts/ranking', 'calendar' );
-					} elseif ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
+					if ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
 						get_template_part( 'parts/nav', 'lists' );
 					} elseif ( is_tax( 'faq_cat' ) ) {
 						get_template_part( 'parts/nav', 'faq' );

@@ -239,10 +239,10 @@ function is_fixed_ranking() {
 function ranking_title() {
 	switch ( get_query_var( 'ranking' ) ) {
 		case 'yearly':
-			return sprintf( '%d年間ランキング', get_query_var( 'year' ) );
+			return sprintf( '%d年のランキング', get_query_var( 'year' ) );
 			break;
 		case 'monthly':
-			return sprintf( '%d年%d月間ランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ) );
+			return sprintf( '%d年%d月のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ) );
 			break;
 		case 'daily':
 			return sprintf( '%d年%d月%d日のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );

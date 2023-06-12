@@ -1,10 +1,10 @@
 <?php if ( is_ranking( 'best' ) ) : ?>
 
 	<ul class="nav nav-pills">
-		<li class="<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>"><a href="<?php echo home_url( '/best/' ); ?>">全体ランキング</a></li>
+		<li class="<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>"><a href="<?php echo home_url( '/ranking/best/' ); ?>">全体ランキング</a></li>
 		<?php
 		foreach ( get_categories() as $cat ) {
-			printf( '<li class="%s"><a href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? 'active' : '', home_url( '/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
+			printf( '<li class="%s"><a href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? 'active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
 		}
 		?>
 	</ul>
@@ -148,42 +148,3 @@
 	</ul>
 
 <?php endif; ?>
-
-<?php if ( ! is_ranking( 'top' ) ) : ?>
-<p>
-	<a class="btn btn-lg btn-primary btn-block" href="<?php echo home_url( '/ranking' ); ?>">ランキングトップへ</a>
-</p>
-<?php endif; ?>
-
-<hr />
-
-<div id="ranking-detail" class="panel panel-default">
-	<div class="panel-heading">
-		<h2 class="panel-title">ランキングの仕組み</h2>
-	</div>
-	<div class="panel-body">
-
-		<h3><i class="icon-certificate"></i> 基本原則</h3>
-		<ul>
-			<li>ランキングは任意の期間でページビュー（以下PV）が多い順に決定されます。</li>
-			<li>PVとは、そのページが表示された回数です。これにより「その作品を読もうとした人」の数を擬似的に表現しています。</li>
-			<li>この基本原則は変わることがあります。</li>
-		</ul>
-
-		<h3><i class="icon-database"></i> データ収集の仕組み</h3>
-		<ul>
-			<li>Google Analyticsという計測ツールを利用し、誰かが作品ページを開いたときにPVを取得してします。</li>
-			<li>現在はPVであるため、同じ人が何回も同じページを開いたときもカウントされます。<small>（※今後は改善する予定です）</small></li>
-			<li>毎日深夜に前日のPVを記録し、集計用データとして保存します。</li>
-			<li>集計中のランキングには「現在集計中」と表示されます。確定したランキングには「確定」と表示されます。</li>
-		</ul>
-
-		<h3><i class="icon-gift2"></i> おまけ</h3>
-		<ul>
-			<li>
-				<del>2014年9月現在、毎週一回金曜日にランキングを作成し、1位になった作品にAmazonギフト券500円をプレゼントしています。<small>（※これは暫定的なキャンペーンです）</small></del>
-				<ins>このキャンペーンは2016年3月末日をもって終了します。新しいおまけをご期待ください。</ins>
-			</li>
-		</ul>
-	</div>
-</div>

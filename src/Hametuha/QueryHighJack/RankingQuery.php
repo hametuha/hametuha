@@ -32,8 +32,8 @@ class RankingQuery extends QueryHighJack {
 		'ranking/([0-9]{4})/([0-9]{2})/?'                  => 'index.php?ranking=monthly&year=$matches[1]&monthnum=$matches[2]',
 		'ranking/([0-9]{4})/page/([0-9]+)/?'               => 'index.php?ranking=yearly&year=$matches[1]&paged=$matches[2]',
 		'ranking/([0-9]{4})/?'                             => 'index.php?ranking=yearly&year=$matches[1]',
-		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]',
 		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/page/([0-9]+)/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]',
+		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]',
 		'ranking/?$'                                       => 'index.php?ranking=top',
 	];
 
