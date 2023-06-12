@@ -29,11 +29,11 @@ class AnalyticsMesurementApi extends Singleton {
 	 * @param array $setting
 	 */
 	public function __construct( array $setting = [] ) {
-		$setting = wp_parse_args( $setting, [
+		$setting   = wp_parse_args( $setting, [
 			'ua'  => '',
 			'cid' => '',
 		] );
-		$this->ua = $setting['ua'];
+		$this->ua  = $setting['ua'];
 		$this->cid = $setting['cid'];
 		$this->tmp = (string) Uuid::uuid4();
 	}
@@ -46,7 +46,7 @@ class AnalyticsMesurementApi extends Singleton {
 	 */
 	public function request( array $param ) {
 		$req_param = $this->fill_params( $param );
-		$response = wp_remote_post( self::ENDPOINT, [
+		$response  = wp_remote_post( self::ENDPOINT, [
 			'body' => $req_param,
 		] );
 		return $response;
@@ -88,7 +88,7 @@ class AnalyticsMesurementApi extends Singleton {
 	public function fill_params( array $params ) {
 		$args = [];
 		foreach ( array_merge( $this->default_params(), $params ) as $key => $value ) {
-			$key = preg_replace( '/dimension(\d+)/u', 'cd$1', $key );
+			$key          = preg_replace( '/dimension(\d+)/u', 'cd$1', $key );
 			$args[ $key ] = $value;
 		}
 		return $args;

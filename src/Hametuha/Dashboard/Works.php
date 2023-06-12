@@ -57,7 +57,7 @@ class Works extends Screen {
 		$pages = [
 			'works'    => '投稿',
 			'series'   => '作品集',
-            'comments' => 'コメント',
+			'comments' => 'コメント',
 			'reviews'  => 'レビュー',
 			'lists'    => '',
 		];
@@ -72,20 +72,20 @@ class Works extends Screen {
 		wp_enqueue_script( 'hametuha-hb-payment-table' );
 		switch ( $page ) {
 			case 'rewards':
-            case 'deposit':
-		        hameplate( 'templates/dashboard/sales', 'rewards', [
-                    'page'     => $page,
-                    'endpoint' => rest_url( "hametuha/v1/sales/rewards/me" ),
-                ] );
+			case 'deposit':
+				hameplate( 'templates/dashboard/sales', 'rewards', [
+					'page'     => $page,
+					'endpoint' => rest_url( 'hametuha/v1/sales/rewards/me' ),
+				] );
 				break;
 			case 'payments':
 				hameplate( 'templates/dashboard/sales', 'payments', [
-					'endpoint' => rest_url( "hametuha/v1/sales/payments/me" ),
+					'endpoint' => rest_url( 'hametuha/v1/sales/payments/me' ),
 				] );
 				break;
 			default:
 				hameplate( 'templates/dashboard/sales', 'graph', [
-					'endpoint' => rest_url( "hametuha/v1/sales/history/me" ),
+					'endpoint' => rest_url( 'hametuha/v1/sales/history/me' ),
 				] );
 				break;
 		}

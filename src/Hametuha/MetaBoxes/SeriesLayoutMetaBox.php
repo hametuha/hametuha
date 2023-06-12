@@ -13,9 +13,9 @@ use WPametu\UI\Field\Number;
  *
  * @package Hametuha\MetaBoxes
  */
-class SeriesLayoutMetaBox extends EditMetaBox
-{
-	protected $post_types = ['series'];
+class SeriesLayoutMetaBox extends EditMetaBox {
+
+	protected $post_types = [ 'series' ];
 
 	protected $name = 'hametuha_epub_layout_helper';
 
@@ -26,55 +26,55 @@ class SeriesLayoutMetaBox extends EditMetaBox
 	protected $priority = 'low';
 
 	protected $fields = [
-		'orientation' => [
-			'class' => Radio::class,
-			'label' => '文字方向',
+		'orientation'   => [
+			'class'   => Radio::class,
+			'label'   => '文字方向',
 			'options' => [
-				'vertical' => '縦書き',
-				'horizontal' => '横書き'
+				'vertical'   => '縦書き',
+				'horizontal' => '横書き',
 			],
 			'default' => 'vertical',
 		],
-		'_show_title' => [
-			'class' => Radio::class,
-		    'label' => '本文のタイトル',
-		    'options' => [
-		    	3 => 'タイトル・筆名・リード（アンソロジー）',
-			    2 => 'タイトル・筆名（アンソロジー）',
+		'_show_title'   => [
+			'class'       => Radio::class,
+			'label'       => '本文のタイトル',
+			'options'     => [
+				3 => 'タイトル・筆名・リード（アンソロジー）',
+				2 => 'タイトル・筆名（アンソロジー）',
 				4 => 'タイトル・リード（短編集）',
-			    1 => 'タイトルのみ（短編集）',
-		        0 => '表示しない（連載）',
-		    ],
-		    'default' => 0,
-		    'description' => 'それぞれの作品のタイトルを表示するか否か。連載作品の場合、タイトルはなくてもよいかもしれません。',
+				1 => 'タイトルのみ（短編集）',
+				0 => '表示しない（連載）',
+			],
+			'default'     => 0,
+			'description' => 'それぞれの作品のタイトルを表示するか否か。連載作品の場合、タイトルはなくてもよいかもしれません。',
 		],
 		'_hide_correct' => [
-			'class' => Radio::class,
-			'label' => '初出一覧',
-			'options' => [
+			'class'       => Radio::class,
+			'label'       => '初出一覧',
+			'options'     => [
 				0 => '表示する',
 				1 => '表示しない',
 			],
-			'default' => 0,
+			'default'     => 0,
 			'description' => '各作品の初出一覧を奥付に表示します。',
 		],
-		'_series_type' => [
-			'class' => Radio::class,
-		    'label' => '連載のタイプ',
-		    'options' => [
-			    1 => '一話完結',
-		        0 => '連載'
-		    ],
-		    'default' => 0,
-		    'description' => '一話完結型の場合、各話に著作権表示がされます。',
+		'_series_type'  => [
+			'class'       => Radio::class,
+			'label'       => '連載のタイプ',
+			'options'     => [
+				1 => '一話完結',
+				0 => '連載',
+			],
+			'default'     => 0,
+			'description' => '一話完結型の場合、各話に著作権表示がされます。',
 		],
-		'_visibility' => [
-			'class' => Text::class,
-		    'label' => '閲覧設定',
-		    'require' => true,
-		    'min' => 0,
-		    'default' => 0,
-		    'description' => '数値を設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。0だと全話に制限がかかります。カンマ区切りで複数指定すると、指定されたページ(1,4,5なら1,4,5話)が閲覧可能になります。',
+		'_visibility'   => [
+			'class'       => Text::class,
+			'label'       => '閲覧設定',
+			'require'     => true,
+			'min'         => 0,
+			'default'     => 0,
+			'description' => '数値を設定すると、それ以降の作品を閲覧できなくなります。販売を開始した場合は必ず設定してください。0だと全話に制限がかかります。カンマ区切りで複数指定すると、指定されたページ(1,4,5なら1,4,5話)が閲覧可能になります。',
 		],
 	];
 

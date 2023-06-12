@@ -160,7 +160,7 @@ function hamenew_links( $post = null ) {
 		$title = implode( '|', $line );
 
 		return [ $title, $url ];
-	}, explode( "\r\n", $links ) ), function ( $var ) {
+        }, explode( "\r\n", $links ) ), function ( $var ) {
 		return $var && is_array( $var );
 	} );
 }
@@ -206,7 +206,7 @@ function hamenew_books( $post = null ) {
 				break;
 			}
 		}
-		$author= [];
+		$author = [];
 		if ( ! empty( $result['attributes']['contributors'] ) ) {
 			foreach ( $result['attributes']['contributors'] as $role => $names ) {
 				foreach ( $names as $name ) {
@@ -248,7 +248,7 @@ function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
 	// TODO: Get popular nouns.
 	global $wpdb;
 	$wheres = [
-		"( tt.taxonomy = 'nouns' )"
+		"( tt.taxonomy = 'nouns' )",
 	];
 	// Filter term id
 	if ( $term_id ) {
@@ -256,11 +256,11 @@ function hamenew_popular_nouns( $term_id = 0, $days = 30, $limit = 20 ) {
 		if ( ! $term || is_wp_error( $term ) ) {
 			return [];
 		}
-		$ids      = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_id ) );
+		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_id ) );
 		if ( ! $ids ) {
 			return [];
 		}
-		$ids = implode( ', ', $ids );
+		$ids      = implode( ', ', $ids );
 		$wheres[] = $wpdb->prepare( '(tt.term_taxonomy_id != %d)', $term->term_taxonomy_id );
 		$wheres[] = <<<SQL
 			( tt.term_taxonomy_id IN (
@@ -272,7 +272,7 @@ SQL;
 	}
 	// Filter days
 	if ( $days ) {
-		$days = (int) $days;
+		$days     = (int) $days;
 		$wheres[] = <<<SQL
 			( tt.term_taxonomy_id IN (
 			  SELECT tr.term_taxonomy_id FROM {$wpdb->term_relationships} AS tr
@@ -284,8 +284,8 @@ SQL;
 			) )
 SQL;
 	}
-	$wheres = $wheres ? " WHERE " . implode( ' AND ', $wheres ) : '';
-	$query = <<<SQL
+	$wheres = $wheres ? ' WHERE ' . implode( ' AND ', $wheres ) : '';
+	$query  = <<<SQL
 		SELECT t.*, tt.* FROM {$wpdb->terms} AS t
 		INNER JOIN {$wpdb->term_taxonomy} AS tt
 		ON t.term_id = tt.term_id

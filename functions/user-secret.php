@@ -37,45 +37,47 @@ function hametuha_is_secret_book( $post = null ) {
  */
 add_action( 'edit_user_profile', function ( WP_User $user ) {
 	if ( ! current_user_can( 'edit_users' ) ) {
-	    return;
-    }
+		return;
+	}
 	wp_nonce_field( 'secret_publisher', '_secretpublishernonce', false );
 	?>
-    <hr/>
-    <h2><span class="dashicons dashicons-businessman"></span> ゲスト・ユーザー</h2>
-    <p>
-        シークレットゲストは自身の名義で電子書籍を発行することができます。
-        以下の情報を入力すると、発行元を株式会社破滅派以外にできます。
-        値を<code>no</code>にすると、項目自体が表示されません。
-    </p>
-    <table class="form-table">
-        <tr>
-            <th><label for="is_secret_publisher">ステータス</label></th>
-            <td>
-                <label>
-                    <input type="checkbox" name="is_secret_publisher" id="is_secret_publisher"
-                           value="1"<?php checked( hametuha_is_secret_guest( $user->ID ) ) ?> />
-                    シークレットゲストにする
-                </label>
-            </td>
-        </tr>
-		<?php foreach ( [
-							'publisher_name' => '発行者',
-							'publisher_tel' => '電話番号',
-							'publisher_mail' => 'メールアドレス',
-							'publisher_address' => '住所',
-						] as $key => $label ) : ?>
-            <tr>
-                <th><label for="<?php echo esc_attr( $key ) ?>"><?php echo esc_html( $label ); ?></label></th>
-                <td>
-                    <input class="regular-text" type="text" name="<?php echo esc_attr( $key ) ?>"
-                           id="<?php echo esc_attr( $key ) ?>"
-                           value="<?php echo esc_html( get_user_meta( $user->ID, '_' . $key, true ) ) ?>"
-                    />
-                </td>
-            </tr>
+	<hr/>
+	<h2><span class="dashicons dashicons-businessman"></span> ゲスト・ユーザー</h2>
+	<p>
+		シークレットゲストは自身の名義で電子書籍を発行することができます。
+		以下の情報を入力すると、発行元を株式会社破滅派以外にできます。
+		値を<code>no</code>にすると、項目自体が表示されません。
+	</p>
+	<table class="form-table">
+		<tr>
+			<th><label for="is_secret_publisher">ステータス</label></th>
+			<td>
+				<label>
+					<input type="checkbox" name="is_secret_publisher" id="is_secret_publisher"
+						   value="1"<?php checked( hametuha_is_secret_guest( $user->ID ) ); ?> />
+					シークレットゲストにする
+				</label>
+			</td>
+		</tr>
+		<?php
+		foreach ( [
+			'publisher_name'    => '発行者',
+			'publisher_tel'     => '電話番号',
+			'publisher_mail'    => 'メールアドレス',
+			'publisher_address' => '住所',
+		] as $key => $label ) :
+			?>
+			<tr>
+				<th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
+				<td>
+					<input class="regular-text" type="text" name="<?php echo esc_attr( $key ); ?>"
+						   id="<?php echo esc_attr( $key ); ?>"
+						   value="<?php echo esc_html( get_user_meta( $user->ID, '_' . $key, true ) ); ?>"
+					/>
+				</td>
+			</tr>
 		<?php endforeach; ?>
-    </table>
+	</table>
 	<?php
 }, 11 );
 
@@ -95,6 +97,6 @@ add_action( 'edit_user_profile_update', function ( $user_id ) {
 	}
 	// 発行者名など
 	foreach ( [ 'publisher_name', 'publisher_tel', 'publisher_mail', 'publisher_address' ] as $key ) {
-		update_user_meta( $user_id, '_'.$key, $input->post( $key ) );
+		update_user_meta( $user_id, '_' . $key, $input->post( $key ) );
 	}
 } );

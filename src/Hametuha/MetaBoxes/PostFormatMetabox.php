@@ -43,9 +43,9 @@ class PostFormatMetabox extends EditMetaBox {
 			],
 			'description' => 'この作品がどのように表示されるかを選んでください。<small>※縦書きレイアウトは一時的に停止しています。設定だけしておけば、そのうち有効になります。</small>',
 		],
-		'_noindex' => [
-			'class' => Radio::class,
-			'label' => '検索エンジン',
+		'_noindex'    => [
+			'class'   => Radio::class,
+			'label'   => '検索エンジン',
 			'options' => [
 				''        => '表示する',
 				'noindex' => '隠す',
@@ -66,7 +66,7 @@ class PostFormatMetabox extends EditMetaBox {
 		ob_end_clean();
 		// 現在の投稿が作品集に所属しており
 		// なおかつその所有権がない場合、表示を変更する
-		if ( $post->post_parent &&  ! current_user_can( 'edit_others_posts' ) && ! current_user_can( 'edit_post', $post->post_parent ) ) {
+		if ( $post->post_parent && ! current_user_can( 'edit_others_posts' ) && ! current_user_can( 'edit_post', $post->post_parent ) ) {
 			$content = preg_replace_callback( '#<input id="post_parent"[^>]+value="(\d*)"[^>]*?>#u', function( $matches ) use ( $post ) {
 				$title = esc_html( get_the_title( $post->post_parent ) );
 				$url   = get_permalink( $post->post_parent );
@@ -80,4 +80,4 @@ HTML;
 	}
 
 
-} 
+}

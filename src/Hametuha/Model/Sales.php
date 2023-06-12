@@ -56,7 +56,7 @@ class Sales extends Model {
 	 *
 	 * @return array|mixed|null
 	 */
-	public function get_records( array $args = [ ] ) {
+	public function get_records( array $args = [] ) {
 		$args = wp_parse_args( $args, [
 			'author'   => 0,
 			'asin'     => '',
@@ -81,8 +81,8 @@ class Sales extends Model {
 			$this->where( "EXTRACT(YEAR_MONTH FROM {$this->table}.date) = %s", sprintf( '%04d%02d', $args['year'], $args['month'] ) );
 		}
 		$this->select( "{$this->table}.*, p.*" )
-		            ->calc()
-		            ->order_by( "{$this->table}.date", 'DESC' );
+					->calc()
+					->order_by( "{$this->table}.date", 'DESC' );
 		if ( $args['per_page'] ) {
 			$this->limit( $args['per_page'], $args['page'] );
 		}
@@ -103,10 +103,10 @@ class Sales extends Model {
 			$this->where( 'p.post_author = %d', $author_id );
 		}
 		$rows    = $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
-		                ->select( "p.*, {$this->table}.*" )
-		                ->order_by( "{$this->table}.date", 'DESC' )
-		                ->result();
-		$results = [ ];
+						->select( "p.*, {$this->table}.*" )
+						->order_by( "{$this->table}.date", 'DESC' )
+						->result();
+		$results = [];
 		$from_ts = strtotime( $from );
 		$to_ts   = strtotime( $to );
 		$diff    = ceil( ( $to_ts - $from_ts ) / ( 60 * 60 * 24 ) );
@@ -151,9 +151,9 @@ class Sales extends Model {
 		}
 
 		return $this->where( "{$this->table}.date BETWEEN %s AND %s", [ $from, $to ] )
-		            ->select( "p.*, {$this->table}.*" )
-		            ->order_by( "{$this->table}.date", 'DESC' )
-		            ->result();
+					->select( "p.*, {$this->table}.*" )
+					->order_by( "{$this->table}.date", 'DESC' )
+					->result();
 	}
 
 
@@ -203,9 +203,9 @@ class Sales extends Model {
 	 * @return array|mixed|null
 	 */
 	public function monthly_report( $year, $month, $day = '01' ) {
-		$sales = UserSales::get_instance();
+		$sales               = UserSales::get_instance();
 		list( $start, $end ) = $sales->get_range( $year, $month, $day );
-		$result = $this
+		$result              = $this
 			->select( 'p.post_author as user_id, p.post_title as label, p.ID as post_id, s.asin, SUM(s.unit) as unit, SUM(s.royalty) as sub_total, s.currency' )
 			->from( "{$this->table} as s" )
 			->join( "{$this->db->postmeta} as pm", "pm.meta_key = '_asin' AND pm.meta_value = s.asin" )

@@ -33,25 +33,25 @@ class KdpWidget extends Widget {
 		ob_start();
 		?>
 		<div class="widget-kdp-lead">
-			<?= esc_html( $desc ) ?>
+			<?php echo esc_html( $desc ); ?>
 		</div>
 		<?php
 		$key   = 'kdp_widget_' . $number;
-		$cache = wp_cache_get( $key, 'kdp_widget' ) ;
+		$cache = wp_cache_get( $key, 'kdp_widget' );
 		if ( false !== $cache ) {
 			$posts = $cache;
 		} else {
 			$query = new \WP_Query( [
 				'post_type'      => 'series',
 				'post_status'    => 'publish',
-				'meta_query'    => [
+				'meta_query'     => [
 					[
-						'key' => '_kdp_status',
+						'key'   => '_kdp_status',
 						'value' => 2,
 					],
 				],
 				'posts_per_page' => $number,
-				'orderby' => [
+				'orderby'        => [
 					'menu_order' => 'DESC',
 					'date'       => 'DESC',
 				],
@@ -63,18 +63,20 @@ class KdpWidget extends Widget {
 		<div class="widget-kdp-list">
 			<?php foreach ( $posts as $post ) : ?>
 				<div class="widget-kdp-item">
-					<a class="widget-kdp-link" href="<?php echo esc_url( get_the_permalink( $post ) ) ?>">
-						<?php echo geT_the_post_thumbnail(  $post, 'medium', [
-							'alt' => get_the_title( $post ),
+					<a class="widget-kdp-link" href="<?php echo esc_url( get_the_permalink( $post ) ); ?>">
+						<?php
+						echo geT_the_post_thumbnail(  $post, 'medium', [
+							'alt'     => get_the_title( $post ),
 							'loading' => 'lazy',
-							'width' => '1200',
-							'height' => '1920',
-						] ); ?>
+							'width'   => '1200',
+							'height'  => '1920',
+						] );
+						?>
 					</a>
 				</div>
 			<?php endforeach; ?>
 		</div>
-		<a href="<?= home_url( '/kdp/' ) ?>" class="btn btn-amazon btn-block">
+		<a href="<?php echo home_url( '/kdp/' ); ?>" class="btn btn-amazon btn-block">
 			<i class="icon-amazon"></i> <?php esc_html_e( '電子書籍一覧', 'hametuha' ); ?>
 		</a>
 		<?php
@@ -110,7 +112,7 @@ class KdpWidget extends Widget {
 			<label for="<?php echo $this->get_field_id( 'desc' ); ?>">
 				説明<br/>
 				<textarea name="<?php echo $this->get_field_name( 'desc' ); ?>"
-						  id="<?php echo $this->get_field_id( 'desc' ); ?>"><?= esc_textarea( $desc ) ?></textarea>
+						  id="<?php echo $this->get_field_id( 'desc' ); ?>"><?php echo esc_textarea( $desc ); ?></textarea>
 			</label>
 		</p>
 		<?php

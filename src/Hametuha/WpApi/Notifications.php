@@ -37,26 +37,29 @@ class Notifications extends WpApi {
 		switch ( $method ) {
 			case 'GET':
 				return [
-					'type' => [
-						'type'     => 'string',
+					'type'     => [
+						'type'        => 'string',
 						'description' => '取得すべき通知のタイプ。',
-						'required' => true,
-						'enum'     => [
-							'general', 'works', 'all', 'recent',
+						'required'    => true,
+						'enum'        => [
+							'general',
+							'works',
+							'all',
+							'recent',
 						],
 					],
-					'paged' => [
-						'type' => 'integer',
-						'description' => sprintf( '1ページあたり%d件が表示されます。整数にキャストされます。', NotificationsModel::PER_PAGE ),
-						'default' => 1,
+					'paged'    => [
+						'type'              => 'integer',
+						'description'       => sprintf( '1ページあたり%d件が表示されます。整数にキャストされます。', NotificationsModel::PER_PAGE ),
+						'default'           => 1,
 						'sanitize_callback' => function( $num ) {
 							return max( 1, (int) $num );
 						},
 					],
 					'per_page' => [
-						'type'        => 'integer',
-						'description' => '1ページあたりの件数です。',
-						'default'     => NotificationsModel::PER_PAGE,
+						'type'              => 'integer',
+						'description'       => '1ページあたりの件数です。',
+						'default'           => NotificationsModel::PER_PAGE,
 						'sanitize_callback' => function( $num ) {
 							return max( 1, (int) $num );
 						},
@@ -96,7 +99,7 @@ class Notifications extends WpApi {
 					break;
 			}
 			$notifications = $this->notifications->get_notifications( $user_ids, '', $request->get_param( 'paged' ), $per_page );
-			$total = $this->notifications->found_count();
+			$total         = $this->notifications->found_count();
 		}
 		$notifications = array_map( function( $notification ) {
 			ob_start();
@@ -107,12 +110,12 @@ class Notifications extends WpApi {
 			$notification->url      = $this->notifications->build_url( $notification->type, $notification->object_id );
 			return $notification;
 		}, $notifications );
-		$response = new \WP_REST_Response( $notifications );
+		$response      = new \WP_REST_Response( $notifications );
 		nocache_headers();
 		$response->set_headers( [
-			'X-WP-Total' => $total,
+			'X-WP-Total'      => $total,
 			'X-WP-TotalPages' => ceil( $total / $per_page ),
-			'X-WP-PerPage' => $per_page,
+			'X-WP-PerPage'    => $per_page,
 		] );
 		return $response;
 	}

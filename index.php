@@ -1,6 +1,6 @@
-<?php get_header() ?>
-<?php get_header( 'sub' ) ?>
-<?php get_header( 'breadcrumb' ) ?>
+<?php get_header(); ?>
+<?php get_header( 'sub' ); ?>
+<?php get_header( 'breadcrumb' ); ?>
 
 	<div class="container archive">
 
@@ -22,15 +22,13 @@
 					get_template_part( 'parts/jumbotron', 'thread' );
 				} elseif ( is_post_type_archive( 'lists' ) ) {
 					get_template_part( 'parts/jumbotron', 'lists' );
-				} elseif ( is_ranking() ) {
-					get_template_part( 'parts/jumbotron', 'ranking' );
 				} elseif ( is_post_type_archive( 'ideas' ) ) {
 					get_template_part( 'parts/jumbotron', 'ideas' );
 				}
 				?>
 
 				<?php if ( is_author() ) : ?>
-					<?php get_template_part( 'parts/author' ) ?>
+					<?php get_template_part( 'parts/author' ); ?>
 				<?php endif; ?>
 
 
@@ -50,16 +48,18 @@
 						</div>
 
 						<?php if ( hametuha_is_profile_page() ) : ?>
-							<?php get_template_part( 'parts/search', 'author' ) ?>
+							<?php get_template_part( 'parts/search', 'author' ); ?>
 						<?php endif; ?>
 
 
 					</div>
 				<?php } ?>
 
-				<?php if ( is_tax( 'campaign' ) ) {
+				<?php
+				if ( is_tax( 'campaign' ) ) {
 					get_template_part( 'parts/meta', 'campaign' );
-				} ?>
+				}
+				?>
 				<div>
 
 					<?php
@@ -92,11 +92,7 @@
 										$query->the_post();
 										$counter ++;
 										$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
-										if ( is_ranking() ) {
-											get_template_part( 'parts/loop', 'ranking' );
-										} else {
-											get_template_part( 'parts/loop', get_post_type() );
-										}
+										get_template_part( 'parts/loop', get_post_type() );
 									}
 									?>
 								</ol>
@@ -120,16 +116,16 @@
 
 					<?php else : ?>
 
-						<?php get_template_part( 'parts/no', 'content' ) ?>
+						<?php get_template_part( 'parts/no', 'content' ); ?>
 
-					<?php endif;
-					wp_reset_postdata(); ?>
+						<?php
+					endif;
+					wp_reset_postdata();
+					?>
 
 					<?php
 					// Extras
-					if ( is_ranking() ) {
-						get_template_part( 'parts/ranking', 'calendar' );
-					} elseif ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
+					if ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
 						get_template_part( 'parts/nav', 'lists' );
 					} elseif ( is_tax( 'faq_cat' ) ) {
 						get_template_part( 'parts/nav', 'faq' );
@@ -149,7 +145,7 @@
 			</div>
 			<!-- //.main-container -->
 
-			<?php get_sidebar() ?>
+			<?php get_sidebar(); ?>
 
 		</div>
 		<!-- // .offcanvas -->

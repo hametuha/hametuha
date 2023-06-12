@@ -55,7 +55,7 @@ class SalesReportTable extends \WP_List_Table {
 
 		$this->items = $this->sales->get_records( [
 			'per_page' => 20,
-			'page'   => max( 0, $this->get_pagenum() - 1 ),
+			'page'     => max( 0, $this->get_pagenum() - 1 ),
 		] );
 
 		$this->set_pagination_args( [

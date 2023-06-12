@@ -56,9 +56,9 @@ class EpubFiles extends WpApi {
 			case 'POST':
 				$args = array_merge( $args, [
 					'published' => [
-						'default'     => '',
-						'type'        => 'string',
-						'description' => 'The datetime of publication',
+						'default'           => '',
+						'type'              => 'string',
+						'description'       => 'The datetime of publication',
 						'validate_callback' => function( $var ) {
 							return empty( $var ) || ( 'DELETE' === $var ) || preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/u', $var );
 						},
@@ -78,7 +78,7 @@ class EpubFiles extends WpApi {
 	 */
 	public function handle_get( $request ) {
 		$method = 'handle_get_' . strtolower( $request->get_param( 'format' ) );
-		$file = $this->files->validate_file( $request->get_param( 'file_id' ) );
+		$file   = $this->files->validate_file( $request->get_param( 'file_id' ) );
 		return $this->{$method}( $file, $request );
 	}
 
@@ -117,9 +117,9 @@ class EpubFiles extends WpApi {
 	 * @throws \Exception
 	 */
 	public function handle_post( $request ) {
-		$error = new \WP_Error();
+		$error    = new \WP_Error();
 		$messages = [];
-		$file_id = $request->get_param( 'file_id' );
+		$file_id  = $request->get_param( 'file_id' );
 		foreach ( [ 'published' ] as $key ) {
 			$value = $request->get_param( $key );
 			switch ( $key ) {

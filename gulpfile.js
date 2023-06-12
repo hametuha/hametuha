@@ -57,42 +57,14 @@ gulp.task( 'js', function () {
 
 // Package jsx.
 gulp.task( 'jsx', function () {
-	var tmp = {};
 	return gulp.src( [ './assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
-		.pipe( named() )
-		.pipe( $.rename( function ( path ) {
-			tmp[ path.basename ] = path.dirname;
+		.pipe( named( ( file ) => {
+			return file.relative.replace(/\.[^\.]+$/, '');
 		} ) )
-		.pipe( webpack( {
-			mode: 'production',
-			devtool: 'source-map',
-			module: {
-				rules: [
-					{
-						test: /\.jsx?$/,
-						exclude: /(node_modules|bower_components)/,
-						use: {
-							loader: 'babel-loader',
-							options: {
-								presets: [ '@babel/preset-env' ],
-								plugins: [ '@babel/plugin-transform-react-jsx' ]
-							}
-						}
-					}
-				]
-			}
-		}, webpackBundle ) )
-		.pipe( $.rename( function ( path ) {
-			if ( tmp[ path.basename ] ) {
-				path.dirname = tmp[ path.basename ];
-			} else if ( '.map' === path.extname && tmp[ path.basename.replace( /\.js$/, '' ) ] ) {
-				path.dirname = tmp[ path.basename.replace( /\.js$/, '' ) ];
-			}
-			return path;
-		} ) )
+		.pipe( webpack( require( './webpack.config.js' ), webpackBundle ) )
 		.pipe( gulp.dest( './assets/js/dist' ) );
 } );
 

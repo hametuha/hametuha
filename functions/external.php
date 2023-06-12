@@ -11,7 +11,7 @@ use Hametuha\Model\Series;
  * Get minicome products.
  */
 function hametuha_get_minicome_product() {
-	$key = 'minicome_products';
+	$key   = 'minicome_products';
 	$cache = get_transient( 'minicome_products' );
 	if ( false !== $cache ) {
 		return $cache;

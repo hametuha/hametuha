@@ -4,8 +4,8 @@
  * フッターにJS SDKを読み込む
  */
 add_action( 'admin_footer', function () {
-    $fb_app_id = '196054397143922';
-    $fb_sdk = 'https://connect.facebook.net/en_US/sdk.js';
+	$fb_app_id = '196054397143922';
+	$fb_sdk    = 'https://connect.facebook.net/en_US/sdk.js';
 	echo <<<HTML
 <div id="fb-root"></div>
 <script>
@@ -92,7 +92,7 @@ function hametuha_user_link( $url, $label, $source, $author = null ) {
  */
 function google_adsense( $unit_no = 1 ) {
 	switch ( $unit_no ) {
-        case 'after_title':
+		case 'after_title':
 		case 1:
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -108,7 +108,7 @@ function google_adsense( $unit_no = 1 ) {
 HTML;
 			break;
 		case 2:
-        case 'after_content':
+		case 'after_content':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅー記事下 -->
@@ -123,7 +123,7 @@ HTML;
 HTML;
 			break;
 		case 3:
-        case 'sidebar':
+		case 'sidebar':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーサイドバー -->
@@ -138,7 +138,7 @@ HTML;
 HTML;
 			break;
 		case 4:
-        case 'archive_top':
+		case 'archive_top':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーアーカイブ上 -->
@@ -153,7 +153,7 @@ HTML;
 HTML;
 			break;
 		case 5:
-        case 'archive_bottom':
+		case 'archive_bottom':
 			echo <<<HTML
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <!-- はめにゅーアーカイブ下 -->
@@ -167,15 +167,15 @@ HTML;
 </script>
 HTML;
 			break;
-        case 6:
-        case 'related':
+		case 6:
+		case 'related':
 			if ( function_exists( 'get_the_related_post_patch' ) ) {
 				$result = get_the_related_post_patch();
 				if ( $result ) {
 					echo $result;
 				}
 			}
-            break;
+			break;
 	}
 }
 
@@ -196,11 +196,11 @@ add_action( 'admin_notices', function () {
 				投稿を宣伝してみんなに読んでもらいましょう。
 			</p>
 			<div class="fb-share-button"
-			     data-href="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ) ?>"
-			     data-layout="button_count"></div>
+				 data-href="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ); ?>"
+				 data-layout="button_count"></div>
 			<a href="https://twitter.com/share" class="twitter-share-button"
-			   data-url="<?= hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ) ?>"
-			   data-text="<?= get_the_title( $post ) ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
+			   data-url="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ); ?>"
+			   data-text="<?php echo get_the_title( $post ); ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
 
 		</div>
 		<?php
@@ -236,10 +236,10 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 /**
  * パーミッションを変更する
  */
-add_filter( 'gianism_facebook_permissions', function( array $permissions, $context ){
+add_filter( 'gianism_facebook_permissions', function( array $permissions, $context ) {
 	switch ( $context ) {
 		case 'admin':
-		    $permissions[] = 'publish_pages';
+			$permissions[] = 'publish_pages';
 			break;
 		default:
 			// Do nothing.
@@ -328,7 +328,7 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 				$class_name .= ' btn-block';
 			}
 			?>
-			<a href="#" data-follower-id="<?= $author_id ?>" class="btn btn-primary btn-follow<?= $class_name ?>"
+			<a href="#" data-follower-id="<?php echo $author_id; ?>" class="btn btn-primary btn-follow<?php echo $class_name; ?>"
 			   rel="nofollow">
 				<span class="remove">フォロー中</span>
 				<span class="add">
@@ -339,12 +339,15 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 				</span>
 			</a>
 		<?php else : ?>
-			<a class="btn btn-primary" href="<?= home_url( '/doujin/follower/', 'https' ) ?>"><i class="icon-user"></i>
+			<a class="btn btn-primary" href="<?php echo home_url( '/doujin/follower/', 'https' ); ?>"><i class="icon-user"></i>
 				フォロワー確認</a>
-		<?php endif;
-	else : ?>
-		<a class="btn btn-primary" href="<?= wp_login_url( $_SERVER['REQUEST_URI'] ) ?>" rel="nofollow">フォローする</a>
-	<?php endif;
+			<?php
+		endif;
+	else :
+		?>
+		<a class="btn btn-primary" href="<?php echo wp_login_url( $_SERVER['REQUEST_URI'] ); ?>" rel="nofollow">フォローする</a>
+		<?php
+	endif;
 }
 
 /**
@@ -362,7 +365,7 @@ function hametuha_social_share_message( $post = null, $limit = 120 ) {
 	$title       = hametuha_censor( get_the_title( $post ) );
 	$author      = hametuha_censor( get_the_author_meta( 'display_name', $post->post_author ) );
 	$screen_name = get_user_meta( $post->post_author, 'twitter', true );
-	$screen_name = $screen_name ? " @{$screen_name} "  : '';
+	$screen_name = $screen_name ? " @{$screen_name} " : '';
 	$taxonomies  = [];
 	switch ( $post->post_type ) {
 		case 'post':
@@ -370,9 +373,9 @@ function hametuha_social_share_message( $post = null, $limit = 120 ) {
 			if ( ! hametuha_is_valid_post( $post ) ) {
 				return '';
 			}
-			$url         = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
-			$string      = "{$author}さん{$screen_name}が #破滅派 に新作「{$title}」を投稿しました！\n{$url}\n#文学";
-			$taxonomies  = [ 'category', 'post_tag' ];
+			$url        = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
+			$string     = "{$author}さん{$screen_name}が #破滅派 に新作「{$title}」を投稿しました！\n{$url}\n#文学";
+			$taxonomies = [ 'category', 'post_tag' ];
 			break;
 		case 'announcement':
 			$url = hametuha_user_link( get_permalink( $post ), 'share-auto', 'Twitter', 1 );
@@ -400,7 +403,7 @@ function hametuha_social_share_message( $post = null, $limit = 120 ) {
 			$taxonomies = [ 'faq_cat' ];
 			break;
 		case 'news':
-			$string = sprintf( "%s\n%s\n#はめにゅー", get_the_title( $post ), get_permalink( $post ) );
+			$string     = sprintf( "%s\n%s\n#はめにゅー", get_the_title( $post ), get_permalink( $post ) );
 			$taxonomies = [ 'nouns', 'genre' ];
 			break;
 		default:

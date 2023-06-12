@@ -135,4 +135,4 @@ class LoginName extends RestTemplate {
 		wp_enqueue_script( 'hametuha-login-changer' );
 	}
 
-} 
+}

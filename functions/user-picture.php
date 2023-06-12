@@ -75,12 +75,12 @@ add_action( 'edit_user_profile', function ( \WP_User $user ) {
 			<th>プロフィール写真</th>
 			<td class="image-picker">
 				<p class="image-holder">
-					<?= $avatar ?>
+					<?php echo $avatar; ?>
 					<span class="dashicons dashicons-arrow-right-alt"></span>
-					<?= $new_img ?>
+					<?php echo $new_img; ?>
 				</p>
 				<input type="hidden" name="profile_pick_id"
-				       value="<?= $instance->has_profile_pic( $user->ID ) ?: '' ?>"/>
+					   value="<?php echo $instance->has_profile_pic( $user->ID ) ?: ''; ?>"/>
 				<a class="button-primary" href="#">変更</a>
 				<a class="button" href="#">削除</a>
 			</td>

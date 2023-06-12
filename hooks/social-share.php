@@ -20,11 +20,11 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 		// Do nothing. if available.
 		return;
 	}
-	if ( 'news' === $post->post_type) {
+	if ( 'news' === $post->post_type ) {
 		// ニュースでは何もしない
 		return;
 	}
-	if ( hametuha_user_has_flag( $post->post_author, 'spam') ) {
+	if ( hametuha_user_has_flag( $post->post_author, 'spam' ) ) {
 		// This is spam user.
 		return;
 	}
@@ -86,10 +86,12 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 				default:
 					// 没になった
 					// TODO: なんらかの方法で連絡する
-					hametuha_slack( '@here 公開されていたニュースがボツになりました。このニュースはもう修正できません。', [ array_merge( $base, [
-						'fallback'   => sprintf( '「%s」がボツになりました。', $title ),
-						'title_link' => admin_url( 'edit.php?post_type=news' ),
-					] ) ], '#news' );
+					hametuha_slack( '@here 公開されていたニュースがボツになりました。このニュースはもう修正できません。', [
+						array_merge( $base, [
+							'fallback'   => sprintf( '「%s」がボツになりました。', $title ),
+							'title_link' => admin_url( 'edit.php?post_type=news' ),
+						] ),
+					], '#news' );
 					break;
 			}
 			break;
@@ -102,17 +104,21 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 					case 'publish':
 						// 公開されていたものレビュー待ちになった
 						// TODO: なんらかの方法で連絡する
-						hametuha_slack( '@here 公開されていたニュースがレビュー待ちになりました。執筆者は修正してください。', [ array_merge( $base, [
-							'fallback' => sprintf( '「%s」が再度レビュー待ちになりました。', $title ),
-							'color'    => 'danger',
-						] ) ], '#news' );
+						hametuha_slack( '@here 公開されていたニュースがレビュー待ちになりました。執筆者は修正してください。', [
+							array_merge( $base, [
+								'fallback' => sprintf( '「%s」が再度レビュー待ちになりました。', $title ),
+								'color'    => 'danger',
+							] ),
+						], '#news' );
 						break;
 					default:
 						// 承認待ちになった
-						hametuha_slack( '@channel ニュースが承認待ちです。公開権限を持っている方は承認をお願いします。', [ array_merge( $base, [
-							'fallback' => sprintf( '「%s」が承認待ちです。', $title ),
-							'color'    => 'warning',
-						] ) ], '#news' );
+						hametuha_slack( '@channel ニュースが承認待ちです。公開権限を持っている方は承認をお願いします。', [
+							array_merge( $base, [
+								'fallback' => sprintf( '「%s」が承認待ちです。', $title ),
+								'color'    => 'warning',
+							] ),
+						], '#news' );
 						break;
 				}
 			}
@@ -138,11 +144,13 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 						gianism_update_twitter_status( $string );
 					}
 					// Slackに通知
-					hametuha_slack( '@here ニュースが公開されました。', [ array_merge( $base, [
-						'fallback'   => sprintf( '「%s」%s', $title, $author->display_name ),
-						'title_link' => get_permalink( $post ),
-						'color'      => 'good',
-					] ) ], '#news' );
+					hametuha_slack( '@here ニュースが公開されました。', [
+						array_merge( $base, [
+							'fallback'   => sprintf( '「%s」%s', $title, $author->display_name ),
+							'title_link' => get_permalink( $post ),
+							'color'      => 'good',
+						] ),
+					], '#news' );
 					break;
 			}
 			break;

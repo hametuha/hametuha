@@ -32,7 +32,7 @@ class KdpTweet extends CronBase {
 	 * つぶやく
 	 */
 	public function process() {
-		if ( !WP_DEBUG ) {
+		if ( ! WP_DEBUG ) {
 			gianism_update_twitter_status( $this->tweet() );
 		}
 	}
@@ -68,7 +68,7 @@ class KdpTweet extends CronBase {
 	 * @return mixed
 	 */
 	public function cron_schedule( $schedule ) {
-		$schedule[ 'meet_everybody' ] = [
+		$schedule['meet_everybody'] = [
 			'interval' => 60 * 60 * ( 18 + 24 ),
 			'display'  => '1日と18時間おきにつぶやくと、いろんな人の目に入る',
 		];

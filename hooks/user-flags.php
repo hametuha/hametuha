@@ -11,7 +11,7 @@
  */
 function hametuha_author_has_flag( $flag, $post = null ) {
 	$post = get_post( $post );
-	if ( !$post ) {
+	if ( ! $post ) {
 		return false;
 	}
 	return hametuha_user_has_flag( $post->post_author, $flag );
@@ -82,7 +82,7 @@ add_action( 'edit_user_profile', function ( $user ) {
 				<p>
 					<label>
 						<input type="checkbox" value="1"
-							name="<?php echo 'flag_' . esc_attr( $flag['id'] ); ?>" <?php checked( hametuha_user_has_flag( $user->ID, $flag['id'] ), true ) ?> />
+							name="<?php echo 'flag_' . esc_attr( $flag['id'] ); ?>" <?php checked( hametuha_user_has_flag( $user->ID, $flag['id'] ), true ); ?> />
 						<?php echo esc_html( $flag['label'] ); ?>
 					</label>
 				</p>

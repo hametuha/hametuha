@@ -56,14 +56,14 @@ class HametuhaReaderSegment extends Gabstract {
 					'position' => 'none',
 				],
 				'backgroundColor' => '#fff',
-				'colors'          => [ ],
+				'colors'          => [],
 			],
 			'data'    => [
-				[ '属性', '割合' ]
-			]
+				[ '属性', '割合' ],
+			],
 		];
 		foreach ( $result as $row ) {
-			list( $sex, $age, $pv ) = $row;
+			list( $sex, $age, $pv )      = $row;
 			$female                      = 'female' == $sex;
 			$hue                         = $female ? 5 : 140;
 			$age                         = explode( '-', $age );
@@ -72,7 +72,7 @@ class HametuhaReaderSegment extends Gabstract {
 			$json['options']['colors'][] = $this->hsl2hex( [
 				$hue / 255,
 				$saturation / 255,
-				round( $lightness / 255, 2 )
+				round( $lightness / 255, 2 ),
 			] );
 			if ( ! isset( $age[1] ) ) {
 				$age[1] = '';

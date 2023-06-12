@@ -42,20 +42,20 @@ class Collaborators extends WpApi {
 	protected function get_arguments( $method ) {
 		$args = [
 			'series_id' => [
-				'type' => 'integer',
-				'required' => true,
+				'type'              => 'integer',
+				'required'          => true,
 				'validate_callback' => function( $var ) {
 					$post = get_post( $var );
-					return $post && 'series'=== $post->post_type;
+					return $post && 'series' === $post->post_type;
 				},
 			],
 		];
 		if ( in_array( $method, [ 'PUT', 'DELETE' ] ) ) {
 			$args['collaborator_id'] = [
 				'collaborator_id' => [
-					'required' => true,
-					'type'     => 'integer',
-					'description' => 'ID of user who is added as collaborator.',
+					'required'          => true,
+					'type'              => 'integer',
+					'description'       => 'ID of user who is added as collaborator.',
 					'validate_callback' => function( $var, \WP_REST_Request $request ) {
 						return is_numeric( $var ) && $this->collaborators->collaborator_exists( $request->get_param( 'series_id' ), $var );
 					},
@@ -66,8 +66,8 @@ class Collaborators extends WpApi {
 			case 'GET':
 				return array_merge( $args, [
 					'include_waiting' => [
-						'default' => true,
-						'type' => 'boolean',
+						'default'           => true,
+						'type'              => 'boolean',
 						'sanitize_callback' => function( $var ) {
 							return (bool) $var;
 						},
@@ -76,17 +76,17 @@ class Collaborators extends WpApi {
 			case 'POST':
 				return array_merge( $args, [
 					'collaborator' => [
-						'required'    => true,
-						'type'        => 'string',
-						'description' => 'User nice name',
+						'required'          => true,
+						'type'              => 'string',
+						'description'       => 'User nice name',
 						'validate_callback' => function( $var ) {
 							return ! empty( $var ) && $this->authors->get_by_nice_name( $var );
 						},
 					],
-					'margin' => [
-						'required' => true,
-						'type'     => 'integer',
-						'description' => 'Margin for user. Should be more than 0',
+					'margin'       => [
+						'required'          => true,
+						'type'              => 'integer',
+						'description'       => 'Margin for user. Should be more than 0',
 						'validate_callback' => function( $var ) {
 							return is_numeric( $var ) && ( 0 < $var ) && ( 0 < 100 );
 						},
@@ -95,9 +95,9 @@ class Collaborators extends WpApi {
 			case 'PUT':
 				return array_merge( $args, [
 					'margin' => [
-						'required'    => true,
-						'type'        => 'integer',
-						'description' => 'Revenue margin in percentile.',
+						'required'          => true,
+						'type'              => 'integer',
+						'description'       => 'Revenue margin in percentile.',
 						'validate_callback' => function( $var ) {
 							return is_numeric( $var ) && ( 100 >= $var && 0 <= $var );
 						},
@@ -115,9 +115,9 @@ class Collaborators extends WpApi {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_get( $request ) {
-		$series_id = $request->get_param( 'series_id' );
-		$collaborators = $this->collaborators->get_collaborators( $series_id );
-		$include_waiting  = $request->get_param( 'include_waiting' ) && current_user_can( 'edit_post', $series_id );
+		$series_id       = $request->get_param( 'series_id' );
+		$collaborators   = $this->collaborators->get_collaborators( $series_id );
+		$include_waiting = $request->get_param( 'include_waiting' ) && current_user_can( 'edit_post', $series_id );
 		return new \WP_REST_Response( array_values( array_map( [ $this, 'to_array' ], array_filter( $collaborators, function( $user ) use ( $include_waiting ) {
 			return $include_waiting || 0 <= (int) $user->location;
 		} ) ) ) );
@@ -153,8 +153,8 @@ class Collaborators extends WpApi {
 		$margin       = $request->get_param( 'margin' );
 		$collaborator = get_userdata( $request->get_param( 'collaborator_id' ) );
 		$series_id    = $request->get_param( 'series_id' );
-		$response = $this->collaborators->update_margin( $series_id, $collaborator->ID, $margin );
-		if ( is_wp_error( $response) ) {
+		$response     = $this->collaborators->update_margin( $series_id, $collaborator->ID, $margin );
+		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
 		/**
@@ -180,7 +180,7 @@ class Collaborators extends WpApi {
 	public function handle_delete( \WP_REST_Request $request ) {
 		$user_id   = $request->get_param( 'collaborator_id' );
 		$series_id = $request->get_param( 'series_id' );
-		$result = $this->collaborators->delete_collaborator( $series_id, $user_id );
+		$result    = $this->collaborators->delete_collaborator( $series_id, $user_id );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}

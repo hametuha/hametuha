@@ -10,7 +10,7 @@ add_action( 'after_setup_theme', function() {
 			'post',
 			'news',
 		];
-		$post_id = url_to_postid( $url );
+		$post_id            = url_to_postid( $url );
 		if ( ! $post_id || false === array_search( get_post( $post_id )->post_type, $allowed_post_types ) ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
@@ -28,7 +28,7 @@ add_action( 'after_setup_theme', function() {
 	// Add minico.me
 	wp_embed_register_handler( 'minicome', '#https?://minico\.me/(.*?)$#u', function( $match, $attr, $url ) {
 		$use_cache = ! WP_DEBUG;
-		$cache = wp_cache_get( $url, 'minicome' );
+		$cache     = wp_cache_get( $url, 'minicome' );
 		if ( ! $use_cache || false === $cache ) {
 			try {
 				$response = wp_remote_get( $url );
@@ -36,8 +36,8 @@ add_action( 'after_setup_theme', function() {
 					throw new Exception( $response->get_error_message(), 500 );
 				}
 				$html5 = new \Masterminds\HTML5();
-				$dom = $html5->loadHTML( $response['body'] );
-				$json = null;
+				$dom   = $html5->loadHTML( $response['body'] );
+				$json  = null;
 				foreach ( $dom->getElementsByTagName( 'script' ) as $script ) {
 					$string = $script->nodeValue;
 					if ( false !== strpos( $string, 'Product' ) ) {
@@ -49,8 +49,8 @@ add_action( 'after_setup_theme', function() {
 					throw new Exception( '見つかりませんでした', 404 );
 				}
 				$cache = hametuha_format_html_indent_for_embed( hameplate( 'parts/embed', 'minicome', [
-					'url' => $url,
-				    'schema' => $json,
+					'url'    => $url,
+					'schema' => $json,
 				], false ) );
 				if ( $use_cache ) {
 					wp_cache_set( $url, $cache, 'minicome', 60 * 30 );

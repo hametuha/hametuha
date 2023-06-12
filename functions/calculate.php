@@ -67,9 +67,9 @@ function hametuha_remarkably_old( $days = 30, $post = null ) {
 	if ( ! $post || 'publish' !== $post->post_status ) {
 		return false;
 	}
-	$days = absint( $days );
+	$days         = absint( $days );
 	$last_updated = max( strtotime( $post->post_date_gmt ), strtotime( $post->post_modified_gmt ) );
-	$diff = current_time( 'timestamp', true ) - $last_updated;
+	$diff         = current_time( 'timestamp', true ) - $last_updated;
 	if ( 0 > $diff ) {
 		return false;
 	}

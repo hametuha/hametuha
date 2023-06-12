@@ -37,12 +37,12 @@ abstract class AbstractRecorders extends Singleton {
 	 * @param string $category
 	 */
 	public function save_user_event( $action, $user_id, $category, $label ) {
-		$user_hash =  cookie_tasting_get( 'uuid' ) ?: cookie_tasting_get_uuid( $user_id );
+		$user_hash = cookie_tasting_get( 'uuid' ) ?: cookie_tasting_get_uuid( $user_id );
 		$this->analytics->measurement->event( [
-			'ea' => $action,
-			'ec' => $category,
-			'el' => $label,
-			'uid' => $user_hash,
+			'ea'                     => $action,
+			'ec'                     => $category,
+			'el'                     => $label,
+			'uid'                    => $user_hash,
 			Analytics::DIMENSION_UID => $user_hash,
 		] );
 	}
@@ -54,7 +54,7 @@ abstract class AbstractRecorders extends Singleton {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		switch( $name ) {
+		switch ( $name ) {
 			case 'analytics':
 				return Analytics::get_instance();
 				break;

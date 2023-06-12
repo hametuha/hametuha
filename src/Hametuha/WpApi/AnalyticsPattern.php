@@ -37,7 +37,7 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @return string
 	 */
 	protected function n_days_ago( $n ) {
-		$now = current_time( 'timestamp' );
+		$now  = current_time( 'timestamp' );
 		$now -= 60 * 60 * 24 * $n;
 		return date_i18n( 'Y-m-d', $now );
 	}
@@ -63,11 +63,11 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @param string $default
 	 */
 	protected function add_date( &$fields, $key, $default ) {
-		$fields[$key] = [
-			'required' => true,
-			'default'  => $default,
+		$fields[ $key ] = [
+			'required'          => true,
+			'default'           => $default,
 			'validate_callback' => function( $var ) use ( $key ) {
-				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) ) ;
+				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) );
 			},
 		];
 	}
@@ -138,7 +138,7 @@ abstract class AnalyticsPattern extends WpApi {
 	protected function proper_metrics( $start, $end ) {
 		$start = new \DateTime( "{$start} 00:00:00" );
 		$end   = new \DateTime( "{$end} 00:00:00" );
-		$diff = $start->diff( $end )->days;
+		$diff  = $start->diff( $end )->days;
 		if ( $diff > 365 * 1 ) {
 			// Over 2 years, year month.
 			return 'ga:yearMonth';

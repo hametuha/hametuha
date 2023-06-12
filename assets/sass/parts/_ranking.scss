@@ -1,133 +1,232 @@
 // ランキング用
+.ranking-back-to-top {
+	margin: 40px 0;
+}
 
+#ranking-detail {
+	padding-top: 60px;
 
-// 背景色が点滅
-@include keyframes( ranker ){
-  0%, 100%{
-    color: yellow;
-  }
-  50%{
-    color: orange;
-  }
+	h3 {
+		font-size: 1.2em;
+		font-weight: bold;
+		margin: 2em 0 1em;
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	li {
+		margin: 0.5em 0;
+	}
+}
+
+.archive-ranking {
+
+	padding: 0;
+	margin: 40px 0;
+
+	&-title {
+		font-size: 2em;
+		font-family: $work-body;
+		margin: 3em 0 2em;
+
+		header + & {
+			margin-top: 0;
+		}
+	}
+
 }
 
 
+// 背景色が点滅
+@include keyframes(ranker) {
+	0%, 100% {
+		color: yellow;
+	}
+	50% {
+		color: orange;
+	}
+}
+
 // リスト
-.rank-list{
-  position: relative;
-  .pull-left{
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
-    position: relative;
-    font-size: 40px;
-    color: white;
-    .icon-circle2{
-      position: absolute;
-      top: 0;
-      left: 0;
-      font-size: 80px;
-      color: $thin-border;
-      z-index: 1;
-    }
-    strong{
-      position: relative;
-      z-index: 2;
-    }
-    .rank-status{
-      position: absolute;
-      top: 110%;
-      left: 50%;
-      font-size: 30px;
-      margin-left: -15px;
-      z-index: 5;
-      color: $more-shade-font;
-      &.icon-new{
-        color: $brand-warning;
-      }
-      &.icon-arrow-up-right2{
-        color: $brand-danger;
-      }
-      &.icon-arrow-down-right2{
-        color: $brand-primary;
-      }
-    }
-  }
-  &.king{
-    .pull-left{
-      color: black;
-      .icon-circle2{
-        color: #ffff00;;
-      }
-    }
-  }
-  &.ranker{
-    .pull-left{
-      .icon-circle2{
-        color: #ba5c00;
-      }
-    }
-  }
-  .rank-icon{
-    position: absolute;
-    display: block;
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
-    @include animation( ranker 3s linear infinite );
-  }
+.rank-list {
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	border-bottom: 1px solid $thin-border;
+
+	&:first-child {
+		border-top: 1px solid $thin-border;
+	}
+
+	&-link {
+		display: flex;
+		align-items: center;
+
+		&:link,
+		&:visited {
+			color: currentColor;
+			text-decoration: none;
+		}
+
+		&:hover,
+		&:active {
+			color: currentColor;
+			text-decoration: none;
+			background-color: $gray-lighter;
+		}
+	}
+
+	&-header {
+		width: 80px;
+	}
+
+	&-score {
+		width: 80px;
+		height: 80px;
+		line-height: 80px;
+		border-radius: 50%;
+		text-align: center;
+		strong {
+			font-size: 60px;
+		}
+
+		&-1 {
+			background-color: #f6f67e;
+		}
+
+		&-2 {
+			background-color: #eee;
+		}
+
+		&-3 {
+			background-color: #e8b785;
+		}
+
+		strong#{&}-digit3 {
+			font-size: 40px;
+		}
+		strong#{&}-digit4 {
+			font-size: 24px;
+		}
+		strong#{&}-digit6 {
+			font-size: 12px;
+		}
+	}
+
+	&-status {
+		text-align: center;
+		padding-top: 20px;
+		font-size: 24px;
+		font-weight: normal;
+		color: $more-shade-font;
+
+		.icon-new {
+			color: $brand-warning;
+		}
+
+		.icon-arrow-up-right2 {
+			color: $brand-danger;
+		}
+
+		.icon-arrow-down-right2 {
+			color: $brand-primary;
+		}
+	}
+
+	&-body {
+		flex: 1;
+		box-sizing: border-box;
+		padding: 20px;
+	}
+
+	&-title {
+		font-family: $work-title;
+		font-size: 20px;
+		margin: 0 0 20px;
+
+		small {
+			font-size: 16px;
+			margin-left: 1em;
+			display: inline-block;
+			background-color: $gray;
+			color: #fff;
+			padding: 2px;
+		}
+	}
+
+	&-meta {
+		margin: 10px 0;
+	}
+
+	.avatar {
+		border-radius: 50%;
+		margin-right: 0.5em;
+		@media screen and (max-width: $screen-sm-max ) {
+			width: 24px;
+			height: 24px;
+		}
+	}
+
 }
 
 @include bg-blink(cell-blink, white, yellow);
 
 // カレンダー
-.calendar-year{
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  caption{
-    padding: 1em;
-    font-size: 1.25em;
-    color: $shade-font;
-    border-top: 3px double $thin-border;
-  }
-  th, td{
-    border: 1px solid $thin-border;
-    text-align: center;
-    padding: 0;
-    a{
-      display: block;
-      padding: 0.5em;
-      &:hover{
-        text-decoration: none;
-        background-color: $zebra-bg;
-      }
-    }
-    span{
-      display: block;
-      padding: 0.5em;
-      color: $more-shade-font;
-      &.on{
-        color: $link-color;
-        @include animation(cell-blink 3s linear infinite);
-      }
-    }
-  }
+.calendar-year {
+	margin-top: 40px;
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+
+	caption {
+		padding: 1em;
+		font-size: 1.25em;
+		color: $shade-font;
+		border-top: 3px double $thin-border;
+	}
+
+	th, td {
+		border: 1px solid $thin-border;
+		text-align: center;
+		padding: 0;
+
+		a {
+			display: block;
+			padding: 0.5em;
+
+			&:hover {
+				text-decoration: none;
+				background-color: $zebra-bg;
+			}
+		}
+
+		span {
+			display: block;
+			padding: 0.5em;
+			color: $more-shade-font;
+
+			&.on {
+				color: $link-color;
+				@include animation(cell-blink 3s linear infinite);
+			}
+		}
+	}
 }
 
 @media only screen and (max-width: $screen-xs-max) {
-  .rank-list{
-    .pull-left{
-      width: 60px;
-      height: 60px;
-      line-height: 60px;
-      font-size: 32px;
-      .icon-circle2{
-        font-size: 60px;
-      }
-    }
-  }
+	.rank-list {
+		.pull-left {
+			width: 60px;
+			height: 60px;
+			line-height: 60px;
+			font-size: 32px;
+
+			.icon-circle2 {
+				font-size: 60px;
+			}
+		}
+	}
 }

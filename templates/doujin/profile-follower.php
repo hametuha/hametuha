@@ -9,7 +9,7 @@
 		<div class="row followers">
 
 			<div class="col-xs-12 follower__container" ng-controller="followed"
-			     ng-class="(tabs[0].loading || tabs[1].loading ? 'follower__container--loading' : '')">
+				 ng-class="(tabs[0].loading || tabs[1].loading ? 'follower__container--loading' : '')">
 
 				<uib-tabset justified="true" ng-init="detectTab()">
 

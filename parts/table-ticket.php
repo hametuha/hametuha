@@ -1,15 +1,15 @@
 <?php
 /* @var $lwp Literally_WordPress */
 global $lwp;
-$footer_note = $lwp->event->get_footer_note(get_the_ID());
+$footer_note = $lwp->event->get_footer_note( get_the_ID() );
 ?>
-<?php if(lwp_has_ticket()): ?>
+<?php if ( lwp_has_ticket() ) : ?>
 <div class="hametu-ticket-wrap">
 
 	<table class="lwp-ticket-list table">
-		<?php if (lwp_is_event_available()): ?>
-			<caption><?php echo lwp_selling_limit('Y年n月j日（D）'); ?>まで！</caption>
-		<?php else: ?>
+		<?php if ( lwp_is_event_available() ) : ?>
+			<caption><?php echo lwp_selling_limit( 'Y年n月j日（D）' ); ?>まで！</caption>
+		<?php else : ?>
 			<caption class="alert alert-danger">申込期限は過ぎました</caption>
 		<?php endif; ?>
 		<thead>
@@ -21,27 +21,28 @@ $footer_note = $lwp->event->get_footer_note(get_the_ID());
 			</tr>
 		</thead>
 		<tbody>
-			<?php lwp_list_tickets('wrap=&callback=_hametuha_lwp_ticket_table'); ?>
+			<?php lwp_list_tickets( 'wrap=&callback=_hametuha_lwp_ticket_table' ); ?>
 		</tbody>
 	</table><!-- //.lwp-ticket-list -->
 	
 	
 
-	<?php if ( !empty($footer_note) ): ?>
+	<?php if ( ! empty( $footer_note ) ) : ?>
 		<div class="ticket-notes">
-            <p class="alert"><?= $footer_note ?></p>
-            <?php if( lwp_is_cancelable() ): ?>
+			<p class="alert"><?php echo $footer_note; ?></p>
+			<?php if ( lwp_is_cancelable() ) : ?>
 			<p class="alert alert-info">
-                このチケットはキャンセル可能です。
+				このチケットはキャンセル可能です。
 			</p>
-            <?php else: ?>
-            <p class="alert alert-warning">
-                このチケットはキャンセルできません。
-            </p>
-            <?php endif; ?>
+			<?php else : ?>
+			<p class="alert alert-warning">
+				このチケットはキャンセルできません。
+			</p>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 	</div><!-- //.hametu-ticket-wrap -->
 
 
-<?php endif; 
+	<?php
+endif;

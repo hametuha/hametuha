@@ -59,8 +59,8 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
  * Add extra values to user cookie.
  */
 add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
-	$values[ 'role' ] = hametuha_user_role( $user_id );
-	$values[ 'is_author' ] = user_can( $user_id, 'edit_posts' ) ? 'true' : '';
+	$values['role']      = hametuha_user_role( $user_id );
+	$values['is_author'] = user_can( $user_id, 'edit_posts' ) ? 'true' : '';
 	return $values;
 }, 10, 2 );
 

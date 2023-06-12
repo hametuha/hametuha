@@ -28,10 +28,10 @@ class IdeaMetabox extends EditMetaBox {
 			'label'    => 'アイデアの作者',
 			'required' => false,
 		],
-	    'idea_id'     => [
-		    'class'    => Text::class,
-	        'label'    => 'ID',
-	        'required' => false,
-	    ],
+		'idea_id'     => [
+			'class'    => Text::class,
+			'label'    => 'ID',
+			'required' => false,
+		],
 	];
 }

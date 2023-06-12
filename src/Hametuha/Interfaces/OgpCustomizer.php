@@ -3,8 +3,8 @@
 namespace Hametuha\Interfaces;
 
 
-interface OgpCustomizer
-{
+interface OgpCustomizer {
+
 
 	/**
 	 * Set OGP

@@ -16,15 +16,15 @@ use WPametu\UI\Admin\EmptyMetaBox;
  * @property-read CompiledFiles $files
  * @property-read Collaborators $collaborators
  */
-abstract class SeriesBase extends EmptyMetaBox
-{
+abstract class SeriesBase extends EmptyMetaBox {
+
 
 	/**
 	 * Only series
 	 *
 	 * @var array
 	 */
-	protected $post_types = ['series'];
+	protected $post_types = [ 'series' ];
 
 
 	/**
@@ -34,8 +34,8 @@ abstract class SeriesBase extends EmptyMetaBox
 	 *
 	 * @return mixed
 	 */
-	public function __get($name){
-		switch( $name ){
+	public function __get( $name ) {
+		switch ( $name ) {
 			case 'series':
 				return Series::get_instance();
 			case 'files':
@@ -43,7 +43,7 @@ abstract class SeriesBase extends EmptyMetaBox
 			case 'collaborators':
 				return Collaborators::get_instance();
 			default:
-				return parent::__get($name);
+				return parent::__get( $name );
 		}
 	}
 

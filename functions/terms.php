@@ -31,12 +31,12 @@ function hametuha_get_nouns( $post = null, $filter = true ) {
  * @param null|int|WP_Post $post       投稿オブジェクトかID
  * @param bool             $link       リンクを付けるかどうか
  * @param string           $prefix     ハッシュタグの場合は#、それ以外は@
- * @param string 		   $class_name タグのクラス名
+ * @param string           $class_name タグのクラス名
  * @return string[]
  */
 function hametuha_terms_to_hashtag( $taxonomies, $post = null, $link = false, $prefix = '#', $class_name = 'tag-link' ) {
 	$assigned_terms = [];
-	$taxonomies = (array) $taxonomies;
+	$taxonomies     = (array) $taxonomies;
 	foreach ( $taxonomies as $taxonomy ) {
 		$terms = get_the_terms( get_post( $post ), $taxonomy );
 		if ( is_wp_error( $terms ) || ! $terms ) {

@@ -1,6 +1,6 @@
-<?php get_header() ?>
+<?php get_header(); ?>
 
-<?php the_post() ?>
+<?php the_post(); ?>
 
 <div class="tweet--big">
 
@@ -10,13 +10,13 @@
 
 			<div class="tweet__author">
 				<h1 class="tweet__author--header">
-					<a href="<?= esc_url( home_url( '/doujin/detail/' . get_the_author_meta( 'user_nicename' ) . '/' ) ) ?>">
-						<?= get_avatar( get_the_author_meta( 'ID' ), 96, '', get_the_author(), [ 'class' => 'avatart img-circle' ] ) ?>
-						<span class="tweet__author--name"><?php the_author() ?></span>
-						<small><?= hametuha_user_role( get_the_author_meta( 'ID' ) ) ?></small>
+					<a href="<?php echo esc_url( home_url( '/doujin/detail/' . get_the_author_meta( 'user_nicename' ) . '/' ) ); ?>">
+						<?php echo get_avatar( get_the_author_meta( 'ID' ), 96, '', get_the_author(), [ 'class' => 'avatart img-circle' ] ); ?>
+						<span class="tweet__author--name"><?php the_author(); ?></span>
+						<small><?php echo hametuha_user_role( get_the_author_meta( 'ID' ) ); ?></small>
 						<br/>
 						<small class="tweet__date text-muted">
-							<i class="icon-calendar"></i> <?php the_time( get_option( 'date_format' ) . ' H:i' ) ?>
+							<i class="icon-calendar"></i> <?php the_time( get_option( 'date_format' ) . ' H:i' ); ?>
 						</small>
 					</a>
 				</h1>
@@ -25,14 +25,14 @@
 					<div class="tweet__action dropdown">
 
 						<button class="btn btn-link dropdown-toggle" type="button" id="dropdownTweet"
-						        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 							<i class="icon-cog"></i>
 						</button>
 
 						<ul class="dropdown-menu" aria-labelledby="dropdownTweet">
 							<?php if ( ! \Hametuha\Model\Anpis::get_instance()->is_tweet() ) : ?>
 								<li>
-									<a href="<?= home_url( "/anpi/mine/edit/{$post->ID}/", 'https' ) ?>">編集</a>
+									<a href="<?php echo home_url( "/anpi/mine/edit/{$post->ID}/", 'https' ); ?>">編集</a>
 								</li>
 							<?php endif; ?>
 							<li><a href="#">削除</a></li>
@@ -47,13 +47,13 @@
 				<?php if ( \Hametuha\Model\Anpis::get_instance()->is_tweet() ) : ?>
 					<?php the_tweet(); ?>
 				<?php else : ?>
-					<h2><?php the_title() ?></h2>
+					<h2><?php the_title(); ?></h2>
 				<?php endif; ?>
 			</div>
 
 			<div class="tweet__meta">
 				<span class="tweet__comment">
-					<i class="icon-bubble"></i> | <?php comments_number( '0', '1', '%' ) ?>
+					<i class="icon-bubble"></i> | <?php comments_number( '0', '1', '%' ); ?>
 				</span>
 				<span class="tweet__mentions">
 				@ |
@@ -61,16 +61,18 @@
 						<?php foreach ( $post->mention_to as $user ) : ?>
 							<span
 								class="help-tip"
-								title="<?= esc_attr( $user->display_name ) ?>">
-							<?= get_avatar(
-									$user->ID, 32,
-									'',
-									$user->display_name,
-									[
+								title="<?php echo esc_attr( $user->display_name ); ?>">
+							<?php
+							echo get_avatar(
+								$user->ID, 32,
+								'',
+								$user->display_name,
+								[
 									'title' => $user->display_name,
 									'class' => 'img-circle avatar tweet__mentions--img',
-									]
-								); ?>
+								]
+							);
+							?>
 						</span>
 						<?php endforeach; ?>
 					<?php else : ?>
@@ -85,14 +87,14 @@
 			</div>
 			<?php endif; ?>
 
-			<?php comments_template() ?>
+			<?php comments_template(); ?>
 
 		</article>
 
 
-		<?php get_template_part( 'parts/share' ) ?>
+		<?php get_template_part( 'parts/share' ); ?>
 
 	</div>
 
 </div>
-<?php get_footer() ?>
+<?php get_footer(); ?>
