@@ -31,7 +31,7 @@ function hametuha_ga_ranking( $start, $end, $params = [], $metrics = 'screenPage
 	$request['orderBys'] = [
 		[
 			'metric' => [
-				'metricName' => $params['sorts'],
+				'metricName' => $params['sort'],
 			],
 			'desc'   => ( 'DESC' === $params['order'] ),
 		],
