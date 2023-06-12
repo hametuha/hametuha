@@ -393,5 +393,4 @@ class Post extends Command {
 			self::e( $e->getCode() . ': ' . $e->getMessage() );
 		}
 	}
-
 }
