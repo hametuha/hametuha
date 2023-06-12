@@ -240,16 +240,12 @@ function ranking_title() {
 	switch ( get_query_var( 'ranking' ) ) {
 		case 'yearly':
 			return sprintf( '%d年のランキング', get_query_var( 'year' ) );
-			break;
 		case 'monthly':
 			return sprintf( '%d年%d月のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ) );
-			break;
 		case 'daily':
 			return sprintf( '%d年%d月%d日のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
-			break;
 		case 'weekly':
 			return sprintf( '%d年%d月%d日までの週間ランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
-			break;
 		case 'best':
 			$title = '歴代ベスト';
 			if ( $slug = get_query_var( 'category_name' ) ) {
@@ -257,10 +253,10 @@ function ranking_title() {
 				$title .= sprintf( '（%s部門）', esc_html( $cat->name ) );
 			}
 			return $title;
-			break;
+		case 'top':
+			return '厳粛なランキング';
 		default:
 			return 'ランキング';
-			break;
 	}
 }
 
