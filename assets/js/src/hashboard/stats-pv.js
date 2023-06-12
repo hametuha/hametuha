@@ -39,7 +39,7 @@
             }]
           }
         }
-      }
+      };
     },
     computed: {},
 
@@ -152,7 +152,7 @@
           self.records = response.records;
         }).fail($.hbRestError()).always(function () {
           self.loading = false;
-        })
+        });
       }
     }
   });

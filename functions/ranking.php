@@ -109,6 +109,55 @@ SQL;
 }
 
 /**
+ * その作品の前後の記事を出す
+ *
+ * @param int              $limit 2の倍数。
+ * @param int|null|WP_Post $post  投稿オブジェクト。
+ * @return WP_Post[]
+ */
+function hametuha_get_author_work_siblings( $limit = 6, $post = null ) {
+	$post = get_post( $post );
+	if ( 0 !== $limit % 2 ) {
+		$limit++;
+	}
+	$found = [
+		'before' => [],
+		'after' => [],
+	];
+	foreach ( [
+		'before' => 'DESC',
+		'after'  => 'ASC',
+	] as $param => $order ) {
+		$found[ $param ] = get_posts( [
+			'post_type'      => $post->post_type,
+			'post_status'    => 'publish',
+			'author'         => $post->post_author,
+			'post__not_in'   => [ $post->ID ],
+			'posts_per_page' => $limit,
+			'orderby'        => [ 'date' => $order ],
+			'date_query'     => [
+				[
+					$param => mysql2date( 'Y-m-d H:i', $post->post_date ),
+				],
+			],
+		] );
+	}
+	$posts = [];
+	for ( $i = 0; $i < $limit; $i++ ) {
+		if ( count( $posts ) >= $limit ) {
+			break;
+		}
+		if ( isset( $found['before'][ $i ] ) ) {
+			$posts[] = $found['before'][ $i ];
+		}
+		if ( isset( $found['after'][ $i ] ) ) {
+			array_unshift( $posts, $found['after'][$i] );
+		}
+	}
+	return $posts;
+}
+
+/**
  * ランキングページか否か
  *
  * @param string $type

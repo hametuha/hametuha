@@ -145,37 +145,55 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 /**
  * 最新のキャンペーンを取得する
  *
- * @param int    $limit      Number to retrieve. 0 means all.
- * @param string $date       Date string or 'now'. Default 'now'.
+ * @param int    $limit Number to retrieve. 0 means all.
+ * @param string $date  Date string or 'now'. Default 'now'.
  *
- * @return array|int|WP_Error
+ * @return WP_Term[]
  */
 function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
-	if ( 'now' === $date ) {
-		$date = date_i18n( 'Y-m-d' );
+	return hametuha_get_nearing_deadline_campaigns( $date, '', $limit );
+}
+
+/**
+ * 指定の範囲内に〆切があるキャンペーンを近い順に取得する
+ *
+ * @param string $start_date 〆切日の起算日。初期値は今日の日付。
+ * @param string $end_date   含める日付。指定しない場合は未来の日付すべて。
+ * @param int    $limit      取得数。-1の場合はすべて。
+ * @return WP_Term[]
+ */
+function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date = '', $limit = 5 ) {
+	if ( 'now' === $start_date ) {
+		$start_date = date_i18n( 'Y-m-d' );
 	}
+	// 初期クエリ
 	$args = [
 		'taxonomy'   => 'campaign',
 		'hide_empty' => false,
+		'number'     => $limit,
+		'meta_key'   => '_campaign_limit',
+		'orderby'    => 'meta_value',
+		'order'      => 'ASC',
 		'meta_query' => [],
-		'number'  => $limit,
-		'orderby' => 'meta_value',
-		'order'   => 'DESC',
 	];
-	if ( $date ) {
-		$args['meta_query'] = [
-			[
-				'key'     => '_campaign_limit',
-				'value'   => $date,
-				'compare' => '>=',
-				'type'    => 'DATE',
-			],
+	if ( ! $end_date ) {
+		$args['meta_query'][] = [
+			'key'     => '_campaign_limit',
+			'value'   => $start_date,
+			'compare' => '>=',
+			'type'    => 'DATE',
 		];
 	} else {
-		$args['meta_key'] = '_campaign_limit';
+		// 範囲指定されている。
+		$args['meta_query'][] = [
+			'key'     => '_campaign_limit',
+			'value'   => [ $start_date, $end_date ],
+			'compare' => 'BETWEEN',
+			'type'    => 'DATE',
+		];
 	}
 	$campaigns = get_terms( $args );
-	return $campaigns && ! is_wp_error( $campaigns ) ? $campaigns : [];
+	return ( $campaigns && ! is_wp_error( $campaigns ) ) ? $campaigns : [];
 }
 
 /**
@@ -187,7 +205,7 @@ function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
  * @return bool
  */
 function hametuha_is_available_campaign( $term, $when = 'now' ) {
-	$tz   = new DateTimeZone( 'Asia/Tokyo' );
+	$tz   = new DateTimeZone( wp_timezone_string() );
 	$time = new DateTime( $when, $tz );
 	if ( ! $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) {
 		return true;

@@ -1,4 +1,9 @@
-<?php $author_id = (int) get_the_author_meta( 'ID' ); ?>
+<?php
+/**
+ * 著者プロフィール、おもに投稿ページでのみ利用。
+ */
+$author_id = (int) get_the_author_meta( 'ID' );
+?>
 <div class="author-profile row" itemscope itemprop="author" itemtype="http://schema.org/Person">
 	<div class="col-sm-3 col-xs-12 text-center">
 		<?= get_avatar( $author_id, 160, '', get_the_author(), [ 'itemprop' => 'image' ] ) ?>

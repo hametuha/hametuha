@@ -161,6 +161,16 @@ HTML;
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
 				</div>
 
+				<?php
+				// 関連タグを取得
+				$terms = hametuha_terms_to_hashtag( [ 'nouns', 'post_tag', 'campaign', 'category' ], get_post(), true );
+				if ( $terms ):
+				?>
+				<p class="post-tags">
+					<?php echo implode( ' ', $terms ); ?>
+				</p>
+				<?php endif; ?>
+
 				<p class="finish-nav">
 					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>
 						これは<?php the_terms( get_the_ID(), 'campaign' ) ?>の応募作品です。<br />
@@ -175,23 +185,23 @@ HTML;
 
 			<?php get_template_part( 'parts/share', 'big' ) ?>
 
-			<div class="container">
+			<section class="single-author-section" id="post-author">
 
-				<div id="post-author" class="author-container m20">
-					<?php get_template_part( 'parts/author' ) ?>
+				<div class="container">
+					<h2 class="list-title list-title-inverse">
+						<?php esc_html_e( '著者', 'hametuha' ) ?>
+					</h2>
+
+					<div class="author-container m20">
+						<?php get_template_part( 'parts/author' ) ?>
+					</div>
+
+					<?php get_template_part( 'parts/list', 'author' ) ?>
 				</div>
 
-				<?php get_template_part( 'parts/list', 'author' ) ?>
+			</section>
 
-				<?php get_sidebar( 'books' ); ?>
-
-				<?php
-				// Yarpp関連記事
-				if ( function_exists( 'related_posts' ) ) {
-					related_posts();
-				}
-				?>
-
+			<div class="container recommend-wrapper">
 				<div class="row row--recommend row--catNav">
 
 					<div class="col-xs-12 col-sm-4">
@@ -249,6 +259,13 @@ HTML;
 					</div>
 				</div>
 
+				<h2 class="series__title--share text-center">
+					<small class="series__title--caption">Books</small>
+					<?php esc_html_e( '破滅派の書籍', 'hametuha' ) ?>
+				</h2>
+
+				<?php get_sidebar( 'books' ); ?>
+
 
 			</div>
 			<!-- // .work-wrapper -->
@@ -257,13 +274,6 @@ HTML;
 		</div>
 		<!-- //#content-wrapper -->
 
-
-		<div id="reading-nav">
-			<div class="container">
-				<div id="slider"></div>
-				<a href="#" class="reset-viewer"><i class="icon-close3"></i></a>
-			</div>
-		</div>
 
 		<div id="finish-wrapper" class="overlay-container">
 			<div class="container">
@@ -361,14 +371,6 @@ HTML;
 			</div>
 		</div>
 
-		<div id="tags-wrapper" class="overlay-container">
-			<div id="post-tags" class="container">
-				<div class="alert alert-danger m20">この機能は廃止予定です。</div>
-				<?php Hametuha\Rest\UserTag::view( 'parts/feedback', 'tag' ) ?>
-			</div>
-			<!-- //#post-tags -->
-		</div>
-
 		<div id="comments-wrapper" class="overlay-container">
 			<div id="post-comment" class="container">
 				<?php comments_template(); ?>
@@ -388,12 +390,6 @@ HTML;
 	<footer id="footer-single">
 		<nav class="container">
 			<ul class="clearfix">
-				<li>
-					<a href="#reading-nav">
-						<i class="icon-cog"></i><br/>
-						<span>機能</span>
-					</a>
-				</li>
 				<li>
 					<a href="#finish-wrapper">
 						<i class="icon-books"></i><br/>
@@ -415,12 +411,6 @@ HTML;
 								<?= $count > 100 ? '99+' : $count ?>
 							</small>
 						<?php endif; ?>
-					</a>
-				</li>
-				<li>
-					<a href="#tags-wrapper">
-						<i class="icon-tags"></i><br/>
-						<span>タグ</span>
 					</a>
 				</li>
 			</ul>

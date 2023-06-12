@@ -60,7 +60,7 @@ get_header( 'breadcrumb' );
 					<?php if ( false !== array_search( get_post_type(), [ 'faq', 'anpi', 'announcement' ] ) ) : ?>
 
 						<h2><i class="icon-vcard"></i> 著者情報</h2>
-						<?php get_template_part( 'parts/author' ) ?>
+						<?php get_template_part( 'parts/author', 'narrow' ) ?>
 
 					<?php endif; ?>
 

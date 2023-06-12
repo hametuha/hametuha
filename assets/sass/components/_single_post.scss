@@ -91,7 +91,7 @@ body.single-post{
   }
 }
 
-
+// ラッパー
 #content-wrapper, .overlay-container{
   position: fixed;
   height: 100%;
@@ -151,79 +151,6 @@ body.single-post{
   }
 }
 
-// スライダー
-#reading-nav{
-  display: none;
-  position: fixed;
-  width: 100%;
-  bottom: $single-footer-height;
-  background-color: $footer-navbar-bg;
-  .container{
-    position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 20px 60px 20px 20px;
-  }
-  #slider{
-
-  }
-  #slider-ticker{
-    position: absolute;
-    width: 60px;
-    height: 30px;
-    line-height: 30px;
-    padding: 5px;
-    top: -50px;
-    left: 50%;
-    font-size: 12px;
-    font-weight: normal;
-    margin-left: -30px;
-    background-color: $navbar-default-bg;
-    text-align: center;
-    color: $footer-navbar-bg;
-    &:after{
-      content: '';
-      position: absolute;
-      display: block;
-      border: 10px solid transparent;
-      border-top-color: $navbar-default-bg;
-      top: 30px;
-      left: 50%;
-      margin-left: -10px;
-    }
-  }
-  i{
-    position: absolute;
-    font-size: 30px;
-    top: 50%;
-    right: 5px;
-    margin-top: -15px;
-    color: $inverse-body;
-    text-decoration: none;
-  }
-}
-.show-nav #reading-nav{
-  display: block;
-  z-index: 10;
-  #slider{
-    position: relative;
-    display: block;
-    margin: 5px 35px;
-    height: 10px;
-    background: #fff;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    .ui-slider-handle{
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: #000;
-      border: 1px solid #ddd;
-    }
-  }
-}
 
 // フッター
 #footer-single{
@@ -239,7 +166,8 @@ body.single-post{
     margin: 0;
     padding: 0;
     li{
-      width: 20%;
+      width: 33.3333%;
+
       float: left;
       margin: 0;
       padding: 0;
@@ -486,6 +414,35 @@ p.pixiv-embed-illust{
   color: $shade-font;
 }
 
+// タグ
+.post-tags {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.tag-link {
+  display: inline-block;
+  font-family: $font-family-sans-serif;
+  margin: 0 1em 1em 0;
+  font-size: 16px;
+  padding: 0.25em 1em;
+  border-radius: 1em;
+  border: 1px solid $shade-font;
+
+  &:link,
+  &:visited {
+    color: $shade-font;
+    text-decoration: none;
+  }
+  &:hover,
+  &:active {
+    color: $gray-dark;
+    border-color: $gray-dark;
+    background-color: $gray-lighter;
+    text-decoration: none;
+  }
+}
+
 // ナビゲーション
 .series-pager{
   @include clearfix();
@@ -571,10 +528,13 @@ p.pixiv-embed-illust{
   color: $more-shade-font;
   text-align: center;
   margin: 1em 0;
+
   i{
+    margin-top: 0.5em;
     font-size: 1.8em;
   }
 }
+
 // シェア
 #post-share{
   margin-bottom: 1em;
@@ -584,6 +544,23 @@ p.pixiv-embed-illust{
   .input-group{
     margin-top: 1em;
   }
+}
+
+// 著者パーツ
+.single-author-section {
+  margin: 2em 0;
+  padding: 2em 0;
+  background-color: $navbar-default-bg;
+
+  .author-profile {
+    border-top: none;
+    border-bottom: none;
+  }
+}
+
+// おすすめ
+.recommend-wrapper {
+  padding-bottom: 40px;
 }
 
 // 評価

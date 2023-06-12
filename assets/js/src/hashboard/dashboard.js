@@ -6,6 +6,8 @@
 
 (function ($) {
 
+  "use strict";
+
   Vue.component('hametuha-notification-block', {
     data: function(){
       return {
