@@ -7,7 +7,7 @@
 add_action( 'init', function () {
 	// 応募
 	register_taxonomy( 'campaign', 'post', [
-		'label'             => '応募',
+		'label'             => '公募',
 		'hierarchical'      => true,
 		'public'            => true,
 		'show_admin_column' => true,

@@ -3,6 +3,7 @@
 
 namespace Hametuha\Commands;
 
+use cli\Table;
 use Hametuha\Hooks\Analytics;
 use Hametuha\Model\Notifications;
 use WPametu\Service\Akismet;
@@ -268,6 +269,8 @@ SQL;
 
 	/**
 	 * Test measurement protocol
+	 *
+	 * @deprecated UAは2023年7月から廃止。
 	 */
 	public function measurement() {
 		$analytics = Analytics::get_instance();
@@ -277,5 +280,30 @@ SQL;
 			'el'                        => 100,
 			Analytics::DIMENSION_AUTHOR => 66,
 		] );
+	}
+
+	/**
+	 * 人気の投稿を取得する
+	 *
+	 * @synopsis [--start=<start>] [--end=<end>] [--post_type=<post_type>] [--limit=<limit>]
+	 * @param array $args  Command arguments.
+	 * @param array $assoc Command option.
+	 * @return void
+	 */
+	public function hot_posts( $args, $assoc ) {
+		$start     = $assoc['start'] ?? date_i18n( 'Y-m-d', time() - DAY_IN_SECONDS * 7 );
+		$end       = $assoc['end'] ?? date_i18n( 'Y-m-d' );
+		$limit     = $assoc['limit'] ?? 10;
+		$post_type = $assoc['post_type'] ?? 'post';
+		$result = hametuha_hot_posts( $start, $end, $post_type, $limit );
+		if ( is_wp_error( $result ) ) {
+			\WP_CLI::error( $result->get_error_message() );
+		}
+		$table = new Table();
+		$table->setHeaders( [ 'Title', 'Path', 'Post Type', 'PV' ] );
+		foreach ( $result as $row ) {
+			$table->addRow( $row );
+		}
+		$table->display();
 	}
 }
