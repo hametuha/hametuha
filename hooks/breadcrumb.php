@@ -7,7 +7,7 @@
 /**
  * ランキングページパンクズリストの改良
  */
-add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail &$bcn ) {
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	if ( ! is_ranking() ) {
 		// なにもしない。
 		return;
@@ -18,7 +18,7 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail &$bcn ) {
 	$link_last = false;
 	$paged     = max( 1, get_query_var( 'paged' ) );
 	if ( 1 < $paged ) {
-		$bcn->add( new bcn_breadcrumb( '2ページ目', null, ['ranking-archive-pages'], '', '', false ) );
+		$bcn->add( new bcn_breadcrumb( sprintf( '%dページ目', $paged ), null, ['ranking-archive-pages'], esc_url( home_url( $_SERVER['REQUEST_URI'] ) ), '', false ) );
 		$link_last = true;
 	}
 	if ( is_ranking( 'best' ) ) {
