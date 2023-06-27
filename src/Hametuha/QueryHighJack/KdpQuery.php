@@ -31,7 +31,6 @@ class KdpQuery extends QueryHighJack {
 		'series' => Series::class,
 	];
 
-
 	/**
 	 * リライトルール
 	 *
@@ -52,7 +51,7 @@ class KdpQuery extends QueryHighJack {
 	 * @return string
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		return '破滅派のKindle本';
+		return '破滅派の電子書跡';
 	}
 
 	/**
@@ -67,6 +66,10 @@ class KdpQuery extends QueryHighJack {
 				'value'   => [ 2 ],
 				'compare' => 'IN',
 			] );
+			$wp_query->set( 'orderby', 'menu_order' );
+			$wp_query->set( 'order', 'DESC' );
+			// テンプレートを変更する
+			add_filter( 'template_include', [ $this, 'template_include' ] );
 		}
 	}
 
@@ -79,6 +82,16 @@ class KdpQuery extends QueryHighJack {
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return (bool) 'kdp' == $wp_query->get( 'meta_filter' );
+		return 'kdp' === $wp_query->get( 'meta_filter' );
+	}
+
+	/**
+	 * テンプレートを変更
+	 *
+	 * @param string $template Template path.
+	 * @return string
+	 */
+	public function template_include( $template ) {
+		return get_template_directory() . '/archive-kdp.php';
 	}
 }
