@@ -74,7 +74,7 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 		/** @var bcn_breadcrumb $item */
 		if ( in_array( 'post-series-archive', $item->get_types(), true ) ) {
 			// これは作品集のアーカイブ
-			$trail = new bcn_breadcrumb( __( '電子書跡', 'hametuha' ), null, ['post-series-archive-kdp'], home_url( 'kdp' ), 'kdp-archive', true );
+			$trail = new bcn_breadcrumb( __( '電子書籍', 'hametuha' ), null, ['post-series-archive-kdp'], home_url( 'kdp' ), 'kdp-archive', true );
 			if ( 1 < (int) get_query_var( 'paged' ) ) {
 				// ページネーションされてる。
 				$trails[] = $trail;

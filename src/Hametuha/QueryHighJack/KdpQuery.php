@@ -51,7 +51,7 @@ class KdpQuery extends QueryHighJack {
 	 * @return string
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		return '破滅派の電子書跡';
+		return '破滅派の電子書籍';
 	}
 
 	/**
