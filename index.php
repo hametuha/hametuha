@@ -12,8 +12,6 @@
 				// Jumbotron
 				if ( is_tax( 'faq_cat' ) ) {
 					get_template_part( 'parts/jumbotron', 'help' );
-				} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
-					get_template_part( 'parts/jumbotron', 'kdp' );
 				} elseif ( is_post_type_archive( 'anpi' ) || is_tax( 'anpi_cat' ) ) {
 					get_template_part( 'parts/jumbotron', 'anpi' );
 				} elseif ( is_post_type_archive( 'announcement' ) ) {

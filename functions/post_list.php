@@ -13,18 +13,19 @@
  * @return array
  */
 function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) {
-	$date    = current_time( 'timestamp' ) - 60 * 60 * 24 * $period;
-	$posts   = [];
-	$query   = new WP_Query( [
+	$date = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
+	$date->sub( new DateInterval( 'P' . $period . 'D' ) );
+	$posts = [];
+	$query = new WP_Query( [
 		'post_type'      => $post_type,
 		'post_status'    => 'publish',
 		'posts_per_page' => $limit * 5,
 		'date_query'     => [
 			[
 				'after' => [
-					'year'  => (int) date_i18n( 'Y', $date ),
-					'month' => (int) date_i18n( 'M', $date ),
-					'day'   => (int) date_i18n( 'D', $date ),
+					'year'  => $date->format( 'Y' ),
+					'month' => $date->format( 'm' ),
+					'day'   => $date->format( 'd' ),
 				],
 			],
 		],

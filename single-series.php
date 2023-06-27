@@ -1,6 +1,12 @@
-<?php get_header(); ?>
+<?php
+/**
+ * 連載ページのテンプレート
+ */
 
-<?php get_header( 'breadcrumb' ); ?>
+get_header();
+get_header( 'sub' );
+get_header( 'breadcrumb' );
+?>
 
 <div class="series__wrap" itemprop="mainEntity"  itemscope itemtype="http://schema.org/Book">
 
@@ -40,7 +46,7 @@
 				<div class="col-xs-12 col-sm-4 series__meta--thumbnail text-center">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<?php
-						the_post_thumbnail( 'medium', [
+						the_post_thumbnail( 'large', [
 							'itemprop' => 'image',
 						] );
 						?>
@@ -119,7 +125,6 @@ endswitch;
 		</div>
 	</div>
 	<!-- //series__row--cover -->
-
 
 	<div class="series__row series__row--meta">
 		<div class="container series__inner">
@@ -479,7 +484,7 @@ endswitch;
 
 			<div class="mt-1 text-center">
 				<a class="btn btn-lg btn-amazon" href="<?php echo home_url( 'kdp' ); ?>">
-					<i class="icon-amazon"></i> もっと見る
+					もっと見る
 				</a>
 			</div>
 
@@ -488,4 +493,6 @@ endswitch;
 
 </div><!-- //.series__wrap -->
 
-<?php get_footer(); ?>
+<?php
+get_footer( 'books' );
+get_footer();

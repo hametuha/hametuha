@@ -117,7 +117,7 @@ class Series extends Model {
 	 */
 	public function get_kdp_url( $post_id ) {
 		$asin = $this->get_asin( $post_id );
-		return $asin ? sprintf( 'http://www.amazon.co.jp/dp/%s/?t=hametuha-22', $asin ) : '';
+		return $asin ? sprintf( 'https://www.amazon.co.jp/dp/%s/ref=nosim?tag=hametuha-22', $asin ) : '';
 	}
 
 	/**

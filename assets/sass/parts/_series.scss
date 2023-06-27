@@ -1,285 +1,459 @@
-.series{
-  &__inner{
-  }
-  &__row{
-    padding: 2em 0;
-    &--cover{
-      background-color: $brand-primary;
-      color: #fff;
-      text-shadow: 0 0 3px rgba(0, 0, 0, .8);
-    }
-    &--author{
-      background-color: #ebebeb;
-    }
-    &--testimonials{
-      background-color: #f9f9f9;
-    }
-    &--share{
-      background: #ebebeb;
-      .work-wrapper + &{
-        background: transparent;
-      }
-    }
-    &--single{
-      margin: 1em 0;
-      img{
-        margin-bottom: 1em;
-        max-width: 200px;
-        width: auto;
-        height: auto;
-      }
-    }
-  }
+.series {
+	&__inner {
+	}
 
-  // メタ情報
-  &__meta{
-    &--thumbnail{
-      max-height: 200px;
-      overflow: visible;
-      @media (max-width: $screen-xs-max) {
-        max-height: none;
-      }
-      img{
-        max-width: 240px;
-        width: auto;
-        height: auto;
-        @include box-shadow(0 0 5px rgba(0, 0, 0, 0.6));
-      }
-    }
-  }
+	&__row {
+		padding: 2em 0;
 
-  // 題字
-  &__title{
-    &--work{
-      color: #fff;
-      display: block;
-      padding-bottom: 0.25em;
-      border-bottom: 3px double #fff;
-    }
-    &--headline{
-      margin-left: 0.5em;
-      color: inherit;
-    }
-    &--represent{
-      color: #fff;
-      display: block;
-      padding-top: 0.25em;
-    }
+		&--cover {
+			background-color: $gray-dark;
+			color: #fff;
+			text-shadow: 0 0 3px rgba(0, 0, 0, .8);
+		}
 
-    &--author,
-    &--share,
-    &--review,
-    &--testimonials
-    {
-      color: #444;
-    }
-    &--amazon,
-    &--list,
-    &--related{
-      color: #999;
-    }
-    &--author,
-    &--list{
+		&--author {
+			background-color: #ebebeb;
+		}
 
-      @include mq-max( $screen-xs-max ) {
-        text-align: center;
-        margin-bottom: 2em;
-      }
-    }
-    &--caption{
-      display: block;
-      color: inherit;
-      font-size: 0.5em;
-      margin-bottom: 0.25em;
-    }
-  }
-  &__excerpt{
-    margin: 2em 0;
-  }
+		&--testimonials {
+			background-color: #f9f9f9;
+		}
 
-  &__link{
-    a:nth-child(3){
-      margin-left: 1em;
-      @media only screen and (max-width: #{$screen-sm-max}) {
-        margin-top: 0.5em;
-        margin-left: 0;
-      }
-    }
-    &--divider{
-      display: none;
-      @media only screen and (max-width: #{$screen-sm-max}){
-        display: block;
-      }
-    }
-  }
+		&--share {
+			background: #ebebeb;
 
-  // 値段
-  &__price{
-    color: #ef9936;
-    font-size: 1.4em;
-    strong{
-      font-size: 1.4em;
-    }
-  }
+			.work-wrapper + & {
+				background: transparent;
+			}
+		}
 
-  // ステータス
-  &__status{
-    padding-left: 0;
-    li{
-      list-style: none;
-      color: #666;
-    }
-    i.ok{
-      color: $brand-success;
-    }
-    i.ng{
-      color: $brand-danger;
-    }
-  }
+		&--single {
+			margin: 1em 0;
 
-  // 著者
-  &__author{
-    padding: 1em 0;
-    min-height: 100px;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    &:last-child{
-      border-bottom: none;
-    }
-    &--photo{
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY( -50% );
-      width: 80px;
-      @include mq-max( $screen-xs-max ) {
-        width: 60px;
-      }
-    }
-    .avatar{
-      max-width: 100%;
-      width: auto;
-      height: auto;
-      vertical-align: middle;
-    }
-    &--desc{
-      margin: 1em 0;
-    }
-    &--longdesc{
-      @include long-desc(#ebebeb);
-    }
-    &--profile{
-      position: relative;
-      padding-left: 100px;
-      @include mq-max( $screen-xs-max ) {
-        padding-left: 80px;
-      }
+			img {
+				margin-bottom: 1em;
+				max-width: 200px;
+				width: auto;
+				height: auto;
+			}
+		}
+	}
 
-      h3{
-        margin-top: 0;
-        padding-right: 100px;
-      }
+	// メタ情報
+	&__meta {
+		&--thumbnail {
+			max-height: 450px;
+			overflow: visible;
+			@media (max-width: $screen-xs-max) {
+				max-height: none;
+			}
 
-      .btn{
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-    }
+			img {
+				max-width: 100%;
+				width: auto;
+				height: auto;
+				@include box-shadow(0 0 5px rgba(0, 0, 0, 0.6));
+			}
+		}
+	}
 
-  }
+	// 題字
+	&__title {
+		&--work {
+			color: #fff;
+			display: block;
+			padding-bottom: 0.25em;
+			margin-bottom: 0.25em;
+			border-bottom: 3px double #fff;
+			font-family: $work-body;
+		}
 
+		&--headline {
+			margin-left: 0.5em;
+			color: inherit;
+		}
 
-  // 作品一覧
-  &__list{
-    padding-left: 0;
-  }
-  &__item{
-    list-style:none;
-    border-bottom: 1px solid #ddd;
-    &:first-child{
-      @include mq-max( $screen-xs-max ) {
-        border-top: 1px solid #ddd;
-      }
-    }
-    &:last-child{
-      border-bottom: none;
-    }
-    &--link{
-      display: block;
-      position: relative;
-      transition: color .3s linear;
-      &:link{
-        color: #000;
-        text-decoration: none;
-      }
-      &:visited{
-        color: #444;
-        text-decoration: none;
-      }
-      &:hover, &:active{
-        text-decoration: none;
-        color: $brand-primary;
-      }
-    }
-    &--meta{
-      margin-bottom: 10px;
-    }
-    &--title{
-      font-family: $work-body;
-      display: inline;
-      font-size: 1.4em;
-      @at-root a:visited &:after{
-        content: "";
-      }
-    }
-    &--counter{
-    }
-    &--author{
-      font-family: $work-body;
-      float: right;
-      margin-left: 1em;
-    }
-    &--body{
-      padding: 20px;
-    }
-    &--info{
-      color: #888;
-      margin-bottom: 10px;
-    }
-    &--excerpt{
-      margin-top: 10px;
-      font-family: $work-body;
-      color: #444;
-      p{
-        margin: 0;
-        line-height: 1.4;
-      }
-    }
-  }
+		&--represent {
+			color: #fff;
+			display: block;
+			padding-top: 0.25em;
+			font-family: $work-body;
+		}
 
-  &__follow{
-    text-align: center;
-  }
+		&--author,
+		&--share,
+		&--review,
+		&--testimonials {
+			color: #444;
+		}
+
+		&--amazon,
+		&--list,
+		&--related {
+			color: #999;
+		}
+
+		&--author,
+		&--list {
+
+			@include mq-max($screen-xs-max) {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+		}
+
+		&--caption {
+			display: block;
+			color: inherit;
+			font-size: 0.5em;
+			margin-bottom: 0.25em;
+		}
+	}
+
+	&__excerpt {
+		margin: 2em 0;
+		font-size: 16px;
+		font-family: $work-body;
+	}
+
+	&__link {
+		a:nth-child(3) {
+			margin-left: 1em;
+			@media only screen and (max-width: #{$screen-sm-max}) {
+				margin-top: 0.5em;
+				margin-left: 0;
+			}
+		}
+
+		&--divider {
+			display: none;
+			@media only screen and (max-width: #{$screen-sm-max}) {
+				display: block;
+			}
+		}
+	}
+
+	// 値段
+	&__price {
+		color: $brand-price;
+		font-size: 1.4em;
+
+		strong {
+			font-size: 1.4em;
+		}
+	}
+
+	// ステータス
+	&__status {
+		padding-left: 0;
+
+		li {
+			list-style: none;
+			color: #666;
+		}
+
+		i.ok {
+			color: $brand-success;
+		}
+
+		i.ng {
+			color: $brand-danger;
+		}
+	}
+
+	// 著者
+	&__author {
+		padding: 1em 0;
+		min-height: 100px;
+		border-bottom: 1px solid #ddd;
+		position: relative;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--photo {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			transform: translateY(-50%);
+			width: 80px;
+			@include mq-max($screen-xs-max) {
+				width: 60px;
+			}
+		}
+
+		.avatar {
+			max-width: 100%;
+			width: auto;
+			height: auto;
+			vertical-align: middle;
+		}
+
+		&--desc {
+			margin: 1em 0;
+		}
+
+		&--longdesc {
+			@include long-desc(#ebebeb);
+		}
+
+		&--profile {
+			position: relative;
+			padding-left: 100px;
+			@include mq-max($screen-xs-max) {
+				padding-left: 80px;
+			}
+
+			h3 {
+				margin-top: 0;
+				padding-right: 100px;
+			}
+
+			.btn {
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+		}
+
+	}
 
 
-  // Series Testimonial
-  &__testimonials{
-    &--stars{
-      i{
-        font-size: 3em;
-        margin: 0 0.2em;
+	// 作品一覧
+	&__list {
+		padding-left: 0;
+	}
 
-      }
-      strong{
-        font-size: 1.5em;
-      }
-      small{
-        font-size: 1.2em;
-        color: #888;
-      }
-    }
-  }
+	&__item {
+		list-style: none;
+		border-bottom: 1px solid #ddd;
+
+		&:first-child {
+			@include mq-max($screen-xs-max) {
+				border-top: 1px solid #ddd;
+			}
+		}
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		&--link {
+			display: block;
+			position: relative;
+			transition: color .3s linear;
+
+			&:link {
+				color: #000;
+				text-decoration: none;
+			}
+
+			&:visited {
+				color: #444;
+				text-decoration: none;
+			}
+
+			&:hover, &:active {
+				text-decoration: none;
+				color: $brand-primary;
+			}
+		}
+
+		&--meta {
+			margin-bottom: 10px;
+		}
+
+		&--title {
+			font-family: $work-body;
+			display: inline;
+			font-size: 1.4em;
+			@at-root a:visited &:after {
+				content: "";
+			}
+		}
+
+		&--counter {
+		}
+
+		&--author {
+			font-family: $work-body;
+			float: right;
+			margin-left: 1em;
+		}
+
+		&--body {
+			padding: 20px;
+		}
+
+		&--info {
+			color: #888;
+			margin-bottom: 10px;
+		}
+
+		&--excerpt {
+			margin-top: 10px;
+			font-family: $work-body;
+			color: #444;
+
+			p {
+				margin: 0;
+				line-height: 1.4;
+			}
+		}
+	}
+
+	&__follow {
+		text-align: center;
+	}
+
+
+	// Series Testimonial
+	&__testimonials {
+		&--stars {
+			i {
+				font-size: 3em;
+				margin: 0 0.2em;
+
+			}
+
+			strong {
+				font-size: 1.5em;
+			}
+
+			small {
+				font-size: 1.2em;
+				color: #888;
+			}
+		}
+	}
 }
 
+// KDPページ
+.book-list-header {
+	background-color: $gray-lighter;
+	padding: 60px 0;
+	margin-bottom: 20px;
 
+	small {
+		display: block;
+		font-family: $font-family-sans-serif;
+		font-weight: 700;
+		font-size: 20px;
+		color: $gray-light;
+	}
+
+	h1 {
+		margin: 20px 0;
+		@extend .page-heading-title;
+		font-family: $work-body;
+	}
+
+	.description {
+		font-size: 18px;
+		margin: 20px 0;
+		font-family: $work-body;
+	}
+}
+
+// 書籍リスト
+
+.list-book {
+	margin: 40px 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 40px;
+
+	@media screen and (max-width: $screen-xs-max ) {
+		grid-template-columns: 1fr;
+	}
+
+	&-item {
+		flex: 0 1 33.333%;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-radius: 10px;
+		background-color: $gray-lighter;
+	}
+
+	&-cover {
+		position: relative;
+
+		&::before {
+			position: relative;
+			content: "";
+			display: block;
+			padding-top: 100% * 1920 / 1200;
+		}
+
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			border-radius: 10px 10px 0 0;
+		}
+	}
+
+	&-body {
+		padding: 20px;
+	}
+
+	&-text {
+		text-align: center;
+		font-family: $work-bold;
+		span {
+			display: block;
+			line-height: 1.1;
+			max-height: 2.2em;
+			overflow: hidden;
+			word-break: break-all;
+		}
+	}
+
+	&-title {
+		font-size: 18px;
+		margin-bottom:10px;
+	}
+	&-author {
+		font-size: 14px;
+	}
+
+	&-meta {
+		text-align: center;
+		color: $brand-price;
+		font-size: 18px;
+		font-family: $font-family-serif;
+	}
+
+	&-action {
+		display: flex;
+		justify-content: space-between;
+
+		a {
+			display: inline-block;
+			border: 1px solid $gray;
+			border-radius: 20px;
+			font-size: 16px;
+			padding: 5px 10px;
+
+			&:link,
+			&:visited {
+				color: $gray;
+				text-decoration: none;
+			}
+			&:hover,
+			&:active {
+				color: #fff;
+				background-color: $gray;
+			}
+		}
+	}
+
+}
