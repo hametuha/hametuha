@@ -142,6 +142,14 @@ JS;
 
 	// Register all hashboard.
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
+	// todo: enqueue is broken.
+	wp_register_script( 'hametuha-hb-requests', get_template_directory_uri() . '/assets/js/dist/hashboard/requests.js', [
+		'hb-components-loading',
+		'wp-api-fetch',
+		'hashboard-rest',
+		'hb-components-pagination',
+		'hb-filters-moment',
+	], hametuha_version(), true );
 	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
 	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
 

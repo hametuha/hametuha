@@ -1,5 +1,7 @@
 /*!
- * wpdeps=hb-components-loading,wp-api-fetch,hashboard-rest,hb-components-pagination, hb-filters-moment
+ * HashBoard Requests
+ *
+ * @wpdeps hb-components-loading,wp-api-fetch,hashboard-rest,hb-components-pagination, hb-filters-moment
  */
 
 /*global Vue:false*/

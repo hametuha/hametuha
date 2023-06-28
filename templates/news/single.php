@@ -207,23 +207,33 @@
 
 
 					<ul class="news-pager">
-										<?php previous_post_link( '<li class="previous">%link</li>', '<i class="icon-arrow-left"></i><small>PREVIOUS POST</small><br />%title' ); ?>
-										<?php next_post_link( '<li class="next">%link</li>', '<i class="icon-arrow-right2"></i><small>NEXT POST</small><br />%title' ); ?>
+						<?php previous_post_link( '<li class="previous">%link</li>', '<i class="icon-arrow-left"></i><small>PREVIOUS POST</small><br />%title' ); ?>
+						<?php next_post_link( '<li class="next">%link</li>', '<i class="icon-arrow-right2"></i><small>NEXT POST</small><br />%title' ); ?>
 					</ul>
+					<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
 
-									<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
 
 				</article><!-- //.single-container -->
 
-							<?php
-			endwhile;
-endif;
+				<?php
+				endwhile;
+			endif;
 			?>
 
 			<?php get_sidebar( 'news' ); ?>
 
 		</div><!-- //.row -->
 
+		<h2 class="page-header text-center">
+			電子書籍<br/>
+			<small>eBooks</small>
+		</h2>
+		<?php
+		hameplate( 'templates/recommendations', '', [
+			'author'   => get_the_author_meta( 'ID' ),
+			'fill'     => true,
+		] )
+		?>
 
 	</div><!-- //.container -->
 <?php
