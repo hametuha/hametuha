@@ -69,4 +69,14 @@ jQuery(document).ready(function ($) {
         headroom.init();
     }
 
+	// ページ内リンク
+	$( 'a.page-anker' ).click( function( e ) {
+		var $target = $( $( this ).attr( 'href' ) );
+		if ( $target.length ) {
+			e.preventDefault();
+			$('body,html').animate({
+				scrollTop: $target.offset().top - 70
+			}, 300, 'swing');
+		}
+	} );
 });
