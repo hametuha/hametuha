@@ -414,6 +414,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	protected function set_member( $nice_name = '' ) {
 		$this->doujin = $this->author->get_by_nice_name( $nice_name );
 		if ( ! $this->doujin || ! $this->doujin->has_cap( 'edit_posts' ) ) {
+			$this->wp_query->set( 'p', -1 );
 			throw new \Exception( 'Page Not Found.', 404 );
 		}
 	}
@@ -434,6 +435,12 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @param $author_name
 	 */
 	public function get_detail( $author_name ) {
+		if ( 1 < count( func_get_args() ) ) {
+			// 指定が多すぎるのでエラーを返す。
+			$this->wp_query->set( 'p', -1 );
+			$this->method_not_found();
+		}
+		// メンバーをセット、いなければエラー。
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . 'のプロフィール | ' . get_bloginfo( 'name' );
 		$this->set_data( [
@@ -512,6 +519,4 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		}
 		$this->load_template( 'templates/doujin/base' );
 	}
-
-
 }
