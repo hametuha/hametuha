@@ -7,60 +7,21 @@
  *
  * @param string       $slug
  * @param string|array $name
- * @param array        $args Arguments to pass.
- * @param bool         $echo If false, return string.
- * @param string       $glue Default is '-'. You can specify '/' which means directory separator.
+ * @param array        $args       Arguments to pass.
+ * @param bool         $echo       If false, return string.
+ * @param string       $deprecated
  *
  * @return null|string
  */
-function hameplate( $slug, $name = '', $args = [], $echo = true, $glue = '-' ) {
-	$file = [];
-	if ( ! $name ) {
-		$file[] = $slug;
-	} elseif ( is_array( $name ) ) {
-		for ( $i = count( $name ); $i > 0; $i -- ) {
-			$file[] = $slug . $glue . implode( $glue, array_slice( $name, 0, $i ) );
-		}
-		$file[] = $slug;
-	} else {
-		$file[] = $slug . $glue . $name;
-		$file[] = $slug;
-	}
-	$dirs = [ get_stylesheet_directory() ];
-	if ( is_child_theme() ) {
-		$dirs[] = get_template_directory();
-	}
-	$path = '';
-	foreach ( $file as $f ) {
-		foreach ( $dirs as $dir ) {
-			$p = $dir . DIRECTORY_SEPARATOR . $f . '.php';
-			if ( file_exists( $p ) ) {
-				$path = $p;
-				break 2;
-			}
-		}
-	}
-	if ( ! $path ) {
-		return $echo ? null : '';
-	}
-	// Enable vars.
-	global $posts, $post, $wp_query, $wp_rewrite, $wpdb;
-	if ( $args ) {
-		extract( $args );
-	}
+function hameplate( $slug, $name = '', $args = [], $echo = true, $deprecated = '-' ) {
 	if ( $echo ) {
-		include $path;
+		get_template_part( $slug, $name, $args );
 	} else {
 		ob_start();
-		include $path;
-		$output = ob_get_contents();
-		ob_end_clean();
-
-		return $output;
+		get_template_part( $slug, $name, $args );
+		return ob_get_clean();
 	}
 }
-
-
 
 /**
  * ヘルプ用アイコンを出力する

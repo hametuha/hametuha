@@ -107,12 +107,12 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	}
 	$trails = [];
 	foreach ( $bcn->trail as $item ) {
+		$trails[] = $item;
 		/** @var bcn_breadcrumb $item */
 		if ( in_array( 'current-item', $item->get_types(), true ) ) {
 			// KDPリンクを追加
 			$trails []= new bcn_breadcrumb( __( '電子書籍', 'hametuha' ), null, ['post-series-archive-kdp'], home_url( 'kdp' ), 'kdp-archive', true );
 		}
-		$trails[] = $item;
 	}
 	$bcn->trail = $trails;
 } );

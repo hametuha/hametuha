@@ -110,11 +110,11 @@ get_header( 'breadcrumb' );
 endswitch;
 						?>
 						<span class="series__link--divider"></span>
-						<a href="#series-children" class="btn btn-trans">
-							<i class="icon-books"></i> 掲載作一覧
+						<a href="#series-children" class="btn btn-trans page-anker">
+							<i class="icon-books"></i> <?php esc_html_e( '収録作一覧', 'hametuah' ); ?>
 						</a>
-						<a href="#series-testimonials" class="btn btn-trans">
-							<i class="icon-star"></i> レビュー
+						<a href="#series-testimonials" class="btn btn-trans page-anker">
+							<i class="icon-star"></i> <?php esc_html_e( 'レビュー', 'hametuha' ); ?>
 						</a>
 					</div>
 

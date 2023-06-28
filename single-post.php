@@ -214,6 +214,7 @@ HTML;
 					</div>
 
 					<?php get_template_part( 'parts/list', 'author' ); ?>
+
 				</div>
 
 			</section>
@@ -225,6 +226,16 @@ HTML;
 					<small class="series__title--caption">Books</small>
 					<?php esc_html_e( '破滅派の書籍', 'hametuha' ); ?>
 				</h2>
+
+				<?php
+				hameplate( 'templates/recommendations', '', [
+					'excludes' => wp_get_post_parent_id() ?: 0,
+					'author'   => get_the_author_meta( 'ID' ),
+					'fill'     => true,
+				] )
+				?>
+
+				<hr />
 
 				<?php get_sidebar( 'books' ); ?>
 			</div>

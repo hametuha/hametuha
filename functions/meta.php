@@ -175,7 +175,7 @@ add_action( 'wp_head', function () {
 		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $page->ID ), 'full' )[0];
 	} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
 		$url   = home_url( '/kdp/' );
-		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。プライム会員は月1冊まで無料！';
+		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。';
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/kdp.jpg';
 	} elseif ( is_author() ) {
 		global $wp_query;
