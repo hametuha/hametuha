@@ -459,7 +459,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		nocache_headers();
 		$this->auth_redirect();
 		$this->doujin = new \WP_User( get_current_user_id() );
-		$this->title  = 'フォロワー | ' . $this->title;
+		$this->title  = 'フォロワー | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
