@@ -117,6 +117,15 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 				],
 			];
 		}
+		if ( $params['author'] ) {
+			$filters[] = [
+				'fieldName'    => 'customEvent:author',
+				'stringFilter' => [
+					'matchType' => 'EXACT',
+					'value'     => $params['author'],
+				],
+			];
+		}
 		if ( 1 === count( $filters ) ) {
 			// 1 Filter.
 			$request['dimensionFilter'] = [
@@ -146,6 +155,9 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					],
 				],
 			];
+		}
+		if ( 0 < $params['offset'] ) {
+			$request['offset'] = $params['offset'];
 		}
 		return $this->fetch( $request );
 	}
