@@ -5,10 +5,14 @@ use \Gianism\Cron\Daily;
 /**
  * Google Analyticsからデータを取得する
  *
+ * @deprecated 8.0.0
+ *
  */
 class HametuhaGeneralRanking extends Daily {
 
 	const CATEGORY = 'general';
+
+	const SKIP_CRON = true;
 
 	/**
 	 * Google Analyticsからデータを取得する
