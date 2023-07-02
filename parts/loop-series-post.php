@@ -3,8 +3,9 @@
  * 作品集ページで呼び出される
  *
  * @package hametuha
- * @var int $counter
+ * @var array $args
  */
+$counter = $args['counter'] ?? 0;
 ?>
 <li data-post-id="<?php the_ID(); ?>" <?php post_class( 'series__item post-in-series' ); ?>>
 

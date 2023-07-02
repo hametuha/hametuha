@@ -1,3 +1,10 @@
+<?php
+/**
+ * Page on graph.
+ *
+ */
+$endpoint = $args['endpoint'] ?? '';
+?>
 <div id="sales-container" data-endpoint="<?php echo esc_url( $endpoint ); ?>" data-slug="history">
 	<hb-month-selector v-on:date-updated="getSales" label="日付" minYear="2015" curMonth="{{curMonth}}" curYear="{{curYear}}"></hb-month-selector>
 

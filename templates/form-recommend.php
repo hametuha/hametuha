@@ -1,4 +1,8 @@
-<?php /* @var WP_Post $idea */ ?>
+<?php
+/* @var array $args */
+/* @var \WP_Post $idea */
+$idea = $args['idea'] ?? null;
+?>
 <form id="recommend-idea-form" data-post-id="<?php echo esc_attr( $idea->ID ); ?>">
 	<div class="form-group">
 		<label for="recommend_to"><?php echo get_the_title( $idea ); ?>を薦める</label>

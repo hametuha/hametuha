@@ -1,3 +1,10 @@
+<?php
+/**
+ * Page on
+ *
+ */
+$endpoint = $args['endpoint'] ?? '';
+?>
 <div id="sales-container" data-endpoint="<?php echo esc_url( $endpoint ); ?>" data-slug="payments">
 	<div class="form-group">
 		<select class="form-control" v-on:change="getPayments" v-model="currentYear">

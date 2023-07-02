@@ -1,3 +1,12 @@
+<?php
+/**
+ * Sales screen.
+ *
+ * @var array $args
+ */
+$endpoint = $args['endpoint'] ?? '';
+$page     = $args['page'] ?? '';
+?>
 <div id="sales-container" data-endpoint="<?php echo esc_url( $endpoint ); ?>" data-slug="<?php echo esc_attr( $page ); ?>">
 	<?php if ( 'rewards' === $page ) : ?>
 		<hb-month-selector v-on:date-updated="getReward" label="日付"></hb-month-selector>

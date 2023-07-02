@@ -1,5 +1,10 @@
 <?php
-$slug = isset( $slug ) ? $slug : '';
+/**
+ * Home screen of hashboard/
+ *
+ * @parm array $args
+ */
+$slug = $args['slug'] ?? '';
 if ( ! $slug ) {
 	return;
 }

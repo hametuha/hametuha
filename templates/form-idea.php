@@ -1,3 +1,15 @@
+<?php
+/**
+ * ジャンルを選択するフォーム
+ *
+ * @param array $args
+ */
+$id      = $args['id'] ?? 0;
+$title   = $args['title'] ?? '';
+$content = $args['content'] ?? '';
+$genre   = $args['genre'] ?? 0;
+$private = $args['private'] ?? false;
+?>
 <form id="new-idea-form">
 	<?php if ( $id ) : ?>
 		<input type="hidden" name="post_id" id="new-idea-id" value="<?php echo esc_attr( $id ); ?>"/>
