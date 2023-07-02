@@ -1,3 +1,12 @@
+<?php
+/**
+ * 安否情報投稿フォーム
+ *
+ * @var array $args
+ */
+$id      = $args['id'] ?? 0;
+$content = $args['content'] ?? '';
+?>
 <form id="new-tweet-form">
 	<?php if ( $id ) : ?>
 		<input type="hidden" name="post_id" id="new-tweet-id" value="<?php echo esc_attr( $id ); ?>"/>

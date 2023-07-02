@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var array $args
+ */
 /* @var int $id */
 /* @var int $max */
 /* @var int $min */
@@ -8,6 +11,9 @@ if ( ! isset( $max ) ) {
 if ( isset( $min ) ) {
 	$min = 1;
 }
+$id  = $args['id'] ?? '';
+$max = $args['max'] ?? 1;
+$min = $args['min'] ?? 1;
 ?>
 <div class="user-picker" data-max="<?php echo esc_attr( $max ); ?>" data-min="<?php echo esc_attr( $min ); ?>" data-target="#<?php echo esc_attr( $id ); ?>">
 	<input type="text" class="form-control user-picker__input" placeholder="名前を入力して選択してください"/>

@@ -459,7 +459,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		nocache_headers();
 		$this->auth_redirect();
 		$this->doujin = new \WP_User( get_current_user_id() );
-		$this->title  = 'フォロワー | ' . $this->title;
+		$this->title  = 'フォロワー | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
@@ -487,9 +487,11 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @return array
 	 */
 	public function ogp( array $values ) {
-		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
-		$values['image'] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
-		$values['desc']  = $this->doujin->user_description;
+		if ( $this->doujin ) {
+			$values[ 'url' ] = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
+			$values[ 'image' ] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
+			$values[ 'desc' ] = $this->doujin->user_description;
+		}
 
 		return $values;
 	}

@@ -1,6 +1,11 @@
 <?php
-/** @var stdClass $schema */
-/** @var string  $url */
+/**
+ * embed parts for minicome.
+ *
+ * @var array $args
+ */
+$url    = $args['url'] ?? '';
+$schema = $args['schema'] ?? null;
 ?>
 <div class="embed-wrap embed-minicome">
 
@@ -8,7 +13,7 @@
 
 		<?php if ( $schema->image ) : ?>
 			<div class="embed-thumbnail">
-				<a href="<?php $url; ?>" class="embed-thumbnail-link">
+				<a href="<?php echo esc_url( $url ); ?>" class="embed-thumbnail-link">
 					<img src="<?php echo $schema->image; ?>" alt="<?php echo esc_attr( $schema->name ); ?>" class="embed-thumbnail-img" />
 				</a>
 			</div>

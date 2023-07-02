@@ -1,3 +1,11 @@
+<?php
+/**
+ * Home screen of hashboard/
+ *
+ * @parm array $args
+ */
+$endpoint = $args['endpoint'] ?? '';
+?>
 <div id="access-container" data-endpoint="<?php echo esc_url( $endpoint ); ?>" :class="{loading: loading, minHeight: true}">
 
 	<hb-month-selector label="日付変更" @date-updated="dateChangeHandler"></hb-month-selector>

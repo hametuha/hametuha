@@ -5,13 +5,14 @@ use Gianism\Cron\Daily;
 /**
  * Get total PV and save them as post_meta
  *
+ * @deprecated 8.0.0
  * @package Hametuha\gianism
  */
 class HametuhaTotalRanking extends Daily {
 
 	const CATEGORY = 'diff';
 
-	const SKIP_CRON = false;
+	const SKIP_CRON = true;
 
 	/**
 	 * Start time
@@ -19,7 +20,7 @@ class HametuhaTotalRanking extends Daily {
 	 * @return int
 	 */
 	public function build_timestamp() {
-		// Next midnite.
+		// Next midnight.
 		$now = current_time( 'timestamp' );
 		if ( (int) date_i18n( 'H' ) < 3 ) {
 			$now += 60 * 60 * 24;
@@ -27,7 +28,6 @@ class HametuhaTotalRanking extends Daily {
 
 		return (int) get_gmt_from_date( date_i18n( 'Y-m-d', $now ) . '03:00:00', 'U' );
 	}
-
 
 	/**
 	 * Do cron

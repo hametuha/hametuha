@@ -3,8 +3,7 @@
 
 namespace Hametuha\Commands;
 
-use AFB\Admin\Table;
-use Gianism\Plugins\Analytics;
+use Hametuha\Service\GoogleAnalyticsDataAccessor;
 use WPametu\Utility\Command;
 
 /**
@@ -125,39 +124,30 @@ SQL;
 	 */
 	protected function get_pv( $start_date, $end_date, $author = 0 ) {
 		try {
-			$google = Analytics::get_instance();
-			if ( ! $google || ! $google->ga_profile['view'] ) {
-				throw new \Exception( 'Google Analytics is not connected.', 500 );
-			}
-			$start_index = 1;
-			$per_page    = 200;
-			$args        = [
-				'max-results' => $per_page,
-				'dimensions'  => 'ga:pagePath',
-				'filters'     => 'ga:dimension1==news',
-				'sort'        => '-ga:pageviews',
+			$offset      = 0;
+			$per_page    = 1000;
+			$args     = [
+				'start'     => $start_date,
+				'end'       => $end_date,
+				'post_type' => 'news',
+				'author'    => $author ?: '',
+				'limit'     => $per_page,
 			];
-			if ( $author ) {
-				$args['filters'] .= ',ga:dimension2==' . $author;
-			}
 			$rows = [];
 			while ( true ) {
 				$loop_arg = array_merge( $args, [
-					'start-index' => $start_index,
+					'offset' => $offset,
 				] );
-				$result   = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $loop_arg );
-				if ( ! $result || ! ( 0 < ( $count = count( $result->rows ) ) ) ) {
+				$result = GoogleAnalyticsDataAccessor::get_instance()->popular_posts( $loop_arg );
+				if ( ! $result || is_wp_error( $result ) ) {
 					break;
 				}
-				foreach ( $result->rows as $row ) {
-					list( $path, $pv ) = $row;
-					$url               = home_url( $path );
-					if ( ! preg_match( '#/news/article/(\d+)/?#', $path, $matches ) ) {
-						continue;
-					}
-					$post_id = $matches[1];
-					if ( ! is_numeric( $post_id ) || ! get_post( $post_id ) ) {
-						continue;
+
+				foreach ( $result as $row ) {
+					list( $path, $post_type, $author, $category, $pv ) = $row;
+					$post_id = url_to_postid( home_url( $path ) );
+					if ( ! $post_id ) {
+						continue 1;
 					}
 					if ( ! isset( $rows[ $post_id ] ) ) {
 						$rows[ $post_id ] = 0;
@@ -165,8 +155,8 @@ SQL;
 					$rows[ $post_id ] += $pv;
 				}
 				// Check if more results.
-				if ( $count >= $per_page ) {
-					$start_index += $per_page;
+				if ( count( $result ) >= $per_page ) {
+					$offset += $per_page;
 				} else {
 					break;
 				}

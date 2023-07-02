@@ -1,6 +1,13 @@
 <?php
-/** @var WP_Post $object */
-/** @var string $url */
+/**
+ * Embed template for oEmbed self.
+ *
+ * @see get_template_part()
+ * @var array $args See `get_template_part()` for detail.
+ */
+
+$object = $args['object'] ?? null;
+$url    = $args['url'] ?? '';
 
 $model       = \Hametuha\Model\Series::get_instance();
 $epub_status = $model->get_status( $object->ID );

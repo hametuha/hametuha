@@ -1,4 +1,13 @@
-<?php get_header( 'meta' ); ?>
+<?php
+/**
+ * エディター
+ *
+ * @var array $args
+ */
+$title  = $args['title'] ?? '';
+$return = $args['return'] ?? '';
+get_header( 'meta' );
+?>
 <header id="header" class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
 
