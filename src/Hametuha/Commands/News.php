@@ -94,18 +94,20 @@ SQL;
 	/**
 	 * ニュースのランキングを取得する
 	 *
-	 * @synopsis --from=<from> [--to=<to>] [--author=<author>]
+	 * @synopsis [--from=<from>] [--to=<to>] [--author=<author>]
 	 * @param array $args
 	 * @param array $assoc
 	 */
 	public function update_pv( $args, $assoc ) {
-		$start_date = $assoc['from'];
+		$yesterday  = new \DateTime( 'yesterday', wp_timezone() );
+		$start_date = $assoc['from'] ?? $yesterday->format( 'Y-m-d' );
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
 		$author     = isset( $assoc['author'] ) ? $assoc['author'] : 0;
 		$posts      = $this->get_pv( $start_date, $end_date, $author );
 		$done       = 0;
-		foreach ( $posts as $post ) {
-			update_post_meta( $post[0], '_current_pv', $post[1] );
+		foreach ( $posts as list( $post_id, $pv ) ) {
+			$current = (int) get_post_meta( $post_id, '_current_pv', true );
+			update_post_meta( $post_id, '_current_pv', $current + $pv );
 			$done++;
 			echo '.';
 		}
