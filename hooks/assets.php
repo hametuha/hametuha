@@ -237,24 +237,6 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 	}
 }, 200 );
 
-
-/**
- * IE8以下用のJS
- *
- * @action wp_head
- */
-add_action( 'wp_head', function () {
-	$shiv    = get_template_directory_uri() . '/assets/js/dist/html5shiv.js';
-	$respond = get_template_directory_uri() . '/assets/js/dist/respond.src.js';
-	echo <<<EOS
-<!--[if lt IE 9]>
-  <script src="{$shiv}?ver=3.7.0"></script>
-  <script src="{$respond}?ver=1.4.2"></script>
-<![endif]-->
-EOS;
-}, 20 );
-
-
 /**
  * jQueryをフッターに動かす
  */

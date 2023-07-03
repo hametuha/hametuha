@@ -32,7 +32,6 @@
     "babel-loader": "^8.0.5",
     "bootbox": "^5.3.4",
     "bootstrap-sass": "3.4.1",
-    "browser-sync": "^2.11",
     "eslint": "^5.4.0",
     "eslint-plugin-wordpress": "^0.1.0",
     "gulp": "^4.0.0",
@@ -44,24 +43,20 @@
     "gulp-load-plugins": "^1.2",
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.0",
-    "gulp-pug": "^4.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-sass-glob": "^1.0.9",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
-    "html5shiv": "^3.7.3",
     "imagemin-mozjpeg": "^8.0.0",
     "imagemin-pngquant": "^6.0.1",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.0",
     "merge-stream": "^1.0.1",
     "prop-types": "^15.7.2",
-    "respond.js": "^1.4.2",
     "select2": "^4.0.5",
     "vinyl-named": "^1.1.0",
     "webpack": "^5.85.0",
     "webpack-stream": "^6.1.2"
-  },
-  "dependencies": {}
+  }
 }
