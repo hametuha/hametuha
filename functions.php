@@ -102,6 +102,7 @@ include __DIR__ . '/functions/calculate.php';
 // 表示
 include __DIR__ . '/functions/display.php';
 include __DIR__ . '/functions/external.php';
+include __DIR__ . '/functions/text-analyzer.php';
 // amazon
 include __DIR__ . '/functions/hamazon.php';
 // 暗号化
