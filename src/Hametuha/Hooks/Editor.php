@@ -56,11 +56,7 @@ class Editor extends Singleton {
 			list( $file_name, $name ) = $match;
 			$block_name               = 'hametuha/' . $name;
 			$handle                   = 'hametuha-block-' . $name;
-			$file_path                = $asset_dir . '/' . $file;
-			// Grab deps.
-			$deps    = $this->grab_deps( $file_path );
-			$version = filemtime( $file_path );
-			wp_register_script( $handle, get_template_directory_uri() . '/assets/js/dist/blocks/' . $file, $deps, $version, true );
+			// Set handle.
 			$setting  = [
 				'editor_script' => $handle,
 			];

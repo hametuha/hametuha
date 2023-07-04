@@ -1,5 +1,8 @@
 /*!
- * wpdeps=jquery, wp-api-fetch, jquery-effects-highlight, moment
+ * Compiled files.
+ *
+ * @handle hametuha-module-compiled-files
+ * @deps jquery, wp-api-fetch, jquery-effects-highlight, moment
  */
 
 const $ = jQuery;

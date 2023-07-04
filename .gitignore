@@ -13,3 +13,4 @@ package-lock.json
 assets/img/*
 !assets/img/src
 assets/css
+wp-dependencies.json

@@ -37,6 +37,19 @@ add_action( 'hashboard_after_main', function( \Hametuha\Hashboard\Pattern\Screen
 	$current_user = wp_get_current_user();
 }, 10, 3 );
 
+/**
+ * Add user information to cookie.
+ *
+ * @param array $values
+ * @param int   $user_id
+ * @return array
+ */
+add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
+	if ( user_can( $user_id, 'edit_posts' ) ) {
+		$values[ 'profile' ] = hametuha_author_url( $user_id );
+	}
+	return $values;
+}, 10, 2 );
 
 /**
  * Filter for arguments.

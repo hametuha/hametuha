@@ -21,8 +21,12 @@ $brand-danger: red;
   }
 }
 @import "variables";
+@import "../../node_modules/bootstrap/scss/functions";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/variables";
 @import "mixins";
 @import "parts/notification";
 @import "parts/campaign";
 @import "parts/requests";
 
+@import "dashboard/*";

@@ -31,9 +31,6 @@ add_action( 'init', function () {
 	// Prop Types
 	wp_register_script( 'prop-types', get_template_directory() . '/assets/js/dist/prop-types.min.js', [ 'wp-element' ], '15.7.2', true );
 
-	// Header script.
-	wp_register_script( 'hametuheader', get_template_directory_uri() . '/assets/js/dist/header.js', [ 'cookie-tasting-heartbeat', 'wp-element' ], hametuha_version(), true );
-
 	/**
 	 * hametuha_angular_extensions
 	 *
@@ -142,19 +139,31 @@ JS;
 
 	// Register all hashboard.
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
-	// todo: enqueue is broken.
-	wp_register_script( 'hametuha-hb-requests', get_template_directory_uri() . '/assets/js/dist/hashboard/requests.js', [
-		'hb-components-loading',
-		'wp-api-fetch',
-		'hashboard-rest',
-		'hb-components-pagination',
-		'hb-filters-moment',
-	], hametuha_version(), true );
-	$hash_dir = get_template_directory() . '/assets/js/dist/hashboard';
-	\Hametuha\WpEnqueueManager::register_js( $hash_dir, 'hametuha-hb-', hametuha_version(), true );
 
-	// Register all new modules.
-	\Hametuha\WpEnqueueManager::register_js( get_template_directory() . '/assets/js/dist/modules', 'hametuha-module-', hametuha_version(), true );
+	// Load wp-dependencies.json.
+	$deps = get_template_directory() . '/wp-dependencies.json';
+	if ( file_exists( $deps ) ) {
+		$assets = json_decode( file_get_contents( $deps ), true );
+		if ( ! empty( $assets ) ) {
+			foreach ( $assets as $asset ) {
+				if ( empty( $asset['path'] ) ) {
+					continue;
+				}
+				switch ( $asset['ext'] ) {
+					case 'js':
+						wp_register_script( $asset['handle'], trailingslashit( get_template_directory_uri() ) . $asset['path'], $asset['deps'], $asset['hash'], $asset['footer'] );
+						break;
+					case 'css':
+						wp_register_style( $asset['handle'], trailingslashit( get_template_directory_uri() ) . $asset['path'], $asset['deps'], $asset['hash'], $asset['media'] ?? 'all' );
+						break;
+				}
+			}
+		}
+	}
+	// Add custom script.
+	wp_localize_script( 'hametuha-components', 'HametuhaComponents', [
+		'indicator' => get_template_directory_uri() . '/vendor/hametuha/hashboard/assets/img/ripple.gif',
+	] );
 }, 9 );
 
 /**

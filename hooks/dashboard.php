@@ -52,16 +52,20 @@ add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
  * 新しい画面を追加
  */
 add_filter( 'hashboard_screens', function( $screens ) {
-	if ( ! current_user_can( 'edit_posts' ) ) {
-		return $screens;
-	}
 	$new_screens = [];
 	foreach ( $screens as  $key => $class_name ) {
 		if ( 'profile' == $key ) {
-			$new_screens['notifications'] = \Hametuha\Dashboard\Notifications::class;
-			$new_screens['requests']      = \Hametuha\Dashboard\Requests::class;
-			$new_screens['statistics']    = \Hametuha\Dashboard\Statistics::class;
-			$new_screens['sales']         = \Hametuha\Dashboard\Sales::class;
+			if ( current_user_can( 'edit_posts' ) ) {
+				$new_screens['works']      = \Hametuha\Dashboard\Works::class;
+				$new_screens['statistics'] = \Hametuha\Dashboard\Statistics::class;
+			}
+			//$new_screens['comments'] = \Hametuha\Dashboard\Sales::class;
+			//$new_screens['reviews']  = \Hametuha\Dashboard\Sales::class;
+			if ( current_user_can( 'edit_posts' ) ) {
+				$new_screens['sales']         = \Hametuha\Dashboard\Sales::class;
+				$new_screens['notifications'] = \Hametuha\Dashboard\Notifications::class;
+				$new_screens['requests']      = \Hametuha\Dashboard\Requests::class;
+			}
 		}
 		$new_screens[ $key ] = $class_name;
 	}
@@ -73,38 +77,32 @@ add_filter( 'hashboard_screens', function( $screens ) {
  */
 add_filter( 'hashboard_sidebar_links', function ( $links ) {
 	$new_links   = [];
-	$link_to_add = [
-		'dashboard' => [],
+	$add_divider_after = [
+		'reviews'
 	];
-	if ( current_user_can( 'edit_posts' ) ) {
-		$link_to_add['dashboard'][] = [ 'works', 'book', admin_url( 'edit.php' ), 'あなたの作品' ];
-	}
 	foreach ( $links as $key => $html ) {
-		$new_links[ $key ] = $html;
-		if ( ! isset( $link_to_add[ $key ] ) || ! $link_to_add[ $key ] ) {
-			continue;
-		}
-		foreach ( $link_to_add[ $key ] as list( $slug, $icon, $url, $label ) ) {
-			$url                = esc_url( $url );
-			$label              = esc_html( $label );
-			$new_links[ $slug ] = <<<HTML
-						 <li class="hb-menu-item">
-                			<a href="{$url}">
-								<i class="material-icons">{$icon}</i> {$label}
-                			</a>
-						</li>
+		if ( 'profile' === $key ) {
+			// Add help URL.
+			$help_url          = get_page_link( get_page_by_path( 'help' ) );
+			$new_links['help'] = <<<HTML
+        		 <li class="hb-menu-item">
+            		<a href="{$help_url}">
+                		<i class="material-icons">live_help</i> ヘルプセンター
+            		</a>
+        		</li>
 HTML;
+		}
+		if ( in_array( $key, [ 'profile', 'threads', 'notifications' ], true ) ) {
+			$new_links[ $key . '-divider'] = '<li class="divider"></li>';
+		}
+		$new_links[ $key ] = $html;
+		if ( 'dashboard' === $key ) {
+			$new_links['works-divider'] = '<li class="divider"></li>';
+		}
+		if ( in_array( $key, $add_divider_after, true ) ) {
+			$new_links[ 'divider' . $key ] = "<li class='divider'></li>";
 		}
 	}
-	// Add help URL.
-	$help_url          = get_page_link( get_page_by_path( 'help' ) );
-	$new_links['help'] = <<<HTML
-         <li class="hb-menu-item">
-            <a href="{$help_url}">
-                <i class="material-icons">live_help</i> ヘルプセンター
-            </a>
-        </li>
-HTML;
 
 	return $new_links;
 } );

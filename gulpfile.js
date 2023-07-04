@@ -1,12 +1,14 @@
-var gulp = require( 'gulp' ),
-	fs = require( 'fs' ),
-	$ = require( 'gulp-load-plugins' )(),
-	pngquant = require( 'imagemin-pngquant' ),
-	mozjpeg = require( 'imagemin-mozjpeg' ),
-	mergeStream = require( 'merge-stream' ),
-	webpack = require( 'webpack-stream' ),
-	webpackBundle = require( 'webpack' ),
-	named = require( 'vinyl-named' );
+const gulp = require( 'gulp' );
+const fs = require( 'fs' );
+const md5File = require( 'md5-file' );
+const { glob } = require( 'glob' );
+const $ = require( 'gulp-load-plugins' )();
+const pngquant = require( 'imagemin-pngquant' );
+const mozjpeg = require( 'imagemin-mozjpeg' );
+const mergeStream = require( 'merge-stream' );
+const webpack = require( 'webpack-stream' );
+const webpackBundle = require( 'webpack' );
+const named = require( 'vinyl-named' );
 
 
 // Sassのタスク
@@ -65,6 +67,36 @@ gulp.task( 'jsx', function () {
 		} ) )
 		.pipe( webpack( require( './webpack.config.js' ), webpackBundle ) )
 		.pipe( gulp.dest( './assets/js/dist' ) );
+} );
+
+// Buidl dependncies.json
+gulp.task( 'deps', function( done ) {
+	glob( 'assets/js/dist/**/*.LICENSE.txt' ).then( res => {
+		return Promise.all( res.map( path => {
+			return fs.promises.readFile( path, 'utf-8' ).then( content => {
+				const name = path.replace( /^assets\/js\/dist\//, '' ).replace( /\.LICENSE\.txt$/, '' );
+				const deps = [];
+				content.replace( /@deps(.*)$/m, ( match, p1 ) => {
+					p1.split( ',' ).map( dep => deps.push( dep.trim() ) );
+				} );
+				let handle = 'hametuha-' + name.replace( '/', '-' ).replace( '.js', '' );
+				content.replace( /@handle(.*)$/m, ( match, p1 ) => {
+					handle = p1.trim();
+				} );
+				path = path.replace( /\.LICENSE\.txt$/, '' );
+				return {
+					handle,
+					ext: 'js',
+					path,
+					deps,
+					hash: md5File.sync( path ),
+					footer: true,
+				};
+			} );
+		} ) );
+	} ).then( values => {
+		return fs.writeFileSync( './wp-dependencies.json', JSON.stringify( values, null, 2 ) );
+	} ).then( () => done() );
 } );
 
 // Build app
@@ -155,6 +187,8 @@ gulp.task( 'watch', function () {
 	gulp.watch( [ 'assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js' ], gulp.task( 'js' ) );
 	// Handle JSX
 	gulp.watch( [ 'assets/js/src/**/*.jsx' ], gulp.task( 'jsx' ) );
+	// deps.
+	gulp.watch( [ 'assets/js/dist/**/*.js' ], gulp.task( 'deps' ) );
 	// Check JS syntax
 	gulp.watch( 'assets/js/src/**/*.js', gulp.task( 'jshint' ) );
 	// Build common js
@@ -164,7 +198,7 @@ gulp.task( 'watch', function () {
 } );
 
 // Build
-gulp.task( 'build', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ) );
+gulp.task( 'build', gulp.series( gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ), 'deps' ) );
 
 // Default Tasks
 gulp.task( 'default', gulp.series( 'watch' ) );

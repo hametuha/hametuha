@@ -1,5 +1,8 @@
 /*!
- * wpdeps=wp-api-fetch, wp-element, moment
+ * Collaborators List
+ *
+ * @handle hametuha-module-collaborators-list
+ * @deps wp-api-fetch, wp-element, moment
  */
 
 import { CollaboratorAdd } from "./_collaborator-add.jsx";

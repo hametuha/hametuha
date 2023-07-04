@@ -1,7 +1,8 @@
-/**
+/*!
  * Container
  *
- * @wpdeps wp-blocks,wp-editor
+ * @handle hametuha-block-container
+ * @deps wp-blocks,wp-editor
  * @package hametuha
  */
 
