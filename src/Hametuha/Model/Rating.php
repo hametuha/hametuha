@@ -195,4 +195,48 @@ class Rating extends Model {
             [$this->posts, "{$this->posts}.ID = {$this->table}.object_id", 'inner'],
         ];
     }
+
+	/**
+	 * Get reviewed posts.
+	 *
+	 * @param int $user_id
+	 * @param array $args
+	 * @return array
+	 */
+	public function get_reviewed_posts( $user_id, $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'paged'          => 1,
+			'posts_per_page' => 20,
+		] );
+		$paged          = $args['paged'];
+		$posts_per_page = $args['posts_per_page'];
+		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
+		$wheres = [
+			'r.rel_type = "rank"',
+			$this->db->prepare( 'p.post_author = %d', $user_id ),
+			'p.post_type = "post"',
+		];
+		$wheres = implode( ' AND ', $wheres );
+		$sql = <<<SQL
+			SELECT SQL_CALC_FOUND_ROWS
+		    	p.*, r.location as rating, r.user_id as reviewer, r.updated as reviewed_at
+			FROM {$this->table} as r
+			LEFT JOIN {$this->db->posts} as p
+			ON p.ID = r.object_id
+			WHERE {$wheres}
+			ORDER BY r.updated DESC
+			LIMIT %d, %d
+SQL;
+		$result = $this->db->get_results( $this->db->prepare( $sql, $offset, $posts_per_page ) );
+		error_log( $this->db->last_error );
+		$found  = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
+		return [
+			'found'   => $found,
+			'current' => $paged,
+			'total'   => ceil( $found / $posts_per_page ),
+			'reviews' => array_map( function( $post ) {
+				return new \WP_Post( $post );
+			}, $result ),
+		];
+	}
 }

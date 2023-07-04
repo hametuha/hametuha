@@ -188,7 +188,7 @@ gulp.task( 'watch', function () {
 	// Handle JSX
 	gulp.watch( [ 'assets/js/src/**/*.jsx' ], gulp.task( 'jsx' ) );
 	// deps.
-	gulp.watch( [ 'assets/js/dist/**/*.js' ], gulp.task( 'deps' ) );
+	gulp.watch( [ 'assets/js/dist/**/*.js.LICENSE.txt' ], gulp.task( 'deps' ) );
 	// Check JS syntax
 	gulp.watch( 'assets/js/src/**/*.js', gulp.task( 'jshint' ) );
 	// Build common js

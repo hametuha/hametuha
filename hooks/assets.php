@@ -160,6 +160,8 @@ JS;
 			}
 		}
 	}
+	// todo: fix wpdeps
+
 	// Add custom script.
 	wp_localize_script( 'hametuha-components', 'HametuhaComponents', [
 		'indicator' => get_template_directory_uri() . '/vendor/hametuha/hashboard/assets/img/ripple.gif',

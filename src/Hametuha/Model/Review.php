@@ -357,5 +357,52 @@ SQL;
 
 		return $json;
 	}
+
+	/**
+	 * 投稿に付けられたタグを取得する
+	 *
+	 * @param int   $user_id
+	 * @param array $args
+	 * @return \WP_Comment[]
+	 */
+	public function get_author_comments( $user_id, $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'paged'          => 1,
+			'posts_per_page' => 20,
+			's'              => '',
+		] );
+		$paged          = $args['paged'];
+		$posts_per_page = $args['posts_per_page'];
+		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
+		$wheres = [
+			$this->db->prepare( 'p.post_author = %d', $user_id ),
+			'p.post_type = "post"',
+			$this->db->prepare( 'c.user_id != %d', $user_id ),
+		];
+		if ( ! empty( $args['s'] ) ) {
+			$wheres[] = $this->db->prepare( 'c.comment_content LIKE %s', '*' . $args['s'] . '*' );
+		}
+		$wheres = implode( ' AND ', $wheres );
+		$sql = <<<SQL
+			SELECT SQL_CALC_FOUND_ROWS
+		    	c.*
+			FROM {$this->db->comments} as c
+			LEFT JOIN {$this->db->posts} as p
+			ON p.ID = c.comment_post_ID
+			WHERE {$wheres}
+			ORDER BY c.comment_date DESC
+			LIMIT %d, %d
+SQL;
+		$result = $this->db->get_results( $this->db->prepare( $sql, $offset, $posts_per_page ) );
+		$found  = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
+		return [
+			'found'    => $found,
+			'current'  => $paged,
+			'total'    => ceil( $found / $posts_per_page ),
+			'comments' => array_map( function( $row ) {
+				return new \WP_Comment( $row );
+			}, $result ),
+		];
+	}
 }
 

@@ -21,7 +21,7 @@ class PostList extends Component {
 		this.state = {
 			loading: false,
 			posts: [],
-			totalPage: 10,
+			totalPage: 0,
 			currentPage: 1,
 			s: '',
 		};
@@ -100,6 +100,9 @@ class PostList extends Component {
 												</small>
 											) }
 										</h3>
+										{ post.new && (
+											<span className="badge badge-danger">{ __( '新着', 'hametuha' ) }</span>
+										) }
 									</header>
 									<div className="hb-posts-list-body">
 										<span className="hb-posts-list-meta">
@@ -129,7 +132,9 @@ class PostList extends Component {
 									</div>
 									<footer className="hb-posts-list-footer">
 										<a className="btn btn-secondary btn-sm" href={ post.url } target="_blank" rel="noopener noreferrer"> { __( '確認', 'hametuha' ) }</a>
-										<a className="btn btn-primary btn-sm" href={ post.edit_url}>{ __( '編集', 'hametuha' ) }</a>
+										{ !! post.edit_url && (
+											<a className="btn btn-primary btn-sm" href={ post.edit_url}>{ __( '編集', 'hametuha' ) }</a>
+										) }
 									</footer>
 								</li>
 							);

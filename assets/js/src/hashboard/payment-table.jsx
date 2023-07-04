@@ -1,5 +1,8 @@
 /*!
- * wpdeps=hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector,hb-filters-moment
+ * Hashboard Payment Screen.
+ *
+ * @handle hametuha-hb-payment-table
+ * @deps hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector,hb-filters-moment
  */
 
 /*global Materialize: false*/

@@ -42,8 +42,8 @@ class Works extends Screen {
 				return __( 'あなたの登録している作品集です。', 'hametuha' );
 			case 'comments':
 				return __( 'あなたの作品が受けとったコメントです。', 'hametuha' );
-			case 'reviews':
-				return __( 'これまで受け取ったレビューです。', 'hametuha' );
+			case 'ratings':
+				return __( 'これまで受け取った星によるレーティングです。', 'hametuha' );
 			case 'lists':
 				return __( 'あなたの作品が含まれているリストの一覧です。', 'hametuha' );
 			default:

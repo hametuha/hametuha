@@ -4,6 +4,8 @@ namespace Hametuha\WpApi;
 
 
 use Hametuha\Model\Lists;
+use Hametuha\Model\Rating;
+use Hametuha\Model\Review;
 use Hametuha\Model\Series;
 use WPametu\API\Rest\WpApi;
 
@@ -13,12 +15,16 @@ use WPametu\API\Rest\WpApi;
  * @package hametuha
  * @property-read Series $series
  * @property-read Lists  $lists
+ * @property-read Review $reviews
+ * @property-read Rating $rating
  */
 class MyContents extends WpApi {
 
 	protected $models = [
-		'series' => Series::class,
-		'lists'  => Lists::class,
+		'series'  => Series::class,
+		'lists'   => Lists::class,
+		'reviews' => Review::class,
+		'rating'  => Rating::class,
 	];
 
 	/**
@@ -40,7 +46,7 @@ class MyContents extends WpApi {
 				'type'        => 'string',
 				'description' => __( '投稿タイプ名', 'hametuha' ),
 				'required'    => true,
-				'enum'        => [ 'post', 'series', 'list', 'reviews', 'comment' ],
+				'enum'        => [ 'post', 'series', 'list', 'review', 'comment' ],
 			],
 			'paged' => [
 				'type'              => 'integer',
@@ -102,6 +108,34 @@ class MyContents extends WpApi {
 					'total'       => $result['total'],
 					'current'     => $result['current'],
 				] );
+			case 'comment':
+				$result = $this->reviews->get_author_comments( get_current_user_id(), [
+					'paged'          => $paged,
+					'posts_per_page' => 20,
+					's'              => $request->get_param( 's' ),
+				] );
+				return new \WP_REST_Response( [
+					'posts'       => array_map( [ $this, 'convert_response' ], $result['comments'] ),
+					'found_posts' => $result['found'],
+					'total'       => $result['total'],
+					'current'     => $result['current'],
+				] );
+			case 'review':
+				$result = $this->rating->get_reviewed_posts( get_current_user_id(), [
+					'paged'          => $paged,
+					'posts_per_page' => 20,
+				] );
+				return new \WP_REST_Response( [
+					'posts'       => array_map( [ $this, 'convert_response' ], $result['reviews'] ),
+					'found_posts' => $result['found'],
+					'total'       => $result['total'],
+					'current'     => $result['current'],
+				] );
+				break;
+			default:
+				return new \WP_Error( 'invalid_post_type', __( '投稿タイプが不正です。', 'hametuha' ), [
+					'status' => 400,
+				] );
 		}
 	}
 
@@ -113,6 +147,7 @@ class MyContents extends WpApi {
 	 */
 	protected function convert_response( $object ) {
 		$format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		$metas = [];
 		if ( is_a( $object, 'WP_Post' ) ) {
 			/** @var \WP_Post $post */
 			$post     = $object;
@@ -120,7 +155,6 @@ class MyContents extends WpApi {
 			$modified = new \DateTime( $post->post_modified, wp_timezone() );
 			$diff     = $modified->diff( $date );
 			$is_modified = ( 'publish' === $post->post_status ) && $diff && $diff->invert && 3 < $diff->days;
-			$metas = [];
 			switch ( $post->post_type ) {
 				case 'series':
 					$metas['library_books'] = sprintf( __( '%d作品収録', 'hametuha' ), $this->series->get_total( $post ) );
@@ -135,14 +169,20 @@ class MyContents extends WpApi {
 					$metas['person'] = get_the_author_meta( 'display_name', $post->post_author );
 					break;
 			}
-			return [
+			if ( ! empty( $post->reviewed_at) ) {
+				// this is rating.
+				$is_modified = false;
+				$metas['star'] = sprintf( __(  '%d/5点', 'hametuha' ), $post->rating * 10 );
+			}
+			$return = [
 				'ID'       => $post->ID,
 				'title'    => get_the_title( $post ),
 				'url'      => get_permalink( $post ),
 				'edit_url' => get_edit_post_link( $post, 'rest' ),
-				'date'     => mysql2date( $format, $post->post_date ),
+				'date'     => mysql2date( $format, $post->reviewed_at ?? $post->post_date ),
 				'modified' => mysql2date( $format, $post->post_modified ),
 				'updated'  => $is_modified,
+				'new'      => hametuha_is_new( $post->reviewed_at ?? $post->post_date ),
 				'status'   => [
 					'name'  => $post->post_status,
 					'label' => get_post_status_object( $post->post_status )->label,
@@ -154,8 +194,49 @@ class MyContents extends WpApi {
 				'terms'     => $this->get_post_terms( $post ),
 				'metas'     => $metas,
 			];
+			if ( ! empty( $post->reviewed_at) ) {
+				// this is rating.
+				$return['parent'] = [
+					'title' => get_the_title( $post ),
+					'url'   => get_permalink( $post ),
+				];
+				$return['terms'] = [];
+				$title = '';
+				$rate = (int) ( $post->rating * 10 );
+				for ( $i = 1; $i <= 5; $i++ ) {
+					$title .= ( $i <= $rate ) ? '★' : '☆';
+				}
+				$return['title'] = $title;
+			}
+			return $return;
 		} elseif ( is_a( $object, 'WP_Comment') ) {
-
+			/** @var \WP_Comment $comment */
+			$comment = $object;
+			if ( $comment->user_id ) {
+				$metas['person'] = get_the_author_meta( 'display_name', $comment->user_id ) ?: __( '退会したユーザー', 'hametuha' );
+			}
+			return [
+				'ID'       => $comment->ID,
+				'title'    => trim_long_sentence( $comment->comment_content, 60 ),
+				'url'      => get_comment_link( $comment ),
+				'edit_url' => false,
+				'date'     => mysql2date( $format, $comment->comment_date ),
+				'modified' => mysql2date( $format, $comment->comment_date ),
+				'updated'  => false,
+				'new'      => hametuha_is_new( $comment->comment_date, 365 * 7 ),
+				'status'   => [
+					'name'  => ( $comment->comment_approved ) ? 'approved' : 'pending',
+					'label' => ( $comment->comment_approved ) ? __( '承認済み', 'hametuha' ) : __( '未承認', 'hametuha' ),
+				],
+				'parent'    => ( $comment->comment_post_ID ) ? [
+					'title' => get_the_title( $comment->comment_post_ID ),
+					'url'   => get_permalink( $comment->comment_post_ID ),
+				] : null,
+				'terms'     => [],
+				'metas'     => $metas,
+			];
+		} else {
+			return $object;
 		}
 	}
 

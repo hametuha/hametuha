@@ -355,8 +355,24 @@ function human_time_diff_jp( $from, $to = '' ) {
  */
 function is_new_post( $offset = 7, $post = null ) {
 	$post = get_post( $post );
+	if ( ! $post ) {
+		return false;
+	}
+	return hametuha_is_new( $post->post_date, $offset );
+}
 
-	return ( current_time( 'timestamp' ) - strtotime( $post->post_date ) ) < 60 * 60 * 24 * $offset;
+/**
+ * Is date considered as "new"?
+ *
+ * @param string $date_time Y-m-d H:i:s
+ * @param int    $offset    Default 7 days.
+ * @return bool
+ */
+function hametuha_is_new( $date_time, $offset = 7) {
+	$now  = new DateTime( 'now', wp_timezone() );
+	$date = new DateTime( $date_time, wp_timezone() );
+	$now->sub( new DateInterval( 'P' . $offset . 'D' ) );
+	return $now < $date;
 }
 
 /**
