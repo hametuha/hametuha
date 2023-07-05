@@ -12,7 +12,7 @@ const { apiFetch } = wp;
 const { addQueryArgs } = wp.url;
 
 const div = document.getElementById( 'post-list-container' );
-const { postType } = div.dataset;
+const { postType, as } = div.dataset;
 
 class PostList extends Component {
 
@@ -35,8 +35,18 @@ class PostList extends Component {
 			if ( this.state.s.length ) {
 				args.s = this.state.s;
 			}
+			let path;
+			switch ( as ) {
+				case 'reader':
+					path = 'hametuha/v1/reading/' + this.props.postType;
+					break
+				case 'author':
+				default:
+					path = 'hametuha/v1/mine/' + this.props.postType;
+					break;
+			}
 			apiFetch( {
-				path: addQueryArgs( 'hametuha/v1/mine/' + this.props.postType, args ),
+				path: addQueryArgs( path, args ),
 			} ).then( res => {
 				this.setState( {
 					posts: res.posts,

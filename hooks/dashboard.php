@@ -59,8 +59,7 @@ add_filter( 'hashboard_screens', function( $screens ) {
 				$new_screens['works']      = \Hametuha\Dashboard\Works::class;
 				$new_screens['statistics'] = \Hametuha\Dashboard\Statistics::class;
 			}
-			//$new_screens['comments'] = \Hametuha\Dashboard\Sales::class;
-			//$new_screens['reviews']  = \Hametuha\Dashboard\Sales::class;
+			$new_screens['reading'] = \Hametuha\Dashboard\Readings::class;
 			if ( current_user_can( 'edit_posts' ) ) {
 				$new_screens['sales']         = \Hametuha\Dashboard\Sales::class;
 				$new_screens['notifications'] = \Hametuha\Dashboard\Notifications::class;

@@ -10,7 +10,7 @@ use Hametuha\Hashboard\Pattern\Screen;
  */
 class Works extends Screen {
 
-	protected $icon = 'book';
+	protected $icon = 'history_edu';
 
 	/**
 	 * Should return unique URL slug.
@@ -88,6 +88,7 @@ class Works extends Screen {
 				$args['post_type'] = 'post';
 				break;
 		}
+		$args['as'] = 'author';
 		hameplate( 'templates/dashboard/post-list', '', $args );
 		hameplate( 'templates/dashboard/footer', '', [
 			'slug' => 'dashboard-posts-footer',
