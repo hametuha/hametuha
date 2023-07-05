@@ -13,13 +13,18 @@ const $ = jQuery;
 const app = new Vue( {
 	el: '#access-container',
 	data: function () {
-		var now = new Date();
-		var year = now.getFullYear();
-		var month = ( '0' + ( now.getMonth() + 1 ) ).slice( -2 );
+		const pad2 = ( num ) => {
+			return ( '0' + num ).slice( -2 );
+		};
+		const now = new Date();
+		const year = now.getFullYear();
+		const month = pad2( now.getMonth() + 1 );
+		const day = pad2( now.getDate() );
+		now.setDate( now.getDate() - 30 );
 		return {
 			loading: false,
-			from: [ year, month, '01' ].join( '-' ),
-			to: [ year, month, $.hbGetLastDateOfMonth( year, month ) ].join( '-' ),
+			from: [ now.getFullYear(), pad2( now.getMonth() + 1 ), pad2( now.getDate() ) ].join( '-' ),
+			to: [ year, month, day ].join( '-' ),
 			rankings: [],
 			records: [],
 			chartData: {},
@@ -73,12 +78,10 @@ const app = new Vue( {
 			return array;
 		},
 
-		dateChangeHandler: function ( year, month ) {
-			month = ( '0' + month ).slice( -2 );
-			this.from = [ year, month, '01' ].join( '-' );
-			this.to = [ year, month, $.hbGetLastDateOfMonth( year, month ) ].join( '-' );
+		dateChangeHandler: function () {
 			this.fetch();
 		},
+
 
 		fillDataSet: function ( dataSets, labels, type, date, pv ) {
 			if ( !dataSets[ type ] ) {

@@ -42,7 +42,7 @@ class MyContents extends MyContentPattern {
 			case 'series':
 				$args = [
 					'post_type'           => $post_type,
-					'post_status'         => 'any',
+					'post_status'         => [ 'publish', 'pending', 'draft', 'future', 'private'],
 					'author'              => get_current_user_id(),
 					'posts_per_page'      => 20,
 					'paged'               => $paged,
@@ -54,6 +54,7 @@ class MyContents extends MyContentPattern {
 					$args['s'] = $s;
 				}
 				$query = new \WP_Query( $args );
+				error_log( $query->request );
 				return new \WP_REST_Response( [
 					'posts'       => array_map( [ $this, 'convert_response' ], $query->posts ),
 					'found_posts' => $query->found_posts,

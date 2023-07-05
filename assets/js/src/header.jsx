@@ -112,7 +112,7 @@ class HametuHeader extends Component {
 						  </a>
 					  </li>
 					  <li>
-						  <a href="/dashboard/statistics/">
+						  <a href="/dashboard/statistics/popular">
 							  <i className="icon-chart"/>
 							  統計情報
 						  </a>
@@ -128,7 +128,7 @@ class HametuHeader extends Component {
 
               <li className="divider"/>
               <li>
-                <a href="/your/comments/">
+                <a href="/dashboard/reading/comments/">
                   <i className="icon-bubble-dots"/>
                   あなたのコメント
                 </a>
@@ -140,7 +140,7 @@ class HametuHeader extends Component {
                 </a>
               </li>
               <li>
-                <a href="/your/reviews/">
+                <a href="/dashboard/reading/reviews/">
                   <i className="icon-star2"/>
                   レビューした作品
                 </a>

@@ -25,7 +25,7 @@ class UserPv extends AnalyticsPattern {
 	 * @return bool
 	 */
 	protected function is_available() {
-		return class_exists( 'Gianism\\Bootstrap' );
+		return class_exists( 'Kunoichi\GaCommunicator' );
 	}
 
 
@@ -49,10 +49,8 @@ class UserPv extends AnalyticsPattern {
 			case 'GET':
 				$args = $this->add_date_fields( $args, 30 );
 				return $args;
-				break;
 			default:
 				return [];
-				break;
 		}
 	}
 
@@ -63,50 +61,41 @@ class UserPv extends AnalyticsPattern {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_get( \WP_REST_Request $request ) {
+		// Create date dimension
+		$params = [
+			'start'     => $request->get_param( 'from' ),
+			'end'       => $request->get_param( 'to' ),
+			'post_type' => 'post,series,news',
+			'limit'     => 1000,
+		];
 		$user_id = $request->get_param( 'user_id' );
 		switch ( $user_id ) {
 			case 'me':
-				$user_id = get_current_user_id();
+				$params['author'] = (string) get_current_user_id();
 				break;
 			case 'all':
-				$user_id = 0;
-				$filters = '';
+				// Do nothing.
+				break;
+			default:
+				$params['author'] = (string) $request->get_param( 'user_id' );
 				break;
 		}
-		// Create date dimension
-		$start          = $request->get_param( 'from' );
-		$end            = $request->get_param( 'to' );
-		$date_dimension = $this->proper_metrics( $start, $end );
-		// Set default dimension
-		$filters     = sprintf( 'ga:dimension2==%d;ga:dimension1=~post|series|news', $user_id );
-		$pv_params   = [
-			'dimensions' => implode( ',', [ $date_dimension, 'ga:dimension1' ] ),
-			'sort'       => $date_dimension,
-		];
-		$rank_params = [
-			'dimensions'  => implode( ',', [ 'ga:pagePath' ] ),
-			'sort'        => '-ga:pageviews',
-			'max-results' => 20,
-		];
-		if ( $user_id ) {
-			$pv_params['filters']   = $filters;
-			$rank_params['filters'] = $filters;
-		}
 		return new \WP_REST_Response( [
-			'start'          => $start,
-			'end'            => $end,
-			'date_dimension' => $date_dimension,
+			'start'          => $params['start'],
+			'end'            => $params['end'],
 			'records'        => array_map( function( $row ) {
-				list( $date, $post_type, $pv ) = $row;
-				$post_type_obj                 = get_post_type_object( $post_type );
+				list( $date, $post_type ) = $row;
+				$pv = $row[ count( $row ) - 1 ];
+				$post_type_obj = get_post_type_object( $post_type );
 				return [
 					'date'      => preg_replace( '#(\d{4})(\d{2})(\d{2})#u', '$1-$2-$3', $date ),
 					'post_type' => $post_type_obj ? $post_type_obj->label : $post_type,
 					'pv'        => (int) $pv,
 				];
-			}, $this->fetch( $start, $end, 'ga:pageviews', $pv_params, true ) ),
+			}, $this->ga4->chronic_popularity( $params ) ),
 			'rankings'       => array_map( function( $rank ) {
-				list( $path, $pv ) = $rank;
+				list( $path ) = $rank;
+				$pv = $rank[ count( $rank ) - 1 ];
 				if ( $post_id = url_to_postid( home_url( $path ) ) ) {
 					$label = get_post_type_object( get_post_type( $post_id ) )->label;
 					$url   = get_permalink( $post_id );
@@ -120,7 +109,9 @@ class UserPv extends AnalyticsPattern {
 					'url'   => $url,
 					'pv'    => (int) $pv,
 				];
-			}, $this->fetch( $start, $end, 'ga:pageviews', $rank_params, true ) ),
+			}, $this->ga4->popular_posts( array_merge( $params, [
+				'limit' => 100,
+			] ) ) ),
 		] );
 	}
 

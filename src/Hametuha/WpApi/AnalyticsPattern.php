@@ -4,6 +4,7 @@ namespace Hametuha\WpApi;
 
 
 use Gianism\Plugins\Analytics;
+use Hametuha\Service\GoogleAnalyticsDataAccessor;
 use WPametu\API\Rest\WpApi;
 use WPametu\Utility\StringHelper;
 
@@ -14,6 +15,7 @@ use WPametu\Utility\StringHelper;
  * @package Gianism
  * @property \Gianism\Plugins\Analytics $google
  * @property \Google_Service_Analytics $ga
+ * @property-read GoogleAnalyticsDataAccessor $ga4
  * @property array  $profile
  * @property \wpdb  $db
  * @property string $view_id
@@ -173,6 +175,8 @@ abstract class AnalyticsPattern extends WpApi {
 			case 'google':
 				return Analytics::get_instance();
 				break;
+			case 'ga4':
+				return GoogleAnalyticsDataAccessor::get_instance();
 			default:
 				return parent::__get( $name );
 				break;

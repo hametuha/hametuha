@@ -16,6 +16,8 @@ use WPametu\Pattern\Singleton;
 class GoogleAnalyticsDataAccessor extends Singleton {
 
 	/**
+	 * Typical arguemnts.
+	 *
 	 * @param array $args
 	 * @return array
 	 * @throws \Exception
@@ -37,6 +39,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			'limit'     => 100,
 			'category'  => '',
 			'at_least'  => 1,
+			'offset'    => 0,
 		] );
 	}
 
@@ -68,28 +71,109 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	}
 
 	/**
+	 * Typical post dimension.
+	 *
+	 * @return array[]
+	 */
+	protected function posts_dimensions() {
+		return [
+			[
+				'name' => 'pagePath',
+			],
+			[
+				'name' => 'customEvent:post_type',
+			],
+			[
+				'name' => 'customEvent:author',
+			],
+			[
+				'name' => 'customEvent:category',
+			],
+		];
+	}
+
+	/**
+	 * Get chronical popularity.
+	 *
+	 * @param $params
+	 * @return array
+	 */
+	public function chronic_popularity( $params ) {
+		$dimensions = [];
+		$filters    = [];
+		$params     = $this->parse_args( $params );
+		$start      = new \DateTime( "{$params['start']} 00:00:00" );
+		$end        = new \DateTime( "{$params['end']} 00:00:00" );
+		$diff       = $start->diff( $end )->days;
+		if ( $diff > 365 ) {
+			// Over 1 year, year month.
+			$dimensions[] = [
+				'name' => 'yearMonth',
+			];
+		} else {
+			$dimensions[] = [
+				'name'  => 'date',
+			];
+		}
+		if ( $params['post_type'] ) {
+			$dimensions[] = [
+				'name' => 'customEvent:post_type',
+			];
+			$filters[] = $this->post_type_filter( $params['post_type'] );
+		}
+		if ( $params['author'] ) {
+			$dimensions[] = [
+				'name' => 'customEvent:author',
+			];
+			if ( is_numeric( $params['author'] ) ) {
+				$filters[]    = [
+					'fieldName'    => 'customEvent:author',
+					'stringFilter' => [
+						'matchType' => 'EXACT',
+						'value'     => $params['author'],
+					],
+				];
+			}
+		}
+		$request = [
+			'dimensions'      => $dimensions,
+			'dateRanges'      => [
+				[
+					'startDate' => $params['start'],
+					'endDate'   => $params['end'],
+				],
+			],
+			'orderBys'        => [
+				[
+					'dimension' => [
+						'dimensionName' => $dimensions[0]['name'],
+						'orderType'     => 'NUMERIC',
+					],
+					'desc'      => false,
+				],
+			],
+			'limit'           => $params['limit']
+		];
+		if ( ! empty( $filters ) ) {
+			$request[ 'dimensionFilter' ] = $this->convert_filters( $filters );
+		}
+		if ( 0 < $params['offset'] ) {
+			$request['offset'] = $params['offset'];
+		}
+		return $this->fetch( $request );
+	}
+
+	/**
 	 * Get popular posts.
 	 *
-	 * @param array $params Parameters.
+	 * @param array $params                Parameters.
 	 * @return array[]|\WP_Error
 	 */
 	public function popular_posts( $params = [] ) {
-		$params = $this->parse_args( $params );
+		$params     = $this->parse_args( $params );
+		$dimensions = $this->posts_dimensions();
 		$request = [
-			'dimensions'      => [
-				[
-					'name' => 'pagePath',
-				],
-				[
-					'name' => 'customEvent:post_type',
-				],
-				[
-					'name' => 'customEvent:author',
-				],
-				[
-					'name' => 'customEvent:category',
-				],
-			],
+			'dimensions'      => $dimensions,
 			'dateRanges'      => [
 				[
 					'startDate' => $params['start'],
@@ -100,13 +184,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 		];
 		$filters = [];
 		if ( $params['post_type'] ) {
-			$filters[] = [
-				'fieldName'    => 'customEvent:post_type',
-				'stringFilter' => [
-					'matchType' => 'EXACT',
-					'value'     => $params['post_type'],
-				],
-			];
+			$filters[] = $this->post_type_filter( $params['post_type'] );
 		}
 		if ( $params['category'] ) {
 			$filters[] = [
@@ -126,23 +204,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 				],
 			];
 		}
-		if ( 1 === count( $filters ) ) {
-			// 1 Filter.
-			$request['dimensionFilter'] = [
-				'filter' => $filters[0],
-			];
-		} elseif ( ! empty( $filters ) ) {
-			// Multiple Filters.
-			$request['dimensionFilter'] = [
-				'andGroup' => [
-					'expressions' => array_map( function( $filter ) {
-						return [
-							'filter' => $filter,
-						];
-					}, $filters ),
-				],
-			];
-		}
+		$request['dimensionFilter'] = $this->convert_filters( $filters );
 		if ( $params['at_least'] ) {
 			$request['metricFilter'] = [
 				'filter' => [
@@ -192,6 +254,75 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			return [];
 		}
 		return $result;
+	}
+
+	/**
+	 * Return filter if post type is set.
+	 *
+	 * @param string|string[] $post_types CSV value of post type.
+	 * @return array
+	 */
+	protected function post_type_filter( $post_types ) {
+		if ( ! is_array( $post_types ) ) {
+			$post_types = array_map( 'trim', explode( ',', $post_types ) );
+		}
+		if ( 1 === count( $post_types ) ) {
+			return [
+				'fieldName' => 'customEvent:post_type',
+				'stringFilter' => [
+					'matchType' => 'EXACT',
+					'value' => $post_types[0],
+				],
+			];
+		} else {
+			return [
+				'fieldName' => 'customEvent:post_type',
+				'inListFilter' => [
+					'values' => $post_types,
+				],
+			];
+		}
+	}
+
+	/**
+	 * Convert filter to filter expression.
+	 *
+	 * @param array $filters
+	 * @param bool  $or If true, groups are or group.
+	 * @return array|array[]
+	 */
+	protected function convert_filters( $filters, $or = false ) {
+		if ( 1 < count( $filters ) ) {
+			$key = $or ? 'orGroup' : 'andGroup';
+			return [
+				$key => [
+					'expressions' => array_map( [ $this, 'filter_or_not' ], $filters ),
+				],
+			];
+		} else {
+			return $this->filter_or_not( $filters[0] );
+		}
+	}
+
+	/**
+	 * Convert filter to not or expression.
+	 *
+	 * @param array $filter
+	 * @return array
+	 */
+	protected function filter_or_not( $filter ) {
+		if ( ! empty( $filter['not'] ) ) {
+			unset( $filter['not'] );
+			return [
+				'notExpression' => [
+					'filter' => $filter,
+				],
+			];
+		} else {
+			return [
+				'filter' => $filter,
+			];
+		}
 	}
 
 	/**

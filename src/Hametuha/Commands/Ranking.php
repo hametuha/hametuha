@@ -66,6 +66,33 @@ class Ranking extends Command {
 	}
 
 	/**
+	 * Get popular posts.
+	 *
+	 * @synopsis [--post_type=<post_type>] [--limit=<limit>] [--start=<start>] [--end=<end>] [--author=<author>]
+	 * @return void
+	 */
+	public function chronic( $args, $assoc ) {
+		$result = $this->ga()->chronic_popularity( $assoc );
+		if ( empty( $result ) ) {
+			\WP_CLI::error( __( '条件に該当する記録がありません。', 'hametuha' ) );
+		}
+		$headers = [ 'Date' ];
+		if ( ! empty( $assoc['post_type'] ) ) {
+			$headers[] = 'Post Type';
+		}
+		if ( ! empty( $assoc['author'] ) ) {
+			$headers[] = 'Author';
+		}
+		$headers[] = 'PV';
+		$table = new Table();
+		$table->setHeaders( $headers );
+		foreach ( $result as $row ) {
+			$table->addRow( $row );
+		}
+		$table->display();
+	}
+
+	/**
 	 * Check DB status.
 	 *
 	 * @return void

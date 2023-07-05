@@ -18,6 +18,7 @@ class PostList extends Component {
 
 	constructor( props ) {
 		super( props );
+
 		this.state = {
 			loading: false,
 			posts: [],
@@ -52,9 +53,25 @@ class PostList extends Component {
 					posts: res.posts,
 					totalPage: res.total,
 					currentPage: page,
+				}, () => {
+					// Push stateでURLを変更
+					const params = {};
+					if ( 1 < page ) {
+						params.paged = page;
+					}
+					if ( args.s ) {
+						params.s = args.s;
+					}
+					const url = addQueryArgs( location.pathname, params );
+					try {
+						history.pushState( {}, null, url );
+					} catch ( e ) {
+						// Ignore
+					}
 				} );
 			} ).catch( res => {
-				console.log( res );
+				// todo: エラーを出す
+				window.console && console.log( res );
 			} ).finally( () => {
 				this.setState( { loading: false } );
 			} );
