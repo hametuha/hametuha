@@ -136,6 +136,52 @@ SQL;
 	}
 
 	/**
+	 * Get audience.
+	 *
+	 * @synopsis <group> [--start=<start>] [--end=<end>] [--author=<author>]
+	 *
+	 * @param array $args  Command option..
+	 * @param array $assoc Arguments.
+	 * @return void
+	 */
+	public function audience( $args, $assoc ) {
+		list( $group ) = $args;
+		$start =  $assoc['start'] ?? date_i18n( 'Y-m-d', strtotime( '7days ago' ) );
+		$end   =  $assoc['end'] ?? date_i18n( 'Y-m-d' );
+		$author = $assoc['author'] ?? 0;
+		$result = $this->ga()->audiences( $group, $start, $end, $author );
+		if ( is_wp_error( $result ) ) {
+			\WP_CLI::error( $result->get_error_message() );
+		}
+		if ( empty( $result ) ) {
+			\WP_CLI::error( __( '結果がありませんでした。', 'hametuha' ) );
+		}
+		switch ( $group ) {
+			case 'gender':
+				$label = __( '性別', 'hametuha' );
+				break;
+			case 'generation':
+				$label = __( '年齢層', 'hametuha' );
+				break;
+			case 'new':
+				$label = __( '新規ユーザー', 'hametuha' );
+				break;
+			case 'region':
+				$label = __( '地域', 'hametuha' );
+				break;
+			default:
+				\WP_CLI::error( __( '無効なグループが指定されています。', 'hametuha' ) );
+				break;
+		}
+		$table = new Table();
+		$table->setHeaders( [ $label, __( 'セッション数', 'hametuha' ) ] );
+		foreach ( $result as $row ) {
+			$table->addRow( [ $row[0], $row[ count( $row ) - 1 ] ] );
+		}
+		$table->display();
+	}
+
+	/**
 	 * Get Google Analytics Accessor.
 	 *
 	 * @return GoogleAnalyticsDataAccessor

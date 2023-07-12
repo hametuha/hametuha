@@ -12,6 +12,15 @@
 add_filter( 'show_admin_bar', '__return_false', 1000 );
 
 /**
+ * Display device width.
+ */
+add_action( 'hashboard_head', function() {
+	?>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+	<?php
+}, 1 );
+
+/**
  * Add links to admin bar.
  */
 add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {

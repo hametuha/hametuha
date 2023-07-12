@@ -326,6 +326,99 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	}
 
 	/**
+	 * Get audience data.
+	 *
+	 * @param string $group     Group of Audience. 'gender', 'generation', 'new', and 'region' are available.
+	 * @param string $start     Start date YYYY-MM-DD
+	 * @param string $end       End date YYYY-MM-DD
+	 * @param int    $author_id Author ID. If 0, all authors.
+	 * @return array[]|\WP_Error
+	 */
+	public function audiences( $group, $start, $end, $author_id = 0 ) {
+		$author = null;
+		if ( $author_id ) {
+			$author = get_userdata( $author_id );
+			if ( ! $author ) {
+				return new \WP_Error( 'user_not_found', __( '指定された作者は存在しません。', 'hametuha' ) );
+			}
+		}
+		$request = [
+			'dateRanges' => [
+				[
+					'startDate' => $start,
+					'endDate'   => $end,
+				],
+			],
+			'metrics' => [
+				[
+					'name' => 'sessions',
+				],
+			],
+			'orderBys' => [
+				[
+					'dimension' => [
+						'dimensionName' => 'sessions',
+						'orderType'     => 'NUMERIC',
+					],
+					'desc'      => true,
+				],
+			],
+			'limit'      => 100,
+		];
+		$groups = [
+			'gender'     => [
+				'dimensions' => [
+					[
+						'name' => 'userGender',
+					],
+				],
+			],
+			'generation' => [
+				'dimensions' => [
+					[
+						'name' => 'userAgeBracket',
+					],
+				],
+			],
+			'new'        => [
+				'dimensions' => [
+					[
+						'name' => 'newVsReturning',
+					],
+				],
+			],
+			'region'       => [
+				'dimensions' => [
+					[
+						'name' => 'region',
+					]
+				],
+			],
+		];
+		if ( ! array_key_exists( $group, $groups ) ) {
+			return new \WP_Error( 'audience_not_found', __( '指定された読者グループは存在しません。', 'hametuha' ) );
+		}
+		$request = array_merge( $request, $groups[ $group ] );
+		if ( $author ) {
+			$request['dimensions'][] = [
+				'name' => 'customEvent:author',
+			];
+			$request['dimensionFilter'] = [
+				'filter' => [
+					'fieldName'    => 'customEvent:author',
+					'stringFilter' => [
+						'matchType' => 'EXACT',
+						'value'     => (string) $author->ID,
+					],
+				],
+			];
+		}
+		return $this->fetch( $request );
+	}
+
+	/**
+	 * Save record to database.
+	 *
 	 * @param string $category
 	 * @param int    $id
 	 * @param int    $value

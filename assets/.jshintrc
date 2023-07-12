@@ -17,6 +17,7 @@
 		"gtag": false,
 		"FB": false,
 		"Vue": false,
+		"Recharts": false,
 		"Hashboard": false,
 		"HametuhaComponents": false
 	}

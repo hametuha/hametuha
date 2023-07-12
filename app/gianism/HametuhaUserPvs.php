@@ -5,6 +5,8 @@ use Hametuha\Admin\Gabstract;
 /**
  * Get author's PV
  *
+ * @deprecated
+ *
  */
 class HametuhaUserPvs extends Gabstract {
 

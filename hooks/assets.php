@@ -29,7 +29,10 @@ add_action( 'init', function () {
 	}, 10, 4 );
 
 	// Prop Types
-	wp_register_script( 'prop-types', get_template_directory() . '/assets/js/dist/prop-types.min.js', [ 'wp-element' ], '15.7.2', true );
+	wp_register_script( 'prop-types', 'https://unpkg.com/prop-types/prop-types.min.js', [ 'wp-element' ], null, true );
+
+	// Recharts
+	wp_register_script( 'recharts', 'https://unpkg.com/recharts/umd/Recharts.js', [ 'prop-types' ], null, true );
 
 	/**
 	 * hametuha_angular_extensions
@@ -51,6 +54,7 @@ JS;
 	// Select2
 	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
 	wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
+
 
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [

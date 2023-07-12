@@ -1,6 +1,8 @@
 <?php
 namespace Hametuha\WpApi;
 
+use Hametuha\WpApi\Pattern\AnalyticsPattern;
+
 /**
  * Show user PV
  *
@@ -17,19 +19,6 @@ class UserPv extends AnalyticsPattern {
 	}
 
 	/**
-	 * Check availability
-	 *
-	 * Override this function if some condition exists like
-	 * plugin dependencies.
-	 *
-	 * @return bool
-	 */
-	protected function is_available() {
-		return class_exists( 'Kunoichi\GaCommunicator' );
-	}
-
-
-	/**
 	 * Get arguments for method.
 	 *
 	 * @param string $method 'GET', 'POST', 'PUSH', 'PATCH', 'DELETE', 'HEAD', 'OPTION'
@@ -40,9 +29,7 @@ class UserPv extends AnalyticsPattern {
 		$args = [
 			'user_id' => [
 				'required'          => true,
-				'validate_callback' => function( $var ) {
-					return ( is_numeric( $var ) || in_array( $var, [ 'me', 'all' ] ) ) ?: new \WP_Error( 'malformat', 'ユーザーIDの指定が不正です。' );
-				},
+				'validate_callback' => [ $this, 'validate_user_id' ],
 			],
 		];
 		switch ( $method ) {

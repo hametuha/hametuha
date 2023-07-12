@@ -62,6 +62,13 @@ class Statistics extends Screen {
 	 */
 	public function render( $page = '' ) {
 		switch ( $page ) {
+			case 'readers':
+			case 'traffic':
+			wp_enqueue_script( 'hametuha-hb-stats' );
+				hameplate( 'templates/dashboard/analytics', '', [
+					'target' => $page,
+				] );
+				break;
 			default:
 				wp_enqueue_script( 'hametuha-hb-stats-pv' );
 				hameplate( 'templates/dashboard/analytics', 'access', [

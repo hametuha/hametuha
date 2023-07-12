@@ -1,0 +1,76 @@
+//
+// Toast style.
+//
+.hametuha-toast {
+
+	&-container {
+		position: fixed;
+		z-index: 9997;
+		bottom: 0;
+		left: 0;
+		padding: 20px;
+		max-width: 50vw;
+		display: flex;
+		flex-direction : column-reverse;
+		align-items: flex-start;
+
+		@media screen and (max-width: 767px) {
+			max-width: 100vw;
+		}
+
+		@media screen and (min-width: 768px) {
+			left: 300px;
+		}
+	}
+
+	// Toast item.
+	border-radius: 3px;
+	background-color: rgba( 255, 255, 255, .8 );
+	color: $shade-font;
+	border: 1px solid currentColor;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(0,0,0,.2);
+	opacity: 0;
+	transform: translateY( -10px );
+	transition: opacity .3s ease, transform .3s ease;
+	backdrop-filter: blur(10px);
+
+	& + & {
+		margin-bottom: 20px;
+	}
+
+	@each $theme in ( primary, secondary, success, info, warning, danger ) {
+		// Only works with Bootstrap 4.
+		@if variable-exists( theme-colors ) {
+			$color: map-get( $theme-colors, $theme );
+			&-#{$theme} {
+				color: darken($color, 20);
+				background-color: rgba( $color, .3 );
+			}
+		}
+	}
+
+	&-on {
+		opacity: 1;
+		transform: translateY( 0 );
+	}
+
+	&-header {
+		font-size: 14px;
+		position: relative;
+		border-bottom: 1px solid currentColor;
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+
+		button {
+			color: currentColor;
+			position: absolute;
+			right: 0;
+			top: 0;
+			-webkit-appearance: none;
+			border: none;
+			background: transparent;
+			box-shadow: none;
+		}
+	}
+}

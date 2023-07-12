@@ -69,7 +69,7 @@ gulp.task( 'jsx', function () {
 		.pipe( gulp.dest( './assets/js/dist' ) );
 } );
 
-// Buidl dependncies.json
+// Build wp-dependencies.json
 gulp.task( 'deps', function( done ) {
 	glob( 'assets/js/dist/**/*.LICENSE.txt' ).then( res => {
 		return Promise.all( res.map( path => {

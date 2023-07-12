@@ -20,6 +20,12 @@ $brand-danger: red;
     clear: both;
   }
 }
+
+// todo: この辺りのスタイルは、hametuhaのテーマに移動する
+.hb-site-icon {
+	max-width: 100px !important;
+}
+
 @import "variables";
 @import "../../node_modules/bootstrap/scss/functions";
 @import "../../node_modules/bootstrap/scss/mixins";
@@ -28,5 +34,6 @@ $brand-danger: red;
 @import "parts/notification";
 @import "parts/campaign";
 @import "parts/requests";
+@import "components/toast";
 
 @import "dashboard/*";
