@@ -156,27 +156,45 @@ SQL;
 		if ( empty( $result ) ) {
 			\WP_CLI::error( __( '結果がありませんでした。', 'hametuha' ) );
 		}
+		$headers = [];
+		$indices = [0];
 		switch ( $group ) {
 			case 'gender':
-				$label = __( '性別', 'hametuha' );
+				$headers []= __( '性別', 'hametuha' );
 				break;
 			case 'generation':
-				$label = __( '年齢層', 'hametuha' );
+				$headers []= __( '年齢層', 'hametuha' );
 				break;
 			case 'new':
-				$label = __( '新規ユーザー', 'hametuha' );
+				$headers []= __( '新規ユーザー', 'hametuha' );
 				break;
 			case 'region':
-				$label = __( '地域', 'hametuha' );
+				$headers []= __( '地域', 'hametuha' );
+				break;
+			case 'source':
+				$headers []= __( '参照元', 'hametuha' );
+				break;
+			case 'profile':
+				$headers []= __( 'プロフィールページ', 'hametuha' );
+				break;
+			case 'referrer':
+				$headers []= __( '貢献者', 'hametuha' );
+				$indices []= 1;
 				break;
 			default:
 				\WP_CLI::error( __( '無効なグループが指定されています。', 'hametuha' ) );
 				break;
 		}
+		$headers[] = __( 'セッション数', 'hametuha' );
 		$table = new Table();
-		$table->setHeaders( [ $label, __( 'セッション数', 'hametuha' ) ] );
+		$table->setHeaders( $headers );
 		foreach ( $result as $row ) {
-			$table->addRow( [ $row[0], $row[ count( $row ) - 1 ] ] );
+			$new_row = [];
+			foreach ( $indices as $i ) {
+				$new_row[] = $row[ $i ];
+			}
+			$new_row[] = $row[ count( $row ) - 1 ];
+			$table->addRow( $new_row );
 		}
 		$table->display();
 	}

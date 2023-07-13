@@ -1,7 +1,7 @@
 /*!
  * Hametuha Dashboard - Stats
  *
- * @handle hametuha-hb-stats
+ * @handle hametuha-hb-stats-audiences
  * @deps wp-element, hametuha-date-range, hametuha-toast, wp-i18n, hametuha-loading-indicator, wp-api-fetch, wp-url, recharts, hametuha-chart-colors
  */
 
@@ -21,7 +21,7 @@ const from = new Date();
 from.setDate( from.getDate() - 30 );
 
 
-class Stats extends Component {
+class StatsAudiences extends Component {
 
 	constructor( props ) {
 		super( props );
@@ -192,6 +192,11 @@ class Stats extends Component {
 
 					<div className="col-12 col-md-6">
 						<h3>{ __( 'リピート率', 'hametuha' ) }</h3>
+
+						<div className="mt-4 mb-4 alert alert-secondary" role="alert">
+							{ __( '「新しい読者」は破滅派にはじめて訪れた人のことです。', 'hametuha' ) }
+						</div>
+
 						{ !! this.state.new ? (
 							<ResponsiveContainer width="100%" height={ 300 }>
 								<PieChart width="100%" height={300}>
@@ -214,11 +219,13 @@ class Stats extends Component {
 						) : (
 							noContent()
 						) }
-
 					</div>
 
 					<div className="col-12 col-md-6">
 						<h3>{ __( '読者の地域', 'hametuha' ) }</h3>
+						<div className="mt-4 mb-4 alert alert-secondary" role="alert">
+							{ __( '上位50件を表示しています。', 'hametuha' ) }
+						</div>
 						{ !! region ? (
 							<ResponsiveContainer width="100%" height={ 900 }>
 								<BarChart width="100%" minHeight={ 900 } data={ region } layout="vertical">
@@ -243,7 +250,7 @@ class Stats extends Component {
 }
 
 if ( createRoot ) {
-	createRoot( div ).render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
+	createRoot( div ).render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
 } else {
-	render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
+	render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
 }

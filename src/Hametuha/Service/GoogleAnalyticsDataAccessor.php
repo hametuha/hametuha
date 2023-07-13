@@ -93,6 +93,20 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	}
 
 	/**
+	 * Get proper time range.
+	 *
+	 * @param string $start Datetime format.
+	 * @param string $end   Datetime format.
+	 * @return string
+	 */
+	protected function proper_range_dimension( $start, $end ) {
+		$start_date = new \DateTime( "{$start} 00:00:00" );
+		$end_date   = new \DateTime( "{$end} 00:00:00" );
+		$diff       = $start_date->diff( $end_date )->days;
+		return ( $diff > 365 ) ? 'yearMonth' : 'date';
+	}
+
+	/**
 	 * Get chronical popularity.
 	 *
 	 * @param $params
@@ -100,21 +114,13 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	 */
 	public function chronic_popularity( $params ) {
 		$dimensions = [];
-		$filters    = [];
 		$params     = $this->parse_args( $params );
-		$start      = new \DateTime( "{$params['start']} 00:00:00" );
-		$end        = new \DateTime( "{$params['end']} 00:00:00" );
-		$diff       = $start->diff( $end )->days;
-		if ( $diff > 365 ) {
-			// Over 1 year, year month.
-			$dimensions[] = [
-				'name' => 'yearMonth',
-			];
-		} else {
-			$dimensions[] = [
-				'name'  => 'date',
-			];
-		}
+		// Default dimension.
+		$dimensions[] = [
+			'name' => $this->proper_range_dimension( $params['start'], $params['end'] ),
+		];
+		// Set filters.
+		$filters    = [];
 		if ( $params['post_type'] ) {
 			$dimensions[] = [
 				'name' => 'customEvent:post_type',
@@ -393,25 +399,88 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 						'name' => 'region',
 					]
 				],
+				"limit" => 50,
 			],
+			'source' => [
+				'dimensions' => [
+					[
+						'name' => 'firstUserSource',
+					],
+				],
+				'limit' => 20,
+			],
+			'referrer' => [
+				'dimensions' => [
+					[
+						'name' => 'firstUserMedium',
+					],
+				],
+				'filters' => [
+					[
+						'fieldName' => 'firstUserCampaignName',
+						'inListFilter' => [
+							'values' => [ 'share-single', 'share-auto', 'share-dashboard' ],
+						],
+					],
+				],
+				'limit' => 20,
+			],
+			'profile' => [
+				'dimensions' => [
+					[
+						'name' => $this->proper_range_dimension( $start, $end ),
+					],
+				],
+				'filters' => [
+					[
+						'fieldName' => 'pagePath',
+						'stringFilter' => [
+							'matchType' => 'BEGINS_WITH',
+							'value' => '/doujin/detail/',
+						],
+					],
+				],
+				'limit' => 20,
+			]
 		];
 		if ( ! array_key_exists( $group, $groups ) ) {
 			return new \WP_Error( 'audience_not_found', __( '指定された読者グループは存在しません。', 'hametuha' ) );
 		}
-		$request = array_merge( $request, $groups[ $group ] );
+		$group_option = $groups[ $group ];
+		$filters      = [];
+		if ( ! empty( $group_option['filters'] )) {
+			$filters = $group_option['filters'];
+			unset( $group_option['filters'] );
+		}
+		$request = array_merge( $request, $group_option );
 		if ( $author ) {
-			$request['dimensions'][] = [
-				'name' => 'customEvent:author',
-			];
-			$request['dimensionFilter'] = [
-				'filter' => [
-					'fieldName'    => 'customEvent:author',
-					'stringFilter' => [
-						'matchType' => 'EXACT',
-						'value'     => (string) $author->ID,
-					],
-				],
-			];
+			switch ( $group ) {
+				case 'profile':
+					$filters[] = [
+						'fieldName' => 'pagePath',
+						'stringFilter' => [
+							'matchType' => 'BEGINS_WITH',
+							'value' => '/doujin/detail/' . $author->user_nicename,
+						],
+					];
+					break;
+				default:
+					$request['dimensions'][] = [
+						'name' => 'customEvent:author',
+					];
+					$filters[] = [
+						'fieldName'    => 'customEvent:author',
+						'stringFilter' => [
+							'matchType' => 'EXACT',
+							'value'     => (string) $author->ID,
+						],
+					];
+					break;
+			}
+		}
+		// Setup filter.
+		if ( ! empty( $filters ) ) {
+			$request['dimensionFilter'] = $this->convert_filters( $filters );
 		}
 		return $this->fetch( $request );
 	}

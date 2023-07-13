@@ -35,10 +35,10 @@ class Statistics extends Screen {
 	 */
 	public function description( $page = '' ) {
 		switch ( $page ) {
-			case 'readers':
-				return __( '読者の傾向を表示しています。', 'hametuha' );
+			case 'audiences':
+				return __( 'あなたの作品を読んだ読者の傾向を表示しています。', 'hametuha' );
 			case 'traffic':
-				return __( '読者がどうやって訪れたかを表示しています。', 'hametuha' );
+				return __( '読者がどうやってあなたの作品にたどり着いたかを表示しています。', 'hametuha' );
 			default:
 				return __( '人気の記事を発表しています。', 'hametuha' );
 		}
@@ -49,9 +49,9 @@ class Statistics extends Screen {
 	 */
 	protected function default_children() {
 		return [
-			'popular' => __( '人気の記事', 'hametuha' ),
-			'readers' => __( '読者の傾向', 'hametuha' ),
-			'traffic' => __( '流入経路', 'hametuha' ),
+			'popular'   => __( '人気の作品', 'hametuha' ),
+			'audiences' => __( '読者の傾向', 'hametuha' ),
+			'traffic'   => __( '流入経路', 'hametuha' ),
 		];
 	}
 
@@ -62,9 +62,9 @@ class Statistics extends Screen {
 	 */
 	public function render( $page = '' ) {
 		switch ( $page ) {
-			case 'readers':
+			case 'audiences':
 			case 'traffic':
-			wp_enqueue_script( 'hametuha-hb-stats' );
+				wp_enqueue_script( 'hametuha-hb-stats-' . $page );
 				hameplate( 'templates/dashboard/analytics', '', [
 					'target' => $page,
 				] );
