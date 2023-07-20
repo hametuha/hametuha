@@ -8,7 +8,7 @@ use Hametuha\WpApi\Pattern\AnalyticsPattern;
  *
  * @package hametuha
  */
-class UserPv extends AnalyticsPattern {
+class AuthorPv extends AnalyticsPattern {
 	/**
 	 * Should return route
 	 *
@@ -16,29 +16,6 @@ class UserPv extends AnalyticsPattern {
 	 */
 	protected function get_route() {
 		return 'stats/access/(?P<user_id>\d+|me|all)';
-	}
-
-	/**
-	 * Get arguments for method.
-	 *
-	 * @param string $method 'GET', 'POST', 'PUSH', 'PATCH', 'DELETE', 'HEAD', 'OPTION'
-	 *
-	 * @return array
-	 */
-	protected function get_arguments( $method ) {
-		$args = [
-			'user_id' => [
-				'required'          => true,
-				'validate_callback' => [ $this, 'validate_user_id' ],
-			],
-		];
-		switch ( $method ) {
-			case 'GET':
-				$args = $this->add_date_fields( $args, 30 );
-				return $args;
-			default:
-				return [];
-		}
 	}
 
 	/**
@@ -55,17 +32,9 @@ class UserPv extends AnalyticsPattern {
 			'post_type' => 'post,series,news',
 			'limit'     => 1000,
 		];
-		$user_id = $request->get_param( 'user_id' );
-		switch ( $user_id ) {
-			case 'me':
-				$params['author'] = (string) get_current_user_id();
-				break;
-			case 'all':
-				// Do nothing.
-				break;
-			default:
-				$params['author'] = (string) $request->get_param( 'user_id' );
-				break;
+		$user_id = $this->to_author_id( $request->get_param( 'user_id' ) );
+		if ( $user_id ) {
+			$params['author'] = $user_id;
 		}
 		return new \WP_REST_Response( [
 			'start'          => $params['start'],

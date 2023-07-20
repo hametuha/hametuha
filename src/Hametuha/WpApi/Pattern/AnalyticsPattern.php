@@ -128,6 +128,16 @@ abstract class AnalyticsPattern extends WpApi {
 	}
 
 	/**
+	 * Typical REST arguments.
+	 *
+	 * @param $method
+	 * @return array
+	 */
+	protected function get_arguments( $method ) {
+		return $this->add_date_fields( $this->user_id_arg(), 30 );
+	}
+
+	/**
 	 * Is user id is valid.
 	 *
 	 * @param mixed $var Variable.
@@ -170,6 +180,37 @@ abstract class AnalyticsPattern extends WpApi {
 		} else {
 			return 'ga:date';
 		}
+	}
+
+	/**
+	 * Convert request to User ID.
+	 *
+	 * @param int|string $id_or_string int, "me", or "all"
+	 * @return int User ID.
+	 */
+	protected function to_author_id( $id_or_string ) {
+		switch ( $id_or_string ) {
+			case 'me':
+				return get_current_user_id();
+			case 'all':
+				return 0;
+			default:
+				return (int) $id_or_string;
+		}
+	}
+
+	/**
+	 * User ID arguments.
+	 *
+	 * @return array
+	 */
+	protected function user_id_arg() {
+		return [
+			'user_id' => [
+				'required'          => true,
+				'validate_callback' => [ $this, 'validate_user_id' ],
+			],
+		];
 	}
 
 

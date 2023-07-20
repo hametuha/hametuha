@@ -7,25 +7,13 @@ namespace Hametuha\WpApi;
  *
  * @package hametuha
  */
-class UserAudiences extends Pattern\AnalyticsPattern {
+class AuthorAudiences extends Pattern\AnalyticsPattern {
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function get_route() {
 		return 'stats/audiences/(?P<user_id>\d+|me|all)';
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	protected function get_arguments( $method ) {
-		return $this->add_date_fields( [
-			'user_id' => [
-				'required'          => true,
-				'validate_callback' => [ $this, 'validate_user_id' ],
-			],
-		], 30 );
 	}
 
 	/**

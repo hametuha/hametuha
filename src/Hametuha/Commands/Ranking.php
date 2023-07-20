@@ -179,7 +179,6 @@ SQL;
 				break;
 			case 'referrer':
 				$headers []= __( '貢献者', 'hametuha' );
-				$indices []= 1;
 				break;
 			default:
 				\WP_CLI::error( __( '無効なグループが指定されています。', 'hametuha' ) );

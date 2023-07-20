@@ -99,7 +99,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	 * @param string $end   Datetime format.
 	 * @return string
 	 */
-	protected function proper_range_dimension( $start, $end ) {
+	public function proper_range_dimension( $start, $end ) {
 		$start_date = new \DateTime( "{$start} 00:00:00" );
 		$end_date   = new \DateTime( "{$end} 00:00:00" );
 		$diff       = $start_date->diff( $end_date )->days;
