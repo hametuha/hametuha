@@ -123,6 +123,12 @@ class HametuHeader extends Component {
 							プロフィール
 						  </a>
 					  </li>
+					  <li>
+						  <a href="/wp-admin/">
+							  <i className="icon-wordpress"></i>
+							  管理画面
+						  </a>
+					  </li>
 				  </>
               ) : null }
 

@@ -136,7 +136,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					'fieldName'    => 'customEvent:author',
 					'stringFilter' => [
 						'matchType' => 'EXACT',
-						'value'     => $params['author'],
+						'value'     => (string) $params['author'],
 					],
 				];
 			}
