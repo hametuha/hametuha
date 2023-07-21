@@ -24,11 +24,11 @@ class NewsListTable extends \WP_List_Table {
 
 	public function get_columns() {
 		return [
-			'title'    => 'タイトル',
-			'date' => '公開日',
-			'author'    => '執筆者',
+			'title'  => 'タイトル',
+			'date'   => '公開日',
+			'author' => '執筆者',
 			'genre'  => 'カテゴリー',
-			'pv'    => 'ページビュー',
+			'pv'     => 'ページビュー',
 		];
 	}
 
@@ -38,7 +38,7 @@ class NewsListTable extends \WP_List_Table {
 	function get_sortable_columns() {
 		return [
 			'date' => [ 'date', 'DESC' ],
-		    'pv'   => [ 'pv', false ],
+			'pv'   => [ 'pv', false ],
 		];
 	}
 
@@ -71,23 +71,23 @@ class NewsListTable extends \WP_List_Table {
 			$authors = $this->authors->get_journalists();
 			?>
 			<select name="author">
-				<option value=""<?php selected( ! $this->input->get( 'author' ) ) ?>>すべての投稿者</option>
+				<option value=""<?php selected( ! $this->input->get( 'author' ) ); ?>>すべての投稿者</option>
 				<?php foreach ( $authors as $user ) : ?>
-					<option value="<?= $user->ID ?>"<?php selected( $this->input->get('author'), $user->ID ) ?>>
-						<?= esc_html( $user->display_name ) ?>
+					<option value="<?php echo $user->ID; ?>"<?php selected( $this->input->get( 'author' ), $user->ID ); ?>>
+						<?php echo esc_html( $user->display_name ); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
 			<select name="news-year">
-				<option value="0"<?php selected( ! $this->input->get( 'news-year' ) ) ?>>すべての年</option>
+				<option value="0"<?php selected( ! $this->input->get( 'news-year' ) ); ?>>すべての年</option>
 				<?php for ( $i = (int) date_i18n( 'Y' ); $i >= 2016; $i-- ) : ?>
-					<option value="<?= $i ?>"<?php selected( $i == $this->input->get('news-year') ) ?>><?= $i ?>年</option>
+					<option value="<?php echo $i; ?>"<?php selected( $i == $this->input->get( 'news-year' ) ); ?>><?php echo $i; ?>年</option>
 				<?php endfor; ?>
 			</select>
 			<select name="news-month">
-				<option value="0"<?php selected( ! $this->input->get( 'news-month' ) ) ?>>すべての月</option>
+				<option value="0"<?php selected( ! $this->input->get( 'news-month' ) ); ?>>すべての月</option>
 				<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-					<option value="<?= $i ?>"<?php selected( $i == $this->input->get('news-month') ) ?>><?= $i ?>月</option>
+					<option value="<?php echo $i; ?>"<?php selected( $i == $this->input->get( 'news-month' ) ); ?>><?php echo $i; ?>月</option>
 				<?php endfor; ?>
 			</select>
 			<?php
@@ -105,19 +105,19 @@ class NewsListTable extends \WP_List_Table {
 		];
 		// Build Query
 		$args = [
-			'post_type' => 'news',
-			'post_status' => 'publish',
+			'post_type'      => 'news',
+			'post_status'    => 'publish',
 			'posts_per_page' => 20,
-		    'paged' => max( 1, $this->get_pagenum() ),
-		    's' => $this->input->get( 's' ),
-		    'tax_query' => [],
-		    'meta_query' => [],
+			'paged'          => max( 1, $this->get_pagenum() ),
+			's'              => $this->input->get( 's' ),
+			'tax_query'      => [],
+			'meta_query'     => [],
 		];
 		// 投稿者
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			$args['author'] = $this->input->get( 'author' );
 		} else {
-		    $args['author'] = get_current_user_id();
+			$args['author'] = get_current_user_id();
 		}
 		// タクソノミー
 		if ( $term_id = $this->input->get( 'genre' ) ) {
@@ -128,19 +128,19 @@ class NewsListTable extends \WP_List_Table {
 			];
 		}
 		// 公開日による絞込
-		$year = $this->input->get( 'news-year' );
+		$year  = $this->input->get( 'news-year' );
 		$month = $this->input->get( 'news-month' );
 		if ( $year && $month ) {
 			$start = sprintf( '%04d-%02d-01 00:00:00', $year, $month );
-			$d = new \DateTime();
+			$d     = new \DateTime();
 			$d->setTimezone( new \DateTimeZone( 'Asia/Tokyo' ) );
 			$d->setDate( $year, $month, 1 );
-			$end = $d->format( 'Y-m-t 23:59:59' );
+			$end                  = $d->format( 'Y-m-t 23:59:59' );
 			$args['meta_query'][] = [
-				'key' => '_news_published',
-			    'value' => [ $start, $end ],
-			    'compare' => 'BETWEEN',
-			    'type'   => 'DATETIME',
+				'key'     => '_news_published',
+				'value'   => [ $start, $end ],
+				'compare' => 'BETWEEN',
+				'type'    => 'DATETIME',
 			];
 		}
 		// 並び順
@@ -148,12 +148,12 @@ class NewsListTable extends \WP_List_Table {
 			case 'pv':
 				$args['meta_key'] = '_current_pv';
 				$args['orderby']  = 'meta_value_num';
-				$args['order'] = $this->input->get('order');
+				$args['order']    = $this->input->get( 'order' );
 				break;
 			default:
 				// Do nothign
 				$args['orderby'] = 'date';
-				$args['order'] = $this->input->get('order');
+				$args['order']   = $this->input->get( 'order' );
 				break;
 		}
 
@@ -181,7 +181,7 @@ class NewsListTable extends \WP_List_Table {
 			case 'author':
 				printf(
 					'<a href="%s">%s</a>',
-					admin_url( 'edit.php?post_type=news&page=hamenew-score&author='.$post->post_author ),
+					admin_url( 'edit.php?post_type=news&page=hamenew-score&author=' . $post->post_author ),
 					get_the_author_meta( 'display_name', $post->post_author )
 				);
 				break;
@@ -193,7 +193,7 @@ class NewsListTable extends \WP_List_Table {
 					echo implode( ', ', array_map( function( $term ) {
 						return sprintf(
 							'<a href="%s">%s</a>',
-							admin_url( 'edit.php?post_type=news&page=hamenew-score&genre='.$term->term_id ),
+							admin_url( 'edit.php?post_type=news&page=hamenew-score&genre=' . $term->term_id ),
 							esc_html( $term->name )
 						);
 					}, $terms ) );

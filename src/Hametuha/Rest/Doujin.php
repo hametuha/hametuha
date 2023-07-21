@@ -64,7 +64,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 						'default'           => 0,
 					],
 					'offset' => [
-						'validate_callback' => function($var){
+						'validate_callback' => function( $var ) {
 							return is_numeric( $var );
 						},
 						'default'           => 0,
@@ -90,7 +90,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 						'default'           => 0,
 					],
 					'offset' => [
-						'validate_callback' => function($var){
+						'validate_callback' => function( $var ) {
 							return is_numeric( $var );
 						},
 						'default'           => 0,
@@ -112,7 +112,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'args'                => [
 					'id' => [
 						'required'          => true,
-						'validate_callback' => function($var){
+						'validate_callback' => function( $var ) {
 							return is_numeric( $var );
 						},
 					],
@@ -127,7 +127,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'args'                => [
 					'id' => [
 						'required'          => true,
-						'validate_callback' => function($var){
+						'validate_callback' => function( $var ) {
 							return is_numeric( $var );
 						},
 					],
@@ -144,12 +144,12 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'callback'            => [ $this, 'api_search_user' ],
 				'args'                => [
 					'mode' => [
-						'required' => true,
-					    'validate_callback' => function( $var ) {
-						    return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
-					    },
+						'required'          => true,
+						'validate_callback' => function( $var ) {
+							return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
+						},
 					],
-					's' => [
+					's'    => [
 						'required' => true,
 					],
 				],
@@ -176,17 +176,17 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'callback'            => [ $this, 'api_participant_status' ],
 				'args'                => [
 					'post_id' => [
-						'required' => true,
+						'required'          => true,
 						'validate_callback' => function( $var ) {
 							return $var && is_numeric( $var );
 						},
 					],
-					'status' => [
+					'status'  => [
 						'required' => true,
 					],
-				    'text' => [
-				    	'default' => '',
-				    ],
+					'text'    => [
+						'default' => '',
+					],
 				],
 				'permission_callback' => function ( $request ) {
 					return current_user_can( 'read' );
@@ -275,11 +275,11 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			return new \WP_Error( 400, 'すでに定員に達しています。', [ 'status' => 400 ] );
 		}
 		$args = [
-			'comment_type'    => 'participant',
-			'comment_post_ID' => $request['post_id'],
-			'comment_content' => $request['text'],
+			'comment_type'     => 'participant',
+			'comment_post_ID'  => $request['post_id'],
+			'comment_content'  => $request['text'],
 			'comment_approved' => 1,
-		    'user_id' => get_current_user_id(),
+			'user_id'          => get_current_user_id(),
 		];
 		if ( $comment_id = $event->get_ticket_id( get_current_user_id() ) ) {
 			$args['comment_ID'] = $comment_id;
@@ -287,7 +287,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 			$updated = true;
 		} else {
 			$comment_id = wp_insert_comment( $args );
-			$updated = false;
+			$updated    = false;
 		}
 		update_comment_meta( $comment_id, '_participating', $request['status'] );
 		if ( $comment_id ) {
@@ -299,7 +299,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 					'organizer'   => $organizer,
 					'participant' => get_userdata( get_current_user_id() ),
 					'update'      => $updated,
-				    'message'     => $request['text'],
+					'message'     => $request['text'],
 				] );
 			}
 			return new \WP_REST_Response( $event->get_user_object( $comment_id ) );
@@ -319,13 +319,13 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	protected function process_user_data( $user, $context = 'api' ) {
 		$user_data = [
-			'ID'     => $user->ID,
-		    'name'   => $user->display_name,
-		    'avatar' => get_avatar_url( $user->ID, [
-		    	'size' => 96,
-		    ] ),
-		    'role' => hametuha_user_role( $user ),
-		    'profile_url' => $user->has_cap( 'edit_posts' ) ? home_url( "/doujin/detail/{$user->user_nicename}/" ) : '',
+			'ID'          => $user->ID,
+			'name'        => $user->display_name,
+			'avatar'      => get_avatar_url( $user->ID, [
+				'size' => 96,
+			] ),
+			'role'        => hametuha_user_role( $user ),
+			'profile_url' => $user->has_cap( 'edit_posts' ) ? home_url( "/doujin/detail/{$user->user_nicename}/" ) : '',
 		];
 		/**
 		 * ユーザーのデータを返すフィルター
@@ -414,6 +414,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	protected function set_member( $nice_name = '' ) {
 		$this->doujin = $this->author->get_by_nice_name( $nice_name );
 		if ( ! $this->doujin || ! $this->doujin->has_cap( 'edit_posts' ) ) {
+			$this->wp_query->set( 'p', -1 );
 			throw new \Exception( 'Page Not Found.', 404 );
 		}
 	}
@@ -434,6 +435,12 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @param $author_name
 	 */
 	public function get_detail( $author_name ) {
+		if ( 1 < count( func_get_args() ) ) {
+			// 指定が多すぎるのでエラーを返す。
+			$this->wp_query->set( 'p', -1 );
+			$this->method_not_found();
+		}
+		// メンバーをセット、いなければエラー。
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . 'のプロフィール | ' . get_bloginfo( 'name' );
 		$this->set_data( [
@@ -452,7 +459,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		nocache_headers();
 		$this->auth_redirect();
 		$this->doujin = new \WP_User( get_current_user_id() );
-		$this->title  = 'フォロワー | ' . $this->title;
+		$this->title  = 'フォロワー | 破滅派';
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
@@ -480,9 +487,11 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 * @return array
 	 */
 	public function ogp( array $values ) {
-		$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
-		$values['image'] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
-		$values['desc']  = $this->doujin->user_description;
+		if ( $this->doujin ) {
+			$values[ 'url' ] = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
+			$values[ 'image' ] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
+			$values[ 'desc' ] = $this->doujin->user_description;
+		}
 
 		return $values;
 	}
@@ -512,6 +521,4 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		}
 		$this->load_template( 'templates/doujin/base' );
 	}
-
-
 }

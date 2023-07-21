@@ -13,7 +13,8 @@
  * @return array
  */
 function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) {
-	$date = current_time( 'timestamp' ) - 60 * 60 * 24 * $period;
+	$date = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
+	$date->sub( new DateInterval( 'P' . $period . 'D' ) );
 	$posts = [];
 	$query = new WP_Query( [
 		'post_type'      => $post_type,
@@ -22,9 +23,9 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) 
 		'date_query'     => [
 			[
 				'after' => [
-					'year'  => (int) date_i18n( 'Y', $date ),
-					'month' => (int) date_i18n( 'M', $date ),
-					'day'   => (int) date_i18n( 'D', $date ),
+					'year'  => $date->format( 'Y' ),
+					'month' => $date->format( 'm' ),
+					'day'   => $date->format( 'd' ),
 				],
 			],
 		],
@@ -55,7 +56,7 @@ function hametuha_genre_static( $limit = 0 ) {
 	$categories = get_terms( 'category' );
 	$total      = 0;
 	foreach ( $categories as &$cat ) {
-		$total += $cat->count;
+		$total   += $cat->count;
 		$cat->url = get_category_link( $cat );
 	}
 	usort( $categories, function ( $a, $b ) {
@@ -84,7 +85,7 @@ function hametuha_genre_static( $limit = 0 ) {
 function hametuha_recent_series( $limit = 5, $period = 90 ) {
 	/** @var wpdb $wpdb */
 	global $wpdb;
-	$date = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
+	$date   = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
 	$sql    = <<<SQL
 		select post_parent, COUNT(ID) AS children, MAX(post_date) AS latest
 		FROM {$wpdb->posts}
@@ -96,7 +97,7 @@ function hametuha_recent_series( $limit = 5, $period = 90 ) {
 		ORDER BY latest DESC
 		LIMIT %d
 SQL;
-	$sql = $wpdb->prepare( $sql, $date, $limit * 2 );
+	$sql    = $wpdb->prepare( $sql, $date, $limit * 2 );
 	$series = [];
 	foreach ( $wpdb->get_results( $sql ) as $row ) {
 		$series[ $row->post_parent ] = $row;

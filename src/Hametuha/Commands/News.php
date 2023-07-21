@@ -3,8 +3,7 @@
 
 namespace Hametuha\Commands;
 
-use AFB\Admin\Table;
-use Gianism\Plugins\Analytics;
+use Hametuha\Service\GoogleAnalyticsDataAccessor;
 use WPametu\Utility\Command;
 
 /**
@@ -43,7 +42,7 @@ class News extends Command {
 			  	  AND meta_value != ''
 			  )
 SQL;
-		$done = 0;
+		$done  = 0;
 		foreach ( $wpdb->get_results( $query ) as $post ) {
 			update_post_meta( $post->ID, '_news_published', $post->post_date );
 			$done++;
@@ -66,8 +65,8 @@ SQL;
 	public function show_pv( $args, $assoc ) {
 		$start_date = $assoc['from'];
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
-		$author = isset( $assoc['author'] ) ? $assoc['author'] : 0;
-		$posts = $this->get_pv( $start_date, $end_date, $author );
+		$author     = isset( $assoc['author'] ) ? $assoc['author'] : 0;
+		$posts      = $this->get_pv( $start_date, $end_date, $author );
 		if ( ! $posts ) {
 			self::e( 'No results found.' );
 		}
@@ -77,13 +76,13 @@ SQL;
 		$table->setRows( array_map( function( $row ) use ( &$index ) {
 			$index++;
 			list( $post_id, $pv ) = $row;
-			$post = get_post( $post_id );
+			$post                 = get_post( $post_id );
 			return [
 				$index,
 				$post_id,
-			    $pv,
-			    get_the_author_meta( 'user_login', $post->post_author ),
-			    get_the_time( 'Y.m.d', $post ),
+				$pv,
+				get_the_author_meta( 'user_login', $post->post_author ),
+				get_the_time( 'Y.m.d', $post ),
 				get_the_title( $post ),
 			];
 		}, $posts ) );
@@ -95,18 +94,20 @@ SQL;
 	/**
 	 * ニュースのランキングを取得する
 	 *
-	 * @synopsis --from=<from> [--to=<to>] [--author=<author>]
+	 * @synopsis [--from=<from>] [--to=<to>] [--author=<author>]
 	 * @param array $args
 	 * @param array $assoc
 	 */
 	public function update_pv( $args, $assoc ) {
-		$start_date = $assoc['from'];
+		$yesterday  = new \DateTime( 'yesterday', wp_timezone() );
+		$start_date = $assoc['from'] ?? $yesterday->format( 'Y-m-d' );
 		$end_date   = isset( $assoc['to'] ) ? $assoc['to'] : date_i18n( 'Y-m-d' );
-		$author = isset( $assoc['author'] ) ? $assoc['author'] : 0;
-		$posts = $this->get_pv( $start_date, $end_date, $author );
-		$done = 0;
-		foreach ( $posts as $post ) {
-			update_post_meta( $post[0], '_current_pv', $post[1] );
+		$author     = isset( $assoc['author'] ) ? $assoc['author'] : 0;
+		$posts      = $this->get_pv( $start_date, $end_date, $author );
+		$done       = 0;
+		foreach ( $posts as list( $post_id, $pv ) ) {
+			$current = (int) get_post_meta( $post_id, '_current_pv', true );
+			update_post_meta( $post_id, '_current_pv', $current + $pv );
 			$done++;
 			echo '.';
 		}
@@ -125,39 +126,30 @@ SQL;
 	 */
 	protected function get_pv( $start_date, $end_date, $author = 0 ) {
 		try {
-			$google = Analytics::get_instance();
-			if ( ! $google || ! $google->ga_profile['view'] ) {
-				throw new \Exception( 'Google Analytics is not connected.', 500 );
-			}
-			$start_index = 1;
-			$per_page = 200;
-			$args = [
-				'max-results' => $per_page,
-				'dimensions' => 'ga:pagePath',
-				'filters' => 'ga:dimension1==news',
-				'sort' => '-ga:pageviews',
+			$offset      = 0;
+			$per_page    = 1000;
+			$args     = [
+				'start'     => $start_date,
+				'end'       => $end_date,
+				'post_type' => 'news',
+				'author'    => $author ?: '',
+				'limit'     => $per_page,
 			];
-			if ( $author ) {
-				$args['filters'] .= ',ga:dimension2=='.$author;
-			}
 			$rows = [];
 			while ( true ) {
 				$loop_arg = array_merge( $args, [
-					'start-index' => $start_index,
+					'offset' => $offset,
 				] );
-				$result = $google->ga->data_ga->get( 'ga:' . $google->ga_profile['view'], $start_date, $end_date, 'ga:pageviews', $loop_arg );
-				if ( ! $result || ! ( 0 < ( $count = count( $result->rows ) ) ) ) {
+				$result = GoogleAnalyticsDataAccessor::get_instance()->popular_posts( $loop_arg );
+				if ( ! $result || is_wp_error( $result ) ) {
 					break;
 				}
-				foreach ( $result->rows as $row ) {
-					list( $path, $pv ) = $row;
-					$url     = home_url( $path );
-					if ( ! preg_match( '#/news/article/(\d+)/?#', $path, $matches ) ) {
-						continue;
-					}
-					$post_id = $matches[1];
-					if ( ! is_numeric( $post_id ) || ! get_post( $post_id ) ) {
-						continue;
+
+				foreach ( $result as $row ) {
+					list( $path, $post_type, $author, $category, $pv ) = $row;
+					$post_id = url_to_postid( home_url( $path ) );
+					if ( ! $post_id ) {
+						continue 1;
 					}
 					if ( ! isset( $rows[ $post_id ] ) ) {
 						$rows[ $post_id ] = 0;
@@ -165,8 +157,8 @@ SQL;
 					$rows[ $post_id ] += $pv;
 				}
 				// Check if more results.
-				if ( $count >= $per_page ) {
-					$start_index += $per_page;
+				if ( count( $result ) >= $per_page ) {
+					$offset += $per_page;
 				} else {
 					break;
 				}
@@ -200,7 +192,7 @@ SQL;
 			'_hametuha_announcement_point'    => '_event_point',
 			'_lwp_event_start'                => '_event_start',
 			'_lwp_event_end'                  => '_event_end',
-		] as $old_key => $new_key  ) {
+		] as $old_key => $new_key ) {
 			$replaced = $wpdb->query( $wpdb->prepare( $query, $new_key, $old_key ) );
 			self::l( sprintf( 'Change %s to %s: %d', $old_key, $new_key, $replaced ) );
 		}

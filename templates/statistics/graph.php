@@ -1,7 +1,7 @@
 <?php
 /** @var array $endpoint */
 ?>
-<div id="analytics-pv" class="stat" data-type="ComboChart" data-endpoint="<?= $endpoint['access'] ?>">
+<div id="analytics-pv" class="stat" data-type="ComboChart" data-endpoint="<?php echo $endpoint['access']; ?>">
 
 	<h3><i class="icon-chart"></i> あなたの作品の閲覧数</h3>
 
@@ -13,7 +13,7 @@
 
 <hr/>
 
-<div id="analytics-popular" class="stat" data-type="Table" data-endpoint="<?= $endpoint['popular'] ?>">
+<div id="analytics-popular" class="stat" data-type="Table" data-endpoint="<?php echo $endpoint['popular']; ?>">
 	<h3><i class="icon-star"></i> 人気のページ</h3>
 
 	<p class="text-muted">

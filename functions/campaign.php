@@ -26,38 +26,38 @@ function hametuha_campaign_record( $term = null ) {
 	}
 	$record = wp_cache_get( $term->term_id, 'campaign_record' );
 	if ( false === $record ) {
-		$post_ids = [];
+		$post_ids     = [];
 		$participants = [];
-		$record_base = [];
+		$record_base  = [];
 		// Get submitted posts
 		foreach ( get_posts( [
 			'posts_per_page' => -1,
-		    'post_status' => 'publish',
-		    'no_found_rows' => true,
-		    'orderby' => [
-		    	'ID' => 'ASC',
-		    ],
-		    'tax_query' => [
-		    	[
-		    		'taxonomy' => 'campaign',
-			        'field'   => 'id',
-			        'terms'    => $term->term_id,
-			    ],
-		    ],
+			'post_status'    => 'publish',
+			'no_found_rows'  => true,
+			'orderby'        => [
+				'ID' => 'ASC',
+			],
+			'tax_query'      => [
+				[
+					'taxonomy' => 'campaign',
+					'field'    => 'id',
+					'terms'    => $term->term_id,
+				],
+			],
 		] ) as $post ) {
 			$participants[ (int) $post->post_author ] = [
-				'author' => true,
-			    'comment_total'  => 0,
-			    'rate_total' => 0,
+				'author'        => true,
+				'comment_total' => 0,
+				'rate_total'    => 0,
 			];
-			$post_ids[ (int) $post->ID ] = (int) $post->post_author;
-			$record_base[ (int) $post->ID ] = 0;
+			$post_ids[ (int) $post->ID ]              = (int) $post->post_author;
+			$record_base[ (int) $post->ID ]           = 0;
 		}
 		if ( ! $post_ids ) {
 			return [];
 		}
 		// Get records
-		$model = \Hametuha\Model\Rating::get_instance();
+		$model   = \Hametuha\Model\Rating::get_instance();
 		$records = $model->get_user_points( array_keys( $post_ids ), $limit );
 		// Get all participants
 		foreach ( $records as $record ) {
@@ -80,12 +80,12 @@ function hametuha_campaign_record( $term = null ) {
 		// Calculate record total
 		foreach ( $records as $record ) {
 			$score = intval( 10 * $record->rating );
-			$participants[ $record->user_id ]['rate_total'] += $score;
+			$participants[ $record->user_id ]['rate_total']                 += $score;
 			$participants[ $record->user_id ]['records'][ $record->post_id ] = $score;
 		}
 		$record = [
 			'posts'        => $post_ids,
-		    'participants' => $participants,
+			'participants' => $participants,
 		];
 		wp_cache_set( $term->term_id, $record, 'campaign_record' );
 	}
@@ -101,7 +101,7 @@ function hametuha_campaign_record( $term = null ) {
  */
 function hametuha_comment_point( $post_ids ) {
 	global $wpdb;
-	$in = implode( ', ', array_map( 'intval', $post_ids ) );
+	$in    = implode( ', ', array_map( 'intval', $post_ids ) );
 	$query = <<<SQL
 		SELECT user_id, COUNT( DISTINCT comment_post_ID ) AS comment_count
 		FROM {$wpdb->comments}
@@ -123,19 +123,19 @@ SQL;
  */
 function hametuha_review_terms( $year, $ascendant = true ) {
 	$next_year = $year + 1;
-	$terms = get_terms( [
-		'taxonomy' => 'campaign',
-	    'hide_empty' => false,
+	$terms     = get_terms( [
+		'taxonomy'   => 'campaign',
+		'hide_empty' => false,
 		'meta_query' => [
 			[
-				'key' => '_campaign_limit',
-				'value' => [ "{$year}-04-01", "{$next_year}-03-31" ],
+				'key'     => '_campaign_limit',
+				'value'   => [ "{$year}-04-01", "{$next_year}-03-31" ],
 				'compare' => 'BETWEEN',
-				'type' => 'DATE',
+				'type'    => 'DATE',
 			],
 		],
-		'orderby' => 'meta_value',
-		'order' => 'DESC',
+		'orderby'    => 'meta_value',
+		'order'      => 'DESC',
 	] );
 	return ( ! $terms || is_wp_error( $terms ) ) ? [] : array_filter( $terms, function( $term ) {
 		return 0 === strpos( $term->slug, 'joint-review' );
@@ -145,37 +145,55 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 /**
  * 最新のキャンペーンを取得する
  *
- * @param int    $limit      Number to retrieve. 0 means all.
- * @param string $date       Date string or 'now'. Default 'now'.
+ * @param int    $limit Number to retrieve. 0 means all.
+ * @param string $date  Date string or 'now'. Default 'now'.
  *
- * @return array|int|WP_Error
+ * @return WP_Term[]
  */
 function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
-	if ( 'now' === $date ) {
-		$date = date_i18n( 'Y-m-d' );
+	return hametuha_get_nearing_deadline_campaigns( $date, '', $limit );
+}
+
+/**
+ * 指定の範囲内に〆切があるキャンペーンを近い順に取得する
+ *
+ * @param string $start_date 〆切日の起算日。初期値は今日の日付。
+ * @param string $end_date   含める日付。指定しない場合は未来の日付すべて。
+ * @param int    $limit      取得数。-1の場合はすべて。
+ * @return WP_Term[]
+ */
+function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date = '', $limit = 5 ) {
+	if ( 'now' === $start_date ) {
+		$start_date = date_i18n( 'Y-m-d' );
 	}
+	// 初期クエリ
 	$args = [
 		'taxonomy'   => 'campaign',
 		'hide_empty' => false,
+		'number'     => $limit,
+		'meta_key'   => '_campaign_limit',
+		'orderby'    => 'meta_value',
+		'order'      => 'ASC',
 		'meta_query' => [],
-		'number'  => $limit,
-		'orderby' => 'meta_value',
-		'order'   => 'DESC',
 	];
-	if ( $date ) {
-		$args['meta_query'] = [
-			[
-				'key'     => '_campaign_limit',
-				'value'   => $date,
-				'compare' => '>=',
-				'type'    => 'DATE',
-			],
+	if ( ! $end_date ) {
+		$args['meta_query'][] = [
+			'key'     => '_campaign_limit',
+			'value'   => $start_date,
+			'compare' => '>=',
+			'type'    => 'DATE',
 		];
 	} else {
-		$args['meta_key'] = '_campaign_limit';
+		// 範囲指定されている。
+		$args['meta_query'][] = [
+			'key'     => '_campaign_limit',
+			'value'   => [ $start_date, $end_date ],
+			'compare' => 'BETWEEN',
+			'type'    => 'DATE',
+		];
 	}
 	$campaigns = get_terms( $args );
-	return $campaigns && ! is_wp_error( $campaigns ) ? $campaigns : [];
+	return ( $campaigns && ! is_wp_error( $campaigns ) ) ? $campaigns : [];
 }
 
 /**
@@ -187,7 +205,7 @@ function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
  * @return bool
  */
 function hametuha_is_available_campaign( $term, $when = 'now' ) {
-	$tz   = new DateTimeZone( 'Asia/Tokyo' );
+	$tz   = new DateTimeZone( wp_timezone_string() );
 	$time = new DateTime( $when, $tz );
 	if ( ! $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) {
 		return true;
@@ -233,7 +251,7 @@ function hametuha_campaign_length( $term, $format = 'paper' ) {
 		}
 		return $return . ( $min ? '以上' : '以下' );
 	};
-	$return = '';
+	$return    = '';
 	if ( $min = get_term_meta( $term->term_id, '_campaign_min_length', true ) ) {
 		$return .= $formatter( $min );
 	}
@@ -241,7 +259,7 @@ function hametuha_campaign_length( $term, $format = 'paper' ) {
 		$return .= $formatter( $max, false );
 	}
 	if ( 'paper' == $format && $return ) {
-		$return = '400字詰原稿用紙'.$return;
+		$return = '400字詰原稿用紙' . $return;
 	}
 	return $return;
 }
@@ -255,16 +273,16 @@ function hametuha_campaign_length( $term, $format = 'paper' ) {
  * @return WP_Error|true
  */
 function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
-	$post = get_post( $post );
+	$post     = get_post( $post );
 	$campaign = get_term_by( 'id', $campaign_id, 'campaign' );
-	$error = new WP_Error();
+	$error    = new WP_Error();
 	if ( ! $campaign ) {
 		$error->add( 404, '該当するキャンペーンが存在しません。' );
 		return $error;
 	}
 	if ( hametuha_campaign_has_limit( $campaign_id ) ) {
 		if ( ( false !== array_search( $post->post_status, [ 'future', 'publish', 'private' ] ) )
-		     && ! hametuha_is_available_campaign( $campaign, $post->post_date )
+			 && ! hametuha_is_available_campaign( $campaign, $post->post_date )
 		) {
 			$error->add( '500', '応募期限を過ぎています。' );
 		}

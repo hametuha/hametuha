@@ -1,7 +1,5 @@
 <?php
 
-use Hametuha\Model\Series;
-
 /**
  * 破滅派で紹介された書籍を取得する
  * @global int $paged
@@ -14,9 +12,9 @@ function get_hamazon_posts() {
 	global $wpdb, $wp_query;
 	$per_page = get_option( 'posts_per_page' );
 	$paged    = max( 1, absint( $wp_query->query_vars['paged'] ) );
-	$paged -= 1;
-	$offset = $paged * $per_page;
-	$sql    = <<<EOS
+	$paged   -= 1;
+	$offset   = $paged * $per_page;
+	$sql      = <<<EOS
 		SELECT SQL_CALC_FOUND_ROWS ID, post_date, post_title, post_type,  post_content, post_author
 		FROM {$wpdb->posts}
 		WHERE post_status = 'publish' AND post_content LIKE '%[tmkm-amazon]%'
@@ -25,10 +23,6 @@ function get_hamazon_posts() {
 EOS;
 
 	return $wpdb->get_results( $sql );
-}
-
-function search_hamazon() {
-
 }
 
 /**
@@ -46,10 +40,3 @@ function echo_hamazon( $post_content ) {
 		}
 	}
 }
-
-/**
- * @return int
- */
-add_shortcode( 'kdp_count', function ( $atts, $content = '' ) {
-	return Series::get_instance()->get_published_count();
-} );

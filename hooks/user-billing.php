@@ -55,12 +55,12 @@ add_action( 'hashboard_after_main', function ( \Hametuha\Hashboard\Pattern\Scree
 	<h3>ニュース報酬</h3>
 	<p class="description text-muted">ニュース記事を書いて1記事あたり貰える金額です。</p>
 	<p>
-		<a class="btn btn-primary" href="<?= home_url( '/faq-cat/news/' ) ?>">もっと詳しく</a>
+		<a class="btn btn-primary" href="<?php echo home_url( '/faq-cat/news/' ); ?>">もっと詳しく</a>
 	</p>
 	<p>
 		<strong>2,000pvを超えた記事に関して500円</strong>を受け取ることができます。
 		<?php if ( $news_gurantee = \Hametuha\Model\Sales::get_instance()->get_guarantee( $current_user->ID, 'news' ) ) : ?>
-			ただし、あなたの場合は<strong>最低保証額として1記事あたり<?= number_format( $news_gurantee ) ?>円が保証</strong>されています。
+			ただし、あなたの場合は<strong>最低保証額として1記事あたり<?php echo number_format( $news_gurantee ); ?>円が保証</strong>されています。
 		<?php endif; ?>
 	</p>
 	<?php
@@ -77,19 +77,19 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 		<tr>
 			<th>郵便番号</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?php echo esc_attr( $address->get_value( 'zip' ) ) ?>"/></td>
+					   value="<?php echo esc_attr( $address->get_value( 'zip' ) ); ?>"/></td>
 		</tr>
 		<tr>
 			<th>住所</th>
 			<td>
 				<textarea class="regular-text"
-						  readonly><?php echo esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ) ?></textarea>
+						  readonly><?php echo esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ); ?></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th>氏名</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?php echo esc_attr( $address->get_value( 'name' ) ) ?>"/></td>
+					   value="<?php echo esc_attr( $address->get_value( 'name' ) ); ?>"/></td>
 		</tr>
 		<tr>
 			<th>電話</th>
@@ -115,9 +115,9 @@ add_action( 'sharee_after_table', function ( $table_class ) {
 	?>
 	<h2>源泉徴収票のダウンロード</h2>
 	<iframe id="gensen-downloader" name="gensen-downloader" style="display: none;"></iframe>
-	<form target="gensen-downloader" method="post" action="<?= admin_url( 'admin-ajax.php' ) ?>">
+	<form target="gensen-downloader" method="post" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
 		<input type="hidden" name="action" value="hametuha_gensen"/>
-		<?php wp_nonce_field( 'gensen' ) ?>
+		<?php wp_nonce_field( 'gensen' ); ?>
 		<table class="form-table">
 			<tr>
 				<th>
@@ -125,21 +125,23 @@ add_action( 'sharee_after_table', function ( $table_class ) {
 				</th>
 				<td>
 					<?php
-					$prev_month = (int) date_i18n( 'm' ) - 1 ?: 12;
+					$prev_month   = (int) date_i18n( 'm' ) - 1 ?: 12;
 					$current_year = (int) date_i18n( 'Y' );
 					if ( 12 === $prev_month ) {
 						$current_year--;
 					}
 					?>
 					<select name="year">
-						<?php foreach ( \Hametuha\Sharee\Models\RevenueModel::get_instance()->available_years() as $year ) {
+						<?php
+						foreach ( \Hametuha\Sharee\Models\RevenueModel::get_instance()->available_years() as $year ) {
 							printf(
 								'<option value="%s"%s>%s</option>',
 								esc_attr( $year ),
 								selected( $year, $current_year, false ),
 								sprintf( esc_html_x( '%d年', 'Year with suffix', 'hametuha' ), $year )
 							);
-						} ?>
+						}
+						?>
 					</select>
 
 					<select name="month">
@@ -152,31 +154,34 @@ add_action( 'sharee_after_table', function ( $table_class ) {
 								selected( $i, $prev_month, false ),
 								esc_html( $label )
 							);
-						} ?>
+						}
+						?>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<?php esc_html_e( 'フォーマット', 'hametuha' ) ?>
+					<?php esc_html_e( 'フォーマット', 'hametuha' ); ?>
 				</th>
 				<td>
-					<?php foreach ( [
-										'csv' => __( 'カンマ区切りテキスト', 'hametuha' ),
-										'tsv' => __( 'タブ区切りテキスト', 'hametuha' ),
-									] as $value => $label ) {
+					<?php
+					foreach ( [
+						'csv' => __( 'カンマ区切りテキスト', 'hametuha' ),
+						'tsv' => __( 'タブ区切りテキスト', 'hametuha' ),
+					] as $value => $label ) {
 						printf(
 							'<label style="%s"><input type="radio" name="format" value="%s" /> %s</label>',
 							esc_attr( 'display: block; margin: 5px 0' ),
 							esc_attr( $value ),
 							esc_html( $label )
 						);
-					} ?>
+					}
+					?>
 				</td>
 			</tr>
 		</table>
 		<p class="submit">
-			<?php submit_button( 'ダウンロード' ) ?>
+			<?php submit_button( 'ダウンロード' ); ?>
 		</p>
 	</form>
 	<?php
@@ -187,7 +192,7 @@ add_action( 'sharee_after_table', function ( $table_class ) {
  */
 add_action( 'wp_ajax_hametuha_gensen', function () {
 	try {
-		if ( !wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce' ), 'gensen' ) ) {
+		if ( ! wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce' ), 'gensen' ) ) {
 			throw new Exception( '不正なアクセスです。' );
 		}
 		$format = filter_input( INPUT_POST, 'format' );
@@ -210,9 +215,9 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 		if ( ! $list ) {
 			throw new Exception( '該当するデータがありませんでした。' );
 		}
-		header( "Content-Type: application/octet-stream" );
-		header( sprintf( "Content-Disposition: attachment; filename=deducting-%s.csv", date_i18n( 'YmdHis' ) ) );
-		header( "Content-Transfer-Encoding: binary" );
+		header( 'Content-Type: application/octet-stream' );
+		header( sprintf( 'Content-Disposition: attachment; filename=deducting-%s.csv', date_i18n( 'YmdHis' ) ) );
+		header( 'Content-Transfer-Encoding: binary' );
 		$csv = new SplFileObject( 'php://output', 'w' );
 		foreach ( $list as $line ) {
 			$address = new Hametuha\Sharee\Master\Address( $line->object_id );

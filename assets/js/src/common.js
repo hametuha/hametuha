@@ -110,10 +110,10 @@
                     typeName = 'success';
                     break;
             }
-            body = '<div class="alert alert-' + typeName + ' alert-dismissible alert-sticky" role="alert">' +
+            body = '<div class="alert alert-' + typeName + ' alert-dismissible alert-sticky" role="alert"><div class="container">' +
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
                     message +
-                '</div>';
+                '</div></div>';
             $alert = $(body);
             if ( $('#whole-body').length ) {
                 $('#whole-body').append($alert);
@@ -4034,6 +4034,16 @@ jQuery(document).ready(function ($) {
         headroom.init();
     }
 
+	// ページ内リンク
+	$( 'a.page-anker' ).click( function( e ) {
+		var $target = $( $( this ).attr( 'href' ) );
+		if ( $target.length ) {
+			e.preventDefault();
+			$('body,html').animate({
+				scrollTop: $target.offset().top - 70
+			}, 300, 'swing');
+		}
+	} );
 });
 
 /**

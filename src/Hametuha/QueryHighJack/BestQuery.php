@@ -10,10 +10,10 @@ class BestQuery extends QueryHighJack {
 	protected $query_var = [ 'ranking' ];
 
 	protected $rewrites = [
-		'best/page/([0-9]+)/?$' => 'index.php?ranking=best&paged=$matches[1]',
-		'best/?$' => 'index.php?ranking=best',
-		'best/([^/]+)/page/([0-9]+)/?$' => 'index.php?ranking=best&category_name=$matches[1]&paged=$matches[2]',
-		'best/([^/]+)/?$' => 'index.php?ranking=best&category_name=$matches[1]',
+		'ranking/best/page/([0-9]+)/?$'         => 'index.php?ranking=best&paged=$matches[1]',
+		'ranking/best/?$'                       => 'index.php?ranking=best',
+		'ranking/best/([^/]+)/page/([0-9]+)/?$' => 'index.php?ranking=best&category_name=$matches[1]&paged=$matches[2]',
+		'ranking/best/([^/]+)/?$'               => 'index.php?ranking=best&category_name=$matches[1]',
 	];
 
 	/**
@@ -38,7 +38,7 @@ class BestQuery extends QueryHighJack {
 	 * @return array
 	 */
 	public function the_posts( array $posts, \WP_Query $wp_query ) {
-		if ( !$this->is_valid_query( $wp_query ) ) {
+		if ( ! $this->is_valid_query( $wp_query ) ) {
 			return $posts;
 		}
 		// Ranking Query
@@ -48,7 +48,7 @@ class BestQuery extends QueryHighJack {
 			  AND CAST(meta_value AS SIGNED) > %d
 SQL;
 		// PV diff query
-		$yesterday = date_i18n( 'Y-m-d', current_time( 'timestamp' ) - 60 * 60 * 24 );
+		$yesterday  = date_i18n( 'Y-m-d', current_time( 'timestamp' ) - 60 * 60 * 24 );
 		$object_ids = [];
 		foreach ( $posts as $post ) {
 			$object_ids[] = $post->ID;
@@ -61,7 +61,7 @@ SQL;
 			  AND object_id IN ({$object_ids})
 			  AND calc_date = '{$yesterday}'
 SQL;
-			$result = $this->db->get_results( $diff_query );
+			$result     = $this->db->get_results( $diff_query );
 		} else {
 			$result = [];
 		}
@@ -70,8 +70,8 @@ SQL;
 			$object_values[ $row->object_id ] = $row->object_value;
 		}
 		foreach ( $posts as &$post ) {
-			$post->pv = (int) get_post_meta( $post->ID, '_current_pv', true );
-			$post->rank = $this->db->get_var( $this->db->prepare( $rank_query, $post->pv ) ) + 1;
+			$post->pv         = (int) get_post_meta( $post->ID, '_current_pv', true );
+			$post->rank       = $this->db->get_var( $this->db->prepare( $rank_query, $post->pv ) ) + 1;
 			$post->transition = isset( $object_values[ $post->ID ] ) ? (int) ( 0 < $object_values[ $post->ID ] ) : 0;
 		}
 		return $posts;
@@ -89,5 +89,18 @@ SQL;
 		return 'best' == $wp_query->get( 'ranking' );
 	}
 
-
+	/**
+	 * @param $title
+	 * @param $sep
+	 * @param $sep_location
+	 * @return string
+	 */
+	public function wp_title( $title, $sep, $sep_location ) {
+		$titles = [ '歴代ベスト' ];
+		if ( is_category() ) {
+			$titles []= sprintf( '%s部門', get_queried_object()->name );
+		}
+		$titles []= get_bloginfo( 'name' );
+		return implode( ' ' . $sep . ' ', $titles );
+	}
 }

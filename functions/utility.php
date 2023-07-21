@@ -195,8 +195,8 @@ function google_ads( $type = 'default' ) {
 		default:
 			?>
 			<iframe src="http://rcm-fe.amazon-adsystem.com/e/cm?t=hametuha-22&o=9&p=13&l=ur1&category=books&f=ifr"
-			        width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;"
-			        frameborder="0"></iframe>
+					width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;"
+					frameborder="0"></iframe>
 			<?php
 			break;
 	}
@@ -238,9 +238,9 @@ EOS;
 
 		$content = implode( "\n", $wpdb->get_col( $wpdb->prepare( $sql, $post->ID ) ) );
 	} else {
-	    $content = $post->post_content;
+		$content = $post->post_content;
 	}
-    return mb_strlen( preg_replace( '/[\s　]/u', '', str_replace( "\n\n", "\n", strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $content ) ) ) ) ), 'utf-8' );
+	return mb_strlen( preg_replace( '/[\s　]/u', '', str_replace( "\n\n", "\n", strip_shortcodes( strip_tags( preg_replace( '#<rt>[^<]+</rt>#u', '', $content ) ) ) ) ), 'utf-8' );
 }
 
 /**
@@ -303,7 +303,7 @@ function has_recent_post( $user_id, $post_type = 'post', $days = 30 ) {
 		LIMIT 1
 EOS;
 
-	return (boolean) $wpdb->get_var( $wpdb->prepare( $sql, $post_type, $user_id, $days ) );
+	return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $post_type, $user_id, $days ) );
 }
 
 /**
@@ -355,8 +355,24 @@ function human_time_diff_jp( $from, $to = '' ) {
  */
 function is_new_post( $offset = 7, $post = null ) {
 	$post = get_post( $post );
+	if ( ! $post ) {
+		return false;
+	}
+	return hametuha_is_new( $post->post_date, $offset );
+}
 
-	return ( current_time( 'timestamp' ) - strtotime( $post->post_date ) ) < 60 * 60 * 24 * $offset;
+/**
+ * Is date considered as "new"?
+ *
+ * @param string $date_time Y-m-d H:i:s
+ * @param int    $offset    Default 7 days.
+ * @return bool
+ */
+function hametuha_is_new( $date_time, $offset = 7) {
+	$now  = new DateTime( 'now', wp_timezone() );
+	$date = new DateTime( $date_time, wp_timezone() );
+	$now->sub( new DateInterval( 'P' . $offset . 'D' ) );
+	return $now < $date;
 }
 
 /**
@@ -381,7 +397,7 @@ function get_post_children_count( $post_type = 'post', $status = 'publish', $pos
  * @return boolean
  */
 function needs_left_sidebar() {
-	return (boolean) (
+	return (bool) (
 		( is_archive() &&
 		  ! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
 		)

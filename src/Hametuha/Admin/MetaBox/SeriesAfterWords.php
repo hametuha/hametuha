@@ -7,8 +7,8 @@ namespace Hametuha\Admin\MetaBox;
  *
  * @package Hametuha\Admin\MetaBox
  */
-class SeriesAfterWords extends SeriesBase
-{
+class SeriesAfterWords extends SeriesBase {
+
 
 	/**
 	 * @var string

@@ -16,7 +16,7 @@ class SeriesEpub extends SeriesBase {
 	protected $nonce_action = 'edit_epub_auth';
 
 	public function savePost( \WP_Post $post ) {
-		$url = get_permalink( $post );
+		$url    = get_permalink( $post );
 		$author = get_userdata( $post->post_author );
 		// シリーズが完結したかどうか
 		update_post_meta( $post->ID, '_series_finished', (bool) $this->input->post( 'is_finished' ) );
@@ -24,7 +24,7 @@ class SeriesEpub extends SeriesBase {
 		if ( current_user_can( 'edit_others_posts' ) ) {
 			// 販売状況
 			$current = $this->series->get_status( $post->ID );
-			$status = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
+			$status  = min( 2, max( 0, $this->input->post( 'publishing_status' ) ) );
 			update_post_meta( $post->ID, '_kdp_status', $status );
 			// Asin
 			update_post_meta( $post->ID, '_asin', $this->input->post( 'asin' ) );
@@ -66,13 +66,13 @@ TEXT;
 				$title = sprintf( '『%s』%s', get_the_title( $post ), $author->display_name );
 				hametuha_slack( '電子書籍が販売開始されました', [
 					[
-						'fallback' => $title,
-						'title' => $title,
-						'title_link' => $kdp_url,
+						'fallback'    => $title,
+						'title'       => $title,
+						'title_link'  => $kdp_url,
 						'author_name' => $author->display_name,
 						'author_link' => home_url( "/doujin/detail/{$author->user_nicename}/" ),
-				        'color' => '#00928D',
-				        'text' => "Amazonで確認できます。破滅派のページは<{$url}|こちら>です。",
+						'color'       => '#00928D',
+						'text'        => "Amazonで確認できます。破滅派のページは<{$url}|こちら>です。",
 					],
 				] );
 			}
@@ -80,8 +80,8 @@ TEXT;
 			// Author
 			if ( $this->input->post( 'please-publish' ) ) {
 				update_post_meta( $post->ID, '_kdp_status', 1 );
-				$admin_url  = get_edit_post_link( $post->ID, 'mail' );
-				$url = get_permalink( $post );
+				$admin_url = get_edit_post_link( $post->ID, 'mail' );
+				$url       = get_permalink( $post );
 				// Slackに通知
 				$title = sprintf( '『%s』%s', get_the_title( $post ), $author->display_name );
 				hametuha_slack( '@channel 電子書籍販売申請がありました', [
@@ -123,8 +123,8 @@ TEXT;
 			if ( '2' === get_post_meta( $post->ID, '_kdp_status', true ) ) {
 				if ( $current_required_price != $new_required_price ) {
 					// Slackに通知
-					$from = $current_required_price ? '￥'.number_format( $current_required_price ) : 'なし';
-					$to   = $new_required_price     ? '￥'.number_format( $new_required_price ) : 'なし';
+					$from  = $current_required_price ? '￥' . number_format( $current_required_price ) : 'なし';
+					$to    = $new_required_price ? '￥' . number_format( $new_required_price ) : 'なし';
 					$title = sprintf( '『%s』%s → %s', get_the_title( $post ), $from, $to );
 					hametuha_slack( '@channel 電子書籍の希望小売価格が変更されました', [
 						[
@@ -160,7 +160,7 @@ TEXT;
 			<label>
 				<span class="dashicons dashicons-book"></span> 連載状況:
 				<input type="checkbox" name="is_finished"
-				       value="1" <?php checked( $this->series->is_finished( $post->ID ) ) ?> /> 完結済み
+					   value="1" <?php checked( $this->series->is_finished( $post->ID ) ); ?> /> 完結済み
 			</label>
 		</div>
 
@@ -169,20 +169,20 @@ TEXT;
 		<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">
 			<label>
 				<span class="dashicons dashicons-money"></span> 販売状況:
-				<strong><?= $this->series->status_label[ $status ] ?></strong>
+				<strong><?php echo $this->series->status_label[ $status ]; ?></strong>
 				<?php if ( $status > 1 ) : ?>
 					<br/>
-					<small>ASIN: <code><?= $this->series->get_asin( $post->ID ); ?></code></small>
-                    <br />
-                    <small>
-                        販売開始日: <code>
+					<small>ASIN: <code><?php echo $this->series->get_asin( $post->ID ); ?></code></small>
+					<br />
+					<small>
+						販売開始日: <code>
 						<?php if ( $published ) : ?>
-							<?= mysql2date( get_option( 'date_format' ), $published ) ?>
+							<?php echo mysql2date( get_option( 'date_format' ), $published ); ?>
 						<?php else : ?>
-                            ---
+							---
 						<?php endif; ?>
-                        </code>
-                    </small>
+						</code>
+					</small>
 				<?php elseif ( $status && $errors ) : ?>
 					<br />
 					<strong style="color: red">この作品集には不備があるので販売できません。</strong>
@@ -195,7 +195,7 @@ TEXT;
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--order">
 				<label>
 					<span class="dashicons dashicons-thumbs-up"></span> 優先順位:
-					<input type="number" class="regular-text" name="menu_order" value="<?= intval( $post->menu_order ) ?>" />
+					<input type="number" class="regular-text" name="menu_order" value="<?php echo intval( $post->menu_order ); ?>" />
 				</label>
 				<p class="description">
 					順位が高いほど優先して表示されます。編集者のみ変更できます。
@@ -208,7 +208,7 @@ TEXT;
 					<span class="dashicons dashicons-admin-settings"></span> ステータス変更:
 					<select name="publishing_status">
 						<?php foreach ( $this->series->status_label as $index => $value ) : ?>
-							<option value="<?= $index ?>"<?php selected( $index === $status ) ?>><?= $value ?></option>
+							<option value="<?php echo $index; ?>"<?php selected( $index === $status ); ?>><?php echo $value; ?></option>
 						<?php endforeach; ?>
 					</select>
 				</label>
@@ -218,7 +218,7 @@ TEXT;
 				<label>
 					<span class="dashicons dashicons-cart"></span> ASIN:
 					<input type="text" name="asin" class="regular-text"
-					       value="<?= esc_attr( $this->series->get_asin( $post->ID ) ) ?>"/>
+						   value="<?php echo esc_attr( $this->series->get_asin( $post->ID ) ); ?>"/>
 				</label>
 			</div>
 		<?php endif; ?>
@@ -230,26 +230,26 @@ TEXT;
 				<span class="dashicons dashicons-money"></span> 販売価格:
 				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
 					<input type="number" name="kdp_price" class="regular-text"
-				       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
+					   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
 				<?php else : ?>
 					<input type="number" readonly class="regular-text"
-					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ) ?>"/>
+						   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
 				<?php endif; ?>
 				<br />
 				<?php if ( is_series_price_unmatch( $post ) ) : ?>
-					<span class="required">希望小売価格: &yen; <?= number_format( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?></span>
+					<span class="required">希望小売価格: &yen; <?php echo number_format( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?></span>
 				<?php elseif ( ( $price = get_post_meta( $post->ID, '_kdp_required_price', true ) ) && is_numeric( $price ) ) : ?>
-					<small>希望小売価格: &yen; <?= number_format( $price ) ?></small>
+					<small>希望小売価格: &yen; <?php echo number_format( $price ); ?></small>
 				<?php endif; ?>
 			</label>
 			<?php endif; ?>
 			<?php if ( get_current_user_id() == $post->post_author ) : ?>
 				<label class="block">
-					<input type="checkbox" id="change-price" name="change_price_flag" value="1" /> 希望小売価格を編集 <a href="<?= home_url( '/faq/pricing-strategy' ) ?>" target="_blank">[?]</a>
+					<input type="checkbox" id="change-price" name="change_price_flag" value="1" /> 希望小売価格を編集 <a href="<?php echo home_url( '/faq/pricing-strategy' ); ?>" target="_blank">[?]</a>
 				</label>
 				<label id="change-price-box" class="hidden block">
 					<input type="number" name="kdp_required_price" class="regular-text"
-					       value="<?= esc_attr( get_post_meta( $post->ID, '_kdp_required_price', true ) ) ?>"/>
+						   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?>"/>
 				</label>
 				<hr />
 			<?php endif; ?>
@@ -263,8 +263,8 @@ TEXT;
 				switch ( $status ) {
 					case 1:
 						if ( $errors ) {
-							echo implode( '<br />', array_map( function( $string ){
-								return sprintf( '<span style="color: red;"><i class="dashicons dashicons-no"></i> %s</span>', esc_html( $string)  );
+							echo implode( '<br />', array_map( function( $string ) {
+								return sprintf( '<span style="color: red;"><i class="dashicons dashicons-no"></i> %s</span>', esc_html( $string ) );
 							}, $errors->get_error_messages() ) );
 						} else {
 							echo '現在、販売処理を行っています。しばらくお待ち下さい。';
@@ -288,7 +288,7 @@ TEXT;
 				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--secret">
 					<label>
 						<input type="checkbox" value="1"
-						       name="secret_ebook" <?php checked( hametuha_is_secret_book( $post ) ); ?> />
+							   name="secret_ebook" <?php checked( hametuha_is_secret_book( $post ) ); ?> />
 						シークレットブックにする
 					</label>
 				</div>
@@ -307,17 +307,18 @@ TEXT;
 				<label>
 					<span class="dashicons dashicons-format-aside"></span> ファイル:
 					<?php if ( $this->files->record_exists( $post->ID ) ) : ?>
-						<a href="<?php echo admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $post->ID ) ?>">一覧</a>
+						<a href="<?php echo admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $post->ID ); ?>">一覧</a>
 					<?php else : ?>
 						なし
 					<?php endif; ?>
 				</label>
 			</div>
 			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">
-				<a class="button" target="epub-publisher" href="<?= home_url( "epub/publish/{$post->ID}", 'https' ) ?>">書き出し</a>
+				<a class="button" target="epub-publisher" href="<?php echo home_url( "epub/publish/{$post->ID}", 'https' ); ?>">書き出し</a>
 				<iframe name="epub-publisher" style="display: none"></iframe>
 			</div>
-		<?php endif;
+			<?php
+		endif;
 	}
 
 

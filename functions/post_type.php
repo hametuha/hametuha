@@ -35,6 +35,7 @@ add_action( 'init', function () {
 		'supports'        => array( 'title', 'editor', 'author', 'slug', 'thumbnail', 'excerpt' ),
 		'has_archive'     => true,
 		'capability_type' => 'post',
+		'show_in_rest'    => true,
 		'rewrite'         => array( 'slug' => $series ),
 	);
 	register_post_type( $series, $args );
@@ -48,6 +49,7 @@ add_action( 'init', function () {
 		'has_archive'         => true,
 		'capability_type'     => 'post',
 		'exclude_from_search' => true,
+		'show_in_rest'        => true,
 		'rewrite'             => array( 'slug' => 'lists' ),
 	) );
 
@@ -127,8 +129,8 @@ add_action( 'init', function () {
 add_filter( 'rewrite_rules_array', function ( array $rules ) {
 	return array_merge( [
 		'^lists/([0-9]+)/paged/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists&paged=$matches[2]',
-		'^lists/([0-9]+)/?$' => 'index.php?p=$matches[1]&post_type=lists',
-		'^idea/(\\d+)/?' => 'index.php?p=$matches[1]&post_type=ideas',
+		'^lists/([0-9]+)/?$'                => 'index.php?p=$matches[1]&post_type=lists',
+		'^idea/(\\d+)/?'                    => 'index.php?p=$matches[1]&post_type=ideas',
 	], $rules );
 } );
 
@@ -318,17 +320,19 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 		<td>
 			<select name="tag_genre" id="tag-genre">
 				<?php $genre = get_term_meta( $term->term_id, 'genre', true ); ?>
-				<option value="" <?php selected( ! $genre ) ?>>指定なし</option>
-				<?php foreach (
+				<option value="" <?php selected( ! $genre ); ?>>指定なし</option>
+				<?php
+				foreach (
 					[
 						'サブジャンル',
 						'固有名詞',
 						'印象',
 						'一般名詞',
 					] as $val
-				) : ?>
+				) :
+					?>
 					<option
-						value="<?= esc_attr( $val ) ?>" <?php selected( $val == $genre ) ?>><?= esc_html( $val ) ?></option>
+						value="<?php echo esc_attr( $val ); ?>" <?php selected( $val == $genre ); ?>><?php echo esc_html( $val ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</td>
@@ -343,10 +347,10 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 			</script>
 			<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
 			<select name="tag_type" id="tag-type">
-				<option value="" <?php selected( ! get_term_meta( $term->term_id, 'tag_type', true ) ) ?>>指定しない</option>
+				<option value="" <?php selected( ! get_term_meta( $term->term_id, 'tag_type', true ) ); ?>>指定しない</option>
 				<?php foreach ( [ 'idea' => 'アイデア募集中' ] as $key => $val ) : ?>
-					<option value="<?= esc_attr( $key ) ?>" <?php selected( get_term_meta( $term->term_id, 'tag_type', true ) === $key ) ?>>
-						<?= esc_html( $val ) ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( get_term_meta( $term->term_id, 'tag_type', true ) === $key ); ?>>
+						<?php echo esc_html( $val ); ?>
 					</option>
 				<?php endforeach; ?>
 			</select>
@@ -393,16 +397,16 @@ add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $
  * @return array
  */
 function hametuha_popular_faqs() {
-    if ( ! class_exists( 'AFB\\Model\\FeedBacks' ) ) {
-        return [];
-    }
+	if ( ! class_exists( 'AFB\\Model\\FeedBacks' ) ) {
+		return [];
+	}
 	return \AFB\Model\FeedBacks::get_instance()->search( [
-		'post_type' => 'faq',
+		'post_type'   => 'faq',
 		'post_status' => 'publish',
 		'allow_empty' => false,
-		'orderby' => 'positive',
-		'order' => 'DESC',
-    ], 1, 5 );
+		'orderby'     => 'positive',
+		'order'       => 'DESC',
+	], 1, 5 );
 }
 
 /**
@@ -412,15 +416,15 @@ function hametuha_popular_faqs() {
  * @return bool
  */
 function hametuha_is_valid_post( $post = null ) {
-    $post = get_post( $post );
-    if ( ! $post || ( 'publish' !== $post->post_status ) ) {
-        return false;
-    }
-    if ( post_password_required( $post ) ) {
-        return false;
-    }
-    if ( empty( $post->post_title ) ) {
-        return false;
-    }
-    return true;
+	$post = get_post( $post );
+	if ( ! $post || ( 'publish' !== $post->post_status ) ) {
+		return false;
+	}
+	if ( post_password_required( $post ) ) {
+		return false;
+	}
+	if ( empty( $post->post_title ) ) {
+		return false;
+	}
+	return true;
 }

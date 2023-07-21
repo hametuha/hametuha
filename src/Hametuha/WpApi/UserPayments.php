@@ -36,16 +36,16 @@ class UserPayments extends WpApi {
 	public function get_arguments( $method ) {
 		$args = [
 			'user_id' => [
-				'required' => true,
+				'required'          => true,
 				'validate_callback' => function( $var ) {
 					return preg_match( '#^(all|me|\d+)$#', $var ) ?: new \WP_Error( 'malformat', 'ユーザーIDが不正です。' );
-				}
+				},
 			],
 		];
 		switch ( $method ) {
 			case 'GET':
 				$args['year'] = [
-					'default' => date_i18n( 'Y' ),
+					'default'           => date_i18n( 'Y' ),
 					'validate_callback' => function( $var ) {
 						return preg_match( '#\d{4}#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
@@ -81,10 +81,10 @@ class UserPayments extends WpApi {
 			'records'   => [],
 		];
 		foreach ( $this->sales->get_payment_list( $request->get_param( 'year' ), $user_id ) as $record ) {
-			$response['total'] += $record->total;
+			$response['total']     += $record->total;
 			$response['deducting'] += $record->deducting;
-			$record->label = $this->sales->type_label( $record->revenue_type );
-			$response['records'][] = $record;
+			$record->label          = $this->sales->type_label( $record->revenue_type );
+			$response['records'][]  = $record;
 		}
 		return new \WP_REST_Response( $response );
 	}
@@ -94,7 +94,7 @@ class UserPayments extends WpApi {
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		if ( 'me' == $request->get_param( 'user_id' ) ) {
+		if ( 'me' === $request->get_param( 'user_id' ) ) {
 			return current_user_can( 'read' );
 		} else {
 			return current_user_can( 'edit_users' );

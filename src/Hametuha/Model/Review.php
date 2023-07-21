@@ -81,12 +81,12 @@ class Review extends TermUserRelationships {
 	 */
 	public function is_user_vote_for( $user_id, $post_id, $tag_name ) {
 		return (bool) $this->select( "{$this->table}.object_id" )
-						   ->wheres( [
-							   "{$this->table}.user_id = %d"     => $user_id,
-							   "{$this->table}.object_id = %d"   => $post_id,
-							   "{$this->taxonomy}.taxonomy = %s" => $this->taxonomy,
-							   "{$this->terms}.name = %s"        => $tag_name,
-						   ] )->get_var();
+						->wheres( [
+							"{$this->table}.user_id = %d" => $user_id,
+							"{$this->table}.object_id = %d" => $post_id,
+							"{$this->taxonomy}.taxonomy = %s" => $this->taxonomy,
+							"{$this->terms}.name = %s"    => $tag_name,
+						] )->get_var();
 	}
 
 	/**
@@ -109,7 +109,7 @@ class Review extends TermUserRelationships {
 	 * @return int
 	 */
 	public function update_review_count( $post_id, $increment = 1 ) {
-		$count = $this->get_review_count( $post_id );
+		$count  = $this->get_review_count( $post_id );
 		$count += $increment;
 		update_post_meta( $post_id, '_review_count', $count );
 
@@ -126,7 +126,7 @@ class Review extends TermUserRelationships {
 	 */
 	public function user_voted_tags( $user_id, $post_id ) {
 		if ( ! $user_id ) {
-			return [ ];
+			return [];
 		}
 
 		return (array) $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*" )
@@ -167,7 +167,7 @@ class Review extends TermUserRelationships {
 		return $this->insert( [
 			'user_id'          => $user_id,
 			'object_id'        => $post_id,
-			'term_taxonomy_id' => $term_taxonomy_id
+			'term_taxonomy_id' => $term_taxonomy_id,
 		] );
 	}
 
@@ -250,12 +250,12 @@ SQL;
 		// データ整形
 		$labels = [
 			[],
-		    [],
+			[],
 		];
 		foreach ( $this->feedback_tags as $key => $val ) {
 			list( $pos, $nega ) = $val;
-			$labels[0][] = $pos;
-			$labels[1][] = $nega;
+			$labels[0][]        = $pos;
+			$labels[1][]        = $nega;
 			for ( $i = 0, $l = count( $val ); $i < $l; $i ++ ) {
 				$score = 0;
 				foreach ( $points as $point ) {
@@ -266,15 +266,15 @@ SQL;
 				}
 				$score = min( $score * 20, 100 );
 				// TODO: 投稿数が少な過ぎてたぶん意味ないので、平均は取らない
-//                $avg = get_review_average($val[$i]);
-//                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
+				//                $avg = get_review_average($val[$i]);
+				//                $points[$i][] = ($point > $avg * 2) ? 100 : round($point / $avg * 50) ;
 				$data['datasets'][ $i ]['data'][]      = $score;
 				$data['datasets'][ $i ]['label_set'][] = $val[ $i ];
 			}
 		}
 		$json = json_encode( [
-			'data' => $data,
-		    'labels' => $labels,
+			'data'   => $data,
+			'labels' => $labels,
 		] );
 		$html = <<<HTML
 <div>
@@ -326,18 +326,18 @@ SQL;
 		}
 		$result = $this->select( "COUNT({$this->table}.user_id) AS score, {$this->terms}.name" )
 					   ->join( $this->posts, "{$this->table}.object_id = {$this->posts}.ID" )
-					   ->wheres( [
-						   "{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
-						   "{$this->posts}.post_author = %d"      => $user_id,
-					   ] )
+					->wheres( [
+						"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
+						"{$this->posts}.post_author = %d" => $user_id,
+					] )
 					   ->group_by( "{$this->terms}.term_id" )
 					   ->result();
-		$json   = [ ];
+		$json   = [];
 		foreach ( $this->feedback_tags as $key => $terms ) {
 			$json[ $key ] = [
 				'genre'    => $this->review_tag_label( $key ),
-				'positive' => [ ],
-				'negative' => [ ],
+				'positive' => [],
+				'negative' => [],
 			];
 			for ( $i = 0; $i < 2; $i ++ ) {
 				$value = 0;
@@ -356,6 +356,53 @@ SQL;
 		}
 
 		return $json;
+	}
+
+	/**
+	 * 投稿に付けられたタグを取得する
+	 *
+	 * @param int   $user_id
+	 * @param array $args
+	 * @return \WP_Comment[]
+	 */
+	public function get_author_comments( $user_id, $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'paged'          => 1,
+			'posts_per_page' => 20,
+			's'              => '',
+		] );
+		$paged          = $args['paged'];
+		$posts_per_page = $args['posts_per_page'];
+		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
+		$wheres = [
+			$this->db->prepare( 'p.post_author = %d', $user_id ),
+			'p.post_type = "post"',
+			$this->db->prepare( 'c.user_id != %d', $user_id ),
+		];
+		if ( ! empty( $args['s'] ) ) {
+			$wheres[] = $this->db->prepare( 'c.comment_content LIKE %s', '*' . $args['s'] . '*' );
+		}
+		$wheres = implode( ' AND ', $wheres );
+		$sql = <<<SQL
+			SELECT SQL_CALC_FOUND_ROWS
+		    	c.*
+			FROM {$this->db->comments} as c
+			LEFT JOIN {$this->db->posts} as p
+			ON p.ID = c.comment_post_ID
+			WHERE {$wheres}
+			ORDER BY c.comment_date DESC
+			LIMIT %d, %d
+SQL;
+		$result = $this->db->get_results( $this->db->prepare( $sql, $offset, $posts_per_page ) );
+		$found  = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
+		return [
+			'found'    => $found,
+			'current'  => $paged,
+			'total'    => ceil( $found / $posts_per_page ),
+			'comments' => array_map( function( $row ) {
+				return new \WP_Comment( $row );
+			}, $result ),
+		];
 	}
 }
 

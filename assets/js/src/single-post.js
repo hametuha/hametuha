@@ -19,7 +19,6 @@ Chart.defaults.global.responsive = true;
 (function($){
     'use strict';
 
-
     Hametuha.views.Scroll = Backbone.View.extend({
 
         el: '#content-wrapper',
@@ -299,6 +298,17 @@ Chart.defaults.global.responsive = true;
 
     });
 
+    // 脚注
+    $( document ).on( 'click', '.noteref-link,.footernote-link', function( e ) {
+        e.preventDefault();
+        var offset = 40 * 1.5;
+        var $elem  = $( $( this ).attr( 'href' ) );
 
+        if ( $elem.length ) {
+            $( 'body,html' ).animate( {
+                scrollTop: $elem.offset().top - offset,
+            }, 200, 'swing' );
+        }
+    } );
 
 })(jQuery);

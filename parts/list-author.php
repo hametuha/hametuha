@@ -1,49 +1,59 @@
 <?php
+// 人気作品
+$authors_ranking = hametuha_get_author_popular_works( null, 6 );
+// 前後の作品
+$authors_recent = hametuha_get_author_work_siblings();
 
-$authors_ranking = hametuha_get_author_popular_works( null, 3 );
-$authors_recent  = hametuha_get_author_recent_works( null, 3 );
-	?>
+?>
+<?php if ( $authors_recent ) : ?>
+<div class="m20">
+		<h3 class="list-title list-title-inverse">
+			<?php esc_html_e( 'この作者の他の作品' ); ?>
+		</h3>
+
+		<ul class="post-list post-list-card">
+			<?php
+			foreach ( $authors_recent as $post ) :
+				setup_postdata( $post );
+				?>
+				<?php get_template_part( 'parts/loop', 'front' ); ?>
+				<?php
+			endforeach;
+			wp_reset_postdata();
+			?>
+		</ul>
+</div>
+<?php endif; ?>
+
+<?php if ( $authors_ranking ) : ?>
+<div class="m20">
+	<h3 class="list-title list-title-inverse">
+		<?php esc_html_e( 'この作者の人気作' ); ?>
+	</h3>
+
+	<ul class="post-list post-list-card">
+		<?php
+		foreach ( $authors_ranking as $post ) :
+			setup_postdata( $post );
+			?>
+			<?php get_template_part( 'parts/loop', 'front' ); ?>
+			<?php
+		endforeach;
+		wp_reset_postdata();
+		?>
+	</ul>
+
+</div>
+<?php endif; ?>
+
 <section class="m20">
 
 	<div class="row">
-
-		<div class="col-xs-12 col-sm-6">
-
-			<h2 class="list-title">この作者の人気作</h2>
-            <?php if ( $authors_ranking ) : ?>
-                <ul class="post-list no-excerpt">
-					<?php foreach ( $authors_ranking as $post ) : setup_postdata( $post ); ?>
-					<?php get_template_part( 'parts/loop', 'front' ) ?>
-                    <?php endforeach; wp_reset_postdata(); ?>
-                </ul>
-			<?php else : ?>
-                <div class="alert alert-light text-center">
-                    今後の活躍にご期待ください。
-                </div>
-            <?php endif ; ?>
-		</div>
-
-		<div class="col-xs-12 col-sm-6">
-			<h2 class="list-title">この作者の最新作</h2>
-			<?php if ( $authors_recent ) : ?>
-				<ul class="post-list no-excerpt">
-					<?php foreach ( $authors_recent as $post ) : setup_postdata( $post ); ?>
-						<?php get_template_part( 'parts/loop', 'front' ) ?>
-					<?php endforeach; wp_reset_postdata(); ?>
-				</ul>
-			<?php else : ?>
-                <div class="alert alert-light text-center">
-                    この作者は最近活動していないようです。
-                </div>
-			<?php endif; ?>
-		</div>
-	</div>
-
-	<div class="row">
 		<div class="col-xs-8 col-xs-offset-2">
-			<a href="<?= home_url( '/doujin/detail/'.get_the_author_meta( 'nicename' ).'/' ) ?>" class="btn btn-default btn-lg btn-block">もっと見る</a>
+			<a href="<?php echo home_url( '/doujin/detail/' . get_the_author_meta( 'nicename' ) . '/' ); ?>" class="btn btn-default btn-lg btn-block">
+				<?php esc_html_e( '著者詳細プロフィール', 'hametuha' ); ?>
+			</a>
 		</div>
 	</div>
 
 </section>
-<?php wp_reset_postdata(); ?>

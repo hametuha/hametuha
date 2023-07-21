@@ -25,8 +25,8 @@ function _hametuha_admin_dashboard_metaboxes( $screen_id ) {
 			'side'   => array(
 				'dashboard_quick_press', // クイック投稿
 				'dashboard_primary', // WordPress 開発ブログ
-				'dashboard_secondary' // WordPress フォーラム
-			)
+				'dashboard_secondary', // WordPress フォーラム
+			),
 		);
 		foreach ( $meta_boxes as $context => $arr ) {
 			foreach ( $arr as $id ) {
@@ -98,7 +98,7 @@ add_action( 'admin_init', function() {
 		echo '<p>コンテンツの検閲を行うための設定です。正規表現が使えます。デリミタは<code>#</code>です。</p>';
 	}, 'discussion' );
 	// 検閲ブラックリスト
-	add_settings_field( 'four_words', '検閲対象文字列', function ($args) {
+	add_settings_field( 'four_words', '検閲対象文字列', function ( $args ) {
 		printf( '<textarea rows="10" style="width: 90%%;" name="four_words" id="four_words">%s</textarea>', esc_textarea( get_option( 'four_words', '' ) ) );
 	}, 'discussion', 'censorship' );
 	register_setting( 'discussion', 'four_words' );

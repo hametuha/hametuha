@@ -5,9 +5,12 @@ namespace Hametuha\Dashboard;
 
 use Hametuha\Hashboard\Pattern\Screen;
 
+/**
+ * List of your works.
+ */
 class Works extends Screen {
 
-	protected $icon = 'reply';
+	protected $icon = 'history_edu';
 
 	/**
 	 * Should return unique URL slug.
@@ -15,7 +18,7 @@ class Works extends Screen {
 	 * @return string
 	 */
 	public function slug() {
-		return 'edit';
+		return 'works';
 	}
 
 	/**
@@ -24,7 +27,7 @@ class Works extends Screen {
 	 * @return string
 	 */
 	public function label() {
-		return 'フィードバック';
+		return __( 'あなたの作品', 'hametuha' );
 	}
 
 	/**
@@ -35,18 +38,16 @@ class Works extends Screen {
 	 */
 	public function description( $page = '' ) {
 		switch ( $page ) {
-			case 'deposit':
-				return '支払いが確定している未払いの報酬';
-				break;
-			case 'rewards':
-				return 'あなたがこれまで破滅派から受け取った報酬の履歴';
-				break;
-			case 'payments':
-				return 'これまで破滅派がお支払いした入金履歴';
-				break;
+			case 'series':
+				return __( 'あなたの登録している作品集です。', 'hametuha' );
+			case 'comments':
+				return __( 'あなたの作品が受けとったコメントです。', 'hametuha' );
+			case 'ratings':
+				return __( 'これまで受け取った星によるレーティングです。', 'hametuha' );
+			case 'lists':
+				return __( 'あなたの作品が含まれているリストの一覧です。', 'hametuha' );
 			default:
-				return '電子書籍の売り上げ記録';
-				break;
+				return __( 'あなたが破滅派に登録した作品です。', 'hametuha' );
 		}
 	}
 
@@ -54,12 +55,12 @@ class Works extends Screen {
 	 * Set children.
 	 */
 	protected function default_children() {
-		$pages = [
+		return [
 			'works'    => '投稿',
 			'series'   => '作品集',
-            'comments' => 'コメント',
+			'comments' => 'コメント',
 			'reviews'  => 'レビュー',
-			'lists'    => '',
+			'lists'    => 'リスト',
 		];
 	}
 
@@ -69,28 +70,28 @@ class Works extends Screen {
 	 * @param string $page
 	 */
 	public function render( $page = '' ) {
-		wp_enqueue_script( 'hametuha-hb-payment-table' );
+		wp_enqueue_script( 'hametuha-hb-posts' );
 		switch ( $page ) {
-			case 'rewards':
-            case 'deposit':
-		        hameplate( 'templates/dashboard/sales', 'rewards', [
-                    'page'     => $page,
-                    'endpoint' => rest_url( "hametuha/v1/sales/rewards/me" ),
-                ] );
+			case 'comments':
+				$args['post_type'] = 'comment';
 				break;
-			case 'payments':
-				hameplate( 'templates/dashboard/sales', 'payments', [
-					'endpoint' => rest_url( "hametuha/v1/sales/payments/me" ),
-				] );
+			case 'reviews':
+				$args['post_type'] = 'review';
+				break;
+			case 'series':
+				$args['post_type'] = 'series';
+				break;
+			case 'lists':
+				$args['post_type'] = 'list';
 				break;
 			default:
-				hameplate( 'templates/dashboard/sales', 'graph', [
-					'endpoint' => rest_url( "hametuha/v1/sales/history/me" ),
-				] );
+				$args['post_type'] = 'post';
 				break;
 		}
+		$args['as'] = 'author';
+		hameplate( 'templates/dashboard/post-list', '', $args );
 		hameplate( 'templates/dashboard/footer', '', [
-			'slug' => 'dashboard-sales-footer',
+			'slug' => 'dashboard-posts-footer',
 		] );
 	}
 

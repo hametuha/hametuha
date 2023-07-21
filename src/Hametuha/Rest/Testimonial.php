@@ -55,7 +55,7 @@ class Testimonial extends RestTemplate {
 		$url    = $this->input->post( 'testimonial-url' );
 		$text   = $this->input->post( 'testimonial-text' );
 		$rank   = $this->input->post( 'testimonial-rank' );
-		$errors = [ ];
+		$errors = [];
 		if ( ! $this->series->is_service( $url, 'twitter' ) ) {
 			if ( empty( $title ) ) {
 				$errors[] = '名前・引用元が入力されていません。';
@@ -63,7 +63,6 @@ class Testimonial extends RestTemplate {
 			if ( empty( $text ) ) {
 				$errors[] = 'レビュー本文が入力されていません。';
 			}
-
 		}
 		if ( false === array_search( $rank, range( 0, 5 ) ) ) {
 			$errors[] = '五段階評価の値が不正です。';
@@ -172,8 +171,8 @@ class Testimonial extends RestTemplate {
 				$excerpt = $this->input->post( 'comment-excerpt' );
 				if ( $excerpt ) {
 					foreach ( explode( "\r\n", $excerpt ) as $line ) {
-						$line = trim($line);
-						if( empty($line) ){
+						$line = trim( $line );
+						if ( empty( $line ) ) {
 							continue;
 						}
 						if ( false === strpos( $comment->comment_content, $line ) ) {

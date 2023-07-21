@@ -8,6 +8,8 @@
 
 (function(){
 
+"use strict";
+
 angular.module('hametuha')
   .controller( 'hameventStatus', [ '$scope', '$http', '$timeout', function( $scope, $http, $timeout ){
 

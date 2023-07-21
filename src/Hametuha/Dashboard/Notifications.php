@@ -59,7 +59,7 @@ class Notifications extends Screen {
 	 */
 	public function render( $page = '' ) {
 		?>
-		<div id="hametuha-notifications" data-type="<?= esc_attr( $page ) ?>">
+		<div id="hametuha-notifications" data-type="<?php echo esc_attr( $page ); ?>">
 		</div>
 		<?php
 	}

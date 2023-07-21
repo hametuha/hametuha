@@ -34,8 +34,8 @@ class Requests extends Screen {
 		switch ( $page ) {
 			case 'collaborations':
 				return '作品集の寄稿者・共同編集者として招待されたリクエストです。';
-            default:
-                return '';
+			default:
+				return '';
 		}
 	}
 
@@ -55,7 +55,7 @@ class Requests extends Screen {
 	 */
 	public function render( $page = '' ) {
 		?>
-		<div id="hametuha-requests" data-type="<?= esc_attr( $page ) ?>">
+		<div id="hametuha-requests" data-type="<?php echo esc_attr( $page ); ?>">
 		</div>
 		<?php
 	}

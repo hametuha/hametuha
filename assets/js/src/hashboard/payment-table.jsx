@@ -1,5 +1,8 @@
 /*!
- * wpdeps=hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector,hb-filters-moment
+ * Hashboard Payment Screen.
+ *
+ * @handle hametuha-hb-payment-table
+ * @deps hashboard,hb-components-bar-chart,hb-components-pagination,hb-components-month-selector,hb-filters-moment
  */
 
 /*global Materialize: false*/
@@ -263,7 +266,7 @@
         } ).done(function(response){
           self.total = response.total;
           self.tax = response.deducting;
-          self.available = response.enough,
+          self.available = response.enough;
           self.records = response.records;
         }).fail($.hbRestError()).always(function(){
           self.loading = false;

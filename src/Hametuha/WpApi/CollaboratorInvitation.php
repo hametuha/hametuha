@@ -45,7 +45,7 @@ class CollaboratorInvitation extends WpApi {
 				'validate_callback' => function( $var ) {
 					if ( 'me' === $var ) {
 						return true;
-					} else if ( ! is_numeric( $var ) ) {
+					} elseif ( ! is_numeric( $var ) ) {
 						return false;
 					} else {
 						return (bool) get_userdata( $var );
@@ -57,8 +57,8 @@ class CollaboratorInvitation extends WpApi {
 			case 'GET':
 				$args = array_merge( $args, [
 					'paged' => [
-						'type' => 'integer',
-						'default' => 1,
+						'type'              => 'integer',
+						'default'           => 1,
 						'sanitize_callback' => function( $var ) {
 							return max( 1, (int) $var );
 						},
@@ -67,15 +67,15 @@ class CollaboratorInvitation extends WpApi {
 				break;
 			case 'POST':
 			case 'DELETE':
-			$args = array_merge( $args, [
-				'series_id' => [
-					'type' => 'integer',
-					'required' => true,
-					'validate_callback' => function ( $var ) {
-						return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
-					},
-				],
-			] );
+				$args = array_merge( $args, [
+					'series_id' => [
+						'type'              => 'integer',
+						'required'          => true,
+						'validate_callback' => function ( $var ) {
+							return ( $post = get_post( $var ) ) && 'series' === $post->post_type;
+						},
+					],
+				] );
 				break;
 		}
 		return $args;
@@ -111,7 +111,7 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_post( $request ) {
 		$collaborator = $this->get_invitation( $request );
-		$series_id = $request->get_param( 'series_id' );
+		$series_id    = $request->get_param( 'series_id' );
 		if ( 0 <= $collaborator->ratio ) {
 			return new \WP_Error( 'already_collaborator', 'すでにこの作品へは招待されています。', [
 				'status' => 403,
@@ -120,7 +120,7 @@ class CollaboratorInvitation extends WpApi {
 		$result = $this->collaborators->confirm_invitation( $series_id, $collaborator->ID );
 		if ( is_wp_error( $result ) ) {
 			return $result;
-		} elseif( ! $result ) {
+		} elseif ( ! $result ) {
 			return new \WP_Error( 'failed_update', 'リクエストを処理できませんでした。やりなおしてください。', [
 				'status' => 500,
 			] );
@@ -145,8 +145,8 @@ class CollaboratorInvitation extends WpApi {
 	 */
 	public function handle_delete( $request ) {
 		$collaborator = $this->get_invitation( $request );
-		$series = get_post( $request->get_param( 'series_id' ) );
-		$result = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
+		$series       = get_post( $request->get_param( 'series_id' ) );
+		$result       = $this->collaborators->delete_collaborator( $request->get_param( 'series_id' ), $collaborator->ID );
 		/**
 		 * Executed when user denied collaborator invitation.
 		 *
@@ -168,7 +168,7 @@ class CollaboratorInvitation extends WpApi {
 	 * @throws \Exception
 	 */
 	private function get_invitation( $request ) {
-		$user = $this->get_user( $request );
+		$user         = $this->get_user( $request );
 		$collaborator = $this->collaborators->collaborator( $request->get_param( 'series_id' ), $user );
 		if ( $collaborator ) {
 			return $collaborator;

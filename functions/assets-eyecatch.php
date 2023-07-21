@@ -57,7 +57,7 @@ function pixiv_output( $post = null ) {
 function has_pixiv( $post = null ) {
 	$post = get_post( $post );
 
-	return (boolean) get_post_meta( $post->ID, '_pixiv_embed', true );
+	return (bool) get_post_meta( $post->ID, '_pixiv_embed', true );
 }
 
 

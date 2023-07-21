@@ -11,7 +11,7 @@ use Hametuha\Model\Series;
  * Get minicome products.
  */
 function hametuha_get_minicome_product() {
-	$key = 'minicome_products';
+	$key   = 'minicome_products';
 	$cache = get_transient( 'minicome_products' );
 	if ( false !== $cache ) {
 		return $cache;
@@ -58,4 +58,29 @@ function hametuha_get_minicome_product() {
 			'price'       => $price,
 		];
 	}, $result->get_items() );
+}
+
+/**
+ * Get KDP URL.
+ *
+ * @param null|int|WP_Post $post Post object.
+ * @return string
+ */
+function hametuha_kdp_url( $post = null ) {
+	$post = get_post( $post );
+	$url  = 'https://amzn.to/3XqCRt0'; // 破滅派の検索結果へのURL
+	if ( ! $post ) {
+		return $url;
+	}
+	return Series::get_instance()->get_kdp_url( $post->ID ) ?: $url;
+}
+
+/**
+ * Render KDP url.
+ *
+ * @param null|int|WP_Post $post Post object.
+ * @return void
+ */
+function hametuha_the_kdp_url( $post = null ) {
+	echo esc_url( hametuha_kdp_url( $post ) );
 }

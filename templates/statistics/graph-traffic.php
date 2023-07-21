@@ -5,7 +5,7 @@
 ?>
 
 <div class="row">
-	<div id="analytics-source" class="stat col-xs-12 col-sm-6" data-type="PieChart" data-endpoint="<?= $endpoint['source'] ?>">
+	<div id="analytics-source" class="stat col-xs-12 col-sm-6" data-type="PieChart" data-endpoint="<?php echo $endpoint['source']; ?>">
 
 		<h3><span class="icon-share2"></span> アクセス元</h3>
 
@@ -15,7 +15,7 @@
 
 	</div>
 
-	<div id="analytics-contributor" class="stat col-xs-12 col-sm-6" data-type="BarChart" data-endpoint="<?= $endpoint['contributor'] ?>">
+	<div id="analytics-contributor" class="stat col-xs-12 col-sm-6" data-type="BarChart" data-endpoint="<?php echo $endpoint['contributor']; ?>">
 
 		<h3><i class="icon-heart"></i> 貢献した人</h3>
 
@@ -30,7 +30,7 @@
 <hr />
 
 <div class="row">
-	<div id="analytics-query" class="stat col-xs-12" data-type="Table" data-endpoint="<?= $endpoint['keyword'] ?>">
+	<div id="analytics-query" class="stat col-xs-12" data-type="Table" data-endpoint="<?php echo $endpoint['keyword']; ?>">
 		<h3><i class="icon-key"></i> 検索キーワード</h3>
 		<p class="text-muted">あなたの作品にたどり着いた検索キーワードです。</p>
 		<div class="stat__container" id="analytics-query-child"></div>

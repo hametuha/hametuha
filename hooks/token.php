@@ -10,13 +10,13 @@
  */
 add_action( 'init', function() {
 	register_post_type( 'web-hook', [
-		'label'  => 'Webフック',
-	    'public' => false,
-	    'show_ui' => true,
-	    'show_in_nav_menus' => false,
-	    'show_in_menu' => current_user_can( 'list_users' ) ? 'users.php' : 'profile.php',
-	    'show_in_admin_bar' => false,
-	    'supports' => [ 'title', 'author', 'slug' ],
+		'label'             => 'Webフック',
+		'public'            => false,
+		'show_ui'           => true,
+		'show_in_nav_menus' => false,
+		'show_in_menu'      => current_user_can( 'list_users' ) ? 'users.php' : 'profile.php',
+		'show_in_admin_bar' => false,
+		'supports'          => [ 'title', 'author', 'slug' ],
 	] );
 } );
 
@@ -38,8 +38,8 @@ add_action( 'add_meta_boxes', function( $post_type ) {
 				</th>
 				<td>
 					<input type="text" class="regular-text" name="webhook_token" id="webhook_token"
-					       value="<?= esc_url( $endpoint ) ?>"
-					       placeholder="まだ生成されていません" readonly />
+						   value="<?php echo esc_url( $endpoint ); ?>"
+						   placeholder="まだ生成されていません" readonly />
 				</td>
 			</tr>
 			<tr>
@@ -85,7 +85,7 @@ add_filter( 'manage_web-hook_posts_columns', function( $column ) {
 	foreach ( $column as $key => $value ) {
 		$new_column[ $key ] = $value;
 		if ( 'title' == $key ) {
-			$new_column['endpoint']  = 'エンドポイント';
+			$new_column['endpoint'] = 'エンドポイント';
 		}
 	}
 	return $new_column;
@@ -120,8 +120,8 @@ add_action( 'rest_api_init', function() {
 	// List of Webhooks
 	register_rest_route( 'hametuha/v1', '/webhooks/?', [
 		[
-			'methods' => 'GET',
-			'callback' => function() {
+			'methods'             => 'GET',
+			'callback'            => function() {
 				$hooks = get_posts( [
 					'post_type'   => 'web-hook',
 					'post_status' => 'publish',
@@ -143,7 +143,7 @@ add_action( 'rest_api_init', function() {
 				}
 				return new WP_REST_Response( $return );
 			},
-			'args' => [],
+			'args'                => [],
 			'permission_callback' => function() {
 				// Everything is O.K.
 				return true;

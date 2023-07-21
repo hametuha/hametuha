@@ -1,3 +1,1 @@
-
-<?php hamethread_button() ?>
-
+<?php hamethread_button();

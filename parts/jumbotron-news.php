@@ -1,7 +1,7 @@
 <div class="news-recruit row">
 
 	<div class="col-xs-12 col-sm-6 news-recruit__eyecatch">
-		<img class="news-recruit__img" src="<?= get_template_directory_uri() ?>/assets/img/jumbotron/hamenew-recruit.jpg?201608" alt="募集中……" />
+		<img class="news-recruit__img" src="<?php echo get_template_directory_uri(); ?>/assets/img/jumbotron/hamenew-recruit.jpg?201608" alt="募集中……" />
 	</div>
 
 	<div class="col-xs-12 col-sm-6 news-recruit__copy">
@@ -11,10 +11,13 @@
 			コンテキストなき文学を生き抜くための貴重な情報を一緒に集めましょう。
 			タレコミや情報提供も随時受け付けています。
 		</p>
-		<?php if ( has_nav_menu( 'hamenew_actions' ) ) : $locations = get_nav_menu_locations(); ?>
+		<?php
+		if ( has_nav_menu( 'hamenew_actions' ) ) :
+			$locations = get_nav_menu_locations();
+			?>
 		<p class="text-center">
 			<?php foreach ( wp_get_nav_menu_items( $locations['hamenew_actions'] ) as $item ) : ?>
-			<a href="<?= esc_url( $item->url ) ?>" class="btn btn-success btn-sm"><?= get_the_title( $item ) ?></a>
+			<a href="<?php echo esc_url( $item->url ); ?>" class="btn btn-success btn-sm"><?php echo get_the_title( $item ); ?></a>
 			<?php endforeach; ?>
 		</p>
 		<?php endif; ?>

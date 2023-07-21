@@ -3,14 +3,21 @@
 namespace Hametuha\Cron;
 
 
+use Hametuha\Model\Series;
 use WPametu\Utility\CronBase;
 
-class KdpTweet extends CronBase
-{
+/**
+ * KDPで配信している電子書籍について呟く
+ */
+class KdpTweet extends CronBase {
 
 	/**
-	 * スケジュール
-	 * @var string
+	 * @var bool Disable this cron.
+	 */
+	protected $disabled = true;
+
+	/**
+	 * @var string スケジュール名
 	 */
 	protected $schedule = 'meet_everybody';
 
@@ -26,7 +33,7 @@ class KdpTweet extends CronBase
 	 */
 	public function process() {
 		if ( ! WP_DEBUG ) {
-			update_twitter_status( $this->tweet() );
+			gianism_update_twitter_status( $this->tweet() );
 		}
 	}
 
@@ -36,6 +43,7 @@ class KdpTweet extends CronBase
 	 * @return string
 	 */
 	public function tweet() {
+		Series::get_instance()->get_published_count();
 		$string = '【定期告知】破滅派のKindle本は現在[kdp_count]冊販売中です。まだご覧になっていない方はぜひご高覧ください！　今後も続々と販売予定です。 https://hametuha.com/kdp/ #kdp #電書 #セルパブ';
 		return do_shortcode( $string );
 	}
@@ -61,11 +69,9 @@ class KdpTweet extends CronBase
 	 */
 	public function cron_schedule( $schedule ) {
 		$schedule['meet_everybody'] = [
-			'interval' => 60 * 60 * (18 + 24),
+			'interval' => 60 * 60 * ( 18 + 24 ),
 			'display'  => '1日と18時間おきにつぶやくと、いろんな人の目に入る',
 		];
 		return $schedule;
 	}
-
-
 }

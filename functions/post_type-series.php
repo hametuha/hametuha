@@ -43,7 +43,7 @@ function is_series_finished( $post = null ) {
  * @return array
  */
 function hametuha_series_args( $args ) {
-	$args = wp_parse_args( $args, [
+	$args       = wp_parse_args( $args, [
 		'excludes'       => 0,
 		'author'         => 0,
 		'author_not'     => 0,
@@ -61,7 +61,7 @@ function hametuha_series_args( $args ) {
 		],
 		'paged'          => $args['paged'],
 		'posts_per_page' => $args['posts_per_page'],
-		'orderby' => [
+		'orderby'        => [
 			'menu_order' => 'DESC',
 			'date'       => 'DESC',
 		],
@@ -73,7 +73,7 @@ function hametuha_series_args( $args ) {
 		$query_args['author'] = $args['author'];
 	}
 	if ( $args['author_not'] ) {
-		$query_args['author__not_in'] = $args[ 'author_not' ];
+		$query_args['author__not_in'] = $args['author_not'];
 	}
 	return $query_args;
 }
@@ -120,7 +120,7 @@ function the_series_price( $post = null ) {
  * @return false|int
  */
 function get_series_price( $post = null ) {
-	$post = get_post( $post );
+	$post  = get_post( $post );
 	$price = get_post_meta( $post->ID, '_kdp_price', true );
 	return ! is_numeric( $price ) ? false : (int) $price;
 }
@@ -167,7 +167,7 @@ function get_kdp_remote_price( $post = null, $cache = true ) {
  * @return bool
  */
 function is_series_price_unmatch( $post = null ) {
-	$post = get_post( $post );
+	$post          = get_post( $post );
 	$request_price = get_post_meta( $post->ID, '_kdp_required_price', true );
 	$real_price    = get_post_meta( $post->ID, '_kdp_price', true );
 	if ( ! ( is_numeric( $real_price ) && is_numeric( $request_price ) ) ) {
@@ -202,7 +202,7 @@ function hametuha_get_series_categories( $post = null ) {
 		return [];
 	}
 	global $wpdb;
-	$query = <<<SQL
+	$query   = <<<SQL
 		SELECT t.*, tt.*
 		FROM {$wpdb->terms} AS t
 		INNER JOIN {$wpdb->term_taxonomy} AS tt
@@ -278,7 +278,7 @@ function hametuha_series_hide( $content ) {
 			$body->removeChild( $body->childNodes->item( $i ) );
 		}
 	}
-	$content = \WPametu\Utility\Formatter::to_string( $dom );
+	$content  = \WPametu\Utility\Formatter::to_string( $dom );
 	$content .= "\n<div class=\"content-hide-cover\"></div>";
 	remove_filter( 'the_content', 'hametuha_series_hide' );
 

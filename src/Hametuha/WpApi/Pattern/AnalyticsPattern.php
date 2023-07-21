@@ -1,11 +1,10 @@
 <?php
 
-namespace Hametuha\WpApi;
+namespace Hametuha\WpApi\Pattern;
 
 
-use Gianism\Plugins\Analytics;
+use Hametuha\Service\GoogleAnalyticsDataAccessor;
 use WPametu\API\Rest\WpApi;
-use WPametu\Utility\StringHelper;
 
 /**
  * Analytics api
@@ -14,6 +13,7 @@ use WPametu\Utility\StringHelper;
  * @package Gianism
  * @property \Gianism\Plugins\Analytics $google
  * @property \Google_Service_Analytics $ga
+ * @property-read GoogleAnalyticsDataAccessor $ga4
  * @property array  $profile
  * @property \wpdb  $db
  * @property string $view_id
@@ -22,12 +22,25 @@ use WPametu\Utility\StringHelper;
 abstract class AnalyticsPattern extends WpApi {
 
 	/**
+	 * Check availability
+	 *
+	 * Override this function if some condition exists like
+	 * plugin dependencies.
+	 *
+	 * @return bool
+	 */
+	protected function is_available() {
+		return class_exists( 'Kunoichi\GaCommunicator' );
+	}
+
+	/**
 	 * Return today string in Y-m-d
 	 *
 	 * @return string
 	 */
 	protected function today() {
-		return date_i18n( 'Y-m-d', current_time( 'timestamp' ) );
+		$date = new \DateTime( 'now', wp_timezone() );
+		return $date->format( 'Y-m-d' );
 	}
 
 	/**
@@ -37,9 +50,9 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @return string
 	 */
 	protected function n_days_ago( $n ) {
-		$now = current_time( 'timestamp' );
-		$now -= 60 * 60 * 24 * $n;
-		return date_i18n( 'Y-m-d', $now );
+		$now  = new \DateTime( 'now', wp_timezone() );
+		$now->sub( new \DateInterval( 'P' . $n . 'D' ) );
+		return $now->format( 'Y-m-d' );
 	}
 
 	/**
@@ -63,11 +76,11 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @param string $default
 	 */
 	protected function add_date( &$fields, $key, $default ) {
-		$fields[$key] = [
-			'required' => true,
-			'default'  => $default,
+		$fields[ $key ] = [
+			'required'          => true,
+			'default'           => $default,
 			'validate_callback' => function( $var ) use ( $key ) {
-				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) ) ;
+				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) );
 			},
 		];
 	}
@@ -75,6 +88,7 @@ abstract class AnalyticsPattern extends WpApi {
 	/**
 	 * Fetch data from Google Analytics API
 	 *
+	 * @deprecated
 	 * @param string $start_date Date string
 	 * @param string $end_date Date string
 	 * @param string $metrics CSV of metrics E.g., 'ga:visits,ga:pageviews'
@@ -114,6 +128,26 @@ abstract class AnalyticsPattern extends WpApi {
 	}
 
 	/**
+	 * Typical REST arguments.
+	 *
+	 * @param $method
+	 * @return array
+	 */
+	protected function get_arguments( $method ) {
+		return $this->add_date_fields( $this->user_id_arg(), 30 );
+	}
+
+	/**
+	 * Is user id is valid.
+	 *
+	 * @param mixed $var Variable.
+	 * @return bool|\WP_Error
+	 */
+	public function validate_user_id( $var ) {
+		return ( is_numeric( $var ) || in_array( $var, [ 'me', 'all' ] ) ) ?: new \WP_Error( 'malformat', __( 'ユーザーIDの指定が不正です。', 'hametuha' ) );
+	}
+
+	/**
 	 * Parse permission
 	 *
 	 * @param \WP_REST_Request $request Request object.
@@ -131,6 +165,7 @@ abstract class AnalyticsPattern extends WpApi {
 	/**
 	 * Return metrics considering date range
 	 *
+	 * @deprecated
 	 * @param string $start
 	 * @param string $end
 	 * @return string
@@ -138,13 +173,44 @@ abstract class AnalyticsPattern extends WpApi {
 	protected function proper_metrics( $start, $end ) {
 		$start = new \DateTime( "{$start} 00:00:00" );
 		$end   = new \DateTime( "{$end} 00:00:00" );
-		$diff = $start->diff( $end )->days;
+		$diff  = $start->diff( $end )->days;
 		if ( $diff > 365 * 1 ) {
 			// Over 2 years, year month.
 			return 'ga:yearMonth';
 		} else {
 			return 'ga:date';
 		}
+	}
+
+	/**
+	 * Convert request to User ID.
+	 *
+	 * @param int|string $id_or_string int, "me", or "all"
+	 * @return int User ID.
+	 */
+	protected function to_author_id( $id_or_string ) {
+		switch ( $id_or_string ) {
+			case 'me':
+				return get_current_user_id();
+			case 'all':
+				return 0;
+			default:
+				return (int) $id_or_string;
+		}
+	}
+
+	/**
+	 * User ID arguments.
+	 *
+	 * @return array
+	 */
+	protected function user_id_arg() {
+		return [
+			'user_id' => [
+				'required'          => true,
+				'validate_callback' => [ $this, 'validate_user_id' ],
+			],
+		];
 	}
 
 
@@ -171,8 +237,10 @@ abstract class AnalyticsPattern extends WpApi {
 				return $this->profile['view'];
 				break;
 			case 'google':
-				return Analytics::get_instance();
+				return \Gianism\Plugins\Analytics::get_instance();
 				break;
+			case 'ga4':
+				return GoogleAnalyticsDataAccessor::get_instance();
 			default:
 				return parent::__get( $name );
 				break;

@@ -62,7 +62,7 @@ function has_image_attachment( $post = null ) {
 	global $wpdb;
 	$sql = "SELECT ID FORM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'attachment' AND post_mime_type LIKE 'image%'";
 
-	return (boolean) $wpdb->get_var( $wpdb->prepare( $sql, $post->ID ) );
+	return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $post->ID ) );
 }
 
 /**
@@ -96,7 +96,7 @@ function hametuha_sideload_image( $file, $post_id, $desc = null ) {
 	}
 	// Set variables for storage, fix file filename for query strings.
 	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|gif)\b/i', $file, $matches );
-	$file_array = array();
+	$file_array         = array();
 	$file_array['name'] = basename( $matches[0] );
 	// Download file to temp location.
 	$file_array['tmp_name'] = download_url( $file );

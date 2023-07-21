@@ -88,7 +88,7 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 		case 'count':
 			$total = Series::get_instance()->get_total( $post_id );
 			if ( $total ) {
-				if ( Series::get_instance()->is_finished( $post_id )  ) {
+				if ( Series::get_instance()->is_finished( $post_id ) ) {
 					printf( '<span style="color: #a1de9e;"> 完結（%s作品）</span>', number_format( $total ) );
 				} else {
 					printf( '連載中（%s作品）', number_format( $total ) );
@@ -102,7 +102,7 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 			break;
 		case 'sales_status':
 			$status = Series::get_instance()->get_status( $post_id );
-			$extra = '';
+			$extra  = '';
 			switch ( $status ) {
 				case 2:
 					$color = 'green';
