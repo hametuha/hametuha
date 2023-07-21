@@ -1,3 +1,10 @@
+/*!
+ * Header component.
+ *
+ * @handle hametuheader
+ * @deps cookie-tasting-heartbeat, wp-element
+ *
+ */
 /* global CookieTasting: false */
 
 const {Component, render} = wp.element;
@@ -66,6 +73,7 @@ class HametuHeader extends Component {
       loggedIn: CookieTasting.isLoggedIn(),
       avatar: CookieTasting.get( 'avatar' ) || '',
       name: CookieTasting.userName(),
+	  profile: CookieTasting.get( 'profile' ),
       role: CookieTasting.get( 'role' ),
       isAuthor: !! CookieTasting.get( 'is_author' ),
     }
@@ -96,17 +104,37 @@ class HametuHeader extends Component {
               </li>
 
               {this.state.isAuthor ? (
-                <li>
-                  <a href="/wp-admin/edit.php">
-                    <i className="icon-dashboard"/>
-                    作品管理
-                  </a>
-                </li>
+				  <>
+					  <li>
+						  <a href="/dashboard/works">
+							  <i className="icon-dashboard"/>
+							  作品管理
+						  </a>
+					  </li>
+					  <li>
+						  <a href="/dashboard/statistics/popular">
+							  <i className="icon-chart"/>
+							  統計情報
+						  </a>
+					  </li>
+					  <li>
+						  <a href={ this.state.profile }>
+							<i className="icon-user"></i>
+							プロフィール
+						  </a>
+					  </li>
+					  <li>
+						  <a href="/wp-admin/">
+							  <i className="icon-wordpress"></i>
+							  管理画面
+						  </a>
+					  </li>
+				  </>
               ) : null }
 
               <li className="divider"/>
               <li>
-                <a href="/your/comments/">
+                <a href="/dashboard/reading/comments/">
                   <i className="icon-bubble-dots"/>
                   あなたのコメント
                 </a>
@@ -118,7 +146,7 @@ class HametuHeader extends Component {
                 </a>
               </li>
               <li>
-                <a href="/your/reviews/">
+                <a href="/dashboard/reading/reviews/">
                   <i className="icon-star2"/>
                   レビューした作品
                 </a>

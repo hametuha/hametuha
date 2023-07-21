@@ -35,6 +35,7 @@ add_action( 'init', function () {
 		'supports'        => array( 'title', 'editor', 'author', 'slug', 'thumbnail', 'excerpt' ),
 		'has_archive'     => true,
 		'capability_type' => 'post',
+		'show_in_rest'    => true,
 		'rewrite'         => array( 'slug' => $series ),
 	);
 	register_post_type( $series, $args );
@@ -48,6 +49,7 @@ add_action( 'init', function () {
 		'has_archive'         => true,
 		'capability_type'     => 'post',
 		'exclude_from_search' => true,
+		'show_in_rest'        => true,
 		'rewrite'             => array( 'slug' => 'lists' ),
 	) );
 

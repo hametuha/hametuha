@@ -68,31 +68,12 @@ class ImageGen extends RestTemplate {
 	 *
 	 * @param string $string
 	 *
-	 * @return array|\WP_Error
+	 * @return string[]|\WP_Error
 	 */
 	protected function tokenize( $string ) {
-		$endpoint = 'https://punctuate.space/json?q=' . rawurlencode( $string );
-		$response = wp_remote_get( $endpoint );
-		if ( is_wp_error( $response ) ) {
-			return $response;
+		$split = hametuha_text_split( $string );
+		if ( is_wp_error( $split ) ) {
+			return $split;
 		}
-		$tokens = [];
-		$i      = 0;
-		$store  = '';
-		foreach ( json_decode( $response['body'] ) as $token ) {
-			// If store exists, prepend it.
-			if ( $store ) {
-				$token = $store . $token;
-				$store = '';
-			}
-			// If end with start parentheses, store it.
-			if ( preg_match( '#^(.*)([『「（])$#u', $token, $matches ) ) {
-				$token = $matches[1];
-				$store = $matches[2];
-			}
-			$tokens[ $i ] = $token;
-			$i ++;
-		}
-		return $tokens;
 	}
 }

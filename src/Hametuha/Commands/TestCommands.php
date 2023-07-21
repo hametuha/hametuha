@@ -306,4 +306,51 @@ SQL;
 		}
 		$table->display();
 	}
+
+	/**
+	 * Tokenize text with MeCab
+	 *
+	 * @synopsis <text>
+	 * @param array $args
+	 */
+	public function tokenize( $args ) {
+		list( $text ) = $args;
+		\WP_CLI::line( sprintf( __( '次のテキストを解析しています：　', 'hametuha' ), $text ) );
+		$analyzed = hametuha_text_tokenize( $text );
+		if ( is_wp_error( $analyzed ) ) {
+			\WP_CLI::error( $analyzed->get_error_message() );
+		}
+		$table = new Table();
+		$table->setHeaders( [ '文字', '読み', '原型', '品詞', '活用', '活用形' ] );
+		foreach ( $analyzed as $token ) {
+			/** @var \Youaoi\MeCab\MeCabWord $token */
+			$table->addRow( [
+				$token->text,
+				$token->reading,
+				$token->original,
+				$token->speech,
+				$token->conjugate ?? '-',
+				$token->conjugateType ?? '-',
+			] );
+		}
+		$table->display();
+	}
+
+	/**
+	 * Split text into array.
+	 *
+	 * @synopsis <text>
+	 * @param array $args
+	 * @return void
+	 */
+	public function split( $args ) {
+		list( $text ) = $args;
+		\WP_CLI::line( $text );
+		$splitted = hametuha_text_split( $text );
+		if ( is_wp_error( $splitted ) ) {
+			\WP_CLI::error( $splitted->get_error_message() );
+		}
+		\WP_CLI::line( implode( ', ', $splitted ) );
+		\WP_CLI::success( __( 'テキストを分割しました。', 'hametuha' ) );
+	}
 }

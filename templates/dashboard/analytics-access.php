@@ -8,7 +8,19 @@ $endpoint = $args['endpoint'] ?? '';
 ?>
 <div id="access-container" data-endpoint="<?php echo esc_url( $endpoint ); ?>" :class="{loading: loading, minHeight: true}">
 
-	<hb-month-selector label="日付変更" @date-updated="dateChangeHandler"></hb-month-selector>
+	<div class="form-row align-items-end">
+		<div class="form-group col">
+			<label for="user-pv-from"><?php esc_html_e( '開始', 'hametuha' ); ?></label>
+			<input id="user-pv-from" class="form-control" type="date" v-model="from" />
+		</div>
+		<div class="form-group col">
+			<label id="user-pv-to"><?php esc_html_e( '終了', 'hametuha' ); ?></label>
+			<input id="user-pv-to" class="form-control" type="date" v-model="to" />
+		</div>
+		<div class="form-group col">
+			<button class="btn btn-primary" v-on:click="dateChangeHandler"><?php esc_html_e( '日付指定', 'hametuha' ); ?></button>
+		</div>
+	</div>
 
 	<hb-bar-chart
 			v-if="records.length"

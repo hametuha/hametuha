@@ -1,7 +1,8 @@
-/**
+/*!
  * Excerpt block
  *
- * @wpdeps wp-blocks,wp-editor, wp-i18n, wp-editor, wp-data, wp-core-data, wp-element, wp-components, wp-block-editor
+ * @handle hametuha-block-container
+ * @deps wp-blocks,wp-editor, wp-i18n, wp-editor, wp-data, wp-core-data, wp-element, wp-components, wp-block-editor
  * @package hametuha
  */
 

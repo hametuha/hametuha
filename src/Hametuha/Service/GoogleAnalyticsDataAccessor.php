@@ -16,6 +16,8 @@ use WPametu\Pattern\Singleton;
 class GoogleAnalyticsDataAccessor extends Singleton {
 
 	/**
+	 * Typical arguemnts.
+	 *
 	 * @param array $args
 	 * @return array
 	 * @throws \Exception
@@ -37,6 +39,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			'limit'     => 100,
 			'category'  => '',
 			'at_least'  => 1,
+			'offset'    => 0,
 		] );
 	}
 
@@ -68,28 +71,115 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	}
 
 	/**
+	 * Typical post dimension.
+	 *
+	 * @return array[]
+	 */
+	protected function posts_dimensions() {
+		return [
+			[
+				'name' => 'pagePath',
+			],
+			[
+				'name' => 'customEvent:post_type',
+			],
+			[
+				'name' => 'customEvent:author',
+			],
+			[
+				'name' => 'customEvent:category',
+			],
+		];
+	}
+
+	/**
+	 * Get proper time range.
+	 *
+	 * @param string $start Datetime format.
+	 * @param string $end   Datetime format.
+	 * @return string
+	 */
+	public function proper_range_dimension( $start, $end ) {
+		$start_date = new \DateTime( "{$start} 00:00:00" );
+		$end_date   = new \DateTime( "{$end} 00:00:00" );
+		$diff       = $start_date->diff( $end_date )->days;
+		return ( $diff > 365 ) ? 'yearMonth' : 'date';
+	}
+
+	/**
+	 * Get chronical popularity.
+	 *
+	 * @param $params
+	 * @return array
+	 */
+	public function chronic_popularity( $params ) {
+		$dimensions = [];
+		$params     = $this->parse_args( $params );
+		// Default dimension.
+		$dimensions[] = [
+			'name' => $this->proper_range_dimension( $params['start'], $params['end'] ),
+		];
+		// Set filters.
+		$filters    = [];
+		if ( $params['post_type'] ) {
+			$dimensions[] = [
+				'name' => 'customEvent:post_type',
+			];
+			$filters[] = $this->post_type_filter( $params['post_type'] );
+		}
+		if ( $params['author'] ) {
+			$dimensions[] = [
+				'name' => 'customEvent:author',
+			];
+			if ( is_numeric( $params['author'] ) ) {
+				$filters[]    = [
+					'fieldName'    => 'customEvent:author',
+					'stringFilter' => [
+						'matchType' => 'EXACT',
+						'value'     => (string) $params['author'],
+					],
+				];
+			}
+		}
+		$request = [
+			'dimensions'      => $dimensions,
+			'dateRanges'      => [
+				[
+					'startDate' => $params['start'],
+					'endDate'   => $params['end'],
+				],
+			],
+			'orderBys'        => [
+				[
+					'dimension' => [
+						'dimensionName' => $dimensions[0]['name'],
+						'orderType'     => 'NUMERIC',
+					],
+					'desc'      => false,
+				],
+			],
+			'limit'           => $params['limit']
+		];
+		if ( ! empty( $filters ) ) {
+			$request[ 'dimensionFilter' ] = $this->convert_filters( $filters );
+		}
+		if ( 0 < $params['offset'] ) {
+			$request['offset'] = $params['offset'];
+		}
+		return $this->fetch( $request );
+	}
+
+	/**
 	 * Get popular posts.
 	 *
-	 * @param array $params Parameters.
+	 * @param array $params                Parameters.
 	 * @return array[]|\WP_Error
 	 */
 	public function popular_posts( $params = [] ) {
-		$params = $this->parse_args( $params );
+		$params     = $this->parse_args( $params );
+		$dimensions = $this->posts_dimensions();
 		$request = [
-			'dimensions'      => [
-				[
-					'name' => 'pagePath',
-				],
-				[
-					'name' => 'customEvent:post_type',
-				],
-				[
-					'name' => 'customEvent:author',
-				],
-				[
-					'name' => 'customEvent:category',
-				],
-			],
+			'dimensions'      => $dimensions,
 			'dateRanges'      => [
 				[
 					'startDate' => $params['start'],
@@ -100,13 +190,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 		];
 		$filters = [];
 		if ( $params['post_type'] ) {
-			$filters[] = [
-				'fieldName'    => 'customEvent:post_type',
-				'stringFilter' => [
-					'matchType' => 'EXACT',
-					'value'     => $params['post_type'],
-				],
-			];
+			$filters[] = $this->post_type_filter( $params['post_type'] );
 		}
 		if ( $params['category'] ) {
 			$filters[] = [
@@ -126,23 +210,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 				],
 			];
 		}
-		if ( 1 === count( $filters ) ) {
-			// 1 Filter.
-			$request['dimensionFilter'] = [
-				'filter' => $filters[0],
-			];
-		} elseif ( ! empty( $filters ) ) {
-			// Multiple Filters.
-			$request['dimensionFilter'] = [
-				'andGroup' => [
-					'expressions' => array_map( function( $filter ) {
-						return [
-							'filter' => $filter,
-						];
-					}, $filters ),
-				],
-			];
-		}
+		$request['dimensionFilter'] = $this->convert_filters( $filters );
 		if ( $params['at_least'] ) {
 			$request['metricFilter'] = [
 				'filter' => [
@@ -195,6 +263,231 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	}
 
 	/**
+	 * Return filter if post type is set.
+	 *
+	 * @param string|string[] $post_types CSV value of post type.
+	 * @return array
+	 */
+	protected function post_type_filter( $post_types ) {
+		if ( ! is_array( $post_types ) ) {
+			$post_types = array_map( 'trim', explode( ',', $post_types ) );
+		}
+		if ( 1 === count( $post_types ) ) {
+			return [
+				'fieldName' => 'customEvent:post_type',
+				'stringFilter' => [
+					'matchType' => 'EXACT',
+					'value' => $post_types[0],
+				],
+			];
+		} else {
+			return [
+				'fieldName' => 'customEvent:post_type',
+				'inListFilter' => [
+					'values' => $post_types,
+				],
+			];
+		}
+	}
+
+	/**
+	 * Convert filter to filter expression.
+	 *
+	 * @param array $filters
+	 * @param bool  $or If true, groups are or group.
+	 * @return array|array[]
+	 */
+	protected function convert_filters( $filters, $or = false ) {
+		if ( 1 < count( $filters ) ) {
+			$key = $or ? 'orGroup' : 'andGroup';
+			return [
+				$key => [
+					'expressions' => array_map( [ $this, 'filter_or_not' ], $filters ),
+				],
+			];
+		} else {
+			return $this->filter_or_not( $filters[0] );
+		}
+	}
+
+	/**
+	 * Convert filter to not or expression.
+	 *
+	 * @param array $filter
+	 * @return array
+	 */
+	protected function filter_or_not( $filter ) {
+		if ( ! empty( $filter['not'] ) ) {
+			unset( $filter['not'] );
+			return [
+				'notExpression' => [
+					'filter' => $filter,
+				],
+			];
+		} else {
+			return [
+				'filter' => $filter,
+			];
+		}
+	}
+
+	/**
+	 * Get audience data.
+	 *
+	 * @param string $group     Group of Audience. 'gender', 'generation', 'new', and 'region' are available.
+	 * @param string $start     Start date YYYY-MM-DD
+	 * @param string $end       End date YYYY-MM-DD
+	 * @param int    $author_id Author ID. If 0, all authors.
+	 * @return array[]|\WP_Error
+	 */
+	public function audiences( $group, $start, $end, $author_id = 0 ) {
+		$author = null;
+		if ( $author_id ) {
+			$author = get_userdata( $author_id );
+			if ( ! $author ) {
+				return new \WP_Error( 'user_not_found', __( '指定された作者は存在しません。', 'hametuha' ) );
+			}
+		}
+		$request = [
+			'dateRanges' => [
+				[
+					'startDate' => $start,
+					'endDate'   => $end,
+				],
+			],
+			'metrics' => [
+				[
+					'name' => 'sessions',
+				],
+			],
+			'orderBys' => [
+				[
+					'dimension' => [
+						'dimensionName' => 'sessions',
+						'orderType'     => 'NUMERIC',
+					],
+					'desc'      => true,
+				],
+			],
+			'limit'      => 100,
+		];
+		$groups = [
+			'gender'     => [
+				'dimensions' => [
+					[
+						'name' => 'userGender',
+					],
+				],
+			],
+			'generation' => [
+				'dimensions' => [
+					[
+						'name' => 'userAgeBracket',
+					],
+				],
+			],
+			'new'        => [
+				'dimensions' => [
+					[
+						'name' => 'newVsReturning',
+					],
+				],
+			],
+			'region'       => [
+				'dimensions' => [
+					[
+						'name' => 'region',
+					]
+				],
+				"limit" => 50,
+			],
+			'source' => [
+				'dimensions' => [
+					[
+						'name' => 'firstUserSource',
+					],
+				],
+				'limit' => 20,
+			],
+			'referrer' => [
+				'dimensions' => [
+					[
+						'name' => 'firstUserMedium',
+					],
+				],
+				'filters' => [
+					[
+						'fieldName' => 'firstUserCampaignName',
+						'inListFilter' => [
+							'values' => [ 'share-single', 'share-auto', 'share-dashboard' ],
+						],
+					],
+				],
+				'limit' => 20,
+			],
+			'profile' => [
+				'dimensions' => [
+					[
+						'name' => $this->proper_range_dimension( $start, $end ),
+					],
+				],
+				'filters' => [
+					[
+						'fieldName' => 'pagePath',
+						'stringFilter' => [
+							'matchType' => 'BEGINS_WITH',
+							'value' => '/doujin/detail/',
+						],
+					],
+				],
+				'limit' => 20,
+			]
+		];
+		if ( ! array_key_exists( $group, $groups ) ) {
+			return new \WP_Error( 'audience_not_found', __( '指定された読者グループは存在しません。', 'hametuha' ) );
+		}
+		$group_option = $groups[ $group ];
+		$filters      = [];
+		if ( ! empty( $group_option['filters'] )) {
+			$filters = $group_option['filters'];
+			unset( $group_option['filters'] );
+		}
+		$request = array_merge( $request, $group_option );
+		if ( $author ) {
+			switch ( $group ) {
+				case 'profile':
+					$filters[] = [
+						'fieldName' => 'pagePath',
+						'stringFilter' => [
+							'matchType' => 'BEGINS_WITH',
+							'value' => '/doujin/detail/' . $author->user_nicename,
+						],
+					];
+					break;
+				default:
+					$request['dimensions'][] = [
+						'name' => 'customEvent:author',
+					];
+					$filters[] = [
+						'fieldName'    => 'customEvent:author',
+						'stringFilter' => [
+							'matchType' => 'EXACT',
+							'value'     => (string) $author->ID,
+						],
+					];
+					break;
+			}
+		}
+		// Setup filter.
+		if ( ! empty( $filters ) ) {
+			$request['dimensionFilter'] = $this->convert_filters( $filters );
+		}
+		return $this->fetch( $request );
+	}
+
+	/**
+	 * Save record to database.
+	 *
 	 * @param string $category
 	 * @param int    $id
 	 * @param int    $value

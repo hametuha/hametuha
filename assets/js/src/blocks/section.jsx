@@ -1,7 +1,9 @@
 /*!
  * Block Section without padding.
  *
- * @wpdeps wp-editor, wp-blocks, wp-element, wp-components
+ *
+ * @handle hametuha-block-section
+ * @deps wp-editor, wp-blocks, wp-element, wp-components
  */
 
 const { registerBlockType } = wp.blocks;

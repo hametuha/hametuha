@@ -23,7 +23,8 @@
     "hametuha/hashboard": "^0.9.1",
     "hametuha/sharee": "^0.8.9",
     "league/commonmark": "^1.6|^2.3",
-    "kunoichi/ga-communicator": "^3.3"
+    "kunoichi/ga-communicator": "^3.3",
+    "youaoi/php-mecab": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7|^6|^7",

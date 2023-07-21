@@ -1,13 +1,14 @@
-var gulp = require( 'gulp' ),
-	fs = require( 'fs' ),
-	$ = require( 'gulp-load-plugins' )(),
-	browserSync = require( 'browser-sync' ),
-	pngquant = require( 'imagemin-pngquant' ),
-	mozjpeg = require( 'imagemin-mozjpeg' ),
-	mergeStream = require( 'merge-stream' ),
-	webpack = require( 'webpack-stream' ),
-	webpackBundle = require( 'webpack' ),
-	named = require( 'vinyl-named' );
+const gulp = require( 'gulp' );
+const fs = require( 'fs' );
+const md5File = require( 'md5-file' );
+const { glob } = require( 'glob' );
+const $ = require( 'gulp-load-plugins' )();
+const pngquant = require( 'imagemin-pngquant' );
+const mozjpeg = require( 'imagemin-mozjpeg' );
+const mergeStream = require( 'merge-stream' );
+const webpack = require( 'webpack-stream' );
+const webpackBundle = require( 'webpack' );
+const named = require( 'vinyl-named' );
 
 
 // Sassのタスク
@@ -68,6 +69,36 @@ gulp.task( 'jsx', function () {
 		.pipe( gulp.dest( './assets/js/dist' ) );
 } );
 
+// Build wp-dependencies.json
+gulp.task( 'deps', function( done ) {
+	glob( 'assets/js/dist/**/*.LICENSE.txt' ).then( res => {
+		return Promise.all( res.map( path => {
+			return fs.promises.readFile( path, 'utf-8' ).then( content => {
+				const name = path.replace( /^assets\/js\/dist\//, '' ).replace( /\.LICENSE\.txt$/, '' );
+				const deps = [];
+				content.replace( /@deps(.*)$/m, ( match, p1 ) => {
+					p1.split( ',' ).map( dep => deps.push( dep.trim() ) );
+				} );
+				let handle = 'hametuha-' + name.replace( '/', '-' ).replace( '.js', '' );
+				content.replace( /@handle(.*)$/m, ( match, p1 ) => {
+					handle = p1.trim();
+				} );
+				path = path.replace( /\.LICENSE\.txt$/, '' );
+				return {
+					handle,
+					ext: 'js',
+					path,
+					deps,
+					hash: md5File.sync( path ),
+					footer: true,
+				};
+			} );
+		} ) );
+	} ).then( values => {
+		return fs.writeFileSync( './wp-dependencies.json', JSON.stringify( values, null, 2 ) );
+	} ).then( () => done() );
+} );
+
 // Build app
 gulp.task( 'commonjs', function () {
 	return gulp.src( [ './assets/js/src/common/*.js' ] )
@@ -109,13 +140,6 @@ gulp.task( 'copylib', function () {
 			.pipe( $.concat( 'angular.js' ) )
 			.pipe( $.uglify() )
 			.pipe( gulp.dest( './assets/js/dist' ) ),
-		// Build unpacked Libraries.
-		gulp.src( [
-			'./node_modules/html5shiv/dist/html5shiv.js',
-			'./node_modules/respond.js/dest/respond.src.js',
-		] )
-			.pipe( $.uglify() )
-			.pipe( gulp.dest( './assets/js/dist/' ) ),
 		gulp.src( [
 			'./node_modules/select2/dist/js/select2.min.js',
 		] )
@@ -155,101 +179,6 @@ gulp.task( 'imagemin', function () {
 		.pipe( gulp.dest( './assets/img' ) );
 } );
 
-// Jade
-gulp.task( 'jade', function () {
-
-	var list = fs.readdirSync( './assets/jade' )
-		.filter( function ( file ) {
-			return /^[^_].*\.jade$/.test( file );
-		} ).map( function ( f ) {
-			return f.replace( '.jade', '.html' );
-		} );
-
-	return gulp.src( [ './assets/jade/**/*.jade', '!./assets/jade/**/_*.jade' ] )
-		.pipe( $.plumber() )
-		.pipe( $.pug( {
-			pretty: true,
-			locals: {
-				list: list,
-				scripts: [
-					'https://code.jquery.com/jquery-1.11.3.min.js',
-					'../js/dist/bootstrap.js',
-					'../js/dist/common.js',
-				],
-
-				labels: {
-					"default": "デフォルト",
-					"primary": "重要",
-					"success": "成功",
-					"info": "お知らせ",
-					"warning": "警告",
-					"danger": "危険"
-				},
-				"msgs": {
-					"success": {
-						"strong": "登録成功！",
-						"body": "これであなたは大金持ちになりました。"
-					},
-					"info": {
-						"strong": "お知らせ",
-						"body": "これはみても見なくてもどっちでもいいお知らせです。"
-					},
-					"warning": {
-						"strong": "注意！",
-						"body": "なにかおかしなことが起きたのでこのメッセージが表示されています。"
-					},
-					"danger": {
-						"strong": "警告！",
-						"body": "あなたはなにかとんでもないことをしてしまったので、メッセージが出ています。。"
-					}
-				},
-				carousels: [
-					{
-						"active": "active",
-						"url": "./img/photo1.jpg",
-						"alt": "最初のスライド",
-						"caption": "これは日向山の山頂付近です。"
-					},
-					{
-						"active": "",
-						"url": "./img/photo2.jpg",
-						"alt": "二番目のスライド",
-						"caption": "これは八ヶ岳の山中です。"
-					},
-					{
-						"active": "",
-						"url": "./img/photo3.jpg",
-						"alt": "三番目のスライド",
-						"caption": "富山県の日本海に沈む夕日です。"
-					}
-				],
-				lists: [
-					{
-						"title": "その他雑記",
-						"body": "どうでもいいことが書いてあります。当サイトの人気コンテンツ。",
-						"active": true
-					},
-					{
-						"title": "Twitter",
-						"body": "Twitterのコンテンツをただコピーしただけのページですが、二番目に人気があります。",
-						"active": false
-					},
-					{
-						"title": "料理と狩猟",
-						"body": "私の趣味である料理と狩猟について書いています。同じ趣味を持っている方は共有してください",
-						"active": false
-					},
-					{
-						"title": "読書記録",
-						"body": "私が読んだ本の感想について記してあります。ただし、一度も本を読んだことはありません。",
-						"active": false
-					}
-				]
-			}
-		} ) )
-		.pipe( gulp.dest( './assets/html/' ) );
-} );
-
 // watch
 gulp.task( 'watch', function () {
 	// Make SASS
@@ -258,45 +187,18 @@ gulp.task( 'watch', function () {
 	gulp.watch( [ 'assets/js/src/**/*.js', '!./assets/js/src/common/**/*.js' ], gulp.task( 'js' ) );
 	// Handle JSX
 	gulp.watch( [ 'assets/js/src/**/*.jsx' ], gulp.task( 'jsx' ) );
+	// deps.
+	gulp.watch( [ 'assets/js/dist/**/*.js.LICENSE.txt' ], gulp.task( 'deps' ) );
 	// Check JS syntax
 	gulp.watch( 'assets/js/src/**/*.js', gulp.task( 'jshint' ) );
 	// Build common js
 	gulp.watch( 'assets/js/src/common/**/*.js', gulp.task( 'commonjs' ) );
 	// Minify Image
 	gulp.watch( 'assets/img/src/**/*', gulp.task( 'imagemin' ) );
-	// Build Jade
-	gulp.watch( 'assets/jade/**/*.jade', gulp.task( 'jade' ) );
-} );
-
-gulp.task( 'bs-watch', function () {
-	return gulp.watch( [
-		'assets/css/**/*.css',
-		'assets/js/dist/**/*.js',
-		'assets/img/**/*', '!./assets/img/src/**/*',
-		'assets/html/*.html'
-	], gulp.task( 'bs-reload' ) );
-} );
-
-// BrowserSync
-gulp.task( 'browser-sync', function () {
-	return browserSync( {
-		server: {
-			baseDir: "./assets/",
-			index: "html/index.html"
-		},
-		reloadDelay: 500
-	} );
-} );
-
-gulp.task( 'bs-reload', function () {
-	return browserSync.reload();
 } );
 
 // Build
-gulp.task( 'build', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ) );
+gulp.task( 'build', gulp.series( gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ), 'deps' ) );
 
 // Default Tasks
 gulp.task( 'default', gulp.series( 'watch' ) );
-
-// Browser sync( not working?)
-gulp.task( 'bs', gulp.series( 'browser-sync', 'bs-watch' ) );

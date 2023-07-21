@@ -1,7 +1,8 @@
 /*!
  * HashBoard Requests
  *
- * @wpdeps hb-components-loading,wp-api-fetch,hashboard-rest,hb-components-pagination, hb-filters-moment
+ * @handle hametuha-hb-requests
+ * @deps hb-components-loading,wp-api-fetch,hashboard-rest,hb-components-pagination, hb-filters-moment
  */
 
 /*global Vue:false*/

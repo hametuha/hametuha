@@ -61,7 +61,6 @@ class Lists extends Model {
 		'created'    => '%d',
 	];
 
-
 	/**
 	 * ユーザーがリストを扱うことが可能か
 	 *
@@ -84,7 +83,6 @@ class Lists extends Model {
 			}
 		}
 	}
-
 
 	/**
 	 * 投稿を保存する
@@ -161,7 +159,6 @@ class Lists extends Model {
 			[ 'object_id', '=', $post_id, '%d' ],
 		]);
 	}
-
 
 	/**
 	 * リストの中に指定した投稿が存在するか
@@ -277,4 +274,49 @@ class Lists extends Model {
 		]);
 	}
 
+	/**
+	 * Get list matching criteria.
+	 *
+	 * @param array $args
+	 * @return array[]
+	 */
+	public function search_list( $args = [] ) {
+		$args = wp_parse_args( $args, [
+			'posts_per_page' => 20,
+			'paged'          => 1,
+			'author'         => 0,
+			's'              => '',
+		] );
+		$offset = ( max( 1, $args['paged'] ) - 1 ) * $args['posts_per_page'];
+		$query = <<<SQL
+		SELECT SQL_CALC_FOUND_ROWS
+		    p.*, rp.object_id
+		FROM
+		    {$this->db->posts} AS p
+		INNER JOIN (
+		    SELECT subject_id, object_id FROM {$this->table} as r
+			INNER JOIN {$this->db->posts} AS p2
+			ON r.object_id = p2.ID
+		    WHERE r.rel_type = 'list'
+		      AND p2.post_author = %d
+		) as rp
+		ON p.ID = rp.subject_id
+		WHERE p.post_type = 'lists'
+		  AND p.post_status = 'publish'
+		ORDER BY post_date DESC
+		LIMIT %d, %d
+SQL;
+		$query = $this->db->prepare( $query, $args['author'], $offset, $args['posts_per_page'] );
+		$results = $this->db->get_results( $query );
+		error_log( $this->db->last_error );
+		$found = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
+		return [
+			'found_posts' => $found,
+			'current'     => $args['paged'],
+			'total'       => ceil( $found / $args['posts_per_page'] ),
+			'posts'       => array_map( function( $row ) {
+				return new \WP_Post( $row );
+			}, $results ),
+		];
+	}
 }

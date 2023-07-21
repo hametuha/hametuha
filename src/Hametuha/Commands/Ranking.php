@@ -66,6 +66,33 @@ class Ranking extends Command {
 	}
 
 	/**
+	 * Get popular posts.
+	 *
+	 * @synopsis [--post_type=<post_type>] [--limit=<limit>] [--start=<start>] [--end=<end>] [--author=<author>]
+	 * @return void
+	 */
+	public function chronic( $args, $assoc ) {
+		$result = $this->ga()->chronic_popularity( $assoc );
+		if ( empty( $result ) ) {
+			\WP_CLI::error( __( '条件に該当する記録がありません。', 'hametuha' ) );
+		}
+		$headers = [ 'Date' ];
+		if ( ! empty( $assoc['post_type'] ) ) {
+			$headers[] = 'Post Type';
+		}
+		if ( ! empty( $assoc['author'] ) ) {
+			$headers[] = 'Author';
+		}
+		$headers[] = 'PV';
+		$table = new Table();
+		$table->setHeaders( $headers );
+		foreach ( $result as $row ) {
+			$table->addRow( $row );
+		}
+		$table->display();
+	}
+
+	/**
 	 * Check DB status.
 	 *
 	 * @return void
@@ -106,6 +133,69 @@ SQL;
 		} else {
 			\WP_CLI::success( sprintf( __( 'テーブル %s は有効です。', 'hametuha' ), $this->ga()->table ) );
 		}
+	}
+
+	/**
+	 * Get audience.
+	 *
+	 * @synopsis <group> [--start=<start>] [--end=<end>] [--author=<author>]
+	 *
+	 * @param array $args  Command option..
+	 * @param array $assoc Arguments.
+	 * @return void
+	 */
+	public function audience( $args, $assoc ) {
+		list( $group ) = $args;
+		$start =  $assoc['start'] ?? date_i18n( 'Y-m-d', strtotime( '7days ago' ) );
+		$end   =  $assoc['end'] ?? date_i18n( 'Y-m-d' );
+		$author = $assoc['author'] ?? 0;
+		$result = $this->ga()->audiences( $group, $start, $end, $author );
+		if ( is_wp_error( $result ) ) {
+			\WP_CLI::error( $result->get_error_message() );
+		}
+		if ( empty( $result ) ) {
+			\WP_CLI::error( __( '結果がありませんでした。', 'hametuha' ) );
+		}
+		$headers = [];
+		$indices = [0];
+		switch ( $group ) {
+			case 'gender':
+				$headers []= __( '性別', 'hametuha' );
+				break;
+			case 'generation':
+				$headers []= __( '年齢層', 'hametuha' );
+				break;
+			case 'new':
+				$headers []= __( '新規ユーザー', 'hametuha' );
+				break;
+			case 'region':
+				$headers []= __( '地域', 'hametuha' );
+				break;
+			case 'source':
+				$headers []= __( '参照元', 'hametuha' );
+				break;
+			case 'profile':
+				$headers []= __( 'プロフィールページ', 'hametuha' );
+				break;
+			case 'referrer':
+				$headers []= __( '貢献者', 'hametuha' );
+				break;
+			default:
+				\WP_CLI::error( __( '無効なグループが指定されています。', 'hametuha' ) );
+				break;
+		}
+		$headers[] = __( 'セッション数', 'hametuha' );
+		$table = new Table();
+		$table->setHeaders( $headers );
+		foreach ( $result as $row ) {
+			$new_row = [];
+			foreach ( $indices as $i ) {
+				$new_row[] = $row[ $i ];
+			}
+			$new_row[] = $row[ count( $row ) - 1 ];
+			$table->addRow( $new_row );
+		}
+		$table->display();
 	}
 
 	/**

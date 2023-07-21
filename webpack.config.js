@@ -21,6 +21,14 @@ module.exports = {
 		minimize: true,
 		minimizer: [
 			new TerserPlugin( {
+				terserOptions: {
+					mangle: {
+						reserved: [ '__', '_x', '_n', '_nx', 'sprintf' ], // Avoid i18n functions dropping.
+					},
+					output: {
+						comments: /translators:/i,
+					},
+				},
 				extractComments: {
 					condition: true,
 					filename: ( fileData ) => {
