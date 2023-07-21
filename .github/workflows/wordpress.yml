@@ -12,10 +12,9 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        operating-system: [ ubuntu-20.04 ]  # OS. ubuntu-18.04 is also available.
         php: [ '7.2', '7.4' ]        # PHP versions to check.
         wp: [ 'latest', '5.9' ]             # WordPress version to check.
     services:
@@ -26,7 +25,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
@@ -56,13 +55,13 @@ jobs:
   asset:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - name: Install Node
         uses: actions/setup-node@v3
         with:
           node-version: '14'
-  
+
       - name: Install Dependencies
         run: npm install
 
@@ -72,7 +71,7 @@ jobs:
   status-check:
     name: Status Check
     needs: [asset, test]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Display Status
         run: echo "All Green"
@@ -81,9 +80,9 @@ jobs:
     name: Build Hametuha Theme
     needs: status-check
     if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
