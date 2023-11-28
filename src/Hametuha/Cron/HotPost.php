@@ -62,7 +62,7 @@ class HotPost extends CronBase {
 				$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
 				break;
 			case '22':
-				$message = '【定期ポスト】昨日人気があったニュースはこちらです。';
+				$message = '【定期ポスト】昨日よく読まれたニュースはこちらです。';
 				$post_type = 'news';
 				$channel   = '#news';
 				break;

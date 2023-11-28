@@ -118,7 +118,6 @@ function _hametuha_favicon() {
 }
 add_action( 'admin_head', '_hametuha_favicon' );
 add_action( 'wp_head', '_hametuha_favicon' );
-add_action( 'amp_post_template_head', '_hametuha_favicon' );
 
 /**
  * OGPのprefixを取得する
@@ -144,7 +143,6 @@ add_action( 'wp_head', function () {
 	remove_action( 'wp_head', 'jetpack_og_tags' );
 }, 1 );
 
-
 /**
  * OGPを出力する
  */
@@ -156,11 +154,9 @@ add_action( 'wp_head', function () {
 	$type     = 'article';
 	$creator  = '@hametuha';
 	$desc     = '';
-	$card     = 'summary_large_image';
+	$card     = 'summary';
 	$author   = '';
 	$twitters = [];
-
-	global $wp_query;
 
 	// はめにゅーのときだけ画像を設定
 	if ( is_hamenew() ) {
@@ -185,7 +181,6 @@ add_action( 'wp_head', function () {
 		$image  = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $user->ID, 300 ) );
 		$desc   = str_replace( "\n", '', get_user_meta( $user->ID, 'description', true ) );
 		$author = '<meta property="profile:username" content="' . $user->user_login . '" />';
-		$card   = 'summary';
 	} elseif ( is_singular() ) {
 		$post   = get_queried_object();
 		$url    = get_permalink( $post );
@@ -197,7 +192,6 @@ add_action( 'wp_head', function () {
 		if ( is_singular( 'thread' ) ) {
 			// Show avatar on thread.
 			$image = preg_replace( "/^.*src=[\"']([^\"']+)[\"'].*$/", '$1', get_avatar( $post->post_author, 300 ) );
-			$card  = 'summary';
 		} elseif ( has_post_thumbnail() ) {
 			// Show thumbnail if set.
 			if ( $src = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) {
@@ -234,7 +228,6 @@ add_action( 'wp_head', function () {
 				if ( $src = wp_get_attachment_image_src( $attachment->ID, 'full' ) ) {
 					if ( ! is_hamenew() || $src[1] >= 696 ) {
 						$image = $src[0];
-						$card  = 'summary_large_image';
 					}
 				}
 			}
@@ -246,7 +239,6 @@ add_action( 'wp_head', function () {
 	} elseif ( is_ranking() ) {
 		$url   = home_url( $_SERVER['REQUEST_URI'] );
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/ranking.jpg';
-		$card  = 'summary_large_image';
 	} elseif ( is_post_type_archive() ) {
 		$post_obj = get_post_type_object( get_query_var( 'post_type' ) ?: 'post' );
 		$url      = get_post_type_archive_link( get_post_type() );
@@ -254,7 +246,6 @@ add_action( 'wp_head', function () {
 		$path     = '/assets/img/jumbotron/' . get_post_type() . '.jpg';
 		if ( file_exists( get_stylesheet_directory() . $path ) ) {
 			$image = get_stylesheet_directory_uri() . $path;
-			$card  = 'summary_large_image';
 		}
 	} elseif ( ( $class_name = get_query_var( 'api_class' ) ) ) {
 		$class_name = str_replace( '\\\\', '\\', $class_name );
@@ -305,94 +296,6 @@ HTML;
 	}
 }, 1 );
 
-
-/**
- * リッチスニペット
- */
-add_action( 'wp_head', function () {
-	$url     = home_url( '/' );
-	$name    = get_bloginfo( 'name' );
-	$css_dir = get_template_directory_uri();
-	if ( is_front_page() ) {
-		echo <<<HTML
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "WebSite",
-  "url": "{$url}",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{$url}?s={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-HTML;
-	}
-	if ( is_singular( 'news' ) ) {
-		$excerpt = preg_replace( '#[\r|\n]#', '', strip_tags( get_the_excerpt() ) );
-		$image   = [
-			get_template_directory_uri() . '/assets/img/ogp/hamenew-ogp.png',
-			'1200',
-			'696',
-		];
-		if ( has_post_thumbnail() ) {
-			$image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
-		}
-		?>
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "NewsArticle",
-  "mainEntityOfPage": {
-	"@type": "WebPage",
-	"@id": "<?php the_permalink(); ?>"
-  },
-  "headline": "<?php echo esc_js( get_the_title() ); ?>",
-  "image": {
-	"@type": "ImageObject",
-	"url": "<?php echo $image[0]; ?>",
-	"height": <?php echo $image[1]; ?>,
-	"width": <?php echo $image[2]; ?>
-  },
-  "datePublished": "<?php the_date( DateTime::ATOM ); ?>",
-  "dateModified": "<?php the_modified_date( DateTime::ATOM ); ?>",
-  "author": {
-	"@type": "Person",
-	"name": "<?php echo esc_js( get_the_author() ); ?>"
-  },
-   "publisher": {
-	"@type": "Organization",
-	"name": "<?php bloginfo( 'name' ); ?>",
-	"logo": {
-	  "@type": "ImageObject",
-	  "url": "<?php echo get_template_directory_uri(); ?>/assets/img/ogp/hamenew-company.png",
-	  "width": 600,
-	  "height": 60
-	}
-  },
-  "description": "<?php echo esc_js( $excerpt ); ?>"
-}
-</script>
-		<?php
-	}
-	echo <<<HTML
-<script type="application/ld+json">
-{
-	"@context": "http://schema.org",
-	"@type": "Organization",
-	"name": "破滅派",
-	"url": "{$url}",
-	"logo": "{$css_dir}/assets/img/hametuha-logo.png",
-	"sameAs" : [
-		"https://www.facebook.com/hametuha.inc",
-		"https://www.twitter.com/hametuha"
-	]
-}
-</script>
-HTML;
-} );
-
 /**
  * 検索エンジン対策
  *
@@ -407,20 +310,3 @@ add_action( 'wp_head', function() {
 		echo '<meta name="robots" content="noindex,noarchive" />';
 	}
 } );
-
-/**
- * サイトマップから削除
- *
- * @deprecated BWG.
- */
-add_filter( 'bwp_gxs_excluded_posts', function( $excludes, $requested ) {
-	global $wpdb;
-	$query = <<<SQL
-        SELECT p.ID FROM {$wpdb->posts} AS p
-        INNER JOIN {$wpdb->postmeta} AS pm
-        ON p.ID = pm.post_id AND pm.meta_key = '_noindex'
-        WHERE p.post_status = 'publish'
-          AND pm.meta_value = 'noindex'
-SQL;
-	return array_map( 'intval', array_filter( array_merge( $excludes, $wpdb->get_col( $query ) ) ) );
-}, 10, 2 );

@@ -35,7 +35,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	/**
 	 * @var \WP_User|false
 	 */
-	protected $doujin = null;
+	public $doujin = null;
 
 	/**
 	 * @var array

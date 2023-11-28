@@ -10,9 +10,7 @@ $query = new WP_Query( [
 ?>
 
 
-	<section id="doujin-detail" class="doujin" itemscope itemtype="https://schema.org/Person">
-
-		<meta itemprop="affiliation" content="破滅派"/>
+	<section id="doujin-detail" class="doujin">
 
 		<div class="doujin__row doujin__row--base">
 			<div class="container">
@@ -22,7 +20,6 @@ $query = new WP_Query( [
 					<div class="col-xs-12 col-sm-3 text-center">
 						<?php
 						echo get_avatar( $this->doujin->ID, 300, '', $this->doujin->display_name, [
-							'itemprop' => 'image',
 							'class'    => 'doujin__img img-circle avatar',
 						] )
 						?>
@@ -32,7 +29,7 @@ $query = new WP_Query( [
 
 						<h1 class="doujin__name">
 							<ruby>
-								<span itemprop="name"><?php echo esc_html( $this->doujin->display_name ); ?></span>
+								<span><?php echo esc_html( $this->doujin->display_name ); ?></span>
 								<rt><?php echo esc_html( $this->doujin->user_lastname ); ?></rt>
 							</ruby>
 							<small><?php echo hametuha_user_role( $this->doujin->ID ); ?></small>
@@ -54,13 +51,13 @@ $query = new WP_Query( [
 							<li>
 								<i class="icon-location4"></i>
 								<?php if ( $this->doujin->location ) : ?>
-									<span itemprop="homeLocation"><?php echo esc_html( $this->doujin->location ); ?></span>
+									<span><?php echo esc_html( $this->doujin->location ); ?></span>
 								<?php else : ?>
 									<span class="text-muted">非公開</span>
 								<?php endif; ?>
 								<?php if ( $this->doujin->birth_place ) : ?>
-									<small>（<span
-											itemprop="birthPlace"><?php echo esc_html( $this->doujin->birth_place ); ?></span>出身）
+									<small>
+										<?php echo esc_html( $this->doujin->birth_place ); ?>出身）
 									</small>
 								<?php endif; ?>
 							</li>

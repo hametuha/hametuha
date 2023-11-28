@@ -116,3 +116,33 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	}
 	$bcn->trail = $trails;
 } );
+
+/**
+ * 投稿ページのパンクズリストを変更する
+ *
+ */
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
+	if ( ! is_single() ) {
+		// 投稿ページ以外はなにもしない。
+		return;
+	}
+	global $wp_query;
+	// ホーム以外空にする
+	$bcn->trail = [];
+	// ページネーションされているか？
+	$link_last = false;
+	$paged     = max( 1, get_query_var( 'page' ) );
+	if ( 1 < $paged ) {
+		$bcn->add( new bcn_breadcrumb( sprintf( '%dページ目', $paged ), null, ['post-pages'], esc_url( trailingslashit( get_permalink( get_queried_object() ) ) . 'page/' . $paged ), '', false ) );
+		$link_last = true;
+	}
+	// URLをつける
+	$bcn->add( new bcn_breadcrumb( get_the_title(), null, ['post-single'], get_permalink( get_queried_object() ), '', $link_last ) );
+	// 作者名をつける
+	$bcn->add( new bcn_breadcrumb( hametuha_author_name( get_queried_object() ), null, ['post-author'], hametuha_author_url( get_queried_object()->post_author ), '', true ) );
+	// 作品一覧ページへ
+	$page_for_posts = get_option( 'page_for_posts' );
+	$bcn->add( new bcn_breadcrumb( get_the_title( $page_for_posts ), null, ['post-archive'], get_the_title( $page_for_posts ), '', true ) );
+	// 最後にホーム
+	$bcn->add( new bcn_breadcrumb( 'ホーム', null, ['main-home'], home_url(), '', true ) );
+} );
