@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         php: [ '7.2', '7.4' ]        # PHP versions to check.
-        wp: [ 'latest', '5.9' ]             # WordPress version to check.
+        wp: [ 'latest', '6.1' ]             # WordPress version to check.
     services:
       mysql:
         image: mysql:5.7
