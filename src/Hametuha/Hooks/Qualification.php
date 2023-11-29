@@ -57,7 +57,7 @@ class Qualification extends Singleton {
 								'<option value="%s"%s>%s</option>',
 								esc_attr( $option->name ),
 								selected( $option->term_id, $term, false ),
-								esc_attr( $option->name ),
+								esc_attr( $option->name )
 							);
 						} ?>
 					</select>
