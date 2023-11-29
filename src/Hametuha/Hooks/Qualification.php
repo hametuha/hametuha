@@ -51,7 +51,7 @@ class Qualification extends Singleton {
 					$term = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->term_id : '';
 					?>
 					<select name="<?php echo esc_attr( $name ); ?>">
-						<option value=""<?php selected( '',  ) ?>><?php esc_html_e( '指定なし', 'hametuha' ); ?></option>
+						<option value="" <?php selected( '', $term ); ?>><?php esc_html_e( '指定なし', 'hametuha' ); ?></option>
 						<?php foreach ( $options as $option ) {
 							printf(
 								'<option value="%s"%s>%s</option>',
