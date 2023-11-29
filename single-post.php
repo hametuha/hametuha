@@ -14,19 +14,9 @@ if ( have_posts() ) :
 
 		<div id="content-wrapper">
 			<?php if ( has_post_thumbnail() ) : ?>
-
 				<div class="single-post-thumbnail text-center">
 					<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
 				</div>
-			<?php else : ?>
-				<img class="hidden" src="<?php echo get_template_directory_uri() . '/assets/img/facebook-logo.png'; ?>" itemprop="image" width="300" height="300">
-				<?php if ( has_pixiv() ) : ?>
-
-					<div class="single-post-thumbnail pixiv text-center">
-						<?php pixiv_output(); ?>
-					</div>
-
-				<?php endif; ?>
 			<?php endif; ?>
 			<div class="work-wrapper container">
 
