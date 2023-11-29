@@ -38,7 +38,24 @@ if ( have_posts() ) :
 
 						<?php the_series( '<p class="series">', sprintf( '（第%s話）</p>', $series->get_index() ) ); ?>
 
-						<?php echo the_terms( get_the_ID(), 'campaign', '<p class="campaign">', ', ', '応募作品</p>' ); ?>
+						<?php
+							$list = [];
+							foreach ( [
+								'campaign' => esc_html( '%s応募作品', 'hametuha' ),
+								\Hametuha\Hooks\Qualification::TAXONOMY => esc_html( '%s', 'hametuha' ),
+							] as $taxonomy => $replace ) {
+								$terms = get_the_terms( get_the_ID(), $taxonomy );
+								if ( ! $terms || is_wp_error( $terms ) ) {
+									continue;
+								}
+								foreach ( $terms as $term ) {
+									$list[] = sprintf( $replace, sprintf( '<a href="%s">%s</a>', esc_url( get_term_link( $term ) ), esc_html( $term->name ) ) );
+								}
+							}
+							if ( ! empty( $list ) ) {
+								printf( '<p class="campaign">%s</p>', implode( esc_html__( '、', 'hametuha' ), $list ) );
+							}
+						?>
 
 						<p class="author">
 							<a href="#post-author"><?php the_author(); ?></a>
