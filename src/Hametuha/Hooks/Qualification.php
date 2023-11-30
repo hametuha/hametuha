@@ -67,6 +67,11 @@ class Qualification extends Singleton {
 						array_map( function( $term ) {
 							printf( '<p><strong><span style="color: green;" class="dashicons dashicons-yes"></span> %s</strong></p>', esc_html( $term->name ) );
 						}, $terms );
+					} else {
+						sprintf(
+							'<p class="description">%s</p>',
+							esc_html__( 'この作品にはまだ認証はついていません。', 'hametuha' )
+						);
 					}
 				}
 			}
