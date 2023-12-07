@@ -1,6 +1,7 @@
 @mixin post-style($book: false){
 
   counter-reset: noteref-id 0 notetext-id 0;
+  font-feature-settings: "chws" 1;
 
   // section
   .wp-block-hametuha-section{

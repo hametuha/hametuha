@@ -40,6 +40,8 @@
 
   &__title {
     font-weight: bold;
+    word-break: auto-phrase;
+
     small {
       font-weight: normal;
     }
