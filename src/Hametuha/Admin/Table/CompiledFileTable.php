@@ -60,8 +60,9 @@ class CompiledFileTable extends \WP_List_Table {
 	 * @return string[]
 	 */
 	protected function get_views() {
-		$author = $this->input->get( 'author' );
-		if ( ! $author ) {
+		$author  = $this->input->get( 'author' );
+		$post_id = $this->input->get( 'p' );
+		if ( ! $author && ! $post_id ) {
 			return [];
 		}
 		$base_url = admin_url( 'edit.php' );
@@ -76,10 +77,19 @@ class CompiledFileTable extends \WP_List_Table {
 			}
 		}
 		$url = add_query_arg( $args, $base_url );
-		return [
+		$views = [
 			'all'    => sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html__( 'すべて', 'hametuha' ) ),
-			'author' => sprintf( '<a href="#" class="current">%s</a>', esc_html( get_the_author_meta( 'display_name', $author ) ) ),
 		];
+		if ( $post_id ) {
+			$post = get_post( $post_id );
+			if ( $post ) {
+				$views['author'] = sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'author' => $post->post_author ], $base_url ) ), esc_html( get_the_author_meta( 'display_name', $post->post_author ) ) );
+				$views['post']   = sprintf( '<a href="#" class="current">%s</a>',  esc_html( get_the_title( $post_id ) ) );
+			}
+		} elseif ( $author ) {
+			$views['author'] = sprintf( '<a href="#" class="current">%s</a>', esc_html( get_the_author_meta( 'display_name', $author ) ) );
+		}
+		return $views;
 	}
 
 	public function prepare_items() {
