@@ -46,14 +46,12 @@ class CompiledFiles extends Model {
 	 * @return false|int
 	 */
 	public function add_record( $type, $post_id, $name ) {
-		$result = $this->insert( [
+		return $this->insert( [
 			'type'    => $type,
 			'post_id' => $post_id,
 			'name'    => $name,
 			'updated' => current_time( 'mysql' ),
 		] );
-			error_log( $this->db->last_query );
-		return $result;
 	}
 
 	/**
