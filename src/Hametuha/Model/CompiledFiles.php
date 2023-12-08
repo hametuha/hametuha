@@ -46,11 +46,14 @@ class CompiledFiles extends Model {
 	 * @return false|int
 	 */
 	public function add_record( $type, $post_id, $name ) {
-		return $this->insert( [
+		$result = $this->insert( [
 			'type'    => $type,
 			'post_id' => $post_id,
 			'name'    => $name,
+			'updated' => current_time( 'mysql' ),
 		] );
+			error_log( $this->db->last_query );
+		return $result;
 	}
 
 	/**
@@ -126,14 +129,23 @@ class CompiledFiles extends Model {
 		$this->calc()
 			 ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
 			 ->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
-			 ->limit( $limit, $page )
-			 ->order_by( "{$this->table}.updated", 'DESC' );
+			 ->limit( $limit, $page );
 		$args = wp_parse_args( $args, [
 			's'      => '',
 			'p'      => 0,
 			'author' => 0,
 			'secret' => false,
+			'orderby' => 'updated',
+			'order'   => 'DESC',
 		] );
+		// Force value.
+		if ( ! in_array( $args['orderby'], [ 'updated' ], true ) ) {
+			$args['orderby'] = 'updated';
+		}
+		if ( ! in_array( $args['order'], [ 'DESC', 'ASC', 'asc', 'desc' ], true ) ) {
+			$args['order'] = 'DESC';
+		}
+		// Set conditions.
 		if ( $args['p'] ) {
 			$this->where( "{$this->table}.post_id = %d", $args['p'] );
 		}
@@ -146,6 +158,7 @@ class CompiledFiles extends Model {
 		if ( $args['secret'] ) {
 			$this->where( "{$this->posts}.ID IN ( SELECT post_id FROM {$this->db->postmeta} WHERE meta_key = %s AND meta_value = 1 )", '_is_secret_book' );
 		}
+		$this->order_by( "{$this->table}." . $args['orderby'], $args['order'] );
 
 		return array_map( function( $row ) {
 			$row->label = $this->type_labels[ $row->type ];

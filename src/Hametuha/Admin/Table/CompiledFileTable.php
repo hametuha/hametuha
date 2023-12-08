@@ -54,6 +54,33 @@ class CompiledFileTable extends \WP_List_Table {
 		return [ 'widefat', 'striped', $this->_args['plural'] ];
 	}
 
+	/**
+	 * Get views
+	 *
+	 * @return string[]
+	 */
+	protected function get_views() {
+		$author = $this->input->get( 'author' );
+		if ( ! $author ) {
+			return [];
+		}
+		$base_url = admin_url( 'edit.php' );
+		$args = [
+			'post_type' => 'series',
+			'page'      => 'hamepub-files',
+		];
+		foreach ( [ 'orderby', 'order' ] as $key ) {
+			$value = $this->input->get( $key );
+			if ( $value ) {
+				$args[ $key ] = $value;
+			}
+		}
+		$url = add_query_arg( $args, $base_url );
+		return [
+			'all'    => sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html__( 'すべて', 'hametuha' ) ),
+			'author' => sprintf( '<a href="#" class="current">%s</a>', esc_html( get_the_author_meta( 'display_name', $author ) ) ),
+		];
+	}
 
 	public function prepare_items() {
 		//Set column header
@@ -75,6 +102,13 @@ class CompiledFileTable extends \WP_List_Table {
 				'p'      => $this->input->get( 'p' ),
 				'author' => get_current_user_id(),
 			];
+		}
+		// Set order.
+		foreach ( [ 'order', 'orderby' ] as $key ) {
+			$value = $this->input->get( $key );
+			if ( $value ) {
+				$args[ $key ] = $value;
+			}
 		}
 		$this->items = $this->files->get_files( $args, 20, max( 1, $this->get_pagenum() ) - 1 );
 
@@ -102,6 +136,11 @@ class CompiledFileTable extends \WP_List_Table {
 					'check' => sprintf( '<a class="compiled-file-validate-btn" href="#" title="%s ePubバリデーション" data-file-id="%d">チェック</a>', get_the_title( $item ), $item->file_id ),
 				];
 				if ( current_user_can( 'publish_epub', $item->post_id ) ) {
+					$updated_date = '';
+					$updated      = $this->files->meta->get_meta( $item->file_id, 'published' );
+					if ( $updated ) {
+						$updated_date = $updated->updated;
+					}
 					$actions = array_merge( $actions, [
 						'download'  => sprintf( '<a class="compiled-file-download-btn" href="%s" target="file-downloader">ダウンロード</a>', add_query_arg( [
 							'_wpnonce' => wp_create_nonce( 'wp_rest' ),
@@ -110,7 +149,7 @@ class CompiledFileTable extends \WP_List_Table {
 						'published' => sprintf(
 							'<a class="compiled-file-published-btn" href="#" data-file-id="%s" data-published="%s">公開日設定</a>',
 							$item->file_id,
-							esc_attr( $this->files->meta->get_meta( $item->file_id, 'published' )->updated )
+							esc_attr( $updated_date )
 						),
 					] );
 				}
@@ -150,7 +189,6 @@ class CompiledFileTable extends \WP_List_Table {
 				break;
 		}
 	}
-
 
 	/**
 	 * Returns string if nothing found
