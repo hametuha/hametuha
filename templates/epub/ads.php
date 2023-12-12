@@ -1,9 +1,8 @@
 <?php
 /** @var \Hametuha\Model\Series $series */
-/** @var int $series_id */
-$post       = get_post( $series_id );
+/** @var WP_Post $post */
 $recommends = get_posts( hametuha_series_args( [
-	'excludes'       => $series_id,
+	'excludes'       => $post->ID,
 	'author'         => $post->post_author,
 	'posts_per_page' => 10,
 ] ) );

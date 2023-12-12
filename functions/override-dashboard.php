@@ -10,6 +10,12 @@ add_filter( 'admin_footer_text', function ( $string ) {
 	return '<span id="footer-thankyou">破滅派は<a href="https://ja.wordpress.org/">WordPress</a>で動いています。</span>';
 } );
 
+/**
+ * Allow editor components to have styles.
+ */
+add_action( 'admin_enqueue_scripts', function() {
+	wp_enqueue_style( 'wp-components' );
+} );
 
 /**
  * ダッシュボードのメタボックスをカスタマイズ

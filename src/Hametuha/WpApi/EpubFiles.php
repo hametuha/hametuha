@@ -3,175 +3,133 @@
 namespace Hametuha\WpApi;
 
 
-use Hametuha\Model\CompiledFiles;
-use WPametu\API\Rest\WpApi;
+use Hametuha\WpApi\Pattern\EpubFilePattern;
 
 /**
- * ePub API
+ * ePub file list api
  *
  * @package hametuha
- * @property CompiledFiles $files
  */
-class EpubFiles extends WpApi {
+class EpubFiles extends EpubFilePattern {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function get_route() {
-		return 'epub/file/(?P<file_id>\d+)/?';
+		return 'epub/files/';
 	}
 
 	/**
-	 * Get arguments for method.
-	 *
-	 * @param string $method 'GET', 'POST', 'PUSH', 'PATCH', 'DELETE', 'HEAD', 'OPTION'
-	 *
-	 * @return array
+	 * {@inheritDoc}
 	 */
 	protected function get_arguments( $method ) {
-		$args = [
-			'file_id' => [
-				'required'          => true,
-				'type'              => 'integer',
-				'description'       => 'File ID to handle.',
-				'validate_callback' => function( $file_id ) {
-					if ( ! is_numeric( $file_id ) ) {
-						return false;
-					}
-					try {
-						return (bool) $this->files->validate_file( $file_id );
-					} catch ( \Exception $e ) {
-						return false;
-					}
-				},
-			],
-		];
 		switch ( $method ) {
 			case 'GET':
-				$args['format'] = [
-					'required'    => true,
-					'default'     => 'file',
-					'type'        => 'string',
-					'description' => 'Result format. Actual file or report.',
-					'enum'        => [ 'file', 'report' ],
-				];
-				break;
-			case 'POST':
-				$args = array_merge( $args, [
-					'published' => [
-						'default'           => '',
-						'type'              => 'string',
-						'description'       => 'The datetime of publication',
+				return [
+					's' => [
+						'type'        => 'string',
+						'description' => 'Search Term',
+						'default'     => '',
+					],
+					'p' => [
+						'type'        => 'integer',
+						'description' => 'Series ID. Needs permission to edit the post.',
+						'default'     => 0,
 						'validate_callback' => function( $var ) {
-							return empty( $var ) || ( 'DELETE' === $var ) || preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/u', $var );
+							if ( 1 > $var ) {
+								return current_user_can( 'edit_others_posts' );
+							} else {
+								return current_user_can( 'edit_post', $var );
+							}
 						},
 					],
-				] );
-				break;
+					'author' => [
+						'type'        => 'integer',
+						'description' => 'Author ID',
+						'default'     => 0,
+						'validate_callback' => function( $var ) {
+							if ( ! $var ) {
+								return current_user_can( 'edit_others_posts' );
+							} else {
+								return current_user_can( 'edit_others_posts' ) || ( $var === get_current_user_id() );
+							}
+						},
+					],
+					'posts_per_page' => [
+						'type'        => 'integer',
+						'description' => 'Number per page',
+						'default'     => 10,
+						'validate_callback' => function( $var ) {
+							return ( 0 < $var ) && ( 200 > $var );
+						},
+					],
+					'paged' => [
+						'type'        => 'integer',
+						'description' => 'Page number',
+						'default'     => 1,
+						'sanitize_callback' => function( $var ) {
+							return max( 1, (int) $var );
+						},
+					],
+					'order' => [
+						'type'        => 'string',
+						'description' => 'Order',
+						'default'     => 'DESC',
+						'enum'        => [ 'ASC', 'DESC' ],
+					],
+					'orderby' => [
+						'type'        => 'string',
+						'description' => 'Order',
+						'default'     => 'DESC',
+						'enum'        => [ 'ASC', 'DESC' ],
+					],
+				];
+			case 'POST':
+				return [
+					'p' => [
+						'required'    => true,
+						'type'        => 'integer',
+						'description' => 'Post ID',
+						'validate_callback' => function( $var ) {
+							return ( 'series' === get_post_type( $var ) ) && current_user_can( 'edit_post', $var );
+						},
+					],
+				];
+			default:
+				return [];
 		}
-		return $args;
 	}
 
 	/**
-	 * Handle GET request.
+	 * Handle file list.
 	 *
-	 * @throws \Exception
 	 * @param \WP_REST_Request $request
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_get( $request ) {
-		$method = 'handle_get_' . strtolower( $request->get_param( 'format' ) );
-		$file   = $this->files->validate_file( $request->get_param( 'file_id' ) );
-		return $this->{$method}( $file, $request );
+		$args = [
+			's'      => $request->get_param( 's' ),
+			'p'      => $request->get_param( 'p' ),
+			'author' => $request->get_param( 'author' ),
+			'order'  => $request->get_param( 'order' ),
+			'orderby' => $request->get_param( 'orderby' ),
+		];
+		$files = $this->files->get_files( $args, $request->get_param( 'posts_per_page' ), $request->get_param( 'paged' ) - 1 );
+		return new \WP_REST_Response( [
+			'total' => $this->files->found_count(),
+			'items' => $files,
+		] );
 	}
 
 	/**
-	 * Get file.
-	 *
-	 * @param \stdClass        $file
-	 * @param \WP_REST_Request $request
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	protected function handle_get_file( $file, $request ) {
-		return $this->files->download( $file->file_id );
-	}
-
-	/**
-	 * Get file report.
-	 *
-	 * @param \stdClass        $file
-	 * @param \WP_REST_Request $request
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	protected function handle_get_report( $file, $request ) {
-		$result = $this->files->validate( $file->file_id );
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		} else {
-			return new \WP_REST_Response( $result );
-		}
-	}
-
-	/**
-	 * Update file data.
+	 * Handle POST request.
 	 *
 	 * @param \WP_REST_Request $request
-	 * @return \WP_REST_Response|\WP_Error
-	 * @throws \Exception
+	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function handle_post( $request ) {
-		$error    = new \WP_Error();
-		$messages = [];
-		$file_id  = $request->get_param( 'file_id' );
-		foreach ( [ 'published' ] as $key ) {
-			$value = $request->get_param( $key );
-			switch ( $key ) {
-				case 'published':
-					if ( 'DELETE' === $value ) {
-						// Delete file meta.
-						if ( $this->files->meta->delete_meta( $file_id, 'published' ) ) {
-							$messages[] = 'ファイルの公開日時を削除しました。';
-						} else {
-							$error->add( 'failed_to_update_file', 'ファイルの公開日時を削除できませんでした。', [
-								'status' => 500,
-							] );
-						}
-					} elseif ( $value ) {
-						// Update published date.
-						if ( $this->files->meta->update_meta( $file_id, 'published', $value ) ) {
-							$messages[] = 'ファイルの公開日時を更新しました。';
-						} else {
-							$error->add( 'failed_to_update_file', 'ファイルの公開日時を更新できませんでした。', [
-								'status' => 500,
-							] );
-						}
-					}
-					break;
-			}
-		}
-		if ( $error->get_error_messages() ) {
-			return $error;
-		} else {
-			return new \WP_REST_Response( [
-				'success'  => true,
-				'messages' => $messages,
-			] );
-		}
-	}
-
-	/**
-	 * Handle delete response.
-	 *
-	 * @throws \Exception
-	 * @param \WP_REST_Request $request
-	 * @return \WP_REST_Response|\WP_Error
-	 */
-	public function handle_delete( $request ) {
-		$file_id = $request->get_param( 'file_id' );
-		$file    = $this->files->validate_file( $file_id );
-		if ( ! $this->files->delete_file( $file_id ) ) {
-			throw new \Exception( 'ファイルを削除できませんでした。', 500 );
-		}
-		return new \WP_REST_Response( [
-			'message' => 'ePubファイルを削除しました。',
-		] );
+		$post = get_post( $request->get_param( 'p' ) );
+		// todo: Move Rest/Epub to here.
 	}
 
 	/**
@@ -181,33 +139,6 @@ class EpubFiles extends WpApi {
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		$file = $this->files->get_file( $request->get_param( 'file_id' ) );
-		switch ( $request->get_method() ) {
-			case 'GET':
-				if ( 'report' === $request->get_param( 'format' ) ) {
-					return current_user_can( 'edit_post', $file->post_id );
-				} else {
-					return current_user_can( 'get_epub', $file->file_id );
-				}
-			default:
-				return current_user_can( 'get_epub', $file->file_id );
-		}
+		return current_user_can( 'edit_posts' );
 	}
-
-	/**
-	 * Getter
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function __get( $name ) {
-		switch ( $name ) {
-			case 'files':
-				return CompiledFiles::get_instance();
-			default:
-				return parent::__get( $name );
-		}
-	}
-
-
 }
