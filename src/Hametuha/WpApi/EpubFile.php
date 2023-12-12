@@ -3,16 +3,14 @@
 namespace Hametuha\WpApi;
 
 
-use Hametuha\Model\CompiledFiles;
-use WPametu\API\Rest\WpApi;
+use Hametuha\WpApi\Pattern\EpubFilePattern;
 
 /**
  * ePub API
  *
  * @package hametuha
- * @property CompiledFiles $files
  */
-class EpubFiles extends WpApi {
+class EpubFile extends EpubFilePattern {
 
 	protected function get_route() {
 		return 'epub/file/(?P<file_id>\d+)/?';
@@ -193,21 +191,4 @@ class EpubFiles extends WpApi {
 				return current_user_can( 'get_epub', $file->file_id );
 		}
 	}
-
-	/**
-	 * Getter
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function __get( $name ) {
-		switch ( $name ) {
-			case 'files':
-				return CompiledFiles::get_instance();
-			default:
-				return parent::__get( $name );
-		}
-	}
-
-
 }

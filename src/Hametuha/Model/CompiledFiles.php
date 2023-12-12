@@ -118,7 +118,7 @@ class CompiledFiles extends Model {
 	 *
 	 * @param array $args
 	 * @param int $limit
-	 * @param int $page
+	 * @param int $page Shoudl start from 1.
 	 *
 	 * @return \stdClass[]
 	 */

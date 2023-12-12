@@ -302,24 +302,47 @@ TEXT;
 
 		<?php endif; ?>
 
-		<?php if ( current_user_can( 'publish_epub', $post->ID ) ) : ?>
-			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--files">
-				<label>
-					<span class="dashicons dashicons-format-aside"></span> ファイル:
-					<?php if ( $this->files->record_exists( $post->ID ) ) : ?>
-						<a href="<?php echo admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $post->ID ); ?>">一覧</a>
-					<?php else : ?>
-						なし
-					<?php endif; ?>
-				</label>
-			</div>
-			<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">
-				<a class="button" target="epub-publisher" href="<?php echo home_url( "epub/publish/{$post->ID}", 'https' ); ?>">書き出し</a>
-				<iframe name="epub-publisher" style="display: none"></iframe>
+		<?php if ( current_user_can( 'publish_epub', $post->ID ) ) :
+			wp_enqueue_script( 'hametuha-epub-generator' );
+			$js = <<<'JS'
+(function(){
+	window.hametuhaFileListUrl = '%s';
+	window.hametuhaFileGenerateUrl = '%s';
+})();
+JS;
+
+			$data = sprintf(
+				$js,
+				add_query_arg( [
+					'post_type' => 'series',
+					'page'      => 'hamepub-files',
+					'p'         => $post->ID,
+				], admin_url( 'edit.php' ) ),
+				home_url( 'epub/publish/' . $post->ID )
+			);
+			wp_add_inline_script( 'hametuha-epub-generator', $data, 'before' );
+			?>
+			<div id="hametuha-epub-file-container" class="misc-pub-section misc-pub-section--epub misc-pub-section--files" data-post-id="<?php echo esc_attr( $post->ID ); ?>">
 			</div>
 			<?php
 		endif;
 	}
 
+	public function do() {
+		$poost = get_post();
+		?>
+				<label>
+					<span class="dashicons dashicons-format-aside"></span> ファイル:
+					<?php if ( $this->files->record_exists( $post->ID ) ) : ?>
+						<a href="--><?php echo admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $post->ID ); ?>">一覧</a>
+					<?php else : ?>
+						なし-->
+					<?php endif; ?>
+				</label>
+				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">-->
+					<a class="button" target="epub-publisher" href="--><?php echo home_url( "epub/publish/{$post->ID}", 'https' ); ?>">書き出し</a>
+				</div>
+		<?php
+	}
 
 }
