@@ -327,22 +327,4 @@ JS;
 			<?php
 		endif;
 	}
-
-	public function do() {
-		$poost = get_post();
-		?>
-				<label>
-					<span class="dashicons dashicons-format-aside"></span> ファイル:
-					<?php if ( $this->files->record_exists( $post->ID ) ) : ?>
-						<a href="--><?php echo admin_url( 'edit.php?post_type=series&page=hamepub-files&p=' . $post->ID ); ?>">一覧</a>
-					<?php else : ?>
-						なし-->
-					<?php endif; ?>
-				</label>
-				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--sold">-->
-					<a class="button" target="epub-publisher" href="--><?php echo home_url( "epub/publish/{$post->ID}", 'https' ); ?>">書き出し</a>
-				</div>
-		<?php
-	}
-
 }
