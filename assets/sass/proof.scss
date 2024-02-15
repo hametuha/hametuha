@@ -1,0 +1,53 @@
+/**
+ * 証明書印刷用CSS
+ *
+ */
+
+@page {
+	size: A4 portrait;
+}
+
+body {
+	color: #red;
+}
+
+.paper {
+	&-table {
+		table-layout: auto;
+		width: 100%;
+		border-collapse: collapse;
+		caption-side: bottom;
+
+		caption {
+			text-align: right;
+		}
+
+		th,
+		td {
+			padding: 1em;
+			border: 1px solid #000;
+		}
+		tbody tr:first-child th {
+			border-top: 3px double #000;
+		}
+
+		tbody tr:last-child td {
+			border-bottom: 3px double #000;
+		}
+	}
+
+	&-header {
+		text-align: center;
+		margin-bottom: 2em;
+	}
+
+	&-no-result {
+		text-align: center;
+		font-size: 18pt;
+		margin: 3em 0
+	}
+
+	&-issued {
+		margin: 2em 0;
+	}
+}

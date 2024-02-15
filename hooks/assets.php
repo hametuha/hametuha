@@ -141,6 +141,10 @@ JS;
 	// Watermark
 	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
 
+	// 税金関係書類のCSS
+	wp_register_style( 'hametuha-accounting-paper', get_template_directory_uri() . '/assets/css/proof.css', [ 'hametuha-app' ], hametuha_version(), 'all' );
+
+
 	// Register all hashboard.
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
 

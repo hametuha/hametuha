@@ -60,5 +60,8 @@
     "vinyl-named": "^1.1.0",
     "webpack": "^5.85.0",
     "webpack-stream": "^6.1.2"
+  },
+  "volta": {
+    "node": "14.21.3"
   }
 }
