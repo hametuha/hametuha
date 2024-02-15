@@ -84,7 +84,7 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 	} elseif ( is_search() ) {
 		$title = sprintf( '「%s」の検索結果', get_search_query() );
 	} elseif ( is_page() ) {
-		$title = get_the_title( get_queried_object() );
+		$title = single_post_title( '', false );
 	}
 	// Merge title.
 	$titles = [ $title ];

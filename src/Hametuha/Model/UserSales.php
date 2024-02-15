@@ -565,4 +565,15 @@ SQL;
 		$end = $d->format( 'Y-m-t 23:59:59' );
 		return [ $start, $end ];
 	}
+
+	/**
+	 * 年度ごとの支払い長所を取得する
+	 *
+	 * @param int $user_id ユーザーID
+	 * @param int $year    年度
+	 * @return array
+	 */
+	public function get_accounting_result( $user_id, $year ) {
+
+	}
 }
