@@ -112,7 +112,6 @@ SQL;
 	return $wpdb->get_results( $query );
 }
 
-
 /**
  * 合評会のタームを返す
  *
@@ -145,8 +144,8 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 /**
  * 最新のキャンペーンを取得する
  *
- * @param int    $limit Number to retrieve. 0 means all.
- * @param string $date  Date string or 'now'. Default 'now'.
+ * @param int          $limit Number to retrieve. 0 means all.
+ * @param string|false $date  Date string or 'now'. Default 'now'.
  *
  * @return WP_Term[]
  */
@@ -157,9 +156,9 @@ function hametuha_recent_campaigns( $limit = 5, $date = 'now' ) {
 /**
  * 指定の範囲内に〆切があるキャンペーンを近い順に取得する
  *
- * @param string $start_date 〆切日の起算日。初期値は今日の日付。
- * @param string $end_date   含める日付。指定しない場合は未来の日付すべて。
- * @param int    $limit      取得数。-1の場合はすべて。
+ * @param string|false $start_date 〆切日の起算日。初期値は今日の日付。
+ * @param string       $end_date   含める日付。指定しない場合は未来の日付すべて。
+ * @param int          $limit      取得数。-1の場合はすべて。
  * @return WP_Term[]
  */
 function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date = '', $limit = 5 ) {
@@ -173,7 +172,7 @@ function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date
 		'number'     => $limit,
 		'meta_key'   => '_campaign_limit',
 		'orderby'    => 'meta_value',
-		'order'      => 'ASC',
+		'order'      => $start_date ? 'ASC' : 'DESC',
 		'meta_query' => [],
 	];
 	if ( ! $end_date ) {
@@ -296,4 +295,32 @@ function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
 		$error->add( 500, '文字数が長すぎます。' );
 	}
 	return $error->get_error_messages() ? $error : true;
+}
+
+/**
+ * キャンペーン一覧ページを返す
+ *
+ * @return WP_Post
+ */
+function hametuha_get_campaign_page() {
+	$args = [
+		'post_type'      => 'page',
+		'post_status'    => 'publish',
+		'no_found_rows'  => true,
+		'meta_key'       => '_wp_page_template',
+		'meta_value'     => 'page-campaign.php',
+		'posts_per_page' => 1,
+	];
+	$query = new WP_Query( $args );
+	return $query->have_posts() ? $query->posts[0] : null;
+}
+
+/**
+ * キャンペーン一覧ページのURLを返す
+ *
+ * @return string
+ */
+function hametuha_get_campaign_page_url() {
+	$page = hametuha_get_campaign_page();
+	return $page ? get_permalink( $page ) : home_url();
 }

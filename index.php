@@ -114,7 +114,14 @@
 
 					<?php else : ?>
 
-						<?php get_template_part( 'parts/no', 'content' ); ?>
+						<?php
+						if ( is_tax( 'campaign' ) ) {
+							$no_slug = 'campaign';
+						} else {
+							$no_slug = '';
+						}
+						get_template_part( 'parts/no-content', $no_slug );
+						?>
 
 						<?php
 					endif;
