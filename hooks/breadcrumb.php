@@ -146,3 +146,27 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	// 最後にホーム
 	$bcn->add( new bcn_breadcrumb( 'ホーム', null, ['main-home'], home_url(), '', true ) );
 } );
+
+/**
+ * 応募ページだったら、一覧を追加
+ */
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
+	if ( ! is_tax( 'campaign' ) ) {
+		return;
+	}
+	$parent = hametuha_get_campaign_page();
+	if ( ! $parent ) {
+		return;
+	}
+	$trails = [];
+	foreach ( $bcn->trail as $item ) {
+		/** @var bcn_breadcrumb $item */
+		if ( in_array( 'post-root', $item->get_types(), true ) ) {
+			// 親キャンペーンを追加
+			$trails []= new bcn_breadcrumb( get_the_title( $parent ), null, ['post-series-archive-kdp'], get_permalink( $parent ), 'campaign-archive', true );
+		} else {
+			$trails[] = $item;
+		}
+	}
+	$bcn->trail = $trails;
+} );

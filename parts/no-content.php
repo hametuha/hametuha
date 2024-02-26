@@ -1,3 +1,8 @@
+<?php
+/**
+ * コンテンツが存在しなかったときに表示されるテンプレート
+ */
+?>
 <div class="nocontents-found alert alert-warning">
 	<p>該当するコンテンツがありませんでした。以下の方法をお試しください。</p>
 	<ul>

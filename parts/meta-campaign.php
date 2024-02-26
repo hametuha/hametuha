@@ -9,7 +9,7 @@ $desc      = get_term_meta( $campaign->term_id, '_campaign_detail', true );
 <div class="event-detail clearfix">
 	<dl class="dl-horizontal">
 		<?php if ( $has_limit ) : ?>
-		<dt>応募〆切</dt>
+		<dt><?php esc_html_e( '応募〆切', 'hametuha' ); ?></dt>
 		<dd>
 			<?php echo mysql2date( get_option( 'date_format' ), get_term_meta( $campaign->term_id, '_campaign_limit', true ) ); ?>
 			<?php if ( hametuha_is_available_campaign( $campaign ) ) : ?>
@@ -20,24 +20,31 @@ $desc      = get_term_meta( $campaign->term_id, '_campaign_detail', true );
 		</dd>
 		<?php endif; ?>
 		<?php if ( $length ) : ?>
-		<dt>長さ</dt>
+		<dt><?php esc_html_e( '長さ', 'hametuha' ); ?></dt>
 		<dd>
 			<?php echo $length; ?>
 		</dd>
 		<?php endif; ?>
-		<dt>応募方法</dt>
+		<dt><?php esc_html_e( '応募方法', 'hametuha' ); ?></dt>
 		<dd>
 			応募タグ <strong><?php echo esc_html( $campaign->name ); ?></strong> をつけて、所定の期日までに作品を投稿してください。
 			雑誌掲載作品は「非公開」を選べば表示されません。（<a href="<?php echo home_url( 'faq/how-to-participate-campaign' ); ?>">詳しく</a>）
 		</dd>
-		
-				<dt>備考</dt>
+
+		<dt><?php esc_html_e( '備考', 'hametuha' ); ?></dt>
 		<dd>
 			<?php echo  $desc ? nl2br( strip_tags( $desc, '<strong>' ) ) : '---'; ?>
 		</dd>
-		<dt>関連リンク</dt>
+
+		<dt><?php esc_html_e( '関連リンク', 'hametuha' ); ?></dt>
 		<dd>
 			<?php echo  $url ? sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( explode( '/', preg_replace( '#https?://#', '', $url ) )[0] ) ) : '---'; ?>
+		</dd>
+		<dt><?php esc_html_e( '他の公募', 'hametuha' ); ?></dt>
+		<dd>
+			<a href="<?php echo esc_url( hametuha_get_campaign_page_url() ); ?>">
+				<?php esc_html_e( 'すべての公募一覧を見る', 'hametuha' ); ?>
+			</a>
 		</dd>
 	</dl>
 </div>
