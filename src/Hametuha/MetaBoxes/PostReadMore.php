@@ -4,6 +4,7 @@ namespace Hametuha\MetaBoxes;
 
 
 use WPametu\UI\Admin\EditMetaBox;
+use WPametu\UI\Field\Date;
 use WPametu\UI\Field\Text;
 use WPametu\UI\Field\TextArea;
 
@@ -38,12 +39,13 @@ class PostReadMore extends EditMetaBox {
 			'required'    => false,
 			'description' => '書籍化などで外部のURLで続きを読んで欲しい場合はこちらにURLを入力してください。投稿がチラ見せ状態になります。',
 			'placeholder' => '例）https://amazon.co.jp/example',
+			'input_type'  =>  'url',
 		],
 		'_external_url_limit' => [
-			'class'       => Text::class,
+			'class'       => Date::class,
 			'label'       => '外部参照期限',
 			'required'    => false,
-			'description' => '外部参照URLを設定し、その発売日まで投稿を読めるようにしておくには、ここに日付を入力してください。',
+			'description' => '外部参照URLを設定し、その発売日まで投稿を全文読めるようにしておくには、ここに日付を入力してください。',
 			'placeholder' => '例）2024-12-31',
 		],
 		'_first_collected'    => [
