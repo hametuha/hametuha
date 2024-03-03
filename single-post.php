@@ -114,7 +114,7 @@ HTML;
 					) );
 					?>
 
-						<?php if ( is_user_logged_in() && ! is_preview() ) : ?>
+					<?php if ( is_user_logged_in() && ! is_preview() ) : ?>
 						<text-holder selection="selection" selection-top="selectionTop" content-height="contentHeight" id="<?php echo the_ID(); ?>"></text-holder>
 					<?php endif; ?>
 
@@ -229,9 +229,14 @@ HTML;
 			<?php get_sidebar( 'related' ); ?>
 
 			<div class="container">
+
+				<?php get_sidebar( 'books', [
+					'title' => true,
+				] ); ?>
+
 				<h2 class="series__title--share text-center">
-					<small class="series__title--caption">Books</small>
-					<?php esc_html_e( '破滅派の書籍', 'hametuha' ); ?>
+					<small class="series__title--caption">eBooks</small>
+					<?php esc_html_e( '破滅派の電子書籍', 'hametuha' ); ?>
 				</h2>
 
 				<?php
@@ -241,10 +246,6 @@ HTML;
 					'fill'     => true,
 				] )
 				?>
-
-				<hr />
-
-				<?php get_sidebar( 'books' ); ?>
 			</div>
 			<!-- // .work-wrapper -->
 

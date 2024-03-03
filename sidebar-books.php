@@ -1,6 +1,8 @@
 <?php
 /**
  * Book list template.
+ *
+ * @var array $args
  */
 
 $books = hametuha_get_minicome_product();
@@ -8,8 +10,19 @@ if ( ! $books ) {
 	return;
 }
 
+$args = wp_parse_args( $args, [
+	'title' => false,
+] );
+
 ?>
-<section class="books-wrapper">
+<section class="books-wrapper" style="margin-top: 40px; margin-bottom: 80px;">
+
+	<?php if ( $args['title'] ) : ?>
+	<h2 class="page-header text-center" style="margin-bottom: 20px; border-bottom: none;">
+		<small>Books</small><br />
+		<?php esc_html_e( '破滅派の書籍', 'hametuha' ); ?>
+	</h2>
+	<?php endif; ?>
 
 	<div class="books-list">
 

@@ -225,8 +225,8 @@
 		</div><!-- //.row -->
 
 		<h2 class="page-header text-center">
-			電子書籍<br/>
-			<small>eBooks</small>
+			<small>eBooks</small><br />
+			破滅派の電子書籍
 		</h2>
 		<?php
 		hameplate( 'templates/recommendations', '', [
