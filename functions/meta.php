@@ -13,7 +13,7 @@
  *
  * @return string
  */
-add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
+add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 	$sep = '｜';
 	if ( is_front_page() ) {
 		// フロントページ
@@ -46,6 +46,8 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 			get_bloginfo( 'name' ),
 		] );
 	}
+	// Is title replaced?
+	$title = '';
 	if ( is_category() ) {
 		$title = get_queried_object()->name;
 	} elseif ( is_tag() ) {
@@ -85,6 +87,9 @@ add_filter( 'wp_title', function ( $title, $sep, $seplocation ) {
 		$title = sprintf( '「%s」の検索結果', get_search_query() );
 	} elseif ( is_page() ) {
 		$title = single_post_title( '', false );
+	} else {
+		// If no change applied, user original one.
+		return $original_title . get_bloginfo( 'name' );
 	}
 	// Merge title.
 	$titles = [ $title ];
@@ -299,8 +304,9 @@ HTML;
 /**
  * 検索エンジン対策
  *
- * 特定の投稿で「検索エンジンに表示しない」がオンになっていたら、
+ * 1. 特定の投稿で「検索エンジンに表示しない」がオンになっていたら、
  * noindexを出力する。
+ * 2. 作者がスパムだったら検索エンジンに表示しない。
  */
 add_action( 'wp_head', function() {
 	if ( ! is_singular( 'post' ) ) {
