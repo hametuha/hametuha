@@ -312,16 +312,33 @@ HTML;
  * @parma string[] $robogts robots string.
  */
 add_filter( 'wp_robots', function ( $robots ) {
-	if ( ! is_singular( 'post' ) ) {
-		return $robots;
-	}
-	$is_spam = false;
-	if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
-		// 投稿が個別にnoindexになっている場合
-		return wp_robots_sensitive_page( $robots );
-	} elseif ( hametuha_user_has_flag( get_queried_object()->post_author, 'spam' ) ) {
-		// 投稿の作者がspam認定
-		return wp_robots_sensitive_page( $robots );
+	if ( is_singular( 'post' ) ) {
+		if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
+			// 投稿が個別にnoindexになっている場合
+			return wp_robots_sensitive_page( $robots );
+		} elseif ( hametuha_user_has_flag( get_queried_object()->post_author, 'spam' ) ) {
+			// 投稿の作者がspam認定
+			return wp_robots_sensitive_page( $robots );
+		}
+	}  elseif ( get_query_var( 'ranking' ) ) {
+		$noindex = false;
+		switch ( get_query_var( 'ranking' ) ) {
+			case 'best':
+			case 'weekly':
+			case 'monthly':
+			case 'daily':
+				// 歴代ランキング、ウィークリーははトップ以外noindex
+				if ( 1 < get_query_var( 'paged' ) ) {
+					$noindex = true;
+				}
+				break;
+			case 'top':
+				// トップはオーケー
+				break;
+		}
+		if ( $noindex ) {
+			return wp_robots_no_robots( $robots );
+		}
 	}
 	return $robots;
 } );
