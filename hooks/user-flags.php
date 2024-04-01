@@ -18,10 +18,10 @@ function hametuha_author_has_flag( $flag, $post = null ) {
 }
 
 /**
- * Is user spam?
+ * Is user has spam?
  *
  * @param int    $user_id User ID.
- * @param string $flag    Flag.
+ * @param string $flag    Flag. spam, professional, certified
  * @return bool
  */
 function hametuha_user_has_flag( $user_id, $flag ) {

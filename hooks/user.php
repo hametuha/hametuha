@@ -48,7 +48,18 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 	if ( 'display_name' == $column ) {
 		$ruby = (string) get_user_meta( $user_id, 'last_name', true );
 		$name = (string) get_the_author_meta( 'display_name', $user_id );
-		$role = hametuha_is_secret_guest( $user_id ) ? ' - <strong>シークレット</strong>' : '';
+		$roles = [];
+		if ( hametuha_is_secret_guest( $user_id ) ) {
+			$roles[] = 'シークレット';
+		}
+		foreach ( hametuha_user_flags() as $flag ) {
+			if ( hametuha_user_has_flag( $user_id, $flag['id' ] ) ) {
+				$roles[] = $flag['label'];
+			}
+		}
+		$role = implode( '', array_map( function( $r ) {
+			return sprintf( ' - <strong>%s</strong>', esc_html( $r ) );
+		}, $roles ) );
 		return sprintf( '<ruby>%s<rt>%s</rt></ruby>%s', esc_html( $name ), esc_html( $ruby ), $role );
 	} else {
 		return $td;
