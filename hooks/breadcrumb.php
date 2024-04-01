@@ -170,3 +170,25 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	}
 	$bcn->trail = $trails;
 } );
+
+/**
+ * 著者アーカイブに詳細を追加
+ */
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
+	if ( ! is_author() ) {
+		return;
+	}
+	$trails = [];
+	foreach ( $bcn->trail as $item ) {
+		/** @var bcn_breadcrumb $item */
+		if ( in_array( 'home', $item->get_types(), true ) ) {
+			// 同人詳細ページを追加
+			$trails []= new bcn_breadcrumb( get_queried_object()->display_name, null, ['post-author'], hametuha_author_url( get_queried_object()->ID ), '', true );
+			// 作品一覧を追加
+			$page_for_posts = get_option( 'page_for_posts' );
+			$trails[] = new bcn_breadcrumb( get_the_title( $page_for_posts ), null, ['post-archive'], get_the_title( $page_for_posts ), '', true );
+		}
+		$trails[] = $item;
+	}
+	$bcn->trail = $trails;
+} );
