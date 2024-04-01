@@ -147,7 +147,7 @@ $query = new WP_Query( [
 								?>
 							</ul>
 							<a class="btn btn-primary btn-lg btn-block"
-							   href="<?php echo get_author_posts_url( $this->doujin->ID ); ?>?post_type=any">もっと見る</a>
+							   href="<?php echo get_author_posts_url( $this->doujin->ID ); ?>">もっと見る</a>
 						<?php else : ?>
 							<div class="alert alert-warning">
 								投稿がありません

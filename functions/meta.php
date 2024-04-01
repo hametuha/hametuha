@@ -351,3 +351,12 @@ add_action( 'wp_head', function() {
 		}
 	}
 }, 10 );
+
+/**
+ * 404を確実に出す
+ */
+add_action( 'template_redirect', function() {
+	if ( is_404() ) {
+		status_header( 404, get_status_header_desc( 404 ) );
+	}
+} );
