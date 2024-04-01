@@ -307,12 +307,47 @@ HTML;
  * 1. 特定の投稿で「検索エンジンに表示しない」がオンになっていたら、
  * noindexを出力する。
  * 2. 作者がスパムだったら検索エンジンに表示しない。
+ *
+ * @see wp_robots()
+ * @parma string[] $robogts robots string.
+ */
+add_filter( 'wp_robots', function ( $robots ) {
+	if ( ! is_singular( 'post' ) ) {
+		return $robots;
+	}
+	$is_spam = false;
+	if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
+		// 投稿が個別にnoindexになっている場合
+		return wp_robots_sensitive_page( $robots );
+	} elseif ( hametuha_user_has_flag( get_queried_object()->post_author, 'spam' ) ) {
+		// 投稿の作者がspam認定
+		return wp_robots_sensitive_page( $robots );
+	}
+	return $robots;
+} );
+
+/**
+ * アーカイブページでカノニカルを出力
+ *
+ * 1. カテゴリー、タグ、タクソノミーのアーカイブページでカノニカルを出力
+ * 2. rel=prev, rel=next を出力
  */
 add_action( 'wp_head', function() {
-	if ( ! is_singular( 'post' ) ) {
+	if ( ! is_archive() ) {
 		return;
 	}
-	if ( 'noindex' === get_post_meta( get_queried_object_id(), '_noindex', true ) ) {
-		echo '<meta name="robots" content="noindex,noarchive" />';
+	// Canonical URL.
+	$url = home_url( $_SERVER['REQUEST_URI'] );
+	$url = explode( '?', $url )[0];
+	printf( '<link rel="canonical" href="%s" />', esc_url( $url ) );
+	// prev, next.
+	foreach ( [
+		'next' => get_next_posts_page_link( 0 ),
+		'prev' => ( get_query_var( 'paged' ) > 1 ) ? get_previous_posts_page_link() : false,
+	] as $key => $link ) {
+		if ( $link ) {
+			$link = explode( '?', $link )[0];
+			printf( '<link rel="%s" href="%s" />', esc_attr( $key ), esc_url( $link ) );
+		}
 	}
-} );
+}, 10 );
