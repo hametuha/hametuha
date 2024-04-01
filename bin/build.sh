@@ -9,7 +9,7 @@ VERSION=${1#"$PREFIX"}
 
 
 # Build files
-composer install --no-dev --prefer-dist --no-suggest --no-progress
+composer install --no-dev --prefer-dist
 npm install
 npm run package
 

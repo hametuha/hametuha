@@ -9,15 +9,25 @@ const mergeStream = require( 'merge-stream' );
 const webpack = require( 'webpack-stream' );
 const webpackBundle = require( 'webpack' );
 const named = require( 'vinyl-named' );
+const { plugins } = require( "@babel/preset-env/lib/plugins-compat-data" );
 
+let noplumber = true;
+
+// エラーオプションを切り替える
+gulp.task( 'plumber', function( done ) {
+	noplumber = false;
+	done();
+} );
 
 // Sassのタスク
 gulp.task( 'sass', function () {
-
-	return gulp.src( [ './assets/sass/**/*.scss' ] )
-		.pipe( $.plumber( {
+	let task = gulp.src( [ './assets/sass/**/*.scss' ] );
+	if ( noplumber ) {
+		task = task.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
-		} ) )
+		} ) );
+	}
+	return task
 		.pipe( $.sassGlob() )
 		.pipe( $.sourcemaps.init() )
 		.pipe( $.sass( {
@@ -40,10 +50,13 @@ gulp.task( 'sass', function () {
 
 // Minify All
 gulp.task( 'js', function () {
-	return gulp.src( [ './assets/js/src/**/*.js', '!./assets/js/src/common/*.js' ] )
-		.pipe( $.plumber( {
+	let task = gulp.src( [ './assets/js/src/**/*.js', '!./assets/js/src/common/*.js' ] );
+	if ( noplumber ) {
+		task = task.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
-		} ) )
+		} ) );
+	}
+	return task
 		.pipe( $.sourcemaps.init( {
 			loadMaps: true
 		} ) )
@@ -58,10 +71,13 @@ gulp.task( 'js', function () {
 
 // Package jsx.
 gulp.task( 'jsx', function () {
-	return gulp.src( [ './assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx' ] )
-		.pipe( $.plumber( {
+	let task = gulp.src( [ './assets/js/src/**/*.jsx', '!./assets/js/src/**/_*.jsx' ] );
+	if ( noplumber ) {
+		task = task.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
-		} ) )
+		} ) );
+	}
+	return task
 		.pipe( named( ( file ) => {
 			return file.relative.replace(/\.[^\.]+$/, '');
 		} ) )
@@ -198,7 +214,7 @@ gulp.task( 'watch', function () {
 } );
 
 // Build
-gulp.task( 'build', gulp.series( gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ), 'deps' ) );
+gulp.task( 'build', gulp.series( 'plumber', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ), 'deps' ) );
 
 // Default Tasks
 gulp.task( 'default', gulp.series( 'watch' ) );
