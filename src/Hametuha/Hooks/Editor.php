@@ -138,6 +138,13 @@ class Editor extends Singleton {
 						break;
 				}
 				break;
+			case 'post':
+				if ( 0 < $post->post_parent && get_post( $post->post_parent ) ) {
+					$link = get_edit_post_link( $post->post_parent );
+					$title = get_the_title( $post->post_parent );
+					$post_states['post-parent'] = $link ? sprintf( '<a href="%s">%s</a>', $link, esc_html( $title ) ) : esc_html( $title );
+				}
+				break;
 		}
 		return $post_states;
 	}

@@ -3,6 +3,7 @@
 namespace Hametuha\Commands;
 
 
+use Hametuha\Hooks\StaleStatus;
 use Hametuha\Model\Jobs;
 use Hametuha\Sharee\Master\Address;
 use WPametu\Utility\Command;
@@ -391,6 +392,31 @@ class Post extends Command {
 			self::s( $response->getGraphNode()->getField( 'id' ) );
 		} catch ( \Exception $e ) {
 			self::e( $e->getCode() . ': ' . $e->getMessage() );
+		}
+	}
+
+	/**
+	 * List command to stale.
+	 *
+	 * @synopsis <days> [--dry-run]
+	 * @param array $args Option.
+	 * @return void
+	 */
+	public function stales( $args, $assoc ) {
+		$dry_run = $assoc['dry-run'] ?? false;
+		list( $days ) = $args;
+		$result = StaleStatus::get_instance()->bulk_stale( $days, $dry_run );
+		if ( is_array( $result ) ) {
+			// Display table.
+			$table = new Table();
+			$table->setHeaders( [ 'ID', 'Type', 'Title', 'Author', 'Date' ] );
+			foreach ( $result as $post ) {
+				$table->addRow( [ $post->ID, $post->post_type, $post->post_title, get_the_author_meta( 'display_name', $post->post_author ), $post->post_date ] );
+			}
+			$table->display();
+		} else {
+			// Display count.
+			\WP_CLI::success( sprintf( __( '%d件の投稿が期限切れになりました。', 'hametuha' ), $result ) );
 		}
 	}
 }

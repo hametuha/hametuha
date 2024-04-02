@@ -295,12 +295,15 @@ class Series extends Model {
 	 */
 	public function get_total( $post = null ) {
 		$post = get_post( $post );
-
-		return (int) $this->select( 'COUNT(ID)' )->from( $this->db->posts )
-						  ->where( 'post_type = %s', 'post' )
-						  ->where( 'post_status = %s', 'publish' )
-						  ->where( 'post_parent = %d', $post->ID )
-						  ->get_var();
+		$query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_status'    => [ 'publish', 'private' ],
+			'post_parent'    => $post->ID,
+			'no_found_rows'  => true,
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		] );
+		return count( $query->posts );
 	}
 
 	/**
