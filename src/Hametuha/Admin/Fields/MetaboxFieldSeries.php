@@ -78,7 +78,6 @@ class MetaboxFieldSeries extends Select {
 		$post = get_post( $data );
 		if ( ! $post ) {
 			return true;
-
 		}
 		return current_user_can( 'edit_post', $post->ID );
 	}
@@ -112,16 +111,25 @@ class MetaboxFieldSeries extends Select {
 		];
 		$args = [
 			'post_type'      => 'series',
-			'posts_per_page' => 100,
+			'posts_per_page' => 200,
 			'orderby'        => [ 'date' => 'DESC' ],
 			'post_status'    => 'any',
+			'meta_query'     => [
+				[
+					'key'     => '_stale',
+					'compare' => 'NOT EXISTS',
+				],
+			],
 		];
-		if ( ! current_user_can( 'edit_others_posts' ) ) {
-			// 自分が所有していない投稿が割り当てられている場合
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			$args['posts_per_page'] = 1000;
+		} else {
 			if ( $this->fixed_parent ) {
+				// 自分が所有していない投稿が割り当てられている場合は他の選択肢をなくす
 				$args['p'] = $this->fixed_parent;
 				$options   = [];
 			} else {
+				// 自分の所有している投稿のみを表示
 				$args['author'] = get_current_user_id();
 			}
 		}

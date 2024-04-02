@@ -45,3 +45,12 @@
   }
 }
 
+.table-view-list.posts {
+	table-layout: auto;
+
+	th#categories {
+		max-width: 5em;
+		width: auto;
+	}
+
+}
