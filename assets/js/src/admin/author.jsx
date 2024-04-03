@@ -11,4 +11,10 @@ jQuery( document ).ready( function( $ ) {
 		// Make this pulldown to select2.
 		$selector.select2();
 	}
+
+	const $series = $( '.wpametu-meta-table select#post_parent' );
+	if ( $series.length ) {
+		// Make this pulldown to select2.
+		$series.select2();
+	}
 } );
