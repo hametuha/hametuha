@@ -52,7 +52,8 @@ JS;
 	wp_add_inline_script( 'angular', $angular_scripts );
 
 	// Select2
-	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
+	wp_register_script( 'select2-src', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
+	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
 	wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
 
 
