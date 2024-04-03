@@ -24,6 +24,7 @@ class Editor extends Singleton {
 		add_action( 'init', [ $this, 'register_blocks' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'editor_assets' ] );
 		add_filter( 'display_post_states', [ $this, 'post_state' ], 10, 2 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_editor_helper' ] );
 	}
 
 	/**
@@ -147,5 +148,24 @@ class Editor extends Singleton {
 				break;
 		}
 		return $post_states;
+	}
+
+	/**
+	 * Enqueue classic editor helper.
+	 *
+	 * @param string $page Current page.
+	 * @return void
+	 */
+	public function enqueue_editor_helper( $page ) {
+		$screen = get_current_screen();
+		if ( 'post' !== $screen->base || $screen->is_block_editor() ) {
+			// This is not classic editor.
+			return;
+		}
+		// If current user is editor, activate select2.
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			wp_enqueue_script( 'hametuha-author-selector' );
+			wp_enqueue_style( 'select2' );
+		}
 	}
 }
