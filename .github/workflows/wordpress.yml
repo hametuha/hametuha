@@ -88,8 +88,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@master
+
         - name: Run Snyk to check for vulnerabilities
           uses: snyk/actions/php@master
+          with:
+            args: --all-projects
           env:
             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}
 
