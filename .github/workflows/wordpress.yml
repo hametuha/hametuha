@@ -82,6 +82,17 @@ jobs:
       - name: Build Assets
         run: npm run package
 
+  vulnerability:
+    name: Check Vulnerability
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@master
+        - name: Run Snyk to check for vulnerabilities
+          uses: snyk/actions/php@master
+          env:
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}
+
   status-check:
     name: Status Check
     needs: [asset, test]
