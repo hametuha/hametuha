@@ -31,15 +31,11 @@ function hametuha_user_has_flag( $user_id, $flag ) {
 /**
  * User flags.
  *
+ * @param bool $exclude_negative Exclude negative flags.
  * @return array[]
  */
-function hametuha_user_flags() {
-	return [
-		[
-			'id'    => 'spam',
-			'label' => __( '告知なし', 'hametuha' ),
-			'admin' => false,
-		],
+function hametuha_user_flags( $exclude_negative = false ) {
+	$flags = [
 		[
 			'id'    => 'professional',
 			'label' => __( 'プロ作家', 'hametuha' ),
@@ -47,10 +43,18 @@ function hametuha_user_flags() {
 		],
 		[
 			'id'    => 'certified',
-			'label' => __( 'お墨つき', 'hametuha' ),
+			'label' => __( '殿堂入り', 'hametuha' ),
 			'admin' => true,
 		],
 	];
+	if ( ! $exclude_negative ) {
+		$flags[] = [
+			'id'    => 'spam',
+			'label' => __( '告知なし', 'hametuha' ),
+			'admin' => false,
+		];
+	}
+	return $flags;
 }
 
 /**
@@ -143,3 +147,13 @@ add_action( 'hashboard_before_fields_rendered', function( $slug, $page, $name ) 
 		<?php
 	}
 }, 10, 3 );
+
+/**
+ * 作者の投稿数を返す
+ */
+add_action( 'save_post', function( $post_id, $post ) {
+	if ( 'post' !== $post->post_type ) {
+		return;
+	}
+	update_user_meta( $post->post_author, 'work_count', count_user_posts( $post->post_author, 'post', true ) );
+}, 10, 2 );

@@ -419,4 +419,28 @@ class Post extends Command {
 			\WP_CLI::success( sprintf( __( '%d件の投稿が期限切れになりました。', 'hametuha' ), $result ) );
 		}
 	}
+
+	/**
+	 * Update work count of authors.
+	 *
+	 * @subcommand work-count
+	 * @return void
+	 */
+	public function work_count() {
+		global $wpdb;
+		$query = <<<SQL
+			SELECT post_author, COUNT(ID) AS work_count
+			FROM {$wpdb->posts}
+			WHERE post_type = 'post'
+			  AND post_status = 'publish'
+			GROUP BY post_author
+SQL;
+		$total = 0;
+		foreach ( $wpdb->get_results( $query ) as $row ) {
+			update_user_meta( $row->post_author, 'work_count', $row->work_count );
+			echo '.';
+			$total++;
+		}
+		\WP_CLI::success( sprintf( 'Done: %d', $total ) );
+	}
 }

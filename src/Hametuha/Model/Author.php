@@ -83,7 +83,7 @@ class Author extends Model {
 		if ( ! $user ) {
 			return 0;
 		}
-		$tz         = new \DateTimeZone( 'Asia/Tokyo' );
+		$tz         = wp_timezone();
 		$registered = new \DateTime( $user->user_registered, $tz );
 		$now        = new \DateTime( 'now', $tz );
 

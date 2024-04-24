@@ -130,22 +130,22 @@ function hametuha_user_role( $user = null ) {
 	if ( is_numeric( $user ) ) {
 		$user = new WP_User( $user );
 		if ( ! $user ) {
-			return 'ゲスト';
+			return esc_html__( 'ゲスト', 'hametuha' );
 		}
 	}
 	if ( ! method_exists( $user, 'has_cap' ) ) {
-		return 'ゲスト';
+		return esc_html__( 'ゲスト', 'hametuha' );
 	}
 	if ( $user->has_cap( 'manage_options' ) ) {
-		return '編集長';
+		return esc_html__( '編集長', 'hametuha' );
 	} elseif ( $user->has_cap( 'edit_others_posts' ) ) {
-		return '編集者';
+		return esc_html__( '編集者', 'hametuha' );
 	} elseif ( $user->has_cap( 'edit_posts' ) ) {
-		return '投稿者';
+		return esc_html__( '投稿者', 'hametuha' );
 	} elseif ( $user->has_cap( 'subscriber' ) ) {
-		return '読者';
+		return esc_html__( '読者', 'hametuha' );
 	} else {
-		return 'ゲスト';
+		return esc_html__( 'ゲスト', 'hametuha' );
 	}
 }
 

@@ -202,11 +202,34 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 		if ( in_array( 'home', $item->get_types(), true ) ) {
 			// 同人詳細ページを追加
 			$trails []= new bcn_breadcrumb( get_queried_object()->display_name, null, ['post-author'], hametuha_author_url( get_queried_object()->ID ), '', true );
-			// 作品一覧を追加
-			$page_for_posts = get_option( 'page_for_posts' );
-			$trails[] = new bcn_breadcrumb( get_the_title( $page_for_posts ), null, ['post-archive'], get_the_title( $page_for_posts ), '', true );
+			// 作者一覧ページへ
+			$trails []= new bcn_breadcrumb( __( '執筆者一覧', 'hametuha' ), null, ['authors'], home_url( '/authors/' ), '', true );
 		}
 		$trails[] = $item;
+	}
+	$bcn->trail = $trails;
+} );
+
+/**
+ * 著者検索に著者一覧を追加
+ */
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
+	$profile_name = get_query_var( 'profile_name' );
+	if ( '0' !== $profile_name && ! $profile_name ) {
+		return;
+	}
+	$trails = [];
+	foreach ( $bcn->trail as $item ) {
+		/** @var bcn_breadcrumb $item */
+		if ( in_array( 'home', $item->get_types(), true ) ) {
+			// 作者一覧ページへ
+			$trails []= new bcn_breadcrumb( __( '執筆者一覧', 'hametuha' ), null, ['authors'], home_url( '/authors/' ), '', true );
+		}
+		if ( in_array( 'current-item', $item->get_types(), true ) ) {
+			$trails []= new bcn_breadcrumb( __( '執筆者検索', 'hametuha' ), null, ['authors-search'], home_url( '/authors/' ), '', false );
+		} else {
+			$trails[] = $item;
+		}
 	}
 	$bcn->trail = $trails;
 } );
