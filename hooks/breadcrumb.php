@@ -101,15 +101,16 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	if ( ! is_singular( 'series' ) ) {
 		return;
 	}
-	if ( 2 > \Hametuha\Model\Series::get_instance()->get_status( get_queried_object_id() ) ) {
-		// 販売中ではない。
-		return;
-	}
 	$trails = [];
 	foreach ( $bcn->trail as $item ) {
-		$trails[] = $item;
 		/** @var bcn_breadcrumb $item */
+		if ( ! in_array( 'series-root', $item->get_types(), true ) ) {
+			// 投稿一覧じゃなければ既存のアイテムを追加
+			$trails[] = $item;
+		}
 		if ( in_array( 'current-item', $item->get_types(), true ) ) {
+			// 著者ページを追加
+			$trails []= new bcn_breadcrumb( hametuha_author_name( get_queried_object() ), null, ['post-author'], hametuha_author_url( get_queried_object()->post_author ), '', true );
 			// KDPリンクを追加
 			$trails []= new bcn_breadcrumb( __( '電子書籍', 'hametuha' ), null, ['post-series-archive-kdp'], home_url( 'kdp' ), 'kdp-archive', true );
 		}
@@ -122,11 +123,10 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
  *
  */
 add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
-	if ( ! is_single() ) {
+	if ( ! is_singular( 'post' ) ) {
 		// 投稿ページ以外はなにもしない。
 		return;
 	}
-	global $wp_query;
 	// ホーム以外空にする
 	$bcn->trail = [];
 	// ページネーションされているか？
@@ -138,13 +138,25 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	}
 	// URLをつける
 	$bcn->add( new bcn_breadcrumb( get_the_title(), null, ['post-single'], get_permalink( get_queried_object() ), '', $link_last ) );
+	// 作品集の一部なら、作品集へリンク、それ以外ならカテゴリーへリンク
+	$parent = get_queried_object()->post_parent ? get_post( get_queried_object()->post_parent ) : null;
+	if ( $parent && 'series' === $parent->post_type ) {
+		$bcn->add( new bcn_breadcrumb( get_the_title( $parent ), null, ['post-series'], get_permalink( $parent ), '', true ) );
+	} else {
+		$terms = get_the_category( get_queried_object_id() );
+		if ( $terms && ! is_wp_error( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$bcn->add( new bcn_breadcrumb( $term->name, null, ['category'], get_term_link( $term ), '', true ) );
+				break 1;
+			}
+		}
+	}
 	// 作者名をつける
 	$bcn->add( new bcn_breadcrumb( hametuha_author_name( get_queried_object() ), null, ['post-author'], hametuha_author_url( get_queried_object()->post_author ), '', true ) );
-	// 作品一覧ページへ
-	$page_for_posts = get_option( 'page_for_posts' );
-	$bcn->add( new bcn_breadcrumb( get_the_title( $page_for_posts ), null, ['post-archive'], get_the_title( $page_for_posts ), '', true ) );
+	// 作者一覧ページへ
+	$bcn->add( new bcn_breadcrumb( __( '執筆者一覧', 'hametuha' ), null, ['authors'], home_url( '/authors/' ), '', true ) );
 	// 最後にホーム
-	$bcn->add( new bcn_breadcrumb( 'ホーム', null, ['main-home'], home_url(), '', true ) );
+	$bcn->add( new bcn_breadcrumb( __( '破滅派', 'hametuha' ), null, ['main-home'], home_url(), '', true ) );
 } );
 
 /**
