@@ -37,11 +37,23 @@ class ProfileQuery extends QueryHighJack {
 	 * @var array
 	 */
 	protected $rewrites = [
-		'authors/page/([0-9]{1,})/?$'               => 'index.php?profile_name=0&paged=$matches[1]',
-		'authors/?$'                                => 'index.php?profile_name=0',
+		'authors/search/page/(\d+)/?$'              => 'index.php?profile_name=0&paged=$matches[1]',
+		'authors/search/?$'                         => 'index.php?profile_name=0',
 		'(series|anpi)/by/([^/]+)/page/([0-9]+)/?$' => 'index.php?post_type=$matches[1]&author_name=$matches[2]&paged=$matches[3]',
 		'(series|anpi)/by/([^/]+)/?$'               => 'index.php?post_type=$matches[1]&author_name=$matches[2]',
 	];
+
+	/**
+	 * action for pre_get_posts
+	 *
+	 * @param \WP_Query $wp_query
+	 */
+	public function pre_get_posts( \WP_Query &$wp_query ) {
+		if ( $this->is_valid_query( $wp_query ) ) {
+			// テンプレートを変更する
+			add_filter( 'template_include', [ $this, 'template_include' ] );
+		}
+	}
 
 	/**
 	 * タイトル変更
@@ -53,7 +65,7 @@ class ProfileQuery extends QueryHighJack {
 	 * @return string
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		return "執筆者一覧 {$sep} " . get_bloginfo( 'name' );
+		return __( '執筆者検索', 'hametuha' ) . " {$sep} " . get_bloginfo( 'name' );
 	}
 
 	/**
@@ -185,4 +197,14 @@ SQL;
 		return '0' === $profile_name || ! empty( $profile_name );
 	}
 
+
+	/**
+	 * テンプレートを変更
+	 *
+	 * @param string $template Template path.
+	 * @return string
+	 */
+	public function template_include( $template ) {
+		return get_template_directory() . '/archive-author.php';
+	}
 }

@@ -14,12 +14,6 @@ use WPametu\API\QueryHighJack;
  */
 class KdpQuery extends QueryHighJack {
 
-
-	/**
-	 * @var string
-	 */
-	protected $pseudo_post_type = 'profile';
-
 	/**
 	 * Query vars
 	 *
@@ -51,7 +45,7 @@ class KdpQuery extends QueryHighJack {
 	 * @return string
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		return '破滅派の電子書籍';
+		return __( '破滅派の電子書籍', 'hametuha' );
 	}
 
 	/**
@@ -68,6 +62,7 @@ class KdpQuery extends QueryHighJack {
 			] );
 			$wp_query->set( 'orderby', 'menu_order' );
 			$wp_query->set( 'order', 'DESC' );
+			$wp_query->set( 'posts_per_page', 24 );
 			// テンプレートを変更する
 			add_filter( 'template_include', [ $this, 'template_include' ] );
 		}

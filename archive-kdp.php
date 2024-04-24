@@ -12,7 +12,7 @@ global $wp_query;
 ?>
 <header class="book-list-header">
 	<div class="container">
-		<small>Hametuha on amazon</small>
+		<small>Hametuha eBooks</small>
 		<h1>破滅派の電子書籍</h1>
 		<p class="description">
 			破滅派がリリースしている電子書籍<?php echo number_format( $wp_query->found_posts ); ?>冊はAmazonのKindleストアで入手できます。

@@ -1,6 +1,8 @@
 <?php
 /*
  * Template Name: KDP
+ *
+ * @todo 使ってない？
  */
 get_header();
 

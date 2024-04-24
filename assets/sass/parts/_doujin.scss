@@ -151,3 +151,105 @@
   }
 }
 
+.author-group {
+	margin: 40px 0 80px;
+
+	&-header {
+		margin: 20px 0;
+		font-family: $font-family-serif;
+		padding: 20px 0 0;
+		border-top: 2px solid currentColor;
+	}
+
+	&-list {
+		margin: 20px 0 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+		gap: 20px;
+
+		&-item {
+			flex: 0 1 calc( 25% - 15px );
+			list-style: none;
+			position: relative;
+			border: 1px solid $thin-border;
+			background-color: #fdfdfd;
+			box-sizing: border-box;
+			padding: 20px;
+			border-radius: 5px;
+
+			&:hover {
+				background-color: #fff;
+				border-color: #000;
+			}
+
+			@media screen and ( max-width: 767px ) {
+				flex: 0 1 100%;
+			}
+		}
+
+		&-avatar {
+			width: 96px;
+			height: 96px;
+			border-radius: 50%;
+			object-fit: cover;
+			display: block;
+			margin: 0 auto 20px;
+		}
+
+		&-link {
+			display: block;
+			text-align: center;
+			font-size: 1.2em;
+			font-weight: bold;
+			&:link,
+			&:visited {
+				text-decoration: none;
+				color: $text-color;
+			}
+			&:hover,
+			&:active {
+				text-decoration: none;
+				color: $text-color;
+			}
+
+			&::after {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+			}
+		}
+
+		&-description {
+			margin: 10px 0;
+		}
+
+		&-role {
+			display: block;
+			margin-top: 10px;
+			color: $gray-light;
+		}
+
+		&-meta {
+			font-size: 0.8em;
+		}
+
+		&-flag {
+			display: inline-block;
+			margin-right: 1em;
+			padding: 5px 10px;
+			background-color: $brand-success;
+			color: #fff;
+			border-radius: 5px;
+		}
+	}
+}
+
+.search-author-link {
+	margin: 40px 0;
+}
