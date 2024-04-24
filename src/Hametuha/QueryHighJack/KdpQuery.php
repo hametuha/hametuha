@@ -68,6 +68,7 @@ class KdpQuery extends QueryHighJack {
 			] );
 			$wp_query->set( 'orderby', 'menu_order' );
 			$wp_query->set( 'order', 'DESC' );
+			$wp_query->set( 'posts_per_page', 24 );
 			// テンプレートを変更する
 			add_filter( 'template_include', [ $this, 'template_include' ] );
 		}

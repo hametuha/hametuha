@@ -88,7 +88,10 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 				} ), $item->get_url(), $item->get_id(), true );
 			}
 		} else {
-			$trails[] = $item;
+			if ( ! in_array( 'series-root', $item->get_types(), true ) ) {
+				// 投稿一覧じゃなければ既存のアイテムを追加
+				$trails[] = $item;
+			}
 		}
 	}
 	$bcn->trail = $trails;
@@ -143,11 +146,14 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	if ( $parent && 'series' === $parent->post_type ) {
 		$bcn->add( new bcn_breadcrumb( get_the_title( $parent ), null, ['post-series'], get_permalink( $parent ), '', true ) );
 	} else {
-		$terms = get_the_category( get_queried_object_id() );
-		if ( $terms && ! is_wp_error( $terms ) ) {
-			foreach ( $terms as $term ) {
-				$bcn->add( new bcn_breadcrumb( $term->name, null, ['category'], get_term_link( $term ), '', true ) );
-				break 1;
+		foreach ( [ 'campaign', 'category' ] as $taxonomy ) {
+			// キャンペーン、あるいはカテゴリーのどちらかを入れる
+			$terms = get_the_terms( get_queried_object_id(), $taxonomy );
+			if ( $terms && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$bcn->add( new bcn_breadcrumb( $term->name, null, ['category'], get_term_link( $term ), '', true ) );
+					break 2;
+				}
 			}
 		}
 	}
