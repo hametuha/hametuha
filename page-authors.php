@@ -21,7 +21,13 @@ $professionals = new WP_User_Query( [
 			'key'     => 'flag_professional',
 			'value'   => 1,
 			'compare' => '=',
-		]
+		],
+		[
+			'key'     => 'work_count',
+			'value'   => 0,
+			'compare' => '>',
+			'type'    => 'NUMERIC',
+		],
 	],
 ] );
 // 最近入った

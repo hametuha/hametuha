@@ -175,21 +175,23 @@ function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date
 		'order'      => $start_date ? 'ASC' : 'DESC',
 		'meta_query' => [],
 	];
-	if ( ! $end_date ) {
-		$args['meta_query'][] = [
-			'key'     => '_campaign_limit',
-			'value'   => $start_date,
-			'compare' => '>=',
-			'type'    => 'DATE',
-		];
-	} else {
-		// 範囲指定されている。
-		$args['meta_query'][] = [
-			'key'     => '_campaign_limit',
-			'value'   => [ $start_date, $end_date ],
-			'compare' => 'BETWEEN',
-			'type'    => 'DATE',
-		];
+	if ( $start_date ) {
+		if ( !$end_date ) {
+			$args[ 'meta_query' ][] = [
+				'key' => '_campaign_limit',
+				'value' => $start_date,
+				'compare' => '>=',
+				'type' => 'DATE',
+			];
+		} else {
+			// 範囲指定されている。
+			$args[ 'meta_query' ][] = [
+				'key' => '_campaign_limit',
+				'value' => [ $start_date, $end_date ],
+				'compare' => 'BETWEEN',
+				'type' => 'DATE',
+			];
+		}
 	}
 	$campaigns = get_terms( $args );
 	return ( $campaigns && ! is_wp_error( $campaigns ) ) ? $campaigns : [];
