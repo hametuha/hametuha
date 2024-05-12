@@ -134,6 +134,34 @@ class Post extends Command {
 					echo '.';
 					break;
 				case 'text':
+					// Extract captions.
+					// todo: wp-caption, wp-block-image.
+					$images = [];
+					$content = preg_replace_callback( '#\[caption id="attachment_(\d+)".*](.*)\[/caption]#u', function( $matches ) use ( &$images ) {
+						list( $match, $id, $caption ) = $matches;
+						$images[ $id ] = trim( $caption );
+						return '';
+					}, $post->post_content );
+					if ( ! empty( $images ) ) {
+						$sub_dir = $dir . '/images';
+						if ( ! is_dir( $sub_dir ) ) {
+							mkdir( $sub_dir, 0755, true );
+						}
+						$json = [];
+						foreach ( $images as $id => $caption ) {
+							$attachment = wp_get_attachment_image_url( $id, 'full' );
+							$path       = str_replace( home_url( '/' ), ABSPATH, $attachment );
+							$json[]     = [
+								'id'       => $id,
+								'captions' => strip_tags( $caption ),
+								'url'      => basename( $path ),
+							];
+							// Save file.
+							copy( $path, $sub_dir . '/' . basename( $path ) );
+						}
+						file_put_contents( "{$dir}/post-{$post->ID}-captions.json", json_encode( $json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
+					}
+
 					// Post content.
 					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post, $endmark );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
@@ -144,7 +172,7 @@ class Post extends Command {
 					$footernote = trim( ob_get_contents() );
 					ob_end_clean();
 					if ( $footernote ) {
-						// Rmove footer note link.
+						// Remove footer note link.
 						$footernote = preg_replace( '#<a class="footernote-link"[^>]+>(.*?)</a>#u', '', $footernote );
 						file_put_contents( "{$dir}/post-{$post->ID}-footernote.xml", '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" . $footernote );
 					}
@@ -244,6 +272,7 @@ class Post extends Command {
 		// TODO: link should be saved as footernote.
 		$content = preg_replace( '#<a[^>]+>(.*?)</a>#u', '$1', $content );
 		$content = preg_replace( '#<img[^>]+>#u', '', $content );
+		$content = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $content );
 
 		// Remove empty line.
 		$content = trim( implode( "\n", array_map( function( $line ) {
@@ -259,7 +288,7 @@ class Post extends Command {
 			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
 		}, $content );
 
-		// Inline elemnets.
+		// Inline elements.
 		foreach ( [
 			'#<strong>(.*?)</strong>#u'              => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
