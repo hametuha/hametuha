@@ -216,8 +216,8 @@ class Sales extends Model {
 				's.royalty != %d' => 0,
 			] )
 			->group_by( 's.asin, s.currency' )
+			->order_by( 'post_id', 'ASC' )
 			->result();
-
 		return array_filter( $result, function ( $row ) {
 			return $row->user_id && ( 0 < $row->sub_total );
 		} );
