@@ -359,12 +359,27 @@ add_filter( 'wp_robots', function ( $robots ) {
  * 2. rel=prev, rel=next を出力
  */
 add_action( 'wp_head', function() {
-	if ( ! is_archive() ) {
+	if ( is_front_page() ) {
 		return;
 	}
-	// Canonical URL.
-	$url = home_url( $_SERVER['REQUEST_URI'] );
-	$url = explode( '?', $url )[0];
+	$paged = get_query_var( 'paged' );
+	$url   = '';
+	if ( is_category() || is_tag() || is_tax() ) {
+		$url = get_term_link( get_queried_object() );
+	} elseif ( is_author() ) {
+		$url = get_author_posts_url( get_queried_object_id() );
+	} elseif ( is_post_type_archive() ) {
+		$url = get_post_type_archive_link( get_query_var( 'post_type' ) );
+	} elseif ( is_home() ) {
+		$url = get_permalink( get_option( 'page_for_posts' ) );
+	}
+	if ( ! $url ) {
+		return;
+	}
+	// If paged, add page number.
+	if ( 1 < $paged ) {
+		$url = sprintf( '%s/page/%d/', untrailingslashit( $url ), $paged );
+	}
 	printf( '<link rel="canonical" href="%s" />', esc_url( $url ) );
 	// prev, next.
 	foreach ( [
@@ -376,7 +391,7 @@ add_action( 'wp_head', function() {
 			printf( '<link rel="%s" href="%s" />', esc_attr( $key ), esc_url( $link ) );
 		}
 	}
-}, 10 );
+}, 1 );
 
 /**
  * 404を確実に出す
