@@ -138,6 +138,15 @@ function hametuha_get_ogp_type() {
 	}
 }
 
+/**
+ * カノニカルを出力する
+ *
+ * @param string $url canonical URL
+ * @return string
+ */
+function hametuha_canonical( $url ) {
+	return sprintf( '<link rel="canonical" href="%s" />' . "\n", esc_url( $url ) );
+}
 
 /**
  * JetpackのOGPを消す
