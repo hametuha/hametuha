@@ -1,5 +1,12 @@
 <?php
-if ( ! ( $records = hametuha_campaign_record() ) ) {
+/**
+ * 公募の採点結果を表示する
+ *
+ * @param array $atts
+ */
+
+$records = hametuha_campaign_record();
+if ( ! $records ) {
 	return;
 } elseif ( is_wp_error( $records ) ) {
 	printf( '<p class="alert alert-default">%s</p>', esc_html( $records->get_error_message() ) );

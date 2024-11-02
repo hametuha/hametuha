@@ -1,6 +1,6 @@
 <?php
 /**
- * キャンペーン用ファイル
+ * キャンペーン用関数
  */
 
 
@@ -22,7 +22,7 @@ function hametuha_campaign_record( $term = null ) {
 	if ( $limit ) {
 		$limit .= ' 23:59:59';
 	} else {
-		return new WP_Error( 'not_campaign', sprintf( '%sは採点のないキャンペーンです。', $term->name ) );
+		return new WP_Error( 'not_campaign', sprintf( '%sは採点のない公募です。', $term->name ) );
 	}
 	$record = wp_cache_get( $term->term_id, 'campaign_record' );
 	if ( false === $record ) {
@@ -200,18 +200,17 @@ function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date
 /**
  * キャンペーンが応募中か
  *
- * @param WP_Term $term
- * @param string $when
+ * @param WP_Term $term タームオブジェクト
+ * @param string  $when 指定しなければ現在時。YYYY-MM-DD形式で指定することも可能。
  *
  * @return bool
  */
 function hametuha_is_available_campaign( $term, $when = 'now' ) {
-	$tz   = new DateTimeZone( wp_timezone_string() );
-	$time = new DateTime( $when, $tz );
+	$time = new DateTime( $when, wp_timezone() );
 	if ( ! $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) {
 		return true;
 	}
-	$limit = new DateTime( $limit . ' 23:59:59', $tz );
+	$limit = new DateTime( $limit . ' 23:59:59', wp_timezone() );
 
 	return ( $limit >= $time );
 }
@@ -297,6 +296,48 @@ function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
 		$error->add( 500, '文字数が長すぎます。' );
 	}
 	return $error->get_error_messages() ? $error : true;
+}
+
+/**
+ * ユーザーがキャンペーンに参加しているか
+ *
+ * @param int      $campaign_id キャンペーンID
+ * @param null|int $user_id     デフォルトは現在のユーザー
+ * @return bool
+ */
+function hametuha_is_participating( $campaign_id, $user_id = null ) {
+	$campaign = get_term( $campaign_id, 'campaign' );
+	if ( ! $campaign || is_wp_error( $campaign ) ) {
+		return false;
+	}
+	if ( is_null( $user_id ) ) {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			return false;
+		}
+	}
+
+	// 作品で参加しているか
+	$query = new WP_Query( [
+		'post_type'      => 'post',
+		'post_status'    => 'any',
+		'no_found_rows'  => true,
+		'posts_per_page' => 1,
+		'author'         => $user_id,
+		'tax_query'      => [
+			[
+				'taxonomy' => 'campaign',
+				'field'    => 'id',
+				'terms'    => $campaign_id,
+			],
+		],
+	] );
+	if ( $query->have_posts() ) {
+		return true;
+	}
+	// 興味があると明言しているか
+	$terms = get_user_meta( $user_id, 'interested_campaigns' );
+	return in_array(  (string) $campaign_id, $terms, true );
 }
 
 /**

@@ -24,7 +24,7 @@ class CampaignController extends Singleton {
 	 * @return void
 	 */
 	public function pre_get_posts( $wp_query ) {
-		if ( is_admin() || ! $wp_query->is_main_query() || ! is_user_logged_in()) {
+		if ( is_admin() || ! $wp_query->is_main_query() || ! is_user_logged_in() ) {
 			return;
 		}
 		if ( ! current_user_can( 'edit_posts' ) || current_user_can( 'edit_other_posts' ) ) {
@@ -51,35 +51,72 @@ class CampaignController extends Singleton {
 			}
 		}
 		// 現在のキャンペーンにユーザーが参加しているかを調べ
-		// 散会してる場合は非公開・下書きも含めて表示
-		if ( $this->is_user_participating( $terms, get_current_user_id() ) ) {
-			$wp_query->set( 'post_status', [ 'publish', 'private', 'draft' ] );
+		// 参加してる場合は非公開・下書きも含めて表示
+		foreach ( $terms as $term ) {
+			if ( $this->is_user_participating( $term, get_current_user_id() ) || $this->is_user_supporting( $term, get_current_user_id() ) ) {
+				$wp_query->set( 'post_status', [ 'publish', 'private', 'draft' ] );
+				return;
+			}
 		}
 	}
 
 	/**
-	 * ユーザーがキャンペーンに参加しているかどうか
+	 * ユーザーがキャンペーンに作品で参加しているかどうか
 	 *
-	 * @param \WP_Term|\WP_Term[] $term_or_terms
-	 * @param int                 $user_id
+	 * @param \WP_Term $term_or_terms
+	 * @param int      $user_id
 	 * @return bool
 	 */
-	public function is_user_participating( $term_or_terms, $user_id ) {
-		if ( is_a( $term_or_terms, 'WP_Term' ) ) {
-			$term_or_terms = [ $term_or_terms ];
-		}
+	public function is_user_participating( $term, $user_id ) {
 		$query = new \WP_Query( [
 			'post_type'      => 'post',
 			'posts_per_page' => 1,
 			'post_status'    => 'any',
+			'author'         => $user_id,
 			'tax_query'      => [
 				[
 					'taxonomy' => 'campaign',
 					'field'    => 'term_id',
-					'terms'    => wp_list_pluck( $term_or_terms, 'term_id' ),
+					'terms'    => $term->term_id,
 				],
 			],
 		] );
 		return $query->have_posts();
+	}
+
+	/**
+	 * ユーザーがキャンペーンをサポートしているかどうか
+	 *
+	 * @param \WP_Term $term
+	 * @param int      $user_id
+	 * @return bool
+	 */
+	public function is_user_supporting( $term, $user_id ) {
+		if ( ! get_term_meta( $term->term_id, '_is_collaboration', true ) ) {
+			// 共同型でないので、サポートできない
+			return false;
+		}
+		$terms = get_user_meta( $user_id, 'supporting_campaigns' );
+		return in_array( (string) $term->term_id, $terms, true );
+	}
+
+	/**
+	 * サポーターを取得する
+	 *
+	 * @param \WP_Term $term
+	 * @return \WP_User[]
+	 */
+	public function get_supporters( $term ) {
+		$user = new \WP_User_Query( [
+			'orderby' => 'user_registered',
+			'order'   => 'ASC',
+			'meta_query' => [
+				[
+					'key'   => 'supporting_campaigns',
+					'value' => $term->term_id,
+				],
+			],
+		] );
+		return $user->get_results();
 	}
 }
