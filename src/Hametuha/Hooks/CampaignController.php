@@ -15,6 +15,7 @@ class CampaignController extends Singleton {
 	 */
 	public function __construct( array $setting = array() ) {
 		add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ] );
+		add_action( 'hametuha_campaign_supporter_add', [ $this, 'notify_new_supporter' ], 10, 2 );
 	}
 
 	/**
@@ -118,5 +119,19 @@ class CampaignController extends Singleton {
 			],
 		] );
 		return $user->get_results();
+	}
+
+	/**
+	 * ユーザーが追加されたら通知する
+	 *
+	 * @param \WP_Term $term    キャンペーン
+	 * @param int      $user_id ユーザーID
+	 * @return void
+	 */
+	public function notify_new_supporter( $term, $user_id ) {
+		$user = get_userdata( $user_id );
+		$message = _x( '公募「%1$s」に %3$s さんがサポーターとして参加されました %2$s', 'slack', 'hametuha' );
+		$message = sprintf( $message, $term->name, get_term_link( $term ), $user->display_name );
+		hametuha_slack( $message, [], '#magazine' );
 	}
 }
