@@ -192,6 +192,31 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ); ?>"/>
 			</td>
 		</tr>
+		<tr>
+			<th>
+				コラボレーション
+			</th>
+			<td>
+				<?php
+				$current = get_term_meta( $tag->term_id, '_is_collaboration', true );
+				foreach ( [
+					'' => 'なし',
+					'1' => '共同作業型キャンペーン',
+				] as $value => $label ) {
+					?>
+					<label style="display: block; margin: 0 1em 1em 0;">
+						<input type="radio" name="is_collaboration"
+							   value="<?php echo esc_attr( $value ); ?>" <?php checked( $current, $value ); ?>/>
+						<?php echo esc_html( $label ); ?>
+					</label>
+					<?php
+				}
+				?>
+				<p class="description">
+					<?php esc_html_e( '共同型プロジェクトの場合は投稿していない人もサポーターとして非公開の作品を閲覧できます。', 'hametuha' ); ?>
+				</p>
+			</td>
+		</tr>
 		<?php
 	}
 } );
@@ -209,6 +234,7 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 				'campaign_max_length',
 				'campaign_detail',
 				'campaign_url',
+				'is_collaboration'
 			] as $key
 		) {
 			if ( isset( $_POST[ $key ] ) ) {

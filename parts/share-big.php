@@ -1,5 +1,5 @@
 <?php
-if ( is_preview() ) {
+if ( 'publish' !== ( get_queried_object()->post_status ?? '' ) ) {
 	return;
 }
 ?>

@@ -29,7 +29,7 @@ $args = wp_parse_args( $args, [
 		<?php
 		$counter = 0;
 		foreach ( $books as $book ) :
-			if ( 6 <= $counter ) {
+			if ( 12 <= $counter ) {
 				break;
 			}
 			$counter++;

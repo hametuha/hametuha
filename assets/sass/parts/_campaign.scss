@@ -126,7 +126,32 @@ $brand-warning: #f0ad4e !default;
   }
 }
 
+// キャンペーンの参加条件
+.campaign-collaboration {
+	background-color: $navbar-default-bg;
+	margin: 2em 0;
+	padding: 2em;
 
+	&-title {
+		margin: 0 0 1em;
+		font-size: 1.5em;
+		font-family: $work-title;
+	}
+
+	i {
+		margin-right: 0.5em;
+	}
+
+	.icon-checkmark {
+		color: green;
+	}
+	.icon-close {
+		color: $shade-font;
+	}
+
+	p.description {
+	}
+}
 
 // キャンペーン
 .widget{

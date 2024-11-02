@@ -443,6 +443,10 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		// メンバーをセット、いなければエラー。
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . 'のプロフィール | ' . get_bloginfo( 'name' );
+		// カノニカルを設定
+		add_action( 'wp_head', function() use ( $author_name ) {
+			echo hametuha_canonical( home_url( "doujin/detail/{$author_name}/" ) );
+		}, 1 );
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
