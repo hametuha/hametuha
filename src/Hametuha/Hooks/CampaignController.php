@@ -104,20 +104,30 @@ class CampaignController extends Singleton {
 	/**
 	 * サポーターを取得する
 	 *
-	 * @param \WP_Term $term
+	 * @param \WP_Term|int|\WP_Term[]|int[] $term_or_terms キャンペーン
 	 * @return \WP_User[]
 	 */
-	public function get_supporters( $term ) {
-		$user = new \WP_User_Query( [
-			'orderby' => 'user_registered',
-			'order'   => 'ASC',
-			'meta_query' => [
-				[
-					'key'   => 'supporting_campaigns',
-					'value' => $term->term_id,
-				],
-			],
-		] );
+	public function get_supporters( $term_or_terms ) {
+		$args = [
+			'orderby'    => 'user_registered',
+			'order'      => 'ASC',
+			'meta_query' => []
+		];
+		if ( is_array( $term_or_terms ) ) {
+			$args['meta_query'][] = [
+				'key'     => 'supporting_campaigns',
+				'compare' => 'IN',
+				'value'   => array_map( function( $term ) {
+					return is_a( $term, 'WP_Term' ) ? $term->term_id : $term;
+				}, $term_or_terms ),
+			];
+		} else {
+			$args['meta_query'][] = [
+				'key'   => 'supporting_campaigns',
+				'value' => is_a( $term_or_terms, 'WP_Term' ) ? $term_or_terms->term_id : intval( $term_or_terms ),
+			];
+		}
+		$user = new \WP_User_Query( $args );
 		return $user->get_results();
 	}
 

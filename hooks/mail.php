@@ -132,7 +132,7 @@ add_filter( 'hamail_generic_user_group', function( $groups ) {
 	if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
 		$groups[] = [
 			'id'       => 'hamail_tag_authors',
-			'label'    => __( 'タグのついた投稿の作者', 'hametuha' ),
+			'label'    => __( 'タグのついた投稿の関係者', 'hametuha' ),
 			'endpoint' => 'hametuha/v1/recipients/tag-authors',
 		];
 	}
