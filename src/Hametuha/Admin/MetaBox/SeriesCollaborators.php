@@ -52,12 +52,9 @@ class SeriesCollaborators extends SeriesBase {
 				'label' => $label,
 			];
 		}
-		$post_id = (int) filter_input( INPUT_GET, 'post' );
 		wp_localize_script( 'hametuha-module-collaborators-list', 'CollaboratorsList', [
-			'series_id'    => $post_id,
 			'share_types'  => $share_types,
 			'collaborator' => $collaborator_types,
-			'shareType'    => $this->collaborators->current_share_type( $post_id ),
 		] );
 	}
 
@@ -103,7 +100,7 @@ class SeriesCollaborators extends SeriesBase {
 				</td>
 			</tr>
 		</table>
-		<div id="series-collaborators"></div>
+		<div id="series-collaborators" data-post-id="<?php echo esc_attr( $post->ID); ?>"></div>
 		<?php
 	}
 }
