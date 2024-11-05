@@ -23,7 +23,7 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 				if ( 'author' === $key ) {
 					$val = '編集者';
 					if ( current_user_can( 'edit_others_posts' ) ) {
-						$new_columns['menu_order'] = '順';
+						$new_columns['menu_order'] = '順序';
 					}
 				}
 				$new_columns[ $key ] = $val;
@@ -32,6 +32,9 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 					$new_columns['thumbnail']    = '表紙画像';
 					$new_columns['count']        = '作品数';
 					$new_columns['sales_status'] = '販売状況';
+				}
+				if ( 'author' === $key ) {
+					$new_columns['collaborators'] = '協力者';
 				}
 				break;
 			case 'post':
@@ -124,6 +127,19 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 			printf( "<span style='color: %s'>%s%s</span>%s", $color, Series::get_instance()->status_label[ $status ], $extra, $secret );
 			if ( $asin = Series::get_instance()->get_asin( $post_id ) ) {
 				echo "<code>{$asin}</code>";
+			}
+			break;
+		case 'collaborators':
+			$collaborators = \Hametuha\Model\Collaborators::get_instance()->get_collaborators( $post_id );
+			if ( empty( $collaborators ) ) {
+				printf( '<span style="color:lightgrey">%s</span>', esc_html__( '協力者なし', 'hametuha' ) );
+			}
+			foreach ( $collaborators as $index => $collaborator ) {
+				if ( 8 < $index ) {
+					printf( esc_html__( 'ほか％d名', 'hametuha' ), count( $collaborators ) );
+					break;
+				}
+				printf('<a style="margin-right: 0.5em;" href="%s">%s</a>', esc_url( hametuha_author_url( $collaborator->ID ) ), esc_html( $collaborator->display_name ) );
 			}
 			break;
 		default:
