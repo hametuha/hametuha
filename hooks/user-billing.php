@@ -101,6 +101,21 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 				<?php endif; ?>
 			</td>
 		</tr>
+		<tr>
+			<th>
+				<?php esc_html_e( '振込先', 'hametuha' ); ?>
+			</th>
+			<td>
+				<?php
+				$account = new \Hametuha\Sharee\Master\Account( $user->ID );
+				if ( $account->validate() ) {
+					echo esc_html( $account->format_line() );
+				} else {
+					echo '<span style="color:lightgray">---</span>';
+				}
+				?>
+			</td>
+		</tr>
 	</table>
 	<?php
 } );
