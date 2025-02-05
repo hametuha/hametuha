@@ -43,6 +43,9 @@ class RecaptchaV3 extends Singleton {
 		if ( ! $this->available ) {
 			return new \WP_Error( 'recaptcha_verification_failed', __( 'This site has no proper setting.', 'hametuha' ) );
 		}
+		if ( empty( $token ) ) {
+			return new \WP_Error( 'recaptcha_verification_failed', __( 'アクセスチェックで異常が発生しました。やりなおしてください。', 'hametuha' ) );
+		}
 		$result = wp_remote_post( 'https://www.google.com/recaptcha/api/siteverify', [
 			'body' => [
 				'secret'   => $this->secret_key,
