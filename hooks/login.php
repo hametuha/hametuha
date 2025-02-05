@@ -64,7 +64,7 @@ add_action( 'register_form', function() {
 	  </label>
 	</p>
 	<?php
-}, 1 );
+}, 2 );
 
 /**
  * Register mail magazine.
@@ -95,7 +95,7 @@ add_action( 'login_form', 'hametuha_login_divider', 2 );
  * Add login tag line
  */
 add_filter( 'login_message', function( $messages ) {
-	$messages = sprintf( '<p class="login-tagline">%s</p>', esc_html( get_bloginfo( 'description' ) ) ) . $messages;
+	$messages = sprintf( '<p class="login-tagline">%s</p>', esc_html(  get_bloginfo( 'name' ) . ' ' . get_bloginfo( 'description' ) ) ) . $messages;
 	return $messages;
 }, 9999 );
 

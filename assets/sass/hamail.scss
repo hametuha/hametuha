@@ -1,0 +1,25 @@
+body {
+	  color: #D70000 !important;
+}
+
+hr {
+	clear: both;
+	max-width: 150px;
+	border-color: #aaa;
+	border-style: solid;
+	border-bottom: none;
+	box-shadow: none;
+}
+
+figcaption {
+	font-size: 0.8em;
+	color: #666;
+	margin: 5px 0 0;
+}
+
+.wp-block-group {
+	clear: both;
+	&.has-background {
+		padding: 15px;
+	}
+}

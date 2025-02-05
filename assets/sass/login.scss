@@ -74,12 +74,20 @@ $gap: 8px;
   }
 }
 
-.login-action-register #user_login{
-  margin-bottom: 5px;
-  & + span{
-    display: block;
-    margin-bottom: 16px;
-    color: #888;
-    font-size: 11px;
-  }
+// 登録フォームのデザイン
+.login-action-register {
+	#user_login,
+	#user_message {
+		margin-bottom: 5px;
+	}
+}
+.login-action-register #user_login + span,
+.user-registration-description {
+	display: block;
+	margin-bottom: 16px;
+	color: #888;
+	font-size: 11px;
+}
+#user_message2 {
+	display: none;
 }

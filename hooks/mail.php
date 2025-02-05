@@ -145,3 +145,14 @@ add_filter( 'hamail_generic_user_group', function( $groups ) {
 if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
 	\Hametuha\Plugins\Hamail\TagAuthor::get_instance();
 }
+
+/**
+ * メルマガ用CSSにパスを追加する
+ *
+ * @param string[] $path
+ * @return string[]
+ */
+add_filter( 'hamail_css_path', function( $path ) {
+	$path[] = get_template_directory() . '/assets/css/hamail.css';
+	return $path;
+} );

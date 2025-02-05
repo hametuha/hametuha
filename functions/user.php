@@ -77,16 +77,29 @@ function hametuha_user_write_actions() {
 		], $actions );
 	}
 	if ( current_user_can( 'edit_posts' ) ) {
+		// 投稿用のリンク
 		$editor_actions = [
 			'file-plus' => [ admin_url( 'post-new.php' ), '新規投稿を作成', false, '', false ],
 			'books'     => [ admin_url( 'edit.php' ), '作品一覧', false, '', false ],
 			'stack'     => [ admin_url( 'edit.php?post_type=series' ), '作品集／連載', false, '', false ],
 			'newspaper' => [ admin_url( 'post-new.php?post_type=news' ), 'ニュースを投稿する', false, '', false ],
 		];
-		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_the_ID() ) ) {
+		if ( is_singular( [ 'post', 'page', 'announcement', 'series' ] ) && current_user_can( 'edit_post', get_queried_object_id() ) ) {
+			// この投稿の編集権限がある
 			$editor_actions = array_merge( [
 				'pencil6' => [ get_edit_post_link( get_queried_object_id() ), 'このページを編集', false, '', false ],
 			], $editor_actions );
+		}
+		if ( ( is_tax() || is_tag() || is_category() ) && current_user_can( 'manage_categories' ) ) {
+			// タームの編集権限がある
+			$term = get_queried_object();
+			if ( is_a( $term, 'WP_Term' ) ) {
+				$taxonomy = get_taxonomy( $term->taxonomy );
+				$editor_actions = array_merge( [
+					// translators: %1$s is taxonomy name, %2$s is term name.
+					'tag' => [ get_edit_term_link( $term ), sprintf( __( '%1$s「%2$s」を編集', 'hametuha' ), $taxonomy->label, $term->name ), false, '', false ],
+				], $editor_actions );
+			}
 		}
 		$actions = array_merge( $editor_actions, $actions );
 	} elseif ( current_user_can( 'read' ) ) {
@@ -109,7 +122,7 @@ function hametuha_user_registered( $format = false ) {
 	}
 	$user = wp_get_current_user();
 	if ( $user->ID ) {
-		return mysql2date( $format, $user->user_registered );
+		return mysql2date( $format, get_date_from_gmt( $user->user_registered ) );
 	} else {
 		return '-';
 	}
