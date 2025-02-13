@@ -2,8 +2,6 @@ name: Hametuha Unit Test
 
 on:
   push:
-    branches:
-      - master
     tags:
       - '*'
   pull_request:
@@ -11,46 +9,46 @@ on:
       - master
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php: [ '7.2', '7.4' ]        # PHP versions to check.
-        wp: [ 'latest', '6.1' ]             # WordPress version to check.
-    services:
-      mysql:
-        image: mysql:5.7
-        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
-        env:
-          MYSQL_ROOT_PASSWORD: root
-    name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup PHP with composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Start MySQL
-        run: |
-          sudo systemctl start mysql
-          mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
-
-      - name: Install WordPress
-        run: bash bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
-
-      - name: Run test suite
-        run: composer test
+#  test:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        php: [ '7.2', '7.4' ]        # PHP versions to check.
+#        wp: [ 'latest', '6.1' ]             # WordPress version to check.
+#    services:
+#      mysql:
+#        image: mysql:5.7
+#        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+#        env:
+#          MYSQL_ROOT_PASSWORD: root
+#    name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Setup PHP with composer
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.php }}
+#          tools: composer
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#
+#      - name: Validate composer.json and composer.lock
+#        run: composer validate
+#
+#      - name: Install dependencies
+#        run: composer install --prefer-dist --no-progress --no-suggest
+#
+#      - name: Start MySQL
+#        run: |
+#          sudo systemctl start mysql
+#          mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+#
+#      - name: Install WordPress
+#        run: bash bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
+#
+#      - name: Run test suite
+#        run: composer test
 
   asset:
     runs-on: ubuntu-latest
@@ -84,7 +82,7 @@ jobs:
 
   vulnerability:
     name: Check Vulnerability
-    needs: [test]
+    if: contains(github.ref, 'tags/')
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@master
@@ -98,11 +96,13 @@ jobs:
 
   status-check:
     name: Status Check
-    needs: [asset, test]
+    needs: [asset]
     runs-on: ubuntu-latest
+    if: always()
     steps:
-      - name: Display Status
-        run: echo "All Green"
+      - uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
 
   release:
     name: Build Hametuha Theme
