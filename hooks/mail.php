@@ -145,6 +145,9 @@ add_filter( 'hamail_generic_user_group', function( $groups ) {
 if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
 	\Hametuha\Plugins\Hamail\TagAuthor::get_instance();
 }
+if ( class_exists( 'Hametuha\Hamail\Pattern\Filters\UserFilterInputPattern' ) ) {
+	\Hametuha\Plugins\Hamail\UserFilterPayment::get_instance();
+}
 
 /**
  * メルマガ用CSSにパスを追加する
