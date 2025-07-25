@@ -1,16 +1,59 @@
-vendor
-vendor-dev
-node_modules
-bower_components
-assets/html/*.html
-assets/js/dist
-composer.lock
-composer-dev.lock
-.sass-cache
-.svn
-/wordpress/
-package-lock.json
-assets/img/*
-!assets/img/src
-assets/css
-wp-dependencies.json
+# WordPress core
+/wp/
+
+# Uploads and other runtime files
+/uploads/
+/upgrade/
+/cache/
+/backups/
+
+# Composer dependencies
+/vendor/
+/plugins/*
+!/plugins/.gitkeep
+/themes/*
+!/themes/hametuha/
+
+# Node dependencies (theme specific)
+/themes/hametuha/node_modules/
+/node_modules/
+
+# Build files
+*.log
+*.cache
+.DS_Store
+._*
+Thumbs.db
+
+# Theme build files
+/themes/hametuha/vendor/
+/themes/hametuha/assets/css/
+/themes/hametuha/assets/js/dist/
+/themes/hametuha/assets/img/*
+!/themes/hametuha/assets/img/src
+!/themes/hametuha/assets/img/covers
+/themes/hametuha/composer.lock
+/themes/hametuha/package-lock.json
+/themes/hametuha/wp-dependencies.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# DDEV
+.ddev/db_snapshots/
+.ddev/import-db/
+.ddev/.gitignore
+.ddev/docker-compose.*.yaml
+.ddev/db.cnf
+
+# Other
+*.sql
+*.sql.gz

@@ -1,47 +1,64 @@
 {
-	"name": "hametuha/hametuha",
-	"description": "A WordPress theme for hametuha",
-	"minimum-stability": "stable",
-	"license": "GPL-3.0-or-later",
-	"scripts": {
-		"test": "phpunit",
-		"lint": "phpcs --standard=phpcs.ruleset.xml $(find ./ -name '*.php')",
-		"fix": "phpcbf --standard=phpcs.ruleset.xml $(find ./ -name '*.php')"
-	},
-	"authors": [
-		{
-			"name": "Hametuha INC.",
-			"email": "info@hametuha.co.jp"
-		}
-	],
-	"require": {
-		"php": ">=7.2",
-		"ext-simplexml": "*",
-		"ext-curl": "*",
-		"hametuha/wpametu": "^1.1.1",
-		"hametuha/hamepub": "^1.0.0",
-		"hametuha/hashboard": "^0.9.1",
-		"hametuha/sharee": "^0.8.9",
-		"league/commonmark": "^1.6|^2.3",
-		"kunoichi/ga-communicator": "^3.3",
-		"youaoi/php-mecab": "^1.0"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "^8.5.33",
-		"yoast/phpunit-polyfills": "^1.0|^2.0",
-		"squizlabs/php_codesniffer": "^3.0",
-		"wp-coding-standards/wpcs": "^3.0",
-		"phpcompatibility/php-compatibility": "^9.3",
-		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
-	},
-	"autoload": {
-		"psr-0": {
-			"Hametuha": "src"
-		}
-	},
-	"config": {
-		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
-		}
-	}
+  "name": "hametuha/hametuha",
+  "description": "Hametuha WordPress site",
+  "type": "project",
+  "license": "GPL-3.0-or-later",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "composer/installers": "^2.0",
+    "wpackagist-plugin/contact-form-7": "*",
+    "wpackagist-plugin/flamingo": "*",
+    "wpackagist-plugin/jetpack": "*",
+    "wpackagist-plugin/wp-yomigana": "*",
+    "wpackagist-plugin/gianism": "*",
+    "wpackagist-plugin/hamail": "*",
+    "wpackagist-plugin/hamethread": "*",
+    "wpackagist-plugin/hamelp": "*",
+    "wpackagist-plugin/wp-hamazon": "*",
+    "wpackagist-plugin/never-let-me-go": "*",
+    "hametuha/wpametu": "^1.1.1",
+    "hametuha/hamepub": "^1.0.0",
+    "hametuha/hashboard": "^0.9.1",
+    "hametuha/sharee": "^0.8.9",
+    "league/commonmark": "^1.6|^2.3",
+    "kunoichi/ga-communicator": "^3.3",
+    "youaoi/php-mecab": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5.33",
+    "yoast/phpunit-polyfills": "^1.0|^2.0",
+    "squizlabs/php_codesniffer": "^3.0",
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "Hametuha": "themes/hametuha/src"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "lint": "phpcs --standard=phpcs.xml",
+    "fix": "phpcbf --standard=phpcs.xml"
+  },
+  "extra": {
+    "wordpress-install-dir": "wp",
+    "installer-paths": {
+      "plugins/{$name}/": ["type:wordpress-plugin"],
+      "themes/{$name}/": ["type:wordpress-theme"]
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
 }

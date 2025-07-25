@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ruleset name="Hametuha Coding Standards">
+    <description>Hametuha coding standards based on WordPress standards</description>
+
+    <!-- Scan only PHP files -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Show colors -->
+    <arg name="colors"/>
+
+    <!-- Show progress -->
+    <arg value="sp"/>
+
+    <!-- Files to check -->
+    <file>./themes/hametuha</file>
+
+    <!-- Exclude paths -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <!-- Use WordPress coding standards -->
+    <rule ref="WordPress">
+        <!-- Exclude some rules -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+    </rule>
+
+    <!-- Additional PHP compatibility check -->
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="7.4-"/>
+</ruleset>

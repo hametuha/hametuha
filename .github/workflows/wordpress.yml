@@ -61,7 +61,7 @@ jobs:
           node-version: '14'
 
       - name: Install Dependencies
-        run: npm install
+        run: cd themes/hametuha && npm install
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
@@ -78,7 +78,7 @@ jobs:
         run: composer install --prefer-dist --no-dev
 
       - name: Build Assets
-        run: npm run package
+        run: cd themes/hametuha && npm run package
 
   vulnerability:
     name: Check Vulnerability
