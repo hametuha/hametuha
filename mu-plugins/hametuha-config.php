@@ -1,30 +1,39 @@
 <?php
 /**
- * Plugin Name: Hametuha Configuration
- * Description: Must-use plugin for Hametuha site configuration
+ * Plugin Name: Hametuha Local Env Config
+ * Description: Must-use plugin for Hametuha site configuration for local env
  * Version: 1.0.0
  * Author: Hametuha
  */
 
 // Prevent direct access
-if (!defined('ABSPATH')) {
+if ( ! defined('ABSPATH' ) ) {
     exit;
 }
 
-// サイト固有の設定をここに記述
-add_action('init', function() {
-    // 例: デバッグ情報の表示
-    if (WP_DEBUG) {
-        error_log('Hametuha MU Plugin loaded');
-    }
-});
-
-// 例: 管理バーのカスタマイズ
-add_action('wp_before_admin_bar_render', function() {
-    global $wp_admin_bar;
+/**
+ * ローカル環境の場合は管理バーをカスタマイズ
+ */
+add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
     $wp_admin_bar->add_menu([
         'id'    => 'hametuha-info',
-        'title' => 'Hametuha Dev',
+        'title' => '［ローカル環境］',
         'href'  => admin_url(),
     ]);
+	$counter = 1;
+	foreach ( [
+		'phpMyAdmin' => 'http://localhost:8081',
+		'Mailpit' => 'http://localhost:8026',
+	] as $label => $link ) {
+		$wp_admin_bar->add_node( [
+			'id' => sprintf( 'hametuha-dev-%d', $counter ),
+			'title' => $label,
+			'href'  => $link,
+			'parent' => 'hametuha-info',
+			'meta' => [
+				'target' => '_blank'
+			],
+		] );
+		++$counter;
+	}
 });

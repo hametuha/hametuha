@@ -11,4 +11,4 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description
 
-A 
+破滅派専用のWordPressテーマです。独自機能の大半はこのテーマに含まれています。

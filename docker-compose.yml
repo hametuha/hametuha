@@ -47,6 +47,8 @@ services:
       - ./maintenance.php:/var/www/html/wp-content/maintenance.php
       - ./db-error.php:/var/www/html/wp-content/db-error.php
       - ./uploads:/var/www/html/wp-content/uploads
+      # WordPressテストスイート
+      - ./wp-tests:/var/www/html/wp-tests
       # PHP設定
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       # Composer cache
@@ -90,6 +92,8 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER:-wordpress}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-wordpress}
       UPLOAD_LIMIT: 300M
     networks:
       - hametuha-network

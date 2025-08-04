@@ -66,7 +66,9 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
 	},
 	"scripts": {
-		"test": "phpunit",
+		"test": [
+			"docker compose exec wordpress bash -c \"cd /var/www/html/wp-content/themes/hametuha && composer test\""
+		],
 		"lint": [
 			"@lint:theme"
 		],
@@ -78,6 +80,7 @@
 		"wp": "docker compose exec -u www-data wordpress wp",
 		"start": "docker compose up -d",
 		"stop": "docker compose down",
+		"restart": "docker compose down && docker compose up -d",
 		"build": "docker compose up -d --build",
 		"logs": "docker compose logs -f",
 		"logs:debug": "docker compose exec wordpress tail -f /var/www/html/wp-content/debug.log",

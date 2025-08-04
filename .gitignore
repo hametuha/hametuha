@@ -1,14 +1,13 @@
-# WordPress core
+# WordPress core and test suite
 /wp/
-
-# WordPress config (local settings)
-/wp-config-local.php
+/wp-tests/
 
 # Uploads and other runtime files
 /uploads/
 /upgrade/
 /cache/
 /backups/
+/.github-*/
 
 # Composer dependencies
 /vendor/
@@ -18,9 +17,9 @@
 !/themes/hametuha/
 
 # Must-use plugins (選択的にGit管理)
-# /mu-plugins/
-# または特定のファイルのみ除外:
-# /mu-plugins/some-plugin.php
+/mu-plugins/*
+# 特定のファイルのみ除外:
+!/mu-plugins/hametuha-config.php
 
 # contents（昔のHTMLで管理されていたもの）
 /contents/*
@@ -72,9 +71,6 @@ docker/nginx/certs/*
 !docker/nginx/certs/.gitkeep
 docker/mailpit-data/
 mysql_data/
-
-# DDEV (backup)
-.ddev.bak/
 
 # Other
 *.sql

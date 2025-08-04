@@ -189,6 +189,103 @@ WP_SITEURL=https://hametuha.info
 - カスタマイズが容易
 - 本番環境に近い構成
 
+## WordPressバージョン管理
+
+### 統一されたバージョン管理
+WordPressのバージョンは`.env`ファイルの`WORDPRESS_VERSION`で一元管理します。
+
+### バージョン設定方法
+
+#### 1. 初回セットアップ時
+```bash
+# .envファイルを作成
+cp .env.example .env
+
+# バージョンを確認・設定（デフォルト: 6.1.7）
+grep WORDPRESS_VERSION .env
+```
+
+#### 2. バージョン変更時
+```bash
+# バージョンを変更（例: 6.4.2）
+./bin/set-wordpress-version.sh 6.4.2
+
+# 最新版に変更
+./bin/set-wordpress-version.sh latest
+
+# Composerパッケージを更新
+composer update johnpbloch/wordpress
+
+# テストスイートを再インストール
+rm -rf wp-tests
+./bin/install-wp-tests.sh
+
+# Dockerコンテナを再起動
+docker compose restart
+```
+
+### WordPressテストスイートのセットアップ
+
+WordPressのPHPUnitテスト実行には、WordPress本体とは別にテストスイートが必要です。
+
+#### セットアップ手順
+```bash
+# 1. WordPressテストスイートをインストール
+#    （.envのWORDPRESS_VERSIONを自動的に使用）
+./bin/install-wp-tests.sh
+
+# 2. テストを実行
+./bin/test.sh
+
+# または直接実行
+docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && composer test"
+```
+
+#### ディレクトリ構成
+```
+hametuha/
+├── wp/                    # WordPressコア（Composer管理）
+├── wp-tests/             # WordPressテストスイート（ローカル管理）
+│   ├── includes/         # テストフレームワーク
+│   ├── data/            # テストデータ
+│   └── wp-tests-config.php  # テスト設定
+```
+
+#### 利点
+- **IDEサポート**: ローカルファイルでコードヒント・自動補完が効く
+- **バージョン統一**: WordPressコアとテストスイートのバージョンが一致
+- **高速実行**: Docker内tmpではなくマウントされたローカルファイル
+
+### PHPUnitテストの実行
+
+#### テーマのテスト実行
+```bash
+# 推奨方法
+./bin/test.sh
+
+# Composer経由
+docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && composer test"
+
+# 直接実行
+docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && vendor/bin/phpunit"
+```
+
+#### 新しいテストの追加
+1. `themes/hametuha/tests/`にテストファイルを作成
+2. ファイル名は`test-*.php`の形式
+3. クラス名は`Test_*`の形式
+4. `WP_UnitTestCase`を継承
+
+例:
+```php
+<?php
+class Test_Example extends WP_UnitTestCase {
+    public function test_something() {
+        $this->assertTrue( true );
+    }
+}
+```
+
 ## トラブルシューティング
 
 ### ポート競合の場合
@@ -202,6 +299,16 @@ NGINX_HTTPS_PORT=8443
 ```bash
 # uploads/pluginsディレクトリの権限を修正
 docker compose exec wordpress chown -R www-data:www-data /var/www/html/wp-content/
+```
+
+### テストが失敗する場合
+```bash
+# テストスイートを再インストール
+rm -rf wp-tests
+./bin/install-wp-tests.sh
+
+# テストデータベースを再作成
+docker compose exec mysql mysql -u root -proot -e "DROP DATABASE IF EXISTS wordpress_test; CREATE DATABASE wordpress_test;"
 ```
 
 ## 今後の課題
