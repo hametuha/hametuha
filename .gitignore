@@ -1,6 +1,9 @@
 # WordPress core
 /wp/
 
+# WordPress config (local settings)
+/wp-config-local.php
+
 # Uploads and other runtime files
 /uploads/
 /upgrade/
@@ -13,6 +16,19 @@
 !/plugins/.gitkeep
 /themes/*
 !/themes/hametuha/
+
+# Must-use plugins (選択的にGit管理)
+# /mu-plugins/
+# または特定のファイルのみ除外:
+# /mu-plugins/some-plugin.php
+
+# contents（昔のHTMLで管理されていたもの）
+/contents/*
+!/contents/.gitkeep
+
+# データファイルを保存する場所
+/data/*
+!/data/.gitkeep
 
 # Node dependencies (theme specific)
 /themes/hametuha/node_modules/
@@ -41,18 +57,24 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+/.claude/settings.local.json
 
 # Environment files
 .env
 .env.*
 !.env.example
 
-# DDEV
-.ddev/db_snapshots/
-.ddev/import-db/
-.ddev/.gitignore
-.ddev/docker-compose.*.yaml
-.ddev/db.cnf
+# Composer auth
+auth.json
+
+# Docker
+docker/nginx/certs/*
+!docker/nginx/certs/.gitkeep
+docker/mailpit-data/
+mysql_data/
+
+# DDEV (backup)
+.ddev.bak/
 
 # Other
 *.sql

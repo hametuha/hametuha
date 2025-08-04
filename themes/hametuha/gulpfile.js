@@ -142,7 +142,7 @@ gulp.task( 'copylib', function () {
 		// Build Bootstrap
 		gulp.src( [
 			'./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
-			'./node_modules/bootbox/bootbox.js'
+			'./node_modules/bootbox/dist/bootbox.js'
 		] )
 			.pipe( $.concat( 'bootstrap.js' ) )
 			.pipe( $.uglify() )
