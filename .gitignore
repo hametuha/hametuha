@@ -1,16 +1,77 @@
-vendor
-vendor-dev
-node_modules
-bower_components
-assets/html/*.html
-assets/js/dist
-composer.lock
-composer-dev.lock
-.sass-cache
-.svn
-/wordpress/
-package-lock.json
-assets/img/*
-!assets/img/src
-assets/css
-wp-dependencies.json
+# WordPress core and test suite
+/wp/
+/wp-tests/
+
+# Uploads and other runtime files
+/uploads/
+/upgrade/
+/cache/
+/backups/
+/.github-*/
+
+# Composer dependencies
+/vendor/
+/plugins/*
+!/plugins/.gitkeep
+/themes/*
+!/themes/hametuha/
+
+# Must-use plugins (選択的にGit管理)
+/mu-plugins/*
+# 特定のファイルのみ除外:
+!/mu-plugins/hametuha-config.php
+
+# contents（昔のHTMLで管理されていたもの）
+/contents/*
+!/contents/.gitkeep
+
+# データファイルを保存する場所
+/data/*
+!/data/.gitkeep
+
+# Node dependencies (theme specific)
+/themes/hametuha/node_modules/
+/node_modules/
+
+# Build files
+*.log
+*.cache
+.DS_Store
+._*
+Thumbs.db
+
+# Theme build files
+/themes/hametuha/vendor/
+/themes/hametuha/assets/css/
+/themes/hametuha/assets/js/dist/
+/themes/hametuha/assets/img/*
+!/themes/hametuha/assets/img/src
+!/themes/hametuha/assets/img/covers
+/themes/hametuha/composer.lock
+/themes/hametuha/package-lock.json
+/themes/hametuha/wp-dependencies.json
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+/.claude/settings.local.json
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Composer auth
+auth.json
+
+# Docker
+docker/nginx/certs/*
+!docker/nginx/certs/.gitkeep
+docker/mailpit-data/
+mysql_data/
+
+# Other
+*.sql
+*.sql.gz

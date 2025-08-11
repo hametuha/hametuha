@@ -1,0 +1,106 @@
+name: Deploy to Production
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  deploy_production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://hametuha.com
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@main
+        with:
+          ref: release
+
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.2
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node with npm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 14
+
+      - name: Install PHP dependencies in Theme
+        run: composer install --no-dev --no-interaction --no-progress --optimize-autoloader --prefer-dist
+        working-directory: themes/hametuha
+
+      - name: Install Node.js dependencies
+        run: npm install --frozen-lockfile
+        working-directory: themes/hametuha
+
+      - name: Build the theme assets
+        run: npm run package
+        working-directory: themes/hametuha
+
+      - name: Generate README
+        run: |
+          curl -L https://raw.githubusercontent.com/fumikito/wp-readme/master/wp-readme.php | php
+        working-directory: themes/hametuha
+
+      - name: Update version in theme files
+        run: ./bin/build.sh ${{ github.event.release.tag_name }}
+        working-directory: themes/hametuha
+
+#      - name: Deploy to Production
+#        uses: burnett01/rsync-deployments@7.0.2
+#        with:
+#          switches: --log-file=rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=./themes/hametuha/.distignore
+#          path: ./themes/hametuha/
+#          remote_path: ${{ vars.DEPLOY_PATH }}
+#          remote_host: ${{ vars.DEPLOY_HOST }}
+#          remote_user: ${{ secrets.DEPLOY_USER }}
+#          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+#
+#      - name: Upload rsync log
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: rsync-log
+#          path: rsync.log
+
+      - name: Create distribution zip
+        run: |
+          mkdir hametuha
+          rsync -av --exclude=hametuha --exclude-from=.distignore ./ ./hametuha/
+          zip -r hametuha.zip hametuha/
+        working-directory: themes/hametuha
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: themes/hametuha/hametuha.zip
+          asset_name: hametuha.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: Notify Deployment
+    needs: deploy_production
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Deployment Success Notification
+        if: needs.deploy_production.result == 'success'
+        run: |
+          echo "✅ Deployment to production was successful!"
+          echo "Site: https://hametuha.com"
+          echo "Version: ${{ github.event.release.tag_name }}"
+
+      - name: Deployment Failure Notification
+        if: needs.deploy_production.result == 'failure'
+        run: |
+          echo "❌ Deployment to production failed!"
+          echo "Please check the logs and rollback if necessary."
+          exit 1

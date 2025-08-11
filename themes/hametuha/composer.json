@@ -1,0 +1,30 @@
+{
+  "name": "hametuha/hametuha",
+  "description": "WordPress theme for Hametuha",
+  "type": "wordpress-theme",
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "php": ">=7.2",
+    "hametuha/wpametu": "^1.1.1",
+    "hametuha/hamepub": "^1.0.0",
+    "hametuha/hashboard": "^0.9.1",
+    "hametuha/sharee": "^0.8.9",
+    "league/commonmark": "^1.6|^2.3",
+    "kunoichi/ga-communicator": "^3.3",
+    "youaoi/php-mecab": "^1.0"
+  },
+  "autoload": {
+    "psr-0": {
+      "Hametuha": "src"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.5",
+    "yoast/phpunit-polyfills": "^1.0"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test:docker": "docker compose exec -T wordpress bash -c 'cd /var/www/html/wp-content/themes/hametuha && vendor/bin/phpunit'",
+    "update-lock": "composer update"
+  }
+}

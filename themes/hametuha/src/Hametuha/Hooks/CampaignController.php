@@ -32,13 +32,14 @@ class CampaignController extends Singleton {
 			// 著者でなければ何もしない
 			return;
 		}
+		$terms = [];
 		if ( is_tax( 'campaign' ) ) {
 			// キャンペーン一覧なので、参加しているか調べる
 			$terms = [ get_queried_object() ];
 		} elseif ( $wp_query->get( 'p' ) ) {
 			$post = get_post( $wp_query->get( 'p' ) );
 			if ( ! $post || 'post' !== $post->post_type || ! in_array( $post->post_status, [ 'private', 'draft' ], true ) ) {
-				// 投稿ページでないので何もしない
+				// 投稿ページではないので何もしない
 				return;
 			}
 			if ( (int) $post->post_author === get_current_user_id() ) {

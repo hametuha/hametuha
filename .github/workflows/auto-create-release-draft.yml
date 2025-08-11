@@ -1,0 +1,36 @@
+name: Auto Create Release Draft
+
+on:
+  push:
+    branches:
+      - release
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - release
+
+permissions:
+  contents: read
+
+jobs:
+  update_release_draft:
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      # CalVer形式のバージョン番号を生成（東京時間）
+      - name: Generate CalVer version
+        id: calver
+        run: |
+          export VERSION=v$(TZ=Asia/Tokyo date "+%Y.%m.%d.%H%M")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Version set to ${VERSION}"
+      
+      - uses: release-drafter/release-drafter@v6
+        with:
+          tag: ${{ steps.calver.outputs.version }}
+          name: ${{ steps.calver.outputs.version }}
+          version: ${{ steps.calver.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

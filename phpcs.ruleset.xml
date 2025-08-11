@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for Plugins">
+<ruleset name="WordPress Coding Standards for Hametuha">
 	<description>Generally-applicable sniffs for WordPress plugins</description>
 
 	<arg name="colors" />
@@ -25,15 +25,12 @@
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
 		<exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound" />
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found" />
-	</rule>
-
-	<rule ref="PHPCompatibility">
-		<config name="testVersion" value="7.2-"/>
+		<exclude name="Universal.Operators.DisallowShortTernary.Found" />
+		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames" />
 	</rule>
 
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
-	<exclude-pattern>*/wordpress/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 </ruleset>
