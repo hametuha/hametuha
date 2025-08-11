@@ -8,6 +8,7 @@
 .node-version
 .stylelintrc.json
 .wp_install_path
+gulpfile.js
 node_modules
 composer.lock
 package-lock.json

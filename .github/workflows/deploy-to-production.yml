@@ -51,22 +51,22 @@ jobs:
         run: bash ./bin/build.sh ${{ github.event.release.tag_name }}
         working-directory: themes/hametuha
 
-#      - name: Deploy to Production
-#        uses: burnett01/rsync-deployments@7.0.2
-#        with:
-#          switches: --log-file=rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=./themes/hametuha/.distignore
-#          path: ./themes/hametuha/
-#          remote_path: ${{ vars.DEPLOY_PATH }}
-#          remote_host: ${{ vars.DEPLOY_HOST }}
-#          remote_user: ${{ secrets.DEPLOY_USER }}
-#          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
-#
-#      - name: Upload rsync log
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: rsync-log
-#          path: rsync.log
+      - name: Deploy to Production
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: --log-file=../../rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=.distignore
+          path: themes/hametuha/
+          remote_path: ${{ vars.DEPLOY_PATH }}
+          remote_host: ${{ vars.DEPLOY_HOST }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Upload rsync log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rsync-log
+          path: rsync.log
 
       - name: Create distribution zip
         run: |
