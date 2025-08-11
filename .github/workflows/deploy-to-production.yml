@@ -70,8 +70,9 @@ jobs:
 
       - name: Create distribution zip
         run: |
-          mkdir hametuha
-          rsync -av --exclude=hametuha --exclude-from=.distignore ./ ./hametuha/
+          mkdir hametuha-tmp
+          rsync -av --exclude=hametuha-tmp --exclude-from=.distignore ./ ./hametuha-tmp/
+          mv hametuha-tmp hametuha
           zip -r hametuha.zip hametuha/
         working-directory: themes/hametuha
 
