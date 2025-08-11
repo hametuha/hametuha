@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - release
-  pull_request:
-    types: [opened, reopened, synchronize]
-    branches:
-      - release
 
 permissions:
   contents: read
@@ -32,5 +28,8 @@ jobs:
           tag: ${{ steps.calver.outputs.version }}
           name: ${{ steps.calver.outputs.version }}
           version: ${{ steps.calver.outputs.version }}
+          target_commitish: release
+          publish: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
