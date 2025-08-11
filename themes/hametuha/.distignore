@@ -15,7 +15,7 @@ phpcs.ruleset.xml
 phpunit.xml.dist
 README.md
 webpack.config.js
-bin
+/bin
 tmp
 tests
 style.css.bak
