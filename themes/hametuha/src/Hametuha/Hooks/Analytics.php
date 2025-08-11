@@ -99,8 +99,13 @@ class Analytics extends Singleton {
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
 		<script>
+		(function() {
 			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
+
+			function gtag() {
+				dataLayer.push( arguments );
+			}
+
 			gtag( 'js', new Date() );
 			// Setup config.
 			var config = {
@@ -108,18 +113,20 @@ class Analytics extends Singleton {
 			};
 			// Custom dimensions.
 			var customMap = {};
+			// User properties.
+			var userProperties = {};
 			try {
 				// Set user id.
 				var uid = CookieTasting.get( 'uuid' );
 				gtag( 'set', {
 					user_id: uid
 				} );
-				customMap['<?php echo esc_js( self::DIMENSION_UID ); ?>'] = 'user_id';
-				config.user_id = uid;
-			} catch ( err ) {}
+				customMap[ '<?php echo esc_js( self::DIMENSION_UID ); ?>' ] = 'user_id';
+				userProperties.client_id = uid;
+			} catch ( err ) {
+			}
 			<?php
-			// Set dimension as possible.
-			// Set user type.
+			// ユーザー種別を取得
 			if ( ! is_singular( 'news' ) ) {
 				if ( ! is_user_logged_in() ) {
 					$role = 'anonymous';
@@ -130,8 +137,15 @@ class Analytics extends Singleton {
 				} else {
 					$role = 'subscriber';
 				}
-				$this->set_dimension( self::DIMENSION_USER_TYPE, 'user_type', $role );
+				printf( 'userProperties.user_type="%s";', esc_attr( $role ) );
 			}
+			// ユーザープロパティが1つでも登録されていたらセットする。
+			// see: https://developers.google.com/analytics/devguides/collection/ga4/reference/config?hl=ja#user_properties
+			?>
+			if ( Object.keys( userProperties ).length > 0 ) {
+				config.user_properties = userProperties;
+			}
+			<?php
 			// Set contents attribution.
 			if ( ( is_singular() || is_page() ) && ! is_preview() ) {
 				// Set page attributes.
@@ -140,12 +154,14 @@ class Analytics extends Singleton {
 				$this->set_dimension( self::METRIC_CHAR_LENGTH, 'content_length', get_post_length( get_queried_object() ) );
 				// Set category.
 				$cat = 0;
-				foreach ( [
-					'post'   => 'category',
-					'news'   => 'genre',
-					'faq'    => 'faq_cat',
-					'thread' => 'topic',
-				] as $post_type => $taxonomy ) {
+				foreach (
+					[
+						'post'   => 'category',
+						'news'   => 'genre',
+						'faq'    => 'faq_cat',
+						'thread' => 'topic',
+					] as $post_type => $taxonomy
+				) {
 					if ( $post_type !== get_queried_object()->post_type ) {
 						continue;
 					}
@@ -179,8 +195,8 @@ class Analytics extends Singleton {
 				config.custom_map = customMap;
 			}
 			<?php do_action( 'hametuha_before_ga_send_pageviews' ); ?>
-			gtag('config', '<?php echo esc_js( $this->ua ); ?>', config );
-			gtag('config', '<?php echo esc_js( $this->ga ); ?>', config );
+			gtag( 'config', '<?php echo esc_js( $this->ga ); ?>', config );
+		})()
 		</script>
 		<?php
 		do_action( 'hametuha_after_tracking_code' );

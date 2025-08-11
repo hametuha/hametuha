@@ -1,19 +1,8 @@
 # hametuha
 
-Contributors: Takahashi_Fumiki, hametuha  
-Requires at least: 5.8  
-Tested up to: 6.0  
-Requires PHP: 7.2  
-Stable Tag: nightly  
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+[破滅派](https://hametuha.com)のサイト開発用リポジトリです。
 
-
-[破滅派](https://hametuha.com)のWordPressテーマです。
-
-## Description
-
-## FAQ
+## 破滅派への貢献
 
 破滅派に貢献をしたいという奇特な方がいらっしゃったら、以下の方法で貢献いただけますと嬉しいです。
 
@@ -27,45 +16,9 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 以下にソースコードを修正するための最低限の情報を記載します。
 
-### Getting Started
+## 開発
 
-hametuhaは多くがPHPコードですが、デザインだけ修正することもできます。以下、そのやり方を説明します。
-
-まず、破滅派は[Twitter Bootstrap](http://getbootstrap.com)というCSSフレームワークを利用しています。
-
-このカスタマイズをちょこちょこ行うだけでも、デザインの修正ができます。必要なのは[NodeJS](https://nodejs.org/en/)および[npm](https://www.npmjs.com)です。また、[Gulp](http://gulpjs.com)も使うので、インストール`npm install -g gulp`しておいてください。
-
-```
-# Gitリポジトリをクローン
-git clone git@github.com:hametuha/hametuha.git
-# 移動
-cd hametuha
-# npm をインストール
-npm install
-# ビルドを行うと、JSがnode_modulesからコピーされます。
-npm run package
-# ファイルを監視して、変更がある度にコンパイルします。
-npm run watch
-# ブラウザに表示します。
-npm run display
-```
-
-これらのコマンドを発行すると、`hametuha/assets`フォルダにhtmlファイルがぶわーっと書きだされ、デザインの確認ができるようになります。
-
-`hametuha/assets/jade`フォルダにあるファイルを変更すると、HTMLが変更され、`hametuha/assets/sass`フォルダにあるファイルを変更すると、CSSが書き出されます。
-
-### Advanced
-
-PHPを修正する場合、ダミーデータが入っていないとどうしようもないのですが、とりあえず動かすことはできます。
-
-必要な機能は[composer](https://getcomposer.org)です。
-
-```
-# hametuhaフォルダ内で実行
-composer install
-```
-
-これで必要な機能がインストールされ、利用可能になるはずです。
+[CLAUDE.md](./CLAUDE.md)を読んでください。
 
 ## ライセンス
 

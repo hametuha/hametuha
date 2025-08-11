@@ -22,7 +22,7 @@ if ( ! isset( $error_code ) ) {
 }
 
 $theme_dir = '/wp-content/themes/hametuha/assets/';
-
+$ver       = 'error-' . date( 'YmdH' ); // 時間まで記載してキャッシュされるように
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,7 +31,7 @@ $theme_dir = '/wp-content/themes/hametuha/assets/';
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars( $title, ENT_QUOTES, 'utf-8' ); ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="<?php echo $theme_dir; ?>/css/app.css?ver=1.0" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $theme_dir; ?>/css/app.css?ver=<?php echo $ver; ?>" />
 	<link rel="shortcut icon" href="<?php echo $theme_dir; ?>/img/favicon.ico" />
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-GX6ZTNEEW8"></script>
@@ -41,30 +41,28 @@ $theme_dir = '/wp-content/themes/hametuha/assets/';
 		gtag('js', new Date());
 		var config = {
 			link_attribution: true,
-			custom_map: {
-				dimension2: '<?php echo $error_code; ?>'
-			}
+			page_type: "error"
 		};
-		gtag('config', 'UA-1766751-2', config );
 		gtag('config', 'G-GX6ZTNEEW8', config );
 	</script>
 </head>
 <body class="error error<?php echo $error_code; ?>">
 	<div class="container">
 
-		<p class="text-center">
+		<p class="error-header text-center">
 			<a id="login-logo" href="/" rel="home" title="破滅派に戻る"><i class="icon-hametuha"></i></a>
 		</p>
 
-		<div>
+		<div class="error-body">
 			<h1 class="text-center text-muted"><?php echo $title; ?></h1>
 			<div class="error-container"><?php echo $message; ?></div>
+			<h2>最新のステータス</h2>
+			<p><a href="https://x.com/hametuha">破滅派のX（旧twitter）</a>を確認すると、更新情報がわかるかもしれません。</p>
 		</div>
 
-		<div class="footer-note">
+		<footer class="error-footer">
 			<p class="copy-right text-center text-muted">&copy; 2007 破滅派</p>
-		</div>
-
+		</footer>
 	</div><!-- //.container -->
 </body>
 </html>
