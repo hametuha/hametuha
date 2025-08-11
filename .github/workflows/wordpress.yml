@@ -65,7 +65,7 @@ jobs:
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 7.2
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -82,13 +82,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # wpametuに依存しているので、必要
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.2
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: '14'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install && composer install
         working-directory: themes/hametuha
 
       - name: Build Assets
