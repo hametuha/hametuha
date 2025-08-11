@@ -47,22 +47,43 @@ jobs:
           curl -L https://raw.githubusercontent.com/fumikito/wp-readme/master/wp-readme.php | php
         working-directory: themes/hametuha
 
-      - name: Deploy to Production
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: --log-file=rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=./themes/hametuha/.distignore
-          path: ./themes/hametuha/
-          remote_path: ${{ vars.DEPLOY_PATH }}
-          remote_host: ${{ vars.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      - name: Update version in theme files
+        run: ./bin/build.sh ${{ github.event.release.tag_name }}
+        working-directory: themes/hametuha
 
-      - name: Upload rsync log
-        if: always()
-        uses: actions/upload-artifact@v4
+#      - name: Deploy to Production
+#        uses: burnett01/rsync-deployments@7.0.2
+#        with:
+#          switches: --log-file=rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=./themes/hametuha/.distignore
+#          path: ./themes/hametuha/
+#          remote_path: ${{ vars.DEPLOY_PATH }}
+#          remote_host: ${{ vars.DEPLOY_HOST }}
+#          remote_user: ${{ secrets.DEPLOY_USER }}
+#          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+#
+#      - name: Upload rsync log
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: rsync-log
+#          path: rsync.log
+
+      - name: Create distribution zip
+        run: |
+          mkdir hametuha
+          rsync -av --exclude=hametuha --exclude-from=.distignore ./ ./hametuha/
+          zip -r hametuha.zip hametuha/
+        working-directory: themes/hametuha
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
         with:
-          name: rsync-log
-          path: rsync.log
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: themes/hametuha/hametuha.zip
+          asset_name: hametuha.zip
+          asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notify:
     name: Notify Deployment
