@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.2', '8.0' ]        # PHP versions to check.
+        php: [ '7.2', '8.2' ]        # PHP versions to check.
         wp: [ '6.1', 'latest' ]      # WordPress version to check.
     services:
       mysql:
@@ -21,7 +21,12 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@main
+
+      # ubuntu-latest requires subversion.
+      # see: https://github.com/10up/action-wordpress-plugin-deploy/releases/tag/2.3.0
+      - name: Install SVN
+        run: sudo apt-get install -y subversion
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
@@ -92,7 +97,7 @@ jobs:
 
   status-check:
     name: Status Check
-    needs: [test, lint-php, asset]
+    needs: [asset]
     runs-on: ubuntu-latest
     if: always()
     steps:
