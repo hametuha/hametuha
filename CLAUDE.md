@@ -147,7 +147,10 @@ docker compose exec wordpress bash -c "cd themes/hametuha && npm run watch"
 
 ### WP-CLI
 ```bash
-# 一般的なWP-CLIコマンド
+# composer経由のショートカット
+composer wp [コマンド]
+
+# Docker内で実行するWP-CLIコマンド
 docker compose exec wordpress wp [コマンド]
 
 # 例：プラグイン一覧
@@ -264,7 +267,7 @@ hametuha/
 ./bin/test.sh
 
 # Composer経由
-docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && composer test"
+composer test
 
 # 直接実行
 docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && vendor/bin/phpunit"
@@ -311,8 +314,38 @@ rm -rf wp-tests
 docker compose exec mysql mysql -u root -proot -e "DROP DATABASE IF EXISTS wordpress_test; CREATE DATABASE wordpress_test;"
 ```
 
+## GitHub Actions デプロイ設定
+
+### 必要な設定
+
+#### Environment Variables (Settings → Environments → production → Variables)
+- `DEPLOY_PATH`: `/var/www/vhosts/hametuha.com/wp-content/themes/hametuha`
+- `DEPLOY_HOST`: EC2インスタンスのホスト名またはIP
+
+#### Secrets (Settings → Secrets and variables → Actions)
+- `DEPLOY_USER`: SSHユーザー名（セキュリティのため秘匿）
+- `DEPLOY_SSH_KEY`: EC2インスタンスへのSSH秘密鍵
+
+### SSH鍵の設定方法
+```bash
+# 1. SSH鍵ペアを生成（既存のものがあれば不要）
+ssh-keygen -t ed25519 -C "github-actions@hametuha.com" -f deploy_key
+
+# 2. 公開鍵をEC2インスタンスに追加
+ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys'
+
+# 3. 秘密鍵をGitHub Secretsに追加
+# deploy_keyファイルの内容を DEPLOY_SSH_KEY として登録
+```
+
+### デプロイフロー
+1. **開発** → `master` (PR) - テスト実行
+2. `master` マージ → `release` へのPR自動作成
+3. `release` PRマージ → リリースドラフト作成
+4. リリース公開 → 本番環境へ自動デプロイ
+
 ## 今後の課題
-- 本番環境へのデプロイフローの確立
+- GCP移行時の設定変更（変数名は汎用的なので最小限の変更で済む）
 - CI/CDパイプラインの最適化
 - 開発者向けドキュメントの整備
 - SSL証明書の自動化（Let's Encryptなど）

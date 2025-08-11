@@ -1,72 +1,32 @@
-name: Hametuha Unit Test
+name: Hametuha CI Test
 
 on:
-  push:
-    tags:
-      - '*'
   pull_request:
     branches:
       - master
+      - release
 
 jobs:
-#  test:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        php: [ '7.2', '7.4' ]        # PHP versions to check.
-#        wp: [ 'latest', '6.1' ]             # WordPress version to check.
-#    services:
-#      mysql:
-#        image: mysql:5.7
-#        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
-#        env:
-#          MYSQL_ROOT_PASSWORD: root
-#    name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Setup PHP with composer
-#        uses: shivammathur/setup-php@v2
-#        with:
-#          php-version: ${{ matrix.php }}
-#          tools: composer
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#      - name: Validate composer.json and composer.lock
-#        run: composer validate
-#
-#      - name: Install dependencies
-#        run: composer install --prefer-dist --no-progress --no-suggest
-#
-#      - name: Start MySQL
-#        run: |
-#          sudo systemctl start mysql
-#          mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
-#
-#      - name: Install WordPress
-#        run: bash bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
-#
-#      - name: Run test suite
-#        run: composer test
-
-  asset:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '8.0' ]        # PHP versions to check.
+        wp: [ '6.1', 'latest' ]      # WordPress version to check.
+    services:
+      mysql:
+        image: mysql:5.7
+        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
+        env:
+          MYSQL_ROOT_PASSWORD: root
+    name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install Dependencies
-        run: cd themes/hametuha && npm install
+      - uses: actions/checkout@v4
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: ${{ matrix.php }}
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,85 +35,67 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-dev
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Start MySQL
+        run: |
+          sudo systemctl start mysql
+          mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
+
+      - name: Install WordPress
+        run: bash themes/hametuha/bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
+
+      - name: Run test suite
+        run: |
+          cd themes/hametuha
+          composer install
+          composer test
+
+  lint-php:
+    runs-on: ubuntu-latest
+    name: PHP Lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP with composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          tools: composer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run PHP CodeSniffer
+        run: composer lint:theme
+
+  asset:
+    runs-on: ubuntu-latest
+    name: Build Assets
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14'
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: themes/hametuha
 
       - name: Build Assets
-        run: cd themes/hametuha && npm run package
-
-  vulnerability:
-    name: Check Vulnerability
-    if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@master
-
-        - name: Run Snyk to check for vulnerabilities
-          uses: snyk/actions/php@master
-          with:
-            args: --all-projects
-          env:
-            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}
+        run: npm run package
+        working-directory: themes/hametuha
 
   status-check:
     name: Status Check
-    needs: [asset]
+    needs: [test, lint-php, asset]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - uses: re-actors/alls-green@release/v1
         with:
           jobs: ${{ toJSON(needs) }}
-
-  release:
-    name: Build Hametuha Theme
-    needs: status-check
-    if: contains(github.ref, 'tags/')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup PHP with composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.2
-          tools: composer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Build Package
-        run: bash bin/build.sh ${{ github.ref }}
-
-      - name: Clean Package
-        run: bash bin/clean.sh
-
-      - name: Deploy Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Create Zip
-        run: zip -r ${{ github.event.repository.name }}.zip ./
-
-      - name: Upload Release Zip
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ${{ github.workspace }}/${{ github.event.repository.name }}.zip
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip

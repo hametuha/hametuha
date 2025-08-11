@@ -16,4 +16,4 @@ header( 'Pragma: no-cache' );
 header( 'Content-Type: text/html; charset=utf-8' );
 
 // テンプレート読み込み
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR."hametuha".DIRECTORY_SEPARATOR."503.php";
+require_once __DIR__ . '/themes/hametuha/503.php';

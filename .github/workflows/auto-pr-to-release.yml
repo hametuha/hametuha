@@ -1,0 +1,49 @@
+name: Auto PR from master to release branch
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Create or Update Pull Request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "release"
+          pr_title: "🚀 Deploy to Production: master → release"
+          pr_body: |
+            ## 🚀 本番環境へのデプロイ準備
+
+            最新の master ブランチを release ブランチへマージするPRです。
+
+            ### ⚠️ デプロイ前の確認事項
+            - [ ] テストが全て成功している
+            - [ ] ビルドが正常に完了している
+            - [ ] 本番環境への影響を確認済み
+
+            ### 📝 デプロイ手順
+            1. このPRをマージ
+            2. リリースドラフトが自動作成される
+            3. リリースを公開すると本番環境へ自動デプロイ
+
+            ---
+            *このPRは master ブランチへの push をトリガーにして自動生成されています。*
+          pr_label: "deploy"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  vulnerability:
+    name: Check Vulnerability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/php@master
+        with:
+          args: --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}

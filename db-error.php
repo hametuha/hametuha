@@ -15,4 +15,4 @@ header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
 header( 'Cache-Control: no-cache, must-revalidate, max-age=0' );
 header( 'Pragma: no-cache' );
 header( 'Content-Type: text/html; charset=utf-8' );
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR."themes".DIRECTORY_SEPARATOR."hametuha".DIRECTORY_SEPARATOR."503.php";
+require_once __DIR__ . '/themes/hametuha/503.php';

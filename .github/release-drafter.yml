@@ -1,0 +1,51 @@
+name-template: 'v$RESOLVED_VERSION 🚀'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+  - title: '📝 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+  - title: '👥 User Affected'
+    labels:
+      - 'users'
+      - 'writers'
+      - 'accounts'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+
+change-title-escapes: '\<*_&'
+
+template: |
+  ## 🎉 Hametuha Release
+
+  ### 📋 変更内容
+
+  $CHANGES
+
+  ### 📊 統計
+  - **Contributors**: $CONTRIBUTORS
+
+  ---
+
+  ### 🚀 デプロイ手順
+  1. このリリースを公開 (Publish) する
+  2. 自動的に本番環境へデプロイが開始される
+  3. デプロイ完了後、サイトを確認する
+
+  ### ⚠️ 注意事項
+  - デプロイは自動的に開始されます
+  - 問題が発生した場合は、前のバージョンにロールバックしてください

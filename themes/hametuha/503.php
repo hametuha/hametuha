@@ -31,7 +31,7 @@ $ver       = 'error-' . date( 'YmdH' ); // 時間まで記載してキャッシ�
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars( $title, ENT_QUOTES, 'utf-8' ); ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="<?php echo $theme_dir; ?>/css/app.css?ver=<?php $ver ?>" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $theme_dir; ?>/css/app.css?ver=<?php echo $ver; ?>" />
 	<link rel="shortcut icon" href="<?php echo $theme_dir; ?>/img/favicon.ico" />
 	<!-- Google tag (gtag.js) -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=G-GX6ZTNEEW8"></script>
