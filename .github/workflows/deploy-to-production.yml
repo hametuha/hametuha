@@ -105,3 +105,34 @@ jobs:
           echo "❌ Deployment to production failed!"
           echo "Please check the logs and rollback if necessary."
           exit 1
+
+  percy:
+    name: Visual Regression Testing
+    needs: deploy_production
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@main
+        with:
+          sparse-checkout: |
+            urls.txt
+            package.json
+      
+      - name: Wait for production deployment to propagate
+        run: sleep 30
+      
+      - name: Install Percy CLI
+        run: npm i -D @percy/cli
+      
+      - name: Run Percy snapshot
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PERCY_BRANCH: production
+        run: npx percy snapshot urls.txt --base-url https://hametuha.com
+        
+      - name: Percy failure notification
+        if: failure()
+        run: |
+          echo "⚠️ Percy visual regression testing failed!"
+          echo "Please check Percy dashboard for visual differences."
