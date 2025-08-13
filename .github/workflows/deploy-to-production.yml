@@ -117,20 +117,21 @@ jobs:
         with:
           sparse-checkout: |
             .percy.yml
+            snapshots.yml
             package.json
-      
+
       - name: Wait for production deployment to propagate
         run: sleep 30
-      
+
       - name: Install Percy CLI
         run: npm i -D @percy/cli
-      
+
       - name: Run Percy snapshot
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-          PERCY_BRANCH: production
-        run: npx percy snapshot .percy.yml
-        
+          PERCY_BRANCH: release
+        run: npx percy snapshot snapshots.yml
+
       - name: Percy failure notification
         if: failure()
         run: |
