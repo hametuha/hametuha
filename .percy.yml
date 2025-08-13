@@ -1,34 +1,11 @@
 version: 2
 snapshot:
-  widths: [375, 1280]
+  widths: [375, 768, 1280]
   min-height: 1024
   enable-javascript: true
   percy-css: |
     iframe { display: none; }
     .ad, .advertisement { display: none; }
 discovery:
-  allowed-hosts:
-    - hametuha.com
-  network-idle-timeout: 500
-static-snapshots:
-  path: /
-  base-url: https://hametuha.com
-  snapshots:
-    - name: Homepage
-      url: /
-    - name: News
-      url: /news/
-    - name: News Article
-      url: /news/article/15395/
-    - name: Novel
-      url: /novel/10038/
-    - name: Series
-      url: /series/hakobune/
-    - name: Thread
-      url: /thread/
-    - name: Thread Detail
-      url: /thread/%e6%9c%97%e8%aa%ad%e4%bc%9a%e3%82%92%e3%82%84%e3%82%8a%e3%81%be%e3%81%9b%e3%82%93%e3%81%8b/
-    - name: Help
-      url: /help/
-    - name: FAQ
-      url: /faq/novel-writing-basic/
+  network-idle-timeout: 750
+  wait-for-timeout: 30000
