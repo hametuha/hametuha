@@ -116,7 +116,7 @@ jobs:
         uses: actions/checkout@main
         with:
           sparse-checkout: |
-            urls.txt
+            .percy.yml
             package.json
       
       - name: Wait for production deployment to propagate
@@ -129,7 +129,7 @@ jobs:
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           PERCY_BRANCH: production
-        run: npx percy snapshot urls.txt --base-url https://hametuha.com
+        run: npx percy snapshot .percy.yml
         
       - name: Percy failure notification
         if: failure()
