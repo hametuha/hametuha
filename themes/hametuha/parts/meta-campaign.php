@@ -1,4 +1,9 @@
 <?php
+/**
+ * キャンペーンのトップに表示されるメタ情報
+ *
+ *
+ */
 $campaign  = get_queried_object();
 $length    = hametuha_campaign_length( $campaign );
 $has_limit = hametuha_campaign_has_limit( $campaign->term_id );
