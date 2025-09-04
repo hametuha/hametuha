@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "staging"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t3.small"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "hametuha-staging-key"
+  },
+  {
+    "ParameterKey": "VPCId",
+    "ParameterValue": "vpc-xxxxxxxxxx"
+  },
+  {
+    "ParameterKey": "SubnetId",
+    "ParameterValue": "subnet-xxxxxxxxxx"
+  },
+  {
+    "ParameterKey": "ExistingSecurityGroupId",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ExistingElasticIPAllocation",
+    "ParameterValue": ""
+  }
+]
