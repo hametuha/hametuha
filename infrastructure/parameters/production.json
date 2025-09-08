@@ -30,5 +30,17 @@
   {
     "ParameterKey": "ElastiCacheEndpoint",
     "ParameterValue": "hametuhaobjectcache.bogjkp.0001.apne1.cache.amazonaws.com:11211"
+  },
+  {
+    "ParameterKey": "WebContentVolumeSize",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "ExistingWebContentVolumeId",
+    "ParameterValue": "vol-0bb999fe861f677fa"
+  },
+  {
+    "ParameterKey": "ScriptsVersion",
+    "ParameterValue": "dev"
   }
 ]

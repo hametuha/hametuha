@@ -5,7 +5,7 @@ set -e
 
 # 設定
 STACK_NAME="hametuha-production-server"
-TEMPLATE_FILE="infrastructure/cloudformation/hametuha-ec2.yaml"
+TEMPLATE_FILE="infrastructure/cloudformation/hametuha-ec2-modular.yaml"
 PARAMETERS_FILE="infrastructure/parameters/production.json"
 
 # カラー出力
@@ -115,6 +115,103 @@ log_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# Function to extract parameter value from JSON file
+get_parameter_value() {
+    local params_file=$1
+    local parameter_key=$2
+    
+    if [[ -f "$params_file" ]]; then
+        # Extract parameter value using jq (or python if jq not available)
+        if command -v jq &> /dev/null; then
+            jq -r --arg key "$parameter_key" '.[] | select(.ParameterKey==$key) | .ParameterValue' "$params_file" 2>/dev/null || echo ""
+        else
+            # Fallback to python if jq not available
+            python3 -c "
+import json, sys
+try:
+    with open('$params_file') as f:
+        params = json.load(f)
+    for param in params:
+        if param.get('ParameterKey') == '$parameter_key':
+            print(param.get('ParameterValue', ''))
+            break
+except:
+    pass
+" 2>/dev/null || echo ""
+        fi
+    else
+        echo ""
+    fi
+}
+
+# Function to handle EBS volume detachment for production updates
+handle_ebs_detachment() {
+    local params_file=$1
+    
+    # Only process for production environment and when parameters file exists
+    if [[ "$ENVIRONMENT" != "production" ]] || [[ ! -f "$params_file" ]]; then
+        return 0
+    fi
+    
+    # Extract existing volume ID from parameters
+    local volume_id
+    volume_id=$(get_parameter_value "$params_file" "ExistingWebContentVolumeId")
+    
+    if [[ -z "$volume_id" ]] || [[ "$volume_id" == "null" ]] || [[ "$volume_id" == '""' ]] || [[ "$volume_id" == "" ]]; then
+        log_info "No existing EBS volume specified, skipping detachment check"
+        return 0
+    fi
+    
+    log_info "Checking EBS volume attachment status: $volume_id"
+    
+    # Check if volume exists and get attachment info
+    local attachment_info
+    attachment_info=$(aws ec2 describe-volumes --volume-ids "$volume_id" --region "$REGION" --query 'Volumes[0].Attachments[0]' --output json 2>/dev/null) || {
+        log_warn "Could not retrieve volume information for $volume_id"
+        return 0
+    }
+    
+    # Check if volume is attached
+    if [[ "$attachment_info" != "null" ]] && [[ -n "$attachment_info" ]]; then
+        local instance_id
+        local attachment_state
+        
+        if command -v jq &> /dev/null; then
+            instance_id=$(echo "$attachment_info" | jq -r '.InstanceId // ""')
+            attachment_state=$(echo "$attachment_info" | jq -r '.State // ""')
+        else
+            instance_id=$(echo "$attachment_info" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('InstanceId', ''))" 2>/dev/null || echo "")
+            attachment_state=$(echo "$attachment_info" | python3 -c "import sys, json; data=json.load(sys.stdin); print(data.get('State', ''))" 2>/dev/null || echo "")
+        fi
+        
+        if [[ "$attachment_state" == "attached" ]] && [[ -n "$instance_id" ]]; then
+            log_info "Volume $volume_id is attached to instance $instance_id. Preparing to detach..."
+            
+            # Stop the instance first for safety
+            log_info "Stopping instance $instance_id to safely detach volume..."
+            aws ec2 stop-instances --instance-ids "$instance_id" --region "$REGION" > /dev/null
+            
+            # Wait for instance to stop
+            log_info "Waiting for instance to stop completely..."
+            aws ec2 wait instance-stopped --instance-ids "$instance_id" --region "$REGION"
+            
+            # Detach the volume
+            log_info "Detaching volume $volume_id..."
+            aws ec2 detach-volume --volume-id "$volume_id" --region "$REGION" > /dev/null
+            
+            # Wait for volume to become available
+            log_info "Waiting for volume to become available..."
+            aws ec2 wait volume-available --volume-ids "$volume_id" --region "$REGION"
+            
+            log_info "✅ Volume $volume_id successfully detached and ready for reuse"
+        else
+            log_info "Volume $volume_id is not attached or in unexpected state: $attachment_state"
+        fi
+    else
+        log_info "Volume $volume_id is not attached to any instance"
+    fi
+}
+
 # テンプレート検証
 validate_template() {
     log_info "Validating CloudFormation template..."
@@ -166,6 +263,9 @@ deploy_stack() {
 # スタック更新
 update_stack() {
     log_info "Updating stack: $STACK_NAME"
+    
+    # Handle EBS volume detachment before update (production only)
+    handle_ebs_detachment "$PARAMETERS_FILE"
     
     # 更新実行
     if aws cloudformation update-stack \
