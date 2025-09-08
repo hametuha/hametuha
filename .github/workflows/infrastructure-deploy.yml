@@ -78,9 +78,9 @@ jobs:
             SHOULD_DEPLOY="false"
           fi
           
-          echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "should-deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+          echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "should-deploy=$SHOULD_DEPLOY" >> "$GITHUB_OUTPUT"
           
           echo "📋 Deployment Configuration:"
           echo "  Environment: $ENVIRONMENT"
@@ -105,7 +105,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y shellcheck
           
           # Validate all shell scripts
-          find infrastructure/scripts -name "*.sh" -type f | while read script; do
+          find infrastructure/scripts -name "*.sh" -type f | while read -r script; do
             echo "Checking: $script"
             shellcheck "$script" || true  # Don't fail on warnings
           done
@@ -122,8 +122,8 @@ jobs:
             if [[ -f "$template" ]]; then
               echo "Validating: $template"
               aws cloudformation validate-template \
-                --template-body file://$template \
-                --region ${{ vars.AWS_REGION || 'ap-northeast-1' }} \
+                --template-body "file://$template" \
+                --region "${{ vars.AWS_REGION || 'ap-northeast-1' }}" \
                 || exit 1
             fi
           done
@@ -142,7 +142,6 @@ jobs:
       needs.determine-environment.outputs.environment == 'development'
     environment:
       name: development
-      url: https://s3.console.aws.amazon.com/s3/buckets/hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}?prefix=userdata/${{ needs.determine-environment.outputs.version }}/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -199,7 +198,7 @@ jobs:
           if [[ -z "$ACCOUNT_ID" ]]; then
             ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           fi
-          echo "account-id=$ACCOUNT_ID" >> $GITHUB_OUTPUT
+          echo "account-id=$ACCOUNT_ID" >> "$GITHUB_OUTPUT"
 
       - name: Comment on PR
         if: github.event_name == 'pull_request'
@@ -237,7 +236,6 @@ jobs:
       needs.determine-environment.outputs.environment == 'production'
     environment:
       name: production
-      url: https://s3.console.aws.amazon.com/s3/buckets/hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}?prefix=userdata/latest/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -257,10 +255,10 @@ jobs:
           echo "📦 Backing up current latest version to $BACKUP_VERSION..."
           
           # Check if latest exists
-          if aws s3 ls s3://$BUCKET/userdata/latest/ 2>/dev/null; then
+          if aws s3 ls "s3://$BUCKET/userdata/latest/" 2>/dev/null; then
             aws s3 sync \
-              s3://$BUCKET/userdata/latest/ \
-              s3://$BUCKET/userdata/$BACKUP_VERSION/ \
+              "s3://$BUCKET/userdata/latest/" \
+              "s3://$BUCKET/userdata/$BACKUP_VERSION/" \
               --metadata-directive COPY
             echo "✅ Backup created: $BACKUP_VERSION"
           else
@@ -278,7 +276,7 @@ jobs:
           
           # Upload scripts
           aws s3 sync infrastructure/scripts/userdata/ \
-            s3://$BUCKET/userdata/$VERSION/ \
+            "s3://$BUCKET/userdata/$VERSION/" \
             --exclude '*' \
             --include '*.sh' \
             --metadata-directive REPLACE \
@@ -300,7 +298,7 @@ jobs:
           # Also create a versioned copy
           TAGGED_VERSION="v$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA:0:7}"
           aws s3 sync infrastructure/scripts/userdata/ \
-            s3://$BUCKET/userdata/$TAGGED_VERSION/ \
+            "s3://$BUCKET/userdata/$TAGGED_VERSION/" \
             --exclude '*' \
             --include '*.sh' \
             --metadata-directive REPLACE \
@@ -328,7 +326,7 @@ jobs:
           EOF
           
           aws s3 cp deployment.json \
-            s3://$BUCKET/userdata/latest/_deployment.json \
+            "s3://$BUCKET/userdata/latest/_deployment.json" \
             --content-type 'application/json'
 
       - name: Notify deployment
