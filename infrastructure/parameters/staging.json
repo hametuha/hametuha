@@ -9,22 +9,38 @@
   },
   {
     "ParameterKey": "KeyPairName",
-    "ParameterValue": "hametuha-staging-key"
+    "ParameterValue": "hametuha_github_actions"
   },
   {
     "ParameterKey": "VPCId",
-    "ParameterValue": "vpc-xxxxxxxxxx"
+    "ParameterValue": "vpc-53eb0236"
   },
   {
     "ParameterKey": "SubnetId",
-    "ParameterValue": "subnet-xxxxxxxxxx"
+    "ParameterValue": "subnet-8dd331fa"
   },
   {
     "ParameterKey": "ExistingSecurityGroupId",
-    "ParameterValue": ""
+    "ParameterValue": "sg-4bad542e"
   },
   {
     "ParameterKey": "ExistingElasticIPAllocation",
     "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "ElastiCacheEndpoint",
+    "ParameterValue": "hametuhaobjectcache.bogjkp.0001.apne1.cache.amazonaws.com:11211"
+  },
+  {
+    "ParameterKey": "WebContentVolumeSize",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "ExistingWebContentVolumeId",
+    "ParameterValue": "vol-0bb999fe861f677fa"
+  },
+  {
+    "ParameterKey": "ScriptsVersion",
+    "ParameterValue": "latest"
   }
 ]

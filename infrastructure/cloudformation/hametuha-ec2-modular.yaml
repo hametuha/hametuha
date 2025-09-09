@@ -215,52 +215,52 @@ Resources:
             export WEB_ROOT="/var/www/hametuha.com/wordpress"
 
             echo "=== Hametuha ${Environment} Server Setup Started ==="
-            echo "Environment: $ENVIRONMENT"
-            echo "PHP Version: $PHP_VERSION" 
-            echo "ElastiCache: $ELASTICACHE_ENDPOINT"
+            echo "Environment: \$ENVIRONMENT"
+            echo "PHP Version: \$PHP_VERSION" 
+            echo "ElastiCache: \$ELASTICACHE_ENDPOINT"
             echo "Scripts Version: ${ScriptsVersion}"
             echo "========================================================"
 
             # S3 bucket information
             S3_BUCKET="hametuha-infrastructure-${AWS::AccountId}"
             SCRIPTS_VERSION="${ScriptsVersion}"
-            SCRIPTS_BASE_URL="https://$S3_BUCKET.s3.${AWS::Region}.amazonaws.com/userdata/$SCRIPTS_VERSION"
+            SCRIPTS_BASE_URL="https://\$S3_BUCKET.s3.${AWS::Region}.amazonaws.com/userdata/\$SCRIPTS_VERSION"
 
-            echo "Downloading scripts from: $SCRIPTS_BASE_URL"
+            echo "Downloading scripts from: \$SCRIPTS_BASE_URL"
 
             # 作業ディレクトリ作成
             WORK_DIR="/tmp/userdata-scripts"
-            mkdir -p "$WORK_DIR"
-            cd "$WORK_DIR"
+            mkdir -p "\$WORK_DIR"
+            cd "\$WORK_DIR"
 
             # 基本パッケージインストール（curl、git等）
             echo "Installing basic packages..."
             dnf update -y
-            dnf install -y curl wget git vim unzip
+            dnf install -y --allowerasing curl wget git vim unzip
 
             # モジュラースクリプトのダウンロード
             echo "Downloading modular UserData scripts from S3..."
             
             # メインスクリプトをダウンロード
             echo "Downloading main.sh..."
-            if curl -fsSL "$SCRIPTS_BASE_URL/main.sh" -o main.sh; then
+            if curl -fsSL "\$SCRIPTS_BASE_URL/main.sh" -o main.sh; then
                 chmod +x main.sh
                 echo "✅ Downloaded: main.sh"
             else
                 echo "❌ Failed to download: main.sh from S3"
                 echo "Please ensure scripts are uploaded to S3 using:"
-                echo "  ./infrastructure/scripts/upload-userdata-scripts.sh -v $SCRIPTS_VERSION"
+                echo "  ./infrastructure/scripts/upload-userdata-scripts.sh -v \$SCRIPTS_VERSION"
                 exit 1
             fi
 
             # 各機能別スクリプトをダウンロード
             for script in "01-system-setup.sh" "02-ebs-mount.sh" "03-php-setup.sh" "04-nginx-setup.sh" "05-cloudflare-ssl.sh" "06-composer-tools.sh" "07-monitoring.sh" "08-static-subdomain.sh"; do
-                echo "Downloading $script..."
-                if curl -fsSL "$SCRIPTS_BASE_URL/$script" -o "$script"; then
-                    chmod +x "$script"
-                    echo "✅ Downloaded: $script"
+                echo "Downloading \$script..."
+                if curl -fsSL "\$SCRIPTS_BASE_URL/\$script" -o "\$script"; then
+                    chmod +x "\$script"
+                    echo "✅ Downloaded: \$script"
                 else
-                    echo "❌ Failed to download: $script"
+                    echo "❌ Failed to download: \$script"
                     exit 1
                 fi
             done
@@ -277,43 +277,66 @@ Resources:
                 echo "✅ Setup completed successfully!"
                 SETUP_STATUS=0
             else
-                echo "❌ Setup failed with exit code: $?"
+                echo "❌ Setup failed with exit code: \$?"
                 SETUP_STATUS=1
             fi
 
+            # CloudFormation helper scriptsの確認
+            echo "Checking for CloudFormation helper scripts..."
+            which cfn-signal || echo "cfn-signal not in PATH"
+            ls -la /opt/aws/bin/ 2>/dev/null || echo "/opt/aws/bin/ does not exist"
+            
             # CloudFormation通知用の関数
             send_cfn_signal() {
                 local status="$1"
-                echo "Sending CloudFormation signal with status: $status"
-
-                # Amazon Linux 2023 では cfn-bootstrap がプリインストール
-                if command -v cfn-signal >/dev/null 2>&1; then
-                    cfn-signal -e $status --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
-                    echo "cfn-signal sent successfully"
+                echo "Sending CloudFormation signal with status: \$status"
+                echo "Stack: ${AWS::StackName}"
+                echo "Region: ${AWS::Region}"
+                echo "Instance: \$(curl -s http://169.254.169.254/latest/meta-data/instance-id)"
+                
+                # cfn-signalを直接実行（Amazon Linux 2023には標準でインストール済み）
+                if [ -x /opt/aws/bin/cfn-signal ]; then
+                    echo "Using cfn-signal at /opt/aws/bin/cfn-signal"
+                    /opt/aws/bin/cfn-signal -e \$status \
+                        --stack ${AWS::StackName} \
+                        --resource EC2Instance \
+                        --region ${AWS::Region} || {
+                        echo "ERROR: cfn-signal failed with exit code: \$?"
+                        # フォールバック: AWS CLIを使用
+                        echo "Attempting fallback with AWS CLI..."
+                        aws cloudformation signal-resource \
+                            --stack-name ${AWS::StackName} \
+                            --logical-resource-id EC2Instance \
+                            --unique-id \$(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
+                            --status \$([ \$status -eq 0 ] && echo "SUCCESS" || echo "FAILURE") \
+                            --region ${AWS::Region}
+                    }
                 else
-                    echo "WARNING: cfn-signal command not found, using AWS CLI as fallback"
-                    # AWS CLI を使って代替手段
+                    echo "ERROR: cfn-signal not found at expected location"
+                    echo "Attempting to send signal with AWS CLI..."
                     aws cloudformation signal-resource \
                         --stack-name ${AWS::StackName} \
                         --logical-resource-id EC2Instance \
-                        --unique-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
-                        --status $([ $status -eq 0 ] && echo "SUCCESS" || echo "FAILURE") \
+                        --unique-id \$(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
+                        --status \$([ \$status -eq 0 ] && echo "SUCCESS" || echo "FAILURE") \
                         --region ${AWS::Region}
                 fi
+                
+                echo "Signal sending completed"
             }
 
             # 結果をCloudFormationに通知
-            send_cfn_signal $SETUP_STATUS
+            send_cfn_signal \$SETUP_STATUS
 
             # クリーンアップ
             cd /
-            rm -rf "$WORK_DIR"
+            rm -rf "\$WORK_DIR"
 
             echo "========================================================"
-            echo "UserData script execution completed with status: $SETUP_STATUS"
+            echo "UserData script execution completed with status: \$SETUP_STATUS"
             echo "========================================================"
 
-            exit $SETUP_STATUS
+            exit \$SETUP_STATUS
         TagSpecifications:
           - ResourceType: instance
             Tags:
