@@ -41,6 +41,6 @@
   },
   {
     "ParameterKey": "ScriptsVersion",
-    "ParameterValue": "dev"
+    "ParameterValue": "latest"
   }
 ]
