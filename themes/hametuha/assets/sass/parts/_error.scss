@@ -1,40 +1,75 @@
-body.error{
+$error-gutter: 40px;
 
-  .container{
-    padding-top: 100px;
-    max-width: 640px;
-  }
+body.error {
 
-  #login-logo{
-    font-size: 100px;
-    &:hover{
-      text-decoration: none;
-    }
-  }
+	background-color: $gray-lighter;
 
-  h1{
-    font-size: 18px;
-  }
+	.container {
+		padding-top: $error-gutter;
+		max-width: 768px;
+	}
 
-  .error-container{
-    @extend .alert;
-    @extend .alert-danger;
-    a{
-      &:link, &:visited{
-        color: darken($brand-danger, 10);
-        text-decoration: underline;
-      }
-      &:hover, &:active{
-        color: lighten($brand-danger, 10);
-        text-decoration: none;
-      }
-    }
-    .btn{
-      &:link, &:visited, &:hover, &:active{
-        color: #fff;
-        text-decoration: none;
-      }
-    }
-  }
 
+
+	#login-logo {
+		font-size: 100px;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+
+	.error-container {
+		margin: $error-gutter 0;
+		padding: $error-gutter / 2;
+		border: 3px solid $gray-dark;
+		background-color: #fff;
+
+		a {
+			&:link,
+			&:visited {
+				color: currentColor;
+				text-decoration: underline;
+			}
+
+			&:hover,
+			&:active {
+				color: $gray-lighter;
+				text-decoration: none;
+			}
+		}
+
+		.btn {
+			&:link, &:visited, &:hover, &:active {
+				color: #fff;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.error-body {
+		&-divider {
+			margin: $error-gutter auto;
+			border-top: 1px solid $gray-dark;
+			width: 100%;
+			max-width: 200px;
+		}
+
+		h1 {
+			font-size: 18px;
+			margin-bottom: $error-gutter;
+		}
+
+		h2 {
+			font-size: 16px;
+			margin: $error-gutter 0;
+
+		}
+	}
+
+	.error-footer {
+		margin-top: $error-gutter;
+	}
 }
+
