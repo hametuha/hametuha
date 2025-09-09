@@ -29,6 +29,13 @@ on:
           - latest
           - custom
 
+# Security: Limit GITHUB_TOKEN permissions
+permissions:
+  contents: read        # Read repository contents
+  issues: write         # Write comments on PRs
+  pull-requests: write  # Write PR comments
+  deployments: write    # Create deployment records
+
 jobs:
   # ======================================================================
   # Determine deployment environment and version
