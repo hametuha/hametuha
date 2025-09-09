@@ -51,7 +51,7 @@ jobs:
         id: set-env
         run: |
           # Default values
-          ENVIRONMENT="development"
+          ENVIRONMENT="infrastructure-dev"
           VERSION="dev"
           SHOULD_DEPLOY="true"
           
@@ -59,24 +59,24 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             VERSION="${{ github.event.inputs.version }}"
             if [[ "$VERSION" == "latest" ]]; then
-              ENVIRONMENT="production"
+              ENVIRONMENT="infrastructure-prod"
             elif [[ "$VERSION" == "custom" ]]; then
               VERSION="${{ github.ref_name }}-$(date +%Y%m%d%H%M%S)"
             fi
           
           # Push to default branch (master/main)
           elif [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            ENVIRONMENT="production"
+            ENVIRONMENT="infrastructure-prod"
             VERSION="latest"
           
           # Push to infra/infrastructure branches
           elif [[ "${{ github.ref }}" =~ ^refs/heads/(infra|infrastructure)/.* ]]; then
-            ENVIRONMENT="development"
+            ENVIRONMENT="infrastructure-dev"
             VERSION="dev"
           
           # Pull request
           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            ENVIRONMENT="development"
+            ENVIRONMENT="infrastructure-dev"
             VERSION="pr-${{ github.event.pull_request.number }}"
             SHOULD_DEPLOY="false"  # Only validate, don't deploy on PR
           
@@ -146,9 +146,9 @@ jobs:
     needs: [determine-environment, validate]
     if: |
       needs.determine-environment.outputs.should-deploy == 'true' &&
-      needs.determine-environment.outputs.environment == 'development'
+      needs.determine-environment.outputs.environment == 'infrastructure-dev'
     environment:
-      name: development
+      name: infrastructure-dev
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -222,7 +222,7 @@ jobs:
               body: `🚀 **Infrastructure scripts uploaded to S3**\n\n` +
                     `- **Version:** \`${version}\`\n` +
                     `- **S3 Location:** \`s3://${bucket}/userdata/${version}/\`\n` +
-                    `- **Environment:** Development\n\n` +
+                    `- **Environment:** Infrastructure Development\n\n` +
                     `To deploy this version:\n` +
                     `\`\`\`bash\n` +
                     `aws cloudformation update-stack \\\n` +
@@ -240,9 +240,9 @@ jobs:
     needs: [determine-environment, validate]
     if: |
       needs.determine-environment.outputs.should-deploy == 'true' &&
-      needs.determine-environment.outputs.environment == 'production'
+      needs.determine-environment.outputs.environment == 'infrastructure-prod'
     environment:
-      name: production
+      name: infrastructure-prod
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -372,8 +372,8 @@ jobs:
           echo "Version: ${{ needs.determine-environment.outputs.version }}"
           echo "Validation: ${{ needs.validate.result }}"
           
-          if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
-            echo "Production Deploy: ${{ needs.deploy-prod.result }}"
+          if [[ "${{ needs.determine-environment.outputs.environment }}" == "infrastructure-prod" ]]; then
+            echo "Infrastructure Production Deploy: ${{ needs.deploy-prod.result }}"
           else
-            echo "Development Deploy: ${{ needs.deploy-dev.result }}"
+            echo "Infrastructure Development Deploy: ${{ needs.deploy-dev.result }}"
           fi
