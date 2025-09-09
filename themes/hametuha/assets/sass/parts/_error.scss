@@ -26,6 +26,10 @@ body.error {
 		border: 3px solid $gray-dark;
 		background-color: #fff;
 
+		> *:last-child {
+			margin-bottom: 0;
+		}
+
 		a {
 			&:link,
 			&:visited {
