@@ -34,8 +34,8 @@
 		}
 	],
 	"require": {
-		"php": ">=7.2",
-		"johnpbloch/wordpress": "6.1.7",
+		"php": ">=7.4",
+		"johnpbloch/wordpress": "6.8",
 		"composer/installers": "^2.0",
 		"wpackagist-plugin/contact-form-7": "5.7.7",
 		"wpackagist-plugin/flamingo": "*",
@@ -56,12 +56,12 @@
 		"wpackagist-plugin/breadcrumb-navxt": "^7.4",
 		"wpackagist-plugin/anyway-feedback": "^1.1",
 		"wpackagist-plugin/cookie-tasting": "^1.0",
-		"wpackagist-plugin/query-monitor": "^3.19",
+		"wpackagist-plugin/query-monitor": "^3.16",
 		"wpackagist-plugin/hameslack": "*"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^7.5",
-		"yoast/phpunit-polyfills": "^1.0",
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^2.0",
 		"wp-coding-standards/wpcs": "^3.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
 	},

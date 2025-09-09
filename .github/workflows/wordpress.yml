@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '7.2', '8.2' ]        # PHP versions to check.
+        php: [ '8.2' ]        # PHP versions to check.
         wp: [ '6.1', 'latest' ]      # WordPress version to check.
     services:
       mysql:
@@ -65,7 +65,7 @@ jobs:
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 8.2
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 8.2
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

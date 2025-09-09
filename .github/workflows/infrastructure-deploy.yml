@@ -1,0 +1,379 @@
+name: Deploy Infrastructure Scripts
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - 'infra/**'
+      - 'infrastructure/**'
+    paths:
+      - 'infrastructure/scripts/userdata/**'
+      - 'infrastructure/cloudformation/**'
+      - '.github/workflows/infrastructure-deploy.yml'
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'infrastructure/scripts/userdata/**'
+      - 'infrastructure/cloudformation/**'
+      - '.github/workflows/infrastructure-deploy.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (dev/latest/v1.0.0)'
+        required: false
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - latest
+          - custom
+
+# Security: Limit GITHUB_TOKEN permissions
+permissions:
+  contents: read        # Read repository contents
+  issues: write         # Write comments on PRs
+  pull-requests: write  # Write PR comments
+  deployments: write    # Create deployment records
+
+jobs:
+  # ======================================================================
+  # Determine deployment environment and version
+  # ======================================================================
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      version: ${{ steps.set-env.outputs.version }}
+      should-deploy: ${{ steps.set-env.outputs.should-deploy }}
+    steps:
+      - name: Determine Environment and Version
+        id: set-env
+        run: |
+          # Default values
+          ENVIRONMENT="development"
+          VERSION="dev"
+          SHOULD_DEPLOY="true"
+          
+          # Manual workflow dispatch
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ github.event.inputs.version }}"
+            if [[ "$VERSION" == "latest" ]]; then
+              ENVIRONMENT="production"
+            elif [[ "$VERSION" == "custom" ]]; then
+              VERSION="${{ github.ref_name }}-$(date +%Y%m%d%H%M%S)"
+            fi
+          
+          # Push to default branch (master/main)
+          elif [[ "${{ github.ref }}" == "refs/heads/master" ]] || [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            ENVIRONMENT="production"
+            VERSION="latest"
+          
+          # Push to infra/infrastructure branches
+          elif [[ "${{ github.ref }}" =~ ^refs/heads/(infra|infrastructure)/.* ]]; then
+            ENVIRONMENT="development"
+            VERSION="dev"
+          
+          # Pull request
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            ENVIRONMENT="development"
+            VERSION="pr-${{ github.event.pull_request.number }}"
+            SHOULD_DEPLOY="false"  # Only validate, don't deploy on PR
+          
+          # Other branches
+          else
+            SHOULD_DEPLOY="false"
+          fi
+          
+          echo "environment=$ENVIRONMENT" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "should-deploy=$SHOULD_DEPLOY" >> "$GITHUB_OUTPUT"
+          
+          echo "📋 Deployment Configuration:"
+          echo "  Environment: $ENVIRONMENT"
+          echo "  Version: $VERSION"
+          echo "  Should Deploy: $SHOULD_DEPLOY"
+
+  # ======================================================================
+  # Validate infrastructure scripts
+  # ======================================================================
+  validate:
+    runs-on: ubuntu-latest
+    needs: determine-environment
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate shell scripts
+        run: |
+          echo "🔍 Validating shell scripts..."
+          
+          # Install shellcheck
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          
+          # Validate all shell scripts
+          find infrastructure/scripts -name "*.sh" -type f | while read -r script; do
+            echo "Checking: $script"
+            shellcheck "$script" || true  # Don't fail on warnings
+          done
+
+      - name: Validate CloudFormation templates
+        run: |
+          echo "🔍 Validating CloudFormation templates..."
+          
+          # Install AWS CLI
+          pip install awscli
+          
+          # Validate templates
+          for template in infrastructure/cloudformation/*.yaml; do
+            if [[ -f "$template" ]]; then
+              echo "Validating: $template"
+              aws cloudformation validate-template \
+                --template-body "file://$template" \
+                --region "${{ vars.AWS_REGION || 'ap-northeast-1' }}" \
+                || exit 1
+            fi
+          done
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  # ======================================================================
+  # Deploy to S3 (development environment)
+  # ======================================================================
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: [determine-environment, validate]
+    if: |
+      needs.determine-environment.outputs.should-deploy == 'true' &&
+      needs.determine-environment.outputs.environment == 'development'
+    environment:
+      name: development
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION || 'ap-northeast-1' }}
+
+      - name: Upload to S3 (dev)
+        run: |
+          VERSION="${{ needs.determine-environment.outputs.version }}"
+          # アカウントIDを自動取得（secrets.AWS_ACCOUNT_IDがない場合のフォールバック）
+          ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
+          if [[ -z "$ACCOUNT_ID" ]]; then
+            ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+            echo "Using auto-detected AWS Account ID: $ACCOUNT_ID"
+          fi
+          BUCKET="hametuha-infrastructure-${ACCOUNT_ID}"
+          
+          echo "📤 Uploading UserData scripts to S3..."
+          echo "  Bucket: $BUCKET"
+          echo "  Version: $VERSION"
+          
+          # Upload scripts
+          aws s3 sync infrastructure/scripts/userdata/ \
+            s3://$BUCKET/userdata/$VERSION/ \
+            --exclude '*' \
+            --include '*.sh' \
+            --metadata-directive REPLACE \
+            --cache-control 'max-age=300' \
+            --content-type 'text/plain'
+          
+          # Set public access tags
+          for file in infrastructure/scripts/userdata/*.sh; do
+            if [[ -f "$file" ]]; then
+              filename=$(basename "$file")
+              aws s3api put-object-tagging \
+                --bucket "$BUCKET" \
+                --key "userdata/$VERSION/$filename" \
+                --tagging 'TagSet=[{Key=Public,Value=true}]'
+            fi
+          done
+          
+          echo "✅ Upload completed successfully!"
+
+      - name: Get AWS Account ID
+        if: github.event_name == 'pull_request'
+        id: get-account
+        run: |
+          ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
+          if [[ -z "$ACCOUNT_ID" ]]; then
+            ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          fi
+          echo "account-id=$ACCOUNT_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.determine-environment.outputs.version }}';
+            const bucket = `hametuha-infrastructure-${{ steps.get-account.outputs.account-id }}`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 **Infrastructure scripts uploaded to S3**\n\n` +
+                    `- **Version:** \`${version}\`\n` +
+                    `- **S3 Location:** \`s3://${bucket}/userdata/${version}/\`\n` +
+                    `- **Environment:** Development\n\n` +
+                    `To deploy this version:\n` +
+                    `\`\`\`bash\n` +
+                    `aws cloudformation update-stack \\\n` +
+                    `  --stack-name hametuha-staging-server \\\n` +
+                    `  --use-previous-template \\\n` +
+                    `  --parameters ParameterKey=ScriptsVersion,ParameterValue=${version}\n` +
+                    `\`\`\``
+            });
+
+  # ======================================================================
+  # Deploy to S3 (production environment)
+  # ======================================================================
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: [determine-environment, validate]
+    if: |
+      needs.determine-environment.outputs.should-deploy == 'true' &&
+      needs.determine-environment.outputs.environment == 'production'
+    environment:
+      name: production
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION || 'ap-northeast-1' }}
+
+      - name: Backup current latest version
+        run: |
+          BUCKET="hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}"
+          BACKUP_VERSION="backup-$(date +%Y%m%d-%H%M%S)"
+          
+          echo "📦 Backing up current latest version to $BACKUP_VERSION..."
+          
+          # Check if latest exists
+          if aws s3 ls "s3://$BUCKET/userdata/latest/" 2>/dev/null; then
+            aws s3 sync \
+              "s3://$BUCKET/userdata/latest/" \
+              "s3://$BUCKET/userdata/$BACKUP_VERSION/" \
+              --metadata-directive COPY
+            echo "✅ Backup created: $BACKUP_VERSION"
+          else
+            echo "ℹ️ No existing latest version to backup"
+          fi
+
+      - name: Upload to S3 (latest)
+        run: |
+          VERSION="latest"
+          BUCKET="hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}"
+          
+          echo "📤 Uploading UserData scripts to S3 (Production)..."
+          echo "  Bucket: $BUCKET"
+          echo "  Version: $VERSION"
+          
+          # Upload scripts
+          aws s3 sync infrastructure/scripts/userdata/ \
+            "s3://$BUCKET/userdata/$VERSION/" \
+            --exclude '*' \
+            --include '*.sh' \
+            --metadata-directive REPLACE \
+            --cache-control 'max-age=300' \
+            --content-type 'text/plain' \
+            --delete  # Remove files that don't exist locally
+          
+          # Set public access tags
+          for file in infrastructure/scripts/userdata/*.sh; do
+            if [[ -f "$file" ]]; then
+              filename=$(basename "$file")
+              aws s3api put-object-tagging \
+                --bucket "$BUCKET" \
+                --key "userdata/$VERSION/$filename" \
+                --tagging 'TagSet=[{Key=Public,Value=true}]'
+            fi
+          done
+          
+          # Also create a versioned copy
+          TAGGED_VERSION="v$(date +%Y%m%d-%H%M%S)-${GITHUB_SHA:0:7}"
+          aws s3 sync infrastructure/scripts/userdata/ \
+            "s3://$BUCKET/userdata/$TAGGED_VERSION/" \
+            --exclude '*' \
+            --include '*.sh' \
+            --metadata-directive REPLACE \
+            --cache-control 'max-age=31536000' \
+            --content-type 'text/plain'
+          
+          echo "✅ Production deployment completed!"
+          echo "  Latest: s3://$BUCKET/userdata/latest/"
+          echo "  Tagged: s3://$BUCKET/userdata/$TAGGED_VERSION/"
+
+      - name: Create deployment record
+        run: |
+          BUCKET="hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}"
+          
+          # Create deployment record
+          cat > deployment.json <<EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "version": "latest",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "deployed_by": "${{ github.actor }}",
+            "workflow_run": "${{ github.run_id }}"
+          }
+          EOF
+          
+          aws s3 cp deployment.json \
+            "s3://$BUCKET/userdata/latest/_deployment.json" \
+            --content-type 'application/json'
+
+      - name: Notify deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const bucket = `hametuha-infrastructure-${{ secrets.AWS_ACCOUNT_ID }}`;
+            
+            await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: 'production',
+              description: 'Infrastructure scripts deployed to S3',
+              auto_merge: false,
+              required_contexts: [],
+              payload: {
+                version: 'latest',
+                s3_location: `s3://${bucket}/userdata/latest/`
+              }
+            });
+
+  # ======================================================================
+  # Summary
+  # ======================================================================
+  summary:
+    runs-on: ubuntu-latest
+    needs: [determine-environment, validate, deploy-dev, deploy-prod]
+    if: always()
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "📊 Deployment Summary"
+          echo "===================="
+          echo "Environment: ${{ needs.determine-environment.outputs.environment }}"
+          echo "Version: ${{ needs.determine-environment.outputs.version }}"
+          echo "Validation: ${{ needs.validate.result }}"
+          
+          if [[ "${{ needs.determine-environment.outputs.environment }}" == "production" ]]; then
+            echo "Production Deploy: ${{ needs.deploy-prod.result }}"
+          else
+            echo "Development Deploy: ${{ needs.deploy-dev.result }}"
+          fi

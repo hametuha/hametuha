@@ -54,10 +54,18 @@ $ver       = 'error-' . date( 'YmdH' ); // 時間まで記載してキャッシ�
 		</p>
 
 		<div class="error-body">
-			<h1 class="text-center text-muted"><?php echo $title; ?></h1>
+			<h1 class="text-center"><?php echo $title; ?></h1>
 			<div class="error-container"><?php echo $message; ?></div>
-			<h2>最新のステータス</h2>
-			<p><a href="https://x.com/hametuha">破滅派のX（旧twitter）</a>を確認すると、更新情報がわかるかもしれません。</p>
+			<hr class="error-body-divider" />
+			<h2 class="text-center">その他の情報源</h2>
+			<p class="text-center">
+				会社サイト、SNSなどで情報を発信しています。
+			</p>
+			<p class="text-center">
+				<a class="btn btn-info" href="https://x.com/hametuha">X(旧twitter)</a>
+				<a class="btn btn-info" href="https://hametuha.co.jp">株式会社破滅派</a>
+				<a class="btn btn-info" href="https://www.facebook.com/hametuha.inc">Facebook</a>
+			</p>
 		</div>
 
 		<footer class="error-footer">

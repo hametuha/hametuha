@@ -1,0 +1,478 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Hametuha WordPress Production Server - Modular UserData Scripts'
+
+# =============================================================================
+# CLOUDFORMATION TEMPLATE STRUCTURE
+# =============================================================================
+# 1. Parameters    - 設定可能な値（PHPバージョン、インスタンスタイプ等）
+# 2. Conditions    - 条件分岐（新規SG作成、Elastic IP紐付け等）
+# 3. Resources     - AWSリソース定義
+#    - Security Group (条件付き作成)
+#    - IAM Role & Instance Profile
+#    - Launch Template (Modular UserData)
+#    - EC2 Instance
+#    - Elastic IP Association (条件付き)
+# 4. Outputs       - 作成されたリソースの情報
+# =============================================================================
+
+# =============================================================================
+# 1. PARAMETERS - デプロイ時に設定可能な値
+# =============================================================================
+
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues: [staging, production]
+    Description: Environment name
+
+  InstanceType:
+    Type: String
+    Default: t3.medium
+    AllowedValues: [t3.small, t3.medium, t3.large, t3.xlarge]
+    Description: EC2 instance type
+
+  PhpVersion:
+    Type: String
+    Default: "8.2"
+    AllowedValues: ["8.1", "8.2", "8.3", "8.4"]
+    Description: PHP version to install
+
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: EC2 KeyPair for SSH access
+
+  VPCId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID where instance will be created
+
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet ID for EC2 instance
+
+  ExistingSecurityGroupId:
+    Type: String
+    Description: Existing Security Group ID to attach
+    Default: ""
+
+  ExistingElasticIPAllocation:
+    Type: String
+    Description: Existing Elastic IP Allocation ID (optional)
+    Default: ""
+
+  ElastiCacheEndpoint:
+    Type: String
+    Description: ElastiCache Memcached endpoint URL with port
+    Default: "hametuhaobjectcache.bogjkp.0001.apne1.cache.amazonaws.com:11211"
+
+  WebContentVolumeSize:
+    Type: Number
+    Default: 20
+    MinValue: 10
+    MaxValue: 100
+    Description: Size of EBS volume for WordPress content (GB)
+
+  ExistingWebContentVolumeId:
+    Type: String
+    Description: Existing EBS Volume ID for WordPress content (optional, if not specified, new volume will be created)
+    Default: ""
+
+  ScriptsVersion:
+    Type: String
+    Default: "latest"
+    AllowedValues: ["dev", "latest"]
+    Description: UserData scripts version to use from S3 (dev for testing, latest for production)
+
+# =============================================================================
+# 2. CONDITIONS - 条件分岐ロジック
+# =============================================================================
+
+Conditions:
+  CreateNewSecurityGroup: !Equals [!Ref ExistingSecurityGroupId, ""]
+  AttachElasticIP: !Not [!Equals [!Ref ExistingElasticIPAllocation, ""]]
+  CreateNewWebContentVolume: !Equals [!Ref ExistingWebContentVolumeId, ""]
+
+# =============================================================================
+# 3. RESOURCES - AWSリソース定義
+# =============================================================================
+
+Resources:
+  # Security Group (if not provided)
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Condition: CreateNewSecurityGroup
+    Properties:
+      GroupDescription: Security group for Hametuha web server
+      VpcId: !Ref VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP access (CloudFlare)
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: HTTPS access (future use)
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: All outbound traffic
+      Tags:
+        - Key: Name
+          Value: !Sub "${Environment}-hametuha-security-group"
+        - Key: Environment
+          Value: !Ref Environment
+
+  # IAM Role for EC2 instance
+  EC2InstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: EBSVolumeAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:AttachVolume
+                  - ec2:DetachVolume
+                  - ec2:DescribeVolumes
+                  - ec2:DescribeInstances
+                Resource: '*'
+        - PolicyName: CloudFormationSignal
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:SignalResource
+                Resource: '*'
+
+  # Instance Profile
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2InstanceRole
+
+  # Launch Template with Modular UserData
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub "${Environment}-hametuha-launch-template"
+      LaunchTemplateData:
+        # Amazon Linux 2023 AMI (ap-northeast-1)
+        # 最新AMIは以下で確認: aws ec2 describe-images --owners amazon --filters "Name=name,Values=al2023-ami-2023.*"
+        ImageId: ami-07faa35bbd2230d90  # Amazon Linux 2023 (最新)
+        InstanceType: !Ref InstanceType
+        KeyName: !Ref KeyPairName
+        IamInstanceProfile:
+          Arn: !GetAtt EC2InstanceProfile.Arn
+        SecurityGroupIds:
+          - !If
+            - CreateNewSecurityGroup
+            - !Ref WebServerSecurityGroup
+            - !Ref ExistingSecurityGroupId
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            # ==============================================================================
+            # Hametuha WordPress Environment - S3-based Modular UserData Bootstrap Script
+            # ==============================================================================
+            # This script downloads and executes modular UserData scripts from S3 bucket
+            # for better maintainability and independent infrastructure code management.
+            # ==============================================================================
+
+            set -e  # Exit on any error
+            set -x  # Enable debug output
+
+            # ログ設定
+            exec > >(tee /var/log/user-data.log)
+            exec 2>&1
+
+            # 環境変数のエクスポート（モジュラースクリプトで利用）
+            export ENVIRONMENT="${Environment}"
+            export PHP_VERSION="${PhpVersion}"
+            export ELASTICACHE_ENDPOINT="${ElastiCacheEndpoint}"
+            export WEB_MOUNT_POINT="/var/www/hametuha.com"
+            export WEB_ROOT="/var/www/hametuha.com/wordpress"
+
+            echo "=== Hametuha ${Environment} Server Setup Started ==="
+            echo "Environment: $ENVIRONMENT"
+            echo "PHP Version: $PHP_VERSION" 
+            echo "ElastiCache: $ELASTICACHE_ENDPOINT"
+            echo "Scripts Version: ${ScriptsVersion}"
+            echo "========================================================"
+
+            # S3 bucket information
+            S3_BUCKET="hametuha-infrastructure-${AWS::AccountId}"
+            SCRIPTS_VERSION="${ScriptsVersion}"
+            SCRIPTS_BASE_URL="https://$S3_BUCKET.s3.${AWS::Region}.amazonaws.com/userdata/$SCRIPTS_VERSION"
+
+            echo "Downloading scripts from: $SCRIPTS_BASE_URL"
+
+            # 作業ディレクトリ作成
+            WORK_DIR="/tmp/userdata-scripts"
+            mkdir -p "$WORK_DIR"
+            cd "$WORK_DIR"
+
+            # 基本パッケージインストール（curl、git等）
+            echo "Installing basic packages..."
+            dnf update -y
+            dnf install -y curl wget git vim unzip
+
+            # モジュラースクリプトのダウンロード
+            echo "Downloading modular UserData scripts from S3..."
+            
+            # メインスクリプトをダウンロード
+            echo "Downloading main.sh..."
+            if curl -fsSL "$SCRIPTS_BASE_URL/main.sh" -o main.sh; then
+                chmod +x main.sh
+                echo "✅ Downloaded: main.sh"
+            else
+                echo "❌ Failed to download: main.sh from S3"
+                echo "Please ensure scripts are uploaded to S3 using:"
+                echo "  ./infrastructure/scripts/upload-userdata-scripts.sh -v $SCRIPTS_VERSION"
+                exit 1
+            fi
+
+            # 各機能別スクリプトをダウンロード
+            for script in "01-system-setup.sh" "02-ebs-mount.sh" "03-php-setup.sh" "04-nginx-setup.sh" "05-cloudflare-ssl.sh" "06-composer-tools.sh" "07-monitoring.sh" "08-static-subdomain.sh"; do
+                echo "Downloading $script..."
+                if curl -fsSL "$SCRIPTS_BASE_URL/$script" -o "$script"; then
+                    chmod +x "$script"
+                    echo "✅ Downloaded: $script"
+                else
+                    echo "❌ Failed to download: $script"
+                    exit 1
+                fi
+            done
+
+            echo "All scripts downloaded successfully from S3."
+            ls -la
+
+            # メインスクリプトを実行
+            echo "========================================================"
+            echo "Starting main setup script execution..."
+            echo "========================================================"
+            
+            if ./main.sh; then
+                echo "✅ Setup completed successfully!"
+                SETUP_STATUS=0
+            else
+                echo "❌ Setup failed with exit code: $?"
+                SETUP_STATUS=1
+            fi
+
+            # CloudFormation通知用の関数
+            send_cfn_signal() {
+                local status="$1"
+                echo "Sending CloudFormation signal with status: $status"
+
+                # Amazon Linux 2023 では cfn-bootstrap がプリインストール
+                if command -v cfn-signal >/dev/null 2>&1; then
+                    cfn-signal -e $status --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
+                    echo "cfn-signal sent successfully"
+                else
+                    echo "WARNING: cfn-signal command not found, using AWS CLI as fallback"
+                    # AWS CLI を使って代替手段
+                    aws cloudformation signal-resource \
+                        --stack-name ${AWS::StackName} \
+                        --logical-resource-id EC2Instance \
+                        --unique-id $(curl -s http://169.254.169.254/latest/meta-data/instance-id) \
+                        --status $([ $status -eq 0 ] && echo "SUCCESS" || echo "FAILURE") \
+                        --region ${AWS::Region}
+                fi
+            }
+
+            # 結果をCloudFormationに通知
+            send_cfn_signal $SETUP_STATUS
+
+            # クリーンアップ
+            cd /
+            rm -rf "$WORK_DIR"
+
+            echo "========================================================"
+            echo "UserData script execution completed with status: $SETUP_STATUS"
+            echo "========================================================"
+
+            exit $SETUP_STATUS
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: !Sub "${Environment}-hametuha-server"
+              - Key: Environment
+                Value: !Ref Environment
+              - Key: Application
+                Value: hametuha
+              - Key: ManagedBy
+                Value: CloudFormation
+              - Key: Group
+                Value: Hametuha
+          - ResourceType: volume
+            Tags:
+              - Key: Name
+                Value: !Sub "${Environment}-hametuha-server-volume"
+              - Key: Environment
+                Value: !Ref Environment
+              - Key: Group
+                Value: Hametuha
+
+  # EC2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      SubnetId: !Ref SubnetId
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT15M
+
+  # EBS Volume for WordPress content (created only if new volume needed)
+  WebContentVolume:
+    Type: AWS::EC2::Volume
+    Condition: CreateNewWebContentVolume
+    DependsOn: EC2Instance
+    Properties:
+      Size: !Ref WebContentVolumeSize
+      VolumeType: gp3
+      AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
+      Encrypted: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Environment}-hametuha-web-content"
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Application
+          Value: hametuha
+        - Key: Group
+          Value: Hametuha
+
+  # EBS Volume Attachment
+  WebContentVolumeAttachment:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      InstanceId: !Ref EC2Instance
+      VolumeId: !If [CreateNewWebContentVolume, !Ref WebContentVolume, !Ref ExistingWebContentVolumeId]
+      Device: /dev/xvdf
+
+  # Elastic IP Association (if provided)
+  ElasticIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Condition: AttachElasticIP
+    Properties:
+      AllocationId: !Ref ExistingElasticIPAllocation
+      InstanceId: !Ref EC2Instance
+
+  # Data Lifecycle Manager (DLM) for EBS Snapshots
+  EBSSnapshotLifecyclePolicy:
+    Type: AWS::DLM::LifecyclePolicy
+    Properties:
+      Description: !Sub "${Environment} Hametuha EBS Volume Daily Snapshots"
+      State: ENABLED
+      ExecutionRoleArn: !GetAtt DLMExecutionRole.Arn
+      PolicyDetails:
+        PolicyType: EBS_SNAPSHOT_MANAGEMENT
+        ResourceTypes:
+          - VOLUME
+        TargetTags:
+          - Key: Environment
+            Value: !Ref Environment
+          - Key: Application
+            Value: hametuha
+          - Key: Group
+            Value: Hametuha
+        Schedules:
+          - Name: DailySnapshots
+            CreateRule:
+              CronExpression: "cron(0 2 * * ? *)"  # Daily at 2:00 AM JST (17:00 UTC)
+            RetainRule:
+              Count: 90  # Keep snapshots for 90 days (3 months)
+            CopyTags: true
+            TagsToAdd:
+              - Key: Name
+                Value: !Sub "${Environment}-hametuha-web-content-snapshot"
+              - Key: CreatedBy
+                Value: DLM
+              - Key: AutoCreated
+                Value: "true"
+
+  # IAM Role for DLM
+  DLMExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: dlm.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSDataLifecycleManagerServiceRole
+
+# =============================================================================
+# 4. OUTPUTS - 作成されたリソースの情報を出力
+# =============================================================================
+
+Outputs:
+  InstanceId:
+    Description: Instance ID of the newly created EC2 instance
+    Value: !Ref EC2Instance
+    Export:
+      Name: !Sub "${Environment}-hametuha-instance-id"
+
+  PrivateIP:
+    Description: Private IP address of the instance
+    Value: !GetAtt EC2Instance.PrivateIp
+    Export:
+      Name: !Sub "${Environment}-hametuha-private-ip"
+
+  PublicIP:
+    Description: Public IP address of the instance
+    Value: !GetAtt EC2Instance.PublicIp
+    Export:
+      Name: !Sub "${Environment}-hametuha-public-ip"
+
+  LaunchTemplateId:
+    Description: Launch Template ID
+    Value: !Ref LaunchTemplate
+    Export:
+      Name: !Sub "${Environment}-hametuha-launch-template"
+
+  WebContentVolumeId:
+    Description: EBS Volume ID for web content
+    Value: !If [CreateNewWebContentVolume, !Ref WebContentVolume, !Ref ExistingWebContentVolumeId]
+    Export:
+      Name: !Sub "${Environment}-hametuha-web-content-volume"
+
+  DLMLifecyclePolicyId:
+    Description: Data Lifecycle Manager policy ID for EBS snapshots
+    Value: !Ref EBSSnapshotLifecyclePolicy
+    Export:
+      Name: !Sub "${Environment}-hametuha-dlm-policy-id"
+
+  ScriptsSource:
+    Description: UserData scripts source location
+    Value: !Sub "Scripts downloaded from S3: s3://hametuha-infrastructure-${AWS::AccountId}/userdata/${ScriptsVersion}/"
