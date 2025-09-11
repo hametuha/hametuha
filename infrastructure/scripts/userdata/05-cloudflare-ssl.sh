@@ -83,8 +83,16 @@ server {
         fastcgi_param SERVER_PORT $http_x_forwarded_port;
     }
 
-    # WordPress管理画面（REST API考慮）
-    location ~ ^/wp-admin {
+    # WordPress管理画面の非PHPファイル（CSS、JS、画像など）
+    location ~ ^/wp-admin/.*\.(css|js|png|jpg|jpeg|gif|ico|svg)$ {
+        limit_req zone=limit_req_admin burst=20 delay=10;
+        try_files $uri =404;
+        expires 1h;
+        add_header Cache-Control "public";
+    }
+    
+    # WordPress管理画面のディレクトリアクセス（index.phpにリダイレクト）
+    location ~ ^/wp-admin/?$ {
         limit_req zone=limit_req_admin burst=20 delay=10;
         try_files $uri $uri/ /index.php?$args;
     }
@@ -100,13 +108,6 @@ server {
         deny all;
     }
 
-    # robots.txt動的生成（WordPress処理）
-    location = /robots.txt {
-        rewrite ^/robots\.txt$ /index.php?robots=1 last;
-        allow all;
-        log_not_found off;
-        access_log off;
-    }
 
     # WordPress pretty permalinks（セキュリティ強化版）
     location / {
