@@ -37,10 +37,10 @@
   },
   {
     "ParameterKey": "ExistingWebContentVolumeId",
-    "ParameterValue": "vol-0bb999fe861f677fa"
+    "ParameterValue": ""
   },
   {
     "ParameterKey": "ScriptsVersion",
-    "ParameterValue": "latest"
+    "ParameterValue": "dev"
   }
 ]

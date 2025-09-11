@@ -16,8 +16,17 @@
 # 7. 監視・ログ設定
 # ==============================================================================
 
-set -e  # エラー時に停止
+set -Eeuo pipefail  # Enhanced error handling
 set -x  # デバッグ出力有効
+
+# エラートラップ設定
+on_error() {
+    local line_no=$1
+    local exit_code=$2
+    echo "[ERROR] main.sh failed at line $line_no with exit code $exit_code" >&2
+    exit $exit_code
+}
+trap 'on_error $LINENO $?' ERR
 
 # スクリプトのベースディレクトリを取得
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
@@ -28,7 +37,7 @@ exec > >(tee -a $LOGFILE)
 exec 2>&1
 
 echo "========================================================================"
-echo "Hametuha WordPress環境構築開始: $(date)"
+echo "[STEP] Hametuha WordPress環境構築開始: $(date)"
 echo "========================================================================"
 
 # 環境変数の表示（デバッグ用）
@@ -53,7 +62,7 @@ for script in "${SCRIPTS[@]}"; do
     
     echo ""
     echo "========================================================================"
-    echo "実行開始: ${script} ($(date))"
+    echo "[STEP] 実行開始: ${script} ($(date))"
     echo "========================================================================"
     
     if [[ -f "$script_path" ]]; then
@@ -62,33 +71,33 @@ for script in "${SCRIPTS[@]}"; do
         
         # スクリプト実行
         if bash "$script_path"; then
-            echo "✅ 成功: ${script}"
+            echo "[OK] ✅ 成功: ${script}"
         else
-            echo "❌ 失敗: ${script}"
-            echo "エラーコード: $?"
-            echo "詳細はログを確認してください: ${LOGFILE}"
+            echo "[ERROR] ❌ 失敗: ${script}"
+            echo "[ERROR] エラーコード: $?"
+            echo "[ERROR] 詳細はログを確認してください: ${LOGFILE}"
             exit 1
         fi
     else
-        echo "❌ スクリプトが見つかりません: ${script_path}"
+        echo "[ERROR] ❌ スクリプトが見つかりません: ${script_path}"
         exit 1
     fi
     
-    echo "完了: ${script} ($(date))"
+    echo "[OK] 完了: ${script} ($(date))"
 done
 
 echo ""
 echo "========================================================================"
-echo "🎉 Hametuha WordPress環境構築完了: $(date)"
+echo "[OK] 🎉 Hametuha WordPress環境構築完了: $(date)"
 echo "========================================================================"
-echo "- WordPress サイト: https://hametuha.com"
-echo "- 管理画面: https://hametuha.com/wp-admin"
-echo "- ログファイル: ${LOGFILE}"
-echo "- PHP バージョン: $(php -v | head -n1)"
-echo "- Nginx ステータス: $(systemctl is-active nginx)"
-echo "- PHP-FPM ステータス: $(systemctl is-active php-fpm)"
+echo "[INFO] - WordPress サイト: https://hametuha.com"
+echo "[INFO] - 管理画面: https://hametuha.com/wp-admin"
+echo "[INFO] - ログファイル: ${LOGFILE}"
+echo "[INFO] - PHP バージョン: $(php -v | head -n1)"
+echo "[INFO] - Nginx ステータス: $(systemctl is-active nginx)"
+echo "[INFO] - PHP-FPM ステータス: $(systemctl is-active php-fpm)"
 echo "========================================================================"
 
 # インスタンス準備完了をCloudFormationに通知
 # （cfn-signal コマンドは CloudFormation テンプレート内で設定）
-echo "インスタンス準備完了 - CloudFormationに通知します"
+echo "[STEP] インスタンス準備完了 - CloudFormationに通知します"

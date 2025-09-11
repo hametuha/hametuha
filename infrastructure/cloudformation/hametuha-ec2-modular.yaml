@@ -97,6 +97,18 @@ Conditions:
 # =============================================================================
 
 Resources:
+  # CloudWatch Log Group for UserData bootstrap logs
+  BootstrapLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/ec2/${Environment}-hametuha-bootstrap"
+      RetentionInDays: 30
+      Tags:
+        - Key: Name
+          Value: !Sub "${Environment}-hametuha-bootstrap-logs"
+        - Key: Environment
+          Value: !Ref Environment
+
   # Security Group (if not provided)
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -164,6 +176,38 @@ Resources:
                 Action:
                   - cloudformation:SignalResource
                 Resource: '*'
+        - PolicyName: CloudWatchLogsAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:DescribeLogStreams
+                  - logs:DescribeLogGroups
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/ec2/${Environment}-hametuha-bootstrap:*"
+        - PolicyName: S3LogUploadAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                Resource: !Sub "arn:aws:s3:::hametuha-infrastructure-${AWS::AccountId}/debug-logs/*"
+        - PolicyName: S3UserDataScriptsReadAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource: 
+                  - !Sub "arn:aws:s3:::hametuha-infrastructure-${AWS::AccountId}/userdata/*"
+                  - !Sub "arn:aws:s3:::hametuha-infrastructure-${AWS::AccountId}"
 
   # Instance Profile
   EC2InstanceProfile:
@@ -203,9 +247,88 @@ Resources:
             set -e  # Exit on any error
             set -x  # Enable debug output
 
-            # ログ設定
-            exec > >(tee /var/log/user-data.log)
+            # TODO: Enhanced error handling will be added after basic functionality is confirmed
+            # エラートラップ設定（一時的に無効化）
+            # on_error() {
+            #     local line_no=$1
+            #     local exit_code=$2
+            #     echo "[ERROR] Script failed at line $line_no with exit code $exit_code" >&2
+            #     
+            #     # CloudFormation失敗シグナル送信
+            #     /opt/aws/bin/cfn-signal -e $exit_code --unique-id \$(curl -s http://169.254.169.254/latest/meta-data/instance-id) --stack "${AWS::StackName}" --resource EC2Instance --region "${AWS::Region}"
+            #     exit $exit_code
+            # }
+            # trap 'on_error $LINENO $?' ERR
+
+            # ログ設定（標準出力とファイルの両方）
+            LOGFILE="/var/log/userdata.log"
+            exec > >(tee -a "$LOGFILE")
             exec 2>&1
+
+            # S3ログアップロード関数（デバッグ用）
+            INSTANCE_ID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
+            S3_LOG_BUCKET="hametuha-infrastructure-${AWS::AccountId}"
+            S3_LOG_KEY="debug-logs/${Environment}/$INSTANCE_ID/userdata.log"
+            
+            upload_log_to_s3() {
+                if [ -f "$LOGFILE" ]; then
+                    aws s3 cp "$LOGFILE" "s3://$S3_LOG_BUCKET/$S3_LOG_KEY" --region "${AWS::Region}" || true
+                    echo "[DEBUG] ログをS3にアップロード: s3://$S3_LOG_BUCKET/$S3_LOG_KEY"
+                fi
+            }
+            
+            # 5分間隔でログをS3にアップロード（バックグラウンド）
+            while true; do
+                sleep 300
+                upload_log_to_s3
+            done &
+
+            # CloudWatch Logs Agent設定
+            LOG_GROUP_NAME="/aws/ec2/${Environment}-hametuha-bootstrap"
+            LOG_STREAM_NAME="`curl -s http://169.254.169.254/latest/meta-data/instance-id`"
+
+            echo "[STEP] UserData実行開始: `date`"
+            
+            # 初回ログアップロード
+            upload_log_to_s3
+            
+            echo "[STEP] CloudWatch Logsセットアップ中..."
+
+            # CloudWatch Agentのインストール確認とインストール
+            if ! command -v /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl &> /dev/null; then
+                echo "[STEP] CloudWatch Agentをインストール中..."
+                dnf install -y amazon-cloudwatch-agent
+            fi
+
+            # 設定ディレクトリの作成
+            mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
+
+            # CloudWatch Agentの設定ファイル作成
+            cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json << CWCONFIG
+            {
+              "logs": {
+                "logs_collected": {
+                  "files": {
+                    "collect_list": [
+                      {
+                        "file_path": "/var/log/user-data.log",
+                        "log_group_name": "$LOG_GROUP_NAME",
+                        "log_stream_name": "$LOG_STREAM_NAME",
+                        "timezone": "Asia/Tokyo"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+            CWCONFIG
+
+            # CloudWatch Agentを起動（エラーが発生しても継続）
+            if /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -a fetch-config -m ec2 -s; then
+                echo "[OK] CloudWatch Logs設定完了"
+            else
+                echo "[WARN] CloudWatch Agent設定に失敗しましたが、処理を継続します"
+            fi
 
             # 環境変数のエクスポート（モジュラースクリプトで利用）
             export ENVIRONMENT="${Environment}"
@@ -224,9 +347,9 @@ Resources:
             # S3 bucket information
             S3_BUCKET="hametuha-infrastructure-${AWS::AccountId}"
             SCRIPTS_VERSION="${ScriptsVersion}"
-            SCRIPTS_BASE_URL="https://$S3_BUCKET.s3.${AWS::Region}.amazonaws.com/userdata/$SCRIPTS_VERSION"
+            S3_SCRIPTS_PATH="s3://$S3_BUCKET/userdata/$SCRIPTS_VERSION"
 
-            echo "Downloading scripts from: $SCRIPTS_BASE_URL"
+            echo "Downloading scripts from: $S3_SCRIPTS_PATH"
 
             # 作業ディレクトリ作成
             WORK_DIR="/tmp/userdata-scripts"
@@ -238,12 +361,12 @@ Resources:
             dnf update -y
             dnf install -y --allowerasing curl wget git vim unzip
 
-            # モジュラースクリプトのダウンロード
-            echo "Downloading modular UserData scripts from S3..."
+            # モジュラースクリプトのダウンロード（AWS CLIを使用）
+            echo "Downloading modular UserData scripts from S3 using AWS CLI..."
             
             # メインスクリプトをダウンロード
             echo "Downloading main.sh..."
-            if curl -fsSL "$SCRIPTS_BASE_URL/main.sh" -o main.sh; then
+            if aws s3 cp "$S3_SCRIPTS_PATH/main.sh" main.sh --region "${AWS::Region}"; then
                 chmod +x main.sh
                 echo "✅ Downloaded: main.sh"
             else
@@ -256,7 +379,7 @@ Resources:
             # 各機能別スクリプトをダウンロード
             for script in "01-system-setup.sh" "02-ebs-mount.sh" "03-php-setup.sh" "04-nginx-setup.sh" "05-cloudflare-ssl.sh" "06-composer-tools.sh" "07-monitoring.sh" "08-static-subdomain.sh"; do
                 echo "Downloading $script..."
-                if curl -fsSL "$SCRIPTS_BASE_URL/$script" -o "$script"; then
+                if aws s3 cp "$S3_SCRIPTS_PATH/$script" "$script" --region "${AWS::Region}"; then
                     chmod +x "$script"
                     echo "✅ Downloaded: $script"
                 else
@@ -362,25 +485,21 @@ Resources:
   # EC2 Instance
   EC2Instance:
     Type: AWS::EC2::Instance
+    DeletionPolicy: Retain  # デバッグのためインスタンスを保持
     Properties:
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
       SubnetId: !Ref SubnetId
-    CreationPolicy:
-      ResourceSignal:
-        Count: 1
-        Timeout: PT15M
 
   # EBS Volume for WordPress content (created only if new volume needed)
   WebContentVolume:
     Type: AWS::EC2::Volume
     Condition: CreateNewWebContentVolume
-    DependsOn: EC2Instance
     Properties:
       Size: !Ref WebContentVolumeSize
       VolumeType: gp3
-      AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
+      AvailabilityZone: !Select [0, !GetAZs '']
       Encrypted: true
       Tags:
         - Key: Name
