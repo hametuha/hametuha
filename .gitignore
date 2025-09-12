@@ -8,7 +8,7 @@
 /cache/
 /backups/
 /.github-*/
-/infrastructure/**/tmp/
+/infrastructure/
 
 # Composer dependencies
 /vendor/
