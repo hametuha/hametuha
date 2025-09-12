@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:8.2-fpm
 
 # 必要なパッケージのインストール
 RUN apt-get update && apt-get install -y \
@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     msmtp \
     subversion \
     curl \
+    libzip-dev \
+    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Composerのインストール
@@ -25,10 +27,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && rm -rf /var/lib/apt/lists/*
 
 # PHP拡張のインストール
-RUN docker-php-ext-install opcache mysqli pdo_mysql
+RUN docker-php-ext-configure zip \
+    && docker-php-ext-install zip opcache mysqli pdo_mysql intl
 
-# Xdebug (開発環境用、PHP 7.2対応バージョン)
-RUN pecl install xdebug-2.9.8 \
+# Xdebug (開発環境用、PHP 8.2対応)
+RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
 # msmtp設定ファイルをコピー

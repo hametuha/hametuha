@@ -7,7 +7,8 @@
 
 /**
  * wp_dieの描画関数をフィルター
- * @param string $function
+ *
+ * @param callable $function
  * @return string
  */
 add_filter('wp_die_handler', function ( $function ) {
@@ -15,7 +16,7 @@ add_filter('wp_die_handler', function ( $function ) {
 }, 1000);
 
 /**
- * Render wp_die
+ * wp_dieの画面をカスタマイズ
  *
  * @param string $message
  * @param string $title
@@ -80,3 +81,15 @@ function _hametuha_wp_die( $message, $title = '', $args = array() ) {
 	include TEMPLATEPATH . '/503.php';
 	die();
 }
+
+/**
+ * PHPエラーページのメッセージをカスタマイズ
+ */
+add_action( 'wp_php_error_message', function( $message ) {
+	$message = <<<HTML
+<p><strong>システムエラー</strong></p>
+<p>大変申し訳ございません。技術的な問題が発生しました。時間をおいてもう一度お試しください。</p>
+<p>この問題が何度も再現する場合は、破滅派までお問い合わせください。</p>
+HTML;
+	return sprintf( '<p>%s</p>', wp_kses_post( $message ) );
+});

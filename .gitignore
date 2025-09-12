@@ -8,6 +8,7 @@
 /cache/
 /backups/
 /.github-*/
+/infrastructure/
 
 # Composer dependencies
 /vendor/
@@ -20,6 +21,7 @@
 /mu-plugins/*
 # 特定のファイルのみ除外:
 !/mu-plugins/hametuha-config.php
+!/mu-plugins/hametuha-opcache-admin.php
 
 # contents（昔のHTMLで管理されていたもの）
 /contents/*

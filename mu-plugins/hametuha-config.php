@@ -37,3 +37,22 @@ add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
 		++$counter;
 	}
 });
+
+/**
+ * wp_dieやphp-error.phpをプレビューする
+ *
+ * 1. URLパラメータ ?error-preview=wp で wp_die を表示
+ * 2. URLパラメータ ?error-preview=php で php-error.php を表示
+ */
+add_action( 'template_redirect', function () {
+	if ( 'local' !== wp_get_environment_type() ) {
+		return;
+	}
+	switch ( filter_input( INPUT_GET, 'error-preview' ) ) {
+		case 'wp':
+			wp_die( 'これは wp_die のテストです。', 'wp_die テスト', [ 'response' => 403 ] );
+		case 'php':
+			// 存在しない関数を呼ぶ
+			hametuha_non_existing_function_for_error_preview();
+	}
+} );
