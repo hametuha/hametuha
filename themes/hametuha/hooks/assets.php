@@ -110,11 +110,6 @@ JS;
 	// ソーシャル計測
 	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
 
-	// イベント参加
-	wp_register_script( 'hamevent', get_template_directory_uri() . '/assets/js/dist/components/event-participate.js', [
-		'angular',
-		'wp-api',
-	], hametuha_version(), true );
 
 	// メインCSS
 	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );

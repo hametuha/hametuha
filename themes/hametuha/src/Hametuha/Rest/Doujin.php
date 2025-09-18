@@ -168,31 +168,6 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				},
 			],
 		] );
-
-		// Event Participant
-		register_rest_route( 'hametuha/v1', '/participants/(?P<post_id>\d+)/?', [
-			[
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'api_participant_status' ],
-				'args'                => [
-					'post_id' => [
-						'required'          => true,
-						'validate_callback' => function( $var ) {
-							return $var && is_numeric( $var );
-						},
-					],
-					'status'  => [
-						'required' => true,
-					],
-					'text'    => [
-						'default' => '',
-					],
-				],
-				'permission_callback' => function ( $request ) {
-					return current_user_can( 'read' );
-				},
-			],
-		] );
 	}
 
 	/**
@@ -253,61 +228,6 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				break;
 		}
 		return new \WP_REST_Response( $users );
-	}
-
-	/**
-	 * Handler event participation
-	 *
-	 * @param \WP_REST_Request $request
-	 *
-	 * @return \WP_Error|\WP_REST_Response
-	 */
-	public function api_participant_status( $request ) {
-		$post = get_post( $request['post_id'] );
-		if ( ! $post || ( false === array_search( $post->post_type, [ 'announcement', 'news' ] ) ) ) {
-			return new \WP_Error( 404, '該当するイベントが存在しません', [ 'status' => 404 ] );
-		}
-		$event = new Announcement( $post );
-		if ( ! $event->is_participating() ) {
-			return new \WP_Error( 400, 'このイベントはすでに参加期限を過ぎています。', [ 'status' => 400 ] );
-		}
-		if ( $event->participating_limit() <= $event->participating_count() ) {
-			return new \WP_Error( 400, 'すでに定員に達しています。', [ 'status' => 400 ] );
-		}
-		$args = [
-			'comment_type'     => 'participant',
-			'comment_post_ID'  => $request['post_id'],
-			'comment_content'  => $request['text'],
-			'comment_approved' => 1,
-			'user_id'          => get_current_user_id(),
-		];
-		if ( $comment_id = $event->get_ticket_id( get_current_user_id() ) ) {
-			$args['comment_ID'] = $comment_id;
-			wp_update_comment( $args );
-			$updated = true;
-		} else {
-			$comment_id = wp_insert_comment( $args );
-			$updated    = false;
-		}
-		update_comment_meta( $comment_id, '_participating', $request['status'] );
-		if ( $comment_id ) {
-			$organizer = get_userdata( $post->post_author );
-			if ( get_current_user_id() != $post->post_author ) {
-				do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
-					'post'        => $post,
-					'status'      => $request['status'],
-					'organizer'   => $organizer,
-					'participant' => get_userdata( get_current_user_id() ),
-					'update'      => $updated,
-					'message'     => $request['text'],
-				] );
-			}
-			return new \WP_REST_Response( $event->get_user_object( $comment_id ) );
-		} else {
-			return new \WP_Error( 500, 'ステータスの変更に失敗しました。', [
-				'status' => 500,
-			] );
-		}
 	}
 
 	/**

@@ -61,7 +61,7 @@
 					] );
 					?>
 
-									<?php get_template_part( 'parts/author', 'narrow' ); ?>
+					<?php get_template_part( 'parts/author', 'narrow' ); ?>
 
 
 					<?php get_template_part( 'parts/event', 'address' ); ?>

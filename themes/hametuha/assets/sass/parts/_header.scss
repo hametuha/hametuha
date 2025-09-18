@@ -1,273 +1,308 @@
-
 //
 // アイコンの点滅
 //
-@include keyframes( icon-blink ){
-  0%{
-    color: $navbar-default-link-color;
-    background-color: $navbar-default-bg;
-  }
-  100%{
-    color: $brand-danger;
-    background-color: lighten($brand-danger, 30);
-  }
+@include keyframes(icon-blink) {
+	0% {
+		color: $navbar-default-link-color;
+		background-color: $navbar-default-bg;
+	}
+	100% {
+		color: $brand-danger;
+		background-color: lighten($brand-danger, 30);
+	}
 }
 
-#header{
-  will-change: transform;
-  transition: transform .3s ease-in-out;
-  &.headroom--unpinned{
-    @include head-room() {
-      transform: translateY(-100%);
-    }
-  }
+#header {
+	will-change: transform;
+	transition: transform .3s ease-in-out;
+
+	&.headroom--unpinned {
+		@include head-room() {
+			transform: translateY(-100%);
+		}
+	}
+
+	.notification__container {
+		padding: 0;
+	}
 }
 
 .navbar {
-  &-header {
-    position: relative;
-  }
-  // 編集ボタン
-  &-edit-btn {
-    position: absolute;
-    top: 10px;
-    left: 60px;
-  }
-  // ヘッダーのトグルボタンを左にする
-  &-toggle {
-    position: relative;
-    float: left;
-    margin-right: 0;
-    margin-left: 10px;
-    @media (min-width: $grid-float-breakpoint) {
-      display: block;
-    }
-    border: none;
-  }
-  &-write{
-    line-height: 14px;
-    margin-left: 5px;
-  }
-  // ステータス表示
-  &-status{
-    position: absolute;
-    width: 100%;
-    height: $navbar-height;
-    line-height: $navbar-height;
-    left: 0;
-    top: 0;
-    text-align: center;
-    font-weight: bold;
-    color: #666;
-  }
+	&-header {
+		position: relative;
+	}
 
-  // ユーザー情報
-  &-login{
-    $avatar-size: 30px;
-    width: 150px;
-    & > li:first-child .avatar{
-      width: $avatar-size;
-      height: $avatar-size;
-      border-radius: 4px;
-    }
-    i{
-      margin-right: 0.5em;
-    }
+	// 編集ボタン
+	&-edit-btn {
+		position: absolute;
+		top: 10px;
+		left: 60px;
+	}
 
-    &.navbar-right > li{
-      float: right;
-      & > a{
-        $avatar-pad: ($navbar-height - $avatar-size) / 2;
-        padding: $avatar-pad $avatar-pad / 2;
-        line-height: 1;
-        &.dropdown--notify{
-          height: $navbar-height;
-          vertical-align: middle;
-        }
-        & > i{
-          $icon-pad: 4px;
-          font-size: $avatar-size - (2 * $icon-pad);
-          line-height: $avatar-size;
-          vertical-align: middle;
-        }
-        &.has-notify{
-          @include animation(icon-blink 1s linear 0 infinite alternate);
-        }
-      }
-      .dropdown-menu{
-        min-width: 240px;
-      }
-    }
-    .greeting{
-      padding: 10px 20px;
-      strong{
-        font-size: 1.2em;
-        margin-right: 0.25em;
-      }
-      .role{
-        color: $shade-font;
-        padding-left: 0;
-        padding-right: 0;
-      }
-    }
-    @media only screen and (max-width: $screen-xs-max){
-      position: absolute;
-      top: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      right: 0;
-      & > li.open{
-        .dropdown-menu{
-          position: absolute;
-          right: 0;
-          width: 320px;
-          &.notification__container{
-            right: -40px;
-          }
-          left: auto;
-          background-color: $navbar-default-bg;
-          border: 1px solid $navbar-default-border;
-          @include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
-        }
-      }
-    }
-  }
+	// ヘッダーのトグルボタンを左にする
+	&-toggle {
+		position: relative;
+		float: left;
+		margin-right: 0;
+		margin-left: 10px;
+		@media (min-width: $grid-float-breakpoint) {
+			display: block;
+		}
+		border: none;
+	}
+
+	&-write {
+		line-height: 14px;
+		margin-left: 5px;
+	}
+
+	// ステータス表示
+	&-status {
+		position: absolute;
+		width: 100%;
+		height: $navbar-height;
+		line-height: $navbar-height;
+		left: 0;
+		top: 0;
+		text-align: center;
+		font-weight: bold;
+		color: #666;
+	}
+
+	// ユーザー情報
+	&-login {
+		$avatar-size: 30px;
+		width: 150px;
+
+		& > li:first-child .avatar {
+			width: $avatar-size;
+			height: $avatar-size;
+			border-radius: 4px;
+		}
+
+		i {
+			margin-right: 0.5em;
+		}
+
+		&.navbar-right > li {
+			float: right;
+
+			& > a {
+				$avatar-pad: ($navbar-height - $avatar-size) / 2;
+				padding: $avatar-pad $avatar-pad / 2;
+				line-height: 1;
+
+				&.dropdown--notify {
+					height: $navbar-height;
+					vertical-align: middle;
+				}
+
+				& > i {
+					$icon-pad: 4px;
+					font-size: $avatar-size - (2 * $icon-pad);
+					line-height: $avatar-size;
+					vertical-align: middle;
+				}
+
+				&.has-notify {
+					@include animation(icon-blink 1s linear 0 infinite alternate);
+				}
+			}
+
+			.dropdown-menu {
+				min-width: 240px;
+			}
+		}
+
+		.greeting {
+			padding: 10px 20px;
+
+			strong {
+				font-size: 1.2em;
+				margin-right: 0.25em;
+			}
+
+			.role {
+				color: $shade-font;
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
+
+		@media only screen and (max-width: $screen-xs-max) {
+			position: absolute;
+			top: 0;
+			margin-top: 0;
+			margin-bottom: 0;
+			right: 0;
+			& > li.open {
+				.dropdown-menu {
+					position: absolute;
+					right: 0;
+					width: 320px;
+
+					&.notification__container {
+						right: -40px;
+					}
+
+					left: auto;
+					background-color: $navbar-default-bg;
+					border: 1px solid $navbar-default-border;
+					@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+				}
+			}
+		}
+	}
 }
 
 //
 // Sub header
 //
-.sub-header{
+.sub-header {
 
-  background: $hametuha-color;
+	background: $hametuha-color;
 
-  .container{
-    padding-top: 40px;
-    padding-bottom: 20px;
-  }
+	.container {
+		padding-top: 40px;
+		padding-bottom: 20px;
+	}
 
-  &-title{
-    color: #fff;
-  }
+	&-title {
+		color: #fff;
+	}
 
-  .nav-pills a{
-    border-color: #fff;
-    color: #fff;
-    &:hover{
-      color: $hametuha-color;
-    }
-  }
+	.nav-pills a {
+		border-color: #fff;
+		color: #fff;
 
-  .nav-pills .active a{
-    background: rgba( 255, 255, 255, .2 );
-    &:hover{
-      color: $hametuha-color;
-      background: #fff;
-    }
-  }
+		&:hover {
+			color: $hametuha-color;
+		}
+	}
 
-  .form-control.hamelp-search-input{
-    height: 33px;
-  }
+	.nav-pills .active a {
+		background: rgba(255, 255, 255, .2);
 
-  .btn-link{
-    color: #ccc;
-  }
+		&:hover {
+			color: $hametuha-color;
+			background: #fff;
+		}
+	}
+
+	.form-control.hamelp-search-input {
+		height: 33px;
+	}
+
+	.btn-link {
+		color: #ccc;
+	}
 }
 
 //
 // mmenu
 //
-#mm-blocker{
-  background: rgba(0, 0, 0, .8) !important;
-  &:after{
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    font-size: 28px;
-    @extend .icon-close:before;
-    font-family: "hameticon";
-    color: #fff;
-    cursor: pointer;
-  }
-}
-#header-navigation{
+#mm-blocker {
+	background: rgba(0, 0, 0, .8) !important;
 
-  li small{
-    color: #999;
-    &:before{
-      content: "（";
-    }
-    &:after{
-      content: "）";
-    }
-  }
-  .icon-lamp,
-  .icon-crown{
-    color: #d4d400;
-  }
-  .icon-amazon{
-    color: orange;
-  }
-  .icon-heart{
-    color: red;
-  }
+	&:after {
+		position: absolute;
+		top: 15px;
+		left: 15px;
+		font-size: 28px;
+		@extend .icon-close:before;
+		font-family: "hameticon";
+		color: #fff;
+		cursor: pointer;
+	}
+}
+
+#header-navigation {
+
+	li small {
+		color: #999;
+
+		&:before {
+			content: "（";
+		}
+
+		&:after {
+			content: "）";
+		}
+	}
+
+	.icon-lamp,
+	.icon-crown {
+		color: #d4d400;
+	}
+
+	.icon-amazon {
+		color: orange;
+	}
+
+	.icon-heart {
+		color: red;
+	}
 }
 
 
 //
 // ロゴマーク
 //
-.logo{
-  $logo-width: $navbar-height;
-  position: absolute;
-  display: block;
-  width: $logo-width;
-  height: $logo-width;
-  left: 50%;
-  top: 0;
-  margin-left: $logo-width  / -10 * 9;
-  &:link,
-  &:visited{
-    text-decoration: none;
-  }
-  &:hover{
-    text-decoration: none;
-  }
-  &:active{
-    text-decoration: none;
-    i{
-      color: $brand-danger !important;
-    }
-  }
-  span{
-    display: none;
-  }
-  i{
-    font-size: $logo-width;
-  }
+.logo {
+	$logo-width: $navbar-height;
+	position: absolute;
+	display: block;
+	width: $logo-width;
+	height: $logo-width;
+	left: 50%;
+	top: 0;
+	margin-left: $logo-width  / -10 * 9;
+
+	&:link,
+	&:visited {
+		text-decoration: none;
+	}
+
+	&:hover {
+		text-decoration: none;
+	}
+
+	&:active {
+		text-decoration: none;
+
+		i {
+			color: $brand-danger !important;
+		}
+	}
+
+	span {
+		display: none;
+	}
+
+	i {
+		font-size: $logo-width;
+	}
 }
 
 // メニューが有効でないときは隠す
-#header-navigation{
-  header + &{
-    display: none;
-  }
+#header-navigation {
+	header + & {
+		display: none;
+	}
 }
 
-.dropdown-menu > li > span{
-  display: block;
-  padding: 3px 20px;
-  clear: both;
+.dropdown-menu > li > span {
+	display: block;
+	padding: 3px 20px;
+	clear: both;
 }
 
-#header{
-  & + #breadcrumb,
-  & + .sub-header{
-    padding-top: $navbar-height + $subnavbar-height;
-  }
+#header {
+	& + #breadcrumb,
+	& + .sub-header {
+		padding-top: $navbar-height + $subnavbar-height;
+	}
 }
-
 
 
 //
@@ -275,122 +310,140 @@
 //
 // ------------------
 //
-#breadcrumb{
-  position: relative;
-  background-color: transparent;
-  z-index: 1;
-  font-size: 12px;
-  color: $shade-font;
-  overflow-x: scroll;
-  .container{
-    height: 32px;
-    line-height: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    white-space: nowrap;
-  }
-  i{
-    margin-right: 1em;
-  }
-  a{
-    &:link, &:visited{
-      color: $little-shade-font;
-      text-decoration: none;
-    }
-    &:hover{
-      color: $link-color;
-    }
-    &:active{
-      color: $link-active;
-    }
-  }
+#breadcrumb {
+	position: relative;
+	background-color: transparent;
+	z-index: 1;
+	font-size: 12px;
+	color: $shade-font;
+	overflow-x: scroll;
+
+	.container {
+		height: 32px;
+		line-height: 1;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		white-space: nowrap;
+	}
+
+	i {
+		margin-right: 1em;
+	}
+
+	a {
+		&:link, &:visited {
+			color: $little-shade-font;
+			text-decoration: none;
+		}
+
+		&:hover {
+			color: $link-color;
+		}
+
+		&:active {
+			color: $link-active;
+		}
+	}
 }
 
 // ログインボタン
-.login-buttons a{
-  @extend %btn-hollow;
-  float: right;
-  margin-top: 8px;
-  background-color: transparent;
-  margin-right: 10px;
-  &:last-child{
-    @media only screen and (max-width: 400px) {
-      display: none;
-    }
-  }
+.login-buttons a {
+	@extend %btn-hollow;
+	float: right;
+	margin-top: 8px;
+	background-color: transparent;
+	margin-right: 10px;
+
+	&:last-child {
+		@media only screen and (max-width: 400px) {
+			display: none;
+		}
+	}
 }
 
 // 書くヤツ
-.write-panel{
-  position: fixed;
-  top: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, .8);
-  z-index: 100;
-  display: none;
-  @include transition( top 0.3s ease-in-out );
-  &.open{
-    display: block;
-    top: $navbar-height;
-  }
-  &__inner{
-    width: 90%;
-    max-height: 90%;
-    overflow-y: scroll;
-    margin: 5% auto;
-    background: #fff;
-    padding: 10px;
-  }
-  &__close{
-    font-size: 32px;
-    &:hover{
-      text-decoration: none;
-    }
-  }
-  &__actions{
-    padding: 0;
-    margin: 20px 0;
-    @media only screen and ( max-width: $screen-xs-max ) {
-      margin: 10px 0;
-    }
-    border-top: 1px solid $thin-border;
-  }
-  &__action{
-    margin: 0;
-    padding: 0;
-    border-bottom: 1px solid $thin-border;
-    list-style: none;
-  }
-  &__link{
-    display: block;
-    padding: 20px;
-    font-size: 20px;
-    @media only screen and ( max-width: $screen-xs-max ) {
-      padding: 10px;
-      font-size: 14px;
-    }
-    &:link, &:visited{
-      color: #000;
-      text-decoration: none;
-    }
-    &:hover, &:active{
-      color: $brand-primary;
-      text-decoration: none;
-      background-color: #f9f9f9;
-    }
-  }
-  &__label{
-    font-weight: bold;
-    i{
-      color: #aaa;
-    }
-  }
-  &__desc{
-    margin: 10px 0 0;
-    font-size: 0.85em;
-    color: #888;
-    line-height: 1.2;
-  }
+.write-panel {
+	position: fixed;
+	top: 100%;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .8);
+	z-index: 100;
+	display: none;
+	@include transition(top 0.3s ease-in-out);
+
+	&.open {
+		display: block;
+		top: $navbar-height;
+	}
+
+	&__inner {
+		width: 90%;
+		max-height: 90%;
+		overflow-y: scroll;
+		margin: 5% auto;
+		background: #fff;
+		padding: 10px;
+	}
+
+	&__close {
+		font-size: 32px;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	&__actions {
+		padding: 0;
+		margin: 20px 0;
+		@media only screen and (max-width: $screen-xs-max) {
+			margin: 10px 0;
+		}
+		border-top: 1px solid $thin-border;
+	}
+
+	&__action {
+		margin: 0;
+		padding: 0;
+		border-bottom: 1px solid $thin-border;
+		list-style: none;
+	}
+
+	&__link {
+		display: block;
+		padding: 20px;
+		font-size: 20px;
+		@media only screen and (max-width: $screen-xs-max) {
+			padding: 10px;
+			font-size: 14px;
+		}
+
+		&:link, &:visited {
+			color: #000;
+			text-decoration: none;
+		}
+
+		&:hover, &:active {
+			color: $brand-primary;
+			text-decoration: none;
+			background-color: #f9f9f9;
+		}
+	}
+
+	&__label {
+		font-weight: bold;
+
+		i {
+			color: #aaa;
+		}
+	}
+
+	&__desc {
+		margin: 10px 0 0;
+		font-size: 0.85em;
+		color: #888;
+		line-height: 1.2;
+	}
 }
