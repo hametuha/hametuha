@@ -126,7 +126,6 @@ gulp.task( 'commonjs', function () {
 gulp.task( 'jshint', function () {
 	return gulp.src( [
 		'./assets/js/src/**/*.js',
-		'!./assets/js/src/modernizr.js',
 		'!./assets/js/src/common/headroom.js',
 		'!./assets/js/src/common/slick.js',
 		'!./assets/js/src/common.js',
@@ -136,7 +135,7 @@ gulp.task( 'jshint', function () {
 		.pipe( $.jshint.reporter( 'jshint-stylish' ) );
 } );
 
-// Build modernizr
+// Build 3rd party libraries.
 gulp.task( 'copylib', function () {
 	return mergeStream(
 		// Build Bootstrap

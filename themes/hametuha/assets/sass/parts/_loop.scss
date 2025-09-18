@@ -190,6 +190,14 @@
 		.list-heading {
 			font-size: 20px;
 			margin-top: 0;
+
+			&-category {
+				display: inline-block;
+				padding: 3px 5px;
+				background-color: #000;
+				color: #fff;
+				vertical-align: middle;
+			}
 		}
 
 		.avatar {

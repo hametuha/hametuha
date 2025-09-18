@@ -436,8 +436,16 @@
 			}
 		}
 		// リスト
-		ul, ol, dl {
+		ul,
+		ol,
+		dl {
 			margin: 1em 0;
+			// リスト内の入れ子はマージンを切る
+			ul,
+			ol,
+			dl {
+				margin: 0;
+			}
 		}
 
 		dl {
@@ -631,8 +639,16 @@
 		}
 
 		// リスト
-		ul, dl, ol {
+		ul,
+		dl,
+		ol {
 			margin: 1em 0;
+
+			ul,
+			dl,
+			ol {
+				margin: 0;
+			}
 		}
 
 		dl {

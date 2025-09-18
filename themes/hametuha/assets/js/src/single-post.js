@@ -225,7 +225,8 @@ Chart.defaults.global.responsive = true;
         // レーダーチャート
         var $radar = $('#single-radar'), ctx, chart;
         if( $radar.length ){
-            if( Modernizr.canvas ){
+            // Canvas APIは2025年現在全ブラウザでサポート済み、念のため最小限のチェック
+            if( $radar.get(0).getContext ){
                 ctx = $radar.get(0).getContext('2d');
                 chart = new Chart(ctx, {
                   type: 'radar',
