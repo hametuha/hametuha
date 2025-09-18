@@ -7,9 +7,6 @@
  */
 add_action( 'init', function () {
 
-	// Modernizr
-	wp_register_script( 'modernizr', get_template_directory_uri() . '/assets/js/dist/modernizr.js', null, '2.8.3', false );
-
 	// Twitter Bootstrap
 	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/js/dist/bootstrap.js', [ 'jquery' ], '3.3.4', true );
 
@@ -61,7 +58,6 @@ JS;
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
 		'twitter-bootstrap',
 		'wp-api',
-		'modernizr',
 		'font-plus',
 		'jsrender',
 		'hametuheader',
