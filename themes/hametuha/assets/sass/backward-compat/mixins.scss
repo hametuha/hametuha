@@ -1,0 +1,95 @@
+//
+// Bootstrap 3 後方互換性ミックスイン
+// Bootstrap 3 → Bootstrap 5 移行のためのミックスイン定義
+// 2024年実装 - 既存コードを壊さずにBootstrap 5に対応
+//
+
+// Bootstrap 3 gradient-vertical mixin
+// 元エラー: no mixin named gradient-vertical
+@mixin gradient-vertical($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
+  background-image: linear-gradient(to bottom, $start-color $start-percent, $end-color $end-percent);
+  background-repeat: repeat-x;
+}
+
+// Bootstrap 3 gradient-horizontal mixin
+@mixin gradient-horizontal($start-color: #555, $end-color: #333, $start-percent: 0%, $end-percent: 100%) {
+  background-image: linear-gradient(to right, $start-color $start-percent, $end-color $end-percent);
+  background-repeat: repeat-x;
+}
+
+// Bootstrap 3 text-justify 互換性
+@mixin text-justify() {
+  .text-justify {
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+}
+
+// Bootstrap 3 clearfix mixin
+@mixin clearfix() {
+  &::before,
+  &::after {
+    content: " ";
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
+}
+
+// Bootstrap 3 border-radius compatibility
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+// Bootstrap 3 box-shadow compatibility
+@mixin box-shadow($shadow...) {
+  box-shadow: $shadow;
+}
+
+// Bootstrap 3 transition compatibility
+@mixin transition($transition...) {
+  transition: $transition;
+}
+
+// Bootstrap 3 text-overflow mixin
+@mixin text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Bootstrap 3 button compatibility classes
+.btn-default {
+  @extend .btn;
+  @extend .btn-secondary !optional;
+}
+
+.btn-xs {
+  @extend .btn;
+  @extend .btn-sm !optional;
+  // Extra small size styling
+  padding: 0.125rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  border-radius: 0.2rem;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+// Bootstrap 3 image compatibility classes
+.img-circle {
+  @extend .rounded-circle;
+}
+
+.img-rounded {
+  @extend .rounded;
+}
+
+// Bootstrap 3 navigation compatibility classes
+.nav-stacked {
+  @extend .flex-column;
+}

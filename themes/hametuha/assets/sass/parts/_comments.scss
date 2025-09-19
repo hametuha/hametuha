@@ -77,7 +77,7 @@
           display: block;
           font-size: 20px;
           color: $thin-border;
-          @extend .icon-forward:before;
+          @extend .icon-forward, :before;
         }
 
         &:last-child {

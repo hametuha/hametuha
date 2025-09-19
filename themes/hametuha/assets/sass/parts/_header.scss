@@ -209,7 +209,7 @@
 		top: 15px;
 		left: 15px;
 		font-size: 28px;
-		@extend .icon-close:before;
+		@extend .icon-close, :before;
 		font-family: "hameticon";
 		color: #fff;
 		cursor: pointer;

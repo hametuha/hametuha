@@ -1,3 +1,15 @@
+//
+// Bootstrap 3 → Bootstrap 5 移行
+// 後方互換性変数とミックスインを読み込み
+//
+@import "backward-compat/variables";
+@import "backward-compat/mixins";
+
+//
+// 既存のhametuha固有変数
+//
+// --------------------------------------------------------
+
 // Slick
 $slick-loader-path: "../img/" !default;
 $slick-arrow-color: #888;
@@ -46,10 +58,7 @@ $minicome-color: #252525;
 $ustream-color: #2F7BFF;
 $pocket-color: #F04057;
 
-// Button colors
-$border-radius-base: 2px;
-$border-radius-large: 3px;
-$border-radius-small: 3px;
+// Button colors（Bootstrap 3互換性はbackward-compat/variables.scssで定義済み）
 
 // アイコンの色を決める
 @each $brand in (
@@ -98,9 +107,62 @@ $divide-border: 3px double $thin-border;
 //
 // ----------------------
 //
-// Boostrap
-$font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,'游ゴシック',sans-serif;
-$font-family-serif:       Georgia, "游明朝体", "Yu Mincho", YuMincho, serif;;
+// Bootstrap 5 フォント設定
+$font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,'游ゴシック',sans-serif !default;
+$font-family-serif:       Georgia, "游明朝体", "Yu Mincho", YuMincho, serif !default;
+$font-family-monospace:   SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:        $font-family-sans-serif !default;
+
+// Bootstrap 5 フォントサイズ設定
+$font-size-root: null !default;
+$font-size-base: 1rem !default;
+$font-size-sm: $font-size-base * .875 !default;
+$font-size-lg: $font-size-base * 1.25 !default;
+
+// Bootstrap 5 フォントサイズマップ
+$font-sizes: (
+  1: $font-size-base * 2.5,
+  2: $font-size-base * 2,
+  3: $font-size-base * 1.75,
+  4: $font-size-base * 1.5,
+  5: $font-size-base * 1.25,
+  6: $font-size-base
+) !default;
+
+// Bootstrap 5 フォントウェイト変数
+$font-weight-lighter: lighter !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-semibold: 600 !default;
+$font-weight-bold: 700 !default;
+$font-weight-bolder: bolder !default;
+$font-weight-base: $font-weight-normal !default;
+
+// Bootstrap 5 行間変数
+$line-height-base: 1.5 !default;
+$line-height-sm: 1.25 !default;
+$line-height-lg: 2 !default;
+
+// Bootstrap 5 z-index変数
+$zindex-dropdown: 1000 !default;
+$zindex-sticky: 1020 !default;
+$zindex-fixed: 1030 !default;
+$zindex-offcanvas-backdrop: 1040 !default;
+$zindex-offcanvas: 1045 !default;
+$zindex-modal-backdrop: 1050 !default;
+$zindex-modal: 1055 !default;
+$zindex-popover: 1070 !default;
+$zindex-tooltip: 1080 !default;
+$zindex-toast: 1090 !default;
+
+$zindex-levels: (
+  n1: -1,
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3
+) !default;
 // type square
 $work-body: TsukuAOldMinPr6N-R, serif;
 $work-bold: TsukuAOldMinPr6-E, serif;
@@ -108,8 +170,6 @@ $work-title: TsukuBOldMinPr6-R, serif;
 $work-body-sans: DNPShueiGoKinStd-L, sans-serif;
 $work-bold-sans: TsukuOldGothicStd-B, sans-serif;
 
-.text-justify{
-  text-align: justify;
-  text-justify: inter-ideograph;
-}
+// text-justify utility（backward-compat/mixins.scssで定義済み）
+@include text-justify();
 

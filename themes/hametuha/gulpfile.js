@@ -9,6 +9,7 @@ const mergeStream = require( 'merge-stream' );
 const webpack = require( 'webpack-stream' );
 const webpackBundle = require( 'webpack' );
 const named = require( 'vinyl-named' );
+const sass = require( 'gulp-sass' )( require( 'sass' ) );
 const { plugins } = require( "@babel/preset-env/lib/plugins-compat-data" );
 
 let noplumber = true;
@@ -30,7 +31,7 @@ gulp.task( 'sass', function () {
 	return task
 		.pipe( $.sassGlob() )
 		.pipe( $.sourcemaps.init() )
-		.pipe( $.sass( {
+		.pipe( sass( {
 			errLogToConsole: true,
 			outputStyle: 'compressed',
 			sourceComments: false,
@@ -38,7 +39,7 @@ gulp.task( 'sass', function () {
 			includePaths: [
 				'./assets/sass',
 				'./vendor',
-				'./node_modules/bootstrap-sass/assets/stylesheets',
+				'./node_modules',
 				'./vendor/hametuha'
 			]
 		} ) )

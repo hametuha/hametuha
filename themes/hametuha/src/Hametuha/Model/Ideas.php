@@ -210,6 +210,23 @@ SQL;
 	}
 
 	/**
+	 * JOIN句でフィルタリング
+	 *
+	 * @param int $stocker_id ユーザーID
+	 * @return string
+	 */
+	public function get_stock_join( $stocker_id ) {
+		$sql = <<<SQL
+			INNER JOIN (
+				SELECT * FROM {$this->table}
+				WHERE rel_type = %s
+				  AND user_id = %d
+			) AS r ON {$this->db->posts}.ID = r.object_id
+SQL;
+		return $this->db->prepare( $sql, $this->rel_stock, $stocker_id );
+	}
+
+	/**
 	 * Get stocked count
 	 *
 	 * @param int $idea_id

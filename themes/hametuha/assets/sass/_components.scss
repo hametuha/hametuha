@@ -207,7 +207,7 @@ i.rotation {
 		i {
 			&:before {
 				@include hameticon();
-				@extend .icon-plus-circle2:before;
+				@extend .icon-plus-circle2, :before;
 			}
 
 			vertical-align: middle;
@@ -223,7 +223,7 @@ i.rotation {
 
 			i {
 				&:before {
-					@extend .icon-close3:before;
+					@extend .icon-close3, :before;
 				}
 
 				color: inherit;

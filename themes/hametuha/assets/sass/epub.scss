@@ -1,10 +1,11 @@
 @charset "UTF-8";
 
-// Normalize CSS
-@import "bootstrap/normalize";
-@import "bootstrap/mixins";
-@import "bootstrap/variables";
-@import "bootstrap/responsive-utilities";
+// Bootstrap 5 imports
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/utilities";
 
 
 //$is-epub: true;

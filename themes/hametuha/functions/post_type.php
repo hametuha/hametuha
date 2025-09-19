@@ -112,7 +112,7 @@ add_action( 'init', function () {
 	// アイデア
 	register_post_type( 'ideas', [
 		'label'           => 'アイデア',
-		'description'     => '作品執筆の手助けとなるアイデアです。「自分が書くのはちょっと……」というシャイなあなたにもオススメ。非公開設定もあります。',
+		'description'     => __( '作品執筆の手助けとなるアイデアです。「自分が書くのはちょっと……」というシャイなあなたにもオススメ。非公開設定もあります。', 'hametuha' ),
 		'public'          => true,
 		'menu_icon'       => 'dashicons-lightbulb',
 		'supports'        => [ 'title', 'editor', 'author', 'comments' ],

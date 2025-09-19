@@ -1,0 +1,71 @@
+//
+// Bootstrap 3 後方互換性変数
+// Bootstrap 3 → Bootstrap 5 移行のための変数定義
+// 2024年実装 - 既存コードを壊さずにBootstrap 5に対応
+//
+
+// Bootstrap 5基本色（Bootstrap本体で定義されるが、先に定義して互換性確保）
+$primary: #0d6efd !default;
+$secondary: #6c757d !default;
+$success: #198754 !default;
+$danger: #dc3545 !default;
+$warning: #ffc107 !default;
+$info: #0dcaf0 !default;
+
+// Bootstrap 3 グレー色互換性
+$gray: #555 !default;
+$gray-light: #777 !default;
+$gray-lighter: #eee !default;
+$gray-dark: #333 !default;
+$gray-darker: #222 !default;
+
+// Bootstrap 3 テキスト色
+$text-color: #333 !default;
+$text-muted: #777 !default;
+$link-color: $primary !default;
+$link-hover-color: darken($link-color, 15%) !default;
+$blockquote-small-color: $gray-light !default;
+
+// Bootstrap 3 互換性のための変数（既存コードで使用中）
+$brand-primary: $primary !default;
+$brand-secondary: $secondary !default;
+$brand-success: $success !default;
+$brand-danger: $danger !default;
+$brand-warning: $warning !default;
+$brand-info: $info !default;
+
+// Bootstrap 3 スクリーンサイズ変数（既存テーマで使用中）
+$screen-xs: 480px !default;
+$screen-xs-min: $screen-xs !default;
+$screen-sm: 768px !default;
+$screen-sm-min: $screen-sm !default;
+$screen-md: 992px !default;
+$screen-md-min: $screen-md !default;
+$screen-lg: 1200px !default;
+$screen-lg-min: $screen-lg !default;
+
+$screen-xs-max: ($screen-sm-min - 1) !default;
+$screen-sm-max: ($screen-md-min - 1) !default;
+$screen-md-max: ($screen-lg-min - 1) !default;
+
+// Bootstrap 3 navbar/form変数（既存テーマで使用中）
+$navbar-default-border: #ddd !default;
+$navbar-default-bg: #f8f8f8 !default;
+$navbar-default-link-color: #777 !default;
+$navbar-default-link-hover-color: #333 !default;
+$navbar-height: 50px !default;
+$grid-float-breakpoint: $screen-sm-min !default;
+$zindex-navbar-fixed: 1030 !default;
+$btn-success-bg: $success !default;
+
+// Bootstrap 3 アラート変数
+$alert-danger-text: #a94442 !default;
+$alert-danger-bg: #f2dede !default;
+$alert-danger-border: #ebccd1 !default;
+
+// theme-colorsは必要に応じてBootstrap 5で自動定義される
+
+// Button colors（Bootstrap 3互換）
+$border-radius-base: 2px;
+$border-radius-large: 3px;
+$border-radius-small: 3px;

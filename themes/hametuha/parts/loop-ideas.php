@@ -1,57 +1,80 @@
-<li data-post-id="<?php the_ID(); ?>" <?php post_class( 'media' ); ?>>
+<?php
+/**
+ * アイデアのリスト用テンプレート
+ *
+ */
+$ideas = \Hametuha\Model\Ideas::get_instance();
+?>
+<div data-post-id="<?php the_ID(); ?>" class="col-sm-6 col-md-4 mb-4">
 
-	<a href="<?php the_permalink(); ?>" class="media__link media__link--nopad">
+	<div class="card card-list-item">
 
-		<div class="media-body">
+		<div class="card-body">
 
 			<!-- Title -->
-			<h2 class="media-body__title">
-				<small>アイデア: </small><?php the_title(); ?>
-			</h2>
-
-			<!-- Post Data -->
-			<ul class="list-inline">
-				<li class="author-info">
-					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
-					<?php the_author(); ?>
-				</li>
-				<li>
-					<i class="icon-tags"></i>
-					<?php if ( ( $terms = get_the_tags( get_the_ID() ) ) && ! is_wp_error( $terms ) ) : ?>
-						<?php
-						echo implode( ', ', array_map( function ( $term ) {
-							return esc_html( $term->name );
-						}, $terms ) );
-						?>
-					<?php else : ?>
-						<span class="text-muted">分類なし</span>
+			<div class="mb-3 d-flex justify-content-between align-items-start">
+				<h2 class="h4 card-title">
+					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+				</h2>
+				<span class="idea-status">
+					<?php if ( ! in_array( get_post_status(), [ 'publish', 'future' ], true )  ) : ?>
+						<i class="icon-lock" title="<?php esc_attr_e( '非公開', 'hametuha' ); ?>"></i>
 					<?php endif; ?>
-				</li>
-				<li class="date">
-					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
-					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
-						<span class="label label-danger">New!</span>
-					<?php elseif ( is_recent_date( $post->post_modified, 7 ) ) : ?>
-						<span class="label label-info">更新</span>
+					<?php if ( is_user_logged_in() && $ideas->is_stocked( get_current_user_id(), get_the_ID() ) ) : ?>
+						<i class="icon-heart idea-stocked" title="<?php esc_attr_e( 'ストック済み', 'hametuha' ); ?>"></i>
 					<?php endif; ?>
-				</li>
-				<?php if ( in_array( $post->post_status, [ 'private', 'protected' ] ) ) : ?>
-				<li>
-					<span class="label label-default"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
-				</li>
-				<?php endif; ?>
-			</ul>
-
-			<!-- Excerpt -->
-			<div class="archive-excerpt">
-				<?php if ( $post->stock ) : ?>
-					<p class="text-muted"><?php echo numbeR_format( $post->stock ); ?>人がこのアイデアをストックしています。</p>
-				<?php else : ?>
-					<p class="text-warning">まだ誰もこのアイデアをストックしていません。早い者勝ち！</p>
-				<?php endif; ?>
+				</span>
 			</div>
 
 
+			<?php
+			$terms = get_the_tags( get_the_ID() );
+			if ( $terms && ! is_wp_error( $terms ) ) : ?>
+				<p>
+					<?php
+					echo implode( ' ', array_map( function ( $term ) {
+						$idea_term_url = add_query_arg( [
+							'tag' => $term->slug,
+						], get_post_type_archive_link( 'ideas' ) );
+						return sprintf(
+							'<a href="%s" class="term-link term-link-sm">#%s</a>',
+							esc_url( $idea_term_url ),
+							esc_html( $term->name )
+						);
+					}, $terms ) );
+					?>
+				</p>
+			<?php endif; ?>
+
+			<p class="card-text idea-excerpt">
+				<?php echo esc_html( get_the_excerpt() ); ?>
+			</p>
+
+			<p class="author-info">
+				<?php
+				echo get_avatar( get_the_author_meta( 'ID' ), 40, '', get_the_author_meta( 'display_name' ), [
+					'class' => 'img-circle',
+				] );
+				?>
+				<span>
+					<?php the_author(); ?>
+				</span>
+			</p>
+		</div><!-- .card-body -->
+
+		<div class="card-footer d-flex justify-content-between text-muted">
+			<span>
+				<?php echo hametuha_passed_time( $post->post_date ); ?>
+			</span>
+			<span>
+				<i class="icon-heart<?php echo $post->stock ? ' idea-stocked ' : '' ?>"></i>
+				<?php
+				printf(
+					esc_html__( '%s人がストック', 'hametuha' ),
+					number_format( $post->stock )
+				);
+				?>
+			</span>
 		</div>
-	</a>
-</li>
+	</div><!-- .card -->
+</div>
