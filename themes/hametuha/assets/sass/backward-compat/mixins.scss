@@ -93,3 +93,30 @@
 .nav-stacked {
   @extend .flex-column;
 }
+
+// Bootstrap 3 hidden utility classes
+// SEO/Microformat用のhiddenクラス（スクリーンリーダーには読まれる）
+.hidden {
+  @extend .visually-hidden;
+}
+
+// Bootstrap 3のレスポンシブ表示/非表示クラス
+.hidden-xs {
+  @extend .d-none;
+  @extend .d-sm-block;
+}
+
+.hidden-sm {
+  @extend .d-sm-none;
+  @extend .d-md-block;
+}
+
+.hidden-md {
+  @extend .d-md-none;
+  @extend .d-lg-block;
+}
+
+.hidden-lg {
+  @extend .d-lg-none;
+  @extend .d-xl-block;
+}

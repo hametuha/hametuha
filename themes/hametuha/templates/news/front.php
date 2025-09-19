@@ -6,7 +6,7 @@
 
 	<?php get_template_part( 'templates/news/nav', 'news' ); ?>
 
-	<div class="row">
+	<div class="row mt-5">
 
 		<div class="col-xs-12 col-md-9 main-container">
 

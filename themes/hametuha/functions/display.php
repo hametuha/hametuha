@@ -126,33 +126,51 @@ HTML;
 add_filter( 'wp_pagenavi', function ( $html ) {
 	// Remove div.
 	$html = trim( preg_replace( '/<\/?div([^>]*)?>/u', '', $html ) );
-	// Wrap links with li.
-	$html = preg_replace( '/(<a[^>]*?>[^<]*<\/a>)/u', '<li>$1</li>', $html );
+
+	// Bootstrap 5: Add page-link class to all <a> tags
+	$html = preg_replace_callback( '/<a([^>]*?)>/u', function ( $matches ) {
+		// Check if class attribute already exists
+		if ( strpos( $matches[1], 'class=' ) !== false ) {
+			// Add page-link to existing class
+			return '<a' . preg_replace( '/class=["\']([^"\']*)["\']/', 'class="$1 page-link"', $matches[1] ) . '>';
+		} else {
+			// Add new class attribute
+			return '<a' . $matches[1] . ' class="page-link">';
+		}
+	}, $html );
+
+	// Wrap links with li and add page-item class
+	$html = preg_replace( '/(<a[^>]*?>[^<]*<\/a>)/u', '<li class="page-item">$1</li>', $html );
+
 	// Wrap links with span considering class name.
 	$html = preg_replace_callback( '/<span([^>]*?)>[^<]*<\/span>/u', function ( $matches ) {
+		// Add page-link class to span
+		$span_with_class = preg_replace( '/<span/', '<span class="page-link"', $matches[0] );
+
 		if ( false !== strpos( $matches[1], 'current' ) ) {
 			// This is current page.
-			$class_name = 'active';
+			$class_name = 'page-item active';
 		} elseif ( false !== strpos( $matches[1], 'pages' ) ) {
 			// This is page number.
-			$class_name = 'disabled';
+			$class_name = 'page-item disabled';
 		} elseif ( false !== strpos( $matches[1], 'extend' ) ) {
 			// This is ellipsis.
-			$class_name = 'disabled';
+			$class_name = 'page-item disabled';
 		} else {
 			// No class.
-			$class_name = '';
+			$class_name = 'page-item';
 		}
 
-		return "<li class=\"{$class_name}\">{$matches[0]}</li>";
+		return "<li class=\"{$class_name}\">{$span_with_class}</li>";
 	}, $html );
 
 	$html = str_replace( 'ページ', '', $html );
 
 	// Wrap with ul as you like.
+	// Bootstrap 5: pagination-centeredは廃止、justify-content-centerを使用
 	return <<<HTML
-<div class="row text-center">
-    <ul class="pagination pagination-centered">{$html}</ul>
+<div class="row justify-content-center">
+    <ul class="pagination justify-content-center">{$html}</ul>
 </div>
 HTML;
 }, 10, 2 );
@@ -169,16 +187,21 @@ HTML;
 function hametuha_format_pagination( $pagination, $size = '' ) {
 	$out = [];
 	foreach ( explode( "\n", $pagination ) as $link ) {
+		// Bootstrap 5: page-itemクラスを追加、page-linkクラスも必要
+		$link = preg_replace( '/<a/', '<a class="page-link"', $link );
+		$link = preg_replace( '/<span/', '<span class="page-link"', $link );
+
 		if ( false !== strpos( $link, 'current' ) ) {
-			$out[] = sprintf( '<li class="active">%s</li>', $link );
+			$out[] = sprintf( '<li class="page-item active">%s</li>', $link );
 		} else {
-			$out[] = sprintf( '<li>%s</li>', $link );
+			$out[] = sprintf( '<li class="page-item">%s</li>', $link );
 		}
 	}
 	if ( $size ) {
 		$size = ' pagination-' . $size;
 	}
-	return '<ul class="pagination pagination-centered' . $size . '">' . implode( "\n", $out ) . '</ul>';
+	// Bootstrap 5: pagination-centeredは廃止、justify-content-centerを使用
+	return '<ul class="pagination justify-content-center' . $size . '">' . implode( "\n", $out ) . '</ul>';
 }
 
 

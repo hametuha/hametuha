@@ -1,124 +1,146 @@
 // Global widget
-.widget{
-  img{
-    max-width: 100%;
-    width: auto;
-    height: auto;
-  }
-  // Image widget
-  &_sp_image-image-link{
-    display: block;
-    text-align: center;
-    img{
-      max-width: 100%;
-      width: auto;
-      height: auto;
-    }
-  }
-  &-kdp {
-    &-lead {
-      font-size: 14px;
-      margin: 10px;
-    }
-    &-list {
-      & + a {
-        margin-top: 50px;
-      }
-      .slick-dots > li{
-        float: left
-      }
-    }
-    &-item {
-      text-align: center;
-      display: none;
+.widget {
+	img {
+		max-width: 100%;
+		width: auto;
+		height: auto;
+	}
 
-      img{
+	// Image widget
+	&_sp_image-image-link {
+		display: block;
+		text-align: center;
 
-        margin-right: auto;
-        margin-left: auto;
-      }
-    }
-  }
+		img {
+			max-width: 100%;
+			width: auto;
+			height: auto;
+		}
+	}
+
+	&-kdp {
+		&-lead {
+			font-size: 14px;
+			margin: 10px;
+		}
+
+		&-list {
+			& + a {
+				margin-top: 50px;
+			}
+
+			.slick-dots > li {
+				float: left
+			}
+		}
+
+		&-item {
+			text-align: center;
+			display: none;
+
+			img {
+
+				margin-right: auto;
+				margin-left: auto;
+			}
+		}
+	}
 
 
 }
 
-#sidebar{
-  @media only screen and (max-width: $screen-xs-max) {
-    margin-top: 40px;
-  }
-  .widget{
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid $thin-border;
-  }
-  .widget-title{
-    margin-top: 0;
-    font-size: 14px;
-    color: $shade-font;
-    font-family: $work-title;
-  }
-  img{
-    max-width: 100%;
-  }
-  .widget_sp_image-image-link{
-  }
-  .small-button{
-    @extend .btn;
-    @extend .btn-sm;
-    @extend .btn-default;
-    @extend .btn-block;
-  }
-  ul{
-    @extend .nav;
-    @extend .nav-pills;
-    @extend .nav-stacked;
-  }
-  .recent-post-list{
-    border-top: 1px dotted $thin-border;
-    h3{
-      font-size: 18px;
-    }
-    .meta{
-      font-size: 12px;
-      color: $more-shade-font;
-    }
-    .icon-calendar{
-      margin-left: 0.5em;
-    }
-  }
-  p.author{
-    padding: 0 15px;
-    margin-bottom: 5px;
-    color: $shade-font;
-    img{
-      margin-right: 0.5em;
-      width: 24px;
-      height: 24px;
-      @include border-radius(50%);
-    }
-    .old{
-      font-family: serif;
-      margin-left: 1em;
-    }
-  }
-  .recentcomments{
-    border-top: 1px dotted $thin-border;
-    padding: 1em 0.5em;
-  }
-  .anyway-feedback-popular-widget{
-    .count{
-      display: block;
-      text-align: center;
-      color: #999;
-      font-size: 0.85em;
-    }
-    li{
-      border-bottom: 1px dotted #ddd;
-      padding: 5px 0;
-      &:last-child{
-        border-bottom: none;
-      }
-    }
-  }
+#sidebar {
+	@media only screen and (max-width: $screen-xs-max) {
+		margin-top: 40px;
+	}
+
+	.widget {
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		border-bottom: 1px solid $thin-border;
+	}
+
+	.widget-title {
+		margin-top: 0;
+		font-size: 18px;
+		color: $black;
+	}
+
+	img {
+		max-width: 100%;
+	}
+
+	.widget_sp_image-image-link {
+	}
+
+	.small-button {
+		@extend .btn;
+		@extend .btn-sm;
+		@extend .btn-default;
+		@extend .btn-block;
+	}
+
+	ul {
+		@extend .nav;
+		@extend .nav-pills;
+		@extend .nav-stacked;
+	}
+
+	.recent-post-list {
+		border-top: 1px dotted $thin-border;
+
+		h3 {
+			font-size: 18px;
+		}
+
+		.meta {
+			font-size: 12px;
+			color: $more-shade-font;
+		}
+
+		.icon-calendar {
+			margin-left: 0.5em;
+		}
+	}
+
+	p.author {
+		padding: 0 15px;
+		margin-bottom: 5px;
+		color: $shade-font;
+
+		img {
+			margin-right: 0.5em;
+			width: 24px;
+			height: 24px;
+			@include border-radius(50%);
+		}
+
+		.old {
+			font-family: serif;
+			margin-left: 1em;
+		}
+	}
+
+	.recentcomments {
+		border-top: 1px dotted $thin-border;
+		padding: 1em 0.5em;
+	}
+
+	.anyway-feedback-popular-widget {
+		.count {
+			display: block;
+			text-align: center;
+			color: #999;
+			font-size: 0.85em;
+		}
+
+		li {
+			border-bottom: 1px dotted #ddd;
+			padding: 5px 0;
+
+			&:last-child {
+				border-bottom: none;
+			}
+		}
+	}
 }

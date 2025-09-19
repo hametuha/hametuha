@@ -121,7 +121,7 @@ HTML;
 					}
 					?>
 
-				<div class="work-content row" itemprop="articleBody">
+				<div class="work-content" itemprop="articleBody">
 
 					<?php the_content(); ?>
 

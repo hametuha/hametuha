@@ -1,6 +1,6 @@
 <!-- post thumbnail -->
 <?php if ( has_post_thumbnail() ) : ?>
-	<div class="post-title-thumbnail row">
+	<div class="post-title-thumbnail">
 		<?php the_post_thumbnail( 'large', array( 'itemprop' => 'image' ) ); ?>
 		<?php
 		$thumbnail = get_post( get_post_thumbnail_id() );
