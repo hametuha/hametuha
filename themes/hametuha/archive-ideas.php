@@ -83,7 +83,7 @@ global $wp_query;
 			<button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
 				data-bs-target="#ideaFilterForm" aria-expanded="false" aria-controls="ideaFilterForm">
 				<i class="icon-filter"></i>
-				<?php esc_html_e( '絞り込み設定', 'hametuha' ); ?>
+				<?php esc_html_e( '絞り込み', 'hametuha' ); ?>
 			</button>
 		</div>
 
@@ -184,17 +184,11 @@ global $wp_query;
 		</div>
 		<?php
 	endif;
+
+	// タグクラウドを出力
+	get_template_part( 'templates/idea/tag-cloud' );
 	?>
 
-	<h2 class="dividing-header"><?php esc_html_e( 'アイデアで良く使われるタグ', 'hametuha' ); ?></h2>
-	<div class="tag-cloud mb-5">
-		<?php echo wp_generate_tag_cloud( array_map( function( $term ) {
-			$term->link = add_query_arg( [
-				'tag' => rawurlencode( $term->slug ),
-			], get_post_type_archive_link( 'ideas' ) );
-			return $term;
-		}, $terms ) ); ?>
-	</div>
 
 </div><!-- //.container -->
 

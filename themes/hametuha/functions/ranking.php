@@ -140,6 +140,7 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null ) {
 					$param => mysql2date( 'Y-m-d H:i', $post->post_date ),
 				],
 			],
+			'suppress_filters' => false,
 		] );
 	}
 	$posts = [];
