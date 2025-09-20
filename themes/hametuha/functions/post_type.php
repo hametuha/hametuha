@@ -326,6 +326,7 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 					[
 						'サブジャンル',
 						'固有名詞',
+						'フラグ',
 						'印象',
 						'一般名詞',
 					] as $val

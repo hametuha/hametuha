@@ -11,7 +11,8 @@ if ( ! $books ) {
 }
 
 $args = wp_parse_args( $args, [
-	'title' => false,
+	'title'       => false,
+	'description' => false,
 ] );
 
 ?>
@@ -24,6 +25,14 @@ $args = wp_parse_args( $args, [
 	</h2>
 	<?php endif; ?>
 
+	<?php if ( $args['description'] ) : ?>
+		<div class="d-flex justify-content-center mt-3 mb-3">
+			<p class="text-muted" style="max-width: 480px;">
+				<?php echo nl2br( esc_html__( "破滅派は同人サークルから出発していまや出版社となりました。\n破滅派の書籍は書店・通販サイトでお求めいただけます。", 'hametuha' ) ); ?>
+			</p>
+		</div>
+	<?php endif; ?>
+
 	<div class="books-list">
 
 		<?php
@@ -34,11 +43,17 @@ $args = wp_parse_args( $args, [
 			}
 			$counter++;
 			$img = $book['media']['woocommerce_single'];
+			$title = $book['title'];
+			if ( ! empty( $book['price'] ) && is_numeric( $book['price'] ) ) {
+				$title .= sprintf( '（税抜%s円）', number_format( $book['price'] ) );
+			}
 			?>
-
 			<div class="books-item">
 				<a class="books-link" href="<?php echo esc_attr( $book['url'] ); ?>" target="_blank" rel="noopener noreferrer">
-					<img loading="lazy" class="books-cover" src="<?php echo esc_url( $img['url'] ); ?>" alt="<?php echo esc_attr( $book['title'] ); ?>" width="<?php echo esc_attr( $img['width'] ); ?>" height="<?php echo esc_attr( $img['height'] ); ?>" />
+					<img loading="lazy" class="books-cover"
+						src="<?php echo esc_url( $img['url'] ); ?>"
+						alt="<?php echo esc_attr( $book['title'] ); ?>" title="<?php echo esc_attr( $title ); ?>"
+						width="<?php echo esc_attr( $img['width'] ); ?>" height="<?php echo esc_attr( $img['height'] ); ?>" />
 				</a>
 			</div>
 

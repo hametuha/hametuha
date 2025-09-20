@@ -29,7 +29,7 @@ function hametuha_get_minicome_product() {
 		return $result;
 	}
 	// Convert to array.
-	return array_map( function( SimplePie_Item $item ) {
+	$items = array_map( function( SimplePie_Item $item ) {
 		// Check price.
 		$price     = '';
 		$price_tag = $item->get_item_tags( 'http://base.google.com/ns/1.0', 'price' );
@@ -58,6 +58,8 @@ function hametuha_get_minicome_product() {
 			'price'       => $price,
 		];
 	}, $result->get_items() );
+	set_transient( $key, $items, 60*60 );
+	return $items;
 }
 
 /**

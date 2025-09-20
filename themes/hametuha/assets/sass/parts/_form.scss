@@ -106,3 +106,17 @@ form{
   z-index: 20;
 }
 
+.form-filter {
+	background: $gray-300;
+	padding: 2em;
+	margin: 2em 0;
+	border-radius: 2em;
+}
+
+.form-check-inline input:checked + .form-check-label {
+	font-weight: $font-weight-bold;
+}
+
+form .form-label {
+	font-weight: $font-weight-bold;
+}

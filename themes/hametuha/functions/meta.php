@@ -51,7 +51,9 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 	if ( is_category() ) {
 		$title = get_queried_object()->name;
 	} elseif ( is_tag() ) {
-		$title = sprintf( 'タグ「%s」を含む作品', get_queried_object()->name );
+		$pos_type_obj = get_post_type_object( get_query_var( 'post_type' ) );
+		$type = $pos_type_obj ? $pos_type_obj->label : '作品';
+		$title = sprintf( 'タグ「%s」を含む%s', get_queried_object()->name, $type );
 	} elseif ( is_ranking() ) {
 		$title = ranking_title() . " {$sep} ";
 	} elseif ( is_singular( 'info' ) ) {
@@ -364,16 +366,16 @@ add_action( 'wp_head', function() {
 	}
 	$paged = get_query_var( 'paged' );
 	$url   = '';
-	if ( is_category() || is_tag() || is_tax() ) {
+	if ( is_post_type_archive() ) {
+		$url = get_post_type_archive_link( get_query_var( 'post_type' ) );
+	} elseif ( is_category() || is_tag() || is_tax() ) {
 		$url = get_term_link( get_queried_object() );
 	} elseif ( is_author() ) {
 		$url = get_author_posts_url( get_queried_object_id() );
-	} elseif ( is_post_type_archive() ) {
-		$url = get_post_type_archive_link( get_query_var( 'post_type' ) );
 	} elseif ( is_home() ) {
 		$url = get_permalink( get_option( 'page_for_posts' ) );
 	}
-	if ( ! $url ) {
+	if ( ! $url || is_wp_error( $url ) ) {
 		return;
 	}
 	// If paged, add page number.

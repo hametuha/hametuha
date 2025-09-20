@@ -139,9 +139,9 @@ gulp.task( 'jshint', function () {
 // Build 3rd party libraries.
 gulp.task( 'copylib', function () {
 	return mergeStream(
-		// Build Bootstrap
+		// Build Bootstrap 5
 		gulp.src( [
-			'./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+			'./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
 			'./node_modules/bootbox/dist/bootbox.js'
 		] )
 			.pipe( $.concat( 'bootstrap.js' ) )

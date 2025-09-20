@@ -155,10 +155,7 @@
 	margin: 40px 0 80px;
 
 	&-header {
-		margin: 20px 0;
-		font-family: $font-family-serif;
-		padding: 20px 0 0;
-		border-top: 2px solid currentColor;
+		@extend .dividing-header !optional;
 	}
 
 	&-list {

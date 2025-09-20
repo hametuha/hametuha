@@ -96,42 +96,9 @@
 	color: $pink;
 }
 
-.ideaList{
-  &__alert{
-    margin: 2em 0;
-  }
-  &__form{
-    margin-bottom: 2em;
-  }
-  &__list{
-    padding-left: 0;
-    margin-bottom: 40px;
-    border-bottom: 1px solid #ddd;
-    min-height: 300px;
-    &--loading{
-      @extend %loading-indicator;
-    }
-  }
-  &__item{
-    list-style: none;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    border-top: 1px solid #ddd;
-    &:nth-child(odd){
-      background: $zebra-bg;
-    }
-    &--recommended{
-      @extend .highlighting;
-    }
-  }
-  &__avatar{
-    max-width: 96px;
-    width: auto;
-    height: auto;
-    margin-bottom: 10px;
-    @include mq-max($screen-xs-max){
-      max-width: 100%;
-    }
-  }
-
+// 一覧ページ
+.card-idea {
+	.card-title {
+		font-weight: $font-weight-bold;
+	}
 }

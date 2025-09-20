@@ -11,6 +11,12 @@ a[disabled], input[disabled] {
 	margin-bottom: 20px;
 }
 
+//区切り戦
+hr.divider {
+	margin: 20px 0;
+	border-color: currentColor;
+}
+
 // ヘルプボタン
 .help-tip {
 	padding: 1px 5px;

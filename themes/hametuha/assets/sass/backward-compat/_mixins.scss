@@ -82,41 +82,41 @@
 
 // Bootstrap 3 image compatibility classes
 .img-circle {
-  @extend .rounded-circle;
+  @extend .rounded-circle !optional;
 }
 
 .img-rounded {
-  @extend .rounded;
+  @extend .rounded !optional;
 }
 
 // Bootstrap 3 navigation compatibility classes
 .nav-stacked {
-  @extend .flex-column;
+  @extend .flex-column !optional;
 }
 
 // Bootstrap 3 hidden utility classes
 // SEO/Microformat用のhiddenクラス（スクリーンリーダーには読まれる）
 .hidden {
-  @extend .visually-hidden;
+  @extend .visually-hidden !optional;
 }
 
 // Bootstrap 3のレスポンシブ表示/非表示クラス
 .hidden-xs {
-  @extend .d-none;
-  @extend .d-sm-block;
+  @extend .d-none !optional;
+  @extend .d-sm-block !optional;
 }
 
 .hidden-sm {
-  @extend .d-sm-none;
-  @extend .d-md-block;
+  @extend .d-sm-none !optional;
+  @extend .d-md-block !optional;
 }
 
 .hidden-md {
-  @extend .d-md-none;
-  @extend .d-lg-block;
+  @extend .d-md-none !optional;
+  @extend .d-lg-block !optional;
 }
 
 .hidden-lg {
-  @extend .d-lg-none;
-  @extend .d-xl-block;
+  @extend .d-lg-none !optional;
+  @extend .d-xl-block !optional;
 }

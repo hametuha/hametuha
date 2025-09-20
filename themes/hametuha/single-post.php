@@ -207,7 +207,7 @@ HTML;
 				<?php endif; ?>
 
 
-				<div id="single-post-footernote" class="row">
+				<div id="single-post-footernote">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
 				</div>
 

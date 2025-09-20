@@ -1,11 +1,12 @@
 // タグ関連のデザイン
 
+.tag-cloud a,
 .term-link {
 	display: inline-block;
 	padding: 0.25em 0.5em;
-	border-radius: 15px;
+	border-radius: 1em;
 	border: 1px solid currentColor;
-	color: $shade-font;
+	color: $gray-600;
 	margin-right: 0.5em;
 
 	&:last-child{
@@ -15,17 +16,25 @@
 	&:link,
 	&:visited {
 		text-decoration: none;
-		color: $shade-font;
+		color: $gray-600;
 	}
 
 	&:hover,
 	&:active {
-		background-color: $shade-font;
+		background-color: $gray-600;
 		color: $white;
 	}
 
 	&-sm {
 		font-size: $font-size-sm;
-		padding: 0.2em 0.25em;
+		padding: 0.2em 0.5em;
+	}
+}
+
+.tag-cloud {
+	margin: 20px 0;
+
+	a {
+		margin-bottom: 10px;
 	}
 }

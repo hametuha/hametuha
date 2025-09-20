@@ -7,7 +7,7 @@ $ideas = \Hametuha\Model\Ideas::get_instance();
 ?>
 <div data-post-id="<?php the_ID(); ?>" class="col-sm-6 col-md-4 mb-4">
 
-	<div class="card card-list-item">
+	<div class="card card-idea card-list-item">
 
 		<div class="card-body">
 

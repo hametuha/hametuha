@@ -233,3 +233,43 @@ add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
 	}
 	$bcn->trail = $trails;
 } );
+
+
+/**
+ * キーワード検索に投稿タイプのアーカイブを追加
+ */
+add_action( 'bcn_after_fill', function( bcn_breadcrumb_trail $bcn ) {
+	if ( ! is_search() || ! get_query_var( 's' ) ) {
+		// 検索ページじゃなければ何もしない
+		return;
+	}
+	$post_type = get_query_var( 'post_type' );
+	if ( ! $post_type ) {
+		// これは投稿タイプ別アーカイブの検索結果ではない
+		return;
+	}
+	$trails = [];
+	foreach ( $bcn->trail as $trail ) {
+		if ( in_array( 'search',  $trail->get_types(), true ) ) {
+			// ラベルを変更
+			$s = get_query_var( 's' );
+			$link = get_post_type_archive_link( $post_type );
+			$trail->set_title( sprintf( __( '「%s」の検索結果', 'hametuha' ), esc_html( $s ) ) );
+			$trail->set_url( add_query_arg( [
+				's' => rawurlencode( $s ),
+			], $link ) );
+			$trails[] = $trail;
+			$trails []= new bcn_breadcrumb(
+				get_post_type_object( $post_type )->label,
+				null,
+				['post-type-archive'],
+				$link,
+				'',
+				true
+			);
+		} else {
+			$trails[] = $trail;
+		}
+	}
+	$bcn->trail = $trails;
+} );
