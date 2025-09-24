@@ -13,27 +13,40 @@ if ( have_posts() ) :
 		<span class="hidden" itemprop="publisher">破滅派</span>
 
 		<div id="content-wrapper">
-			<?php if ( has_post_thumbnail() ) : ?>
-				<div class="single-post-thumbnail text-center">
-					<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
-				</div>
-			<?php endif; ?>
 			<div class="work-wrapper container">
 
 				<div class="work-meta row">
 
 					<div class="inner">
-
-						<h1 itemprop="headline"><?php the_title(); ?></h1>
-
-						<?php the_series( '<p class="series">', sprintf( '（第%s話）</p>', $series->get_index() ) ); ?>
-
 						<?php
+						$main_class = [ 'work-meta-main' ];
+						if ( has_post_thumbnail() ) {
+							$main_class[] = 'has-thumbnail';
+						}
+						if ( has_excerpt() ) {
+							$main_class[] = 'has-excerpt';
+						}
+						?>
+						<div class="<?php echo esc_attr( implode( ' ', $main_class ) ); ?>">
+
+							<?php if ( has_post_thumbnail() ) : ?>
+								<div class="single-post-thumbnail text-center">
+									<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
+								</div>
+							<?php endif; ?>
+
+							<h1 itemprop="headline"><?php the_title(); ?></h1>
+
+							<?php the_series( '<p class="series">', sprintf( '（第%s話）</p>', $series->get_index() ) ); ?>
+
+							<?php
 							$list = [];
-							foreach ( [
-								'campaign' => esc_html( '%s応募作品', 'hametuha' ),
-								\Hametuha\Hooks\Qualification::TAXONOMY => esc_html( '%s', 'hametuha' ),
-							] as $taxonomy => $replace ) {
+							foreach (
+								[
+									'campaign'                              => esc_html( '%s応募作品', 'hametuha' ),
+									\Hametuha\Hooks\Qualification::TAXONOMY => esc_html( '%s', 'hametuha' ),
+								] as $taxonomy => $replace
+							) {
 								$terms = get_the_terms( get_the_ID(), $taxonomy );
 								if ( ! $terms || is_wp_error( $terms ) ) {
 									continue;
@@ -45,11 +58,35 @@ if ( have_posts() ) :
 							if ( ! empty( $list ) ) {
 								printf( '<p class="campaign">%s</p>', implode( esc_html__( '、', 'hametuha' ), $list ) );
 							}
-						?>
+							?>
 
-						<p class="author">
-							<a href="#post-author"><?php the_author(); ?></a>
-						</p>
+							<p class="author">
+								<a href="#post-author"><?php the_author(); ?></a>
+							</p>
+
+						</div>
+
+						<?php
+						// 関連タグを取得（抜粋文のマージンが変わるので先にとっておく）
+						$terms = hametuha_terms_to_hashtag( [ 'nouns', 'post_tag', 'campaign' ], get_post(), true );
+						?>
+						<?php if ( has_excerpt() ) : ?>
+							<div class="desc<?php echo $terms ? ' with-terms' : ''; ?>" itemprop="description">
+								<?php the_excerpt(); ?>
+							</div>
+						<?php endif; ?>
+
+						<?php
+						// 関連タグを出力
+						if ( $terms ) :
+							?>
+							<p class="work-meta-tags">
+								<?php
+								printf( '<span>%s</span>', esc_html__( 'タグ: ', 'hametuha' ) );
+								echo implode( ' ', $terms );
+								?>
+							</p>
+						<?php endif; ?>
 
 						<p class="genre">
 							<?php
@@ -62,12 +99,6 @@ if ( have_posts() ) :
 						<p class="length">
 								<?php the_post_length( '<span itemprop="wordCount">', '</span>', '-' ); ?>文字
 						</p>
-
-							<?php if ( has_excerpt() ) : ?>
-							<div class="desc" itemprop="description">
-								<?php the_excerpt(); ?>
-							</div>
-						<?php endif; ?>
 					</div>
 
 				</div>
@@ -189,19 +220,6 @@ HTML;
 					<?php endif; ?>
 					<i class="icon-point-down"></i>
 				</p>
-
-				<?php
-				// 関連タグを取得
-				$terms = hametuha_terms_to_hashtag( [ 'nouns', 'post_tag', 'campaign', 'category' ], get_post(), true );
-				if ( $terms ) :
-					?>
-					<div>
-						<h3 class="text-center">この作品のタグ</h3>
-						<p class="post-tags">
-							<?php echo implode( ' ', $terms ); ?>
-						</p>
-					</div>
-				<?php endif; ?>
 
 				<?php get_header( 'breadcrumb' ); ?>
 

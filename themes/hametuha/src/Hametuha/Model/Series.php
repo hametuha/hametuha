@@ -472,7 +472,10 @@ HTML;
 		}
 		$query                = <<<SQL
         SELECT SQL_CALC_FOUND_ROWS
-        cs.*, cm2.meta_value AS rank, cm.meta_value AS priority FROM (
+            cs.*,
+            cm2.meta_value AS `rank`,
+            cm.meta_value AS `priority`
+        FROM (
             (
               SELECT *
               FROM {$this->db->comments}

@@ -16,7 +16,7 @@ $no_desc         = isset( $description ) && ( false === $description );
 		<h3 class="list-heading">
 			<?php echo is_doujin_profile_page() ? $title : $title_display; ?>
 			<?php foreach ( get_the_category() as $cat ) : ?>
-				<small>
+				<small class="list-heading-category">
 					<?php echo esc_html( $cat->name ); ?>
 				</small>
 			<?php endforeach; ?>

@@ -2,7 +2,6 @@
  * Description
  */
 
-/*global Modernizr: true*/
 /*global Chart: true*/
 /*global HametuhaGenreStatic: true*/
 
@@ -20,7 +19,8 @@
             }]
         };
         if( radar.length ){
-            if( Modernizr.canvas ){
+            // Canvas APIは2025年現在全ブラウザでサポート済み、念のため最小限のチェック
+            if( radar.get(0).getContext ){
                 // データを加工する
                 $.each(HametuhaGenreStatic.categories, function(index, cat){
                     if( index > 10 ){
