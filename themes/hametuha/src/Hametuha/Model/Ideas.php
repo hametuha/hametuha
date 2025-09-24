@@ -9,6 +9,15 @@ use WPametu\DB\Model;
 /**
  * Idea table
  *
+ * user_content_relationshipsテーブルを使う。
+ *
+ * locationの値によって性質を変える
+ *
+ * 0 ボツアイデア。
+ * 0.5 推薦されたアイデア
+ * 1 ストックされたアイデア
+ *
+ * @todo 数値による管理はあまり自明ではないので、方法を検討する。
  * @property-read string $posts
  * @property-read string $users
  * @package Hametuha\Model
@@ -65,6 +74,7 @@ class Ideas extends Model {
 	public function trash($user_id, $idea_id) {
 		return $this->update([
 			'location' => 0,
+			'updated'   => current_time( 'mysql' ),
 		], [
 			'rel_type'  => $this->rel_stock,
 		    'user_id'   => $user_id,
@@ -82,11 +92,12 @@ class Ideas extends Model {
 	 */
 	public function stock($user_id, $idea_id) {
 		return $this->insert([
-			'rel_type' => $this->rel_stock,
-			'user_id'  => $user_id,
+			'rel_type'  => $this->rel_stock,
+			'user_id'   => $user_id,
 			'object_id' => $idea_id,
 			'location'  => 1,
-		    'content' => 0,
+		    'content'   => 0,
+			'updated'   => current_time( 'mysql' ),
 		]);
 	}
 
@@ -99,7 +110,10 @@ class Ideas extends Model {
 	 * @return false|int
 	 */
 	public function restock($user_id, $idea_id) {
-		return $this->update( [ 'location' => 1 ], [
+		return $this->update( [
+			'location' => 1,
+			'updated'   => current_time( 'mysql' ),
+		], [
 			'rel_type'  => $this->rel_stock,
 			'user_id'   => $user_id,
 		    'object_id' => $idea_id,
@@ -109,17 +123,22 @@ class Ideas extends Model {
 	/**
 	 * Detect if user stocked this idea
 	 *
-	 * @param int $user_id
-	 * @param int $idea_id
+	 * @param int  $user_id
+	 * @param int  $idea_id
+	 * @param bool $include_trash trueにすると、ゴミ箱に入れたアイデアも対象にする
 	 *
 	 * @return null|int
 	 */
-	public function is_stocked($user_id, $idea_id) {
-		return $this->select( 'ID' )->wheres([
+	public function is_stocked($user_id, $idea_id, $include_trash = false) {
+		$wheres = [
 			'rel_type = %s'  => $this->rel_stock,
 			'object_id = %d' => $idea_id,
 			'user_id = %d'   => $user_id,
-		])->get_var();
+		];
+		if ( ! $include_trash ) {
+			$wheres[ 'location = %d' ] = 1;
+		}
+		return $this->select( 'ID' )->wheres( $wheres )->get_var();
 	}
 
 	/**

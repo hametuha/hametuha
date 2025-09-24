@@ -347,14 +347,6 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 				});
 			</script>
 			<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
-			<select name="tag_type" id="tag-type">
-				<option value="" <?php selected( ! get_term_meta( $term->term_id, 'tag_type', true ) ); ?>>指定しない</option>
-				<?php foreach ( [ 'idea' => 'アイデア募集中' ] as $key => $val ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( get_term_meta( $term->term_id, 'tag_type', true ) === $key ); ?>>
-						<?php echo esc_html( $val ); ?>
-					</option>
-				<?php endforeach; ?>
-			</select>
 		</td>
 	</tr>
 	<?php

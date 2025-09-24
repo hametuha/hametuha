@@ -45,7 +45,7 @@ class Ideas extends IdeaApiPattern {
 	 */
 	protected function handle_post( $request ) {
 		$post = get_post( $request['post_id'] );
-		if ( $this->ideas->is_stocked( get_current_user_id(), $post->ID ) ) {
+		if ( $this->ideas->is_stocked( get_current_user_id(), $post->ID, true ) ) {
 			$this->ideas->restock( get_current_user_id(), $post->ID );
 		} else {
 			if ( ! $this->ideas->stock( get_current_user_id(), $post->ID ) ) {
@@ -79,7 +79,7 @@ class Ideas extends IdeaApiPattern {
 			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアの作者です。', $post->post_title ), [ 'status' => 500 ] );
 		}
 		if ( $this->ideas->is_stocked( $user->ID, $post->ID ) ) {
-			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアを検討しているようです。', $post->post_title ), [ 'status' => 500 ] );
+			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアを検討したことがあるようです。', $post->post_title ), [ 'status' => 500 ] );
 		}
 		if ( ! $this->ideas->recommend( get_current_user_id(), $user->ID, $post->ID ) ) {
 			return new \WP_Error( 'server_error', '保存に失敗しました。あとでやり直してください。', [ 'status' => 500 ] );
@@ -103,7 +103,7 @@ class Ideas extends IdeaApiPattern {
 	 */
 	protected function handle_delete( $request ) {
 		$post = get_post( $request['post_id'] );
-		if ( ! $this->ideas->score( get_current_user_id(), $post->ID ) ) {
+		if ( ! $this->ideas->is_stocked( get_current_user_id(), $post->ID ) ) {
 			return new \WP_Error( 'duplicated', 'このアイデアは削除済みか、ストックしていません。', [ 'status' => 404 ] );
 		}
 		if ( ! $this->ideas->trash( get_current_user_id(), $post->ID ) ) {

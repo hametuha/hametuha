@@ -47,19 +47,13 @@ class IdeasMine extends IdeaApiPattern {
 								case 'private':
 								case 'publish':
 									return true;
-									break;
 								default:
 									return false;
-									break;
 							}
 						},
 					],
 					'genre'   => [
-						'validate_callback' => function ( $var ) {
-							$term = get_tag( $var );
-
-							return $term && ! is_wp_error( $term ) && ( 'idea' === get_term_meta( $term->term_id, 'tag_type', true ) );
-						},
+						'validate_callback' => [ $this, 'is_valid_tag' ],
 						'required'          => true,
 					],
 				];
@@ -95,11 +89,7 @@ class IdeasMine extends IdeaApiPattern {
 						},
 					],
 					'genre'   => [
-						'validate_callback' => function ( $var ) {
-							$term = get_tag( $var );
-
-							return $term && ! is_wp_error( $term ) && ( 'idea' === get_term_meta( $term->term_id, 'tag_type', true ) );
-						},
+						'validate_callback' => [ $this, 'is_valid_tag' ],
 						'required'          => true,
 					],
 				];

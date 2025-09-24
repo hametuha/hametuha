@@ -68,7 +68,7 @@ function hametuha_user_write_actions() {
 	if ( current_user_can( 'read' ) ) {
 		$actions = array_merge( [
 			'megaphone' => [ '#', '安否報告をする', '最近活動が滞っている人は同人諸氏に安否をお知らせしましょう。', 'anpi-new', '' ],
-			'lamp'      => [ home_url( 'my/ideas/new/' ), 'アイデアを投稿', false, '', ' data-action="post-idea"' ],
+			'lamp'      => [ get_post_type_archive_link( 'ideas' ) . '#create-idea', 'アイデアを投稿', false, '', '' ],
 		], $actions );
 	} else {
 		$actions = array_merge( [

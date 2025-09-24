@@ -115,4 +115,33 @@ class IdeasQuery extends QueryHighJack {
 	protected function is_valid_query( \WP_Query $wp_query ) {
 		return in_array($wp_query->get( 'idea_type' ), [ 'mine', 'stock' ], true );
 	}
+
+	/**
+	 * アイデアのいいね数を割り当てる
+	 *
+	 * @param array $posts
+	 * @param \WP_Query $wp_query
+	 *
+	 * @return mixed
+	 */
+	public function the_posts( $posts, \WP_Query $wp_query ) {
+		if ( in_array( $wp_query->get( 'post_type' ), [ '', 'any', 'ideas' ], true ) ) {
+			$posts_to_retrieve = [];
+			foreach ( $posts as $post ) {
+				if ( 'ideas' == $post->post_type ) {
+					$posts_to_retrieve[] = $post->ID;
+					$post->stock         = 0; // Default value
+				}
+			}
+			if ( $posts_to_retrieve ) {
+				$list = $this->ideas->get_stock_list( $posts_to_retrieve );
+				foreach ( $posts as &$post ) {
+					if ( isset( $list[ $post->ID ] ) ) {
+						$post->stock = (int) $list[ $post->ID ];
+					}
+				}
+			}
+		}
+		return $posts;
+	}
 }

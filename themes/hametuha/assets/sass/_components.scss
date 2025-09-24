@@ -249,6 +249,9 @@ i.rotation {
 		display: block;
 	}
 }
+.alert > *:last-child {
+	margin-bottom: 0;
+}
 
 // スピナー
 .ui-autocomplete-input {

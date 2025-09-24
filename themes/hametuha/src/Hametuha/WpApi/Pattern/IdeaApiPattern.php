@@ -37,6 +37,18 @@ abstract class IdeaApiPattern extends WpApi {
 		return true;
 	}
 
+	/**
+	 * タグがジャンルに属するものかどうか判定する
+	 *
+	 * @param int $term_id タグID
+	 *
+	 * @return bool
+	 */
+	public function is_valid_tag( $term_id ) {
+		$term = get_tag( $term_id );
+
+		return $term && ! is_wp_error( $term ) && ( 'サブジャンル' === get_term_meta( $term->term_id, 'genre', true ) );
+	}
 
 	public function permission_callback( $request ) {
 		return current_user_can( 'read' );

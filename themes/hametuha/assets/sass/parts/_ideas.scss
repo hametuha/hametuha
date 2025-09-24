@@ -120,3 +120,67 @@
 		font-weight: $font-weight-bold;
 	}
 }
+
+// Ideas component floating action button
+.ideas-fab {
+	position: fixed;
+	bottom: 2rem;
+	right: 2rem;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background-color: $primary;
+	color: white;
+	border: none;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.15);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	z-index: 1000;
+
+	&:hover {
+		background-color: darken($primary, 10%);
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25), 0 8px 25px rgba(0, 0, 0, 0.2);
+		transform: translateY(-2px);
+	}
+
+	&:active {
+		transform: translateY(0);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	&:focus {
+		outline: none;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba($primary, 0.3);
+	}
+
+	svg {
+		width: 24px;
+		height: 24px;
+	}
+
+	@include media-breakpoint-down(md) {
+		bottom: 1rem;
+		right: 1rem;
+		width: 48px;
+		height: 48px;
+
+		svg {
+			width: 20px;
+			height: 20px;
+		}
+	}
+}
+
+// Ideas component container
+.ideas-component {
+	.modal {
+		z-index: 1055;
+	}
+
+	.modal-backdrop {
+		z-index: 1050;
+	}
+}

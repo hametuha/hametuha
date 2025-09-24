@@ -4,6 +4,10 @@ $ideas = \Hametuha\Model\Ideas::get_instance();
 
 get_header();
 get_header( 'sub' );
+if ( current_user_can( 'read' ) ) {
+	wp_enqueue_script( 'hametuha-components-ideas-stock' );
+}
+get_template_part( 'templates/idea/form' );
 ?>
 
 <?php get_header( 'breadcrumb' ); ?>
@@ -65,7 +69,7 @@ get_header( 'sub' );
 								<li class="ideas__item ideas__item--author">
 									<?php
 									// 画像
-									$author = get_userdata( get_the_author( 'ID' ) );
+									$author = get_userdata( get_the_author_meta( 'ID' ) );
 									echo get_avatar( $post->post_author, 32, '', $author->display_name, [ 'class' => 'idea__avatar img-circle avatar' ] );
 									// 名前
 									$author_name = esc_html( get_the_author_meta( 'display_name' ) );
@@ -132,33 +136,31 @@ get_header( 'sub' );
 							<div class="row">
 								<?php if ( current_user_can( 'read' ) ) : ?>
 									<div class="col-sm-4 col-xs-12">
-										<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-											<?php if ( get_current_user_id() == get_the_author_meta( 'ID' ) ) : ?>
-												<a class="btn btn-secondary btn-block" rel="nofollow" href="#" disabled>あなたのアイデア</a>
-											<?php elseif ( $ideas->is_stocked( get_current_user_id(), get_the_ID() ) ) : ?>
-												<a class="btn btn-primary btn-block" rel="nofollow"
-													href="<?php the_permalink(); ?>" disabled>
+										<?php if ( get_current_user_id() == get_the_author_meta( 'ID' ) ) : ?>
+											<button class="btn btn-primary btn-block" class="data-">
+												編集する
+											</button>
+										<?php else :
+											// ストックボタンを表示する
+											$class_names = [ 'stock-container' ];
+											if ( $ideas->is_stocked( get_current_user_id(), get_the_ID() ) ) :
+												?>
+												<button class="btn btn-primary btn-block" data-stock="<?php the_ID() ?>" data-stock-action="delete">
 													ストック済み
-												</a>
+												</button>
 											<?php else : ?>
-												<a class="btn btn-primary btn-block" rel="nofollow"
-													href="<?php the_permalink(); ?>" data-stock="<?php the_ID(); ?>">
+												<button class="btn btn-primary btn-block" data-stock="<?php the_ID(); ?>" data-stock-action="post">
 													ストックする
-												</a>
+												</button>
 											<?php endif; ?>
-										<?php else : ?>
-											<a class="btn btn-primary btn-block" rel="nofollow" href="#" disabled>
-												ストック
-											</a>
 										<?php endif; ?>
 									</div>
 
 									<div class="col-sm-4 col-xs-12">
-										<a class="btn btn-info btn-block" rel="nofollow"
-											href="<?php echo home_url( '/my/ideas/recommend/' . get_the_ID() . '/' ); ?>"
-											data-recommend="<?php the_ID(); ?>">
+										<button class="btn btn-info btn-block" type="button" data-bs-toggle="collapse"
+											data-bs-target="#ideaRecommendForm" aria-expanded="false" aria-controls="ideaRecommendForm">
 											他の人に薦める
-										</a>
+										</button>
 									</div>
 
 									<div class="col-sm-4 col-xs-12">
@@ -192,12 +194,22 @@ get_header( 'sub' );
 									foreach ( $ideas->get_stockers( get_the_ID() ) as $user ) :
 										?>
 										<li class="ideas__stocker">
-											<a class="ideas__scoker--link"
-												href="<?php echo home_url( '/doujin/detail/' . $user->user_nicename . '/' ); ?>">
-												<?php echo get_avatar( $user->ID, 32 ); ?>
-												<?php echo esc_html( $user->ID == get_current_user_id() ? 'あなた' : $user->display_name ); ?>
-
-											</a>
+											<?php if ( $user->ID == get_current_user_id() || ! user_can( $user->ID, 'edit_posts ' )) : ?>
+												<span class="ideas__stocker--link">
+													<?php
+													echo get_avatar( $user->ID, 32 );
+													echo ( $user->ID == get_current_user_id() ) ? 'あなた' : esc_html( $user->display_name );
+													?>
+												</span>
+											<?php else : ?>
+												<a class="ideas__stocker--link"
+													href="<?php echo home_url( '/doujin/detail/' . $user->user_nicename . '/' ); ?>">
+													<?php
+													echo get_avatar( $user->ID, 32 );
+													echo esc_html( $user->display_name );
+													?>
+												</a>
+											<?php endif; ?>
 										</li>
 										<?php
 										$int ++;
@@ -216,7 +228,16 @@ get_header( 'sub' );
 							<?php endif; ?>
 						</div><!-- //.ideas_statistic -->
 
-						<hr />
+						<?php if ( current_user_can( 'read' ) ) : ?>
+
+							<?php
+							hameplate('templates/idea/form', 'recommend', [
+								'idea' => get_post(),
+							] )
+							?>
+						<?php endif; ?>
+
+						<hr class="mb-5 mt-5" />
 
 						<div class="more">
 							<?php comments_template(); ?>

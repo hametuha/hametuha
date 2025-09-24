@@ -8,6 +8,7 @@
 get_header();
 get_header( 'sub' );
 wp_enqueue_script( 'hametuha-components-idea-filter' );
+get_template_part( 'templates/idea/form' );
 global $wp_query;
 ?>
 <header class="book-list-header">
@@ -41,7 +42,7 @@ global $wp_query;
 		$current_idea_by_label = $ideas_by[ $current_ide_by ] ?? $ideas_by['みんなのアイデア'];
 		// 検索クエリ
 		$s = get_query_var( 's' );
-		// 選択中のタグ
+		// 現在のタグ
 		$terms = get_terms( [
 			'taxonomy'   => 'post_tag',
 			'hide_empty' => false,

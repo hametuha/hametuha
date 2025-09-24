@@ -62,10 +62,10 @@
 		<ul class="write-panel__actions">
 			<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
 				<li class="write-panel__action">
-					<a class="write-panel__link <?= esc_attr( $class_name ) ?>" href="<?= $url ?>" <?= $data ?>>
+					<a class="write-panel__link <?php echo esc_attr( $class_name ) ?>" href="<?php echo $url ?>" <?= $data ?>>
 						<span class="write-panel__label">
 							<i class="icon-<?= $icon ?>"></i>
-							<?= esc_html( $label ) ?>
+							<?php echo esc_html( $label ) ?>
 						</span>
 						<?php if ( $desc ) : ?>
 							<p class="write-panel__desc"><?= esc_html( $desc ) ?></p>
@@ -85,5 +85,16 @@
 get_template_part( 'parts/modal' );
 wp_footer();
 ?>
+<noscript>
+	<div class="noscript-notice" style="position: sticky; bottom: 0; z-index: 1040;">
+		<div class="container">
+			<div class="alert alert-warning mb-0">
+				<strong>ご注意:</strong>
+				破滅派での投稿機能（作品・コメント・アイデアなど）にはJavaScriptが必要です。
+				閲覧は問題なく行えますが、投稿される場合はJavaScriptを有効にしてご利用ください。
+			</div>
+		</div>
+	</div>
+</noscript>
 </body>
 </html>

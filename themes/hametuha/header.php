@@ -148,25 +148,6 @@
 			<a href="<?php echo get_post_type_archive_link( 'ideas' ); ?>">
 				<i class="icon-lamp"></i> 作品のアイデア
 			</a>
-			<ul>
-				<?php
-				foreach ( get_tags( [
-					'meta_query' => [
-						[
-							'field' => 'tag_type',
-							'value' => 'idea',
-						],
-					],
-				] ) as $tag ) :
-					?>
-				<li>
-					<a href="<?php echo get_tag_link( $tag ); ?>">
-						 <?php echo esc_html( $tag->name ); ?>
-						<small><?php echo number_format_i18n( $tag->count ); ?>件</small>
-					</a>
-				</li>
-				<?php endforeach; ?>
-			</ul>
 		</li>
 		<li>
 			<a href="<?php echo get_post_type_archive_link( 'anpi' ); ?>">
