@@ -5,7 +5,7 @@
   "license": "GPL-3.0-or-later",
   "require": {
     "php": ">=7.4",
-    "hametuha/wpametu": "^1.1.1",
+    "hametuha/wpametu": "^1.2.1",
     "hametuha/hamepub": "^1.0.0",
     "hametuha/hashboard": "^0.9.1",
     "hametuha/sharee": "^0.8.9",
