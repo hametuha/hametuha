@@ -6,10 +6,10 @@
  */
 /* @var \WP_Post $idea */
 $idea = $args['idea'] ?? null;
-wp_enqueue_script( 'hametuha-components-user-picker' );
+wp_enqueue_script( 'hametuha-components-ideas-recommend' );
 ?>
 <div id="ideaRecommendForm" class="collapse">
-<form id="ideaRecommendForm" data-post-id="<?php echo esc_attr( get_post( $idea )->ID ); ?>" class="form-filter">
+<form id="idea-recommender" data-post-id="<?php echo esc_attr( get_post( $idea )->ID ); ?>" class="form-filter">
 	<div class="form-group">
 		<label class="form-label" for="recommend_to">「<?php echo get_the_title( $idea ); ?>」を薦める</label>
 		<?php
@@ -20,7 +20,7 @@ wp_enqueue_script( 'hametuha-components-user-picker' );
 			'required' => true,
 		] );
 		?>
-		<span class="helper-block">フォローしているユーザーが表示されます。</span>
+		<span class="helper-block">あなたをフォローしているユーザーが表示されます。</span>
 	</div>
 	<div class="d-flex justify-content-between mt-3">
 		<button type="button" class="btn btn-secondary"  data-dismiss="modal">キャンセル</button>

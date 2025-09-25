@@ -78,7 +78,7 @@ class Ideas extends IdeaApiPattern {
 		if ( $post->post_author == $user->ID ) {
 			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアの作者です。', $post->post_title ), [ 'status' => 500 ] );
 		}
-		if ( $this->ideas->is_stocked( $user->ID, $post->ID ) ) {
+		if ( $this->ideas->is_stocked( $user->ID, $post->ID, true ) ) {
 			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアを検討したことがあるようです。', $post->post_title ), [ 'status' => 500 ] );
 		}
 		if ( ! $this->ideas->recommend( get_current_user_id(), $user->ID, $post->ID ) ) {
@@ -87,7 +87,8 @@ class Ideas extends IdeaApiPattern {
 		$current_user = get_userdata( get_current_user_id() );
 		$this->notifications->add_notification( 'idea_recommended', $user->ID, $post->ID,
 			sprintf( '%sさんから「%s」というアイデアが勧められています。', $current_user->display_name, $post->post_title ),
-			get_current_user_id() );
+			get_current_user_id()
+		);
 
 		return new \WP_REST_Response( [
 			'success' => true,
