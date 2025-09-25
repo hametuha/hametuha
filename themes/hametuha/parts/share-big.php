@@ -1,7 +1,16 @@
 <?php
+/**
+ * シェアボタンの見出しつき
+ *
+ * @var array{title:string, desc:string} $args
+ */
 if ( 'publish' !== ( get_queried_object()->post_status ?? '' ) ) {
 	return;
 }
+$args = wp_parse_args( $args, [
+	'title' => 'シェアする',
+	'desc'  => '面白かったり、気になったらSNSでシェアしてください。<br />シェアしていただくと作者がやる気を出します。'
+] );
 ?>
 <div class="series__row series__row--share shareContainer__wrapper">
 
@@ -12,13 +21,11 @@ if ( 'publish' !== ( get_queried_object()->post_status ?? '' ) ) {
 
 				<h2 class="series__title--share text-center">
 					<small class="series__title--caption">Share This</small>
-					シェアする
+					<?php echo esc_html( $args['title'] ); ?>
 				</h2>
 				<p class="text-muted text-center">
-					面白かったり、気になったらSNSでシェアしてください。<br />
-					シェアしていただくと作者がやる気を出します。
+					<?php echo wp_kses_post( $args['desc'] ); ?>
 				</p>
-
 			</div>
 		</div>
 

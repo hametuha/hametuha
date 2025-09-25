@@ -76,8 +76,8 @@ if ( is_preview() ) {
 				break;
 		}
 		?>
-		<div class="share__item--<?php echo $brand; ?>">
+		<p class="share__item--<?php echo $brand; ?>">
 			<?php echo $link; ?>
-		</div>
+		</p>
 	<?php endforeach; ?>
 </div>
