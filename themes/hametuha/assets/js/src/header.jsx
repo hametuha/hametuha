@@ -152,7 +152,7 @@ class HametuHeader extends Component {
 								</a>
 							</li>
 							<li>
-								<a href="/my/ideas/">
+								<a href="/ideas/mine/">
 									<i className="icon-lamp4" />
 									アイデア帳
 								</a>
