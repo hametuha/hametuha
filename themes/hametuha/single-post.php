@@ -221,11 +221,14 @@ HTML;
 					<i class="icon-point-down"></i>
 				</p>
 
-				<?php get_header( 'breadcrumb' ); ?>
 
 			</div><!-- //.work-wrapper -->
 
-				<?php get_template_part( 'parts/share', 'big' ); ?>
+			<?php get_template_part( 'parts/share', 'big' ); ?>
+
+			<div class="text-center">
+				<?php get_header( 'breadcrumb' ); ?>
+			</div>
 
 			<section class="single-author-section" id="post-author">
 
