@@ -81,23 +81,24 @@ class HametuHeader extends Component {
 
 	render() {
 		return (
-			<ul className="navbar-nav navbar-right navbar-login navbar-login--user nav nav-pills col-sm-1">
+			<ul className="navbar-nav ms-auto navbar-login navbar-login--user nav nav-pills col-sm-1 justify-content-end">
 
 				{ this.state.loggedIn ? (
 
-					<li className="dropdown">
-						<a href="#" className="dropdown-toggle"
-							data-toggle="dropdown">
+					<li className="nav-item dropdown">
+						<a href="#" className="nav-link dropdown-toggle"
+							data-bs-toggle="dropdown"
+							aria-expanded="false">
 							<img className='avatar' src={ this.state.avatar } alt={ this.state.name } />
 						</a>
-						<ul className="dropdown-menu">
-							<li className="greeting">
+						<ul className="dropdown-menu dropdown-menu-end">
+							<li className="dropdown-item-text greeting">
 								<strong>{ this.state.name }</strong>さん<br />
 								<span className="role">{ this.state.role }</span>
 							</li>
-							<li className="divider" />
+							<li><hr className="dropdown-divider" /></li>
 							<li>
-								<a href="/dashboard">
+								<a href="/dashboard" className="dropdown-item">
 									<i className="icon-cog" />
 									ダッシュボード
 								</a>
@@ -106,25 +107,25 @@ class HametuHeader extends Component {
 							{ this.state.isAuthor ? (
 								<>
 									<li>
-										<a href="/dashboard/works">
+										<a href="/dashboard/works" className="dropdown-item">
 											<i className="icon-dashboard" />
 											作品管理
 										</a>
 									</li>
 									<li>
-										<a href="/dashboard/statistics/popular">
+										<a href="/dashboard/statistics/popular" className="dropdown-item">
 											<i className="icon-chart" />
 											統計情報
 										</a>
 									</li>
 									<li>
-										<a href={ this.state.profile }>
+										<a href={ this.state.profile } className="dropdown-item">
 											<i className="icon-user"></i>
 											プロフィール
 										</a>
 									</li>
 									<li>
-										<a href="/wp-admin/">
+										<a href="/wp-admin/" className="dropdown-item">
 											<i className="icon-wordpress"></i>
 											管理画面
 										</a>
@@ -132,41 +133,41 @@ class HametuHeader extends Component {
 								</>
 							) : null }
 
-							<li className="divider" />
+							<li><hr className="dropdown-divider" /></li>
 							<li>
-								<a href="/dashboard/reading/comments/">
+								<a href="/dashboard/reading/comments/" className="dropdown-item">
 									<i className="icon-bubble-dots" />
 									あなたのコメント
 								</a>
 							</li>
 							<li>
-								<a href="/your/lists/">
+								<a href="/your/lists/" className="dropdown-item">
 									<i className="icon-drawer3" />
 									あなたのリスト
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard/reading/reviews/">
+								<a href="/dashboard/reading/reviews/" className="dropdown-item">
 									<i className="icon-star2" />
 									レビューした作品
 								</a>
 							</li>
 							<li>
-								<a href="/ideas/mine/">
+								<a href="/ideas/mine/" className="dropdown-item">
 									<i className="icon-lamp4" />
 									アイデア帳
 								</a>
 							</li>
 							<li>
-								<a href="/doujin/follower/">
+								<a href="/doujin/follower/" className="dropdown-item">
 									<i className="icon-heart5" />
 									フォロワー
 								</a>
 							</li>
 
-							<li className="divider" />
+							<li><hr className="dropdown-divider" /></li>
 							<li>
-								<a href={ this.state.logout }>
+								<a href={ this.state.logout } className="dropdown-item">
 									<i className="icon-exit4" />
 									ログアウト
 								</a>
@@ -176,12 +177,14 @@ class HametuHeader extends Component {
 				) : null }
 
 				{ this.state.loggedIn ? (
-					<li className="dropdown">
-						<a href="#" className="dropdown-toggle dropdown--notify" data-toggle="dropdown"
+					<li className="nav-item dropdown">
+						<a href="#" className="nav-link dropdown-toggle dropdown--notify"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
 							data-last-checked={ this.state.lastChecked }>
 							<i className="icon-earth" />
 						</a>
-						<ul id="notification-container" className="dropdown-menu notification__container">
+						<ul id="notification-container" className="dropdown-menu dropdown-menu-end notification__container">
 							{ this.state.notifications.length ? (
 								this.state.notifications.map( ( notification, int ) => {
 									return (

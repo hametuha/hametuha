@@ -56,8 +56,8 @@
 <?php if ( ! is_hamenew() ) : ?>
 <div id="write-panel" class="write-panel">
 	<div class="write-panel__inner">
-		<p class="text-right">
-			<button class="write-panel__close write-panel-btn btn btn-link"><i class="icon-cancel-circle"></i></button>
+		<p class="d-flex justify-content-end">
+			<button class="write-panel__close write-panel-btn btn btn-link" style="text-decoration: none !important;"><i class="icon-cancel-circle"></i></button>
 		</p>
 		<ul class="write-panel__actions">
 			<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
