@@ -137,7 +137,7 @@ get_template_part( 'templates/idea/form' );
 								<?php if ( current_user_can( 'read' ) ) : ?>
 									<div class="col-sm-4 col-xs-12">
 										<?php if ( get_current_user_id() == get_the_author_meta( 'ID' ) ) : ?>
-											<button class="btn btn-primary btn-block" class="data-">
+											<button class="btn btn-primary btn-block" data-post-id="<?php the_ID(); ?>"">
 												編集する
 											</button>
 										<?php else :

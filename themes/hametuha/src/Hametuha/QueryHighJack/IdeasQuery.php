@@ -65,6 +65,7 @@ class IdeasQuery extends QueryHighJack {
 			// キャッシュさせない
 			if ( $wp_query->is_main_query() ) {
 				nocache_headers();
+				add_filter( 'wp_robots', 'wp_robots_noindex' );
 			}
 			// ログインしているユーザーでなければ、このクエリは無効
 			if ( ! is_user_logged_in() ) {

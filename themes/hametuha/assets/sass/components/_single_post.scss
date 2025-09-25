@@ -267,17 +267,12 @@ p.pixiv-embed-illust {
 // メインカラムの最大幅を制限
 .work-wrapper {
 	max-width: 970px;
-}
-
-// スマホのとき
-@media only screen and (max-width: $screen-xs-max) {
-
-	// メインにを取る
-	.work-wrapper {
+	margin-right: auto;
+	margin-left: auto;
+	@include media-breakpoint-down(lg) {
 		margin-right: 15px;
 		margin-left: 15px;
 	}
-
 }
 
 // 本文フォント
@@ -303,12 +298,21 @@ p.pixiv-embed-illust {
 		flex-direction: column;
 	}
 
+	// 文字数
+	.length {
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		color: $more-shade-font;
+		font-size: 12px;
+	}
+
 
 	// ジャンル
 	.genre {
 		position: absolute;
-		top: 0.5em;
-		left: 0;
+		top: 15px;
+		left: 15px;
 
 		a {
 			@include inline-block;
@@ -385,15 +389,6 @@ p.pixiv-embed-illust {
 				color: $link-active;
 			}
 		}
-	}
-
-	// 文字数
-	.length {
-		position: absolute;
-		right: 0;
-		top: 0.5em;
-		color: $more-shade-font;
-		font-size: 12px;
 	}
 
 	// リード

@@ -35,6 +35,10 @@
 		border-radius: 10px;
 		border: 2px solid currentColor;
 		font-weight: 700;
+		@include media-breakpoint-down(sm) {
+			border-radius: 50%;
+			border-width: 3px;
+		}
 
 		&:link,
 		&:visited {
@@ -76,11 +80,17 @@
 			line-height: 1;
 			font-size: 14px;
 			vertical-align: text-bottom;
+			@include media-breakpoint-down(sm) {
+				vertical-align: middle;
+			}
 		}
 	}
 
 	&__text {
 		font-size: 14px;
 		margin-left: 0.125em;
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
 	}
 }

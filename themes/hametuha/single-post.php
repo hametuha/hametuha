@@ -13,7 +13,7 @@ if ( have_posts() ) :
 		<span class="hidden" itemprop="publisher">破滅派</span>
 
 		<div id="content-wrapper">
-			<div class="work-wrapper container">
+			<div class="work-wrapper">
 
 				<div class="work-meta row">
 
@@ -237,7 +237,7 @@ HTML;
 						<?php esc_html_e( '著者', 'hametuha' ); ?>
 					</h2>
 
-					<div class="author-container m20">
+					<div class="author-container m20 mb-5">
 						<?php get_template_part( 'parts/author' ); ?>
 					</div>
 

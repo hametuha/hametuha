@@ -157,7 +157,7 @@ class IdeasMine extends IdeaApiPattern {
 	}
 
 	/**
-	 * アイデアを取得する
+	 * アイデアを更新する
 	 *
 	 * @param \WP_REST_Request $request
 	 * @return \WP_REST_Response|\WP_Error

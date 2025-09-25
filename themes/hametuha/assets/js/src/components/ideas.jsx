@@ -2,19 +2,23 @@
  * アイデア投稿用のスクリプト
  *
  * @handle hametuha-components-ideas
- * @deps wp-element, wp-i18n
+ * @deps wp-element, wp-i18n, wp-api-fetch
  */
 
 /* global HametuhaIdeaTags:false */
 
 const { useState, useRef, useEffect, createRoot } = wp.element;
 const { __ } = wp.i18n;
+const { apiFetch } = wp;
 
 const IdeasComponent = () => {
 	const [ isModalOpen, setIsModalOpen ] = useState( false );
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ message, setMessage ] = useState( '' );
 	const [ messageType, setMessageType ] = useState( '' );
+	const [ editMode, setEditMode ] = useState( false );
+	const [ editPostId, setEditPostId ] = useState( null );
+	const [ isDeleting, setIsDeleting ] = useState( false );
 	const [ formData, setFormData ] = useState( {
 		title: '',
 		content: '',
@@ -41,12 +45,21 @@ const IdeasComponent = () => {
 			openModal();
 		}
 
-		// Intercept existing buttons with data-action="post-idea"
+		// Intercept existing buttons
 		const handleButtonClick = ( e ) => {
-			const button = e.target.closest( '[data-action="post-idea"]' );
-			if ( button ) {
+			const postButton = e.target.closest( '[data-action="post-idea"]' );
+			if ( postButton ) {
 				e.preventDefault();
 				openModal();
+				return;
+			}
+
+			// Intercept edit buttons with data-post-id
+			const editButton = e.target.closest( 'button[data-post-id]' );
+			if ( editButton && editButton.textContent.includes( '編集' ) ) {
+				e.preventDefault();
+				const postId = editButton.getAttribute( 'data-post-id' );
+				openEditModal( postId );
 			}
 		};
 
@@ -71,6 +84,14 @@ const IdeasComponent = () => {
 			return;
 		}
 		previousFocusRef.current = document.activeElement;
+		setEditMode( false );
+		setEditPostId( null );
+		setFormData( {
+			title: '',
+			content: '',
+			status: 'publish',
+			genre: ''
+		} );
 		setIsModalOpen( true );
 		setMessage( '' );
 		// Only update URL if not already #create-idea
@@ -79,8 +100,44 @@ const IdeasComponent = () => {
 		}
 	};
 
+	const openEditModal = async ( postId ) => {
+		if ( isModalOpen ) {
+			return;
+		}
+		previousFocusRef.current = document.activeElement;
+		setIsLoading( true );
+		setIsModalOpen( true );
+		setEditMode( true );
+		setEditPostId( postId );
+		setMessage( '' );
+
+		try {
+			// Fetch idea data
+			const response = await apiFetch( {
+				path: `/hametuha/v1/idea/${postId}/`,
+				method: 'GET',
+			} );
+
+			if ( response.success ) {
+				setFormData( {
+					title: response.title || '',
+					content: response.content || '',
+					status: response.status || 'publish',
+					genre: response.genre || ''
+				} );
+			}
+		} catch ( error ) {
+			setMessage( __( 'アイデアの読み込みに失敗しました。', 'hametuha' ) );
+			setMessageType( 'error' );
+		} finally {
+			setIsLoading( false );
+		}
+	};
+
 	const closeModal = () => {
 		setIsModalOpen( false );
+		setEditMode( false );
+		setEditPostId( null );
 		setFormData( {
 			title: '',
 			content: '',
@@ -88,6 +145,7 @@ const IdeasComponent = () => {
 			genre: ''
 		} );
 		setMessage( '' );
+		setIsDeleting( false );
 
 		// Remove hash from URL
 		if ( window.location.hash === '#create-idea' ) {
@@ -114,13 +172,16 @@ const IdeasComponent = () => {
 		setMessage( '' );
 
 		try {
+			const method = editMode ? 'PUT' : 'POST';
+			const data = editMode ? { ...formData, post_id: editPostId } : formData;
+
 			const response = await fetch( '/wp-json/hametuha/v1/idea/mine/', {
-				method: 'POST',
+				method: method,
 				headers: {
 					'Content-Type': 'application/json',
 					'X-WP-Nonce': wpApiSettings.nonce,
 				},
-				body: JSON.stringify( formData )
+				body: JSON.stringify( data )
 			} );
 
 			const result = await response.json();
@@ -129,7 +190,10 @@ const IdeasComponent = () => {
 				setMessage( result.message );
 				setMessageType( 'success' );
 				setTimeout( () => {
-					if ( result.url ) {
+					if ( editMode ) {
+						// 編集モードの場合はページをリロード
+						window.location.reload();
+					} else if ( result.url ) {
 						window.location.href = result.url;
 					} else {
 						closeModal();
@@ -144,6 +208,41 @@ const IdeasComponent = () => {
 			setMessageType( 'error' );
 		} finally {
 			setIsLoading( false );
+		}
+	};
+
+	const handleDelete = async () => {
+		if ( ! editPostId ) return;
+
+		if ( ! confirm( __( 'このアイデアを削除してよろしいですか？', 'hametuha' ) ) ) {
+			return;
+		}
+
+		setIsDeleting( true );
+		setMessage( '' );
+
+		try {
+			const response = await apiFetch( {
+				path: `/hametuha/v1/idea/mine/?post_id=${editPostId}`,
+				method: 'DELETE',
+			} );
+
+			if ( response.success ) {
+				setMessage( response.message );
+				setMessageType( 'success' );
+				setTimeout( () => {
+					// アーカイブページに遷移
+					window.location.href = '/ideas/';
+				}, 1500 );
+			} else {
+				setMessage( response.message || __( '削除に失敗しました。', 'hametuha' ) );
+				setMessageType( 'error' );
+			}
+		} catch ( error ) {
+			setMessage( __( '削除に失敗しました。', 'hametuha' ) );
+			setMessageType( 'error' );
+		} finally {
+			setIsDeleting( false );
 		}
 	};
 
@@ -182,7 +281,7 @@ const IdeasComponent = () => {
 							{/* Modal Header */ }
 							<div className="modal-header">
 								<h5 className="modal-title" id="ideaModalTitle">
-									{ __( '新しいアイデアを投稿', 'hametuha' ) }
+									{ editMode ? __( 'アイデアを編集', 'hametuha' ) : __( '新しいアイデアを投稿', 'hametuha' ) }
 								</h5>
 								<button
 									type="button"
@@ -299,11 +398,28 @@ const IdeasComponent = () => {
 
 							{/* Modal Footer */ }
 							<div className="modal-footer">
+								{ editMode && (
+									<button
+										type="button"
+										className="btn btn-danger me-auto"
+										onClick={ handleDelete }
+										disabled={ isLoading || isDeleting }
+									>
+										{ isDeleting ? (
+											<>
+												<span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+												{ __( '削除中...', 'hametuha' ) }
+											</>
+										) : (
+											__( '削除', 'hametuha' )
+										) }
+									</button>
+								) }
 								<button
 									type="button"
 									className="btn btn-secondary"
 									onClick={ closeModal }
-									disabled={ isLoading }
+									disabled={ isLoading || isDeleting }
 								>
 									{ __( 'キャンセル', 'hametuha' ) }
 								</button>
@@ -311,16 +427,16 @@ const IdeasComponent = () => {
 									type="submit"
 									className="btn btn-primary"
 									onClick={ handleSubmit }
-									disabled={ isLoading }
+									disabled={ isLoading || isDeleting }
 								>
 									{ isLoading ? (
 										<>
 											<span className="spinner-border spinner-border-sm me-2" role="status"
 												aria-hidden="true" />
-											{ __( '投稿中...', 'hametuha' ) }
+											{ editMode ? __( '更新中...', 'hametuha' ) : __( '投稿中...', 'hametuha' ) }
 										</>
 									) : (
-										__( '投稿する', 'hametuha' )
+										editMode ? __( '更新する', 'hametuha' ) : __( '投稿する', 'hametuha' )
 									) }
 								</button>
 							</div>

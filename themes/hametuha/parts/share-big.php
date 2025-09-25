@@ -9,7 +9,7 @@ if ( 'publish' !== ( get_queried_object()->post_status ?? '' ) ) {
 }
 $args = wp_parse_args( $args, [
 	'title' => 'シェアする',
-	'desc'  => '面白かったり、気になったらSNSでシェアしてください。<br />シェアしていただくと作者がやる気を出します。'
+	'desc'  => '面白かったらSNSでシェアしてください。<br />シェアしていただくと作者がやる気を出します。'
 ] );
 ?>
 <div class="series__row series__row--share shareContainer__wrapper">

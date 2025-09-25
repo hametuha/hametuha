@@ -38,6 +38,41 @@ class Ideas extends IdeaApiPattern {
 	}
 
 	/**
+	 * アイデアを取得する
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function handle_get( $request ) {
+		$post_id = $request->get_param( 'post_id' );
+		$post = get_post( $post_id );
+
+		if ( ! $post ) {
+			return new \WP_Error( 'not_found', 'アイデアが見つかりません。', [ 'status' => 404 ] );
+		}
+
+		// 非公開の場合は作者のみアクセス可能
+		if ( 'private' === $post->post_status && get_current_user_id() !== intval( $post->post_author ) ) {
+			return new \WP_Error( 'forbidden', 'このアイデアにアクセスする権限がありません。', [ 'status' => 403 ] );
+		}
+
+		// タグを取得
+		$tags = wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] );
+		$genre = ! empty( $tags ) ? $tags[0] : '';
+
+		return new \WP_REST_Response( [
+			'success' => true,
+			'post_id' => $post->ID,
+			'title' => $post->post_title,
+			'content' => $post->post_content,
+			'status' => $post->post_status,
+			'genre' => $genre,
+			'author_id' => $post->post_author,
+			'can_edit' => current_user_can( 'edit_post', $post->ID ),
+		] );
+	}
+
+	/**
 	 * アイデアをストックする
 	 *
 	 * @param \WP_REST_Request $request
