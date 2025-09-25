@@ -447,6 +447,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		add_action( 'wp_head', function() use ( $author_name ) {
 			echo hametuha_canonical( home_url( "doujin/detail/{$author_name}/" ) );
 		}, 1 );
+		header(  'Content-Type: text/html;charset=UTF-8' );
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
