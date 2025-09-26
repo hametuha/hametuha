@@ -81,10 +81,8 @@ class IdeasMine extends IdeaApiPattern {
 								case 'private':
 								case 'publish':
 									return true;
-									break;
 								default:
 									return false;
-									break;
 							}
 						},
 					],

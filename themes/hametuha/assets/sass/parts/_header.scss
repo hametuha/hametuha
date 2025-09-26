@@ -29,6 +29,7 @@
 
 }
 
+// ドロップダウンのアイコンを消す
 #user-info .dropdown-toggle::after {
 	content: none;
 }
@@ -74,7 +75,7 @@
 	&-write {
 		&.write-panel-btn {
 			i {
-				color: $brand-primary;
+				// color: $brand-primary;
 			}
 		}
 	}
@@ -96,7 +97,29 @@
 	&-login {
 		$avatar-size: 30px;
 		width: 150px;
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
 
+		@media only screen and (max-width: $screen-xs-max) {
+			width: 100px;
+			& > li.open {
+				.dropdown-menu {
+					position: absolute;
+					right: 0;
+					width: 320px;
+
+					&.notification__container {
+						right: -40px;
+					}
+
+					left: auto;
+					background-color: $navbar-default-bg;
+					border: 1px solid $navbar-default-border;
+					@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
+				}
+			}
+		}
 		& > li:first-child .avatar {
 			width: $avatar-size;
 			height: $avatar-size;
@@ -113,8 +136,16 @@
 			}
 		}
 
+		// ヘッダー右のドロップダウン
+		.dropdown {
+			.dropdown-menu {
+				position: absolute;
+				right: 0;
+				top: 62px;
+			}
+		}
+
 		&.navbar-right > li {
-			float: right;
 
 			& > a {
 				$avatar-pad: ($navbar-height - $avatar-size) / 2;
@@ -158,29 +189,6 @@
 			}
 		}
 
-		@media only screen and (max-width: $screen-xs-max) {
-			position: absolute;
-			top: 0;
-			margin-top: 0;
-			margin-bottom: 0;
-			right: 0;
-			& > li.open {
-				.dropdown-menu {
-					position: absolute;
-					right: 0;
-					width: 320px;
-
-					&.notification__container {
-						right: -40px;
-					}
-
-					left: auto;
-					background-color: $navbar-default-bg;
-					border: 1px solid $navbar-default-border;
-					@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
-				}
-			}
-		}
 	}
 }
 
@@ -227,51 +235,6 @@
 	}
 }
 
-//
-// mmenu
-//
-#mm-blocker {
-	background: rgba(0, 0, 0, .8) !important;
-
-	&:after {
-		position: absolute;
-		top: 15px;
-		left: 15px;
-		font-size: 28px;
-		@extend .icon-close, :before;
-		font-family: "hameticon";
-		color: #fff;
-		cursor: pointer;
-	}
-}
-
-#header-navigation {
-
-	li small {
-		color: #999;
-
-		&:before {
-			content: "（";
-		}
-
-		&:after {
-			content: "）";
-		}
-	}
-
-	.icon-lamp,
-	.icon-crown {
-		color: #d4d400;
-	}
-
-	.icon-amazon {
-		color: orange;
-	}
-
-	.icon-heart {
-		color: red;
-	}
-}
 
 
 //
@@ -314,11 +277,6 @@
 }
 
 // メニューが有効でないときは隠す
-#header-navigation {
-	header + & {
-		display: none;
-	}
-}
 
 .dropdown-menu > li > span {
 	display: block;
@@ -386,6 +344,137 @@
 	&:last-child {
 		@media only screen and (max-width: 400px) {
 			display: none;
+		}
+	}
+}
+
+// Offcanvasメニューのスタイル
+#header-navigation {
+	// Bootstrapのアニメーションを無効化
+	.collapse {
+		transition: none !important;
+	}
+
+	.collapsing {
+		transition: none !important;
+		height: auto !important;
+	}
+
+	// リンクグループ（リンクとトグルボタン）
+	.nav-link-group {
+		position: relative;
+		padding: 0;
+
+		.nav-link {
+			border-radius: 0.25rem 0 0 0.25rem;
+			margin-right: 0;
+		}
+
+		.nav-toggle {
+			padding: 0.75rem;
+			border-radius: 0 0.25rem 0.25rem 0;
+			border: none;
+			background-color: $gray-200;
+			color: $gray-600;
+			text-decoration: none;
+			cursor: pointer;
+			&[aria-expanded="true"]{
+				background-color: $gray-100;
+			}
+
+			&:focus {
+				box-shadow: none;
+			}
+
+			// アイコンの回転
+			.close {
+				display: none;
+			}
+			&[aria-expanded="true"]{
+				background-color: $gray-100;
+
+				.close {
+					display: inline-block;
+				}
+				.open {
+					display: none;
+				}
+			}
+		}
+	}
+
+	.nav-link {
+		padding: 0.75rem 1rem;
+		color: #333;
+		border-radius: 0.25rem;
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+
+
+		// アイコンのカラー
+		.icon-newspaper,
+		.icon-stack-list,
+		.icon-bubble,
+		.icon-ha,
+		.icon-question2 {
+			margin-right: 0.5rem;
+			opacity: 0.7;
+		}
+
+		.icon-lamp,
+		.icon-crown {
+			color: #d4d400;
+			margin-right: 0.5rem;
+		}
+
+		.icon-amazon {
+			color: orange;
+			margin-right: 0.5rem;
+		}
+
+		.icon-heart {
+			color: red;
+			margin-right: 0.5rem;
+		}
+
+		// small要素のスタイル
+		small {
+			&:before {
+				content: " (";
+			}
+			&:after {
+				content: ")";
+			}
+		}
+	}
+
+	// サブメニューのスタイル
+	.collapse,
+	.collapsing {
+		.nav-link {
+			padding: 0.5rem 1rem;
+			font-size: 0.9rem;
+		}
+	}
+
+	// ディバイダー
+	.dropdown-divider {
+		margin: 1rem 0;
+		border-top: 1px solid $gray-300;
+	}
+
+	// セクションラベル
+	span.nav-link.text-muted {
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05rem;
+		padding: 0.5rem 1rem;
+		cursor: default;
+
+		&:hover {
+			background-color: transparent;
 		}
 	}
 }

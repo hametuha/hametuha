@@ -111,7 +111,7 @@
                     break;
             }
             body = '<div class="alert alert-' + typeName + ' alert-dismissible alert-sticky" role="alert"><div class="container">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+				'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
                     message +
                 '</div></div>';
             $alert = $(body);

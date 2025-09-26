@@ -30,7 +30,7 @@ if ( have_posts() ) :
 						<div class="<?php echo esc_attr( implode( ' ', $main_class ) ); ?>">
 
 							<?php if ( has_post_thumbnail() ) : ?>
-								<div class="single-post-thumbnail text-center">
+								<div class="single-post-thumbnail text-center mb-3">
 									<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
 								</div>
 							<?php endif; ?>
