@@ -33,9 +33,9 @@ class SalesReport extends Screen {
 	 * Executed on admin_init
 	 */
 	public function adminInit() {
+		$endpoint = admin_url( $this->parent . '&page=' . $this->slug );
 		if ( $this->slug === $this->input->get( 'page' ) ) {
 			$this->prg->start_session();
-			$endpoint = admin_url( $this->parent . '&page=' . $this->slug );
 		}
 		if ( $this->input->verify_nonce( 'import_kdp_data' ) ) {
 			try {
@@ -49,34 +49,36 @@ class SalesReport extends Screen {
 				$handle = finfo_open( FILEINFO_MIME_TYPE );
 				$mime   = finfo_file( $handle, $csv );
 				finfo_close( $handle );
-				if ( 'text/plain' !== $mime ) {
+				if ( ! in_array( $mime, [ 'text/plain', 'text/csv' ], true ) ) {
 					throw new \Exception( $this->input->file_error_message( 'csv' ) );
 				}
 				// Validate rows
-				$handle  = fopen( $csv, 'r' );
+				$csv_obj  = new \SplFileObject( $csv, 'r' );
+				$csv_obj->setFlags( \SplFileObject::READ_CSV );
 				$counter = 0;
 				$values  = [];
 				$errors  = 0;
-				while ( $line = fgetcsv( $handle ) ) {
+				while ( $line = $csv_obj->fgetcsv() ) {
 					if ( ! $counter ) {
 						$counter++;
 						continue;
 					}
 					switch ( ( $type = $this->input->post( 'type' ) ) ) {
 						case 'kdp':
-							if ( count( $line ) !== 15 ) {
+							if ( count( $line ) !== 16 ) {
 								$errors ++;
 							} else {
-								$value = array_map( 'trim', [
+								$line = array_map( 'trim', $line );
+								$value = [
 									'store'    => 'Amazon',
 									'date'     => date_i18n( 'Y-m-d', strtotime( $line[0] ) ),
 									'asin'     => $line[3],
 									'place'    => $line[4],
-									'type'     => $line[8],
-									'unit'     => $line[5],
-									'royalty'  => $line[13],
-									'currency' => $line[14],
-								] );
+									'type'     => $line[6],
+									'unit'     => $line[7],
+									'royalty'  => $line[14],
+									'currency' => $line[15],
+								];
 								if ( is_wp_error( $this->sales->validate( $value ) ) ) {
 									$errors ++;
 								} else {
@@ -85,10 +87,9 @@ class SalesReport extends Screen {
 							}
 							break;
 						case 'kenp':
+							// TODO: 直す
 							$date = $this->input->post( 'date' );
 							if ( ! StringHelper::get_instance()->is_date( $date ) ) {
-								var_dump( $date );
-								exit;
 								throw new \Exception( "{$date} は不正な日付です。" );
 							}
 							if ( count( $line ) !== 7 ) {
@@ -134,12 +135,6 @@ class SalesReport extends Screen {
 				exit;
 			}
 		}
-	}
-
-	/**
-	 * Enqueue scripts
-	 */
-	protected function enqueueScript() {
 	}
 
 	/**
