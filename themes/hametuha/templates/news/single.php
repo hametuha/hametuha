@@ -131,36 +131,19 @@
 						</div><!-- //.news-related -->
 					<?php endif; ?>
 
-					<table class="news-follow">
-						<tr>
-							<?php
-							$style = '';
-							if ( has_post_thumbnail() ) {
-								$style = sprintf( 'background-image: url(\'%s\');', get_the_post_thumbnail_url( null, 'large' ) );
-							}
-							?>
-							<td class="news-follow__img" style="<?php echo $style; ?>">
-								&nbsp;
-							</td>
-							<td class="news-follow__link text-center">
-								<p class="news-follow__lead">
-									この記事よかった？<br/>
-									いいねしてね！
-								</p>
-								<div class="news-follow__like">
-									<div class="fb-like" data-href="https://www.facebook.com/minicome/"
-										 data-layout="button" data-action="like" data-show-faces="false"
-										 data-share="false"></div>
-								</div>
-								<small class="news-follow__caption">ミニ子が更新情報お届け</small>
-							</td>
-						</tr>
-					</table>
-
-									<?php get_template_part( 'parts/share' ); ?>
+					<div class="shareContainer__wrapper mb-5 mt-5">
+						<h2 class="series__title--share text-center">
+							<small class="series__title--caption">Share This</small>
+							ニュースを広める
+						</h2>
+						<p class="text-muted text-center">
+							このニュースが気になったらSNSでシェアしてください。
+						</p>
+						<?php get_template_part( 'parts/share' ); ?>
+					</div>
 
 					<div class="row mb20">
-										<?php google_adsense( 'related' ); ?>
+						<?php google_adsense( 'related' ); ?>
 					</div>
 
 					<div class="row">

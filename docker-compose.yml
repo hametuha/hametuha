@@ -53,6 +53,8 @@ services:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       # Composer cache
       - composer_cache:/root/.composer/cache
+      # PHP sessions
+      - php_sessions:/var/lib/php/sessions
     networks:
       - hametuha-network
 
@@ -118,6 +120,7 @@ services:
 volumes:
   mysql_data:
   composer_cache:
+  php_sessions:
 
 networks:
   hametuha-network:
