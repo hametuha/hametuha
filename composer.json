@@ -62,7 +62,7 @@
 	"require-dev": {
 		"phpunit/phpunit": "^9.6",
 		"yoast/phpunit-polyfills": "^2.0",
-		"wp-coding-standards/wpcs": "^3.0",
+		"wp-coding-standards/wpcs": "^3.2",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
 	},
 	"scripts": {
@@ -70,7 +70,8 @@
 			"docker compose exec wordpress bash -c \"cd /var/www/html/wp-content/themes/hametuha && composer test\""
 		],
 		"lint": [
-			"@lint:theme"
+			"@lint:theme",
+			"phpcs --standard=phpcs.ruleset.xml mu-plugins"
 		],
 		"lint:theme": "phpcs --standard=phpcs.ruleset.xml themes/hametuha",
 		"fix": [
