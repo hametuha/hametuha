@@ -257,7 +257,7 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 <!DOCTYPE html>
 <html>
 <head>
-<title>${message}</title>
+<title>{$message}</title>
 <body>
 <script>
 alert(document.getElementsByTagName('title')[0].innerHTML);
