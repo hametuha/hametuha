@@ -95,7 +95,7 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 			<th>電話</th>
 			<td>
 				<?php if ( $tel = $address->get_value( 'tel' ) ) : ?>
-					<?php printf( '<a href="tel:%s">%s</a>', esc_attr( $tel ) ); ?>
+					<?php printf( '<a href="tel:%s">%s</a>', esc_attr( $tel ), esc_html( $tel ) ); ?>
 				<?php else : ?>
 					<span style="color:lightgrey">----</span>
 				<?php endif; ?>
