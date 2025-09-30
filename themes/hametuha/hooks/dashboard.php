@@ -12,15 +12,6 @@
 add_filter( 'show_admin_bar', '__return_false', 1000 );
 
 /**
- * Display device width.
- */
-add_action( 'hashboard_head', function() {
-	?>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-	<?php
-}, 1 );
-
-/**
  * Add links to admin bar.
  */
 add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
@@ -74,6 +65,7 @@ add_filter( 'hashboard_screens', function( $screens ) {
 				$new_screens['notifications'] = \Hametuha\Dashboard\Notifications::class;
 				$new_screens['requests']      = \Hametuha\Dashboard\Requests::class;
 			}
+			$new_screens['friends'] = \Hametuha\Dashboard\Followers::class;
 		}
 		$new_screens[ $key ] = $class_name;
 	}

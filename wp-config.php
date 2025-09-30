@@ -80,7 +80,7 @@ define( 'WP_CACHE_KEY_SALT', 'Gyx,D?yl[+@_:XRp =wbXdJ-fmMj]1O|!4ha45/C3fy3ZnhSd<
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
-    define( 'ABSPATH', dirname( __FILE__ ) . '/' );
+    define( 'ABSPATH', '/var/www/html/' );
 }
 
 /** Sets up WordPress vars and included files. */

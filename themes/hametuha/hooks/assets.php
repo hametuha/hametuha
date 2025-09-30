@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * Display device width.
+ */
+add_action( 'wp_head', function() {
+	?>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+	<?php
+}, 1 );
+
+/**
  * アセットを登録する
  *
  * @action init
@@ -138,7 +147,7 @@ JS;
 
 
 	// Register all hashboard.
-	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'bootstrap' ], hametuha_version() );
+	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [], hametuha_version() );
 
 	// Load wp-dependencies.json.
 	$deps = get_template_directory() . '/wp-dependencies.json';
@@ -169,19 +178,16 @@ JS;
 }, 9 );
 
 /**
- * Load Hashboard assets.
- */
-add_action( 'hashboard_head', function() {
-	wp_enqueue_style( 'hametuha-hashboard' );
-} );
-
-/**
  * スクリプトを読み込む
  *
  */
 add_action( 'wp_enqueue_scripts', function () {
 	// Common Style.
-	wp_enqueue_style( 'hametuha-app' );
+	if ( class_exists( 'Hametuha\Hashboard' ) && \Hametuha\Hashboard::is_page() ) {
+		wp_enqueue_style( 'hametuha-hashboard' );
+	} else {
+		wp_enqueue_style( 'hametuha-app' );
+	}
 
 	// Social scripts
 	wp_enqueue_script( 'hametuha-social' );

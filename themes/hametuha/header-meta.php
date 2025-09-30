@@ -3,7 +3,6 @@
 <!--<![endif]-->
 <head prefix="<?php echo hametuha_get_ogp_type(); ?>">
 	<meta charset="<?php bloginfo( 'charset' ); ?>"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<?php wp_head(); ?>
 </head>
 <body

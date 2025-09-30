@@ -174,9 +174,16 @@ endif;
 							</h3>
 
 							<p class="list-group-item-text">
-								<?php foreach ( get_the_terms( $post, 'topic' ) as $term ) : ?>
+								<?php
+								$terms = get_the_terms( $post, 'topic' );
+								if ( $terms && ! is_wp_error( $terms ) ) :
+									foreach ( $terms as $term ) :
+										?>
 									<span class="label label-info"><?php echo esc_html( $term->name ); ?></span>
-								<?php endforeach; ?>
+										<?php
+									endforeach;
+								endif;
+								?>
 								<?php the_author(); ?>
 								（<?php echo human_time_diff( strtotime( get_the_time( 'Y-m-d H:i:s' ) ) ); ?>前）
 							</p>

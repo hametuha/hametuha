@@ -159,7 +159,7 @@ class HametuHeader extends Component {
 								</a>
 							</li>
 							<li>
-								<a href="/doujin/follower/" className="dropdown-item">
+								<a href="/dashboard/friends/" className="dropdown-item">
 									<i className="icon-heart5" />
 									フォロワー
 								</a>

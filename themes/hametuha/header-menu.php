@@ -171,17 +171,22 @@ ob_start();
 						<i class="icon-plus open"></i>
 					</button>
 				</div>
-				<ul class="collapse nav flex-column ps-3" id="threadSubmenu">
-					<?php foreach ( get_terms( 'topic' ) as $term ) : ?>
-						<li class="nav-item">
-							<a class="nav-link" href="<?php echo get_term_link( $term ); ?>">
-								<?php echo esc_html( $term->name ); ?>
-								<small class="text-muted"><?php echo number_format_i18n( $term->count ); ?>
-									件</small>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
+				<?php
+				$topics = get_terms( 'topic' );
+				if ( $topics && ! is_wp_error( $topics ) ) : ?>
+					<ul class="collapse nav flex-column ps-3" id="threadSubmenu">
+						<?php
+						foreach ( $topics as $term ) : ?>
+							<li class="nav-item">
+								<a class="nav-link" href="<?php echo get_term_link( $term ); ?>">
+									<?php echo esc_html( $term->name ); ?>
+									<small class="text-muted"><?php echo number_format_i18n( $term->count ); ?>
+										件</small>
+								</a>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="<?php echo get_post_type_archive_link( 'ideas' ); ?>">

@@ -146,7 +146,7 @@ a{
     .title{
       padding: 1em 2em;
       border-bottom: $thin-border;
-      @media only screen and (max-width: $screen-sm-max){
+      @include media-breakpoint-down(sm){
         padding: 1em 0.5em;
       }
       small{
@@ -163,7 +163,7 @@ a{
       margin: 0 0.67em;
       padding: 2em 1em;
       border-left: $thin-border;
-      @media only screen and (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         padding: 0.5em 1em;
       }
         small{

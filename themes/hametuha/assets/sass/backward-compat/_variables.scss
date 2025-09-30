@@ -45,6 +45,7 @@ $screen-md: 992px !default;
 $screen-md-min: $screen-md !default;
 $screen-lg: 1200px !default;
 $screen-lg-min: $screen-lg !default;
+$screen-desktop: 1200px !default; // Bootstrap 4 compatibility
 
 $screen-xs-max: ($screen-sm-min - 1) !default;
 $screen-sm-max: ($screen-md-min - 1) !default;

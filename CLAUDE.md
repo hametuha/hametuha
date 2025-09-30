@@ -1,16 +1,14 @@
 # Hametuha Docker開発環境
 
 ## 概要
-@wordpress/envからDocker Composeベースの開発環境へ移行。wp-content相当をリポジトリルートとして管理する構成。
-
-**注意**: プロダクション環境はPHP 7.2.34ですが、開発環境では古いDebianリポジトリの問題によりPHP 7.4を使用しています。
+wp-content相当をリポジトリルートとして管理する構成。
 
 ## ディレクトリ構成
 ```
 hametuha/ (リポジトリルート)
 ├── docker-compose.yml
 ├── .env.example
-├── wp/              # WordPressコア（composer管理、.gitignore）
+├── wp/              # WordPressコア（composerで管理、.gitignore）
 ├── themes/
 │   └── hametuha/    # テーマファイル
 ├── plugins/         # プラグイン（composer管理、.gitignore）
@@ -24,31 +22,30 @@ hametuha/ (リポジトリルート)
 └── .gitignore
 ```
 
-## 主な変更点
+## 主な機能
 
-### 1. ファイル移動
-- テーマファイルを`themes/hametuha/`に移動（git mvで履歴保持）
-- `.github/`などの設定ファイルも含めて移動
-
-### 2. Composer設定
+### 1. 統合Composer管理
 - ルートの`composer.json`で全ての依存関係を管理
 - wpackagistでWordPressプラグインを管理
 - テーマ固有の依存関係（hametuha/wpametu等）も統合
 - phpcs/phpunitもルートで管理
 
-### 3. Docker Compose設定
-- WordPress（PHP-FPM）、Nginx、MySQL、phpMyAdminのコンテナ構成
-- ポート80/443を標準で使用
+### 2. Docker Compose構成
+- **WordPress**: PHP-FPM with Xdebug
+- **Nginx**: Alpine版（軽量）
+- **MySQL**: データベースサーバー
+- **phpMyAdmin**: データベース管理UI
+- **Mailpit**: メール監視ツール
+
+### 3. 開発環境の特徴
+- 標準ポート（80/443）を使用可能
+- ホットリロード対応
+- Xdebug対応（有効化済み）
+- WP-CLIを含む
 - volumeマウントでWordPress標準構造を維持
   - `./themes` → `/var/www/html/wp-content/themes`
   - `./plugins` → `/var/www/html/wp-content/plugins`
   - `./uploads` → `/var/www/html/wp-content/uploads`
-
-### 4. 開発環境の特徴
-- 標準ポート（80/443）を使用可能
-- ホットリロード対応
-- Xdebug対応（オプション）
-- WP-CLIを含む
 
 ## セットアップ手順
 
@@ -166,23 +163,33 @@ docker compose exec wordpress wp plugin list
 
 ## 環境変数（.env）
 ```
-# WordPress
-WORDPRESS_DB_HOST=mysql:3306
-WORDPRESS_DB_NAME=wordpress
-WORDPRESS_DB_USER=wordpress
-WORDPRESS_DB_PASSWORD=wordpress
-WORDPRESS_TABLE_PREFIX=wp_
-WORDPRESS_DEBUG=true
-
-# MySQL
+# WordPress Database
 MYSQL_ROOT_PASSWORD=root
 MYSQL_DATABASE=wordpress
 MYSQL_USER=wordpress
 MYSQL_PASSWORD=wordpress
 
-# サイトURL
+# WordPress Settings
+WORDPRESS_VERSION=6.8  # composer.jsonで管理
+WORDPRESS_TABLE_PREFIX=wp_
+WORDPRESS_DEBUG=true
+
+# Site URLs
 WP_HOME=https://hametuha.info
 WP_SITEURL=https://hametuha.info
+
+# Port Settings (変更可能)
+NGINX_PORT=80
+NGINX_HTTPS_PORT=443
+MYSQL_PORT=3307
+PHPMYADMIN_PORT=8081
+MAILPIT_SMTP_PORT=1026
+MAILPIT_UI_PORT=8026
+
+# SSL Settings (オプション)
+SSL_ENABLED=true  # mkcertで証明書生成済み
+SSL_CERT_PATH=docker/nginx/certs/hametuha.info.pem
+SSL_KEY_PATH=docker/nginx/certs/hametuha.info-key.pem
 ```
 
 ## Docker Composeの利点
@@ -204,14 +211,14 @@ WordPressのバージョンは`.env`ファイルの`WORDPRESS_VERSION`で一元�
 # .envファイルを作成
 cp .env.example .env
 
-# バージョンを確認・設定（デフォルト: 6.1.7）
+# バージョンを確認・設定（composer.jsonで管理）
 grep WORDPRESS_VERSION .env
 ```
 
 #### 2. バージョン変更時
 ```bash
-# バージョンを変更（例: 6.4.2）
-./bin/set-wordpress-version.sh 6.4.2
+# バージョンを変更（例）
+./bin/set-wordpress-version.sh 6.8.1
 
 # 最新版に変更
 ./bin/set-wordpress-version.sh latest
@@ -292,10 +299,13 @@ class Test_Example extends WP_UnitTestCase {
 ## トラブルシューティング
 
 ### ポート競合の場合
-`.env`ファイルで以下を変更：
+`.env`ファイルでポート設定を変更：
 ```
 NGINX_PORT=8080
 NGINX_HTTPS_PORT=8443
+MYSQL_PORT=3308
+PHPMYADMIN_PORT=8082
+MAILPIT_UI_PORT=8027
 ```
 
 ### 権限エラーの場合
@@ -347,7 +357,5 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 ## 今後の課題
 - GCP移行時の設定変更（変数名は汎用的なので最小限の変更で済む）
 - CI/CDパイプラインの最適化
-- 開発者向けドキュメントの整備
-- SSL証明書の自動化（Let's Encryptなど）
 
 #genai #claude
