@@ -122,10 +122,7 @@
 		}
 	}
 
-	&__wrap {
-		padding: 2em 0;
-		display: flex;
-	}
+	// &__wrap moved to dashboard/_followers.scss for React version
 
 	&__item {
 		list-style: none;

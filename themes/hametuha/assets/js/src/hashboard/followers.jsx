@@ -95,32 +95,32 @@ const useFollowers = () => {
  */
 const UserItem = ({ user, showUnfollow, onUnfollow }) => (
 	<div className="follower__item row">
-		<div className="col-xs-3">
+		<div className="col-2 text-center">
 			<img className="follower__avatar img-circle" src={user.avatar} alt={user.display_name} />
 		</div>
-		<div className="col-xs-9">
-			<h4>
+		<div className="col-10">
+			<h4 className="mb-2">
 				<strong>{user.display_name}</strong>
 				{user.isEditor && <small className="follower__label">編集者</small>}
 				{!user.isEditor && user.isAuthor && <small className="follower__label">著者</small>}
 				{!user.isAuthor && <small className="follower__label">読者</small>}
 			</h4>
 			<div className="follower__actions">
+				{user.isAuthor && (
+					<a
+						href={`/doujin/detail/${user.user_nicename}/`}
+						className="btn btn-outline-primary btn-sm"
+					>
+						作品を見る
+					</a>
+				)}
 				{showUnfollow && (
 					<button
-						className="btn btn-danger btn-sm"
+						className="btn btn-outline-danger btn-sm"
 						onClick={() => onUnfollow && onUnfollow(user.ID)}
 					>
 						フォローを解除
 					</button>
-				)}
-				{user.isAuthor && (
-					<a
-						href={`/doujin/detail/${user.user_nicename}/`}
-						className="btn btn-link btn-sm"
-					>
-						作品を見る
-					</a>
 				)}
 			</div>
 		</div>

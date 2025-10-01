@@ -122,7 +122,7 @@ SQL;
 				"{$this->table}.status = %d"    => 1,
 			] )
 			->order_by( "{$this->table}.updated", 'DESC' )
-			->limit( 20, $offset );
+			->limit( 20, (int) ( $offset / 20 ) );
 		if ( $query ) {
 			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
 		}
@@ -153,7 +153,7 @@ SQL;
 				"{$this->table}.status = %d"  => 1,
 			] )
 			 ->order_by( "{$this->table}.updated", 'DESC' )
-			 ->limit( 20, $offset );
+			 ->limit( 20, (int) ( $offset / 20 ) );
 		if ( $query ) {
 			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
 		}
