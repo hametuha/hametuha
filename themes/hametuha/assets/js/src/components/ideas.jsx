@@ -321,6 +321,7 @@ const IdeasComponent = () => {
 											required
 											ref={ titleInputRef }
 											aria-describedby="ideaTitleHelp"
+											placeholder={ __( 'ex. 永遠の偏差値ゼロ', 'hametuha' ) }
 										/>
 										<div id="ideaTitleHelp" className="form-text">
 											{ __( 'アイデアのタイトルを入力してください', 'hametuha' ) }
@@ -341,6 +342,7 @@ const IdeasComponent = () => {
 											onChange={ handleInputChange }
 											required
 											aria-describedby="ideaContentHelp"
+											placeholder={ __( 'ex. 元零戦の搭乗員である佐藤函火粉（はこひこ）が現代に蘇り、高校生活を送ることになる。しかし、彼の成績は一向に上がらず……', 'hametuha' ) }
 										/>
 										<div id="ideaContentHelp" className="form-text">
 											{ __( 'アイデアの詳細を入力してください', 'hametuha' ) }
@@ -387,10 +389,10 @@ const IdeasComponent = () => {
 											aria-describedby="ideaStatusHelp"
 										>
 											<option value="publish">{ __( '公開', 'hametuha' ) }</option>
-											<option value="private">{ __( '非公開', 'hametuha' ) }</option>
+											<option value="private">{ __( '非公開（自分専用）', 'hametuha' ) }</option>
 										</select>
 										<div id="ideaStatusHelp" className="form-text">
-											{ __( 'アイデアの公開設定を選択してください', 'hametuha' ) }
+											{ __( '非公開にしておいて、特定の人にだけ見せることは可能です。', 'hametuha' ) }
 										</div>
 									</div>
 								</form>
