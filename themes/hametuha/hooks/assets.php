@@ -3,11 +3,13 @@
 /**
  * Display device width.
  */
-add_action( 'wp_head', function() {
+function hametuha_viewport() {
 	?>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 	<?php
-}, 1 );
+}
+add_action( 'wp_head', 'hametuha_viewport', 1 );
+add_action( 'hashboard_head', 'hametuha_viewport', 1 );
 
 /**
  * アセットを登録する
@@ -183,9 +185,7 @@ JS;
  */
 add_action( 'wp_enqueue_scripts', function () {
 	// Common Style.
-	if ( class_exists( 'Hametuha\Hashboard' ) && \Hametuha\Hashboard::is_page() ) {
-		wp_enqueue_style( 'hametuha-hashboard' );
-	} else {
+	if ( ! get_query_var( 'hashboard' ) ) {
 		wp_enqueue_style( 'hametuha-app' );
 	}
 
@@ -253,6 +253,15 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 		wp_enqueue_script( 'hametuha-user-edit' );
 	}
 }, 200 );
+
+/**
+ * Hashboard用にCSSを読み込む
+ *
+ * @todo hashboard v1.0.0になったらかえる？
+ */
+add_action( 'hashboard_enqueue_scripts', function() {
+	wp_enqueue_style( 'hametuha-hashboard' );
+} );
 
 /**
  * jQueryをフッターに動かす

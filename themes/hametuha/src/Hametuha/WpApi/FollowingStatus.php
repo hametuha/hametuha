@@ -12,7 +12,7 @@ use Hametuha\WpApi\Pattern\FollowPattern;
 class FollowingStatus extends FollowPattern {
 
 	protected function get_route() {
-		return 'doujin/follow/(?<id>]d+)/?';
+		return 'doujin/follow/(?<id>\d+)/?';
 	}
 
 	protected function get_arguments( $method ) {

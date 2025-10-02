@@ -11,7 +11,7 @@ use Hametuha\WpApi\Pattern\FollowPattern;
 class Followers extends FollowPattern {
 
 	protected function get_route() {
-		return 'doujin/(?P<action>followers|following)/(?P<id>\+d|me)';
+		return 'doujin/(?P<action>followers|following)/(?P<id>\+d|me)/?';
 	}
 
 	protected function get_arguments( $method ) {
