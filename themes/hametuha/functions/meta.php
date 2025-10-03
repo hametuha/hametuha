@@ -70,7 +70,9 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 	} elseif ( is_singular( 'announcement' ) ) {
 		$title = get_the_title( get_queried_object() ) . $sep . '告知';
 	} elseif ( is_singular( 'anpi' ) ) {
-		$title .= '安否情報';
+		$author = get_queried_object()->post_author;
+		$user = get_userdata( $author );
+		$title = sprintf( '%sさんの安否情報 #%d（%s）', $user->display_name, get_queried_object_id(), mysql2date( get_option( 'date_format' ), get_queried_object()->post_date) );
 	} elseif ( is_singular( 'ideas' ) || is_post_type_archive( 'ideas' ) ) {
 		$title .= 'アイデア';
 	} elseif ( is_singular( 'thread' ) ) {

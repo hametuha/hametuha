@@ -173,6 +173,13 @@ $query = new WP_Query( [
 													$verb = 'コメントしました';
 													break;
 											}
+											$label     = '';
+											$post_type = get_post_type( $activity->parent_id );
+											if ( $post_type ) {
+												$label = get_post_type_object( $post_type )->label;
+											} else {
+												$url = false;
+											}
 											$title = sprintf( '%s「%s」に%s',
 												get_post_type_object( get_post_type( $activity->parent_id ) )->label,
 												get_the_title( $activity->parent_id ),
@@ -217,12 +224,21 @@ $query = new WP_Query( [
 											$title = sprintf( '「%s」を%sしました。', get_the_title( $activity->post_id ), $action );
 											break;
 									}
+									if ( $url ) {
+										printf(
+											'<a href="%s"><span>%s</span><small>%s</small>',
+											esc_url( $url ),
+											esc_html( $title ),
+											esc_html( hametuha_passed_time( $activity->date ) )
+										);
+									} else {
+										printf(
+											'<span>%s</span><small>%s</small>',
+											esc_html( $title ),
+											esc_html( hametuha_passed_time( $activity->date ) )
+										);
+									}
 									?>
-									<a href="<?php echo esc_url( $url ); ?>">
-										<span><?php echo esc_html( $title ); ?></span>
-										<small
-											class="label label-default"><?php echo hametuha_passed_time( $activity->date ); ?></small>
-									</a>
 								</li>
 							<?php endforeach; ?>
 						</ul>

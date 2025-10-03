@@ -37,16 +37,24 @@ class Anpi extends WpApi {
 	}
 
 	/**
-	 * 安否情報を取得する
+	 * 安否情報を新規作成する
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_post( $request ) {
-		$post = get_post( $request->get_param( 'post_id' ) );
-
-		return new \WP_REST_Response( $this->post_to_response( $post ) );
+		$content = $request->get_param( 'content' );
+		$user_id = get_current_user_id();
+		$result  = $this->anpis->create_tweet( $user_id, $content );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+		return new \WP_REST_Response( [
+			'success' => true,
+			'message' => __( '安否報告を受け付けました。', 'hametuha' ),
+			'post'    => $this->post_to_response( get_post( $result ) ),
+		] );
 	}
 
 	/**

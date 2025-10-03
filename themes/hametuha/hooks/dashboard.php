@@ -85,12 +85,23 @@ add_filter( 'hashboard_sidebar_links', function ( $links ) {
 			// Add help URL.
 			$help_url          = get_page_link( get_page_by_path( 'help' ) );
 			$new_links['help'] = <<<HTML
-        		 <li class="hb-menu-item">
-            		<a href="{$help_url}">
-                		<i class="material-icons">live_help</i> ヘルプセンター
-            		</a>
-        		</li>
+				<li class="hb-menu-item">
+					<a href="{$help_url}">
+						<i class="material-icons">live_help</i> ヘルプセンター
+					</a>
+				</li>
 HTML;
+		}
+		if ( 'friends' === $key ) {
+			$anpi_url = admin_url( 'edit.php?post_type=anpi' );
+			$new_links[ 'anpi' ] = <<<HTML
+				<li class="hb-menu-item">
+					<a href="{$anpi_url}">
+						<i class="material-icons">live_help</i> 安否情報
+					</a>
+				</li>
+HTML;
+
 		}
 		if ( in_array( $key, [ 'profile', 'threads', 'notifications' ], true ) ) {
 			$new_links[ $key . '-divider'] = '<li class="divider"></li>';
