@@ -34,7 +34,7 @@ $( document ).on( 'keydown', '.user-picker__input', function ( e ) {
 /*
  * Incremental Search
  */
-var userPickerTimer, userPicking = false, tpl = {};
+var userPickerTimer, userPicking = false;
 $( document ).on( 'keyup', '.user-picker__input', function ( e ) {
 	if ( userPicking ) {
 		return;
@@ -45,8 +45,7 @@ $( document ).on( 'keyup', '.user-picker__input', function ( e ) {
 	}
 	var $input = $( this ),
 		$container = $input.parents( '.user-picker' ),
-		$lists = $input.next( '.user-picker__placeholder' ),
-		templates = {};
+		$lists = $input.next( '.user-picker__placeholder' );
 
 	userPickerTimer = setTimeout( function () {
 		userPicking = true;
@@ -61,12 +60,15 @@ $( document ).on( 'keyup', '.user-picker__input', function ( e ) {
 			path: '/hametuha/v1/doujin/following/me?s=' + $input.val()
 		} ).then( ( response ) => {
 			if ( response.users.length ) {
-				var id = $container.attr( 'data-target' );
-				if ( !templates.hasOwnProperty( id ) ) {
-					templates[ id ] = $.templates( id + '-template' );
-				}
 				$.each( response.users, function ( index, user ) {
-					$lists.append( templates[ id ].render( user ) );
+					const userItem = `
+						<li class="user-picker__item" data-user-id="${user.ID}">
+							<a class="user-picker__link" href="#" data-user-id="${user.ID}">
+								<img src="${user.avatar}"> ${user.display_name} <i class="icon-close"></i>
+							</a>
+						</li>
+					`;
+					$lists.append( userItem );
 				} );
 			}
 		} ).catch( ( response ) => {

@@ -83,11 +83,18 @@ jQuery(document).ready( function ($) {
     // リストから投稿を削除
     var listTpl = $('#my-list-deleter');
     if (listTpl.length) {
+        var listId = listTpl.data('list-id');
+        var urlBase = listTpl.data('url-base');
+        var nonceAction = listTpl.data('nonce-action');
+
         // ボタンを追加
         $('ol.media-list > li').each(function (index, elt) {
-            $(elt).find('.list-inline').append(listTpl.render({
-                postId: $(elt).attr('data-post-id')
-            }));
+            var postId = $(elt).attr('data-post-id');
+            var deleteUrl = urlBase + postId;
+
+            $(elt).find('.list-inline').append(
+                '<li><a href="' + deleteUrl + '" class="deregister-button btn btn-xs btn-danger">&times; リストから削除</a></li>'
+            );
         });
         // イベントリスナー
         $('ol.media-list').on('click', '.deregister-button', function (e) {

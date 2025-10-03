@@ -50,7 +50,6 @@ add_action( 'init', function () {
 		'twitter-bootstrap',
 		'wp-api',
 		'font-plus',
-		'jsrender',
 		'hametuheader',
 	], hametuha_version(), true );
 	wp_localize_script('hametuha-common', 'HametuhaGlobal', []);
