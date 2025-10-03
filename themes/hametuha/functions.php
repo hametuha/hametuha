@@ -119,7 +119,8 @@ include __DIR__ . '/functions/override-lwp.php';
 include __DIR__ . '/functions/post_list.php';
 include __DIR__ . '/functions/post_list-admin.php';
 // 投稿タイプ
-include __DIR__ . '/functions/post_type.php';
+include __DIR__ . '/hooks/post_type.php';
+include __DIR__ . '/hooks/post_type_anpi.php';
 include __DIR__ . '/functions/post_type-news.php';
 include __DIR__ . '/functions/post_type-series.php';
 // ランキング

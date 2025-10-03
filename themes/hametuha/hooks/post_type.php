@@ -69,31 +69,6 @@ add_action( 'init', function () {
 	);
 	register_post_type( $annoucement_post_type, $args );
 
-	//安否情報
-	$args = array(
-		'label'                 => '安否情報',
-		'description'           => '破滅派同人の安否を知るための最新情報です。書いていない人のことは心配してあげてください。',
-		'public'                => true,
-		'menu_position'         => 10,
-		'menu_icon'             => 'dashicons-microphone',
-		'supports'              => array( 'title', 'editor', 'author', 'thumbnail', 'comments' ),
-		'has_archive'           => true,
-		'capability_type'       => 'post',
-		'show_in_rest'          => true,
-		'rest_controller_class' => 'WP_REST_Posts_Controller',
-		'rewrite'               => array( 'slug' => 'anpi/archives' ),
-	);
-	register_post_type( 'anpi', $args );
-
-	//安否情報カテゴリー
-	register_taxonomy( 'anpi_cat', array( 'anpi' ), array(
-		'hierarchical' => true,
-		'show_ui'      => true,
-		'query_var'    => true,
-		'rewrite'      => array( 'slug' => 'anpi-cat' ),
-		'label'        => 'カテゴリー',
-	) );
-
 	// レビュー
 	register_taxonomy( 'review', 'post', array(
 		'label'        => 'レビューポイント',
@@ -120,7 +95,7 @@ add_action( 'init', function () {
 		'taxonomies'      => [ 'post_tag' ],
 		'capability_type' => 'page',
 	] );
-} );
+}, 10 );
 
 /**
  * リライトルールを追加
