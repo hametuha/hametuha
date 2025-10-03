@@ -166,16 +166,6 @@
         },
 
         /**
-         * Angularのtemplateを返す
-         *
-         * @param templateName
-         * @returns {*}
-         */
-        template: function(templateName){
-            return HametuhaGlobal.angularTemplateDir + templateName;
-        },
-
-        /**
          * モデルを格納する名前空間
          * @type {Object}
          */

@@ -24,9 +24,6 @@ add_action( 'init', function () {
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1&chws=1', null, null, false );
 
-	// Angular
-	wp_register_script( 'angular', get_template_directory_uri() . '/assets/js/dist/angular.js', null, '1.4.8', true );
-
 	// FontAwesome
 	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
 	add_filter( 'style_loader_tag', function( $tag, $handle, $src, $media ) {
@@ -42,23 +39,6 @@ add_action( 'init', function () {
 	// Recharts
 	wp_register_script( 'recharts', 'https://unpkg.com/recharts/umd/Recharts.js', [ 'prop-types' ], null, true );
 
-	/**
-	 * hametuha_angular_extensions
-	 *
-	 * @since 5.2.24
-	 * @package hametuha
-	 * @param array $modules Default ui.bootstrap
-	 * @return array
-	 */
-	$modules         = apply_filters( 'hametuha_angular_extensions', [ 'ui.bootstrap' ] );
-	$modules         = implode( ', ', array_map( function( $module ) {
-		return sprintf( "'%s'", esc_js( $module ) );
-	}, $modules ) );
-	$angular_scripts = <<<JS
-angular.module('hametuha', [{$modules}]);
-JS;
-	wp_add_inline_script( 'angular', $angular_scripts );
-
 	// Select2
 	wp_register_script( 'select2-src', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
 	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
@@ -73,9 +53,7 @@ JS;
 		'jsrender',
 		'hametuheader',
 	], hametuha_version(), true );
-	wp_localize_script('hametuha-common', 'HametuhaGlobal', [
-		'angularTemplateDir' => preg_replace( '#^(https?://)s\.#u', '$1', get_template_directory_uri() ) . '/assets/js/tpl/',
-	]);
+	wp_localize_script('hametuha-common', 'HametuhaGlobal', []);
 
 	// シングルページ用JS
 	wp_register_script( 'hametuha-single', get_template_directory_uri() . '/assets/js/dist/single-post.js', [
@@ -109,13 +87,6 @@ JS;
 	wp_register_script( 'hametuha-series', get_template_directory_uri() . '/assets/js/dist/components/series-helper.js', [
 		'jquery-masonry',
 		'jquery-form',
-	], hametuha_version(), true );
-
-	/// Editor
-	wp_register_script( 'hameditor', get_template_directory_uri() . '/assets/js/dist/editor/common.js', [
-		'jquery',
-		'angular',
-		'wp-api',
 	], hametuha_version(), true );
 
 	// ソーシャル計測
