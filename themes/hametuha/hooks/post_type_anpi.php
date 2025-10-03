@@ -74,7 +74,7 @@ add_action( 'init', function () {
 			'assign_terms' => 'edit_anpis',
 		],
 	) );
-}, 10 );
+} );
 
 /**
  * 安否情報の権限制御
@@ -83,14 +83,14 @@ add_action( 'init', function () {
 add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 	// そもそも安否情報とは関係ない
 	if ( ! preg_match( '/_anpis?$/u', $cap) ) {
-		return $cap;
+		return $caps;
 	}
 	if ( in_array( $cap, [ 'edit_anpi', 'delete_anpi', 'create_anpi', 'read_anpi' ], true ) ) {
 		// 個別の安否情報関連の権限チェック
-		if ( empty( $args[ 0 ] ) ) {
+		if ( ! empty( $args[ 0 ] ) ) {
 			$post = get_post( $args[ 0 ] );
 			if ( 'read_anpi' === $cap ) {
-				if ( 'publish' === $post->post_status ) {
+				if ( $post && 'publish' === $post->post_status ) {
 					// 公開されているので誰でも読める、権限必要なし
 					return [];
 				}
@@ -100,16 +100,22 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 					// 自分のはログインが必要
 					return [ 'read' ];
 				} else {
-					return [ 'edit_others_posts' ];
+					return [ 'edit_others_anpis' ];
 				}
 			}
 		}
-
+		// 投稿IDがない場合（新規作成など）はreadがあればOK
+		if ( user_can( $user_id, 'read' ) ) {
+			return [ 'read' ];
+		}
 		return [ 'do_not_allow' ];
-	} elseif ( in_array( $cap, [ 'edit_others_posts', 'delete_others_posts', 'read_private_posts' ], true ) ) {
+	} elseif ( in_array( $cap, [ 'edit_others_anpis', 'delete_others_anpis', 'read_private_anpis' ], true ) ) {
 		// 他人の編集権限
 		return [ 'edit_others_posts' ];
 	}
-	// それ以外はreadが必要
-	return [ 'read' ];
+	// それ以外（edit_anpis, publish_anpis, delete_anpisなど）はreadが必要
+	if ( user_can( $user_id, 'read' ) ) {
+		return [ 'read' ];
+	}
+	return $caps;
 }, 10, 4 );
