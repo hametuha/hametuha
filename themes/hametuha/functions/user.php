@@ -103,7 +103,7 @@ function hametuha_user_write_actions() {
 		}
 		$actions = array_merge( $editor_actions, $actions );
 	} elseif ( current_user_can( 'read' ) ) {
-		$actions['unlocked'] = [ home_url( '/become-author/' ), '同人になる', '作品を登録して公開するには同人になる必要があります。', '', '' ];
+		$actions['unlocked'] = [ home_url( '/become-author/' ), '同人になる', '小説・詩などの作品を破滅派で公開するには同人になる必要があります。', '', '' ];
 	}
 
 	return $actions;
