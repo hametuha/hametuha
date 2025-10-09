@@ -6,7 +6,7 @@
  */
 
 const { useState, useRef, useEffect, createRoot } = wp.element;
-const { __ } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 const { apiFetch } = wp;
 
 const AnpiSubmitComponent = () => {
@@ -92,8 +92,8 @@ const AnpiSubmitComponent = () => {
 				setMessageType( 'success' );
 				setTimeout( () => {
 					closeModal();
-					// Reload page to show new anpi
-					window.location.reload();
+					// Redirect to the new anpi post
+					window.location.href = response.post.url;
 				}, 1500 );
 			} else {
 				throw new Error( response.message || __( '投稿に失敗しました。', 'hametuha' ) );
@@ -160,7 +160,7 @@ const AnpiSubmitComponent = () => {
 							) }
 
 							<div className="form-group">
-								<label htmlFor="anpi-content">
+								<label htmlFor="anpi-content mb-2">
 									{ __( '安否情報の内容', 'hametuha' ) }
 								</label>
 								<textarea
@@ -175,6 +175,11 @@ const AnpiSubmitComponent = () => {
 									required
 								/>
 							</div>
+
+							<p className="mt-3">
+								{ __( '長々と書きたい方はこちら 👉 ', 'hametuha' ) }
+								<a href="/wp-admin/edit.php?post_type=anpi">{ __( '長文安否報告', 'hametuha' ) }</a>
+							</p>
 						</div>
 
 						<div className="modal-footer">

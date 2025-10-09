@@ -119,3 +119,13 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 	}
 	return $caps;
 }, 10, 4 );
+
+/**
+ * 安否情報で読み込むテンプレートを変更する
+ */
+add_filter( 'template_include', function( $template ) {
+	if ( ! is_tax( 'anpi_cat' ) ) {
+		return $template;
+	}
+	return get_template_directory() . '/archive-anpi.php';
+} );

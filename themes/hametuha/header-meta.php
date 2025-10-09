@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?> ng-app="hametuha">
+<html <?php language_attributes(); ?>>
 <!--<![endif]-->
 <head prefix="<?php echo hametuha_get_ogp_type(); ?>">
 	<meta charset="<?php bloginfo( 'charset' ); ?>"/>

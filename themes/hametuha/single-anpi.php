@@ -10,6 +10,9 @@ the_post();
 $author = get_the_author_meta( 'ID' );
 $is_author = user_can( $author, 'edit_posts' );
 ?>
+<div class="container">
+	<?php get_header( 'breadcrumb' ); ?>
+</div>
 
 <div class="tweet--big">
 
@@ -81,7 +84,15 @@ $is_author = user_can( $author, 'edit_posts' );
 			</div>
 
 			<div class="post-content" itemprop="articleBody">
-				<?php the_content(); ?>
+				<?php
+				if ( \Hametuha\Model\Anpis::get_instance()->is_tweet() ) {
+					// _is_tweet が 1 の場合は excerpt を表示
+					the_excerpt();
+				} else {
+					// それ以外は本文を表示
+					the_content();
+				}
+				?>
 			</div>
 
 			<?php comments_template(); ?>
@@ -91,7 +102,33 @@ $is_author = user_can( $author, 'edit_posts' );
 
 		<?php get_template_part( 'parts/share' ); ?>
 
+		<?php
+		$recent = hametuha_get_author_work_siblings();
+		if ( ! empty( $recent ) ) :
+			?>
+			<div class="card-list row">
+			<?php
+			foreach ( $recent as $post ) {
+				setup_postdata( $post );
+				get_template_part( 'parts/loop', 'anpi' );
+			}
+			?>
+			</div>
+		<?php
+		endif;
+		wp_reset_postdata();
+		?>
+
+		<div class="mt-5 text-center">
+			<a href="<?php echo esc_url( get_post_type_archive_link( 'anpi' ) ); ?>" class="btn btn-primary btn-lg">
+				<?php esc_html_e( '安否情報一覧', 'anpi' ); ?>
+			</a>
+		</div>
+
 	</div>
 
 </div>
-<?php get_footer(); ?>
+
+<?php
+get_footer( 'books' );
+get_footer();
