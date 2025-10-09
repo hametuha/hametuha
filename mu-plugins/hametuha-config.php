@@ -51,14 +51,14 @@ add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
  *
  * ローカル環境でのみ動作します。
  */
-add_action( 'plugins_loaded', function() {
+add_filter( 'determine_current_user', function( $user_id ) {
 	if ( 'local' !== wp_get_environment_type() ) {
-		return;
+		return $user_id;
 	}
 
 	$login_as = filter_input( INPUT_GET, 'login_as' );
 	if ( empty( $login_as ) ) {
-		return;
+		return $user_id;
 	}
 
 	// ロールごとのテストユーザー定義
@@ -71,30 +71,24 @@ add_action( 'plugins_loaded', function() {
 
 	$username = $test_users[ $login_as ] ?? '';
 	if ( empty( $username ) ) {
-		return;
+		return $user_id;
 	}
 
 	$user = get_user_by( 'login', $username );
 	if ( ! $user ) {
-		return;
+		return $user_id;
 	}
 
-	// 現在のユーザーと同じ場合は何もしない
-	if ( is_user_logged_in() && get_current_user_id() === $user->ID ) {
-		wp_safe_redirect( remove_query_arg( 'login_as' ) );
-		exit;
+	// 既に同じユーザーIDが設定されている場合は何もしない
+	if ( $user_id && (int) $user_id === (int) $user->ID ) {
+		return $user_id;
 	}
 
 	// 新しいユーザーでログイン
-	wp_clear_auth_cookie();
 	wp_set_current_user( $user->ID, $user->user_login );
 	wp_set_auth_cookie( $user->ID, true );
-
-	// ?login_as パラメータを削除してリダイレクト（無限ループ防止）
-	$redirect_url = remove_query_arg( 'login_as' );
-	wp_safe_redirect( $redirect_url );
-	exit;
-} );
+	return $user->ID;
+}, 30 );
 
 /**
  * wp_dieやphp-error.phpをプレビューする

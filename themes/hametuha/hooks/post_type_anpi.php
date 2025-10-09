@@ -48,9 +48,9 @@ add_action( 'init', function () {
 			'edit_published_posts'   => 'edit_published_anpis',
 			'edit_private_posts'     => 'edit_private_anpis',
 			// 編集権限
-			'read_private_posts'     => 'read_private_anpis',
-			'edit_others_posts'      => 'edit_others_anpis',
-			'delete_others_posts'    => 'delete_others_anpis',
+			'read_private_posts'     => 'read_private_posts',
+			'edit_others_posts'      => 'edit_others_posts',
+			'delete_others_posts'    => 'delete_others_posts',
 		],
 		'show_in_rest'          => true,
 		'rest_controller_class' => 'WP_REST_Posts_Controller',
@@ -81,43 +81,53 @@ add_action( 'init', function () {
  * read権限を持つユーザーは安否情報を投稿・編集・削除できる
  */
 add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
-	// そもそも安否情報とは関係ない
+	// edit_post, delete_post, read_post の場合、投稿タイプを確認
+	if ( in_array( $cap, [ 'edit_post', 'delete_post', 'read_post' ], true ) ) {
+		if ( ! empty( $args[0] ) ) {
+			$post = get_post( $args[0] );
+
+			// 安否情報ではない場合はスキップ
+			if ( ! $post || 'anpi' !== $post->post_type ) {
+				return $caps;
+			}
+
+			// 読み取り権限の特別処理
+			if ( 'read_post' === $cap ) {
+				if ( 'publish' === $post->post_status ) {
+					// 公開されているので誰でも読める
+					return [];
+				}
+				// 自分の投稿または編集者以上
+				if ( (int) $post->post_author === (int) $user_id ) {
+					return [ 'read' ];
+				}
+				return [ 'edit_others_posts' ];
+			}
+
+			// 編集・削除権限
+			if ( (int) $post->post_author === (int) $user_id ) {
+				// 自分の投稿は編集・削除可能（readがあればOK）
+				return [ 'read' ];
+			}
+			// 他人の投稿は edit_others_posts が必要
+			return [ 'edit_others_posts' ];
+		}
+		return $caps;
+	}
+
+	// 安否情報関連の権限名でない場合はスキップ
 	if ( ! preg_match( '/_anpis?$/u', $cap) ) {
 		return $caps;
 	}
-	if ( in_array( $cap, [ 'edit_anpi', 'delete_anpi', 'create_anpi', 'read_anpi' ], true ) ) {
-		// 個別の安否情報関連の権限チェック
-		if ( ! empty( $args[ 0 ] ) ) {
-			$post = get_post( $args[ 0 ] );
-			if ( 'read_anpi' === $cap ) {
-				if ( $post && 'publish' === $post->post_status ) {
-					// 公開されているので誰でも読める、権限必要なし
-					return [];
-				}
-			}
-			if ( $post ) {
-				if ( (int) $post->post_author === (int) $user_id ) {
-					// 自分のはログインが必要
-					return [ 'read' ];
-				} else {
-					return [ 'edit_others_anpis' ];
-				}
-			}
-		}
-		// 投稿IDがない場合（新規作成など）はreadがあればOK
-		if ( user_can( $user_id, 'read' ) ) {
-			return [ 'read' ];
-		}
-		return [ 'do_not_allow' ];
-	} elseif ( in_array( $cap, [ 'edit_others_anpis', 'delete_others_anpis', 'read_private_anpis' ], true ) ) {
-		// 他人の編集権限
+
+	// 他人の投稿を編集・削除する権限
+	if ( in_array( $cap, [ 'edit_others_anpis', 'delete_others_anpis', 'read_private_anpis' ], true ) ) {
 		return [ 'edit_others_posts' ];
 	}
-	// それ以外（edit_anpis, publish_anpis, delete_anpisなど）はreadが必要
-	if ( user_can( $user_id, 'read' ) ) {
-		return [ 'read' ];
-	}
-	return $caps;
+
+	// その他の複数形の権限（create_anpis, edit_anpis, publish_anpis, edit_published_anpis など）
+	// ログインユーザー（read権限保持者）なら全て許可
+	return [ 'read' ];
 }, 10, 4 );
 
 /**
