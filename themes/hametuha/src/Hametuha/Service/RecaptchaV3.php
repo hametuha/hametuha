@@ -24,7 +24,8 @@ class RecaptchaV3 extends Singleton {
 		add_action( 'admin_init', [ $this, 'add_setting_fields' ] );
 		// Add in login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'login_head' ] );
-		add_action( 'login_form', [ $this, 'login_form_input' ] );
+		add_action( 'wp_enqueue_scripts', [ $this, 'login_head' ] );
+		add_action( 'login_form', [ $this, 'login_form_input' ], 99999 );
 		add_action( 'register_form', [ $this, 'login_form_input' ] );
 		// Handle login validation.
 		add_filter( 'authenticate', [ $this, 'authenticate' ], 50, 3 );
@@ -107,6 +108,12 @@ JS;
 	 */
 	public function login_form_input() {
 		printf( '<input type="hidden" name="%1$s" id="%1$s" value="" />', 'recaptcha-v3-token' );
+		echo wp_kses_post(
+			sprintf(
+				'<p style="color:#999">%s</p>',
+				__( 'This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and<a href="https://policies.google.com/terms">Terms of Service</a> apply.', 'hametuha' )
+			)
+		);
 	}
 
 	/**

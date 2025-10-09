@@ -2,76 +2,88 @@ $color-red: #d54e21;
 $color-orange: #d54e21;
 $gap: 8px;
 
+#login {
+	width: auto !important;
+	max-width: 480px;
+}
+
 .login-form {
 
-  &-divider {
-    border: none;
-    height: 0;
-    display: block;
-  }
+	&-divider {
+		border: none;
+		height: 0;
+		display: block;
+	}
 
-  &-title {
-    display: flex;
-    align-items: center;
-    color: #ccc;
-    margin: $gap * 4 0;
-    &:before,
-    &:after {
-      border-top: 1px solid #eee;
-      content: "";
-      flex-grow: 1;
-    }
-    &:before {
-      margin-right: 1rem;
-    }
-    &:after {
-      margin-left: 1rem;
-    }
-  }
+	&-title {
+		display: flex;
+		align-items: center;
+		color: #ccc;
+		margin: $gap * 4 0;
 
-  &-recaptcha {
-    margin: 0 $gap*-3 $gap * 2;
-    .g-recaptcha > div {
-      margin: 0 auto;
-    }
-  }
+		&:before,
+		&:after {
+			border-top: 1px solid #eee;
+			content: "";
+			flex-grow: 1;
+		}
+
+		&:before {
+			margin-right: 1rem;
+		}
+
+		&:after {
+			margin-left: 1rem;
+		}
+	}
+
+	&-recaptcha {
+		margin: 0 $gap*-3 $gap * 2;
+
+		.g-recaptcha > div {
+			margin: 0 auto;
+		}
+	}
 
 }
 
 .login {
 
-  &-tagline{
-    color: #888;
-    text-align: center;
-    & + p{
-      margin-top: 10px;
-    }
-  }
+	&-tagline {
+		color: #888;
+		text-align: center;
 
-  form {
+		+ p,
+		+ div {
+			margin-top: 24px;
+		}
+	}
 
-    #reg_passmail {
-      margin-bottom: $gap * 2;
-      color: $color-orange;
-      text-align: center;
-    }
+	form {
 
-    .forgetmenot {
-      margin-bottom: $gap * 2 !important;
-    }
+		#reg_passmail {
+			margin-bottom: $gap * 2;
+			color: $color-orange;
+			text-align: center;
+		}
 
-    p.submit {
-      margin-top: $gap * 2 !important;
-      input.button-primary {
-        height: auto;
-        box-sizing: border-box;
-        width: 100%;
-        padding: $gap 0;
-        display: block;
-        float: none;
-      }
-    }
-  }
+		.forgetmenot {
+			margin-bottom: $gap * 2 !important;
+		}
+
+		p.submit {
+			margin-top: $gap * 2 !important;
+
+			input.button-primary {
+				height: auto;
+				box-sizing: border-box;
+				width: 100%;
+				padding: $gap 0;
+				display: block;
+				float: none;
+			}
+		}
+	}
 }
 
 // 登録フォームのデザイン
@@ -81,6 +93,7 @@ $gap: 8px;
 		margin-bottom: 5px;
 	}
 }
+
 .login-action-register #user_login + span,
 .user-registration-description {
 	display: block;
@@ -88,6 +101,13 @@ $gap: 8px;
 	color: #888;
 	font-size: 11px;
 }
+
 #user_message2 {
 	display: none;
 }
+
+#wpg-login {
+	margin: 24px 0;
+}
+
+@import "components/recaptcha";
