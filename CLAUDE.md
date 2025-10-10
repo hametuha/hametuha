@@ -156,36 +156,33 @@ docker compose exec wordpress wp plugin list
 
 ## ローカル環境専用機能
 
-### 簡易ログイン機能
+### 自動ログイン機能
 
-ローカル環境（`wp_get_environment_type() === 'local'`）でのみ動作する、テスト用の簡易ログイン機能が実装されています。
+ローカル環境（`wp_get_environment_type() === 'local'`）でのみ動作する、テスト用の自動ログイン機能が実装されています。Chrome DevTools MCPなどクッキーを保持できない環境でのテスト用です。
 
 #### 使い方
 
-URLパラメータ `?login_as` に以下の値を指定することで、該当するユーザーとして自動ログインできます：
+`wp-config-local.php` に以下の定数を設定すると、すべてのリクエストで指定されたロールのユーザーとして扱われます：
 
+```php
+// 自動ログイン機能
+define( 'HAMETUHA_LOGGED_IN_AS', 'subscriber' );
+
+// reCAPTCHA検証をスキップ（オプション）
+define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 ```
-https://hametuha.info/ideas/?login_as=admin       # 管理者としてログイン
-https://hametuha.info/ideas/?login_as=editor      # 編集者としてログイン
-https://hametuha.info/ideas/?login_as=author      # 投稿者としてログイン
-https://hametuha.info/ideas/?login_as=subscriber  # 購読者としてログイン
-```
 
-#### 動作
+#### 利用可能なロール
 
-1. 既存のログイン状態をクリア
-2. 指定されたロールのユーザーでログイン
-3. `?login_as` パラメータを削除してリダイレクト
-
-#### 実装場所
-
-`mu-plugins/hametuha-config.php:54-97`
+- `'admin'`: 管理者（takahashi_fumiki）
+- `'editor'`: 編集者（takahashi_fumiki）
+- `'author'`: 投稿者（@10kgtr）
+- `'subscriber'`: 購読者（@__k__n__c__）
 
 #### 注意事項
 
-- **ローカル環境でのみ動作** - 本番環境では無効化されます
-- **Chrome DevTools MCP等でテストする場合** - 既存のHttpOnly属性がないクッキーがあると動作しない場合があります。その場合はブラウザのクッキーを削除してください
-- この機能は異なるユーザーロールでの動作確認を効率化するために実装されています
+- ローカル環境でのみ動作します（本番環境では無効）
+- フロントエンド・保護ページ・wp-admin管理画面すべてにアクセス可能になります
 
 ## 注意事項
 
