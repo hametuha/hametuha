@@ -3,7 +3,7 @@
 namespace Hametuha\Service;
 
 
-use Hametuha\Pattern\Singleton;
+use Hametuha\SingletonPattern\Singleton;
 
 /**
  * reCAPTCHA V3
@@ -21,6 +21,10 @@ class RecaptchaV3 extends Singleton {
 	 * Constructor
 	 */
 	protected function init() {
+		// ローカル環境でSKIP_RECAPTCHA_VERIFICATIONが設定されている場合はreCAPTCHAを無効化
+		if ( defined( 'SKIP_RECAPTCHA_VERIFICATION' ) && SKIP_RECAPTCHA_VERIFICATION ) {
+			return;
+		}
 		add_action( 'admin_init', [ $this, 'add_setting_fields' ] );
 		// Add in login page.
 		add_action( 'login_enqueue_scripts', [ $this, 'login_head' ] );
@@ -111,7 +115,11 @@ JS;
 		echo wp_kses_post(
 			sprintf(
 				'<p style="color:#999">%s</p>',
-				__( 'This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy">Privacy Policy</a> and<a href="https://policies.google.com/terms">Terms of Service</a> apply.', 'hametuha' )
+				sprintf(
+				__( 'このサイトはreCAPTCHAで保護されており、Googleの<a href="%s">プライバシーポリシー</a>と<a href="%s">利用規約</a>が適用されます。', 'hametuha' ),
+					'https://policies.google.com/privacy',
+					'https://policies.google.com/terms'
+				)
 			)
 		);
 	}

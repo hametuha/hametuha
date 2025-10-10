@@ -41,25 +41,31 @@ add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
 /**
  * ローカル環境用：簡易ログイン機能
  *
- * URLパラメータ ?login_as に以下の値を設定すると自動ログイン:
+ * wp-config-local.php で HAMETUHA_LOGGED_IN_AS 定数を設定すると、
+ * すべてのリクエストで指定されたロールのユーザーとして自動ログイン。
+ *
+ * 設定例: define( 'HAMETUHA_LOGGED_IN_AS', 'subscriber' );
+ *
+ * 利用可能なロール:
  * - admin: 管理者（takahashi_fumiki）
  * - editor: 編集者（takahashi_fumiki - editorユーザーが存在しないため）
  * - author: 投稿者（@10kgtr）
  * - subscriber: 購読者（@__k__n__c__）
  *
- * 例: https://hametuha.info/ideas/?login_as=admin
- *
  * ローカル環境でのみ動作します。
+ * Chrome DevTools MCPのようなセッション/クッキーを保持できない環境でのテスト用。
  */
 add_filter( 'determine_current_user', function( $user_id ) {
 	if ( 'local' !== wp_get_environment_type() ) {
 		return $user_id;
 	}
 
-	$login_as = filter_input( INPUT_GET, 'login_as' );
-	if ( empty( $login_as ) ) {
+	// HAMETUHA_LOGGED_IN_AS 定数から対象ロールを取得
+	if ( ! defined( 'HAMETUHA_LOGGED_IN_AS' ) || empty( HAMETUHA_LOGGED_IN_AS ) ) {
 		return $user_id;
 	}
+
+	$login_as = HAMETUHA_LOGGED_IN_AS;
 
 	// ロールごとのテストユーザー定義
 	$test_users = [
@@ -89,6 +95,32 @@ add_filter( 'determine_current_user', function( $user_id ) {
 	wp_set_auth_cookie( $user->ID, true );
 	return $user->ID;
 }, 30 );
+
+/**
+ * ローカル環境用：auth_redirect() のオーバーライド
+ *
+ * Chrome DevTools MCPのようにクッキーを保持できない環境で、
+ * wp-adminにアクセスできるようにする。
+ *
+ * ローカル環境でのみこの簡易版を使用し、本番環境ではWordPressコアの実装を使用。
+ */
+if ( ! function_exists( 'auth_redirect' ) && 'local' === wp_get_environment_type() ) {
+	function auth_redirect() {
+		// ログイン済みなら認証OK
+		if ( get_current_user_id() ) {
+			return;
+		}
+
+		// 未ログインならログインページへリダイレクト
+		nocache_headers();
+
+		$redirect = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$login_url = wp_login_url( $redirect, true );
+
+		wp_redirect( $login_url );
+		exit;
+	}
+}
 
 /**
  * wp_dieやphp-error.phpをプレビューする
