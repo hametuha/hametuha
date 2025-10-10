@@ -25,7 +25,9 @@ $table_prefix = 'syoko_';
 define( 'WP_DEBUG', true );
 define( 'WP_DEBUG_LOG', true );
 define( 'WP_DEBUG_DISPLAY', false );
+define( 'SAVEQUERIES', true );
 define( 'SCRIPT_DEBUG', true );
+define( 'CONCATENATE_SCRIPTS', false );
 
 /**
  * サイトURL設定
@@ -38,8 +40,28 @@ define( 'WP_SITEURL', getenv('WP_SITEURL') ?: 'https://hametuha.info' );
  */
 define( 'WP_POST_REVISIONS', 10 );
 define( 'AUTOSAVE_INTERVAL', 300 );
-define( 'WP_MEMORY_LIMIT', '256M' );
-define( 'WP_MAX_MEMORY_LIMIT', '512M' );
+
+// プラグイン・テーマ・コアの自動更新を無効化
+define( 'AUTOMATIC_UPDATER_DISABLED', true );
+define( 'WP_AUTO_UPDATE_CORE', false );
+
+// ファイル編集を無効化
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
+
+// 環境変数の設定
+define( 'WP_ENVIRONMENT_TYPE', 'local' );
+
+// Query Monitor プラグイン用
+define( 'QM_ENABLE_CAPS_PANEL', true );
+
+// メール送信のデバッグ（Mailpit使用）
+define( 'WPMS_ON', true );
+define( 'WPMS_SMTP_HOST', 'mailpit' );
+define( 'WPMS_SMTP_PORT', 1025 );
+
+// 特定のプラグインのデバッグモード
+define( 'JETPACK_DEV_DEBUG', true );
 
 /**
  * 追加のカスタム設定ファイルを読み込む
