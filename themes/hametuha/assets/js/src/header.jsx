@@ -63,7 +63,6 @@ class HametuHeader extends Component {
 		return addQueryArgs( '/wp-login.php', {
 			action: 'logout',
 			_wpnonce: CookieTasting.get( 'logout' ),
-			redirect_to: encodeURIComponent( window.location.pathname ),
 		} );
 	}
 
@@ -84,7 +83,38 @@ class HametuHeader extends Component {
 			<ul className="navbar-nav ms-auto navbar-login navbar-login--user nav nav-pills col-sm-1 justify-content-end">
 
 				{ this.state.loggedIn ? (
+					<li className="nav-item dropdown">
+						<a href="#" className="nav-link dropdown-toggle dropdown--notify"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+							data-last-checked={ this.state.lastChecked }>
+							<i className="icon-earth" />
+						</a>
+						<ul id="notification-container" className="dropdown-menu dropdown-menu-end notification__container">
+							{ this.state.notifications.length ? (
+								this.state.notifications.map( ( notification, int ) => {
+									return (
+										<li className='notification__item--header'
+											key={ int }
+											dangerouslySetInnerHTML={ { __html: notification.rendered } } />
+									)
+								} )
+							) : (
+								<li>
+									<span>お知らせはなにもありません。</span>
+								</li>
+							) }
+							<li className="text-center notification__more">
+								<a href="/dashboard/notifications/all">
+									通知一覧へ
+									<i className="icon-arrow-right4" />
+								</a>
+							</li>
+						</ul>
+					</li>
+				) : null }
 
+				{ this.state.loggedIn ? (
 					<li className="nav-item dropdown">
 						<a href="#" className="nav-link dropdown-toggle"
 							data-bs-toggle="dropdown"
@@ -175,39 +205,6 @@ class HametuHeader extends Component {
 						</ul>
 					</li>
 				) : null }
-
-				{ this.state.loggedIn ? (
-					<li className="nav-item dropdown">
-						<a href="#" className="nav-link dropdown-toggle dropdown--notify"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							data-last-checked={ this.state.lastChecked }>
-							<i className="icon-earth" />
-						</a>
-						<ul id="notification-container" className="dropdown-menu dropdown-menu-end notification__container">
-							{ this.state.notifications.length ? (
-								this.state.notifications.map( ( notification, int ) => {
-									return (
-										<li className='notification__item--header'
-											key={ int }
-											dangerouslySetInnerHTML={ { __html: notification.rendered } } />
-									)
-								} )
-							) : (
-								<li>
-									<span>お知らせはなにもありません。</span>
-								</li>
-							) }
-							<li className="text-center notification__more">
-								<a href="/dashboard/notifications/all">
-									通知一覧へ
-									<i className="icon-arrow-right4" />
-								</a>
-							</li>
-						</ul>
-					</li>
-				) : null }
-
 
 				{ this.state.loggedIn ? null : (
 					<li className="login-buttons">

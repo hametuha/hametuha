@@ -26,14 +26,27 @@ function hamenew_copy( $prefix = '', $sep = '|' ) {
 /**
  * ニュース画面だったら
  *
+ * @param string $page 指定した場合、タイプ別で返す
  * @return bool
  */
-function is_hamenew() {
-	if ( is_front_page() ) {
-		return false;
+function is_hamenew( $page = '' ) {
+	if ( ! $page ) {
+		return is_singular( 'news' ) || is_tax( 'nouns' ) || is_tax( 'genre' ) || is_post_type_archive( 'news' ) || is_page_template( 'page-hamenew.php' );
 	}
-
-	return is_singular( 'news' ) || is_tax( 'nouns' ) || is_tax( 'genre' ) || is_post_type_archive( 'news' ) || is_page_template( 'page-hamenew.php' );
+	if ( is_singular( 'news' ) ) {
+		return 'single' === $page;
+	}
+	if ( is_tax( 'nouns' ) || is_tax( 'gent' ) || is_search() ) {
+		return 'archive' === $page;
+	}
+	if ( is_post_type_archive( 'news' ) ) {
+		if ( 1 < (int) get_query_var( 'paged' ) ) {
+			return 'archive' === $page;
+		} else {
+			return 'front' === $page;
+		}
+	}
+	return false;
 }
 
 /**

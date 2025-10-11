@@ -94,10 +94,11 @@ class CategoryWidget extends Widget {
 		$uls = [];
 		foreach ( $terms as $term ) {
 			$li = sprintf(
-				'<li class="widget-tax-list-item %1$s"><a href="%2$s">%3$s</a>',
+				'<li class="widget-tax-list-item %1$s"><a href="%2$s">%3$s<small>%4$d</small></a>',
 				esc_attr( $term->taxonomy ),
 				esc_url( get_term_link( $term ) ),
-				esc_html( $term->name )
+				esc_html( $term->name ),
+				$term->count
 			);
 			if ( isset( $store[ $term->term_id ] ) ) {
 				$li .= $this->get_list( $store[ $term->term_id ], $store );

@@ -1,10 +1,10 @@
 <div class="news-recruit row">
 
-	<div class="col-xs-12 col-sm-6 news-recruit__eyecatch">
+	<div class="col-12 col-sm-6 news-recruit__eyecatch">
 		<img class="news-recruit__img" src="<?php echo get_template_directory_uri(); ?>/assets/img/jumbotron/hamenew-recruit.jpg?201608" alt="募集中……" />
 	</div>
 
-	<div class="col-xs-12 col-sm-6 news-recruit__copy">
+	<div class="col-12 col-sm-6 news-recruit__copy">
 		<h3 class="news-recruit__title"><i class="icon-users"></i> 執筆者募集中</h3>
 		<p class="news-recruite__desc">
 			はめにゅーでは独自性の高い文学関連の記事を増やすべく、執筆者を募集しています。

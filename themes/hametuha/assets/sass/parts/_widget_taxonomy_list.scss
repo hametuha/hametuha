@@ -1,24 +1,54 @@
-.widget-tax-list{
+.widget-tax-list {
+	margin: 0;
+	padding: 0;
 
+	& & {
+		padding-left: 2em !important;
+		margin-bottom: 0 !important;
+		padding-bottom: 0;
+		border-top: 1px solid #eee;
+	}
 
-  & &{
-    padding-left: 1em !important;
-    margin-bottom: 0 !important;
-  }
+	li {
+		border-bottom: 1px solid #eee;
+		margin: 0;
 
-  &-item{
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.25em;
-    margin-bottom: 0.25em;
-    &:last-child{
-      border-bottom: none;
-    }
-    & &{
-      font-size: 0.85em;
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-  }
+		&:last-child {
+			border-bottom: none;
+		}
+
+		a {
+			display: block;
+			padding: 5px 10px;
+		}
+
+		small {
+			display: inline-block;
+			margin-left: 0.5em;
+			padding: 2px 5px;
+			background-color: $gray-200;
+			color: $black;
+			border-radius: 3px;
+			font-size: 0.6em;
+			font-weight: $font-weight-bold;
+			vertical-align: text-top;
+		}
+
+		a:link,
+		a:visited {
+			text-decoration: none;
+			color: $link-color;
+		}
+		a:hover,
+		a:active {
+			background-color: $link-color;
+			color: $white;
+			text-decoration: none;
+		}
+	}
+
+	&-item {
+
+	}
 
 }

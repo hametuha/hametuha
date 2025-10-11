@@ -2,9 +2,31 @@ $color-red: #d54e21;
 $color-orange: #d54e21;
 $gap: 8px;
 
+@import "components/recaptcha";
+
 #login {
 	width: auto !important;
 	max-width: 480px;
+}
+
+.login-tagline {
+	margin-bottom: 24px;
+}
+
+// ボタンの色を変える
+#loginform,
+#registerform,
+#lostpasswordform,
+#resetpassform {
+	.button-primary {
+		background-color: #222;
+		border-color: #000;
+
+		&:focus {
+			background-color: #444;
+			border-color: #000;
+		}
+	}
 }
 
 .login-form {
@@ -109,5 +131,3 @@ $gap: 8px;
 #wpg-login {
 	margin: 24px 0;
 }
-
-@import "components/recaptcha";

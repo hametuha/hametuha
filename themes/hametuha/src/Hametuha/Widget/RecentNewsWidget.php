@@ -58,13 +58,15 @@ class RecentNewsWidget extends Widget {
 			] );
 			while ( $recent->have_posts() ) {
 				$recent->the_post();
-				get_template_part( 'parts/loop', 'news' );
+				get_template_part( 'parts/loop', 'news', [
+					'type' => 'widget',
+				] );
 			}
 			wp_reset_postdata();
 			?>
 		</ul>
 		<p class="m20">
-			<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-default btn-block">もっと見る</a>
+			<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-secondary w-100">もっと見る</a>
 		</p>
 		<?php
 		$content = ob_get_contents();

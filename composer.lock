@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80d74fb61e399b414ad711fd6bc6c9ee",
+    "content-hash": "4a16b65ae189900d1780077346b5c48e",
     "packages": [
         {
             "name": "composer/installers",
@@ -500,15 +500,15 @@
         },
         {
             "name": "wpackagist-plugin/hameslack",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/hameslack/",
-                "reference": "tags/2.0.0"
+                "reference": "tags/2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/hameslack.2.0.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/hameslack.2.1.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -536,15 +536,15 @@
         },
         {
             "name": "wpackagist-plugin/jetpack",
-            "version": "15.0.2",
+            "version": "15.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/jetpack/",
-                "reference": "tags/15.0.2"
+                "reference": "tags/15.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/jetpack.15.0.2.zip"
+                "url": "https://downloads.wordpress.org/plugin/jetpack.15.1.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -605,6 +605,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/wp-hamazon/"
+        },
+        {
+            "name": "wpackagist-plugin/wp-mail-smtp",
+            "version": "4.6.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-mail-smtp/",
+                "reference": "tags/4.6.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.4.6.0.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/wp-mail-smtp/"
         },
         {
             "name": "wpackagist-plugin/wp-multibyte-patch",

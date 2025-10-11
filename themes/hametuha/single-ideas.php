@@ -170,9 +170,8 @@ get_template_part( 'templates/idea/form' );
 
 								<?php else : ?>
 									<div class="col-xs-12">
-										<div class="alert-info">
-											<a href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow"
-											class="btn btn-block btn-primary">
+										<div class="alert alert-info text-center">
+											<a href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">
 												ログイン
 											</a>
 											するとアイデアをストックしたり勧めたりできるようになります。

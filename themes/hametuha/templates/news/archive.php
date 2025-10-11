@@ -2,6 +2,7 @@
 
 <?php get_header( 'breadcrumb' ); ?>
 
+<?php get_template_part( 'templates/news/header', 'news' ); ?>
 
 <div class="container archive mt-5">
 
@@ -9,41 +10,28 @@
 
 	<div class="row">
 
-		<div class="col-xs-12 col-md-9 main-container">
-
-			<div class="archive-meta">
-				<h1>
-					<?php get_template_part( 'parts/h1' ); ?>
-					<span class="label label-default"><?php echo number_format_i18n( loop_count() ); ?>件</span>
-				</h1>
-
-				<?php get_template_part( 'parts/meta', 'term' ); ?>
-
-				<?php if ( $desc = term_description() ) : ?>
-					<div class="description-wrapper">
-						<?php echo wpautop( $desc ); ?>
-					</div>
-
-				<?php endif; ?>
-			</div>
-
-			<div class="row news-ad__archive">
-				<p class="news-ad__title">Ads by Google</p>
-				<?php google_adsense( 4 ); ?>
-			</div>
-
-			<?php if ( is_tax() && ( $content = get_term_meta( get_queried_object_id(), '_term_content', true ) ) ) : ?>
-				<div class="post-content clearfix">
-					<?php echo apply_filters( 'the_content', $content ); ?>
-				</div>
-			<?php endif; ?>
+		<div class="col-12 col-md-9 main-container">
 
 			<!-- Tab panes -->
-			<ol class="archive-container media-list">
+			<ol class="archive-container media-list row">
 				<?php
+				$counter = 0;
 				while ( have_posts() ) {
+					++$counter;
+					$type = 'normal';
+					if ( is_hamenew( 'front' ) && 6 >= $counter ) {
+						$type = 'card';
+					}
 					the_post();
-					get_template_part( 'parts/loop', get_post_type() );
+					get_template_part( 'parts/loop', get_post_type(), [
+						'type' => $type,
+					] );
+					if ( 6 === $counter ) {
+						echo '<li class="news-list__item col-12">';
+						google_adsense( 4 );
+						echo '<p class="news-ad__title mb-2">Ads by Google</p>';
+						echo '</li>';
+					}
 				}
 				?>
 			</ol>

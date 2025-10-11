@@ -120,7 +120,7 @@
 				}
 			}
 		}
-		& > li:first-child .avatar {
+		& > li:last-child .avatar {
 			width: $avatar-size;
 			height: $avatar-size;
 			border-radius: 4px;
@@ -142,6 +142,7 @@
 				position: absolute;
 				right: 0;
 				top: 62px;
+				min-width: 280px;
 			}
 		}
 

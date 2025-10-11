@@ -153,14 +153,15 @@ HTML;
  * ニュースだったらテンプレートを切り替える
  */
 add_filter( 'template_include', function ( $path ) {
-	if ( is_singular( 'news' ) ) {
-		$path = get_template_directory() . '/templates/news/single.php';
-	} elseif ( is_tax( 'nouns' ) || is_tax( 'genre' ) || ( is_post_type_archive( 'news' ) && 1 < (int) get_query_var( 'paged' ) ) ) {
-		$path = get_template_directory() . '/templates/news/archive.php';
-	} elseif ( is_post_type_archive( 'news' ) ) {
-		$path = get_template_directory() . '/templates/news/front.php';
+	if ( is_hamenew() ) {
+		if ( is_hamenew( 'single' ) ) {
+			$path = get_template_directory() . '/templates/news/single.php';
+		} elseif ( is_hamenew( 'front' ) ) {
+			$path = get_template_directory() . '/templates/news/archive.php';
+		} else {
+			$path = get_template_directory() . '/templates/news/archive.php';
+		}
 	}
-
 	return $path;
 } );
 
