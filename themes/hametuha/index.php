@@ -20,8 +20,6 @@
 					get_template_part( 'parts/jumbotron', 'thread' );
 				} elseif ( is_post_type_archive( 'lists' ) ) {
 					get_template_part( 'parts/jumbotron', 'lists' );
-				} elseif ( is_post_type_archive( 'ideas' ) ) {
-					get_template_part( 'parts/jumbotron', 'ideas' );
 				}
 				?>
 

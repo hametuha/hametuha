@@ -266,7 +266,7 @@ get_template_part( 'templates/idea/form' );
 						<?php
 						foreach ( $ideas as $post ) {
 							setup_postdata( $post );
-							get_template_part( 'parts/loop', 'ideas' );
+							get_template_part( 'templates/idea/loop' );
 						}
 						wp_reset_postdata();
 						?>

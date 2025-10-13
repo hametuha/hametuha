@@ -168,7 +168,7 @@ global $wp_query;
 			<?php
 			while ( have_posts() ) :
 				the_post();
-				get_template_part( 'parts/loop', 'ideas' );
+				get_template_part( 'templates/idea/loop' );
 			endwhile;
 			?>
 		</div>
