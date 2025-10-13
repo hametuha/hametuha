@@ -209,21 +209,26 @@
 		color: #fff;
 	}
 
-	.nav-pills a {
-		border-color: #fff;
-		color: #fff;
-
-		&:hover {
-			color: $hametuha-color;
+	.nav-pills {
+		gap: 10px;
+		a {
+			border: 1px solid $white;
 		}
-	}
+		a:link,
+		a:visited {
+			border-color: $white;
+			color: $white;
+			background-color: $primary;
+		}
+		a:hover,
+		a:active {
+			border-color: $white;
+			color: $primary;
+			background-color: $white;
+		}
 
-	.nav-pills .active a {
-		background: rgba(255, 255, 255, .2);
-
-		&:hover {
-			color: $hametuha-color;
-			background: #fff;
+		a.active {
+			font-weight: $font-weight-bold;
 		}
 	}
 
@@ -232,7 +237,7 @@
 	}
 
 	.btn-link {
-		color: #ccc;
+		color: $gray-500;
 	}
 }
 

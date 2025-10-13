@@ -101,18 +101,26 @@
 		.icon-calendar {
 			margin-left: 0.5em;
 		}
+
+		a {
+			text-decoration: none;
+			padding-top: 1rem;
+			display: block;
+		}
 	}
 
 	p.author {
-		padding: 0 15px;
+		padding: 0;
 		margin-bottom: 5px;
 		color: $shade-font;
+		font-size: 0.8em;
 
 		img {
 			margin-right: 0.5em;
 			width: 24px;
 			height: 24px;
 			@include border-radius(50%);
+			vertical-align: middle;
 		}
 
 		.old {

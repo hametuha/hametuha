@@ -7,9 +7,9 @@
 get_template_part( 'templates/thread/header-thread' );
 ?>
 
-<div class="container single">
+<div class="container single mt-3">
 
-	<div class="row row-offcanvas row-offcanvas-right">
+	<div class="row">
 
 		<?php
 		if ( have_posts() ) :
@@ -18,12 +18,14 @@ get_template_part( 'templates/thread/header-thread' );
 				?>
 
 				<article itemscope
-					itemtype="http://schema.org/Question" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
+					itemtype="http://schema.org/Question" <?php post_class( 'col-12 col-md-9 main-container' ); ?>>
 
-					<div class="page-header thread-header clearfix">
+					<div class="page-header thread-header">
+						<div class="row">
 
-						<div class="thread-info col-sm-3 col-xs-12 text-center clearfix">
-							<div class="col-xs-6 col-sm-12">
+						<div class="thread-info col-12 col-md-3 text-center">
+							<div class="row">
+							<div class="col-6 col-md-12">
 								<p>
 									<?php echo get_avatar( get_the_author_meta( 'ID' ), 160, '', esc_attr( get_the_author() ), [ 'extra_attr' => 'itemprop="image"' ] ); ?>
 								</p>
@@ -34,7 +36,7 @@ get_template_part( 'templates/thread/header-thread' );
 									<span itemprop="author"><?php the_author(); ?></span>
 								</p>
 							</div>
-							<div class="col-xs-6 col-sm-12">
+							<div class="col-6 col-md-12">
 								<p>
 									<strong><i class="icon-stack-list"></i> スレ立て</strong><br />
 									<span><?php echo number_format_i18n( hamethread_get_author_thread_count( get_the_author_meta( 'ID' ) ) ); ?>
@@ -47,17 +49,18 @@ get_template_part( 'templates/thread/header-thread' );
 								</p>
 								<?php if ( user_can( get_the_author_meta( 'ID' ), 'edit_posts' ) ) : ?>
 									<p>
-										<a class="btn btn-info btn-block"
+										<a class="btn btn-info w-100"
 											href="<?php echo get_author_posts_url( get_the_author_meta( 'ID' ) ); ?>">
 											投稿一覧
 										</a>
 									</p>
 								<?php endif; ?>
 							</div>
+							</div><!-- //.row -->
 						</div><!-- //.thread-info -->
 
 
-						<div class="thread-body col-sm-9 col-xs-12">
+						<div class="thread-body col-12 col-md-9">
 
 							<h1>
 								<?php
@@ -87,6 +90,7 @@ get_template_part( 'templates/thread/header-thread' );
 
 						</div><!-- //.thread-body -->
 
+						</div><!-- //.row -->
 					</div><!-- //.thread-header -->
 
 

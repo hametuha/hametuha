@@ -11,14 +11,15 @@ get_template_part( 'templates/thread/header-thread' );
 
 	<div class="row">
 
-		<div class="col-xs-12 col-sm-9 main-container">
+		<div class="col-12 col-md-9 main-container">
 
 			<?php get_template_part( 'parts/jumbotron', 'thread' ); ?>
 
-			<div class="topic-container panel panel-default">
+			<div class="topic-container card mb-5">
 
-				<div class="panel-heading">
-					<h2 class="panel-title">
+				<div class="card-header">
+					<h2 class="card-title d-flex justify-content-between align-items-center">
+						<span>
 						<?php
 						if ( is_search() ) {
 							printf( '「%s」の検索結果', get_search_query() );
@@ -27,14 +28,15 @@ get_template_part( 'templates/thread/header-thread' );
 						} else {
 							echo 'スレッド一覧';
 						}
-						global $wp_query;
 						?>
-						<span class="badge"><?php echo number_format( $wp_query->found_posts ); ?></span>
+						</span>
+						<?php global $wp_query; ?>
+						<span class="badge bg-secondary"><?php echo number_format( $wp_query->found_posts ); ?></span>
 					</h2>
-				</div><!-- //.panel-title -->
+				</div><!-- //.card-header -->
 
 				<?php if ( is_tax( 'topic' ) ) : ?>
-				<div class="panel-body text-muted">
+				<div class="card-body text-muted">
 					<?php echo esc_html( get_queried_object()->description ); ?>
 				</div>
 				<?php endif; ?>
@@ -45,8 +47,8 @@ get_template_part( 'templates/thread/header-thread' );
 						while ( have_posts() ) :
 							the_post();
 							?>
-							<a class="list-group-item" href="<?php the_permalink(); ?>">
-								<span class="badge"><?php echo get_comments_number(); ?></span>
+							<a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start" href="<?php the_permalink(); ?>">
+								<div class="flex-grow-1">
 								<?php echo get_avatar( get_the_author_meta( 'ID' ), 32 ); ?>
 								<?php if ( 'private' == get_post_status() ) : ?>
 									<i class="fa fa-lock text-warning"></i>
@@ -56,11 +58,13 @@ get_template_part( 'templates/thread/header-thread' );
 								<?php endif; ?>
 								<?php the_title(); ?>
 								<?php if ( hamethread_recently_commented() || is_new_post() ) : ?>
-									<span class="label label-warning">New!</span>
+									<span class="badge bg-warning">New!</span>
 								<?php endif; ?>
 								<small class="date">
 									（<?php the_author(); ?>, <?php echo hametuha_passed_time( $post->post_date ); ?>）
 								</small>
+								</div>
+								<span class="badge bg-secondary rounded-pill"><?php echo get_comments_number(); ?></span>
 							</a>
 						<?php endwhile; ?>
 					</div>

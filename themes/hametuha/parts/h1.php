@@ -98,8 +98,8 @@ if ( hametuha_is_profile_page() ) {
 	}
 } elseif ( is_post_type_archive() ) {
 
-	wp_title( '' );
-	echo '一覧';
+	$post_type_obj = get_post_type_object( get_query_var( 'post_type' ) );
+	printf( __( '%s一覧', 'hametuha' ), esc_html( $post_type_obj->label ) );
 
 } elseif ( is_date() ) {
 
