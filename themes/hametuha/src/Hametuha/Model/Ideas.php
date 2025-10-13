@@ -17,6 +17,7 @@ use WPametu\DB\Model;
  * 0.5 推薦されたアイデア
  * 1 ストックされたアイデア
  *
+ * @feature-group ideas
  * @todo 数値による管理はあまり自明ではないので、方法を検討する。
  * @property-read string $posts
  * @property-read string $users

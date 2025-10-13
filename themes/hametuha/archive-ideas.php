@@ -2,6 +2,7 @@
 /**
  * KDP本紹介様のテンプレート
  *
+ * @feature-group ideas
  * @since 7.9.0
  */
 

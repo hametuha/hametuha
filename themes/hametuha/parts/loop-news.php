@@ -2,6 +2,7 @@
 /**
  * ニュースのループ
  *
+ * @feature-group news
  * @var array $args
  */
 $args = wp_parse_args( $args, [

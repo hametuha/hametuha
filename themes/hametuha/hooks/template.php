@@ -17,9 +17,3 @@ add_filter( 'template_include', function ( $path ) {
 	}
 	return $path;
 }, 11 );
-
-/**
- * テンプレートをグルーピング
- */
-
-

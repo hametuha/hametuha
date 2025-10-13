@@ -8,6 +8,7 @@ use WPametu\UI\Widget;
  * FAQ リンクリスト
  *
  * @package hametuha
+ * @feature-group faq
  */
 class FaqNavWidget extends Widget {
 

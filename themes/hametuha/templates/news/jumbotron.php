@@ -1,3 +1,10 @@
+<?php
+/**
+ * ニュース執筆者募集ジャンボトロン
+ *
+ * @feature-group news
+ */
+?>
 <div class="news-recruit row">
 
 	<div class="col-12 col-sm-6 news-recruit__eyecatch">

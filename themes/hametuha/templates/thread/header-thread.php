@@ -1,4 +1,11 @@
-<?php get_header(); ?>
+<?php
+/**
+ * スレッドのヘッダー
+ *
+ * @feature-group thread
+ */
+get_header();
+?>
 
 <div class="sub-header thread-header">
 	<div class="container">

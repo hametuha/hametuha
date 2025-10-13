@@ -15,6 +15,7 @@ package-lock.json
 phpcs.ruleset.xml
 phpunit.xml.dist
 README.md
+CLAUDE.md
 webpack.config.js
 /bin
 tmp

@@ -1,4 +1,11 @@
-<?php get_template_part( 'templates/thread/header-thread' ); ?>
+<?php
+/**
+ * スレッドの一覧とトップページ
+ *
+ * @feature-group thread
+ */
+get_template_part( 'templates/thread/header-thread' );
+?>
 
 <div class="container archive">
 

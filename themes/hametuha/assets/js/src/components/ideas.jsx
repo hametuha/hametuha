@@ -1,6 +1,7 @@
 /*!
  * アイデア投稿用のスクリプト
  *
+ * @feature-group idea
  * @handle hametuha-components-ideas
  * @deps wp-element, wp-i18n, wp-api-fetch
  */

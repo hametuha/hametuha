@@ -1,4 +1,11 @@
-<?php get_template_part( 'templates/faq/header-faq' ); ?>
+<?php
+/**
+ * FAQ用サイドバー
+ *
+ * @feature-group faq
+ */
+get_template_part( 'templates/faq/header-faq' );
+?>
 
 	<div class="container single">
 

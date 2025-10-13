@@ -2,6 +2,7 @@
 /**
  * 安否情報をカードレイアウトで表示する
  *
+ * @feature-group anpi
  * @var array $args
  */
 $args = wp_parse_args( [

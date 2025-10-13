@@ -7,6 +7,7 @@ use WPametu\UI\Widget;
 /**
  * Recent news
  *
+ * @feature-group news
  * @package hametuha
  */
 class RecentNewsWidget extends Widget {

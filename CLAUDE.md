@@ -191,6 +191,158 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 3. **プラグイン**は`plugins/`にcomposerでインストール
 4. **PhpStorm**では`wp/`をInclude Pathに追加してコードヒントを有効化
 
+## Feature Group タグシステム
+
+### 概要
+
+`@feature-group` タグは、物理的なディレクトリ構造にかかわらず、機能ごとに関連ファイルを論理的にグループ化するためのドキュメントタグです。
+
+### 目的
+
+WordPressテーマの開発では、1つの機能に関連するファイルが複数のディレクトリに散らばることがよくあります：
+
+- テンプレートファイル: `templates/news/`, `single-*.php`, `archive-*.php`
+- パーツテンプレート: `parts/loop-*.php`
+- スタイル: `assets/sass/parts/_*.scss`
+- JavaScript: `assets/js/src/components/*.jsx`
+- PHPクラス: `src/Hametuha/Model/`, `src/Hametuha/Widget/`
+- フック: `hooks/*.php`
+- 関数: `functions/*.php`
+
+このような分散したファイルを機能単位で管理するため、`@feature-group` タグを使用してファイルにメタデータを付与します。
+
+### メリット
+
+1. **検索性の向上**: grepやIDEの検索機能で機能に関連するすべてのファイルを一度に見つけられる
+2. **関心の分離**: 物理的な配置を変えずに論理的なグループ化が可能
+3. **自己文書化**: コード内でそのファイルがどの機能に属するかが明確になる
+4. **多言語対応**: PHP、SCSS、JSX、その他すべてのファイル形式で使用可能
+
+### 使用方法
+
+#### PHP テンプレートファイル
+
+```php
+<?php
+/**
+ * ニュースアーカイブテンプレート
+ *
+ * @feature-group news
+ */
+get_header();
+// ...
+```
+
+#### PHP クラスファイル
+
+```php
+<?php
+/**
+ * News command
+ *
+ * @feature-group news
+ * @package Hametuha\Commands
+ */
+class News extends Command {
+    // ...
+}
+```
+
+#### SCSS ファイル
+
+```scss
+/**
+ * ニュースのスタイル
+ *
+ * @feature-group news
+ */
+.news {
+    // ...
+}
+```
+
+#### JSX ファイル
+
+```jsx
+/*!
+ * 安否報告投稿用のスクリプト
+ *
+ * @feature-group anpi
+ * @handle hametuha-components-anpi-submit
+ * @deps wp-element, wp-i18n, wp-api-fetch
+ */
+const AnpiSubmitComponent = () => {
+    // ...
+};
+```
+
+### 検索方法
+
+#### コマンドライン（grep）
+
+```bash
+# 特定のfeature-groupに属するすべてのファイルを検索
+grep -r "@feature-group news" themes/hametuha/
+
+# ファイル名のみを表示
+grep -rl "@feature-group news" themes/hametuha/
+
+# 複数のグループを検索
+grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
+```
+
+#### IDE検索
+
+- PhpStorm/VSCodeなどのIDE内検索で `@feature-group news` を検索
+- 正規表現検索: `@feature-group (news|ideas|anpi)`
+
+### 既存のFeature Groups
+
+#### thread
+スレッド（掲示板）機能に関連するファイル群
+- テンプレート、スタイル、JavaScript、PHPクラス
+
+#### news
+ニュース機能に関連するファイル群（約15ファイル）
+- `templates/news/*.php` - アーカイブ、個別、ヘッダー、ナビゲーション等のテンプレート
+- `parts/loop-news.php` - ループテンプレート
+- `sidebar-news.php` - サイドバー
+- `assets/sass/parts/_news.scss` - スタイル
+- `src/Hametuha/Widget/RecentNewsWidget.php` - ウィジェット
+- `src/Hametuha/Commands/News.php` - WP-CLIコマンド
+- `src/Hametuha/MetaBoxes/NewsMetaBox.php` - メタボックス
+- `hooks/news.php` - 投稿タイプ登録
+- `functions/post_type-news.php` - ヘルパー関数
+
+#### ideas
+アイデア投稿機能に関連するファイル群（約7ファイル）
+- `single-ideas.php`, `archive-ideas.php` - テンプレート
+- `assets/sass/parts/_ideas.scss` - スタイル
+- `assets/js/src/components/ideas.jsx` - 投稿コンポーネント
+- `assets/js/src/components/ideas-stock.jsx` - ストック機能
+- `src/Hametuha/Model/Ideas.php` - データモデル
+
+#### anpi
+安否情報機能に関連するファイル群（約6ファイル）
+- `single-anpi.php`, `archive-anpi.php` - テンプレート
+- `parts/loop-anpi.php` - ループテンプレート
+- `assets/js/src/components/anpi-submit.jsx` - 投稿コンポーネント
+- `hooks/post_type_anpi.php` - 投稿タイプ登録と権限制御
+
+### 新しいFeature Groupの追加
+
+新しい機能を開発する際は：
+
+1. **グループ名を決定**: 簡潔で分かりやすい名前（例: `campaign`, `book-review`）
+2. **関連ファイルにタグを追加**: 各ファイルのコメントブロックに `@feature-group [グループ名]` を記載
+3. **このドキュメントを更新**: 新しいグループを「既存のFeature Groups」セクションに追加
+
+### 注意事項
+
+- グループ名は小文字とハイフンを使用（例: `news`, `book-review`, `user-profile`）
+- 1つのファイルが複数のグループに属することも可能（必要に応じて）
+- WordPressのテンプレート階層を優先し、汎用的な部品は `get_template_part('parts/loop', get_post_type())` のようにポストタイプで呼び分ける
+
 ## 環境変数（.env）
 ```
 # WordPress Database

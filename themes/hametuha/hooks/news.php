@@ -2,6 +2,7 @@
 /**
  * News related hooks.
  *
+ * @feature-group news
  * @package hametuha
  */
 

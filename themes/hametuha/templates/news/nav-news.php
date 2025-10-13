@@ -1,3 +1,10 @@
+<?php
+/**
+ * ニュースナビゲーション
+ *
+ * @feature-group news
+ */
+?>
 <ul class="news-nav mt-2">
 	<?php foreach ( get_terms( 'genre', [ 'parent' => 0 ] ) as $term ) : ?>
 		<li class="news-nav-item">

@@ -1,6 +1,7 @@
 /*!
  * アイデアの絞り込み
  *
+ * @feature-group idea
  * @handle hametuha-components-idea-filter
  * @deps bootstrap
  */

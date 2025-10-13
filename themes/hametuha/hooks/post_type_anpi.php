@@ -2,6 +2,7 @@
 /**
  * 安否情報の投稿タイプ設定
  *
+ * @feature-group anpi
  * @package hametuha
  */
 

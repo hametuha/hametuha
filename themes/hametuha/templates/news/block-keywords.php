@@ -1,4 +1,9 @@
 <?php
+/**
+ * ニュースキーワードブロック
+ *
+ * @feature-group news
+ */
 if ( is_tax( 'nouns' ) ) {
 	$title   = '関連するキーワード';
 	$days    = 0;

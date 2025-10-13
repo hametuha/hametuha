@@ -1,4 +1,11 @@
-<?php get_header(); ?>
+<?php
+/**
+ * ニュース個別ページテンプレート
+ *
+ * @feature-group news
+ */
+get_header();
+?>
 
 	<div class="container">
 		<?php get_header( 'breadcrumb' ); ?>
@@ -197,7 +204,7 @@
 							<?php previous_post_link( '<li class="previous">%link</li>', '<i class="icon-arrow-left"></i><small>PREVIOUS POST</small><br />%title' ); ?>
 							<?php next_post_link( '<li class="next">%link</li>', '<i class="icon-arrow-right2"></i><small>NEXT POST</small><br />%title' ); ?>
 						</ul>
-						<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
+						<?php get_template_part( 'templates/news/jumbotron' ); ?>
 
 
 					</article><!-- //.single-container -->

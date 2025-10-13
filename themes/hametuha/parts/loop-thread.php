@@ -1,3 +1,10 @@
+<?php
+/**
+ * スレッドのループ
+ *
+ * @feature-group thread
+ */
+?>
 <li <?php post_class( 'media' ); ?>>
 	<a class="media__link media__link--nopad" href="<?php the_permalink(); ?>">
 

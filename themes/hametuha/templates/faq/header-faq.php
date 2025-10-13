@@ -1,4 +1,10 @@
-<?php get_header(); ?>
+<?php
+/**
+ * FAQ用ヘッダー
+ *
+ * @feature-group faq
+ */
+get_header(); ?>
 
 <div class="sub-header faq-header hidden-sm">
 	<div class="container">

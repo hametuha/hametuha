@@ -1,6 +1,7 @@
 /*!
  * アイデアをストックしたり、進めたりする機能
  *
+ * @feature-group idea
  * @handle hametuha-components-ideas-stock
  * @deps jquery, hametuha-toast, wp-api-fetch
  */

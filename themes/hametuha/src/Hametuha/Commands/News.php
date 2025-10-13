@@ -9,6 +9,7 @@ use WPametu\Utility\Command;
 /**
  * News command
  *
+ * @feature-group news
  * @package Hametuha\Commands
  */
 class News extends Command {

@@ -1,6 +1,8 @@
 <?php
 /**
  * ニュース関連の処理
+ *
+ * @feature-group news
  */
 
 /**

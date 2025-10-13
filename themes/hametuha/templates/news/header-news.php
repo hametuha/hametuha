@@ -1,6 +1,8 @@
 <?php
 /**
  * ニュースのヘッダー
+ *
+ * @feature-group news
  */
 $description = get_post_type_object( 'news' )->description;
 if ( is_hamenew( 'front' ) ) {

@@ -2,6 +2,7 @@
 /**
  * 安否情報のテンプレート
  *
+ * @feature-group anpi
  */
 
 get_header();
@@ -9,7 +10,7 @@ get_header( 'sub' );
 ?>
 <header class="book-list-header">
 	<div class="container">
-		<small>Idea Notes</small>
+		<small>Status Report</small>
 		<h1>
 			<?php
 			$titles = [ __( '安否情報' ) ];
@@ -42,7 +43,7 @@ get_header( 'sub' );
 			<p>
 			<?php foreach ( $terms as $term ) :
 				printf(
-					'<a href="%s" class="btn btn-outline-primary" style="margin-left: 1em;">%s</a>',
+					'<a href="%s" class="btn btn-outline-primary" style="margin-right: 1em;">%s</a>',
 					esc_url( get_term_link( $term ) ),
 					esc_html( $term->name )
 				);

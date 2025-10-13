@@ -10,14 +10,8 @@
 
 				<?php
 				// Jumbotron
-				if ( is_tax( 'faq_cat' ) ) {
-					get_template_part( 'parts/jumbotron', 'help' );
-				} elseif ( is_post_type_archive( 'anpi' ) || is_tax( 'anpi_cat' ) ) {
-					get_template_part( 'parts/jumbotron', 'anpi' );
-				} elseif ( is_post_type_archive( 'announcement' ) ) {
+				if ( is_post_type_archive( 'announcement' ) ) {
 					get_template_part( 'parts/jumbotron', 'announcement' );
-				} elseif ( is_tax( 'topic' ) || is_post_type_archive( 'thread' ) ) {
-					get_template_part( 'parts/jumbotron', 'thread' );
 				} elseif ( is_post_type_archive( 'lists' ) ) {
 					get_template_part( 'parts/jumbotron', 'lists' );
 				}
@@ -98,9 +92,7 @@
 
 						<?php
 						// Load navigation
-						if ( is_tax( 'topic' ) ) {
-							get_template_part( 'parts/nav', 'thread' );
-						} elseif ( get_query_var( 'reviewed_as' ) ) {
+						if ( get_query_var( 'reviewed_as' ) ) {
 							get_template_part( 'parts/nav', 'review' );
 						} elseif ( ( ( ! is_ranking() || ! get_query_var( 'reviewed_as' ) ) && is_home() ) || is_post_type_archive( 'post' ) || is_category() || is_tag() || is_search() ) {
 							get_template_part( 'parts/nav' );
@@ -130,9 +122,6 @@
 					// Extras
 					if ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
 						get_template_part( 'parts/nav', 'lists' );
-					} elseif ( is_tax( 'faq_cat' ) ) {
-						get_template_part( 'parts/nav', 'faq' );
-						get_search_form();
 					} elseif ( is_tax( 'campaign' ) ) {
 						get_template_part( 'parts/content-campaign', get_term_meta( get_queried_object_id(), '_is_collaboration', true ) ? 'collaboration' : '' );
 					} elseif ( ! hametuha_is_profile_page() ) {

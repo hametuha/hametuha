@@ -1,6 +1,7 @@
 /*!
  * アイデアをお勧めする機能
  *
+ * @feature-group idea
  * @handle hametuha-components-ideas-recommend
  * @deps jquery, hametuha-toast, wp-api-fetch, hametuha-components-user-picker
  */

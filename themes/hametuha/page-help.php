@@ -1,6 +1,9 @@
 <?php
 /*
  * Template Name: ヘルプセンター
+ *
+ *
+ * @feature-group faq
  */
 
 get_template_part( 'templates/faq/header-faq' );

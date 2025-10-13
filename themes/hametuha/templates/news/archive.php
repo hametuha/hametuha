@@ -1,8 +1,13 @@
-<?php get_header(); ?>
-
-<?php get_header( 'breadcrumb' ); ?>
-
-<?php get_template_part( 'templates/news/header', 'news' ); ?>
+<?php
+/**
+ * ニュースアーカイブテンプレート
+ *
+ * @feature-group news
+ */
+get_header();
+get_header( 'breadcrumb' );
+get_template_part( 'templates/news/header', 'news' );
+?>
 
 <div class="container archive mt-5">
 
@@ -47,7 +52,7 @@
 
 			<?php get_template_part( 'templates/news/block', 'keywords' ); ?>
 
-			<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
+			<?php get_template_part( 'templates/news/jumbotron' ); ?>
 
 		</div>
 		<!-- //.main-container -->

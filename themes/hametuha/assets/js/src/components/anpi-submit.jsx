@@ -1,6 +1,7 @@
 /*!
  * 安否報告投稿用のスクリプト
  *
+ * @feature-group anpi
  * @handle hametuha-components-anpi-submit
  * @deps wp-element, wp-i18n, wp-api-fetch
  */

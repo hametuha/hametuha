@@ -2,6 +2,7 @@
 /**
  * 安否情報のシングルページ
  *
+ * @feature-group anpi
  */
 get_header();
 

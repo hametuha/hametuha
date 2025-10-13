@@ -64,7 +64,7 @@ get_header();
 
 					<hr/>
 
-					<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
+					<?php get_template_part( 'templates/news/jumbotron' ); ?>
 
 				</article><!-- //.single-container -->
 

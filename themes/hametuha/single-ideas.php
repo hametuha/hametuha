@@ -1,4 +1,9 @@
 <?php
+/**
+ * アイデア個別ページテンプレート
+ *
+ * @feature-group ideas
+ */
 
 $ideas = \Hametuha\Model\Ideas::get_instance();
 
