@@ -8,7 +8,11 @@ wp-content相当をリポジトリルートとして管理する構成。
 hametuha/ (リポジトリルート)
 ├── docker-compose.yml
 ├── .env.example
-├── wp/              # WordPressコア（composerで管理、.gitignore）
+├── wp/                   # WordPressコア（composerで管理、.gitignore）
+├── wp-tests/             # WordPressテストスイート（ローカル管理）
+│   ├── includes/         # テストフレームワーク
+│   ├── data/             # テストデータ
+│   └── wp-tests-config.php  # テスト設定
 ├── themes/
 │   └── hametuha/    # テーマファイル
 ├── plugins/         # プラグイン（composer管理、.gitignore）
@@ -106,52 +110,61 @@ docker compose exec wordpress bash -c "cd themes/hametuha && npm run watch"
 
 ## 開発コマンド
 
+コマンドにはDockerの中で実行した方がよいもの（例・phpunit）とそうでないもの（例・rootのcomposerインストール）があります。
+それらの差分を吸収したものとして、composer.jsonに composer scriptsを定義してあります。として実行可能なものもあります。
+実際の中身はcomposer.jsonを参照してください。
+
 ### Dockerコンテナ操作
+
 ```bash
 # コンテナ起動
-docker compose up -d
-
+composer start
 # コンテナ停止
-docker compose down
-
+composer stop
+# コンテナ再起動
+composer restart
 # ログ確認
-docker compose logs -f [サービス名]
-
+composer logs [サービス名]
+# WordPressのdebug.logを見る
+composer logs:debug
 # コンテナに入る
 docker compose exec wordpress bash
 ```
 
 ### PHP関連
+
+PHPの構文チェック、単体テスト用のコマンドです。
+
 ```bash
 # Lint
-docker compose exec wordpress composer lint
-
+composer lint
 # Fix  
-docker compose exec wordpress composer fix
-
-# Test
-docker compose exec wordpress composer test
+composer fix
+# Unit Test
+composer test
 ```
 
 ### JavaScript/CSS関連
+
+JS/CSSのトランスパイルおよび構文チェックは基本的にthemes/hametuhaの中で行います。
+
 ```bash
 # ビルド
-docker compose exec wordpress bash -c "cd themes/hametuha && npm run package"
-
+cd themes/hametuha && npm run package
 # 監視モード
-docker compose exec wordpress bash -c "cd themes/hametuha && npm run watch"
+cd themes/hametuha && npm run watch 
 ```
 
 ### WP-CLI
+
+Word
+
 ```bash
 # composer経由のショートカット
 composer wp [コマンド]
 
-# Docker内で実行するWP-CLIコマンド
-docker compose exec wordpress wp [コマンド]
-
 # 例：プラグイン一覧
-docker compose exec wordpress wp plugin list
+composer wp plugin list
 ```
 
 ## ローカル環境専用機能
@@ -162,26 +175,21 @@ docker compose exec wordpress wp plugin list
 
 #### 使い方
 
-`wp-config-local.php` に以下の定数を設定すると、すべてのリクエストで指定されたロールのユーザーとして扱われます：
+`wp-config-local.php` に以下の定数を設定すると、すべてのリクエストで指定されたユーザーとして扱われます：
 
 ```php
 // 自動ログイン機能
-define( 'HAMETUHA_LOGGED_IN_AS', 'subscriber' );
+define( 'HAMETUHA_LOGGED_IN_AS', 'user_login' );
 
 // reCAPTCHA検証をスキップ（オプション）
 define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 ```
 
-#### 利用可能なロール
-
-- `'admin'`: 管理者（takahashi_fumiki）
-- `'editor'`: 編集者（takahashi_fumiki）
-- `'author'`: 投稿者（@10kgtr）
-- `'subscriber'`: 購読者（@__k__n__c__）
-
 #### 注意事項
 
 - ローカル環境でのみ動作します（本番環境では無効）
+- 指定する `user_login` は存在しているものでなければなりません。 `composer wp user list` などで検索ができます。
+- `wp-config-local.php` はdockerの起動時にしか同期されません。変更した場合は再起動 `composer restart` してください。
 - フロントエンド・保護ページ・wp-admin管理画面すべてにアクセス可能になります
 
 ## 注意事項
@@ -298,36 +306,11 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 
 ### 既存のFeature Groups
 
-#### thread
-スレッド（掲示板）機能に関連するファイル群
-- テンプレート、スタイル、JavaScript、PHPクラス
-
-#### news
-ニュース機能に関連するファイル群（約15ファイル）
-- `templates/news/*.php` - アーカイブ、個別、ヘッダー、ナビゲーション等のテンプレート
-- `parts/loop-news.php` - ループテンプレート
-- `sidebar-news.php` - サイドバー
-- `assets/sass/parts/_news.scss` - スタイル
-- `src/Hametuha/Widget/RecentNewsWidget.php` - ウィジェット
-- `src/Hametuha/Commands/News.php` - WP-CLIコマンド
-- `src/Hametuha/MetaBoxes/NewsMetaBox.php` - メタボックス
-- `hooks/news.php` - 投稿タイプ登録
-- `functions/post_type-news.php` - ヘルパー関数
-
-#### ideas
-アイデア投稿機能に関連するファイル群（約7ファイル）
-- `single-ideas.php`, `archive-ideas.php` - テンプレート
-- `assets/sass/parts/_ideas.scss` - スタイル
-- `assets/js/src/components/ideas.jsx` - 投稿コンポーネント
-- `assets/js/src/components/ideas-stock.jsx` - ストック機能
-- `src/Hametuha/Model/Ideas.php` - データモデル
-
-#### anpi
-安否情報機能に関連するファイル群（約6ファイル）
-- `single-anpi.php`, `archive-anpi.php` - テンプレート
-- `parts/loop-anpi.php` - ループテンプレート
-- `assets/js/src/components/anpi-submit.jsx` - 投稿コンポーネント
-- `hooks/post_type_anpi.php` - 投稿タイプ登録と権限制御
+- **thread** スレッド（掲示板）機能に関連するファイル群
+- **news** ニュース機能に関連するファイル群
+- **ideas** アイデア投稿機能に関連するファイル群
+- **anpi** 安否情報機能に関連するファイル群
+- **series** 連載機能に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
@@ -343,52 +326,17 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - 1つのファイルが複数のグループに属することも可能（必要に応じて）
 - WordPressのテンプレート階層を優先し、汎用的な部品は `get_template_part('parts/loop', get_post_type())` のようにポストタイプで呼び分ける
 
-## 環境変数（.env）
-```
-# WordPress Database
-MYSQL_ROOT_PASSWORD=root
-MYSQL_DATABASE=wordpress
-MYSQL_USER=wordpress
-MYSQL_PASSWORD=wordpress
-
-# WordPress Settings
-WORDPRESS_VERSION=6.8  # composer.jsonで管理
-WORDPRESS_TABLE_PREFIX=wp_
-WORDPRESS_DEBUG=true
-
-# Site URLs
-WP_HOME=https://hametuha.info
-WP_SITEURL=https://hametuha.info
-
-# Port Settings (変更可能)
-NGINX_PORT=80
-NGINX_HTTPS_PORT=443
-MYSQL_PORT=3307
-PHPMYADMIN_PORT=8081
-MAILPIT_SMTP_PORT=1026
-MAILPIT_UI_PORT=8026
-
-# SSL Settings (オプション)
-SSL_ENABLED=true  # mkcertで証明書生成済み
-SSL_CERT_PATH=docker/nginx/certs/hametuha.info.pem
-SSL_KEY_PATH=docker/nginx/certs/hametuha.info-key.pem
-```
-
-## Docker Composeの利点
-- 標準ポート（80/443）が使用可能
-- 設定の柔軟性が高い
-- 他のプロジェクトとの独立性
-- カスタマイズが容易
-- 本番環境に近い構成
-
 ## WordPressバージョン管理
 
 ### 統一されたバージョン管理
+
 WordPressのバージョンは`.env`ファイルの`WORDPRESS_VERSION`で一元管理します。
+`.env`ファイルは `.env.example` を元に作成してください。
 
 ### バージョン設定方法
 
 #### 1. 初回セットアップ時
+
 ```bash
 # .envファイルを作成
 cp .env.example .env
@@ -398,6 +346,7 @@ grep WORDPRESS_VERSION .env
 ```
 
 #### 2. バージョン変更時
+
 ```bash
 # バージョンを変更（例）
 ./bin/set-wordpress-version.sh 6.8.1
@@ -427,18 +376,15 @@ WordPressのPHPUnitテスト実行には、WordPress本体とは別にテスト�
 ./bin/install-wp-tests.sh
 
 # 2. テストを実行
-./bin/test.sh
-
-# または直接実行
-docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametuha && composer test"
+composer test
 ```
 
 #### ディレクトリ構成
 ```
 hametuha/
-├── wp/                    # WordPressコア（Composer管理）
+├── wp/                   # WordPressコア（Composer管理）
 ├── wp-tests/             # WordPressテストスイート（ローカル管理）
-│   ├── includes/         # テストフレームワーク
+│   ├── includes/        # テストフレームワーク
 │   ├── data/            # テストデータ
 │   └── wp-tests-config.php  # テスト設定
 ```
@@ -452,9 +398,6 @@ hametuha/
 
 #### テーマのテスト実行
 ```bash
-# 推奨方法
-./bin/test.sh
-
 # Composer経由
 composer test
 
@@ -464,8 +407,8 @@ docker compose exec wordpress bash -c "cd /var/www/html/wp-content/themes/hametu
 
 #### 新しいテストの追加
 1. `themes/hametuha/tests/`にテストファイルを作成
-2. ファイル名は`test-*.php`の形式
-3. クラス名は`Test_*`の形式
+2. ファイル名は`Test_*.php`の形式（クラス名と一致）
+3. クラス名は`Test_*`の形式（スネークケース）
 4. `WP_UnitTestCase`を継承
 
 例:
@@ -519,6 +462,7 @@ docker compose exec mysql mysql -u root -proot -e "DROP DATABASE IF EXISTS wordp
 - `DEPLOY_SSH_KEY`: EC2インスタンスへのSSH秘密鍵
 
 ### SSH鍵の設定方法
+
 ```bash
 # 1. SSH鍵ペアを生成（既存のものがあれば不要）
 ssh-keygen -t ed25519 -C "github-actions@hametuha.com" -f deploy_key

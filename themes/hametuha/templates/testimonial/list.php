@@ -123,7 +123,7 @@ get_header();
 												</li>
 												<li class="list-inline-item">
 													<strong>優先順位</strong>
-													<?php echo number_format( $comment->priority ); ?>
+													<?php echo number_format( (int) $comment->priority ); ?>
 												</li>
 											</ul>
 

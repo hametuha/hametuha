@@ -1,6 +1,7 @@
 <?php
 /**
  * Recommendation template.
+ *
  * @var array $args
  */
 $args   = wp_parse_args( $args, [

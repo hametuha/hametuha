@@ -95,6 +95,9 @@ class Analytics extends Singleton {
 	public function do_tracking_code() {
 		// Get cookie and if set, use it.
 		// If not set, generate via uuid4 and overwrite it.
+		if ( 'local' === wp_get_environment_type() && ! defined( 'HAMETUHA_LOCAL_GA4' ) ) {
+			return;
+		}
 		?>
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
@@ -308,7 +311,8 @@ JS;
 				return AnalyticsMesurementApi::get_instance( [
 					'ua' => $this->ua,
 				] );
-				break;
+			default:
+				return null;
 		}
 	}
 }

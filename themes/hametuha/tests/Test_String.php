@@ -8,7 +8,7 @@
 /**
  * Sample test case.
  */
-class StringTest extends WP_UnitTestCase {
+class Test_String extends WP_UnitTestCase {
 
 	/**
 	 * A single example test.

@@ -76,15 +76,13 @@
 		],
 		"lint:theme": "phpcs --standard=phpcs.ruleset.xml themes/hametuha",
 		"fix": [
-			"@fix:theme"
+			"@fix:theme",
+			"phpcbf --standard=phpcs.ruleset.xml mu-plugins"
 		],
-		"update-lock": [
-			"docker compose exec wordpress composer update"
-		],
+		"fix:theme": "phpcbf --standard=phpcs.ruleset.xml themes/hametuha",
 		"update-lock:theme": [
 			"docker compose exec wordpress bash -c \"cd /var/www/html/wp-content/themes/hametuha && composer update\""
 		],
-		"fix:theme": "phpcbf --standard=phpcs.ruleset.xml themes/hametuha",
 		"wp": "docker compose exec -u www-data wordpress wp",
 		"start": "docker compose up -d",
 		"stop": "docker compose down",

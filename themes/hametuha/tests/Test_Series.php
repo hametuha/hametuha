@@ -8,7 +8,7 @@
 /**
  * Sample test case.
  */
-class SeriesTest extends WP_UnitTestCase {
+class Test_Series extends WP_UnitTestCase {
 
 	/**
 	 * @var \Hametuha\Model\Series

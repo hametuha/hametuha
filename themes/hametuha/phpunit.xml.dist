@@ -9,8 +9,8 @@
 	>
 	<testsuites>
 		<testsuite name="hametuha-test">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
-			<exclude>./tests/test-sample.php</exclude>
+			<directory prefix="Test_" suffix=".php">./tests/</directory>
+			<exclude>./tests/Test_Sample.php</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

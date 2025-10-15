@@ -42,15 +42,9 @@ add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
  * ローカル環境用：簡易ログイン機能
  *
  * wp-config-local.php で HAMETUHA_LOGGED_IN_AS 定数を設定すると、
- * すべてのリクエストで指定されたロールのユーザーとして自動ログイン。
+ * すべてのリクエストで指定されたユーザーとして自動ログイン。
  *
- * 設定例: define( 'HAMETUHA_LOGGED_IN_AS', 'subscriber' );
- *
- * 利用可能なロール:
- * - admin: 管理者（takahashi_fumiki）
- * - editor: 編集者（takahashi_fumiki - editorユーザーが存在しないため）
- * - author: 投稿者（@10kgtr）
- * - subscriber: 購読者（@__k__n__c__）
+ * 設定例: define( 'HAMETUHA_LOGGED_IN_AS', 'user_login' );
  *
  * ローカル環境でのみ動作します。
  * Chrome DevTools MCPのようなセッション/クッキーを保持できない環境でのテスト用。
@@ -65,22 +59,8 @@ add_filter( 'determine_current_user', function( $user_id ) {
 		return $user_id;
 	}
 
-	$login_as = HAMETUHA_LOGGED_IN_AS;
-
-	// ロールごとのテストユーザー定義
-	$test_users = [
-		'admin'      => 'takahashi_fumiki',
-		'editor'     => 'takahashi_fumiki', // editorユーザーが存在しないため、adminで代用
-		'author'     => '@10kgtr',
-		'subscriber' => '@__k__n__c__',
-	];
-
-	$username = $test_users[ $login_as ] ?? '';
-	if ( empty( $username ) ) {
-		return $user_id;
-	}
-
-	$user = get_user_by( 'login', $username );
+	// ユーザーを取得
+	$user = get_user_by( 'login', HAMETUHA_LOGGED_IN_AS );
 	if ( ! $user ) {
 		return $user_id;
 	}

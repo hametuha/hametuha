@@ -381,7 +381,7 @@ endswitch;
 				</ol>
 				<p class="text-center">
 
-					<?php if ( is_user_logged_in() ) : ?>
+					<?php if ( current_user_can( 'read' ) ) : ?>
 						<a class="review-creator btn btn-primary btn-lg" rel="nofollow"
 						   href="<?php echo home_url( '/testimonials/add/' . get_the_ID() . '/', is_ssl() ? 'https' : 'http' ); ?>"
 						   data-title="<?php echo sprintf( '%sのレビュー', esc_attr( get_the_title() ) ); ?>">

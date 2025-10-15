@@ -185,6 +185,9 @@ HTML;
  * @return string
  */
 function hametuha_format_pagination( $pagination, $size = '' ) {
+	if ( empty( $pagination ) ) {
+		return '';
+	}
 	$out = [];
 	foreach ( explode( "\n", $pagination ) as $link ) {
 		// Bootstrap 5: page-itemクラスを追加、page-linkクラスも必要
