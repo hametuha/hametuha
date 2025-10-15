@@ -82,15 +82,8 @@ add_action( 'init', function () {
 		'chart-js',
 	], hametuha_version(), true );
 
-	// シリーズ用JS
-	wp_register_script( 'hametuha-series', get_template_directory_uri() . '/assets/js/dist/components/series-helper.js', [
-		'jquery-masonry',
-		'jquery-form',
-	], hametuha_version(), true );
-
 	// ソーシャル計測
 	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
-
 
 	// メインCSS
 	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );
@@ -132,7 +125,13 @@ add_action( 'init', function () {
 				}
 				switch ( $asset['ext'] ) {
 					case 'js':
-						wp_register_script( $asset['handle'], trailingslashit( get_template_directory_uri() ) . $asset['path'], $asset['deps'], $asset['hash'], $asset['footer'] );
+						$footer = [
+							'in_footer' => $asset['footer'],
+						];
+						if ( isset( $asset['strategy'] ) && in_array( $asset['strategy'], [ 'defer', 'async' ], true ) ) {
+							$footer['strategy'] = $asset['strategy'];
+						}
+						wp_register_script( $asset['handle'], trailingslashit( get_template_directory_uri() ) . $asset['path'], $asset['deps'], $asset['hash'], $footer );
 						break;
 					case 'css':
 						wp_register_style( $asset['handle'], trailingslashit( get_template_directory_uri() ) . $asset['path'], $asset['deps'], $asset['hash'], $asset['media'] ?? 'all' );

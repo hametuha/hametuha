@@ -543,16 +543,16 @@ SQL;
 	 * @return bool
 	 */
 	public function is_service( $url, $service ) {
+		if ( empty( $url ) ) {
+			return false;
+		}
 		switch ( $service ) {
 			case 'twitter':
-				return (bool) preg_match( '#^https?://(www\.)?twitter\.com/[^/]+/status/[0-9]+/?#u', $url );
-				break;
+				return (bool) preg_match( '#^https?://(www\.)?(twitter|x)\.com/[^/]+/status/[0-9]+/?#u', $url );
 			case 'amazon':
 				return (bool) preg_match( '#^https?://([a-z0-9\-\.].*\.)?amazon.(co\.jp|com)#u', $url );
-				break;
 			default:
 				return false;
-				break;
 		}
 	}
 

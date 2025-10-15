@@ -10,7 +10,7 @@ if ( ! window.wp.hametuha ) {
 }
 
 /**
- * Display class names from object.
+ * オブジェクトのプロパティ名からクラス名を表示する
  *
  * @param {object} classes key is class name, value is boolean.
  * @returns {string} Class names.
@@ -41,3 +41,50 @@ const toDateTime = ( date ) => {
 	return str.join( '-' );
 };
 window.wp.hametuha.toDateTime = toDateTime;
+
+/**
+ * formの特定の要素をPOST送信用のオブジェクトに変換する
+ *
+ * WordPress REST APIに準拠した形式で変換：
+ * - radio: 選択された値（文字列）
+ * - checkbox（単一）: boolean
+ * - checkbox（複数）: 選択された値の配列
+ * - その他（text, textarea, select, number等）: value
+ *
+ * @param {HTMLElement} form form要素
+ * @param {Array<string>} names nameの配列
+ * @return {Object}
+ */
+const formToData = ( form, names ) => {
+	const formData = {};
+	names.forEach( ( name ) => {
+		const elements = form.querySelectorAll( `[name="${name}"]` );
+		if ( elements.length === 0 ) {
+			return;
+		}
+
+		const firstElem = elements[0];
+		const type = firstElem.type;
+
+		if ( type === 'radio' ) {
+			// ラジオボタン: チェックされた要素のvalue
+			const checked = form.querySelector( `[name="${name}"]:checked` );
+			formData[name] = checked ? checked.value : null;
+		} else if ( type === 'checkbox' ) {
+			if ( elements.length === 1 ) {
+				// 単一チェックボックス: boolean
+				formData[name] = firstElem.checked;
+			} else {
+				// 複数チェックボックス: チェックされた要素のvalueの配列
+				formData[name] = Array.from( elements )
+					.filter( elem => elem.checked )
+					.map( elem => elem.value );
+			}
+		} else {
+			// その他（text, textarea, select, number等）: valueをそのまま取得
+			formData[name] = firstElem.value;
+		}
+	} );
+	return formData;
+};
+window.wp.hametuha.formToData = formToData;
