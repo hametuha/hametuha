@@ -88,3 +88,26 @@ const formToData = ( form, names ) => {
 	return formData;
 };
 window.wp.hametuha.formToData = formToData;
+
+/**
+ * Bootstrap 5 Tooltip初期化
+ *
+ * data-bs-toggle="tooltip"を持つすべての要素にtooltipを初期化
+ * DOMの変更後に再度呼び出すことで動的に追加された要素にも対応可能
+ */
+const initializeTooltips = () => {
+	const tooltipTriggerList = document.querySelectorAll( '[data-bs-toggle="tooltip"]' );
+	const tooltipList = Array.from( tooltipTriggerList ).map( tooltipTriggerEl => {
+		// Bootstrap 5ではbootstrap.Tooltipコンストラクタを使用
+		return new bootstrap.Tooltip( tooltipTriggerEl );
+	} );
+	return tooltipList;
+};
+
+// ページロード時に初期化
+document.addEventListener( 'DOMContentLoaded', () => {
+	initializeTooltips();
+} );
+
+// 再初期化用の関数を公開
+window.wp.hametuha.initializeTooltips = initializeTooltips;

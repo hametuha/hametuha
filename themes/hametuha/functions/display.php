@@ -26,12 +26,18 @@ function hameplate( $slug, $name = '', $args = [], $echo = true, $deprecated = '
 /**
  * ヘルプ用アイコンを出力する
  *
- * @param string $string
- * @param string $place left top right bottom
+ * Bootstrap 5対応版
+ *
+ * @param string $string ツールチップのテキスト
+ * @param string $place  left, top, right, bottom (Bootstrap 5では start, top, end, bottom も使用可能)
  */
-function help_tip( $string, $place = null ) {
-	printf( '<a href="#" class="btn btn-xs btn-default help-tip" data-toggle="tooltip" data-original-title="%s"%s><i class="icon-question5"></i></a>',
-	esc_attr( $string ), ( $place ? 'data-placement="' . esc_attr( $place ) . '"' : '' ) );
+function help_tip( $string, $place = 'top' ) {
+	$placement = $place ? sprintf( ' data-bs-placement="%s"', esc_attr( $place ) ) : '';
+	printf(
+		'<a href="#" class="btn btn-sm btn-secondary help-tip" data-bs-toggle="tooltip" data-bs-title="%s"%s><i class="icon-question5"></i></a>',
+		esc_attr( $string ),
+		$placement
+	);
 }
 
 /**
