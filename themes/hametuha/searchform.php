@@ -1,29 +1,31 @@
 <?php
+/**
+ * 検索フォーム
+ *
+ * 特定の投稿タイプに絞り込むこと
+ */
 if ( is_hamenew() ) {
-	$post_type = 'news';
+	$action = get_post_type_archive_link( 'news' );
 	$label     = 'はめにゅー内を検索します';
 } elseif ( is_post_type_archive( 'faq' ) || is_tax( 'faq_cat' ) || is_singular( 'faq' ) ) {
-	$post_type = 'faq';
+	$action = get_post_type_archive_link( 'faq' );
 	$label     = 'よくある質問を検索します';
 } elseif ( is_post_type_archive( 'thread' ) || is_tax( 'topic' ) || is_singular( 'thread' ) ) {
-	$post_type = 'thread';
+	$action = get_post_type_archive_link( 'thread' );
 	$label     = '掲示板の中を検索します';
+} elseif ( is_post_type_archive( 'series' ) || is_singular( 'series' ) ) {
+	$action = get_post_type_archive_link( 'series' );
+	$label     = '連載・作品集を検索します';
 } else {
-	$post_type = 'any';
+	$action = home_url( 'search' );
+	$post_type = 'post';
 	$label     = '検索ワードを入れてください';
 }
 ?>
-<form method="get" action="<?php echo home_url( '/' ); ?>" class="adv-search-form">
-
-	<?php if ( $post_type ) : ?>
-		<input type="hidden" name="post_type" value="<?php echo $post_type; ?>"/>
-	<?php endif; ?>
-
-	<div class="input-group">
-		<input placeholder="<?php echo esc_attr( $label ); ?>" type="text" name="s" class="form-control"
+<form method="get" action="<?php echo esc_url( $action ); ?>" class="adv-search-form">
+	<div class="input-group mt-5 mb-5">
+		<input placeholder="<?php echo esc_attr( $label ); ?>" type="search" name="s" class="form-control"
 			   value="<?php the_search_query(); ?>">
-		<span class="input-group-btn">
-			<input type="submit" class="btn btn-default" value="検索">
-		</span>
+		<input type="submit" class="btn btn-primary" value="検索">
 	</div><!-- /input-group -->
 </form>

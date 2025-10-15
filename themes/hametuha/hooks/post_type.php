@@ -21,7 +21,7 @@ add_action( 'init', function () {
 	//シリーズ
 	$series = 'series';
 	$args   = array(
-		'description'     => '著者によってまとめられた作品集です。特定のテーマに基づいた連作や長編小説などがあります。近々ePubなどの形式に書き出せるようになる予定（2012年9月現在）です。',
+		'description'     => '特定のテーマに基づいた連作や長編小説などがあります。電子書籍として販売されているものも含まれています。',
 		'label'           => '作品集・連載',
 		'labels'          => [
 			'featured_image'        => '表紙画像',

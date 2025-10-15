@@ -9,8 +9,10 @@ use WPametu\DB\Model;
  * Series model
  *
  * @package Hametuha\Model
+ * @feature-group series
  *
  * @property CompiledFiles $files
+ * @property \WP_Post_Type $post_type
  */
 class Series extends Model {
 
@@ -731,6 +733,8 @@ SQL;
 		switch ( $name ) {
 			case 'files':
 				return CompiledFiles::get_instance();
+			case 'post_type':
+				return get_post_type_object( 'series' );
 			default:
 				return parent::__get( $name );
 		}

@@ -148,4 +148,33 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 	}
 }, 10, 2 );
 
+/**
+ * 完結済み作品のリライトルールを登録する
+ */
+add_action( 'init', function() {
+	add_rewrite_rule( 'series/finished/page/(\d+)/?$', 'index.php?post_type=series&is_finished=1&paged=$matches[1]', 'top' );
+	add_rewrite_rule( 'series/finished/?$', 'index.php?post_type=series&is_finished=1', 'top' );
+}, 20 );
 
+/**
+ * クエリバーを追加する
+ */
+add_filter( 'query_vars', function( $vars ) {
+	$vars[] = 'is_finished';
+	return $vars;
+} );
+
+/**
+ * リライトルールにフックをかける
+ */
+add_action( 'pre_get_posts', function( WP_Query &$wp_query ) {
+	if ( ! $wp_query->get( 'is_finished') ) {
+		return;
+	}
+	$meta_query = $wp_query->get( 'meta_query' ) ?: [];
+	$meta_query[] = [
+		'key'   => '_series_finished',
+		'value' => '1',
+	];
+	$wp_query->set( 'meta_query', $meta_query );
+} );

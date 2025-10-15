@@ -3,6 +3,7 @@
  * KDP本紹介様のテンプレート
  *
  * @since 7.9.0
+ * @feature-group series
  */
 
 get_header();
@@ -41,7 +42,7 @@ global $wp_query;
 
 			<?php  if ( have_posts() ) : ?>
 
-				<ul class="list-book">
+				<ul class="list-book list-book-kdp">
 					<?php while ( have_posts() ) : the_post(); ?>
 
 						<li class="list-book-item">
