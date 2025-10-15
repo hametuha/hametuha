@@ -69,8 +69,10 @@
 		}
 
 		&--headline {
-			margin-left: 0.5em;
+			margin: 0.25em 0 0;
 			color: inherit;
+			font-size: 0.6em;
+			display: block;
 		}
 
 		&--represent {
@@ -208,6 +210,14 @@
 			h3 {
 				margin-top: 0;
 				padding-right: 100px;
+				small {
+					font-size: 0.6em;
+					display: inline-block;
+					padding: 0.15em 0.3em;
+					background-color: $primary;
+					color: $white;
+					vertical-align: text-bottom;
+				}
 			}
 
 			.btn {
@@ -287,8 +297,18 @@
 		}
 
 		&--info {
-			color: #888;
+			color: $gray-600;
 			margin-bottom: 10px;
+
+			li {
+				border-left: 1px solid $gray-300;
+				padding-left: 0.5rem;
+
+				&:first-child {
+					padding-left: 0;
+					border-left: none;
+				}
+			}
 		}
 
 		&--excerpt {

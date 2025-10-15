@@ -1,3 +1,10 @@
+<?php
+/**
+ * 連載ページの掲載作
+ *
+ * @feature-group series
+ */
+?>
 <li <?php post_class( 'media loop-series' ); ?>>
 	<a class="media__link<?php echo ! has_post_thumbnail() ? ' media__link--nopad' : ''; ?>" href="<?php the_permalink(); ?>">
 
@@ -23,17 +30,17 @@ HTML;
 
 			<!-- Post Data -->
 			<ul class="list-inline">
-				<li class="author-info">
+				<li class="list-inline-item author-info">
 					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
 					<?php the_author(); ?> 編
 				</li>
-				<li class="date">
+				<li class="list-inline-item date">
 					<i class="icon-calendar2"></i> <?php the_series_range(); ?>
 				</li>
-				<li>
+				<li class="list-inline-item">
 					<i class="icon-books"></i> <?php echo number_format_i18n( get_post_children_count() ); ?>作収録
 				</li>
-				<li class="static">
+				<li class="list-inline-item static">
 					<i class="icon-reading"></i> <?php the_post_length( '全', '文字', '計測不能' ); ?>
 				</li>
 			</ul>

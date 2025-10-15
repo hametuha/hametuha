@@ -1,6 +1,8 @@
 <?php
 /**
  * 連載ページのテンプレート
+ *
+ * @feature-group series
  */
 
 get_header();
@@ -43,7 +45,7 @@ get_header( 'breadcrumb' );
 			<meta itemprop="bookFormat" content="EBook">
 
 			<div class="row series__meta">
-				<div class="col-xs-12 col-sm-4 series__meta--thumbnail text-center">
+				<div class="col-12 col-sm-4 series__meta--thumbnail text-center">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<?php
 						the_post_thumbnail( 'large', [
@@ -56,7 +58,7 @@ get_header( 'breadcrumb' );
 					<?php endif; ?>
 				</div>
 
-				<div class="col-xs-12 col-sm-8 series__top">
+				<div class="col-12 col-sm-8 series__top">
 
 					<!-- title -->
 					<div class="series__header">
@@ -128,8 +130,9 @@ endswitch;
 
 	<div class="series__row series__row--meta">
 		<div class="container series__inner">
-			<div class="col-sm-4 hidden-xs"></div>
-			<div class="col-sm-8 col-xs-12">
+			<div class="row">
+				<div class="col-sm-4 d-none d-sm-block"></div>
+				<div class="col-12 col-sm-8">
 				<?php if ( 2 == $series->get_status( get_the_ID() ) ) : ?>
 					<p class="series__price">
 						&yen; <strong><?php the_series_price(); ?></strong>
@@ -175,6 +178,7 @@ endswitch;
 						</li>
 					<?php endif; ?>
 				</ol>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -184,13 +188,13 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-sm-4 col-xs-12">
+				<div class="col-12 col-sm-4">
 					<h2 class="series__title--author">
 						<small class="series__title--caption">Authors &amp; Editors</small>
 						執筆者一覧
 					</h2>
 				</div>
-				<div class="col-sm-8 col-xs-12">
+				<div class="col-12 col-sm-8">
 					<?php
 					$authors_to_display = $collaborators->get_published_collaborators( get_the_ID() );
 					foreach ( $authors_to_display as $author ) :
@@ -199,7 +203,7 @@ endswitch;
 						<div class="series__author">
 
 							<div class="series__author--photo">
-								<?php echo get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'img-circle' ] ); ?>
+								<?php echo get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'rounded-circle' ] ); ?>
 							</div>
 							<!-- //.series__author -->
 
@@ -241,14 +245,14 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-sm-4 col-xs-12">
+				<div class="col-12 col-sm-4">
 					<h2 class="series__title--list">
 						<small class="series__title--caption">Works</small>
 						収録作一覧
 					</h2>
 				</div>
 
-				<div class="col-sm-8 col-xs-12">
+				<div class="col-12 col-sm-8">
 					<?php if ( $query->have_posts() ) : ?>
 						<ol class="series__list">
 							<?php
@@ -291,7 +295,7 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 					<h2 class="series__title--testimonials text-center">
 						<small class="series__title--caption">How people say</small>
 						みんなの反応
@@ -388,7 +392,7 @@ endswitch;
 							<i class="icon-bubble6"></i> レビュー追加
 						</a>
 						<?php if ( current_user_can( 'edit_post', get_the_ID() ) ) : ?>
-							<a class="btn btn-default btn-lg" rel="nofollow"
+							<a class="btn btn-secondary btn-lg" rel="nofollow"
 							   href="<?php echo home_url( '/testimonials/manage/' . get_the_ID() . '/', 'https' ); ?>">
 								<i class="icon-bubble6"></i> 管理
 							</a>
@@ -408,10 +412,14 @@ endswitch;
 
 
 
-	<?php if ( $url = $series->get_kdp_url( get_the_ID() ) ) : ?>
+	<?php
+	// KDPで販売中の場合。
+	$url = $series->get_kdp_url( get_the_ID() );
+	if ( $url ) :
+		?>
 		<div class="series__row series__row--amazon" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 
 					<h2 class="series__title--amazon text-center">
 						<small class="series__title--caption">Buy at Amazon</small>
@@ -466,7 +474,7 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 					<h2 class="series__title--related text-center">
 						<small class="series__title--caption">Recommendations</small>
 						おすすめ書籍
