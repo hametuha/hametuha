@@ -244,3 +244,20 @@ add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $
 
 	return $response;
 }, 10, 3 );
+
+/**
+ * 検索クエリでpost_typeが指定されていない場合、postに限定する
+ *
+ * @param WP_Query $query
+ */
+add_action( 'pre_get_posts', function ( $query ) {
+	// 管理画面、REST API、またはメインクエリでない場合はスキップ
+	if ( is_admin() || ! $query->is_main_query() || wp_is_rest_endpoint() ) {
+		return;
+	}
+
+	// 検索クエリでpost_typeが指定されていない場合
+	if ( $query->is_search() && ! $query->get( 'post_type' ) ) {
+		$query->set( 'post_type', 'post' );
+	}
+} );
