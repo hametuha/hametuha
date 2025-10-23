@@ -16,6 +16,9 @@ if ( is_hamenew() ) {
 } elseif ( is_post_type_archive( 'series' ) || is_singular( 'series' ) ) {
 	$action = get_post_type_archive_link( 'series' );
 	$label     = '連載・作品集を検索します';
+} elseif ( is_post_type_archive( 'announcement' ) || is_singular( 'announcement' ) ) {
+	$action = get_post_type_archive_link( 'announcement' );
+	$label  = __( '告知を検索します', 'hametuha' );
 } else {
 	$action = home_url( 'search' );
 	$post_type = 'post';

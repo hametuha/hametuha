@@ -26,7 +26,7 @@ get_header();
 						<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
 
 						<!-- title -->
-						<div class="page-header">
+						<div class="page-header mt-3">
 
 							<h1 class="post-title news__title">
 								<?php the_title(); ?>

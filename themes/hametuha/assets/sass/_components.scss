@@ -405,7 +405,7 @@ i.rotation {
 ul.metadata {
 	border-bottom: 1px solid #eee;
 	color: #999;
-	padding: 7px 15px;
+	padding: 7px 0;
 	margin-bottom: 20px;
 	@media only screen and (max-width: $screen-xs-max) {
 		padding-right: 0;
@@ -422,8 +422,10 @@ ul.metadata {
 
 		&:first-child {
 			border-left: none;
+			padding-left: 0;
 			@media only screen and (max-width: $screen-xs-max) {
 				border-left: 1px solid #ddd;
+				padding-left: 0.5em;
 			}
 		}
 	}
@@ -490,14 +492,26 @@ ul.metadata {
 		margin-top: 0;
 	}
 
+	.loop-media {
+		h2 {
+			font-size: 18px;
+			font-weight: bold;
+
+			small {
+				display: inline-block;
+				font-size: 0.75em;
+				padding: 0.25em 0.5em;
+				margin-left: 1em;
+				background-color: $primary;
+				color: $white;
+			}
+		}
+	}
+
 	& > li {
 		margin-top: 0;
 		padding: 0;
 		border-bottom: 1px solid $thin-border;
-
-		&:nth-child(even) {
-			background-color: $zebra-bg;
-		}
 
 		.media__link {
 			@extend .clearfix;
@@ -576,9 +590,11 @@ ul.metadata {
 
 		li {
 			border-left: 1px solid #ddd;
+			padding: 0.25em 0.5em;
 
 			&:first-child {
 				border-left: none;
+				padding-left: 0;
 			}
 		}
 	}

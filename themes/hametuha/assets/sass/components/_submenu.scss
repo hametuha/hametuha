@@ -1,64 +1,81 @@
-.submenu{
-  &-wrapper{
-    #header + & {
-      padding-top: $navbar-height;
-    }
-    background-color: #fff;
-  }
-  display: flex;
-  @include mq-max( $screen-md-min ){
-    flex-wrap: wrap;
-  };
-  padding: 0;
-  margin: 0;
-  li{
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    flex-grow: 1;
-    position: relative;
-    &:before{
-      transition: width .3s linear;
-      z-index: 1;
-      position: absolute;
-      content: "";
-      display: block;
-      width: 0;
-      height: 2px;
-      bottom: 0;
-      left: 50%;
-      transform: translateX( -50% );
-      background-color: #000;
-    }
-    &:hover:before{
-      width: 50%;
-    }
-    &:after{
-      content: "";
-      position: absolute;
-      display: block;
-      top: 50%;
-      height: 60%;
-      transform: translateY(-50%);
-      width: 2px;
-      left: -1px;
-      background-color: #eee;
-    }
-  }
-  a{
-    position: relative;
-    z-index: 2;
-    display:block;
-    text-align: center;
-    padding: 1em;
-    &:link, &:visited{
-      text-decoration: none;
-      color: #222;
-    }
-    &:hover, &:active{
-      text-decoration: none;
-      color: #000;
-    }
-  }
+.submenu {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	@include mq-max($screen-md-min) {
+		flex-wrap: wrap;
+	}
 
+	&-wrapper {
+		#header + & {
+			padding-top: $navbar-height;
+		}
+
+		background-color: #fff;
+	}
+
+	li {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		flex-grow: 1;
+		position: relative;
+
+		&::before {
+			transition: width .3s linear;
+			z-index: 1;
+			position: absolute;
+			content: "";
+			display: block;
+			width: 0;
+			height: 2px;
+			bottom: 0;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #000;
+		}
+
+		&:hover::before {
+			width: 50%;
+		}
+	}
+
+	&::after,
+	& li::after {
+		content: "";
+		position: absolute;
+		display: block;
+		top: 50%;
+		height: 60%;
+		transform: translateY(-50%);
+		width: 2px;
+		background-color: #eee;
+	}
+	&::after {
+		right: -1px;
+	}
+	& li::after {
+		left: -1px;
+	}
+
+	a {
+		position: relative;
+		z-index: 2;
+		display: block;
+		text-align: center;
+		padding: 1em;
+
+		&:link,
+		&:visited {
+			text-decoration: none;
+			color: #222;
+		}
+
+		&:hover,
+		&:active {
+			text-decoration: none;
+			color: #000;
+		}
+	}
 }

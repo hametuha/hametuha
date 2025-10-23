@@ -1,11 +1,16 @@
 <?php
+/**
+ * h1の見出しを出力する
+ *
+ * @todo wp_titleと整合性が取れていないので、なくす
+ */
 if ( hametuha_is_profile_page() ) {
 
 	echo '著者一覧';
 
 } elseif ( is_home() ) {
 
-	wp_title( '' );
+	echo '作品一覧';
 
 } elseif ( is_tax( 'faq_cat' ) ) {
 

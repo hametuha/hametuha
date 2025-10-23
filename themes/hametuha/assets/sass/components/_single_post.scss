@@ -1,27 +1,19 @@
 // 投稿タイプを示すバー
 .post-type-bar {
 	margin: 0;
-	position: relative;
-	padding: 0 1em;
-	height: 46px;
-	line-height: 46px;
+	padding: 0.5em 0;
 	color: $shade-font;
-	border-top: 3px double $shade-font;
-	border-bottom: 3px double $shade-font;
+	border-top: 1px solid $thin-border;
+	border-bottom: 1px solid $thin-border;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
 	.small-button {
 		@extend .btn;
 		@extend .btn-default;
 		@extend .btn-sm;
-		position: absolute;
-		right: 5px;
-		top: 5px;
 	}
-
-	& + .post-title-thumbnail {
-		padding-top: 15px;
-	}
-
 }
 
 // サムネイル

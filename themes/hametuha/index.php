@@ -1,12 +1,21 @@
-<?php get_header(); ?>
-<?php get_header( 'sub' ); ?>
-<?php get_header( 'breadcrumb' ); ?>
+<?php
+/**
+ * アーカイブページ
+ *
+ * 投稿用と
+ */
+get_header();
+get_header( 'sub' );
+get_header( 'breadcrumb' );
+?>
 
 	<div class="container archive">
 
 		<div class="row row-offcanvas row-offcanvas-right">
 
-			<div class="col-xs-12 col-sm-9 main-container">
+
+
+			<div class="col-12 col-md-9 main-container">
 
 				<?php
 				// Jumbotron

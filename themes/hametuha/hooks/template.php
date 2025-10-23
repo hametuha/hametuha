@@ -1,7 +1,7 @@
 <?php
-
 /**
- * ページテンプレートを差し替え
+ * ページテンプレートを差し替える
+ *
  */
 add_filter( 'template_include', function ( $path ) {
 	if ( is_singular( 'page' ) && ! is_home() && 'index.php' == basename( $path ) ) {
@@ -17,3 +17,4 @@ add_filter( 'template_include', function ( $path ) {
 	}
 	return $path;
 }, 11 );
+

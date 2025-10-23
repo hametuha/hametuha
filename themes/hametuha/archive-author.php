@@ -33,7 +33,7 @@ global $wp_query;
 						<?php printf( esc_html__( '%d名の執筆者', 'hametuha' ), $wp_query->found_posts ); ?>
 					</h2>
 					<?php if ( have_posts() ) : ?>
-					<ul class="author-group-list">
+					<ul class="author-group-list mb-3">
 						<?php
 						while ( have_posts() ) {
 							the_post();
