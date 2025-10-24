@@ -11,6 +11,10 @@ function hametuha_viewport() {
 add_action( 'wp_head', 'hametuha_viewport', 1 );
 add_action( 'hashboard_head', 'hametuha_viewport', 1 );
 
+// 画像が引き伸ばしされるフィルターを除去
+// see: https://on-ze.com/blog/13082
+add_filter( 'wp_img_tag_add_auto_sizes', '__return_false' );
+
 /**
  * アセットを登録する
  *

@@ -17,7 +17,7 @@ get_header( 'sub' );
 				<?php echo esc_html( get_post_type_object( 'announcement' )->description ); ?>
 			</p>
 			<p class="d-flex justify-content-start gap-3">
-				<a class="btn btn-outline-primary" href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">
+				<a class="btn btn-outline-primary" href="<?php echo esc_url( home_url( '/inquiry/' ) ); ?>">
 					<?php esc_html_e( '掲載依頼をする', 'hametuha' ); ?>
 				</a>
 			</p>
