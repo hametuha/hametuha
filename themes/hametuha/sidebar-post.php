@@ -1,3 +1,9 @@
+<?php
+/**
+ * 検索用サイドバー
+ */
+wp_enqueue_script( 'hametuha-components-post-search-helper' );
+?>
 <div class="col-12 col-lg-3 order-1" id="sidebar" role="navigation">
 
 	<!-- モバイル用トグルボタン -->
@@ -43,27 +49,33 @@
 					<div class="accordion-item">
 						<h3 class="accordion-header">
 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genreFilter" aria-expanded="false" aria-controls="genreFilter">
-								ジャンル
+								<?php esc_html_e( 'ジャンル', 'hametuha' ); ?>
 							</button>
 						</h3>
 						<div id="genreFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
 							<div class="accordion-body">
+								<?php
+								$categories = get_categories();
+								?>
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="genre[]" value="fiction" id="genre-fiction">
-									<label class="form-check-label" for="genre-fiction">小説</label>
+									<input class="form-check-input" type="radio" name="genre" value="" id="genre-all" data-action="<?php echo esc_url( home_url( 'latest' ) ); ?>" checked>
+									<label class="form-check-label" for="genre-all"><?php esc_html_e( 'すべてのジャンル', 'hametuha' ); ?></label>
 								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="genre[]" value="essay" id="genre-essay">
-									<label class="form-check-label" for="genre-essay">エッセイ</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="genre[]" value="poetry" id="genre-poetry">
-									<label class="form-check-label" for="genre-poetry">詩</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="genre[]" value="drama" id="genre-drama">
-									<label class="form-check-label" for="genre-drama">戯曲</label>
-								</div>
+								<?php
+								foreach ( $categories as $category ) {
+									?>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="genre"
+											data-action="<?php echo esc_url( get_term_link( $category ) ) ?>"
+											value=""
+											id="genre-<?php echo esc_attr( $category->slug ); ?>">
+										<label class="form-check-label" for="genre-<?php echo esc_attr( $category->slug ); ?>">
+											<?php echo esc_html( $category->name ); ?>
+										</label>
+									</div>
+									<?php
+								}
+								?>
 							</div>
 						</div>
 					</div>
