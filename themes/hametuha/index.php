@@ -15,9 +15,7 @@ get_header( 'breadcrumb' );
 
 		<div class="row row-offcanvas row-offcanvas-right">
 
-			<?php get_sidebar( 'post' ); ?>
-
-			<div class="col-12 col-lg-9 main-container">
+			<div class="col-12 col-lg-9 order-2 main-container">
 
 
 				<?php
@@ -112,6 +110,8 @@ get_header( 'breadcrumb' );
 
 			</div>
 			<!-- //.main-container -->
+
+			<?php get_sidebar( 'post' ); ?>
 
 		</div>
 		<!-- // .offcanvas -->

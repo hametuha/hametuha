@@ -1,5 +1,202 @@
-<div class="col-12 col-lg-3" id="sidebar" role="navigation">
+<div class="col-12 col-lg-3 order-1" id="sidebar" role="navigation">
 
-	<?php dynamic_sidebar( 'general-sidebar' ); ?>
+	<!-- モバイル用トグルボタン -->
+	<button class="btn btn-primary d-lg-none w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+		<i class="bi bi-funnel"></i> 絞り込み検索
+	</button>
+
+	<!-- 折りたたみコンテンツ（デスクトップでは常に表示） -->
+	<div class="collapse d-lg-block" id="filterCollapse">
+		<div class="post-search">
+			<h2 class="h5 mb-3">作品検索</h2>
+
+			<form method="get" action="<?php echo home_url( '/latest/' ); ?>" id="post-filter-form">
+
+				<!-- 現在のフィルター表示 -->
+				<div class="filter-status mb-3" id="filter-status" style="display: none;">
+					<div class="d-flex flex-wrap gap-2 mb-2" id="active-filters"></div>
+					<button type="button" class="btn btn-sm btn-outline-secondary" id="clear-all-filters">
+						すべてクリア
+					</button>
+				</div>
+
+				<!-- 検索実行ボタン（上部） -->
+				<button type="submit" class="btn btn-primary w-100 mb-3">
+					<i class="bi bi-search"></i> 検索する
+				</button>
+
+				<!-- おすすめタグ -->
+				<div class="mb-3">
+					<h3 class="h6 mb-2">おすすめタグ</h3>
+					<div class="d-flex flex-wrap gap-2">
+						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="SF">SF</button>
+						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="恋愛">恋愛</button>
+						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="ミステリー">ミステリー</button>
+						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="ファンタジー">ファンタジー</button>
+					</div>
+				</div>
+
+				<!-- フィルターアコーディオン -->
+				<div class="accordion accordion-flush" id="filterAccordion">
+
+					<!-- ジャンル -->
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#genreFilter" aria-expanded="false" aria-controls="genreFilter">
+								ジャンル
+							</button>
+						</h3>
+						<div id="genreFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
+							<div class="accordion-body">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="genre[]" value="fiction" id="genre-fiction">
+									<label class="form-check-label" for="genre-fiction">小説</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="genre[]" value="essay" id="genre-essay">
+									<label class="form-check-label" for="genre-essay">エッセイ</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="genre[]" value="poetry" id="genre-poetry">
+									<label class="form-check-label" for="genre-poetry">詩</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="genre[]" value="drama" id="genre-drama">
+									<label class="form-check-label" for="genre-drama">戯曲</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- タグ -->
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tagFilter" aria-expanded="false" aria-controls="tagFilter">
+								タグ
+							</button>
+						</h3>
+						<div id="tagFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
+							<div class="accordion-body">
+								<div class="mb-2">
+									<input type="text" class="form-control form-control-sm" name="tag" placeholder="タグで検索">
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="tags[]" value="SF" id="tag-sf">
+									<label class="form-check-label" for="tag-sf">SF</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="tags[]" value="恋愛" id="tag-romance">
+									<label class="form-check-label" for="tag-romance">恋愛</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="tags[]" value="ミステリー" id="tag-mystery">
+									<label class="form-check-label" for="tag-mystery">ミステリー</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="tags[]" value="ファンタジー" id="tag-fantasy">
+									<label class="form-check-label" for="tag-fantasy">ファンタジー</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="tags[]" value="ホラー" id="tag-horror">
+									<label class="form-check-label" for="tag-horror">ホラー</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- 長さ -->
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lengthFilter" aria-expanded="false" aria-controls="lengthFilter">
+								文字数
+							</button>
+						</h3>
+						<div id="lengthFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
+							<div class="accordion-body">
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="length[]" value="short" id="length-short">
+									<label class="form-check-label" for="length-short">短編（〜5,000字）</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="length[]" value="medium" id="length-medium">
+									<label class="form-check-label" for="length-medium">中編（5,000〜20,000字）</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" name="length[]" value="long" id="length-long">
+									<label class="form-check-label" for="length-long">長編（20,000字〜）</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- 評価 -->
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ratingFilter" aria-expanded="false" aria-controls="ratingFilter">
+								評価
+							</button>
+						</h3>
+						<div id="ratingFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
+							<div class="accordion-body">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="rating" value="" id="rating-all" checked>
+									<label class="form-check-label" for="rating-all">すべて</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="rating" value="5" id="rating-5">
+									<label class="form-check-label" for="rating-5">★★★★★ 5つ星</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="rating" value="4" id="rating-4">
+									<label class="form-check-label" for="rating-4">★★★★☆ 4つ星以上</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="rating" value="3" id="rating-3">
+									<label class="form-check-label" for="rating-3">★★★☆☆ 3つ星以上</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- コメント数 -->
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#commentFilter" aria-expanded="false" aria-controls="commentFilter">
+								コメント数
+							</button>
+						</h3>
+						<div id="commentFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
+							<div class="accordion-body">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="comments" value="" id="comments-all" checked>
+									<label class="form-check-label" for="comments-all">すべて</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="comments" value="10" id="comments-10">
+									<label class="form-check-label" for="comments-10">10件以上</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="comments" value="5" id="comments-5">
+									<label class="form-check-label" for="comments-5">5件以上</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="comments" value="1" id="comments-1">
+									<label class="form-check-label" for="comments-1">1件以上</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div><!-- //.accordion -->
+
+				<!-- 検索実行ボタン（下部） -->
+				<button type="submit" class="btn btn-primary w-100 mt-3">
+					<i class="bi bi-search"></i> 検索する
+				</button>
+
+			</form>
+
+		</div>
+	</div>
 
 </div><!-- //#sidebar -->
