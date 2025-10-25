@@ -37,12 +37,12 @@ $more-shade-font: #aaa;
 $clear-font: #000;
 $inverse-body: #fff;
 $start-font: #ffff00;
-$hover-bg: #feffd3;
+$hover-bg: $thin-border;
 
 // リンク
 $link-active: red;
-$link-hover-bg: #fffcde;
-$link-active-bg: #fffecc;
+$link-hover-bg: $thin-border;
+$link-active-bg: #e4e4ca;
 
 // ソーシャルアイコンの色
 $hametuha-color: #1F1C1D;

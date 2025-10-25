@@ -11,54 +11,27 @@ get_header( 'breadcrumb' );
 
 	<div class="container archive">
 
+
+
 		<div class="row row-offcanvas row-offcanvas-right">
 
+			<?php get_sidebar( 'post' ); ?>
 
-
-			<div class="col-12 col-md-9 main-container">
-
-				<?php
-				// Jumbotron
-				if ( is_post_type_archive( 'announcement' ) ) {
-					get_template_part( 'parts/jumbotron', 'announcement' );
-				} elseif ( is_post_type_archive( 'lists' ) ) {
-					get_template_part( 'parts/jumbotron', 'lists' );
-				}
-				?>
-
-				<?php if ( is_author() ) : ?>
-					<?php get_template_part( 'parts/author' ); ?>
-				<?php endif; ?>
+			<div class="col-12 col-lg-9 main-container">
 
 
 				<?php
-				if ( is_singular( 'lists' ) ) {
+				if ( is_singular( 'list' ) ) {
 					get_template_part( 'parts/meta', 'lists' );
-				} else {
-					?>
-					<div class="archive-meta">
-						<h1>
-							<?php get_template_part( 'parts/h1' ); ?>
-							<span class="label label-default"><?php echo number_format_i18n( loop_count() ); ?>件</span>
-						</h1>
-
-						<div class="desc">
-							<?php get_template_part( 'parts/meta-desc' ); ?>
-						</div>
-
-						<?php if ( hametuha_is_profile_page() ) : ?>
-							<?php get_template_part( 'parts/search', 'author' ); ?>
-						<?php endif; ?>
-
-
-					</div>
-				<?php } ?>
-
-				<?php
-				if ( is_tax( 'campaign' ) ) {
+				} elseif ( is_post_type_archive( 'list' ) )  {
+					get_template_part( 'parts/jumbotron', 'lists' );
+				} elseif ( is_tax( 'campaign' ) ) {
 					get_template_part( 'parts/meta', 'campaign' );
+				} else {
+					get_template_part( 'parts/meta', 'post' );
 				}
 				?>
+
 				<div>
 
 					<?php
@@ -74,11 +47,7 @@ get_header( 'breadcrumb' );
 						$query = $wp_query;
 					}
 					if ( $query->have_posts() ) :
-
-						if ( ! is_ranking() && ! get_query_var( 'reviewed_as' ) && ! hametuha_is_profile_page() ) {
-							get_template_part( 'parts/sort-order' );
-						}
-
+						get_template_part( 'parts/sort-order' );
 						?>
 
 						<!-- Tab panes -->
@@ -103,8 +72,6 @@ get_header( 'breadcrumb' );
 						// Load navigation
 						if ( get_query_var( 'reviewed_as' ) ) {
 							get_template_part( 'parts/nav', 'review' );
-						} elseif ( ( ( ! is_ranking() || ! get_query_var( 'reviewed_as' ) ) && is_home() ) || is_post_type_archive( 'post' ) || is_category() || is_tag() || is_search() ) {
-							get_template_part( 'parts/nav' );
 						}
 						?>
 
@@ -145,8 +112,6 @@ get_header( 'breadcrumb' );
 
 			</div>
 			<!-- //.main-container -->
-
-			<?php get_sidebar(); ?>
 
 		</div>
 		<!-- // .offcanvas -->

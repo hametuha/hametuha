@@ -14,12 +14,8 @@
 			padding: 80px 40px 80px 30%;
 			-webkit-text-stroke: 2px white;
 			paint-order: stroke fill;
-			@include mq-max($screen-md-max) {
-				padding: 40px 0 40px 30%;
-				background-position: left top;
-			}
 			@include mq-max($screen-sm-max) {
-				padding: 20px 0 20px 30%;
+				padding: 20px 0;
 			}
 		}
 

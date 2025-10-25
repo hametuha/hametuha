@@ -17,9 +17,37 @@
 		margin-bottom: 0.5em;
 	}
 
+	&-header {
+		h2 {
+			display: flex;
+			justify-content: space-between;
+			align-items: start;
+			gap: 1em;
+		}
+	}
+
 	&-body {
 		&__title {
 			color: #000;
+		}
+	}
+
+	&-series {
+		&-title {
+			font-weight: $font-weight-bold;
+		}
+		span {
+			margin-right: 0.5em;
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+		&-tag {
+			display: inline-block;
+			font-size: 12px;
+			padding: 0.25em 0.5em;
+			border: 1px solid currentColor;
+			border-radius: 0.25em;
 		}
 	}
 

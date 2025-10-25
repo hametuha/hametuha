@@ -431,57 +431,6 @@ ul.metadata {
 	}
 }
 
-
-//
-// 一覧ページのリスト
-//
-// --------------------
-//
-// タブ
-.nav-tabs--archive {
-	li {
-		.icon-arrow-up {
-			display: none;
-		}
-
-		&.active {
-			a:hover {
-				cursor: pointer;
-
-				.icon-arrow-up {
-					display: inline-block;
-				}
-
-				.icon-arrow-down {
-					display: none;
-				}
-			}
-		}
-
-		&.asc {
-			.icon-arrow-up {
-				display: inline-block;
-			}
-
-			.icon-arrow-down {
-				display: none;
-			}
-
-			&.active {
-				a:hover {
-					.icon-arrow-down {
-						display: inline-block;
-					}
-
-					.icon-arrow-up {
-						display: none;
-					}
-				}
-			}
-		}
-	}
-}
-
 // コンテナ
 .archive-container {
 	margin: 20px 0;
@@ -494,16 +443,17 @@ ul.metadata {
 
 	.loop-media {
 		h2 {
-			font-size: 18px;
+			font-size: 22px;
 			font-weight: bold;
 
 			small {
 				display: inline-block;
-				font-size: 0.75em;
+				font-size: 0.65em;
 				padding: 0.25em 0.5em;
 				margin-left: 1em;
 				background-color: $primary;
 				color: $white;
+				vertical-align: text-top;
 			}
 		}
 	}
@@ -595,6 +545,10 @@ ul.metadata {
 			&:first-child {
 				border-left: none;
 				padding-left: 0;
+			}
+
+			.badge {
+				vertical-align: text-top;
 			}
 		}
 	}

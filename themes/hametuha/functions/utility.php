@@ -177,6 +177,16 @@ function loop_count() {
 }
 
 /**
+ * ページ数を返す。listで受け取る。
+ *
+ * @return int[] 現在のページ、総ページ
+ */
+function hametuha_page_numbers() {
+	global $wp_query;
+	return [ max( 1, $wp_query->get( 'paged' ) ), $wp_query->max_num_pages ];
+}
+
+/**
  * アドセンス広告を出力する
  *
  * @param type $type
@@ -259,6 +269,19 @@ function the_post_length( $prefix = '', $suffix = '', $placeholder = '0', $per_p
 	} else {
 		echo $prefix . number_format_i18n( max( array( 1, round( $length / $per_page ) ) ) ) . $suffix;
 	}
+}
+
+/**
+ * 平均読了時間を表示
+ *
+ * @param int              $letters_per_minute
+ * @param null|int|WP_Post $post
+ *
+ * @return float
+ */
+function hametuha_reading_time( $letters_per_minute = 500, $post = null ) {
+	$length = get_post_length( $post );
+	return round( $length / $letters_per_minute );
 }
 
 /**
