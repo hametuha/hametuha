@@ -3,6 +3,8 @@
  * 検索用サイドバー
  */
 wp_enqueue_script( 'hametuha-components-post-search-helper' );
+
+$current_cat = get_query_var( 'cat' );
 ?>
 <div class="col-12 col-lg-3 order-1" id="sidebar" role="navigation">
 
@@ -32,15 +34,23 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 				</button>
 
 				<!-- おすすめタグ -->
-				<div class="mb-3">
-					<h3 class="h6 mb-2">おすすめタグ</h3>
-					<div class="d-flex flex-wrap gap-2">
-						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="SF">SF</button>
-						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="恋愛">恋愛</button>
-						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="ミステリー">ミステリー</button>
-						<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="ファンタジー">ファンタジー</button>
+				<?php
+				$popular_tags = hametuha_get_popular_tags( 10 );
+				if ( ! empty( $popular_tags ) ) :
+					?>
+					<div class="mb-3">
+						<h3 class="h6 mb-2">おすすめタグ</h3>
+						<div class="d-flex flex-wrap gap-2">
+							<?php foreach ( $popular_tags as $tag ) : ?>
+								<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="<?php echo esc_attr( $tag->name ); ?>">
+									<?php echo esc_html( $tag->name ); ?>
+								</button>
+							<?php endforeach; ?>
+						</div>
 					</div>
-				</div>
+					<?php
+				endif;
+				?>
 
 				<!-- フィルターアコーディオン -->
 				<div class="accordion accordion-flush" id="filterAccordion">
@@ -58,7 +68,10 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 								$categories = get_categories();
 								?>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="genre" value="" id="genre-all" data-action="<?php echo esc_url( home_url( 'latest' ) ); ?>" checked>
+									<input class="form-check-input" type="radio" name="genre"
+										value="" id="genre-all"
+										<?php checked( '', $current_cat ); ?>
+										data-action="<?php echo esc_url( home_url( 'latest' ) ); ?>">
 									<label class="form-check-label" for="genre-all"><?php esc_html_e( 'すべてのジャンル', 'hametuha' ); ?></label>
 								</div>
 								<?php
@@ -68,6 +81,7 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 										<input class="form-check-input" type="radio" name="genre"
 											data-action="<?php echo esc_url( get_term_link( $category ) ) ?>"
 											value=""
+											<?php checked( $current_cat, $category->term_id ); ?>
 											id="genre-<?php echo esc_attr( $category->slug ); ?>">
 										<label class="form-check-label" for="genre-<?php echo esc_attr( $category->slug ); ?>">
 											<?php echo esc_html( $category->name ); ?>
@@ -92,26 +106,21 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 								<div class="mb-2">
 									<input type="text" class="form-control form-control-sm" name="tag" placeholder="タグで検索">
 								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="tags[]" value="SF" id="tag-sf">
-									<label class="form-check-label" for="tag-sf">SF</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="tags[]" value="恋愛" id="tag-romance">
-									<label class="form-check-label" for="tag-romance">恋愛</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="tags[]" value="ミステリー" id="tag-mystery">
-									<label class="form-check-label" for="tag-mystery">ミステリー</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="tags[]" value="ファンタジー" id="tag-fantasy">
-									<label class="form-check-label" for="tag-fantasy">ファンタジー</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="tags[]" value="ホラー" id="tag-horror">
-									<label class="form-check-label" for="tag-horror">ホラー</label>
-								</div>
+								<?php
+								// 人気タグをもっと多く取得（20個）
+								$filter_tags = hametuha_get_popular_tags( 20 );
+								foreach ( $filter_tags as $tag ) :
+									$tag_id = 'tag-' . $tag->term_id;
+									?>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="tags[]" value="<?php echo esc_attr( $tag->name ); ?>" id="<?php echo esc_attr( $tag_id ); ?>">
+										<label class="form-check-label" for="<?php echo esc_attr( $tag_id ); ?>">
+											<?php echo esc_html( $tag->name ); ?>
+										</label>
+									</div>
+									<?php
+								endforeach;
+								?>
 							</div>
 						</div>
 					</div>
