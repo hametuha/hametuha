@@ -4,7 +4,13 @@
  */
 wp_enqueue_script( 'hametuha-components-post-search-helper' );
 
-$current_cat = get_query_var( 'cat' );
+$queried_object = get_queried_object();
+$current_cat  = get_query_var( 'cat' );
+// 現在していされているタグを取得
+$current_tags = hametuha_queried_tags();
+if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
+	$current_tags[] = $queried_object->name;
+}
 ?>
 <div class="col-12 col-lg-3 order-1" id="sidebar" role="navigation">
 
@@ -23,9 +29,9 @@ $current_cat = get_query_var( 'cat' );
 				<!-- 現在のフィルター表示 -->
 				<div class="filter-status mb-3" id="filter-status" style="display: none;">
 					<div class="d-flex flex-wrap gap-2 mb-2" id="active-filters"></div>
-					<button type="button" class="btn btn-sm btn-outline-secondary" id="clear-all-filters">
-						すべてクリア
-					</button>
+					<a class="btn btn-sm btn-outline-secondary" id="clear-all-filters" href="<?php echo home_url( 'latest' ); ?>">
+						<?php esc_html_e( 'すべてクリア', 'hametuha' ); ?>
+					</a>
 				</div>
 
 				<!-- 検索実行ボタン（上部） -->
@@ -41,10 +47,15 @@ $current_cat = get_query_var( 'cat' );
 					<div class="mb-3">
 						<h3 class="h6 mb-2">おすすめタグ</h3>
 						<div class="d-flex flex-wrap gap-2">
-							<?php foreach ( $popular_tags as $tag ) : ?>
-								<button type="button" class="btn btn-sm btn-outline-primary tag-quick-select" data-tag="<?php echo esc_attr( $tag->name ); ?>">
+							<?php
+							foreach ( $popular_tags as $tag ) :
+								$tag_link_classes   = [ 'btn', 'btn-sm', 'btn'];
+								$tag_link_classes[] = in_array( $tag->name, $current_tags, true ) ? 'btn-primary' : 'btn-outline-primary';
+								?>
+								<a class="<?php echo implode( ' ', $tag_link_classes ) ?>"
+									href="<?php echo esc_url( get_term_link( $tag ) ); ?>">
 									<?php echo esc_html( $tag->name ); ?>
-								</button>
+								</a>
 							<?php endforeach; ?>
 						</div>
 					</div>
@@ -103,17 +114,30 @@ $current_cat = get_query_var( 'cat' );
 						</h3>
 						<div id="tagFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
 							<div class="accordion-body">
-								<div class="mb-2">
-									<input type="text" class="form-control form-control-sm" name="tag" placeholder="タグで検索">
-								</div>
 								<?php
 								// 人気タグをもっと多く取得（20個）
-								$filter_tags = hametuha_get_popular_tags( 20 );
+								$filter_tags    = hametuha_get_popular_tags( 20 );
+								$tag_to_display = array_filter( $current_tags, function( $t ) use ( $filter_tags ) {
+									return ! in_array( $t, array_map( function( $f ) {
+										return $f->name;
+									}, $filter_tags ), true );
+								} );
+								?>
+								<div class="mb-2">
+									<input type="text" class="form-control form-control-sm" name="t[]" placeholder="タグで検索"
+										id="tag-free-input"
+										value="<?php echo esc_attr( implode( ',', $tag_to_display ) ); ?>" />
+									<small class="form-text text-muted"><?php esc_html_e( '複数タグはカンマ（,）で区切って入力', 'hametuha' ); ?></small>
+								</div>
+								<?php
 								foreach ( $filter_tags as $tag ) :
 									$tag_id = 'tag-' . $tag->term_id;
 									?>
 									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="tags[]" value="<?php echo esc_attr( $tag->name ); ?>" id="<?php echo esc_attr( $tag_id ); ?>">
+										<input class="form-check-input" type="checkbox"
+											name="t[]" value="<?php echo esc_attr( $tag->name ); ?>"
+											<?php checked( in_array( $tag->name, $current_tags, true ) ); ?>
+											id="<?php echo esc_attr( $tag_id ); ?>">
 										<label class="form-check-label" for="<?php echo esc_attr( $tag_id ); ?>">
 											<?php echo esc_html( $tag->name ); ?>
 										</label>

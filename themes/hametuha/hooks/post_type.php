@@ -183,15 +183,7 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 				<?php $genre = get_term_meta( $term->term_id, 'genre', true ); ?>
 				<option value="" <?php selected( ! $genre ); ?>>指定なし</option>
 				<?php
-				foreach (
-					[
-						'サブジャンル',
-						'固有名詞',
-						'フラグ',
-						'印象',
-						'一般名詞',
-					] as $val
-				) :
+				foreach ( hametuha_tag_types() as $val ) :
 					?>
 					<option
 						value="<?php echo esc_attr( $val ); ?>" <?php selected( $val == $genre ); ?>><?php echo esc_html( $val ); ?></option>
@@ -202,6 +194,9 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 	<tr>
 		<th><label for="tag-type">オプション</label></th>
 		<td>
+			<?php
+			// todo: これがなんのためにあるのかわからない
+			?>
 			<script>
 				jQuery(document).ready(function ($) {
 					$('#my-color').wpColorPicker();
@@ -259,5 +254,44 @@ add_action( 'pre_get_posts', function ( $query ) {
 	// 検索クエリでpost_typeが指定されていない場合
 	if ( $query->is_search() && ! $query->get( 'post_type' ) ) {
 		$query->set( 'post_type', 'post' );
+	}
+} );
+
+/**
+ * tというタグを使えるようにする
+ *
+ * @param array $vars
+ * @return array
+ */
+add_filter( 'query_vars', function( $vars ) {
+	$vars[] = 't';
+	return $vars;
+} );
+
+/**
+ * 複数タグでのOR検索を実装
+ *
+ * クエリパラメータ:
+ * - t: カンマ区切りのタグ (例: t=SF,恋愛,ミステリー)
+ * - tags[]: 配列形式のタグ (例: tags[]=SF&tags[]=恋愛)
+ * - tag: フリー入力のタグ (例: tag=SF)
+ *
+ * @param WP_Query $query
+ */
+add_action( 'pre_get_posts', function ( WP_Query $query ) {
+	$tags = hametuha_queried_tags( $query );
+	if ( ! empty( $tags ) ) {
+		// 既存のtax_queryを取得
+		$tax_query = $query->get( 'tax_query' ) ?: [];
+
+		// タグのOR検索を追加
+		$tax_query[] = [
+			'taxonomy' => 'post_tag',
+			'field'    => 'name',
+			'terms'    => $tags,
+			'operator' => 'IN', // OR検索
+		];
+
+		$query->set( 'tax_query', $tax_query );
 	}
 } );

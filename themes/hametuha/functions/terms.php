@@ -121,3 +121,34 @@ function hametuha_get_popular_tags( $limit = 5, $types = [] ) {
 	// 上限数で切り取り
 	return array_slice( $tags, 0, $limit );
 }
+
+/**
+ * 現在していされているタグを返す
+ *
+ * @param WP_Query|null $query 指定しない場合はメインクエリ
+ * @return string[]
+ */
+function hametuha_queried_tags( $query = null ) {
+	if ( is_null( $query ) ) {
+		global $wp_query;
+		$query = $wp_query;
+	}
+	$terms = $query->get( 't' );
+	if ( empty( $terms ) ) {
+		return [];
+	}
+	// 強制的に配列に
+	$terms = (array) $terms;
+	// カンマ区切り形式を許容
+	$tags = [];
+	foreach ( $terms as $term ) {
+		foreach ( explode( ',', $term ) as $t ) {
+			$t = trim( $t );
+			if ( ! empty( $t ) ) {
+				$tags[] = $t;
+			}
+		}
+	}
+	// 重複を除去して返す
+	return array_values( array_unique( $tags ) );
+}
