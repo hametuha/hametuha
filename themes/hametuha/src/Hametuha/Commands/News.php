@@ -177,6 +177,8 @@ SQL;
 
 	/**
 	 * Change meta
+	 *
+	 * @depreacted たぶん一回しか使わない？
 	 */
 	public function fix_event() {
 		global $wpdb;

@@ -114,7 +114,6 @@ include __DIR__ . '/functions/override.php';
 include __DIR__ . '/functions/override-dashboard.php';
 include __DIR__ . '/functions/override-error.php';
 include __DIR__ . '/functions/override-feed.php';
-include __DIR__ . '/functions/override-lwp.php';
 // 投稿リスト
 include __DIR__ . '/functions/post_list.php';
 include __DIR__ . '/functions/post_list-admin.php';
