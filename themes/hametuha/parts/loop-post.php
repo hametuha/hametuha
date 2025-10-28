@@ -82,14 +82,21 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 					<i class="icon-clock"></i> <?php printf( '読了%s分', hametuha_reading_time() ); ?>
 				</li>
 				<?php if ( in_array( $post->post_status, [ 'private', 'protected' ] ) ) : ?>
-				<li class="list-inline-item">
-					<span class="badge text-bg-secondary"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
-				</li>
+					<li class="list-inline-item">
+						<span class="badge text-bg-secondary"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
+					</li>
 				<?php endif; ?>
 				<?php if ( $censored ) : ?>
-				<li class="list-inline-item">
-					<span class="badge text-bg-danger">検閲済み</span>
-				</li>
+					<li class="list-inline-item">
+						<span class="badge text-bg-danger">検閲済み</span>
+					</li>
+				<?php endif; ?>
+				<?php
+				$comment_count = get_comment_count( get_the_ID() );
+				if ( $comment_count['approved'] ) : ?>
+					<li class="static list-inline-item">
+						<i class="icon-bubble"></i> <?php printf( '%s件', number_format( $comment_count['approved'] ) ); ?>
+					</li>
 				<?php endif; ?>
 			</ul>
 

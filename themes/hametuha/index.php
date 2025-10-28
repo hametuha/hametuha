@@ -11,8 +11,6 @@ get_header( 'breadcrumb' );
 
 	<div class="container archive">
 
-
-
 		<div class="row row-offcanvas row-offcanvas-right">
 
 			<div class="col-12 col-lg-9 order-2 main-container">

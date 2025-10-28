@@ -158,18 +158,35 @@ if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxon
 						</h3>
 						<div id="lengthFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
 							<div class="accordion-body">
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="length[]" value="short" id="length-short">
-									<label class="form-check-label" for="length-short">短編（〜5,000字）</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="length[]" value="medium" id="length-medium">
-									<label class="form-check-label" for="length-medium">中編（5,000〜20,000字）</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="length[]" value="long" id="length-long">
-									<label class="form-check-label" for="length-long">長編（20,000字〜）</label>
-								</div>
+								<?php
+								$cur_length = isset( $_GET['length'] ) ? (array) $_GET['length'] : [];
+								foreach ( hametuha_story_length_category() as $length_category => $values ) :
+									$id = 'length-' . $length_category;
+									?>
+									<div class="form-check">
+										<input class="form-check-input" type="checkbox" name="length[]"
+											value="<?php echo esc_attr( $length_category ) ?>" id="<?php echo esc_attr( $id ); ?>"
+											<?php checked( in_array( $length_category, $cur_length, true ) ); ?>
+											/>
+										<label class="form-check-label" for="<?php echo esc_attr( $id ); ?>">
+											<?php
+											printf(
+												'%s（〜%s字）',
+												esc_html( $values['label'] ),
+												esc_html( number_format( $values['max'] ) )
+											);
+											?>
+										</label>
+									</div>
+								<?php endforeach; ?>
+								<small class="form-text text-muted">
+									<?php
+									printf(
+										wp_kses_post( __( '長編は<a href="%s">%s</a>からお探しください', 'hametuha' ) ),
+										esc_url( get_post_type_archive_link( 'serires' ) ),
+										esc_html( get_post_type_object( 'series' )->label )
+									); ?>
+								</small>
 							</div>
 						</div>
 					</div>

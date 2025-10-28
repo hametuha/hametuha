@@ -20,7 +20,7 @@ if ( is_hamenew() ) {
 	$action = get_post_type_archive_link( 'announcement' );
 	$label  = __( '告知を検索します', 'hametuha' );
 } else {
-	$action = home_url( 'search' );
+	$action = home_url( 'latest' );
 	$post_type = 'post';
 	$label     = '検索ワードを入れてください';
 }

@@ -472,4 +472,82 @@ SQL;
 		}
 		\WP_CLI::success( sprintf( 'Done: %d', $total ) );
 	}
+
+	/**
+	 * Update character count for all posts.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--post-type=<post-type>]
+	 * : Post type to update. Default: post,series
+	 *
+	 * [--dry-run]
+	 * : If set, only show what would be updated without actually updating.
+	 *
+	 * @subcommand update-length
+	 * @synopsis [--post-type=<post-type>] [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 * @return void
+	 */
+	public function update_length( $args, $assoc ) {
+		$post_types = isset( $assoc['post-type'] ) ? explode( ',', $assoc['post-type'] ) : [ 'post', 'series' ];
+		$dry_run    = isset( $assoc['dry-run'] ) && $assoc['dry-run'];
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		foreach ( $post_types as $post_type ) {
+			$post_type = trim( $post_type );
+			\WP_CLI::line( sprintf( 'Processing post type: %s', $post_type ) );
+
+			$query = new \WP_Query( [
+				'post_type'      => $post_type,
+				'post_status'    => [ 'publish', 'private' ],
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			] );
+
+			if ( ! $query->have_posts() ) {
+				\WP_CLI::warning( sprintf( 'No posts found for post type: %s', $post_type ) );
+				continue;
+			}
+
+			$total = count( $query->posts );
+			\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+			$progress = \WP_CLI\Utils\make_progress_bar( sprintf( 'Updating %s', $post_type ), $total );
+
+			$updated = 0;
+			$skipped = 0;
+
+			foreach ( $query->posts as $post_id ) {
+				$post   = get_post( $post_id );
+				$length = get_post_length( $post );
+
+				if ( $dry_run ) {
+					\WP_CLI::line( sprintf( 'Would update #%d with length: %d', $post_id, $length ) );
+				} else {
+					$old_length = get_post_meta( $post_id, '_post_length', true );
+					update_post_meta( $post_id, '_post_length', $length );
+					if ( $old_length !== $length ) {
+						$updated++;
+					} else {
+						$skipped++;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			if ( ! $dry_run ) {
+				\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+			}
+		}
+
+		\WP_CLI::success( 'Done!' );
+	}
 }
