@@ -31,6 +31,7 @@ add_action( 'pre_get_posts', function ( $query ) {
 add_filter( 'query_vars', function( $vars ) {
 	$vars[] = 't'; // タグ（複数指定）
 	$vars[] = 'length'; // 長さ
+	$vars[] = 'comments'; // コメント数
 	return $vars;
 } );
 
@@ -127,3 +128,21 @@ add_action( 'pre_get_posts', function( WP_Query $query ) {
 	$meta_query[] = $length_query;
 	$query->set( 'meta_query', $meta_query );
 } );
+
+/**
+ * コメント数が指定されている場合は絞り込み
+ */
+add_filter( 'posts_where', function( $where, WP_Query $query ) {
+	$comments = $query->get( 'comments' );
+	if ( empty( $comments ) || ! is_numeric( $comments ) ) {
+		return $where;
+	}
+
+	global $wpdb;
+	$min_comments = absint( $comments );
+
+	// comment_countはwp_postsテーブルに直接あるので、シンプルに絞り込める
+	$where .= $wpdb->prepare( " AND {$wpdb->posts}.comment_count >= %d", $min_comments );
+
+	return $where;
+}, 10, 2 );

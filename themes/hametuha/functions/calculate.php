@@ -183,3 +183,26 @@ function hametuha_length_ranges( $length_categories ) {
 
 	return $ranges;
 }
+
+/**
+ * コメントの多い・少ないでグループ分け
+ *
+ * @todo 将来的には現在のコメントのパーセンタイルから動的に導き出せるようにする
+ * @return array{array{count:int, label:string}}
+ */
+function hametuha_comment_count_group() {
+	return [
+		[
+			'count' => 1,
+			'label' => __( 'コメントあり', 'hametuha' ),
+		],
+		[
+			'count' => 10,
+			'label' => __( 'コメント多数', 'hametuha' ),
+		],
+		[
+			'count' => 20,
+			'label' => __( '大盛り上がり', 'hametuha' ),
+		],
+	];
+}

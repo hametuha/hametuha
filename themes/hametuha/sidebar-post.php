@@ -229,22 +229,27 @@ if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxon
 						</h3>
 						<div id="commentFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
 							<div class="accordion-body">
+								<?php $cur_comments = get_query_var( 'comments' ); ?>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="comments" value="" id="comments-all" checked>
+									<input class="form-check-input" type="radio" name="comments" value="" id="comments-all" <?php checked( '', $cur_comments ); ?>>
 									<label class="form-check-label" for="comments-all">すべて</label>
 								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="comments" value="10" id="comments-10">
-									<label class="form-check-label" for="comments-10">10件以上</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="comments" value="5" id="comments-5">
-									<label class="form-check-label" for="comments-5">5件以上</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="comments" value="1" id="comments-1">
-									<label class="form-check-label" for="comments-1">1件以上</label>
-								</div>
+								<?php
+								foreach ( hametuha_comment_count_group() as $comment_group ) {
+									$comment_radio = <<<'HTML'
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="comments" value="%1$d" id="comments-%1$d" %2$s/>
+											<label class="form-check-label" for="comments-%1$d">%3$s（%1$d件以上）</label>
+										</div>
+HTML;
+									printf(
+										$comment_radio,
+										$comment_group['count'],
+										checked( $comment_group['count'], (int) $cur_comments, false ),
+										esc_html( $comment_group['label'] )
+									);
+								}
+								?>
 							</div>
 						</div>
 					</div>
