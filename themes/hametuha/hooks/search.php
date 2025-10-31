@@ -32,6 +32,7 @@ add_filter( 'query_vars', function( $vars ) {
 	$vars[] = 't'; // タグ（複数指定）
 	$vars[] = 'length'; // 長さ
 	$vars[] = 'comments'; // コメント数
+	$vars[] = 'rating'; // レーティング（星評価の平均）
 	return $vars;
 } );
 
@@ -146,3 +147,46 @@ add_filter( 'posts_where', function( $where, WP_Query $query ) {
 
 	return $where;
 }, 10, 2 );
+
+/**
+ * レーティング（星評価の平均）が指定されている場合は絞り込み
+ *
+ * クエリパラメータ:
+ * - rating=1: 1点台（1.0～1.9）
+ * - rating=2: 2点台（2.0～2.9）
+ * - rating=3: 3点台（3.0～3.9）
+ * - rating=4: 4点台（4.0～5.0）
+ */
+add_action( 'pre_get_posts', function( WP_Query $query ) {
+	$rating = $query->get( 'rating' );
+	if ( empty( $rating ) || ! is_numeric( $rating ) ) {
+		return;
+	}
+
+	$min_rating = absint( $rating );
+	// 1～4のみ許可
+	if ( ! in_array( $min_rating, range( 1, 4 ), true ) ) {
+		return;
+	}
+
+	// 既存のmeta_queryを取得
+	$meta_query = $query->get( 'meta_query' ) ?: [];
+
+	// 各点数の範囲を定義
+	$ranges = [
+		1 => [ 1.0, 1.9 ],
+		2 => [ 2.0, 2.9 ],
+		3 => [ 3.0, 3.9 ],
+		4 => [ 4.0, 5.0 ],
+	];
+
+	// レーティング平均値での絞り込みを追加
+	$meta_query[] = [
+		'key'     => '_rating_average',
+		'value'   => $ranges[ $min_rating ],
+		'type'    => 'NUMERIC',
+		'compare' => 'BETWEEN',
+	];
+
+	$query->set( 'meta_query', $meta_query );
+} );

@@ -200,21 +200,26 @@ if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxon
 						</h3>
 						<div id="ratingFilter" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
 							<div class="accordion-body">
+								<?php $cur_rating = get_query_var( 'rating' ); ?>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="rating" value="" id="rating-all" checked>
+									<input class="form-check-input" type="radio" name="rating" value="" id="rating-all" <?php checked( '', $cur_rating ); ?>>
 									<label class="form-check-label" for="rating-all">すべて</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="rating" value="5" id="rating-5">
-									<label class="form-check-label" for="rating-5">★★★★★ 5つ星</label>
+									<input class="form-check-input" type="radio" name="rating" value="4" id="rating-4" <?php checked( '4', $cur_rating ); ?>>
+									<label class="form-check-label" for="rating-4">★★★★ 4点台（4.0〜5.0）</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="rating" value="4" id="rating-4">
-									<label class="form-check-label" for="rating-4">★★★★☆ 4つ星以上</label>
+									<input class="form-check-input" type="radio" name="rating" value="3" id="rating-3" <?php checked( '3', $cur_rating ); ?>>
+									<label class="form-check-label" for="rating-3">★★★ 3点台（3.0〜3.9）</label>
 								</div>
 								<div class="form-check">
-									<input class="form-check-input" type="radio" name="rating" value="3" id="rating-3">
-									<label class="form-check-label" for="rating-3">★★★☆☆ 3つ星以上</label>
+									<input class="form-check-input" type="radio" name="rating" value="2" id="rating-2" <?php checked( '2', $cur_rating ); ?>>
+									<label class="form-check-label" for="rating-2">★★ 2点台（2.0〜2.9）</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="rating" value="1" id="rating-1" <?php checked( '1', $cur_rating ); ?>>
+									<label class="form-check-label" for="rating-1">★ 1点台（1.0〜1.9）</label>
 								</div>
 							</div>
 						</div>

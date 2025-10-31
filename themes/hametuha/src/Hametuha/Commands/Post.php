@@ -550,4 +550,99 @@ SQL;
 
 		\WP_CLI::success( 'Done!' );
 	}
+
+	/**
+	 * Update rating average and count for all posts.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : If set, only show what would be updated without actually updating.
+	 *
+	 * @subcommand update-rating
+	 * @synopsis [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 * @return void
+	 */
+	public function update_rating( $args, $assoc ) {
+		$dry_run = isset( $assoc['dry-run'] ) && $assoc['dry-run'];
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		$rating = \Hametuha\Model\Rating::get_instance();
+
+		\WP_CLI::line( 'Processing post type: post' );
+
+		// まず総数を取得
+		$count_query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_status'    => [ 'publish', 'private' ],
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		] );
+
+		$total = $count_query->found_posts;
+
+		if ( 0 === $total ) {
+			\WP_CLI::warning( 'No posts found' );
+			return;
+		}
+
+		\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Updating ratings', $total );
+
+		$updated = 0;
+		$skipped = 0;
+
+		// ページネーションで処理
+		$per_page = 100;
+		$pages    = ceil( $total / $per_page );
+
+		for ( $page = 1; $page <= $pages; $page++ ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'post',
+				'post_status'    => [ 'publish', 'private' ],
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			] );
+
+			if ( ! $query->have_posts() ) {
+				continue;
+			}
+
+			foreach ( $query->posts as $post_id ) {
+				if ( $dry_run ) {
+					$post  = get_post( $post_id );
+					$avg   = $rating->get_post_rating( $post );
+					$count = $rating->get_post_rating_count( $post );
+					\WP_CLI::line( sprintf( 'Would update #%d with average: %s, count: %d', $post_id, $avg ?: 'null', $count ) );
+				} else {
+					if ( $rating->update_post_average( $post_id ) ) {
+						$updated++;
+					} else {
+						$skipped++;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			// メモリ解放
+			wp_cache_flush();
+		}
+
+		$progress->finish();
+
+		if ( ! $dry_run ) {
+			\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+		}
+
+		\WP_CLI::success( 'Done!' );
+	}
 }
