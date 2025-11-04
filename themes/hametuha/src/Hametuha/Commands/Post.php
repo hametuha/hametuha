@@ -645,4 +645,104 @@ SQL;
 
 		\WP_CLI::success( 'Done!' );
 	}
+
+	/**
+	 * Update review tag metadata for all posts
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : Show what would be updated without actually updating
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Update all posts
+	 *     wp hampost update-review
+	 *
+	 *     # Dry run to see what would be updated
+	 *     wp hampost update-review --dry-run
+	 *
+	 * @synopsis [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 */
+	public function update_review( $args, $assoc ) {
+		$dry_run = isset( $assoc['dry-run'] );
+		$review  = \Hametuha\Model\Review::get_instance();
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		\WP_CLI::line( 'Processing post type: post' );
+
+		// 総数を取得
+		$total_query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+		] );
+		$total       = $total_query->found_posts;
+
+		\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Processing posts', $total );
+		$updated  = 0;
+		$skipped  = 0;
+
+		// ページネーションで処理
+		$per_page = 100;
+		$pages    = ceil( $total / $per_page );
+
+		for ( $page = 1; $page <= $pages; $page++ ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			] );
+
+			if ( ! $query->have_posts() ) {
+				continue;
+			}
+
+			foreach ( $query->posts as $post_id ) {
+				if ( $dry_run ) {
+					$post        = get_post( $post_id );
+					$tag_counts  = $review->get_post_chart_points( $post->ID, false );
+					$tag_summary = [];
+					foreach ( $tag_counts as $tag_data ) {
+						$tag_summary[] = sprintf( '%s: %d', $tag_data->name, $tag_data->score );
+					}
+					\WP_CLI::line( sprintf(
+						'Would update #%d with tags: %s',
+						$post_id,
+						empty( $tag_summary ) ? 'none' : implode( ', ', $tag_summary )
+					) );
+				} else {
+					if ( $review->update_post_review_tags( $post_id ) ) {
+						$updated++;
+					} else {
+						$skipped++;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			// メモリ解放
+			wp_cache_flush();
+		}
+
+		$progress->finish();
+
+		if ( ! $dry_run ) {
+			\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+		}
+
+		\WP_CLI::success( 'Done!' );
+	}
 }

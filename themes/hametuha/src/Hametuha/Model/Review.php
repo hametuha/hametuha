@@ -6,6 +6,7 @@ namespace Hametuha\Model;
 /**
  * Review class
  *
+ * @feature-group review-tag
  * @package Hametuha\Model
  */
 class Review extends TermUserRelationships {
@@ -114,6 +115,42 @@ class Review extends TermUserRelationships {
 		update_post_meta( $post_id, '_review_count', $count );
 
 		return $count;
+	}
+
+	/**
+	 * 投稿に付けられたレビュータグの集計データをpost_metaとしてキャッシュ
+	 *
+	 * @param int $post_id
+	 * @return bool 値が更新された場合はtrue、変更がなかった場合はfalse
+	 */
+	public function update_post_review_tags( $post_id ) {
+		$post = get_post( $post_id );
+		if ( ! $post || 'post' !== $post->post_type ) {
+			return false;
+		}
+
+		$updated = false;
+
+		// 各タグの獲得数を取得
+		$tag_counts = $this->get_post_chart_points( $post->ID, false );
+
+		// すべてのタグをリセット（既存のメタを削除）
+		foreach ( $this->feedback_tags as $key => $terms ) {
+			foreach ( $terms as $tag_name ) {
+				delete_post_meta( $post->ID, '_review_tag_' . $tag_name );
+			}
+		}
+
+		// 新しい集計データを保存
+		foreach ( $tag_counts as $tag_data ) {
+			$meta_key = '_review_tag_' . $tag_data->name;
+			$count    = (int) $tag_data->score;
+			if ( update_post_meta( $post->ID, $meta_key, $count ) ) {
+				$updated = true;
+			}
+		}
+
+		return $updated;
 	}
 
 	/**
