@@ -85,9 +85,8 @@ add_action( 'transition_post_status', function( $new_status, $old_status, \WP_Po
  * @param \WP_Post $post
  * @param int $user_id
  * @param array $reviewed_terms
- * @param int $rank
  */
-add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $reviewed_terms = [], $rank = 0 ) {
+add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $reviewed_terms = [] ) {
 	$count = Hametuha\Model\Review::get_instance()->get_review_count( $post->ID );
 	for ( $i = 4; $i >= 0; $i -- ) {
 		$step = pow( 10, $i );

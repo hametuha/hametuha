@@ -454,6 +454,7 @@ ul.metadata {
 				background-color: $primary;
 				color: $white;
 				vertical-align: text-top;
+				white-space: nowrap;
 			}
 		}
 	}
@@ -539,7 +540,6 @@ ul.metadata {
 		}
 
 		li {
-			border-left: 1px solid #ddd;
 			padding: 0.25em 0.5em;
 
 			&:first-child {

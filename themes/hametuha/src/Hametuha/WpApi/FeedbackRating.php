@@ -9,6 +9,7 @@ use Hametuha\Model\Rating;
 /**
  * レーティングのためのREST APIエンドポイント
  *
+ * @feature-group feedback
  * @property-read Rating $rating
  */
 class FeedbackRating extends WpApi {

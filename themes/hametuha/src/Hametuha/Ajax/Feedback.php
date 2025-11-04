@@ -12,6 +12,7 @@ use WPametu\API\Ajax\AjaxForm;
  * Feedback controller
  *
  * @package Hametuha\Ajax
+ * @feature-group review-tag
  *
  * @property-read Review $review
  * @property-read Rating $rating

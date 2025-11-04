@@ -208,10 +208,10 @@ class HametuHeader extends Component {
 
 				{ this.state.loggedIn ? null : (
 					<li className="login-buttons">
-						<a href={ this.state.login_url } onClick={ ( e ) => {
+						<a className="login" href={ this.state.login_url } onClick={ ( e ) => {
 							this.handleClick( e )
 						} }>ログイン</a>
-						<a href={ this.state.register } onClick={ ( e ) => {
+						<a className="register" href={ this.state.register } onClick={ ( e ) => {
 							this.handleClick( e )
 						} }>登録</a>
 					</li>

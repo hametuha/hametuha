@@ -567,8 +567,8 @@ p.pixiv-embed-illust {
 #single-post-footernote {
 	text-align: center;
 	margin: 1em 0;
-	padding-top: 1em;
-	border-top: $divide-border;
+	padding-bottom: 1em;
+	border-bottom: $divide-border;
 	color: $shade-font;
 	font-family: $work-title;
 	font-size: 16px;
@@ -675,15 +675,33 @@ p.pixiv-embed-illust {
 
 	i {
 		font-size: 20px;
-		cursor: pointer;
 		color: $more-shade-font;
 		-webkit-text-stroke: 1px $more-shade-font;
 
-		&.active, &:hover {
+		&.active {
 			color: $start-font;
 			-webkit-text-stroke: 1px #000;
 		}
 	}
+}
+
+.rating-container {
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	border-bottom: 3px double $thin-border;
+}
+
+.hametuha-post-rating {
+	text-align: center;
+
+	.text-star {
+		font-size: 1.2em;
+	}
+}
+
+.text-star {
+	color: $start-font;
+	-webkit-text-stroke: 1px #000;
 }
 
 // 評価ボタン

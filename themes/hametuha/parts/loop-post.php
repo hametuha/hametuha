@@ -98,6 +98,13 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 						<i class="icon-bubble"></i> <?php printf( '%s件', number_format( $comment_count['approved'] ) ); ?>
 					</li>
 				<?php endif; ?>
+				<?php
+				$rating = (int) get_post_meta( get_the_ID(), '_rating_count', true);
+				if ( $rating > 0 ) : ?>
+					<li class="static list-inline-item">
+						<i class="icon-star"></i> <?php printf( '%s件の評価', number_format( $rating ) ); ?>
+					</li>
+				<?php endif; ?>
 			</ul>
 
 			<!-- Excerpt -->

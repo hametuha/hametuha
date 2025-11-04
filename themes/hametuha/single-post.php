@@ -185,15 +185,6 @@ HTML;
 					<?php endif; ?>
 					<?php endif; ?>
 
-				<p class="text-center pub-date">
-					<span><?php the_time( 'Y年n月j日' ); ?></span>公開
-					<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ); ?></span>
-					<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ); ?></span>
-					<?php if ( $corrected = hametuha_first_corrected( true ) ) : ?>
-						（初出 <?php echo $corrected; ?>）
-					<?php endif; ?>
-				</p>
-
 					<?php if ( is_series() ) : ?>
 					<p class="series-pager-title text-center">
 						作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
@@ -209,6 +200,17 @@ HTML;
 
 				<div id="single-post-footernote">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
+					（
+					<span class="pub-date">
+						<span><?php the_time( 'Y年n月j日' ); ?></span>公開
+						<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ); ?></span>
+						<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ); ?></span>
+					</span>
+					）
+					<?php if ( $corrected = hametuha_first_corrected( true ) ) : ?>
+						<br />
+						<small>※初出 <?php echo $corrected; ?></small>
+					<?php endif; ?>
 				</div>
 
 				<p class="finish-nav">
@@ -221,6 +223,7 @@ HTML;
 					<i class="icon-point-down"></i>
 				</p>
 
+				<?php get_template_part( 'parts/feedback', 'rating' ); ?>
 
 			</div><!-- //.work-wrapper -->
 

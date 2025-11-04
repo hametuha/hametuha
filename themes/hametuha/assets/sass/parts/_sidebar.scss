@@ -152,3 +152,22 @@
 		}
 	}
 }
+
+.post-search {
+
+	&__wrapper {
+		background-color: $gray-100;
+		&#sidebar{
+			margin-top: 0;
+		}
+	}
+
+	&__title {
+		font-weight: $font-weight-bold;
+	}
+
+	.accordion-button.collapsed,
+	.accordion-item {
+		background-color: $gray-100;
+	}
+}

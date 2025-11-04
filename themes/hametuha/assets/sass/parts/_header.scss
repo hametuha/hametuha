@@ -103,6 +103,9 @@
 
 		@media only screen and (max-width: $screen-xs-max) {
 			width: 100px;
+			.register {
+				display: none;
+			}
 			& > li.open {
 				.dropdown-menu {
 					position: absolute;

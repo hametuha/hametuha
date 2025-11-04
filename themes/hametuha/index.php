@@ -96,8 +96,6 @@ get_header( 'breadcrumb' );
 						get_template_part( 'parts/nav', 'lists' );
 					} elseif ( is_tax( 'campaign' ) ) {
 						get_template_part( 'parts/content-campaign', get_term_meta( get_queried_object_id(), '_is_collaboration', true ) ? 'collaboration' : '' );
-					} elseif ( ! hametuha_is_profile_page() ) {
-						get_search_form();
 					}
 					// Content
 					if ( ( is_category() || is_tag() || is_tax() ) && ( $content = get_term_meta( get_queried_object_id(), '_term_content', true ) ) ) {

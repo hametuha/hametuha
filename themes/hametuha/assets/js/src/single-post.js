@@ -275,20 +275,6 @@ Chart.defaults.global.responsive = true;
             });
         });
 
-        // スターレーティング
-        $(document).on('click', '.star-rating i', function(){
-            var value = parseInt($(this).attr('data-value'), 10);
-            $('.star-rating i').each(function(index, elt){
-                if( parseInt($(elt).attr('data-value'), 10) <= value ){
-                    $(elt).addClass('active');
-                }else{
-                    $(elt).removeClass('active');
-                }
-            });
-            $(this).nextAll('input[type=hidden]').val(value);
-        });
-
-
         // リスト作成完了
         $(document).on('created.hametuha', '.list-create-form', function(event, post){
             $('#list-changer').append('<div class="checkbox"><label>' +

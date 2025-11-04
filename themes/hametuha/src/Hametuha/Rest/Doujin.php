@@ -5,12 +5,10 @@ namespace Hametuha\Rest;
 
 use Hametuha\Interfaces\OgpCustomizer;
 use Hametuha\Model\Author;
-use Hametuha\Model\Collaborators;
 use Hametuha\Model\Follower;
 use Hametuha\Model\Notifications;
 use Hametuha\Model\Review;
 use Hametuha\Model\Series;
-use Hametuha\ThePost\Announcement;
 use WPametu\API\Rest\RestTemplate;
 
 /**
