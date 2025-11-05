@@ -1,6 +1,8 @@
 <?php
 /**
  * Template Name: キャンペーン一覧
+ *
+ * @feature-group campaign
  */
 get_header();
 get_header( 'sub' );
