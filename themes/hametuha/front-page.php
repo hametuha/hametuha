@@ -297,6 +297,14 @@ endif;
 		</div>
 	</div>
 
+	<section style="padding: 20px 0; background-color: var( --bs-gray-200 );">
+		<?php get_footer( 'ebooks' ); ?>
+		<p class="text-center">
+			<a class="btn btn-primary" href="<?php echo home_url( 'kdp' ); ?>">
+				<?php esc_html_e( 'すべての電子書籍', 'hametuha' ); ?>
+			</a>
+		</p>
+	</section>
 
 	<?php get_footer( 'books' ); ?>
 
@@ -379,4 +387,5 @@ endif;
 
 	</div><!-- front-container -->
 
-<?php get_footer(); ?>
+<?php
+get_footer();

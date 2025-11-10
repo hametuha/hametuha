@@ -2,7 +2,7 @@
 /**
  * アイデア用のタグクラウドを出力する
  *
- *
+ * @feature-group idea
  */
 // すでにキャッシュがあれば、それを使う
 $cache = get_transient( 'templates/ideas/tag-cloud' );

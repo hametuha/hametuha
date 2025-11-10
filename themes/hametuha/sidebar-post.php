@@ -449,7 +449,7 @@ HTML;
 					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( get_post_type_archive_link( 'series' ) ); ?>">
 						<?php esc_html_e( '連載から探す', 'hametuha' ); ?>
 					</a>
-					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( get_post_type_archive_link( 'list' ) ); ?>">
+					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( get_post_type_archive_link( 'lists' ) ); ?>">
 						<?php esc_html_e( 'みんなのリスト', 'hametuha' ); ?>
 					</a>
 					<a class="btn btn-block btn-outline-secondary" href="<?php echo esc_url( hametuha_get_campaign_page_url() ); ?>">

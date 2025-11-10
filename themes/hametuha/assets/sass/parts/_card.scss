@@ -3,4 +3,19 @@
 	&-header &-title {
 		margin-bottom: 0;
 	}
+
+	&.shadow:hover {
+		box-shadow: none !important;
+	}
+
+	&.bg-primary {
+
+		.card-title a {
+			color: $white;
+		}
+
+		.card-footer {
+			border-top-color: $gray-800;
+		}
+	}
 }

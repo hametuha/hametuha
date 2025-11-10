@@ -60,4 +60,9 @@ $args = wp_parse_args( $args, [
 		<?php endforeach; ?>
 
 	</div>
+	<p class="text-center mt-5">
+		<a class="btn btn-primary" href="https://minico.me">
+			<?php esc_html_e( '破滅派の通販サイトを見る', 'hametuha' ); ?>
+		</a>
+	</p>
 </section>

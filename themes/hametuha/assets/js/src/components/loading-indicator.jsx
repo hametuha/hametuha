@@ -12,7 +12,7 @@ wp.hametuha.LoadingIndicator = ( prop ) => {
 	return prop.loading ? (
 		<div className="hb-loading-indicator">
 			<img src={ HametuhaComponents.indicator } width="100" height="100" alt={ label } />
-			<span class="hb-loading-indicator-title">{ label }</span>
+			<span className="hb-loading-indicator-title">{ label }</span>
 		</div>
 	) : null;
 };

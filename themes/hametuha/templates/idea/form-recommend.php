@@ -2,6 +2,7 @@
 /**
  * アイデアの推薦フォーム
  *
+ * @feature-group idea
  * @var array $args
  */
 /* @var \WP_Post $idea */

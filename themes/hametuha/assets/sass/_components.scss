@@ -11,6 +11,23 @@ a[disabled], input[disabled] {
 	margin-bottom: 20px;
 }
 
+// テキストアライン
+
+// alignment
+.text {
+	&-left {
+		text-align: left !important;
+	}
+
+	&-right {
+		text-align: right !important;
+	}
+
+	&-center {
+		text-align: center !important;
+	}
+}
+
 //区切り戦
 hr.divider {
 	margin: 20px 0;
@@ -417,12 +434,9 @@ ul.metadata {
 	}
 
 	li {
-		border-left: 1px solid #eee;
 		padding: 0.25em 0.5em;
 
 		&:first-child {
-			border-left: none;
-			padding-left: 0;
 			@media only screen and (max-width: $screen-xs-max) {
 				border-left: 1px solid #ddd;
 				padding-left: 0.5em;

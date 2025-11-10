@@ -1,6 +1,8 @@
 <?php
 /**
  * アイデア投稿フォームのスクリプト
+ *
+ * @feature-group idea
  */
 if ( current_user_can( 'read' ) ) {
 	wp_enqueue_script( 'hametuha-components-ideas' );

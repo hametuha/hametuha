@@ -1,6 +1,14 @@
 <?php
+/**
+ * 投稿ページ
+ *
+ * ＠feature-group post
+ *
+ */
 $series = Hametuha\Model\Series::get_instance();
-get_header(); ?>
+get_header();
+
+?>
 
 <?php
 if ( have_posts() ) :
@@ -281,72 +289,36 @@ HTML;
 		<div id="finish-wrapper" class="overlay-container">
 			<div class="container">
 
-				<h3>リストに追加する</h3>
+				<h3>
+					<?php printf( esc_html__( '「%s」をリストに追加', 'hametuha' ), esc_html( get_the_title() ) ); ?>
+				</h3>
 
 				<p class="text-muted">
 					リスト機能とは、気になる作品をまとめておける機能です。公開と非公開が選べますので、
-					短編集として公開したり、お気に入りのリストとしてこっそり楽しむこともできます。
+					あなたのアンソロジーとして共有したり、お気に入りのリストとしてこっそり楽しむこともできます。
 				</p>
 
 				<hr/>
 
-				<?php if ( is_user_logged_in() ) : ?>
+				<?php if ( current_user_can( 'read' ) ) :
+					// ログイン済みならリスト用のJSを追加
+					wp_enqueue_script( 'hametuha-components-list-in-post' );
+					?>
+					<div id="list-form" data-post-id="<?php the_ID(); ?>" class="mb-5"></div>
 
-					<form class="list-save-manager" method="post"
-						  action="<?php echo esc_url( Hametuha\Rest\ListCreator::save_link( get_the_ID() ) ); ?>">
-						<?php wp_nonce_field( 'list-save' ); ?>
-						<div id="list-changer">
-							<?php
-							$lists           = new WP_Query( [
-								'my-content'     => 'lists',
-								'post_type'      => 'lists',
-								'post_author'    => 0,
-								'post_status'    => [ 'publish', 'private' ],
-								'orderby'        => 'post_title',
-								'order'          => 'DESC',
-								'posts_per_page' => - 1,
-							] );
-							$current_post_id = get_the_ID();
-							if ( $lists->have_posts() ) {
-								$html = <<<HTML
-								<div class="checkbox">
-									<label>
-					                    <input type="checkbox" name="lists[]" value="%d"%s>
-					                    %s
-									</label>
-								</div>
-HTML;
-								while ( $lists->have_posts() ) {
-									$lists->the_post();
-									printf( $html, get_the_ID(),
-										checked( in_lists( $current_post_id, get_the_ID() ), true, false ),
-										esc_html( ( $post->post_status == 'publish' ? '公開　: ' : '' ) . get_the_title() )
-									);
-								}
-								wp_reset_postdata();
-							}
-							?>
+					<div class="row justify-content-between">
 
+						<div class="col-6">
+							<a class="btn btn-secondary" href="<?php echo home_url( '/your/lists/' ); ?>"><?php esc_html_e( 'あなたのリストを確認', 'hametuha' ); ?></a>
 						</div>
 
-						<p class="text-muted">リストを選んで保存ください。<strong><?php the_title(); ?></strong>がリストに追加されます。リストは新たに作成することもできます。
-						</p>
-
-						<div class="row">
-
-							<div class="col-xs-6 text-left">
-								<input type="submit" class="btn btn-primary" value="変更を保存"/>
-							</div>
-
-							<div class="col-xs-6 text-right">
-								<a class="btn btn-success list-creator" title="リストを作成する"
-								   href="<?php echo esc_url( Hametuha\Rest\ListCreator::form_link() ); ?>"><i
-										class="icon-plus-circle"></i> リストを作成</a>
-							</div>
-
+						<div class="col-6 text-right">
+							<button class="btn btn-success list-creator" title="リストを作成する">
+								<i class="icon-plus-circle"></i> 新しいリストを作成
+							</button>
 						</div>
 
-					</form>
+					</div>
 
 				<?php else : ?>
 

@@ -17,26 +17,30 @@ get_header( 'breadcrumb' );
 
 
 				<?php
-				if ( is_singular( 'list' ) ) {
+				if ( is_singular( 'lists' ) ) {
+					the_post();
 					get_template_part( 'parts/meta', 'lists' );
 				} elseif ( is_post_type_archive( 'list' ) )  {
 					get_template_part( 'parts/jumbotron', 'lists' );
-				} elseif ( is_tax( 'campaign' ) ) {
-					get_template_part( 'parts/meta', 'campaign' );
 				} else {
 					get_template_part( 'parts/meta', 'post' );
+					if ( is_tax( 'campaign' ) ) {
+						get_template_part( 'parts/meta', 'campaign' );
+					}
 				}
 				?>
 
 				<div>
 
 					<?php
+					// リストかどうかでクエリをわける
 					if ( is_singular( 'lists' ) ) {
 						$query = new WP_Query( [
-							'post_type'   => 'in_list',
-							'post_status' => 'publish',
-							'post_parent' => get_the_ID(),
-							'paged'       => max( 1, intval( get_query_var( 'paged' ) ) ),
+							'post_type'      => 'post',
+							'in_list'        => get_the_ID(),
+							'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
+							'posts_per_page' => 100,
+							'no_found_rows'  => true,
 						] );
 					} else {
 						global $wp_query;
@@ -107,13 +111,26 @@ get_header( 'breadcrumb' );
 			</div>
 			<!-- //.main-container -->
 
-			<?php get_sidebar( 'post' ); ?>
+			<?php
+
+			get_sidebar( 'post' );
+			?>
 
 		</div>
 		<!-- // .offcanvas -->
 
 	</div><!-- //.container -->
 
+<?php  get_footer( 'books' ); ?>
+
+<section style="padding: 20px 0; background-color: var( --bs-gray-200 );">
+	<?php get_footer( 'ebooks' ); ?>
+	<p class="text-center">
+		<a class="btn btn-primary" href="<?php echo home_url( 'kdp' ); ?>">
+			<?php esc_html_e( 'すべての電子書籍', 'hametuha' ); ?>
+		</a>
+	</p>
+</section>
+
 <?php
-get_footer( 'books' );
 get_footer();

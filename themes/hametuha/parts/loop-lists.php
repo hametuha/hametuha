@@ -1,50 +1,57 @@
-<li data-post-id="<?php the_ID(); ?>" <?php post_class( 'media loop-lists' ); ?>>
+<?php
+/**
+ * ループ用のテンプレート
+ *
+ * @feature-group list
+ *
+ */
+$is_mine =( get_current_user_id() === (int) get_the_author_meta( 'ID' ) );
+?>
+<div data-post-id="<?php the_ID(); ?>" class="col-sm-6 col-md-4 mb-4">
 
-	<a class="media__link media__link--nopad" href="<?php the_permalink(); ?>">
+	<div class="card shadow card-lists card-list-item<?php echo esc_attr( $is_mine ? ' bg-primary text-white' : '' ); ?>">
 
-
-		<?php if ( has_post_thumbnail() ) : ?>
-			<div class="pull-right">
-				<?php echo get_the_post_thumbnail( null, 'thumbnail', array( 'class' => 'media-object' ) ); ?>
-			</div>
-		<?php endif; ?>
-
-		<div class="media-body">
+		<div class="card-body">
 
 			<!-- Title -->
-			<h2>
-				<?php the_title(); ?>
-				<?php if ( is_recommended() ) : ?>
-					<small class="label label-danger">オススメ</small>
-				<?php endif; ?>
-			</h2>
-
-			<!-- Post Data -->
-			<ul class="list-inline">
-				<li class="author-info">
-					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
-					<?php the_author(); ?> 編
-				</li>
-				<li class="date">
-					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
-					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
-						<span class="label label-danger">New!</span>
-					<?php elseif ( is_recent_date( $post->post_modified, 7 ) ) : ?>
-						<span class="label label-info">更新</span>
-					<?php endif; ?>
-				</li>
-				<li>
-					<span class="<?php echo $post->num_children ? '' : 'text-danger'; ?>">
-						<i class="icon-books"></i> <?php echo number_format_i18n( $post->num_children ); ?>作収録
+			<div class="mb-3 d-flex justify-content-between align-items-start">
+				<h2 class="h4 card-title">
+					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+				</h2>
+				<?php if ( 'publish' !== get_post_status() ) : ?>
+					<span class="idea-status">
+						<i class="icon-lock" title="<?php esc_attr_e( '非公開', 'hametuha' ); ?>"></i>
 					</span>
-				</li>
-			</ul>
-
-			<!-- Excerpt -->
-			<div class="archive-excerpt">
-				<p class="text-muted"><?php echo trim_long_sentence( get_the_excerpt(), 98 ); ?></p>
+				<?php elseif ( is_recommended() ) : ?>
+					<span class="idea-status">
+						<i class="icon-star3 text-warning" title="<?php esc_attr_e( 'オススメ', 'hametuha' ); ?>"></i>
+					</span>
+				<?php endif; ?>
 			</div>
 
+			<p class="card-text idea-excerpt">
+				<?php echo esc_html( get_the_excerpt() ); ?>
+			</p>
+
+			<p class="author-info">
+				<?php
+				echo get_avatar( get_the_author_meta( 'ID' ), 40, '', get_the_author_meta( 'display_name' ), [
+					'class' => 'img-circle',
+				] );
+				?>
+				<span>
+					<?php the_author(); ?>
+				</span>
+			</p>
+		</div><!-- .card-body -->
+
+		<div class="card-footer d-flex justify-content-between <?php echo $is_mine ? '' : 'text-muted'; ?>">
+			<span>
+				<?php echo hametuha_passed_time( $post->post_date ); ?>
+			</span>
+			<span>
+				<i class="icon-books"></i> <?php echo number_format_i18n( $post->num_children ); ?>作収録
+			</span>
 		</div>
-	</a>
-</li>
+	</div><!-- .card -->
+</div>

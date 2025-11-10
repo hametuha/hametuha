@@ -144,6 +144,28 @@ class Lists extends Model {
 	}
 
 	/**
+	 * リストに投稿を登録する
+	 *
+	 * @param int $list_id
+	 * @param int $post_id
+	 *
+	 * @return bool 失敗したらfalse
+	 */
+	public function register( $list_id, $post_id ) {
+		// すでにあったらfalse
+		$exists = $this->exists_in( $list_id, $post_id );
+		if ( $exists ) {
+			return false;
+		}
+		return (bool) $this->insert( [
+			'rel_type'   => 'list',
+			'subject_id' => $list_id,
+			'object_id'  => $post_id,
+			'created'    => current_time( 'timestamp' ),
+		] );
+	}
+
+	/**
 	 * リストから登録を解除する
 	 *
 	 * @param int $list_id
@@ -174,6 +196,19 @@ class Lists extends Model {
 			'subject_id = %d' => $list_id,
 			'object_id = %d'  => $post_id,
 		])->get_row();
+	}
+
+	public function is_assigned_to( $list_ids, $post_id ) {
+		$query = $this
+			->select( 'subject_id' )
+			->calc( false )
+			->wheres( [
+				'rel_type = %s'   => 'list',
+				'object_id = %d'  => $post_id,
+			] )
+			->where_in( 'subject_id', $list_ids )
+			->build_query();
+		return array_map( 'intval', $this->get_col( 0, $query) );
 	}
 
 	/**
