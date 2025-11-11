@@ -62,10 +62,10 @@ const StarRating = ( { postId, initialRating } ) => {
 			clearTimeout( saveTimeout );
 		}
 
-		// 800ms後に保存
+		// 1,000ms後に保存
 		const timeout = setTimeout( () => {
 			saveRating( newRating );
-		}, 800 );
+		}, 1000 );
 
 		setSaveTimeout( timeout );
 	};

@@ -32,7 +32,7 @@ $query = new WP_Query( [
 								<span><?php echo esc_html( $this->doujin->display_name ); ?></span>
 								<rt><?php echo esc_html( $this->doujin->user_lastname ); ?></rt>
 							</ruby>
-							<small><?php echo hametuha_user_role( $this->doujin->ID ); ?></small>
+							<small class="badge bg-secondary"><?php echo hametuha_user_role( $this->doujin->ID ); ?></small>
 
 							<?php hametuha_follow_btn( $this->doujin->ID ); ?>
 

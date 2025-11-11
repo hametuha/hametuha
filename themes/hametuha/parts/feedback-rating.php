@@ -8,6 +8,13 @@
 $rating       = \Hametuha\Model\Rating::get_instance();
 $rating_avg   = $rating->get_post_rating();
 $rating_total = $rating->get_post_rating_count();
+$all_rating   = $rating->get_post_rating_count_all();
+$max_count    = 0;
+foreach ( $all_rating as $count ) {
+	if ( $max_count < $count ) {
+		$max_count = $count;
+	}
+}
 ?>
 <div class="rating">
 	<h3 class="text-center"><?php esc_html_e( 'みんなの評価', 'hametuha' ); ?></h3>
@@ -39,5 +46,33 @@ $rating_total = $rating->get_post_rating_count();
 		?>
 		<div class="hametuha-post-rating" data-post-id="<?php the_ID(); ?>" data-rating="<?php echo esc_attr( $rating ); ?>"></div>
 	<?php endif; ?>
+
+	<table class="rating-table mt-3">
+		<tbody>
+		<?php
+		foreach ( $all_rating as $score => $count ) :
+			$percent = 0;
+			if ( $count > 0 && $max_count > 0 ) {
+				$percent = round( $count / $max_count * 100 );
+			}
+			?>
+			<tr>
+				<th>
+					<?php for ( $i = 0; $i < $score; $i++ ) {
+						echo '<i class="icon-star6"></i>';
+					} ?>
+				</th>
+				<td class="rating-table-bar">
+					<span class="rating-table-bar-bg">
+						<span class="rating-table-bar-inner" style="width: <?php echo $percent; ?>%">&nbsp;</span>
+					</span>
+				</td>
+				<td class="text-muted">
+					<?php echo number_format( $count ); ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
 </div>
 

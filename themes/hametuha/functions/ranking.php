@@ -111,11 +111,12 @@ SQL;
 /**
  * その作品の前後の記事を出す
  *
- * @param int              $limit 2の倍数。
- * @param int|null|WP_Post $post  投稿オブジェクト。
+ * @param int              $limit  2の倍数。
+ * @param int|null|WP_Post $post   投稿オブジェクト。
+ * @param bool             $series 連載の場合は親投稿で縛りつつ、orderも変更する
  * @return WP_Post[]
  */
-function hametuha_get_author_work_siblings( $limit = 6, $post = null ) {
+function hametuha_get_author_work_siblings( $limit = 6, $post = null, $series = false ) {
 	$post = get_post( $post );
 	if ( 0 !== $limit % 2 ) {
 		$limit++;
@@ -128,7 +129,7 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null ) {
 		'before' => 'DESC',
 		'after'  => 'ASC',
 	] as $param => $order ) {
-		$found[ $param ] = get_posts( [
+		$args = [
 			'post_type'      => $post->post_type,
 			'post_status'    => 'publish',
 			'author'         => $post->post_author,
@@ -141,9 +142,22 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null ) {
 				],
 			],
 			'suppress_filters' => false,
-		] );
+			'no_found_rows'    => true,
+		];
+		if ( $series ) {
+			$args['post_parent'] = $post->post_parent;
+			unset( $args['author'] );
+			$args['orderby'] = [
+				'menu_order' => ( 'ASC' === $order ) ? 'DESC' : 'ASC',
+				'post_date'  => $order,
+			];
+		}
+		$found[ $param ] = get_posts( $args );
 	}
 	$posts = [];
+	if ( $series ) {
+		$posts[] = $post;
+	}
 	for ( $i = 0; $i < $limit; $i++ ) {
 		if ( count( $posts ) >= $limit ) {
 			break;

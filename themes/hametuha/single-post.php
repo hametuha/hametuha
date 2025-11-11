@@ -170,50 +170,44 @@ HTML;
 						$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
 					}
 					?>
-					<div class="alert alert-info text-center">
-						<?php echo esc_html( $limit_message ); ?>
-					</div>
-					<?php
-					// OGPカードが取得できれば表示
-					$ogp = hametuha_remote_ogp( $external );
-					if ( $ogp ) :
-						?>
-						<div class="external-link">
-							<div class="row">
-								<?php if ( $ogp[ 'img' ] ) : ?>
-									<div class="col-12 col-md-3">
-										<img loading="lazy" src="<?php echo esc_url( $ogp[ 'img' ] ); ?>"
-											class="img-responsive" alt="<?php echo esc_attr( $ogp[ 'title' ] ); ?>" />
+					<div class="alert alert-secondary">
+						<p class="text-center">
+							<?php echo esc_html( $limit_message ); ?>
+						</p>
+						<?php
+						// OGPカードが取得できれば表示
+						$ogp = hametuha_remote_ogp( $external );
+						if ( $ogp ) :
+							?>
+							<div class="external-link">
+								<div class="row">
+									<?php if ( $ogp[ 'img' ] ) : ?>
+										<div class="col-12 col-md-3 mb-3 mb-md-0">
+											<img loading="lazy" src="<?php echo esc_url( $ogp[ 'img' ] ); ?>"
+												class="img-responsive" alt="<?php echo esc_attr( $ogp[ 'title' ] ); ?>" />
+										</div>
+									<?php endif; ?>
+									<div class="col-12 col-md-9">
+										<h3 class="text-left">
+											<?php echo esc_html( $ogp[ 'title' ] ); ?>
+										</h3>
+										<p class="text-left"><?php echo esc_html( $ogp[ 'desc' ] ); ?></p>
+										<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow" target="_blank">
+											<?php esc_html_e( '外部サイトへ移動', 'hametuha' ); ?>
+										</a>
 									</div>
-								<?php endif; ?>
-								<div class="col-12 col-md-9">
-									<h3><?php echo esc_html( $ogp[ 'title' ] ); ?></h3>
-									<p class="text-muted"><?php echo esc_html( $ogp[ 'desc' ] ); ?></p>
-									<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow"
-										target="_blank">外部サイトへ移動</a>
 								</div>
 							</div>
-						</div>
-					<?php else : ?>
-						<div class="alert alert-danger text-center">
-							情報の取得に失敗しました（<a href="<?php echo esc_url( $external ); ?>" target="_blank"
-							class="alert-link" rel="nofollow">外部サイトへ移動する</a>）
-						</div>
-					<?php endif; ?>
+						<?php else : ?>
+							<p class="mt-3">
+								情報の取得に失敗しました
+								（<a href="<?php echo esc_url( $external ); ?>" target="_blank" class="alert-link" rel="nofollow">
+									<?php esc_html_e( '外部サイトへ移動', 'hametuha' ); ?>
+								</a>）
+							</p>
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
-
-				<?php if ( is_series() ) : ?>
-					<p class="series-pager-title text-center">
-						作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
-						（全<?php echo $series->get_total( $post->post_parent ); ?>話）
-					</p>
-					<?php get_template_part( 'parts/alert', 'kdp' ); ?>
-					<ul class="series-pager">
-						<?php echo $series->prev( '<li class="previous">' ); ?>
-						<?php echo $series->next( '<li class="next">' ); ?>
-					</ul>
-				<?php endif; ?>
-
 
 				<div id="single-post-footernote">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
@@ -229,6 +223,53 @@ HTML;
 						<small>※初出 <?php echo $corrected; ?></small>
 					<?php endif; ?>
 				</div>
+
+				<?php
+				// 連載なら目次を出す
+				if ( is_series() ) :
+					$total = $series->get_total( $post->post_parent );
+					?>
+					<div class="series-nav mb-5">
+
+						<p class="series-pager-title text-center">
+							作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
+							（全<?php echo esc_html( $total ); ?>話）
+						</p>
+						<?php get_template_part( 'parts/alert', 'kdp' ); ?>
+						<ul class="series-pager">
+							<?php echo $series->prev( '<li class="previous">' ); ?>
+							<?php echo $series->next( '<li class="next">' ); ?>
+						</ul>
+						<?php
+						$siblings = hametuha_get_author_work_siblings( 6, null, true );
+						if ( 1 < count( $siblings ) ) :
+							?>
+							<nav class="series-toc mt-2">
+								<h2 class="mb-3 mt-3 text-center"><?php esc_html_e( '目次', 'hametuha' ); ?></h2>
+								<ul class="mb-3 mt-0">
+									<?php foreach ( $siblings as $sibling ) : ?>
+										<li class="<?php echo ( $sibling->ID === get_the_ID() ) ? 'current' : ''; ?>">
+											<?php if ( $sibling->ID === get_the_ID() ) : ?>
+												<span><?php the_title(); ?> <i class="icon-reading"></i></span>
+											<?php else : ?>
+												<a href="<?php the_permalink( $sibling ); ?>"><?php echo get_the_title( $sibling ); ?></a>
+											<?php endif; ?>
+											<small class="text-muted d-none d-md-inline">
+												<?php printf( '%s（%s）', get_the_time( get_option( 'date_format' ), $sibling ), hametuha_passed_time( $post->post_date ) ); ?>
+											</small>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+								<p class="text-center mt-3">
+									<a href="<?php the_permalink( $post->post_parent ); ?>" class="btn btn-outline-primary">
+										<?php printf( esc_html__( '全%d話を見る', 'hametuha' ), $total ); ?>
+									</a>
+								</p>
+							</nav>
+						<?php endif; ?>
+
+					</div>
+				<?php endif; ?>
 
 				<p class="finish-nav" id="finish-nav">
 					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>

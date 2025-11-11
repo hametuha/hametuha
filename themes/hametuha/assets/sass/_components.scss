@@ -11,9 +11,14 @@ a[disabled], input[disabled] {
 	margin-bottom: 20px;
 }
 
-// テキストアライン
+// 画像
+.img-responsive {
+	max-width: 100%;
+	width: auto;
+	height: auto;
+}
 
-// alignment
+// テキストアライン
 .text {
 	&-left {
 		text-align: left !important;
@@ -377,12 +382,6 @@ i.rotation {
 
 	h3 {
 		margin-top: 0;
-
-		small {
-			@media only screen and (max-width: $screen-xs-max) {
-				display: block;
-			}
-		}
 	}
 
 	.avatar {

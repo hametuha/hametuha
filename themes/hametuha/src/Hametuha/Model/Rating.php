@@ -175,6 +175,36 @@ class Rating extends Model {
 	}
 
 	/**
+	 * 投稿に付与された評価の絶対数をランクごとに返す
+	 *
+	 * @param \WP_Post|int|\WP_Post $post
+	 *
+	 * @return int
+	 */
+	public function get_post_rating_count_all( \WP_Post $post = null ) {
+		$post = get_post( $post );
+		$ratings = [];
+		for ( $i = 5; $i > 0; $i-- ) {
+			$ratings[ $i ] = 0;
+		}
+		if ( ! $post ) {
+			return $ratings;
+		}
+		$this->select( "location, COUNT({$this->table}.ID) as count" )
+			 ->where( "{$this->table}.rel_type = %s", $this->type )
+			->where( "{$this->table}.object_id = %d", $post->ID )
+			->group_by( "{$this->table}.location" );
+		$result = $this->result( $this->build_query() );
+		foreach ( $result as $row ) {
+			$score = intval($row->location * 10 );
+			if ( isset( $ratings[ $score ] ) ) {
+				$ratings[ $score ] = (int) $row->count;
+			}
+		}
+		return $ratings;
+	}
+
+	/**
 	 * 投稿の平均星獲得数と総獲得件数を保存する
 	 *
 	 * @param int $post_id

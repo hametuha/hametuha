@@ -19,11 +19,11 @@ $permalink = get_permalink( $series_id );
 $title     = get_the_title( $series_id );
 if ( is_array( $limit ) ) {
 	sort( $limit );
-	$msg = sprintf( '%sは%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function ( $number ) {
+	$msg = sprintf( '『%s』は%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function ( $number ) {
 		return sprintf( '%d話', $number );
 	}, $limit ) ) );
 } elseif ( $limit ) {
-	$msg = sprintf( '%sは%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
+	$msg = sprintf( '『%s』は%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
 } else {
 	$msg = sprintf( '%sの全文は電子書籍でご覧頂けます。', esc_html( $title ) );
 }
@@ -37,7 +37,7 @@ switch ( $series->get_status( $series_id ) ) {
 					alt="<?php echo esc_attr( $title ); ?>" class="series__single--image"/>
 			</a>
 			<p class="text-muted">
-				<?php echo $msg; ?>
+				<?php echo $msg; ?><br />
 				続きはAmazonでご利用ください。
 			</p>
 			<a class="btn btl-lg btn-trans btn-amazon" href="<?php echo $series->get_kdp_url( $series_id ); ?>"

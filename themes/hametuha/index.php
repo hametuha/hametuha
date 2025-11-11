@@ -20,8 +20,6 @@ get_header( 'breadcrumb' );
 				if ( is_singular( 'lists' ) ) {
 					the_post();
 					get_template_part( 'parts/meta', 'lists' );
-				} elseif ( is_post_type_archive( 'list' ) )  {
-					get_template_part( 'parts/jumbotron', 'lists' );
 				} else {
 					get_template_part( 'parts/meta', 'post' );
 					if ( is_tax( 'campaign' ) ) {

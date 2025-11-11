@@ -5,13 +5,13 @@
 $author_id = (int) get_the_author_meta( 'ID' );
 ?>
 <div class="author-profile row" itemscope itemprop="author" itemtype="http://schema.org/Person">
-	<div class="col-sm-3 col-xs-12 text-center">
+	<div class="col-sm-3 col-12 text-center mb-3 mb-sm-0">
 		<?php echo get_avatar( $author_id, 160, '', get_the_author(), [ 'itemprop' => 'image' ] ); ?>
 	</div>
 	<div class="col-sm-9 col-xs-12">
 		<h3>
 			<span itemprop="name"><?php the_author(); ?></span>
-			<small>
+			<small class="badge text-bg-secondary">
 				<span itemprop="affiliation">破滅派</span>
 				<span><?php echo hametuha_user_role( $author_id ); ?></span>
 			</small>

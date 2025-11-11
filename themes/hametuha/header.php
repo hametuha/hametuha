@@ -15,7 +15,7 @@ get_header( 'meta' );
 
 			<?php if ( ! is_hamenew() ) : ?>
 				<button class="navbar-toggler navbar-write write-panel-btn ms-2 d-inline-block" type="button">
-					<i class="icon-pencil"></i>
+					<i class="icon-pen4"></i>
 				</button>
 			<?php endif; ?>
 		</div>

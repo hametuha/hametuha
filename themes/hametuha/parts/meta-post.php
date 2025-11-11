@@ -30,5 +30,7 @@
 </div>
 
 <?php if ( is_author() ) : ?>
-	<?php get_template_part( 'parts/author' ); ?>
+<div class="mb-5">
+	<?php get_template_part( 'parts/author', 'narrow', [ 'responsibility' => false, ] ); ?>
+</div>
 <?php endif; ?>
