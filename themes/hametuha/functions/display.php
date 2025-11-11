@@ -34,7 +34,7 @@ function hameplate( $slug, $name = '', $args = [], $echo = true, $deprecated = '
 function help_tip( $string, $place = 'top' ) {
 	$placement = $place ? sprintf( ' data-bs-placement="%s"', esc_attr( $place ) ) : '';
 	printf(
-		'<a href="#" class="btn btn-sm btn-secondary help-tip" data-bs-toggle="tooltip" data-bs-title="%s"%s><i class="icon-question5"></i></a>',
+		'<a href="#" class="help-tip" data-bs-toggle="tooltip" data-bs-title="%s"%s><i class="icon-question4"></i></a>',
 		esc_attr( $string ),
 		$placement
 	);
@@ -541,20 +541,20 @@ function hametuha_remote_ogp( $url, $time = 3600 ) {
  * @param null|int|WP_Post $post
  * @return string
  */
-function hametuha_first_corrected( $format = false, $post = null ) {
+function hametuha_first_collected( $format = false, $post = null ) {
 	$post      = get_post( $post );
-	$corrected = get_post_meta( $post->ID, '_first_collected', true );
+	$collected = get_post_meta( $post->ID, '_first_collected', true );
 	$url       = get_post_meta( $post->ID, 'oldurl', true );
-	if ( ! $corrected && ! $url ) {
+	if ( ! $collected && ! $url ) {
 		return '';
 	}
-	if ( ! $corrected ) {
-		$corrected = $url;
+	if ( ! $collected ) {
+		$collected = $url;
 	}
 	if ( ! $format || ! $url ) {
-		return esc_html( $corrected );
+		return esc_html( $collected );
 	} else {
-		return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $corrected ) );
+		return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $collected ) );
 	}
 }
 

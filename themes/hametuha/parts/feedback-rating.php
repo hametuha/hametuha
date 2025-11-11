@@ -1,23 +1,25 @@
 <?php
 /**
  * 星によるフィードバックを表示する
+ *
+ * @feature-group feedback
  */
 
 $rating       = \Hametuha\Model\Rating::get_instance();
 $rating_avg   = $rating->get_post_rating();
 $rating_total = $rating->get_post_rating_count();
 ?>
-<div class="rating-container">
+<div class="rating">
 	<h3 class="text-center"><?php esc_html_e( 'みんなの評価', 'hametuha' ); ?></h3>
 	<p class="star-rating">
 		<?php for ( $i = 1; $i <= 5; $i ++ ) : ?>
 			<i data-value="<?php echo $i; ?>" class="icon-star6<?php echo $i <= $rating_avg ? ' active' : ''; ?>"></i>
 		<?php endfor; ?>
 	</p>
-	<p class="rating-stats text-center text-muted">
+	<p class="rating-stats text-center text-muted" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 		<?php
 		printf(
-			__( '%s点（%d件の評価）', 'hametuha' ),
+			__( '<span itemprop="ratingValue">%s</span>点（<span itemprop="ratingCount">%d</span>件の評価）', 'hametuha' ),
 			number_format_i18n( $rating_avg, 1 ),
 			$rating_total
 		);

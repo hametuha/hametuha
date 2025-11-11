@@ -87,7 +87,7 @@ const StarRating = ( { postId, initialRating } ) => {
 		} else {
 			const stars = [];
 			for ( let i = 0; i < tempRating; i++ ) {
-				stars.push( <span className="text-star">★</span> );
+				stars.push( <span className="text-star" key={ `text-star-${ i }` }>★</span> );
 			}
 			return stars;
 		}

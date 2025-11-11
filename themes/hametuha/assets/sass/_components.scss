@@ -36,9 +36,8 @@ hr.divider {
 
 // ヘルプボタン
 .help-tip {
-	padding: 1px 5px;
-	@include border-radius(10px);
-	margin-left: 1em;
+	margin-left: 0.5em;
+	text-decoration: none !important;
 }
 
 .btn {

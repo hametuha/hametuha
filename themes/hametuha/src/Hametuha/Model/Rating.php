@@ -21,11 +21,6 @@ class Rating extends Model {
 	 */
 	protected $name = 'user_content_relationships';
 
-	/**
-	 *
-	 *
-	 * @var array
-	 */
 	protected $related = [ 'posts' ];
 
 	/**

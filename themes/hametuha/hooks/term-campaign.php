@@ -245,6 +245,7 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 		wp_cache_delete( $term_id, 'campaign_record' );
 	}
 }, 10, 2 );
+
 /**
  * レビューが更新されたらキャッシュ削除
  *

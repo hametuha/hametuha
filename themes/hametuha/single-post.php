@@ -16,7 +16,7 @@ if ( have_posts() ) :
 		the_post();
 		?>
 
-	<article id="viewing-content" <?php post_class(); ?> itemscope itemtype="http://schema.org/BlogPosting" itemprop="mainEntityOfPage">
+	<article id="viewing-content" <?php post_class(); ?> itemscope itemtype="https://schema.org/BlogPosting" itemprop="mainEntityOfPage">
 		<span class="hidden" itemprop="url"><?php echo the_permalink(); ?></span>
 		<span class="hidden" itemprop="publisher">破滅派</span>
 
@@ -160,45 +160,54 @@ HTML;
 				</div>
 				<!-- //.single-post-content -->
 
-					<?php
-					if ( $external = hametuha_external_url() ) :
-						if ( hametuha_external_url_is_active() ) {
-							$limit_message = sprintf( __( 'この作品は%sまで破滅派で読むことができます。', 'hametuha' ), hametuha_external_url_limit( get_option( 'date_format' ) ) );
-						} else {
-							$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
-						}
-						?>
+				<?php
+				// 外部で読む
+				$external = hametuha_external_url();
+				if ( $external ) :
+					if ( hametuha_external_url_is_active() ) {
+						$limit_message = sprintf( __( 'この作品は%sまで破滅派で読むことができます。', 'hametuha' ), hametuha_external_url_limit( get_option( 'date_format' ) ) );
+					} else {
+						$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
+					}
+					?>
 					<div class="alert alert-info text-center">
 						<?php echo esc_html( $limit_message ); ?>
 					</div>
-						<?php if ( $ogp = hametuha_remote_ogp( $external ) ) : ?>
+					<?php
+					// OGPカードが取得できれば表示
+					$ogp = hametuha_remote_ogp( $external );
+					if ( $ogp ) :
+						?>
 						<div class="external-link">
 							<div class="row">
-								<?php if ( $ogp['img'] ) : ?>
-								<div class="col-xs-12 col-sm-3">
-									<img loading="lazy" src="<?php echo esc_url( $ogp['img'] ); ?>" class="img-responsive" alt="<?php echo esc_attr( $ogp['title'] ); ?>"/>
-								</div>
+								<?php if ( $ogp[ 'img' ] ) : ?>
+									<div class="col-12 col-md-3">
+										<img loading="lazy" src="<?php echo esc_url( $ogp[ 'img' ] ); ?>"
+											class="img-responsive" alt="<?php echo esc_attr( $ogp[ 'title' ] ); ?>" />
+									</div>
 								<?php endif; ?>
-								<div class="col-xs-12 col-sm-9">
-									<h3><?php echo esc_html( $ogp['title'] ); ?></h3>
-									<p class="text-muted"><?php echo esc_html( $ogp['desc'] ); ?></p>
-									<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow" target="_blank">外部サイトへ移動</a>
+								<div class="col-12 col-md-9">
+									<h3><?php echo esc_html( $ogp[ 'title' ] ); ?></h3>
+									<p class="text-muted"><?php echo esc_html( $ogp[ 'desc' ] ); ?></p>
+									<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow"
+										target="_blank">外部サイトへ移動</a>
 								</div>
 							</div>
 						</div>
 					<?php else : ?>
 						<div class="alert alert-danger text-center">
-							情報の取得に失敗しました（<a href="<?php echo esc_url( $external ); ?>" target="_blank" class="alert-link" rel="nofollow">外部サイトへ移動する</a>）
+							情報の取得に失敗しました（<a href="<?php echo esc_url( $external ); ?>" target="_blank"
+							class="alert-link" rel="nofollow">外部サイトへ移動する</a>）
 						</div>
 					<?php endif; ?>
-					<?php endif; ?>
+				<?php endif; ?>
 
-					<?php if ( is_series() ) : ?>
+				<?php if ( is_series() ) : ?>
 					<p class="series-pager-title text-center">
 						作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
 						（全<?php echo $series->get_total( $post->post_parent ); ?>話）
 					</p>
-						<?php get_template_part( 'parts/alert', 'kdp' ); ?>
+					<?php get_template_part( 'parts/alert', 'kdp' ); ?>
 					<ul class="series-pager">
 						<?php echo $series->prev( '<li class="previous">' ); ?>
 						<?php echo $series->next( '<li class="next">' ); ?>
@@ -215,13 +224,13 @@ HTML;
 						<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ); ?></span>
 					</span>
 					）
-					<?php if ( $corrected = hametuha_first_corrected( true ) ) : ?>
+					<?php if ( $corrected = hametuha_first_collected( true ) ) : ?>
 						<br />
 						<small>※初出 <?php echo $corrected; ?></small>
 					<?php endif; ?>
 				</div>
 
-				<p class="finish-nav">
+				<p class="finish-nav" id="finish-nav">
 					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>
 						これは<?php the_terms( get_the_ID(), 'campaign' ); ?>の応募作品です。<br />
 						他の作品ともどもレビューお願いします。<br />
@@ -231,7 +240,14 @@ HTML;
 					<i class="icon-point-down"></i>
 				</p>
 
-				<?php get_template_part( 'parts/feedback', 'rating' ); ?>
+				<div class="row rating-container">
+					<div class="col-12 col-md-6 mb-5 mb-md-0">
+						<?php get_template_part( 'parts/feedback', 'rating' ); ?>
+					</div>
+					<div class="col-12 col-md-6">
+						<?php get_template_part( 'parts/feedback', 'feeling' ); ?>
+					</div>
+				</div>
 
 			</div><!-- //.work-wrapper -->
 
@@ -332,20 +348,6 @@ HTML;
 			</div>
 		</div>
 
-
-		<div id="reviews-wrapper" class="overlay-container">
-			<div class="container">
-				<div>
-					<?php Hametuha\Ajax\Feedback::form( 'parts/feedback', 'you', [ 'id' => 'review-form' ] ); ?>
-				</div>
-
-				<hr/>
-
-				<?php Hametuha\Ajax\Feedback::all_review( get_the_ID() ); ?>
-
-			</div>
-		</div>
-
 		<div id="comments-wrapper" class="overlay-container">
 			<div id="post-comment" class="container">
 				<?php comments_template(); ?>
@@ -369,19 +371,19 @@ endif;
 		<nav class="container">
 			<ul class="clearfix">
 				<li>
-					<a href="#finish-wrapper">
+					<a href="#finish-wrapper" class="has-wrapper">
 						<i class="icon-books"></i><br/>
 						<span>リスト</span>
 					</a>
 				</li>
 				<li class="finished-container">
-					<a href="#reviews-wrapper">
+					<a href="#finish-nav">
 						<i class="icon-star6"></i><br/>
 						<span>レビュー</span>
 					</a>
 				</li>
 				<li>
-					<a href="#comments-wrapper">
+					<a href="#comments-wrapper" class="has-wrapper">
 						<i class="icon-bubbles"></i><br/>
 						<span>コメント</span>
 						<?php if ( $count = get_comments_number() ) : ?>

@@ -96,7 +96,7 @@ $publisher = hametuha_is_secret_book() ? get_the_author_meta( '_publisher_name' 
 			<tr>
 				<th><?php echo number_format( $counter ); ?></th>
 				<td>
-					<?php if ( $corrected = hametuha_first_corrected( true, $post ) ) : ?>
+					<?php if ( $corrected = hametuha_first_collected( true, $post ) ) : ?>
 						<?php echo esc_html( get_the_title( $post ) ); ?>
 						（<?php echo $corrected; ?>）
 					<?php else : ?>

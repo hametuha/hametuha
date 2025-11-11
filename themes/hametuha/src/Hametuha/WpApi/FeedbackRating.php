@@ -71,10 +71,31 @@ class FeedbackRating extends WpApi {
 				] );
 			}
 		} else {
-			// 1-5は新規保存
+			// 1-5の場合、かつ新規作成の場合は「新規レビュー」としてアクション実行。
+			$updating = true;
+			if ( is_null( $this->rating->get_users_rating( $post_id, get_current_user_id() ) ) ) {
+				$updating = false;
+			}
 			$result = $this->rating->update_rating( $rating, get_current_user_id(), $post_id );
+			if ( ! $result ) {
+				return new \WP_Error( 'rating_error', __( 'レーティングの更新に失敗しました。', 'hametuha' ), [
+					'status' => 500,
+				] );
+			}
+			if ( ! $updating ) {
+				/**
+				 * hametuha_post_rated
+				 *
+				 * Fired when review is saved
+				 *
+				 * @param int $post_id
+				 * @param int $user_id
+				 * @param int $rating
+				 */
+				do_action( 'hametuha_post_rated', $post_id, get_current_user_id(), $rating );
+			}
 		}
-		// データを保存
+		// 平均データを保存
 		$this->rating->update_post_average( $post_id );
 		// レスポンスを返す
 		return new \WP_REST_Response( [
