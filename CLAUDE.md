@@ -102,11 +102,13 @@ docker compose exec wordpress bash -c "cd themes/hametuha && npm run watch"
 - **phpMyAdmin**: [http://localhost:8081](http://localhost:8081)
 - **Mailpit（メール監視）**: [http://localhost:8026](http://localhost:8026)
 - **MySQL（外部接続）**: localhost:3307
+- **Hameticonフォントプレビュー**: [https://hametuha.info/wp-content/themes/hametuha/tests/hameticon-preview.php](https://hametuha.info/wp-content/themes/hametuha/tests/hameticon-preview.php)
 
 ### サービス説明
 - **phpMyAdmin**: データベースの管理・操作
 - **Mailpit**: WordPressから送信されるメールの監視・確認
 - **MySQL**: SequelProやTablePlusなどでの外部接続用
+- **Hameticonフォントプレビュー**: カスタムアイコンフォント（hameticon）の全アイコンをプレビュー・検索できるツール
 
 ## 開発コマンド
 
