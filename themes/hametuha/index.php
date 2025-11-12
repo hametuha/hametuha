@@ -119,7 +119,7 @@ get_header( 'breadcrumb' );
 
 	</div><!-- //.container -->
 
-<?php  get_footer( 'books' ); ?>
+<?php get_footer( 'books' ); ?>
 
 <section style="padding: 20px 0; background-color: var( --bs-gray-200 );">
 	<?php get_footer( 'ebooks' ); ?>

@@ -302,5 +302,6 @@ get_template_part( 'templates/idea/form' );
 	</div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

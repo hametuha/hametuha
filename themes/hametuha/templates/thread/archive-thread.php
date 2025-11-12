@@ -85,6 +85,7 @@ get_template_part( 'templates/thread/header-thread' );
 
 </div><!-- //.container -->
 
-<?php get_footer( 'books' ); ?>
-
-<?php get_footer(); ?>
+<?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
+get_footer();

@@ -163,5 +163,6 @@ $editors = new WP_User_Query( [
 </div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

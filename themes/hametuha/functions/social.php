@@ -339,8 +339,10 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 				</span>
 			</a>
 		<?php else : ?>
-			<a class="btn btn-primary" href="<?php echo home_url( '/doujin/follower/', 'https' ); ?>"><i class="icon-user"></i>
-				フォロワー確認</a>
+			<a class="btn btn-primary" href="<?php echo home_url( 'dashboard/friends/' ); ?>">
+				<i class="icon-user"></i>
+				フォロワー確認
+			</a>
 			<?php
 		endif;
 	else :

@@ -157,4 +157,6 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 
 </section>
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

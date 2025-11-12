@@ -10,15 +10,15 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 ?>
 <div class="front-container" style="<?php echo $style; ?>">
 	<div class="container">
-		<div class="jumbotron">
+		<div class="p-5">
 			<h1>後ろ向きのまま前へ進め！</h1>
 			<?php the_excerpt(); ?>
 			<p>
-				<a class="btn btn-success btn-lg" href="#about-us">破滅派とは？</a>
+				<a class="btn btn-success btn-lg" href="<?php echo home_url( 'about' ); ?>">破滅派とは？</a>
 				<?php if ( ! is_user_logged_in() ) : ?>
-					<a class="btn btn-success btn-lg" href="<?php echo wp_registration_url(); ?>" rel="nofollow">登録する</a>
+					<a class="btn btn-success btn-lg" style="margin-left: 1em;" href="<?php echo wp_registration_url(); ?>" rel="nofollow">登録する</a>
 				<?php elseif ( ! current_user_can( 'edit_posts' ) ) : ?>
-					<a class="btn btn-success btn-lg" href="<?php echo home_url( 'become-author' ); ?>" rel="nofollow">同人になる</a>
+					<a class="btn btn-success btn-lg" style="margin-left: 1em;" href="<?php echo home_url( 'become-author' ); ?>" rel="nofollow">同人になる</a>
 				<?php endif; ?>
 			</p>
 		</div>
@@ -39,7 +39,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 			<?php dynamic_sidebar( 'frontpage-sidebar' ); ?>
 
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>
 					人気の投稿
 				</h2>
@@ -58,7 +58,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 					?>
 				</ul>
 				<p>
-					<a href="<?php echo home_url( '/ranking/' ); ?>" class="btn btn-default btn-block">ランキング一覧</a>
+					<a href="<?php echo home_url( '/ranking/' ); ?>" class="btn btn-outline-secondary w-100">ランキング一覧</a>
 				</p>
 			</div>
 
@@ -74,7 +74,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 				$query->the_post();
 				$url = get_permalink();
 				?>
-				<div class="col-xs-12 col-sm-4">
+				<div class="col-12 col-sm-4">
 					<h2>
 						編集部オススメ
 					</h2>
@@ -94,7 +94,7 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 						?>
 					</ul>
 					<p>
-						<a href="<?php echo $url; ?>" class="btn btn-default btn-block">もっと見る</a>
+						<a href="<?php echo $url; ?>" class="btn btn-outline-secondary w-100">もっと見る</a>
 					</p>
 				</div>
 				<?php
@@ -103,7 +103,7 @@ endif;
 			?>
 
 			<?php if ( $recent_posts = hametuha_recent_posts( 5 ) ) : ?>
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>新着投稿</h2>
 				<ul class="post-list">
 					<?php
@@ -115,12 +115,12 @@ endif;
 					?>
 				</ul>
 				<p>
-					<a href="<?php echo home_url( '/latest/' ); ?>" class="btn btn-default btn-block">すべての新着投稿</a>
+					<a href="<?php echo home_url( '/latest/' ); ?>" class="btn btn-outline-secondary w-100">すべての新着投稿</a>
 				</p>
 			</div>
 			<?php endif; ?>
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>はめにゅー</h2>
 				<small>文学関連ニュース</small>
 				<ul class="post-list">
@@ -137,11 +137,11 @@ endif;
 					?>
 				</ul>
 				<p>
-					<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-default btn-block">はめにゅートップ</a>
+					<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-outline-secondary w-100">はめにゅートップ</a>
 				</p>
 			</div>
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>検索</h2>
 
 				<p class="text-muted">
@@ -151,7 +151,7 @@ endif;
 			</div>
 
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>掲示板</h2>
 
 				<div class="list-group">
@@ -164,22 +164,24 @@ endif;
 					) :
 						setup_postdata( $post );
 						?>
-						<a class="list-group-item" href="<?php the_permalink(); ?>">
-							<h3 class="list-group-item-heading">
-								<?php echo hametuha_censor( get_the_title() ); ?>
-								<span class="badge"><?php comments_number( '0', '1', '%' ); ?></span>
-								<?php if ( is_new_post( 7, $post ) ) : ?>
-									<span class="label label-danger">New</span>
-								<?php endif; ?>
-							</h3>
+						<a class="list-group-item list-group-item-action" href="<?php the_permalink(); ?>">
+							<div class="d-flex w-100 justify-content-between">
+								<h3 class="mb-1">
+									<?php echo hametuha_censor( get_the_title() ); ?>
+								</h3>
+								<span class="badge bg-secondary"><?php comments_number( '0', '1', '%' ); ?></span>
+							</div>
+							<?php if ( is_new_post( 7, $post ) ) : ?>
+								<span class="badge bg-danger">New</span>
+							<?php endif; ?>
 
-							<p class="list-group-item-text">
+							<p class="mb-1">
 								<?php
 								$terms = get_the_terms( $post, 'topic' );
 								if ( $terms && ! is_wp_error( $terms ) ) :
 									foreach ( $terms as $term ) :
 										?>
-									<span class="label label-info"><?php echo esc_html( $term->name ); ?></span>
+									<span class="badge bg-info"><?php echo esc_html( $term->name ); ?></span>
 										<?php
 									endforeach;
 								endif;
@@ -195,11 +197,11 @@ endif;
 				</div>
 				<p>
 					<a href="<?php echo get_post_type_archive_link( 'thread' ); ?>"
-					   class="btn btn-default btn-block">掲示板トップ</a>
+					   class="btn btn-outline-secondary w-100">掲示板トップ</a>
 				</p>
 			</div>
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>お知らせ</h2>
 
 				<div class="list-group">
@@ -212,13 +214,13 @@ endif;
 					while ( $announcement->have_posts() ) :
 						$announcement->the_post();
 						?>
-						<a class="list-group-item" href="<?php the_permalink(); ?>">
-							<h3 class="list-group-item-heading"><?php the_title(); ?></h3>
+						<a class="list-group-item list-group-item-action" href="<?php the_permalink(); ?>">
+							<h3 class="mb-1"><?php the_title(); ?></h3>
 
-							<p>
+							<p class="mb-1">
 								<?php the_date(); ?>
 								<?php if ( is_new_post( 7 ) ) : ?>
-									<span class="label label-danger">New</span>
+									<span class="badge bg-danger">New</span>
 								<?php endif; ?>
 							</p>
 						</a>
@@ -228,12 +230,12 @@ endif;
 					?>
 				</div>
 				<p>
-					<a href="<?php echo get_post_type_archive_link( 'announcement' ); ?>" class="btn btn-default btn-block">お知らせ一覧</a>
+					<a href="<?php echo get_post_type_archive_link( 'announcement' ); ?>" class="btn btn-outline-secondary w-100">お知らせ一覧</a>
 				</p>
 			</div>
 
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>統計情報</h2>
 				<script>
 					window.HametuhaGenreStatic = <?php echo json_encode( hametuha_genre_static() ); ?>;
@@ -252,7 +254,7 @@ endif;
 			$series_update = hametuha_recent_series( 3 );
 			if ( $series_update ) :
 				?>
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>連載更新</h2>
 				<ul class="post-list">
 					<?php
@@ -264,12 +266,12 @@ endif;
 					?>
 				</ul>
 				<p>
-					<a href="<?php echo get_post_type_archive_link( 'series' ); ?>" class="btn btn-default btn-block">シリーズ一覧</a>
+					<a href="<?php echo get_post_type_archive_link( 'series' ); ?>" class="btn btn-outline-secondary w-100">シリーズ一覧</a>
 				</p>
 			</div>
 			<?php endif; ?>
 
-			<div class="col-xs-12 col-sm-4">
+			<div class="col-12 col-sm-4">
 				<h2>人気のタグ</h2>
 
 				<p class="tag-cloud">
@@ -277,13 +279,13 @@ endif;
 				</p>
 			</div>
 
-			<div class="col-xs-12 col-sm-4 widget-twitter">
+			<div class="col-12 col-sm-4 widget-twitter">
 				<a class="twitter-timeline" href="https://twitter.com/search?q=%E7%A0%B4%E6%BB%85%E6%B4%BE%20-from%3Arusitakigami%20-from%3Aen_okawa" data-widget-id="727361413681836032">
 					破滅派に関するツイート
 				</a>
 			</div>
 
-			<div class="col-xs-12 col-sm-4 widget-facebook">
+			<div class="col-12 col-sm-4 widget-facebook">
 				<div class="fb-page" data-href="https://www.facebook.com/minicome" data-height="230"
 					 data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
 					 data-show-facepile="true" data-show-posts="false">
@@ -309,80 +311,92 @@ endif;
 	<?php get_footer( 'books' ); ?>
 
 	<div>
-		<div id="about-us" class="clearfix">
+		<div id="about-us" class="container">
 
-			<h2 class="page-header text-center">
+			<h2 class="text-center border-bottom pb-3 mb-4">
 				破滅派ってなあに？<br/>
-				<small>はじめての方へ</small>
+				<small class="text-muted h6">はじめての方へ</small>
 			</h2>
 
-			<div class="col-sm-4 col-xs-12">
-				<p class="icon">
-					<i class="icon-ha"></i>
-				</p>
+			<div class="row">
 
-				<div class="caption">
-					<h3>破滅派を知ろう</h3>
-
-					<p>
-						破滅派は要するに<strong>オンライン文芸誌</strong>であり、文学作品を発表したり、読んだりできます。<br/>
-						<a href="<?php echo home_url( '/about/' ); ?>">設立の経緯</a>や<a
-							href="<?php echo home_url( '/history/' ); ?>">活動の記録</a>などをご覧頂き、
-						恐れを消してください。
+				<div class="col-sm-4 col-12">
+					<p class="icon">
+						<i class="icon-ha"></i>
 					</p>
+
+					<div class="caption">
+						<h3>破滅派を知ろう</h3>
+
+						<p>
+							破滅派は要するに<strong>オンライン文芸誌</strong>であり、文学作品を発表したり、読んだりできます。<br />
+							<a href="<?php echo home_url( '/about/' ); ?>">設立の経緯</a>や<a
+								href="<?php echo home_url( '/history/' ); ?>">活動の記録</a>などをご覧頂き、
+							恐れを消してください。
+						</p>
+					</div>
 				</div>
-			</div>
 
-			<div class="col-sm-4 col-xs-12">
-				<p class="icon">
-					<i class="icon-reading"></i>
-				</p>
-
-				<div class="caption">
-					<h3>破滅派に関わろう</h3>
-
-					<p>
-						破滅派はオンライン文芸誌なので、詩や小説といった文学作品を掲載することができます。
-						新たな読者との出会いがあなたを待っています。<br/>
-						「自分は作品を書けないな」という方でも、レビューを残したり、掲示板に書き込んだり、色々な楽しみ方ができます。
+				<div class="col-sm-4 col-12">
+					<p class="icon">
+						<i class="icon-reading"></i>
 					</p>
+
+					<div class="caption">
+						<h3>破滅派に関わろう</h3>
+
+						<p>
+							破滅派はオンライン文芸誌なので、詩や小説といった文学作品を掲載することができます。
+							新たな読者との出会いがあなたを待っています。<br />
+							「自分は作品を書けないな」という方でも、レビューを残したり、掲示板に書き込んだり、色々な楽しみ方ができます。
+						</p>
+					</div>
 				</div>
-			</div>
 
-			<div class="col-sm-4 col-xs-12">
-				<p class="icon">
-					<i class="icon-enter"></i>
-				</p>
-
-				<div class="caption">
-					<h3>まずは新規登録</h3>
-
-					<p>
-						なにはともあれ、破滅派にログインしましょう。<br/>
-						破滅派にアカウントを作成するのに必要なのはメールアドレスだけ。TwitterやFacebookのアカウントでも登録できます。
+				<div class="col-sm-4 col-12">
+					<p class="icon">
+						<i class="icon-enter"></i>
 					</p>
+
+					<div class="caption">
+						<h3>まずは新規登録</h3>
+
+						<p>
+							なにはともあれ、破滅派にログインしましょう。<br />
+							破滅派にアカウントを作成するのに必要なのはメールアドレスだけ。TwitterやFacebookのアカウントでも登録できます。
+						</p>
+					</div>
 				</div>
 			</div>
 
 		</div>
 
-		<?php if ( is_user_logged_in() ) : ?>
-			<?php if ( current_user_can( 'edit_posts' ) ) : ?>
-				<a class="btn btn-lg btn-block btn-primary btn--joinus"
-				   href="<?php echo admin_url( 'post-new.php' ); ?>">作品を書く</a>
+		<p class="text-center mb-5">
+			<?php if ( is_user_logged_in() ) : ?>
+				<?php if ( current_user_can( 'edit_posts' ) ) : ?>
+					<a class="btn btn-lg btn-primary" href="<?php echo admin_url( 'post-new.php' ); ?>">
+						作品を書く
+					</a>
+				<?php else : ?>
+					<a class="btn btn-lg btn-primary" href="<?php echo home_url( 'become-author/' ); ?>">
+						執筆者になる
+					</a>
+				<?php endif; ?>
 			<?php else : ?>
-				<a class="btn btn-lg btn-block btn-primary btn--joinus"
-				   href="<?php echo admin_url( 'post-new.php' ); ?>">執筆者になる</a>
+				<a class="btn btn-lg btn-primary" href="<?php echo wp_login_url(); ?>">
+					破滅派にログイン
+				</a>
 			<?php endif; ?>
-		<?php else : ?>
-			<p>
-				<a class="btn btn-lg btn-block btn-primary btn--joinus" href="<?php echo wp_login_url(); ?>">破滅派にログイン</a>
-			</p>
-		<?php endif; ?>
+		</p>
 
 
 
-		<?php get_template_part( 'parts/share' ); ?>
+		<?php
+		get_template_part( 'parts/share', 'big', [
+			'title' => __( '破滅派を広める', 'hametuha' ),
+			'desc'  => __( '世界に破滅派を広めて下さい', 'hametuha' ),
+		] );
+		?>
 
 
 	</div><!-- front-container -->

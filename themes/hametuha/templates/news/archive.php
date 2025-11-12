@@ -64,5 +64,6 @@ get_template_part( 'templates/news/header', 'news' );
 </div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

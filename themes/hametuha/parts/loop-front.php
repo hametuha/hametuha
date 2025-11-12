@@ -9,10 +9,6 @@ $no_desc         = isset( $description ) && ( false === $description );
 <li>
 	<a href="<?php the_permalink(); ?>" class="clearfix">
 
-		<?php if ( has_post_thumbnail() ) : ?>
-			<?php the_post_thumbnail( 'pinky' ); ?>
-		<?php endif; ?>
-
 		<h3 class="list-heading">
 			<?php echo is_doujin_profile_page() ? $title : $title_display; ?>
 			<?php foreach ( get_the_category() as $cat ) : ?>

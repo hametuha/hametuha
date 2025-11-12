@@ -502,5 +502,6 @@ endswitch;
 </div><!-- //.series__wrap -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

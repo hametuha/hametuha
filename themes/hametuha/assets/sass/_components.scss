@@ -446,6 +446,7 @@ ul.metadata {
 // コンテナ
 .archive-container {
 	margin: 20px 0;
+	padding: 0;
 	border-top: 1px solid $thin-border;
 	// タブが上にある場合はマージンなし
 	.nav-tabs--archive + .tab-content & {

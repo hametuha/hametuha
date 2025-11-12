@@ -47,6 +47,7 @@ get_template_part( 'templates/faq/header-faq' );
 
 	</div><!-- //.container -->
 
-<?php get_footer( 'books' ); ?>
-
-<?php get_footer(); ?>
+<?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
+get_footer();

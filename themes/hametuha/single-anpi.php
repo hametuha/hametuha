@@ -131,5 +131,6 @@ $is_author = user_can( $author, 'edit_posts' );
 </div>
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

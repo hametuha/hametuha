@@ -63,5 +63,6 @@ get_header( 'sub' );
 	</div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

@@ -142,7 +142,7 @@ class Author extends Model {
 				   post_date AS date
 				FROM {$this->posts}
 				WHERE post_author = %d
-				  AND post_type IN ('anpi', 'post', 'series', 'announcement', 'newsletter', 'faq')
+				  AND post_type IN ('anpi', 'post', 'series', 'announcement', 'newsletter', 'faq', 'idea', 'lists')
 				  AND post_status = 'publish'
 				ORDER BY post_date DESC
 				LIMIT 10

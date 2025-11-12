@@ -12,4 +12,6 @@ the_post();
 	<?php the_content(); ?>
 </main>
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

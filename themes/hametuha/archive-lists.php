@@ -119,5 +119,6 @@ global $wp_query;
 </div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();
