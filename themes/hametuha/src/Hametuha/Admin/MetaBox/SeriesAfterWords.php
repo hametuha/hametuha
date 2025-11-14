@@ -31,6 +31,4 @@ class SeriesAfterWords extends SeriesBase {
 			</p>
 HTML;
 	}
-
-
 }

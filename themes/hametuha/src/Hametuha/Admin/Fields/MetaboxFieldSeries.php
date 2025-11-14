@@ -109,7 +109,7 @@ class MetaboxFieldSeries extends Select {
 		$options = [
 			0 => 'なし',
 		];
-		$args = [
+		$args    = [
 			'post_type'      => 'series',
 			'posts_per_page' => 200,
 			'orderby'        => [ 'date' => 'DESC' ],

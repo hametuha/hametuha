@@ -42,7 +42,7 @@ class TermUserRelationships extends Model {
 	 * @param int $term_taxonomy_id
 	 * @return bool
 	 */
-	protected  function record_exists( $user_id, $post_id, $term_taxonomy_id ) {
+	protected function record_exists( $user_id, $post_id, $term_taxonomy_id ) {
 		return (bool) $this->select( 'COUNT(*)' )
 			->wheres([
 				"{$this->table}.user_id = %d"          => $user_id,
@@ -62,5 +62,4 @@ class TermUserRelationships extends Model {
 			[ $this->terms, "{$this->term_taxonomy}.term_id = {$this->terms}.term_id", 'inner' ],
 		];
 	}
-
 }

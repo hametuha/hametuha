@@ -42,14 +42,14 @@ class MyContents extends MyContentPattern {
 			case 'series':
 				$args = [
 					'post_type'           => $post_type,
-					'post_status'         => [ 'publish', 'pending', 'draft', 'future', 'private'],
+					'post_status'         => [ 'publish', 'pending', 'draft', 'future', 'private' ],
 					'author'              => get_current_user_id(),
 					'posts_per_page'      => 20,
 					'paged'               => $paged,
 					'ignore_sticky_posts' => true,
 					'orderby'             => [ 'date' => 'DESC' ],
 				];
-				$s = $request->get_param( 's' );
+				$s    = $request->get_param( 's' );
 				if ( $s ) {
 					$args['s'] = $s;
 				}

@@ -1,6 +1,9 @@
 <?php
 /*
  * Template Name: ヘルプセンター
+ *
+ *
+ * @feature-group faq
  */
 
 get_template_part( 'templates/faq/header-faq' );
@@ -9,8 +12,9 @@ get_template_part( 'templates/faq/header-faq' );
 <section class="help-center-latest">
 
 	<div class="container">
+		<div class="row justify-content-center">
 
-		<div class="col-xs-12 col-sm-8 col-sm-offset-2 text-right">
+		<div class="col-12 col-md-8 text-end">
 
 			<h2 class="help-center-latest-title">よくある質問</h2>
 			<ul class="help-center-latest-list">
@@ -24,6 +28,7 @@ get_template_part( 'templates/faq/header-faq' );
 			</ul>
 		</div>
 
+		</div><!-- //.row -->
 	</div>
 
 </section>
@@ -83,16 +88,16 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 		?>
 	<div class="row">
 		<?php foreach ( $row as $term ) : ?>
-		<div class="col col-xs-6 col-sm-4">
-			<div class="thumbnail">
-				<div class="caption">
+		<div class="col-12 col-sm-6 col-md-4">
+			<div class="card mb-3">
+				<div class="card-body">
 					<h3><?php echo esc_html( $term->name ); ?></h3>
 					<?php echo wpautop( esc_html( $term->description ) ); ?>
 					<p>
 						<a href="<?php echo get_term_link( $term ); ?>" class="btn btn-primary" role="button">すべてみる</a>
 					</p>
-				</div>
-			</div>
+				</div><!-- //.card-body -->
+			</div><!-- //.card -->
 		</div>
 		<?php endforeach; ?>
 	</div>
@@ -111,7 +116,8 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 	</p>
 
 	<div class="container">
-		<div class="col col-xs-12 col-sm-4">
+		<div class="row">
+		<div class="col-12 col-md-4">
 			<div class="help-center-misc-item">
 				<p class="text-center">
 					<i class="icon-users4"></i>
@@ -123,7 +129,7 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 				</p>
 			</div>
 		</div>
-		<div class="col col-xs-12 col-sm-4">
+		<div class="col-12 col-md-4">
 			<div class="help-center-misc-item">
 				<p class="text-center">
 					<i class="icon-hand"></i>
@@ -134,7 +140,7 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 				</p>
 			</div>
 		</div>
-		<div class="col col-xs-12 col-sm-4">
+		<div class="col-12 col-md-4">
 			<div class="help-center-misc-item">
 				<p class="text-center">
 					<i class="icon-phone6"></i>
@@ -146,8 +152,11 @@ if ( $terms && ! is_wp_error( $terms ) ) :
 				</p>
 			</div>
 		</div>
+		</div><!-- //.row -->
 	</div>
 
 </section>
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

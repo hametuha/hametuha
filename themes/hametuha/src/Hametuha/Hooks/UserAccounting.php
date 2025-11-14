@@ -42,7 +42,7 @@ class UserAccounting extends Singleton {
 		// CSSを読み込み
 		wp_enqueue_style( 'hametuha-accounting-paper' );
 		// タイトルを変更
-		add_filter( 'single_post_title', function( $title, $post ) {
+		add_filter( 'single_post_title', function ( $title, $post ) {
 			if ( 'accounting' !== $post->post_name ) {
 				return $title;
 			}
@@ -117,7 +117,7 @@ class UserAccounting extends Singleton {
 				<th rowspan="2">
 					<?php echo esc_html( $title ); ?>
 				</th>
-				<th><?php esc_html_e( '住所', 'hametuha' ) ?></th>
+				<th><?php esc_html_e( '住所', 'hametuha' ); ?></th>
 				<td colspan="2">
 					<?php echo esc_html( $address->format_line() ); ?>
 				</td>
@@ -129,9 +129,13 @@ class UserAccounting extends Singleton {
 				</td>
 				<td>
 					<p><?php esc_html_e( '法人番号・個人番号', 'hametuha' ); ?></p>
-					<code><?php echo implode( '', array_map( function( $i ) {
+					<code>
+					<?php
+					echo implode( '', array_map( function ( $i ) {
 						return ' &nbsp;';
-					}, range( 0, 9 ) ) );?></code>
+					}, range( 0, 9 ) ) );
+					?>
+					</code>
 				</td>
 			</tr>
 		</thead>
@@ -148,8 +152,8 @@ class UserAccounting extends Singleton {
 		?>
 		<tfoot class="paper-table-footer">
 		<tr>
-			<th rowspan="2"><?php echo esc_html( $title ) ?></th>
-			<th><?php esc_html_e( '住所', 'hametuha' ) ?></th>
+			<th rowspan="2"><?php echo esc_html( $title ); ?></th>
+			<th><?php esc_html_e( '住所', 'hametuha' ); ?></th>
 			<td colspan="2">
 				<?php esc_html_e( '東京都中央区銀座1-3-3 G1ビル7F 1211', 'hametuha' ); ?>
 			</td>
@@ -157,8 +161,8 @@ class UserAccounting extends Singleton {
 		<tr>
 			<th><?php esc_html_e( '名称', 'hametuha' ); ?></th>
 			<td>
-				<p><?php esc_html_e( '株式会社破滅派', 'hametuha' ) ?></p>
-				<small><?php esc_html_e( '（電話）'); ?>050-5532-8327</small>
+				<p><?php esc_html_e( '株式会社破滅派', 'hametuha' ); ?></p>
+				<small><?php esc_html_e( '（電話）' ); ?>050-5532-8327</small>
 			</td>
 			<td>
 				<p><?php esc_html_e( '法人番号', 'hametuha' ); ?></p>

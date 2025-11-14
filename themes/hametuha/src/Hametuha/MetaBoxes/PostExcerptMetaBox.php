@@ -28,4 +28,3 @@ class PostExcerptMetaBox extends LeadMetaBox {
 		],
 	];
 }
-

@@ -1,11 +1,16 @@
 <?php
+/**
+ * h1の見出しを出力する
+ *
+ * @todo wp_titleと整合性が取れていないので、なくす
+ */
 if ( hametuha_is_profile_page() ) {
 
 	echo '著者一覧';
 
 } elseif ( is_home() ) {
 
-	wp_title( '' );
+	echo '作品一覧';
 
 } elseif ( is_tax( 'faq_cat' ) ) {
 
@@ -98,8 +103,8 @@ if ( hametuha_is_profile_page() ) {
 	}
 } elseif ( is_post_type_archive() ) {
 
-	wp_title( '' );
-	echo '一覧';
+	$post_type_obj = get_post_type_object( get_query_var( 'post_type' ) );
+	printf( __( '%s一覧', 'hametuha' ), esc_html( $post_type_obj->label ) );
 
 } elseif ( is_date() ) {
 

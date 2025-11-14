@@ -1,16 +1,14 @@
-<?php get_template_part( 'parts/bar', 'posttype' ); ?>
-
-<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
-
-
 <!-- title -->
-<div class="page-header">
+<div class="page-header mb-5">
 	<h1 class="post-title" itemprop="name">
 		<?php the_title(); ?>
 		<?php if ( is_recommended() ) : ?>
-			<span class="label label-danger">オススメ</span>
+			<span class="badge bg-danger">オススメ</span>
 		<?php else : ?>
-			<small>リスト</small>
+			<span class="badge bg-secondary">リスト</span>
+		<?php endif; ?>
+		<?php if ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
+			<span class="badge bg-success">あなたのリスト</span>
 		<?php endif; ?>
 	</h1>
 </div>
@@ -27,8 +25,12 @@
 <?php endif; ?>
 
 
-<?php if ( is_user_logged_in() && get_current_user_id() == get_the_author_meta( 'ID' ) ) : ?>
-<script id="my-list-deleter" type="text/x-jsrender" data-href="<?php echo home_url( 'your/lists/' ); ?>">
-	<li><a href="<?php echo Hametuha\Rest\ListCreator::deregister_link( get_the_ID(), '{{:postId}}' ); ?>" class="deregister-button btn btn-xs btn-danger">&times; リストから削除</a></li>
-</script>
+<?php
+// リストの編集権限がある場合は削除ボタンを出す
+if ( current_user_can( 'edit_post', get_the_ID() ) ) :
+	?>
+	<script id="my-list-deleter"
+		type="application/json"
+		data-list-id="<?php echo esc_attr( get_the_ID() ); ?>">
+	</script>
 <?php endif; ?>

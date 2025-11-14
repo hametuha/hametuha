@@ -33,7 +33,7 @@ class AdsenseWidget extends Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				タイトル<br/>
 				<input name="<?php echo $this->get_field_name( 'title' ); ?>"
-					   id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $atts['title'] ); ?>"/>
+						id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $atts['title'] ); ?>"/>
 			</label>
 		</p>
 		<?php

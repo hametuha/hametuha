@@ -9,6 +9,7 @@ use WPametu\Utility\Command;
 /**
  * News command
  *
+ * @feature-group news
  * @package Hametuha\Commands
  */
 class News extends Command {
@@ -45,13 +46,12 @@ SQL;
 		$done  = 0;
 		foreach ( $wpdb->get_results( $query ) as $post ) {
 			update_post_meta( $post->ID, '_news_published', $post->post_date );
-			$done++;
+			++$done;
 			echo '.';
 		}
 		echo PHP_EOL;
 
 		self::s( sprintf( '%d news date were updated!', $done ) );
-
 	}
 
 
@@ -73,7 +73,7 @@ SQL;
 		$table = new \cli\Table();
 		$table->setHeaders( [ '#', 'ID', 'PV', 'Author', 'Date', 'Title' ] );
 		$index = 0;
-		$table->setRows( array_map( function( $row ) use ( &$index ) {
+		$table->setRows( array_map( function ( $row ) use ( &$index ) {
 			$index++;
 			list( $post_id, $pv ) = $row;
 			$post                 = get_post( $post_id );
@@ -108,7 +108,7 @@ SQL;
 		foreach ( $posts as list( $post_id, $pv ) ) {
 			$current = (int) get_post_meta( $post_id, '_current_pv', true );
 			update_post_meta( $post_id, '_current_pv', $current + $pv );
-			$done++;
+			++$done;
 			echo '.';
 		}
 		echo PHP_EOL;
@@ -126,8 +126,8 @@ SQL;
 	 */
 	protected function get_pv( $start_date, $end_date, $author = 0 ) {
 		try {
-			$offset      = 0;
-			$per_page    = 1000;
+			$offset   = 0;
+			$per_page = 1000;
 			$args     = [
 				'start'     => $start_date,
 				'end'       => $end_date,
@@ -135,12 +135,12 @@ SQL;
 				'author'    => $author ?: '',
 				'limit'     => $per_page,
 			];
-			$rows = [];
+			$rows     = [];
 			while ( true ) {
 				$loop_arg = array_merge( $args, [
 					'offset' => $offset,
 				] );
-				$result = GoogleAnalyticsDataAccessor::get_instance()->popular_posts( $loop_arg );
+				$result   = GoogleAnalyticsDataAccessor::get_instance()->popular_posts( $loop_arg );
 				if ( ! $result || is_wp_error( $result ) ) {
 					break;
 				}
@@ -176,6 +176,8 @@ SQL;
 
 	/**
 	 * Change meta
+	 *
+	 * @depreacted たぶん一回しか使わない？
 	 */
 	public function fix_event() {
 		global $wpdb;
@@ -198,5 +200,4 @@ SQL;
 		}
 		self::s( 'Changing key is finished. Please flush post cache.' );
 	}
-
 }

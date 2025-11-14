@@ -1,6 +1,14 @@
 <?php
+/**
+ * 投稿ページ
+ *
+ * ＠feature-group post
+ *
+ */
 $series = Hametuha\Model\Series::get_instance();
-get_header(); ?>
+get_header();
+
+?>
 
 <?php
 if ( have_posts() ) :
@@ -8,12 +16,12 @@ if ( have_posts() ) :
 		the_post();
 		?>
 
-	<article id="viewing-content" <?php post_class(); ?> itemscope itemtype="http://schema.org/BlogPosting" itemprop="mainEntityOfPage">
+	<article id="viewing-content" <?php post_class(); ?> itemscope itemtype="https://schema.org/BlogPosting" itemprop="mainEntityOfPage">
 		<span class="hidden" itemprop="url"><?php echo the_permalink(); ?></span>
 		<span class="hidden" itemprop="publisher">破滅派</span>
 
 		<div id="content-wrapper">
-			<div class="work-wrapper container">
+			<div class="work-wrapper">
 
 				<div class="work-meta row">
 
@@ -30,7 +38,7 @@ if ( have_posts() ) :
 						<div class="<?php echo esc_attr( implode( ' ', $main_class ) ); ?>">
 
 							<?php if ( has_post_thumbnail() ) : ?>
-								<div class="single-post-thumbnail text-center">
+								<div class="single-post-thumbnail text-center mb-3">
 									<?php the_post_thumbnail( 'large', array( 'item-prop' => 'image' ) ); ?>
 								</div>
 							<?php endif; ?>
@@ -43,7 +51,7 @@ if ( have_posts() ) :
 							$list = [];
 							foreach (
 								[
-									'campaign'                              => esc_html( '%s応募作品', 'hametuha' ),
+									'campaign' => esc_html( '%s応募作品', 'hametuha' ),
 									\Hametuha\Hooks\Qualification::TAXONOMY => esc_html( '%s', 'hametuha' ),
 								] as $taxonomy => $replace
 							) {
@@ -121,7 +129,7 @@ HTML;
 					}
 					?>
 
-				<div class="work-content row" itemprop="articleBody">
+				<div class="work-content" itemprop="articleBody">
 
 					<?php the_content(); ?>
 
@@ -152,66 +160,118 @@ HTML;
 				</div>
 				<!-- //.single-post-content -->
 
-					<?php
-					if ( $external = hametuha_external_url() ) :
-						if ( hametuha_external_url_is_active() ) {
-							$limit_message = sprintf( __( 'この作品は%sまで破滅派で読むことができます。', 'hametuha' ), hametuha_external_url_limit( get_option( 'date_format' ) ) );
-						} else {
-							$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
-						}
-						?>
-					<div class="alert alert-info text-center">
-						<?php echo esc_html( $limit_message ); ?>
-					</div>
-						<?php if ( $ogp = hametuha_remote_ogp( $external ) ) : ?>
-						<div class="external-link">
-							<div class="row">
-								<?php if ( $ogp['img'] ) : ?>
-								<div class="col-xs-12 col-sm-3">
-									<img loading="lazy" src="<?php echo esc_url( $ogp['img'] ); ?>" class="img-responsive" alt="<?php echo esc_attr( $ogp['title'] ); ?>"/>
-								</div>
-								<?php endif; ?>
-								<div class="col-xs-12 col-sm-9">
-									<h3><?php echo esc_html( $ogp['title'] ); ?></h3>
-									<p class="text-muted"><?php echo esc_html( $ogp['desc'] ); ?></p>
-									<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow" target="_blank">外部サイトへ移動</a>
+				<?php
+				// 外部で読む
+				$external = hametuha_external_url();
+				if ( $external ) :
+					if ( hametuha_external_url_is_active() ) {
+						$limit_message = sprintf( __( 'この作品は%sまで破滅派で読むことができます。', 'hametuha' ), hametuha_external_url_limit( get_option( 'date_format' ) ) );
+					} else {
+						$limit_message = __( 'この作品の続きは外部にて読むことができます。', 'hametuha' );
+					}
+					?>
+					<div class="alert alert-secondary">
+						<p class="text-center">
+							<?php echo esc_html( $limit_message ); ?>
+						</p>
+						<?php
+						// OGPカードが取得できれば表示
+						$ogp = hametuha_remote_ogp( $external );
+						if ( $ogp ) :
+							?>
+							<div class="external-link">
+								<div class="row">
+									<?php if ( $ogp['img'] ) : ?>
+										<div class="col-12 col-md-3 mb-3 mb-md-0">
+											<img loading="lazy" src="<?php echo esc_url( $ogp['img'] ); ?>"
+												class="img-responsive" alt="<?php echo esc_attr( $ogp['title'] ); ?>" />
+										</div>
+									<?php endif; ?>
+									<div class="col-12 col-md-9">
+										<h3 class="text-left">
+											<?php echo esc_html( $ogp['title'] ); ?>
+										</h3>
+										<p class="text-left"><?php echo esc_html( $ogp['desc'] ); ?></p>
+										<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow" target="_blank">
+											<?php esc_html_e( '外部サイトへ移動', 'hametuha' ); ?>
+										</a>
+									</div>
 								</div>
 							</div>
-						</div>
-					<?php else : ?>
-						<div class="alert alert-danger text-center">
-							情報の取得に失敗しました（<a href="<?php echo esc_url( $external ); ?>" target="_blank" class="alert-link" rel="nofollow">外部サイトへ移動する</a>）
-						</div>
-					<?php endif; ?>
-					<?php endif; ?>
-
-				<p class="text-center pub-date">
-					<span><?php the_time( 'Y年n月j日' ); ?></span>公開
-					<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ); ?></span>
-					<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ); ?></span>
-					<?php if ( $corrected = hametuha_first_corrected( true ) ) : ?>
-						（初出 <?php echo $corrected; ?>）
-					<?php endif; ?>
-				</p>
-
-					<?php if ( is_series() ) : ?>
-					<p class="series-pager-title text-center">
-						作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
-						（全<?php echo $series->get_total( $post->post_parent ); ?>話）
-					</p>
-						<?php get_template_part( 'parts/alert', 'kdp' ); ?>
-					<ul class="series-pager">
-						<?php echo $series->prev( '<li class="previous">' ); ?>
-						<?php echo $series->next( '<li class="next">' ); ?>
-					</ul>
+						<?php else : ?>
+							<p class="mt-3">
+								情報の取得に失敗しました
+								（<a href="<?php echo esc_url( $external ); ?>" target="_blank" class="alert-link" rel="nofollow">
+									<?php esc_html_e( '外部サイトへ移動', 'hametuha' ); ?>
+								</a>）
+							</p>
+						<?php endif; ?>
+					</div>
 				<?php endif; ?>
 
-
-				<div id="single-post-footernote" class="row">
+				<div id="single-post-footernote">
 					&copy; <span itemprop="copyrightYear"><?php the_time( 'Y' ); ?></span> <?php the_author(); ?>
+					（
+					<span class="pub-date">
+						<span><?php the_time( 'Y年n月j日' ); ?></span>公開
+						<span class="hidden" itemprop="datePublished"><?php the_time( 'c' ); ?></span>
+						<span class="hidden" itemprop="dateModified"><?php the_modified_date( 'c' ); ?></span>
+					</span>
+					）
+					<?php if ( $corrected = hametuha_first_collected( true ) ) : ?>
+						<br />
+						<small>※初出 <?php echo $corrected; ?></small>
+					<?php endif; ?>
 				</div>
 
-				<p class="finish-nav">
+				<?php
+				// 連載なら目次を出す
+				if ( is_series() ) :
+					$total = $series->get_total( $post->post_parent );
+					?>
+					<div class="series-nav mb-5">
+
+						<p class="series-pager-title text-center">
+							作品集『<?php the_series(); ?>』<?php echo $series->index_label(); ?>
+							（全<?php echo esc_html( $total ); ?>話）
+						</p>
+						<?php get_template_part( 'parts/alert', 'kdp' ); ?>
+						<ul class="series-pager">
+							<?php echo $series->prev( '<li class="previous">' ); ?>
+							<?php echo $series->next( '<li class="next">' ); ?>
+						</ul>
+						<?php
+						$siblings = hametuha_get_author_work_siblings( 6, null, true );
+						if ( 1 < count( $siblings ) ) :
+							?>
+							<nav class="series-toc mt-2">
+								<h2 class="mb-3 mt-3 text-center"><?php esc_html_e( '目次', 'hametuha' ); ?></h2>
+								<ul class="mb-3 mt-0">
+									<?php foreach ( $siblings as $sibling ) : ?>
+										<li class="<?php echo ( $sibling->ID === get_the_ID() ) ? 'current' : ''; ?>">
+											<?php if ( $sibling->ID === get_the_ID() ) : ?>
+												<span><?php the_title(); ?> <i class="icon-reading"></i></span>
+											<?php else : ?>
+												<a href="<?php the_permalink( $sibling ); ?>"><?php echo get_the_title( $sibling ); ?></a>
+											<?php endif; ?>
+											<small class="text-muted d-none d-md-inline">
+												<?php printf( '%s（%s）', get_the_time( get_option( 'date_format' ), $sibling ), hametuha_passed_time( $post->post_date ) ); ?>
+											</small>
+										</li>
+									<?php endforeach; ?>
+								</ul>
+								<p class="text-center mt-3">
+									<a href="<?php the_permalink( $post->post_parent ); ?>" class="btn btn-outline-primary">
+										<?php printf( esc_html__( '全%d話を見る', 'hametuha' ), $total ); ?>
+									</a>
+								</p>
+							</nav>
+						<?php endif; ?>
+
+					</div>
+				<?php endif; ?>
+
+				<p class="finish-nav" id="finish-nav">
 					<?php if ( ( $campaigns = get_the_terms( get_post(), 'campaign' ) ) && ! is_wp_error( $campaigns ) ) : ?>
 						これは<?php the_terms( get_the_ID(), 'campaign' ); ?>の応募作品です。<br />
 						他の作品ともどもレビューお願いします。<br />
@@ -221,6 +281,14 @@ HTML;
 					<i class="icon-point-down"></i>
 				</p>
 
+				<div class="row rating-container">
+					<div class="col-12 col-md-6 mb-5 mb-md-0">
+						<?php get_template_part( 'parts/feedback', 'rating' ); ?>
+					</div>
+					<div class="col-12 col-md-6">
+						<?php get_template_part( 'parts/feedback', 'feeling' ); ?>
+					</div>
+				</div>
 
 			</div><!-- //.work-wrapper -->
 
@@ -237,7 +305,7 @@ HTML;
 						<?php esc_html_e( '著者', 'hametuha' ); ?>
 					</h2>
 
-					<div class="author-container m20">
+					<div class="author-container m20 mb-5">
 						<?php get_template_part( 'parts/author' ); ?>
 					</div>
 
@@ -251,9 +319,11 @@ HTML;
 
 			<div class="container">
 
-				<?php get_sidebar( 'books', [
+				<?php
+				get_sidebar( 'books', [
 					'title' => true,
-				] ); ?>
+				] );
+				?>
 
 				<h2 class="series__title--share text-center">
 					<small class="series__title--caption">eBooks</small>
@@ -278,72 +348,37 @@ HTML;
 		<div id="finish-wrapper" class="overlay-container">
 			<div class="container">
 
-				<h3>リストに追加する</h3>
+				<h3>
+					<?php printf( esc_html__( '「%s」をリストに追加', 'hametuha' ), esc_html( get_the_title() ) ); ?>
+				</h3>
 
 				<p class="text-muted">
 					リスト機能とは、気になる作品をまとめておける機能です。公開と非公開が選べますので、
-					短編集として公開したり、お気に入りのリストとしてこっそり楽しむこともできます。
+					あなたのアンソロジーとして共有したり、お気に入りのリストとしてこっそり楽しむこともできます。
 				</p>
 
 				<hr/>
 
-				<?php if ( is_user_logged_in() ) : ?>
+				<?php
+				if ( current_user_can( 'read' ) ) :
+					// ログイン済みならリスト用のJSを追加
+					wp_enqueue_script( 'hametuha-components-list-in-post' );
+					?>
+					<div id="list-form" data-post-id="<?php the_ID(); ?>" class="mb-5"></div>
 
-					<form class="list-save-manager" method="post"
-						  action="<?php echo esc_url( Hametuha\Rest\ListCreator::save_link( get_the_ID() ) ); ?>">
-						<?php wp_nonce_field( 'list-save' ); ?>
-						<div id="list-changer">
-							<?php
-							$lists           = new WP_Query( [
-								'my-content'     => 'lists',
-								'post_type'      => 'lists',
-								'post_author'    => 0,
-								'post_status'    => [ 'publish', 'private' ],
-								'orderby'        => 'post_title',
-								'order'          => 'DESC',
-								'posts_per_page' => - 1,
-							] );
-							$current_post_id = get_the_ID();
-							if ( $lists->have_posts() ) {
-								$html = <<<HTML
-								<div class="checkbox">
-									<label>
-					                    <input type="checkbox" name="lists[]" value="%d"%s>
-					                    %s
-									</label>
-								</div>
-HTML;
-								while ( $lists->have_posts() ) {
-									$lists->the_post();
-									printf( $html, get_the_ID(),
-										checked( in_lists( $current_post_id, get_the_ID() ), true, false ),
-										esc_html( ( $post->post_status == 'publish' ? '公開　: ' : '' ) . get_the_title() )
-									);
-								}
-								wp_reset_postdata();
-							}
-							?>
+					<div class="row justify-content-between">
 
+						<div class="col-6">
+							<a class="btn btn-secondary" href="<?php echo home_url( '/your/lists/' ); ?>"><?php esc_html_e( 'あなたのリストを確認', 'hametuha' ); ?></a>
 						</div>
 
-						<p class="text-muted">リストを選んで保存ください。<strong><?php the_title(); ?></strong>がリストに追加されます。リストは新たに作成することもできます。
-						</p>
-
-						<div class="row">
-
-							<div class="col-xs-6 text-left">
-								<input type="submit" class="btn btn-primary" value="変更を保存"/>
-							</div>
-
-							<div class="col-xs-6 text-right">
-								<a class="btn btn-success list-creator" title="リストを作成する"
-								   href="<?php echo esc_url( Hametuha\Rest\ListCreator::form_link() ); ?>"><i
-										class="icon-plus-circle"></i> リストを作成</a>
-							</div>
-
+						<div class="col-6 text-right">
+							<button class="btn btn-success list-creator" title="リストを作成する">
+								<i class="icon-plus-circle"></i> 新しいリストを作成
+							</button>
 						</div>
 
-					</form>
+					</div>
 
 				<?php else : ?>
 
@@ -353,20 +388,6 @@ HTML;
 
 				<?php endif; ?>
 
-
-			</div>
-		</div>
-
-
-		<div id="reviews-wrapper" class="overlay-container">
-			<div class="container">
-				<div>
-					<?php Hametuha\Ajax\Feedback::form( 'parts/feedback', 'you', [ 'id' => 'review-form' ] ); ?>
-				</div>
-
-				<hr/>
-
-				<?php Hametuha\Ajax\Feedback::all_review( get_the_ID() ); ?>
 
 			</div>
 		</div>
@@ -394,19 +415,19 @@ endif;
 		<nav class="container">
 			<ul class="clearfix">
 				<li>
-					<a href="#finish-wrapper">
+					<a href="#finish-wrapper" class="has-wrapper">
 						<i class="icon-books"></i><br/>
 						<span>リスト</span>
 					</a>
 				</li>
 				<li class="finished-container">
-					<a href="#reviews-wrapper">
+					<a href="#finish-nav">
 						<i class="icon-star6"></i><br/>
 						<span>レビュー</span>
 					</a>
 				</li>
 				<li>
-					<a href="#comments-wrapper">
+					<a href="#comments-wrapper" class="has-wrapper">
 						<i class="icon-bubbles"></i><br/>
 						<span>コメント</span>
 						<?php if ( $count = get_comments_number() ) : ?>

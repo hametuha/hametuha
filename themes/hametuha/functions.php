@@ -23,7 +23,7 @@ define( 'HAMETUHA_THEME_VERSION', hametuha_version() );
 /**
  * Register i18n.
  */
-add_action( 'after_setup_theme', function() {
+add_action( 'after_setup_theme', function () {
 	load_theme_textdomain( 'hametuha', get_template_directory() . '/languages' );
 } );
 
@@ -91,50 +91,49 @@ if ( file_exists( $oauth_mo ) ) {
 $script_flg = array();
 
 // Assets
-include __DIR__ . '/functions/assets.php';
-include __DIR__ . '/functions/assets-ssl.php';
-include __DIR__ . '/functions/assets-analytics.php';
-include __DIR__ . '/functions/assets-eyecatch.php';
-include __DIR__ . '/functions/assets-tinymce.php';
+require __DIR__ . '/functions/assets.php';
+require __DIR__ . '/functions/assets-ssl.php';
+require __DIR__ . '/functions/assets-analytics.php';
+require __DIR__ . '/functions/assets-eyecatch.php';
+require __DIR__ . '/functions/assets-tinymce.php';
 // キャンペーン
-include __DIR__ . '/functions/campaign.php';
-include __DIR__ . '/functions/calculate.php';
+require __DIR__ . '/functions/campaign.php';
+require __DIR__ . '/functions/calculate.php';
 // 表示
-include __DIR__ . '/functions/display.php';
-include __DIR__ . '/functions/external.php';
-include __DIR__ . '/functions/text-analyzer.php';
+require __DIR__ . '/functions/display.php';
+require __DIR__ . '/functions/external.php';
+require __DIR__ . '/functions/text-analyzer.php';
 // amazon
-include __DIR__ . '/functions/hamazon.php';
+require __DIR__ . '/functions/hamazon.php';
 // 暗号化
-include __DIR__ . '/functions/crypt.php';
+require __DIR__ . '/functions/crypt.php';
 // メタ情報
-include __DIR__ . '/functions/meta.php';
+require __DIR__ . '/functions/meta.php';
 // 上書き処理
-include __DIR__ . '/functions/override.php';
-include __DIR__ . '/functions/override-dashboard.php';
-include __DIR__ . '/functions/override-error.php';
-include __DIR__ . '/functions/override-feed.php';
-include __DIR__ . '/functions/override-lwp.php';
+require __DIR__ . '/functions/override.php';
+require __DIR__ . '/functions/override-dashboard.php';
+require __DIR__ . '/functions/override-error.php';
+require __DIR__ . '/functions/override-feed.php';
 // 投稿リスト
-include __DIR__ . '/functions/post_list.php';
-include __DIR__ . '/functions/post_list-admin.php';
+require __DIR__ . '/functions/post_list.php';
+require __DIR__ . '/functions/post_list-admin.php';
 // 投稿タイプ
-include __DIR__ . '/functions/post_type.php';
-include __DIR__ . '/functions/post_type-news.php';
-include __DIR__ . '/functions/post_type-series.php';
+require __DIR__ . '/functions/post_type.php';
+require __DIR__ . '/functions/post_type-news.php';
+require __DIR__ . '/functions/post_type-series.php';
 // ランキング
-include __DIR__ . '/functions/ranking.php';
+require __DIR__ . '/functions/ranking.php';
 // Social
-include __DIR__ . '/functions/social.php';
+require __DIR__ . '/functions/social.php';
 // User
-include __DIR__ . '/functions/user.php';
-include  __DIR__ . '/functions/user-anonymous.php';
-include __DIR__ . '/functions/user-affiliate.php';
-include __DIR__ . '/functions/user-picture.php';
-include __DIR__ . '/functions/user-secret.php';
-include __DIR__ . '/functions/terms.php';
+require __DIR__ . '/functions/user.php';
+require __DIR__ . '/functions/user-anonymous.php';
+require __DIR__ . '/functions/user-affiliate.php';
+require __DIR__ . '/functions/user-picture.php';
+require __DIR__ . '/functions/user-secret.php';
+require __DIR__ . '/functions/terms.php';
 // ユーティリティ
-include __DIR__ . '/functions/utility.php';
+require __DIR__ . '/functions/utility.php';
 
 // ディレクトリを全部読み込み
 foreach ( [ 'hooks' ] as $folder ) {

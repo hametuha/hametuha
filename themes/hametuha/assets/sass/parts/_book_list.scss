@@ -1,59 +1,64 @@
-.book-recommend{
-  margin: 20px 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  &-item{
-    display: block;
-    margin: 0;
-    list-style: none;
-    flex-basis: 16%;
-    @include mq-max( $screen-sm-max ){
-      flex-basis: 25%;
-    }
-    @include mq-max( $screen-xs-max ){
-      flex-basis: 33%;
-    }
-    @include mq-max( 320px ){
-      flex-basis: 50%;
-    }
-    padding: 10px;
-  }
+.book-recommend {
+	margin: 20px 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 
-  &-link{
-    display: block;
-    transition: color .3s linear;
-    &:link, &:visited{
-      color: #444;
-      text-decoration: none;
-    }
-    &:hover, &:active{
-      color: $brand-primary;
-      text-decoration: none;
-    }
-  }
+	&-item {
+		display: block;
+		margin: 0;
+		list-style: none;
+		flex-basis: 16%;
+		@include mq-max($screen-sm-max) {
+			flex-basis: 25%;
+		}
+		@include mq-max($screen-xs-max) {
+			flex-basis: 33%;
+		}
+		@include mq-max(320px) {
+			flex-basis: 50%;
+		}
+		padding: 10px;
+	}
 
-  &-cover{
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    margin-bottom: 10px;
-    opacity: 1;
-    transition: opacity .3s linear;
-    a:hover &, a:active &{
-      opacity: .6;
-    }
-  }
+	&-link {
+		display: block;
+		transition: color .3s linear;
 
-  &-title{
-    font-size: 1.1em;
-  }
+		&:link, &:visited {
+			color: #444;
+			text-decoration: none;
+		}
 
-  &-author{
-    font-size: 0.85em;
-    i{
-      color: $gray-light;
-    }
-  }
+		&:hover, &:active {
+			color: $brand-primary;
+			text-decoration: none;
+		}
+	}
+
+	&-cover {
+		max-width: 100%;
+		width: auto;
+		height: auto;
+		margin-bottom: 10px;
+		opacity: 1;
+		transition: opacity .3s linear;
+
+		a:hover &, a:active & {
+			opacity: .6;
+		}
+	}
+
+	&-title {
+		font-size: 1.1em;
+	}
+
+	&-author {
+		font-size: 0.85em;
+
+		i {
+			color: $gray-light;
+		}
+	}
 }

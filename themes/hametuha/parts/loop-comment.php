@@ -1,3 +1,8 @@
+<?php
+/**
+ * トップページ用途コメントテンプレート
+ */
+?>
 <li <?php post_class( 'media media--pad' ); ?>>
 
 	<a class="media__link media__link--nopad" href="<?php echo get_comment_link( $post->ID ); ?>">
@@ -34,7 +39,6 @@
 			<div class="archive-excerpt">
 				<p class="text-muted"><?php echo trim_long_sentence( strip_tags( $post->post_content ), 80 ); ?></p>
 			</div>
-
 
 		</div>
 

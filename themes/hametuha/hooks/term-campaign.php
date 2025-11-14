@@ -50,7 +50,7 @@ add_action( 'init', function () {
 						<li>
 							<label>
 								<input type="radio" name="tax_input[campaign][]"
-									   value="0" <?php checked( empty( $post_terms ) ); ?>/>
+										value="0" <?php checked( empty( $post_terms ) ); ?>/>
 								応募しない
 							</label>
 						</li>
@@ -58,7 +58,7 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="radio" name="tax_input[campaign][]"
-										   value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?>/>
+											value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?>/>
 									<?php echo esc_html( $term->name ); ?>
 									<?php if ( $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) : ?>
 										<small><?php echo mysql2date( 'Y年n月j日（D）まで', $limit ); ?></small>
@@ -75,7 +75,7 @@ add_action( 'init', function () {
 							<li>
 								<label>
 									<input type="hidden" name="tax_input[campaign][]"
-										   value="<?php echo esc_attr( $term->term_id ); ?>"/>
+											value="<?php echo esc_attr( $term->term_id ); ?>"/>
 									<strong>応募済み: </strong><?php echo esc_html( $term->name ); ?>
 								</label>
 							</li>
@@ -142,8 +142,8 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_limit" name="campaign_limit" type="date" class="regular-text"
-					   placeholder="YYYY-MM-DD"
-					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ); ?>"/>
+						placeholder="YYYY-MM-DD"
+						value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_limit', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -152,8 +152,8 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_range_end" name="campaign_range_end" type="date" class="regular-text"
-					   placeholder="YYYY-MM-DD"
-					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ); ?>"/>
+						placeholder="YYYY-MM-DD"
+						value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -162,7 +162,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_min_length" name="campaign_min_length" type="number" class="regular-text"
-					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ); ?>"/>
+						value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_min_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -171,7 +171,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_max_length" name="campaign_max_length" type="number" class="regular-text"
-					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ); ?>"/>
+						value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_max_length', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -180,7 +180,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<textarea rows="3" style="width: 90%;" id="campaign_detail"
-						  name="campaign_detail"><?php echo esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ); ?></textarea>
+							name="campaign_detail"><?php echo esc_textarea( get_term_meta( $tag->term_id, '_campaign_detail', true ) ); ?></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -189,7 +189,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</th>
 			<td>
 				<input id="campaign_url" name="campaign_url" type="url" class="regular-text"
-					   value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ); ?>"/>
+						value="<?php echo esc_attr( get_term_meta( $tag->term_id, '_campaign_url', true ) ); ?>"/>
 			</td>
 		</tr>
 		<tr>
@@ -200,13 +200,13 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 				<?php
 				$current = get_term_meta( $tag->term_id, '_is_collaboration', true );
 				foreach ( [
-					'' => 'なし',
+					''  => 'なし',
 					'1' => '共同作業型キャンペーン',
 				] as $value => $label ) {
 					?>
 					<label style="display: block; margin: 0 1em 1em 0;">
 						<input type="radio" name="is_collaboration"
-							   value="<?php echo esc_attr( $value ); ?>" <?php checked( $current, $value ); ?>/>
+								value="<?php echo esc_attr( $value ); ?>" <?php checked( $current, $value ); ?>/>
 						<?php echo esc_html( $label ); ?>
 					</label>
 					<?php
@@ -234,7 +234,7 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 				'campaign_max_length',
 				'campaign_detail',
 				'campaign_url',
-				'is_collaboration'
+				'is_collaboration',
 			] as $key
 		) {
 			if ( isset( $_POST[ $key ] ) ) {
@@ -245,6 +245,7 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 		wp_cache_delete( $term_id, 'campaign_record' );
 	}
 }, 10, 2 );
+
 /**
  * レビューが更新されたらキャッシュ削除
  *

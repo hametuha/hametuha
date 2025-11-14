@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<?php $this->load_template( 'templates/doujin/profile', $template ); ?>
+	<?php $this->load_template( 'templates/doujin/profile' ); ?>
 
 <?php
 get_footer();

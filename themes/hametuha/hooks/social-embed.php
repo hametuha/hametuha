@@ -3,9 +3,9 @@
 /**
  * Add oembed as hametuha
  */
-add_action( 'after_setup_theme', function() {
+add_action( 'after_setup_theme', function () {
 	// Register self embed
-	wp_embed_register_handler( 'hametuha', '#https?://hametuha\.(info|com)/(.*?)$#u', function( $match, $attr, $url ) {
+	wp_embed_register_handler( 'hametuha', '#https?://hametuha\.(info|com)/(.*?)$#u', function ( $match, $attr, $url ) {
 		$allowed_post_types = [
 			'post',
 			'news',
@@ -26,7 +26,7 @@ add_action( 'after_setup_theme', function() {
 	}, true );
 
 	// Add minico.me
-	wp_embed_register_handler( 'minicome', '#https?://minico\.me/(.*?)$#u', function( $match, $attr, $url ) {
+	wp_embed_register_handler( 'minicome', '#https?://minico\.me/(.*?)$#u', function ( $match, $attr, $url ) {
 		$use_cache = ! WP_DEBUG;
 		$cache     = wp_cache_get( $url, 'minicome' );
 		if ( ! $use_cache || false === $cache ) {
@@ -62,5 +62,3 @@ add_action( 'after_setup_theme', function() {
 		return $cache;
 	}, true );
 } );
-
-

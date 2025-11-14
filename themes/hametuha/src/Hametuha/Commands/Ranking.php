@@ -84,7 +84,7 @@ class Ranking extends Command {
 			$headers[] = 'Author';
 		}
 		$headers[] = 'PV';
-		$table = new Table();
+		$table     = new Table();
 		$table->setHeaders( $headers );
 		foreach ( $result as $row ) {
 			$table->addRow( $row );
@@ -98,7 +98,7 @@ class Ranking extends Command {
 	 * @return void
 	 */
 	public function db() {
-		$query = <<<SQL
+		$query   = <<<SQL
 			SHOW INDEX FROM {$this->ga()->table};
 SQL;
 		$indices = $this->ga()->db->get_results( $query, ARRAY_A );
@@ -106,7 +106,7 @@ SQL;
 			\WP_CLI::error( __( 'テーブルが存在しません。', 'hametuha' ) );
 		}
 		$has_unique_key = false;
-		$table = new Table();
+		$table          = new Table();
 		$table->setHeaders( array_keys( $indices[0] ) );
 		foreach ( $indices as $index ) {
 			$table->addRow( array_values( $index ) );
@@ -123,7 +123,7 @@ SQL;
 				$this->ga()->table,
 				self::UNIQ_KEY_NAME
 			);
-			$result = $this->ga()->db->query( $index_query );
+			$result      = $this->ga()->db->query( $index_query );
 			if ( ! $result ) {
 				\WP_CLI::error( $this->ga()->db->last_error );
 			} else {
@@ -146,10 +146,10 @@ SQL;
 	 */
 	public function audience( $args, $assoc ) {
 		list( $group ) = $args;
-		$start =  $assoc['start'] ?? date_i18n( 'Y-m-d', strtotime( '7days ago' ) );
-		$end   =  $assoc['end'] ?? date_i18n( 'Y-m-d' );
-		$author = $assoc['author'] ?? 0;
-		$result = $this->ga()->audiences( $group, $start, $end, $author );
+		$start         = $assoc['start'] ?? date_i18n( 'Y-m-d', strtotime( '7days ago' ) );
+		$end           = $assoc['end'] ?? date_i18n( 'Y-m-d' );
+		$author        = $assoc['author'] ?? 0;
+		$result        = $this->ga()->audiences( $group, $start, $end, $author );
 		if ( is_wp_error( $result ) ) {
 			\WP_CLI::error( $result->get_error_message() );
 		}
@@ -157,35 +157,35 @@ SQL;
 			\WP_CLI::error( __( '結果がありませんでした。', 'hametuha' ) );
 		}
 		$headers = [];
-		$indices = [0];
+		$indices = [ 0 ];
 		switch ( $group ) {
 			case 'gender':
-				$headers []= __( '性別', 'hametuha' );
+				$headers [] = __( '性別', 'hametuha' );
 				break;
 			case 'generation':
-				$headers []= __( '年齢層', 'hametuha' );
+				$headers [] = __( '年齢層', 'hametuha' );
 				break;
 			case 'new':
-				$headers []= __( '新規ユーザー', 'hametuha' );
+				$headers [] = __( '新規ユーザー', 'hametuha' );
 				break;
 			case 'region':
-				$headers []= __( '地域', 'hametuha' );
+				$headers [] = __( '地域', 'hametuha' );
 				break;
 			case 'source':
-				$headers []= __( '参照元', 'hametuha' );
+				$headers [] = __( '参照元', 'hametuha' );
 				break;
 			case 'profile':
-				$headers []= __( 'プロフィールページ', 'hametuha' );
+				$headers [] = __( 'プロフィールページ', 'hametuha' );
 				break;
 			case 'referrer':
-				$headers []= __( '貢献者', 'hametuha' );
+				$headers [] = __( '貢献者', 'hametuha' );
 				break;
 			default:
 				\WP_CLI::error( __( '無効なグループが指定されています。', 'hametuha' ) );
 				break;
 		}
 		$headers[] = __( 'セッション数', 'hametuha' );
-		$table = new Table();
+		$table     = new Table();
 		$table->setHeaders( $headers );
 		foreach ( $result as $row ) {
 			$new_row = [];

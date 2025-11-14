@@ -53,29 +53,34 @@
 
 </footer>
 
-<?php if ( ! is_hamenew() ) : ?>
-<div id="write-panel" class="write-panel">
-	<div class="write-panel__inner">
-		<p class="text-right">
-			<button class="write-panel__close write-panel-btn btn btn-link"><i class="icon-cancel-circle"></i></button>
-		</p>
-		<ul class="write-panel__actions">
-			<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
-				<li class="write-panel__action">
-					<a class="write-panel__link <?= esc_attr( $class_name ) ?>" href="<?= $url ?>" <?= $data ?>>
+<?php
+if ( ! is_hamenew() ) :
+	wp_enqueue_script( 'hametuha-components-anpi-submit' );
+	?>
+	<div id="write-panel" class="write-panel">
+		<div class="write-panel__inner">
+			<p class="d-flex justify-content-end">
+				<button class="write-panel__close write-panel-btn btn btn-link"
+					style="text-decoration: none !important;"><i class="icon-cancel-circle"></i></button>
+			</p>
+			<ul class="write-panel__actions">
+				<?php foreach ( hametuha_user_write_actions() as $icon => list( $url, $label, $desc, $class_name, $data ) ) : ?>
+					<li class="write-panel__action">
+						<a class="write-panel__link <?php echo esc_attr( $class_name ) ?>"
+							href="<?php echo $url ?>" <?= $data ?>>
 						<span class="write-panel__label">
 							<i class="icon-<?= $icon ?>"></i>
-							<?= esc_html( $label ) ?>
+							<?php echo esc_html( $label ) ?>
 						</span>
-						<?php if ( $desc ) : ?>
-							<p class="write-panel__desc"><?= esc_html( $desc ) ?></p>
-						<?php endif; ?>
-					</a>
-				</li>
-			<?php endforeach; ?>
-		</ul>
+							<?php if ( $desc ) : ?>
+								<p class="write-panel__desc"><?= esc_html( $desc ) ?></p>
+							<?php endif; ?>
+						</a>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
 	</div>
-</div>
 <?php endif; ?>
 <?php do_action( 'hametuha_after_whole_body' ) ?>
 </div><!-- //#whole-body -->
@@ -85,5 +90,16 @@
 get_template_part( 'parts/modal' );
 wp_footer();
 ?>
+<noscript>
+	<div class="noscript-notice" style="position: sticky; bottom: 0; z-index: 1040;">
+		<div class="container">
+			<div class="alert alert-warning mb-0">
+				<strong>ご注意:</strong>
+				破滅派での投稿機能（作品・コメント・アイデアなど）にはJavaScriptが必要です。
+				閲覧は問題なく行えますが、投稿される場合はJavaScriptを有効にしてご利用ください。
+			</div>
+		</div>
+	</div>
+</noscript>
 </body>
 </html>

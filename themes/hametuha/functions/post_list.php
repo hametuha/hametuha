@@ -15,12 +15,12 @@
 function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) {
 	$date = new DateTime( 'now', new DateTimeZone( wp_timezone_string() ) );
 	$date->sub( new DateInterval( 'P' . $period . 'D' ) );
-	$posts = [];
-	$query = new WP_Query( [
-		'post_type'      => $post_type,
-		'post_status'    => 'publish',
-		'posts_per_page' => $limit * 5,
-		'date_query'     => [
+	$posts   = [];
+	$query   = new WP_Query( [
+		'post_type'          => $post_type,
+		'post_status'        => 'publish',
+		'posts_per_page'     => $limit * 5,
+		'date_query'         => [
 			[
 				'after' => [
 					'year'  => $date->format( 'Y' ),
@@ -29,6 +29,7 @@ function hametuha_recent_posts( $limit = 5, $post_type = 'post', $period = 90 ) 
 				],
 			],
 		],
+		'author_not_flagged' => 'spam',
 	] );
 	$already = [];
 	foreach ( $query->posts as $post ) {
@@ -112,7 +113,7 @@ SQL;
 		'orderby'        => 'post__in',
 		'posts_per_page' => $limit,
 	] );
-	return array_map( function( $post ) use ( $series ) {
+	return array_map( function ( $post ) use ( $series ) {
 		$post->children = $series[ $post->ID ]->children;
 		return $post;
 	}, $posts );

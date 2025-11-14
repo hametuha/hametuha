@@ -46,7 +46,7 @@ class UserFilterPayment extends UserFilterInputPattern {
 			if ( is_wp_error( $days ) ) {
 				return $args;
 			}
-			list( $from, $to ) = $days;
+			list( $from, $to )  = $days;
 			$args['paid_since'] = $from;
 			$args['paid_till']  = $to;
 		}
@@ -71,7 +71,7 @@ class UserFilterPayment extends UserFilterInputPattern {
 					return [ $from_date, $to_date ];
 				} elseif ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $days[0] ) ) {
 					$from = new \DateTime( $days[0], wp_timezone() );
-					return [ $from->format( 'Y-m-d 00:00:00' ), $from->format( 'Y-m-d 23:59:59') ];
+					return [ $from->format( 'Y-m-d 00:00:00' ), $from->format( 'Y-m-d 23:59:59' ) ];
 				} else {
 					throw new \Exception( 'Invalid date format.' );
 				}
@@ -89,8 +89,8 @@ class UserFilterPayment extends UserFilterInputPattern {
 				if ( ! $index ) {
 					$return[] = $this->to_ymd( $day, '-01' ) . ' 00:00:00';
 				} else {
-					$to = new \DateTime( $day . '-01', wp_timezone());
-					$return []= $to->format( 'Y-m-t 23:59:59' );
+					$to        = new \DateTime( $day . '-01', wp_timezone() );
+					$return [] = $to->format( 'Y-m-t 23:59:59' );
 				}
 			}
 			return $return;

@@ -97,3 +97,7 @@
 .slick-arrow.slick-hidden {
     display: none;
 }
+
+#sidebar ul.slick-dots {
+	flex-direction: row !important;
+}

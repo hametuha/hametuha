@@ -9,6 +9,7 @@ const mergeStream = require( 'merge-stream' );
 const webpack = require( 'webpack-stream' );
 const webpackBundle = require( 'webpack' );
 const named = require( 'vinyl-named' );
+const sass = require( 'gulp-sass' )( require( 'sass' ) );
 const { plugins } = require( "@babel/preset-env/lib/plugins-compat-data" );
 
 let noplumber = true;
@@ -30,7 +31,7 @@ gulp.task( 'sass', function () {
 	return task
 		.pipe( $.sassGlob() )
 		.pipe( $.sourcemaps.init() )
-		.pipe( $.sass( {
+		.pipe( sass( {
 			errLogToConsole: true,
 			outputStyle: 'compressed',
 			sourceComments: false,
@@ -38,7 +39,7 @@ gulp.task( 'sass', function () {
 			includePaths: [
 				'./assets/sass',
 				'./vendor',
-				'./node_modules/bootstrap-sass/assets/stylesheets',
+				'./node_modules',
 				'./vendor/hametuha'
 			]
 		} ) )
@@ -138,21 +139,12 @@ gulp.task( 'jshint', function () {
 // Build 3rd party libraries.
 gulp.task( 'copylib', function () {
 	return mergeStream(
-		// Build Bootstrap
+		// Build Bootstrap 5
 		gulp.src( [
-			'./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js',
+			'./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
 			'./node_modules/bootbox/dist/bootbox.js'
 		] )
 			.pipe( $.concat( 'bootstrap.js' ) )
-			.pipe( $.uglify() )
-			.pipe( gulp.dest( './assets/js/dist' ) ),
-		// Build Angular
-		gulp.src( [
-			'./node_modules/angular/angular.js',
-			'./node_modules/angular-i18n/angular-locale_ja-jp.js',
-			'./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
-		] )
-			.pipe( $.concat( 'angular.js' ) )
 			.pipe( $.uglify() )
 			.pipe( gulp.dest( './assets/js/dist' ) ),
 		gulp.src( [

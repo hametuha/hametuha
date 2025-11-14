@@ -22,7 +22,7 @@ function hametuha_minimum_payment() {
 /**
  * プロフィールをオーバーライドする
  */
-add_action( 'edit_user_profile', function( WP_User $user ) {
+add_action( 'edit_user_profile', function ( WP_User $user ) {
 	if ( current_user_can( 'administrator' ) ) {
 		wp_nonce_field( 'override_publisher', '_publishernonce', false );
 		?>

@@ -53,7 +53,7 @@ class Post extends Command {
 		$total  = 0;
 		$length = 0;
 		foreach ( $posts as $post ) {
-			$length++;
+			++$length;
 			$content     = strip_tags( apply_filters( 'the_content', $post->post_content ) );
 			$char_length = mb_strlen( $content, 'utf-8' );
 			$total      += $char_length;
@@ -136,10 +136,10 @@ class Post extends Command {
 				case 'text':
 					// Extract captions.
 					// todo: wp-caption, wp-block-image.
-					$images = [];
-					$content = preg_replace_callback( '#\[caption id="attachment_(\d+)".*](.*)\[/caption]#u', function( $matches ) use ( &$images ) {
+					$images  = [];
+					$content = preg_replace_callback( '#\[caption id="attachment_(\d+)".*](.*)\[/caption]#u', function ( $matches ) use ( &$images ) {
 						list( $match, $id, $caption ) = $matches;
-						$images[ $id ] = trim( $caption );
+						$images[ $id ]                = trim( $caption );
 						return '';
 					}, $post->post_content );
 					if ( ! empty( $images ) ) {
@@ -184,7 +184,7 @@ class Post extends Command {
 				case 'csv':
 					if ( ! $lines ) {
 						self::l( 'お届け先郵便番号,お届け先氏名,お届け先敬称,お届け先住所1行目,お届け先住所2行目,お届け先住所3行目,お届け先住所4行目,内容品' );
-						$lines++;
+						++$lines;
 					}
 					$line = [];
 					foreach ( [ 'zip', 'name', 'address', 'address2' ] as $key ) {
@@ -275,7 +275,7 @@ class Post extends Command {
 		$content = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $content );
 
 		// Remove empty line.
-		$content = trim( implode( "\n", array_map( function( $line ) {
+		$content = trim( implode( "\n", array_map( function ( $line ) {
 			return '&nbsp;' === $line ? '' : $line;
 		}, explode( "\n", $content ) ) ) );
 		if ( $endmark ) {
@@ -283,7 +283,7 @@ class Post extends Command {
 		}
 		// Convert Footernote.
 		$note_id = 0;
-		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function( $matches ) use ( &$note_id ) {
+		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id ) {
 			$note_id++;
 			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
 		}, $content );
@@ -313,7 +313,7 @@ class Post extends Command {
 			'#<ul>(.*?)</ul>#us' => 'UnorderedList',
 			'#<ol>(.*?)</ol>#us' => 'OrderedList',
 		] as $preg => $style ) {
-			$content = preg_replace_callback( $preg, function( $matches ) use ( $style ) {
+			$content = preg_replace_callback( $preg, function ( $matches ) use ( $style ) {
 				list( $match, $lists ) = $matches;
 				$lists                 = preg_replace( '#^\s*?<li>(.*?)</li>#um', '<ParaStyle:' . $style . '>$1', $lists );
 				return $lists;
@@ -325,20 +325,20 @@ class Post extends Command {
 		// Block quote, Aside, pre.
 		foreach ( [ 'Aside', 'BlockQuote', 'Pre' ] as $tag ) {
 			$tag_name = strtolower( $tag );
-			$content  = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
+			$content  = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function ( $match ) use ( $tag ) {
 				$lines = trim( str_replace( "\n\n", "\n", $match[1] ) );
-				return implode( "\n", array_map( function( $line ) use ( $tag ) {
+				return implode( "\n", array_map( function ( $line ) use ( $tag ) {
 					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
 				}, explode( "\n", $lines ) ) );
 			}, $content );
 		}
 		// paragraph
 		foreach ( [
-			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function( $match ) {
+			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$align = ucfirst( trim( str_replace( ';', '', $match[1] ) ) );
 				return sprintf( '<ParaStyle:Align%s>%s', $align, $match[2] );
 			},
-			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function( $match ) {
+			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$indent = preg_replace( '/\D/', '', $match[2] );
 				return $match[1] ? sprintf( '<ParaStyle:Indent%d>%s', str_replace( ';', '', $indent ), $match[3] ) : $match[3];
 			},
@@ -348,7 +348,7 @@ class Post extends Command {
 		// Remove span
 		$content = preg_replace( '#<span([^>]*?>)(.*?)</span>#u', '$2', $content );
 		// Add normal style.
-		return implode( "\n", array_map( function( $line ) {
+		return implode( "\n", array_map( function ( $line ) {
 			if ( 0 === strpos( $line, '<ParaStyle' ) ) {
 				return $line;
 			} else {
@@ -432,9 +432,9 @@ class Post extends Command {
 	 * @return void
 	 */
 	public function stales( $args, $assoc ) {
-		$dry_run = $assoc['dry-run'] ?? false;
+		$dry_run      = $assoc['dry-run'] ?? false;
 		list( $days ) = $args;
-		$result = StaleStatus::get_instance()->bulk_stale( $days, $dry_run );
+		$result       = StaleStatus::get_instance()->bulk_stale( $days, $dry_run );
 		if ( is_array( $result ) ) {
 			// Display table.
 			$table = new Table();
@@ -468,8 +468,281 @@ SQL;
 		foreach ( $wpdb->get_results( $query ) as $row ) {
 			update_user_meta( $row->post_author, 'work_count', $row->work_count );
 			echo '.';
-			$total++;
+			++$total;
 		}
 		\WP_CLI::success( sprintf( 'Done: %d', $total ) );
+	}
+
+	/**
+	 * Update character count for all posts.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--post-type=<post-type>]
+	 * : Post type to update. Default: post,series
+	 *
+	 * [--dry-run]
+	 * : If set, only show what would be updated without actually updating.
+	 *
+	 * @subcommand update-length
+	 * @synopsis [--post-type=<post-type>] [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 * @return void
+	 */
+	public function update_length( $args, $assoc ) {
+		$post_types = isset( $assoc['post-type'] ) ? explode( ',', $assoc['post-type'] ) : [ 'post', 'series' ];
+		$dry_run    = isset( $assoc['dry-run'] ) && $assoc['dry-run'];
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		foreach ( $post_types as $post_type ) {
+			$post_type = trim( $post_type );
+			\WP_CLI::line( sprintf( 'Processing post type: %s', $post_type ) );
+
+			$query = new \WP_Query( [
+				'post_type'      => $post_type,
+				'post_status'    => [ 'publish', 'private' ],
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			] );
+
+			if ( ! $query->have_posts() ) {
+				\WP_CLI::warning( sprintf( 'No posts found for post type: %s', $post_type ) );
+				continue;
+			}
+
+			$total = count( $query->posts );
+			\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+			$progress = \WP_CLI\Utils\make_progress_bar( sprintf( 'Updating %s', $post_type ), $total );
+
+			$updated = 0;
+			$skipped = 0;
+
+			foreach ( $query->posts as $post_id ) {
+				$post   = get_post( $post_id );
+				$length = get_post_length( $post );
+
+				if ( $dry_run ) {
+					\WP_CLI::line( sprintf( 'Would update #%d with length: %d', $post_id, $length ) );
+				} else {
+					$old_length = get_post_meta( $post_id, '_post_length', true );
+					update_post_meta( $post_id, '_post_length', $length );
+					if ( $old_length !== $length ) {
+						++$updated;
+					} else {
+						++$skipped;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			if ( ! $dry_run ) {
+				\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+			}
+		}
+
+		\WP_CLI::success( 'Done!' );
+	}
+
+	/**
+	 * Update rating average and count for all posts.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : If set, only show what would be updated without actually updating.
+	 *
+	 * @subcommand update-rating
+	 * @synopsis [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 * @return void
+	 */
+	public function update_rating( $args, $assoc ) {
+		$dry_run = isset( $assoc['dry-run'] ) && $assoc['dry-run'];
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		$rating = \Hametuha\Model\Rating::get_instance();
+
+		\WP_CLI::line( 'Processing post type: post' );
+
+		// まず総数を取得
+		$count_query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_status'    => [ 'publish', 'private' ],
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		] );
+
+		$total = $count_query->found_posts;
+
+		if ( 0 === $total ) {
+			\WP_CLI::warning( 'No posts found' );
+			return;
+		}
+
+		\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Updating ratings', $total );
+
+		$updated = 0;
+		$skipped = 0;
+
+		// ページネーションで処理
+		$per_page = 100;
+		$pages    = ceil( $total / $per_page );
+
+		for ( $page = 1; $page <= $pages; $page++ ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'post',
+				'post_status'    => [ 'publish', 'private' ],
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			] );
+
+			if ( ! $query->have_posts() ) {
+				continue;
+			}
+
+			foreach ( $query->posts as $post_id ) {
+				if ( $dry_run ) {
+					$post  = get_post( $post_id );
+					$avg   = $rating->get_post_rating( $post );
+					$count = $rating->get_post_rating_count( $post );
+					\WP_CLI::line( sprintf( 'Would update #%d with average: %s, count: %d', $post_id, $avg ?: 'null', $count ) );
+				} else {
+					if ( $rating->update_post_average( $post_id ) ) {
+						++$updated;
+					} else {
+						++$skipped;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			// メモリ解放
+			wp_cache_flush();
+		}
+
+		$progress->finish();
+
+		if ( ! $dry_run ) {
+			\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+		}
+
+		\WP_CLI::success( 'Done!' );
+	}
+
+	/**
+	 * Update review tag metadata for all posts
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--dry-run]
+	 * : Show what would be updated without actually updating
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Update all posts
+	 *     wp hampost update-review
+	 *
+	 *     # Dry run to see what would be updated
+	 *     wp hampost update-review --dry-run
+	 *
+	 * @synopsis [--dry-run]
+	 * @param array $args
+	 * @param array $assoc
+	 */
+	public function update_review( $args, $assoc ) {
+		$dry_run = isset( $assoc['dry-run'] );
+		$review  = \Hametuha\Model\Review::get_instance();
+
+		if ( $dry_run ) {
+			\WP_CLI::line( '=== DRY RUN MODE ===' );
+		}
+
+		\WP_CLI::line( 'Processing post type: post' );
+
+		// 総数を取得
+		$total_query = new \WP_Query( [
+			'post_type'      => 'post',
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+		] );
+		$total       = $total_query->found_posts;
+
+		\WP_CLI::line( sprintf( 'Found %d posts', $total ) );
+
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Processing posts', $total );
+		$updated  = 0;
+		$skipped  = 0;
+
+		// ページネーションで処理
+		$per_page = 100;
+		$pages    = ceil( $total / $per_page );
+
+		for ( $page = 1; $page <= $pages; $page++ ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'post',
+				'post_status'    => 'publish',
+				'posts_per_page' => $per_page,
+				'paged'          => $page,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+			] );
+
+			if ( ! $query->have_posts() ) {
+				continue;
+			}
+
+			foreach ( $query->posts as $post_id ) {
+				if ( $dry_run ) {
+					$post        = get_post( $post_id );
+					$tag_counts  = $review->get_post_chart_points( $post->ID, false );
+					$tag_summary = [];
+					foreach ( $tag_counts as $tag_data ) {
+						$tag_summary[] = sprintf( '%s: %d', $tag_data->name, $tag_data->score );
+					}
+					\WP_CLI::line( sprintf(
+						'Would update #%d with tags: %s',
+						$post_id,
+						empty( $tag_summary ) ? 'none' : implode( ', ', $tag_summary )
+					) );
+				} else {
+					if ( $review->update_post_review_tags( $post_id ) ) {
+						++$updated;
+					} else {
+						++$skipped;
+					}
+				}
+
+				$progress->tick();
+			}
+
+			// メモリ解放
+			wp_cache_flush();
+		}
+
+		$progress->finish();
+
+		if ( ! $dry_run ) {
+			\WP_CLI::success( sprintf( 'Updated: %d, Skipped: %d (no change)', $updated, $skipped ) );
+		}
+
+		\WP_CLI::success( 'Done!' );
 	}
 }

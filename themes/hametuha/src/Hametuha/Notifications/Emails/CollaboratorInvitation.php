@@ -45,7 +45,7 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_added', function( $user_id, $post, $margin, $type, $label ) {
+		add_action( 'hametuha_collaborators_added', function ( $user_id, $post, $margin, $type, $label ) {
 			static::exec( [
 				$user_id => [
 					'title'    => get_the_title( $post ),
@@ -57,6 +57,4 @@ HTML;
 			] );
 		}, 10, 5 );
 	}
-
-
 }

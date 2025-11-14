@@ -37,7 +37,7 @@ class UserSales extends WpApi {
 		$args = [
 			'user_id' => [
 				'required'          => true,
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					return preg_match( '#^(total|me|\d+)$#', $var ) ?: new \WP_Error( 'malformat', 'ユーザーIDが不正です。' );
 				},
 			],
@@ -46,13 +46,13 @@ class UserSales extends WpApi {
 			case 'GET':
 				$args['year']  = [
 					'default'           => date_i18n( 'Y' ),
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return preg_match( '#\d{4}#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
 				];
 				$args['month'] = [
 					'default'           => date_i18n( 'm' ),
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return preg_match( '#\d{1,2}#', $var ) ?: new \WP_Error( 'malformat', '月は2桁の整数です。' );
 					},
 				];

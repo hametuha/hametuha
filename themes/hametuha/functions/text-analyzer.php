@@ -18,9 +18,9 @@ use Youaoi\MeCab\MeCab;
 function hametuha_text_split( $text ) {
 	hametuha_mecab_setup();
 	try {
-		$tokens = hametuha_text_tokenize( $text );
-		$phrases = [];
-		$slot = [];
+		$tokens    = hametuha_text_tokenize( $text );
+		$phrases   = [];
+		$slot      = [];
 		$cur_index = 0;
 		foreach ( $tokens as $index => $token ) {
 			$slot[] = $token->text;
@@ -29,7 +29,7 @@ function hametuha_text_split( $text ) {
 			}
 			// This is last.
 			$phrases[ $cur_index ] = implode( '', $slot );
-			$cur_index++;
+			++$cur_index;
 			$slot = [];
 		}
 		return $phrases;

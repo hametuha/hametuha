@@ -44,9 +44,9 @@ class MyReading extends MyContentPattern {
 					'search'        => $request->get_param( 's' ),
 					'user_id'       => get_current_user_id(),
 				] );
-				$total = $comment_query->found_comments;
+				$total         = $comment_query->found_comments;
 				return new \WP_REST_Response( [
-					'posts'       => array_map( function( $comment ) {
+					'posts'       => array_map( function ( $comment ) {
 						return $this->convert_response( $comment, 'reader' );
 					}, $comment_query->get_comments() ),
 					'found_posts' => $total,
@@ -59,7 +59,7 @@ class MyReading extends MyContentPattern {
 					'posts_per_page' => 20,
 				] );
 				return new \WP_REST_Response( [
-					'posts'       => array_map( function( $review ) {
+					'posts'       => array_map( function ( $review ) {
 						return $this->convert_response( $review, 'reader' );
 					}, $result['reviews'] ),
 					'found_posts' => $result['found'],

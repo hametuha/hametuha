@@ -17,17 +17,13 @@
   "author": "Hametuha inc.",
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
-    "@babel/core": "^7.1.0",
+    "@babel/core": "^7.28.4",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "angular": "^1.4.9",
-    "angular-i18n": "^1.4.9",
-    "angular-ui-bootstrap": "^1.1.2",
+    "@babel/preset-env": "^7.28.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
     "bootbox": "^6.0.0",
-    "bootstrap": "^4.6.2",
-    "bootstrap-sass": "3.4.1",
+    "bootstrap": "^5.3.8",
     "eslint": "^5.4.0",
     "eslint-plugin-wordpress": "^0.1.0",
     "glob": "^10.3.1",
@@ -41,7 +37,7 @@
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.0",
     "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.2",
+    "gulp-sass": "^5.1.0",
     "gulp-sass-glob": "^1.0.9",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
@@ -52,13 +48,14 @@
     "md5-file": "^5.0.0",
     "merge-stream": "^1.0.1",
     "prop-types": "^15.7.2",
+    "sass": "^1.92.1",
     "select2": "^4.0.5",
     "vinyl-named": "^1.1.0",
-    "webpack": "^5.85.0",
+    "webpack": "^5.101.3",
     "webpack-stream": "^6.1.2"
   },
   "volta": {
-    "node": "14.21.3"
+    "node": "16.20.2"
   },
   "dependencies": {}
 }

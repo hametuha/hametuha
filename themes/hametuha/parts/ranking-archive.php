@@ -14,7 +14,7 @@ if ( $query->have_posts() ) :
 		$counter = 0;
 		while ( $query->have_posts() ) {
 			$query->the_post();
-			$counter++;
+			++$counter;
 			$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
 			get_template_part( 'parts/loop', 'ranking' );
 		}
@@ -30,6 +30,6 @@ if ( $query->have_posts() ) :
 		<p><?php esc_html_e( 'この条件のランキングに該当する投稿はありませんでした。', 'hametuha' ); ?></p>
 	</div>
 
-<?php
+	<?php
 endif;
 wp_reset_postdata();

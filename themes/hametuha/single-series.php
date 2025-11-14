@@ -1,6 +1,8 @@
 <?php
 /**
  * 連載ページのテンプレート
+ *
+ * @feature-group series
  */
 
 get_header();
@@ -24,7 +26,7 @@ get_header( 'breadcrumb' );
 			$avg        = $rating->get_post_rating( $p );
 			$rate_count = $rating->get_post_rating_count( $p );
 			if ( $rate_count ) {
-				for ( $i = 0; $i < $rate_count; $i ++ ) {
+				for ( $i = 0; $i < $rate_count; $i++ ) {
 					$ratings[] = $avg;
 				}
 			}
@@ -43,7 +45,7 @@ get_header( 'breadcrumb' );
 			<meta itemprop="bookFormat" content="EBook">
 
 			<div class="row series__meta">
-				<div class="col-xs-12 col-sm-4 series__meta--thumbnail text-center">
+				<div class="col-12 col-sm-4 series__meta--thumbnail text-center">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<?php
 						the_post_thumbnail( 'large', [
@@ -52,11 +54,11 @@ get_header( 'breadcrumb' );
 						?>
 					<?php else : ?>
 						<img itemprop="image" src="<?php echo get_stylesheet_directory_uri(); ?>/assets/img/covers/printing.png"
-							 alt="Now Printing..." width="300" height="480"/>
+							alt="Now Printing..." width="300" height="480"/>
 					<?php endif; ?>
 				</div>
 
-				<div class="col-xs-12 col-sm-8 series__top">
+				<div class="col-12 col-sm-8 series__top">
 
 					<!-- title -->
 					<div class="series__header">
@@ -88,10 +90,10 @@ get_header( 'breadcrumb' );
 							case 2:
 								?>
 								<a href="<?php echo $series->get_kdp_url( get_the_ID() ); ?>" class="btn btn-trans btn-lg btn-amazon"
-								   data-outbound="kdp"
-								   data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
-								   data-label="<?php the_ID(); ?>"
-								   data-value="<?php echo get_series_price(); ?>">
+									data-outbound="kdp"
+									data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
+									data-label="<?php the_ID(); ?>"
+									data-value="<?php echo get_series_price(); ?>">
 									<i class="icon-amazon"></i> Amazonで見る
 								</a>
 								<?php
@@ -128,8 +130,9 @@ endswitch;
 
 	<div class="series__row series__row--meta">
 		<div class="container series__inner">
-			<div class="col-sm-4 hidden-xs"></div>
-			<div class="col-sm-8 col-xs-12">
+			<div class="row">
+				<div class="col-sm-4 d-none d-sm-block"></div>
+				<div class="col-12 col-sm-8">
 				<?php if ( 2 == $series->get_status( get_the_ID() ) ) : ?>
 					<p class="series__price">
 						&yen; <strong><?php the_series_price(); ?></strong>
@@ -175,6 +178,7 @@ endswitch;
 						</li>
 					<?php endif; ?>
 				</ol>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -184,13 +188,13 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-sm-4 col-xs-12">
+				<div class="col-12 col-sm-4">
 					<h2 class="series__title--author">
 						<small class="series__title--caption">Authors &amp; Editors</small>
 						執筆者一覧
 					</h2>
 				</div>
-				<div class="col-sm-8 col-xs-12">
+				<div class="col-12 col-sm-8">
 					<?php
 					$authors_to_display = $collaborators->get_published_collaborators( get_the_ID() );
 					foreach ( $authors_to_display as $author ) :
@@ -199,7 +203,7 @@ endswitch;
 						<div class="series__author">
 
 							<div class="series__author--photo">
-								<?php echo get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'img-circle' ] ); ?>
+								<?php echo get_avatar( $author->ID, '150', '', $author->display_name, [ 'class' => 'rounded-circle' ] ); ?>
 							</div>
 							<!-- //.series__author -->
 
@@ -241,20 +245,20 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-sm-4 col-xs-12">
+				<div class="col-12 col-sm-4">
 					<h2 class="series__title--list">
 						<small class="series__title--caption">Works</small>
 						収録作一覧
 					</h2>
 				</div>
 
-				<div class="col-sm-8 col-xs-12">
+				<div class="col-12 col-sm-8">
 					<?php if ( $query->have_posts() ) : ?>
 						<ol class="series__list">
 							<?php
 							$counter = 0;
 							while ( $query->have_posts() ) {
-								$counter++;
+								++$counter;
 								$query->the_post();
 								hameplate( 'parts/loop-series', get_post_type(), [
 									'counter' => $counter,
@@ -291,7 +295,7 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 					<h2 class="series__title--testimonials text-center">
 						<small class="series__title--caption">How people say</small>
 						みんなの反応
@@ -304,11 +308,11 @@ endswitch;
 				<hr/>
 				<?php if ( $ratings ) : ?>
 					<p class="series__testimonials--stars text-center" itemprop="aggregateRating" itemscope
-					   itemtype="http://schema.org/AggregateRating">
+						itemtype="http://schema.org/AggregateRating">
 						<?php
 						$avg = number_format( array_sum( $ratings ) / count( $ratings ), 2 );
 						$avg = 4.5;
-						for ( $i = 1; $i <= $avg; $i ++ ) {
+						for ( $i = 1; $i <= $avg; $i++ ) {
 							echo '<i class="icon-star6"></i>';
 							if ( $i + 1 > $avg && $i + 0.5 <= $avg ) {
 								echo '<i class="icon-star5"></i>';
@@ -339,8 +343,8 @@ endswitch;
 									</div>
 									<?php if ( $review->rank ) : ?>
 										<p class="testimonial-rating" itemprop="reviewRating"
-										   itemscope itemtype="http://schema.org/Rating">
-											<?php for ( $j = 0; $j < $review->rank; $j ++ ) : ?>
+											itemscope itemtype="http://schema.org/Rating">
+											<?php for ( $j = 0; $j < $review->rank; $j++ ) : ?>
 												<i class="icon-star6"></i>
 											<?php endfor; ?>
 											<meta itemprop="ratingValue" content="<?php echo esc_attr( $review->rank ); ?>">
@@ -366,7 +370,7 @@ endswitch;
 									<cite class="testimonial-source">
 										<?php if ( $url ) : ?>
 											<a href="<?php echo esc_url( $url ); ?>" rel="nofollow" target="_blank"
-											   itemprop="author">
+												itemprop="author">
 												<?php echo esc_html( $review->comment_author ); ?>
 											</a>
 											<small><?php echo $icon; ?></small>
@@ -381,15 +385,15 @@ endswitch;
 				</ol>
 				<p class="text-center">
 
-					<?php if ( is_user_logged_in() ) : ?>
+					<?php if ( current_user_can( 'read' ) ) : ?>
 						<a class="review-creator btn btn-primary btn-lg" rel="nofollow"
-						   href="<?php echo home_url( '/testimonials/add/' . get_the_ID() . '/', is_ssl() ? 'https' : 'http' ); ?>"
-						   data-title="<?php echo sprintf( '%sのレビュー', esc_attr( get_the_title() ) ); ?>">
+							href="<?php echo home_url( '/testimonials/add/' . get_the_ID() . '/', is_ssl() ? 'https' : 'http' ); ?>"
+							data-title="<?php echo sprintf( '%sのレビュー', esc_attr( get_the_title() ) ); ?>">
 							<i class="icon-bubble6"></i> レビュー追加
 						</a>
 						<?php if ( current_user_can( 'edit_post', get_the_ID() ) ) : ?>
-							<a class="btn btn-default btn-lg" rel="nofollow"
-							   href="<?php echo home_url( '/testimonials/manage/' . get_the_ID() . '/', 'https' ); ?>">
+							<a class="btn btn-secondary btn-lg" rel="nofollow"
+								href="<?php echo home_url( '/testimonials/manage/' . get_the_ID() . '/', 'https' ); ?>">
 								<i class="icon-bubble6"></i> 管理
 							</a>
 						<?php endif; ?>
@@ -408,10 +412,14 @@ endswitch;
 
 
 
-	<?php if ( $url = $series->get_kdp_url( get_the_ID() ) ) : ?>
+	<?php
+	// KDPで販売中の場合。
+	$url = $series->get_kdp_url( get_the_ID() );
+	if ( $url ) :
+		?>
 		<div class="series__row series__row--amazon" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 
 					<h2 class="series__title--amazon text-center">
 						<small class="series__title--caption">Buy at Amazon</small>
@@ -428,11 +436,11 @@ endswitch;
 
 					<p class="text-center">
 						<a href="<?php echo $url; ?>" class="btn btn-trans btn-lg btn-amazon"
-						   itemprop="availability"
-						   data-outbound="kdp"
-						   data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
-						   data-label="<?php the_ID(); ?>"
-						   data-value="<?php echo get_series_price(); ?>">
+							itemprop="availability"
+							data-outbound="kdp"
+							data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
+							data-label="<?php the_ID(); ?>"
+							data-value="<?php echo get_series_price(); ?>">
 							<i class="icon-amazon"></i> この本を購入する
 						</a>
 					</p>
@@ -466,7 +474,7 @@ endswitch;
 		<div class="container series__inner">
 
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 					<h2 class="series__title--related text-center">
 						<small class="series__title--caption">Recommendations</small>
 						おすすめ書籍
@@ -494,5 +502,6 @@ endswitch;
 </div><!-- //.series__wrap -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

@@ -1,9 +1,10 @@
 <?php
 /**
  * Recommendation template.
+ *
  * @var array $args
  */
-$args   = wp_parse_args( $args, [
+$args = wp_parse_args( $args, [
 	'excludes'       => 0,
 	'author'         => 0,
 	'author_not'     => 0,
@@ -37,7 +38,7 @@ if ( ! $series ) : ?>
 		まだリリースしている電子書籍はありません。
 	</div>
 
-<?php
+	<?php
 else :
 	// キャッシュ保存する
 	ob_start();
@@ -46,7 +47,7 @@ else :
 	<?php
 	foreach ( $series as $post ) :
 		setup_postdata( $post );
-			?>
+		?>
 			<li class="book-recommend-item">
 				<a class="book-recommend-link" href="<?php the_permalink(); ?>">
 
@@ -58,7 +59,7 @@ else :
 			<?php
 		endforeach;
 		wp_reset_postdata();
-		?>
+	?>
 	</ol>
 	<?php
 	$html = ob_get_contents();

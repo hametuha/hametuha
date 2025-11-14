@@ -44,7 +44,7 @@ $publisher = hametuha_is_secret_book() ? get_the_author_meta( '_publisher_name' 
 			<th>執筆者</th>
 			<td>
 				<?php
-				echo implode( ' / ', array_map( function( WP_User $author ) {
+				echo implode( ' / ', array_map( function ( WP_User $author ) {
 					return esc_html( $author->display_name );
 				}, $authors ) );
 				?>
@@ -91,12 +91,12 @@ $publisher = hametuha_is_secret_book() ? get_the_author_meta( '_publisher_name' 
 			$counter = 0;
 			while ( $series_query->have_posts() ) :
 				$series_query->the_post();
-				$counter++;
+				++$counter;
 				?>
 			<tr>
 				<th><?php echo number_format( $counter ); ?></th>
 				<td>
-					<?php if ( $corrected = hametuha_first_corrected( true, $post ) ) : ?>
+					<?php if ( $corrected = hametuha_first_collected( true, $post ) ) : ?>
 						<?php echo esc_html( get_the_title( $post ) ); ?>
 						（<?php echo $corrected; ?>）
 					<?php else : ?>
@@ -163,13 +163,14 @@ $publisher = hametuha_is_secret_book() ? get_the_author_meta( '_publisher_name' 
 
 
 <footer class="footer footer--colophon">
-	&copy; <?php the_time( 'Y' ); ?> <?php
-	echo implode( ' / ', array_map( function( WP_User $author ) {
+	&copy; <?php the_time( 'Y' ); ?>
+	<?php
+	echo implode( ' / ', array_map( function ( WP_User $author ) {
 		return esc_html( $author->display_name );
 	}, $authors ) )
 	?>
 	<?php if ( ! $publisher ) : ?>
-	 / Hametuha INC.
+	/ Hametuha INC.
 	<?php endif; ?>
 </footer>
 

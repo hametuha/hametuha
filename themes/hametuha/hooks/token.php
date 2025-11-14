@@ -8,7 +8,7 @@
 /**
  * Register post type
  */
-add_action( 'init', function() {
+add_action( 'init', function () {
 	register_post_type( 'web-hook', [
 		'label'             => 'Webフック',
 		'public'            => false,
@@ -23,11 +23,11 @@ add_action( 'init', function() {
 /**
  * Add meta box for token
  */
-add_action( 'add_meta_boxes', function( $post_type ) {
+add_action( 'add_meta_boxes', function ( $post_type ) {
 	if ( 'web-hook' !== $post_type ) {
 		return;
 	}
-	add_meta_box( 'web-hook-info', 'Webフック設定', function( WP_Post $post ) {
+	add_meta_box( 'web-hook-info', 'Webフック設定', function ( WP_Post $post ) {
 		wp_nonce_field( 'webhook', '_webhook_nonce', false );
 		$endpoint = hametuha_webhook_url( $post );
 		?>
@@ -38,8 +38,8 @@ add_action( 'add_meta_boxes', function( $post_type ) {
 				</th>
 				<td>
 					<input type="text" class="regular-text" name="webhook_token" id="webhook_token"
-						   value="<?php echo esc_url( $endpoint ); ?>"
-						   placeholder="まだ生成されていません" readonly />
+							value="<?php echo esc_url( $endpoint ); ?>"
+							placeholder="まだ生成されていません" readonly />
 				</td>
 			</tr>
 			<tr>
@@ -62,7 +62,7 @@ add_action( 'add_meta_boxes', function( $post_type ) {
  * @param int $post_id
  * @param WP_Post $post
  */
-add_action( 'save_post', function( $post_id, $post ) {
+add_action( 'save_post', function ( $post_id, $post ) {
 	if ( 'web-hook' !== $post->post_type ) {
 		return;
 	}
@@ -80,7 +80,7 @@ add_action( 'save_post', function( $post_id, $post ) {
 /**
  * Add columns
  */
-add_filter( 'manage_web-hook_posts_columns', function( $column ) {
+add_filter( 'manage_web-hook_posts_columns', function ( $column ) {
 	$new_column = [];
 	foreach ( $column as $key => $value ) {
 		$new_column[ $key ] = $value;
@@ -97,7 +97,7 @@ add_filter( 'manage_web-hook_posts_columns', function( $column ) {
  * @param string $column
  * @param int    $post_id
  */
-add_action( 'manage_web-hook_posts_custom_column', function( $column, $post_id ) {
+add_action( 'manage_web-hook_posts_custom_column', function ( $column, $post_id ) {
 	switch ( $column ) {
 		case 'endpoint':
 			$token = hametuha_webhook_url( $post_id );
@@ -116,12 +116,12 @@ add_action( 'manage_web-hook_posts_custom_column', function( $column, $post_id )
 /**
  * Register rest action
  */
-add_action( 'rest_api_init', function() {
+add_action( 'rest_api_init', function () {
 	// List of Webhooks
 	register_rest_route( 'hametuha/v1', '/webhooks/?', [
 		[
 			'methods'             => 'GET',
-			'callback'            => function() {
+			'callback'            => function () {
 				$hooks = get_posts( [
 					'post_type'   => 'web-hook',
 					'post_status' => 'publish',
@@ -144,7 +144,7 @@ add_action( 'rest_api_init', function() {
 				return new WP_REST_Response( $return );
 			},
 			'args'                => [],
-			'permission_callback' => function() {
+			'permission_callback' => function () {
 				// Everything is O.K.
 				return true;
 			},

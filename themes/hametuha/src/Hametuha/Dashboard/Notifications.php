@@ -67,9 +67,7 @@ class Notifications extends Screen {
 	/**
 	 * Footer action
 	 */
-	public function footer() {
+	public function footer( $child = '' ) {
 		wp_enqueue_script( 'hametuha-hb-notifications' );
 	}
-
-
 }

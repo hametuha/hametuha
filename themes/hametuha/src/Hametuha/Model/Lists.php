@@ -104,7 +104,7 @@ class Lists extends Model {
 					'object_id'  => $post_id,
 					'created'    => current_time( 'timestamp' ),
 				]);
-				$added++;
+				++$added;
 			}
 		}
 		// 指定したものの中になければ削除
@@ -144,6 +144,28 @@ class Lists extends Model {
 	}
 
 	/**
+	 * リストに投稿を登録する
+	 *
+	 * @param int $list_id
+	 * @param int $post_id
+	 *
+	 * @return bool 失敗したらfalse
+	 */
+	public function register( $list_id, $post_id ) {
+		// すでにあったらfalse
+		$exists = $this->exists_in( $list_id, $post_id );
+		if ( $exists ) {
+			return false;
+		}
+		return (bool) $this->insert( [
+			'rel_type'   => 'list',
+			'subject_id' => $list_id,
+			'object_id'  => $post_id,
+			'created'    => current_time( 'timestamp' ),
+		] );
+	}
+
+	/**
 	 * リストから登録を解除する
 	 *
 	 * @param int $list_id
@@ -174,6 +196,19 @@ class Lists extends Model {
 			'subject_id = %d' => $list_id,
 			'object_id = %d'  => $post_id,
 		])->get_row();
+	}
+
+	public function is_assigned_to( $list_ids, $post_id ) {
+		$query = $this
+			->select( 'subject_id' )
+			->calc( false )
+			->wheres( [
+				'rel_type = %s'  => 'list',
+				'object_id = %d' => $post_id,
+			] )
+			->where_in( 'subject_id', $list_ids )
+			->build_query();
+		return array_map( 'intval', $this->get_col( 0, $query ) );
 	}
 
 	/**
@@ -281,14 +316,14 @@ class Lists extends Model {
 	 * @return array[]
 	 */
 	public function search_list( $args = [] ) {
-		$args = wp_parse_args( $args, [
+		$args    = wp_parse_args( $args, [
 			'posts_per_page' => 20,
 			'paged'          => 1,
 			'author'         => 0,
 			's'              => '',
 		] );
-		$offset = ( max( 1, $args['paged'] ) - 1 ) * $args['posts_per_page'];
-		$query = <<<SQL
+		$offset  = ( max( 1, $args['paged'] ) - 1 ) * $args['posts_per_page'];
+		$query   = <<<SQL
 		SELECT SQL_CALC_FOUND_ROWS
 		    p.*, rp.object_id
 		FROM
@@ -306,7 +341,7 @@ class Lists extends Model {
 		ORDER BY post_date DESC
 		LIMIT %d, %d
 SQL;
-		$query = $this->db->prepare( $query, $args['author'], $offset, $args['posts_per_page'] );
+		$query   = $this->db->prepare( $query, $args['author'], $offset, $args['posts_per_page'] );
 		$results = $this->db->get_results( $query );
 		error_log( $this->db->last_error );
 		$found = (int) $this->db->get_var( 'SELECT FOUND_ROWS()' );
@@ -314,7 +349,7 @@ SQL;
 			'found_posts' => $found,
 			'current'     => $args['paged'],
 			'total'       => ceil( $found / $args['posts_per_page'] ),
-			'posts'       => array_map( function( $row ) {
+			'posts'       => array_map( function ( $row ) {
 				return new \WP_Post( $row );
 			}, $results ),
 		];

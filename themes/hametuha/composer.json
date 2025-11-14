@@ -1,28 +1,33 @@
 {
-  "name": "hametuha/hametuha",
-  "description": "WordPress theme for Hametuha",
-  "type": "wordpress-theme",
-  "license": "GPL-3.0-or-later",
-  "require": {
-    "php": ">=7.4",
-    "hametuha/wpametu": "^1.2.1",
-    "hametuha/hamepub": "^1.0.0",
-    "hametuha/hashboard": "^0.9.1",
-    "hametuha/sharee": "^0.8.9",
-    "league/commonmark": "^1.6|^2.3",
-    "kunoichi/ga-communicator": "^3.3",
-    "youaoi/php-mecab": "^1.0"
-  },
-  "autoload": {
-    "psr-0": {
-      "Hametuha": "src"
-    }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^9.6",
-    "yoast/phpunit-polyfills": "^2.0"
-  },
-  "scripts": {
-    "test": "vendor/bin/phpunit"
-  }
+	"name": "hametuha/hametuha",
+	"description": "WordPress theme for Hametuha",
+	"type": "wordpress-theme",
+	"license": "GPL-3.0-or-later",
+	"require": {
+		"php": ">=7.4",
+		"hametuha/wpametu": "^1.2.1",
+		"hametuha/hamepub": "^1.0.0",
+		"hametuha/hashboard": "^0.9.4",
+		"hametuha/sharee": "^0.8.9",
+		"league/commonmark": "^1.6|^2.3",
+		"kunoichi/ga-communicator": "^3.3",
+		"youaoi/php-mecab": "^1.0"
+	},
+	"autoload": {
+		"psr-0": {
+			"Hametuha": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"HametuhaTest\\": "tests/src"
+		}
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^2.0"
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit"
+	}
 }

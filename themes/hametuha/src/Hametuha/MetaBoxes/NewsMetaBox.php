@@ -7,6 +7,11 @@ use WPametu\UI\Admin\LeadMetaBox;
 use WPametu\UI\Field\Text;
 use WPametu\UI\Field\Textarea;
 
+/**
+ * ニュースメタボックス
+ *
+ * @feature-group news
+ */
 class NewsMetaBox extends LeadMetaBox {
 
 	protected $post_types = [ 'news' ];

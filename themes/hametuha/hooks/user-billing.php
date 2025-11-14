@@ -77,19 +77,19 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 		<tr>
 			<th>郵便番号</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?php echo esc_attr( $address->get_value( 'zip' ) ); ?>"/></td>
+						value="<?php echo esc_attr( $address->get_value( 'zip' ) ); ?>"/></td>
 		</tr>
 		<tr>
 			<th>住所</th>
 			<td>
 				<textarea class="regular-text"
-						  readonly><?php echo esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ); ?></textarea>
+							readonly><?php echo esc_textarea( $address->get_value( 'address' ) . "\n" . $address->get_value( 'address2' ) ); ?></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th>氏名</th>
 			<td><input type="text" class="regular-text" readonly
-					   value="<?php echo esc_attr( $address->get_value( 'name' ) ); ?>"/></td>
+						value="<?php echo esc_attr( $address->get_value( 'name' ) ); ?>"/></td>
 		</tr>
 		<tr>
 			<th>電話</th>
@@ -257,7 +257,7 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 <!DOCTYPE html>
 <html>
 <head>
-<title>${message}</title>
+<title>{$message}</title>
 <body>
 <script>
 alert(document.getElementsByTagName('title')[0].innerHTML);

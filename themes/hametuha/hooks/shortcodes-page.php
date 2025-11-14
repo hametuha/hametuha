@@ -6,7 +6,7 @@
 /**
  * 1/3になるブロックを出力
  */
-add_shortcode( 'col', function( $atts, $content = '' ) {
+add_shortcode( 'col', function ( $atts, $content = '' ) {
 	$atts    = shortcode_atts( [
 		'icon' => '',
 		'href' => '',
@@ -23,6 +23,6 @@ add_shortcode( 'col', function( $atts, $content = '' ) {
 /**
  * 最小支払い金額
  */
-add_shortcode( 'min-payment', function() {
+add_shortcode( 'min-payment', function () {
 	return number_format( hametuha_minimum_payment() );
 } );

@@ -1,4 +1,11 @@
-<div class="col-xs-12 col-sm-3" id="sidebar" role="navigation">
+<?php
+/**
+ * スレッドのサイドバー
+ *
+ * @feature-group thread
+ */
+?>
+<div class="col-12 col-md-3" id="sidebar" role="navigation">
 
 	<?php
 	$sidebar = get_transient( 'thread-sidebar' );

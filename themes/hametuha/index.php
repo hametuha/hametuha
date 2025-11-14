@@ -1,83 +1,51 @@
-<?php get_header(); ?>
-<?php get_header( 'sub' ); ?>
-<?php get_header( 'breadcrumb' ); ?>
+<?php
+/**
+ * アーカイブページ
+ *
+ * 投稿用と
+ */
+get_header();
+get_header( 'sub' );
+get_header( 'breadcrumb' );
+?>
 
 	<div class="container archive">
 
 		<div class="row row-offcanvas row-offcanvas-right">
 
-			<div class="col-xs-12 col-sm-9 main-container">
-
-				<?php
-				// Jumbotron
-				if ( is_tax( 'faq_cat' ) ) {
-					get_template_part( 'parts/jumbotron', 'help' );
-				} elseif ( is_post_type_archive( 'anpi' ) || is_tax( 'anpi_cat' ) ) {
-					get_template_part( 'parts/jumbotron', 'anpi' );
-				} elseif ( is_post_type_archive( 'announcement' ) ) {
-					get_template_part( 'parts/jumbotron', 'announcement' );
-				} elseif ( is_tax( 'topic' ) || is_post_type_archive( 'thread' ) ) {
-					get_template_part( 'parts/jumbotron', 'thread' );
-				} elseif ( is_post_type_archive( 'lists' ) ) {
-					get_template_part( 'parts/jumbotron', 'lists' );
-				} elseif ( is_post_type_archive( 'ideas' ) ) {
-					get_template_part( 'parts/jumbotron', 'ideas' );
-				}
-				?>
-
-				<?php if ( is_author() ) : ?>
-					<?php get_template_part( 'parts/author' ); ?>
-				<?php endif; ?>
+			<div class="col-12 col-lg-9 order-2 main-container">
 
 
 				<?php
 				if ( is_singular( 'lists' ) ) {
+					the_post();
 					get_template_part( 'parts/meta', 'lists' );
 				} else {
-					?>
-					<div class="archive-meta">
-						<h1>
-							<?php get_template_part( 'parts/h1' ); ?>
-							<span class="label label-default"><?php echo number_format_i18n( loop_count() ); ?>件</span>
-						</h1>
-
-						<div class="desc">
-							<?php get_template_part( 'parts/meta-desc' ); ?>
-						</div>
-
-						<?php if ( hametuha_is_profile_page() ) : ?>
-							<?php get_template_part( 'parts/search', 'author' ); ?>
-						<?php endif; ?>
-
-
-					</div>
-				<?php } ?>
-
-				<?php
-				if ( is_tax( 'campaign' ) ) {
-					get_template_part( 'parts/meta', 'campaign' );
+					get_template_part( 'parts/meta', 'post' );
+					if ( is_tax( 'campaign' ) ) {
+						get_template_part( 'parts/meta', 'campaign' );
+					}
 				}
 				?>
+
 				<div>
 
 					<?php
+					// リストかどうかでクエリをわける
 					if ( is_singular( 'lists' ) ) {
 						$query = new WP_Query( [
-							'post_type'   => 'in_list',
-							'post_status' => 'publish',
-							'post_parent' => get_the_ID(),
-							'paged'       => max( 1, intval( get_query_var( 'paged' ) ) ),
+							'post_type'      => 'post',
+							'in_list'        => get_the_ID(),
+							'paged'          => max( 1, intval( get_query_var( 'paged' ) ) ),
+							'posts_per_page' => 100,
+							'no_found_rows'  => true,
 						] );
 					} else {
 						global $wp_query;
 						$query = $wp_query;
 					}
 					if ( $query->have_posts() ) :
-
-						if ( ! is_ranking() && ! get_query_var( 'reviewed_as' ) && ! hametuha_is_profile_page() ) {
-							get_template_part( 'parts/sort-order' );
-						}
-
+						get_template_part( 'parts/sort-order' );
 						?>
 
 						<!-- Tab panes -->
@@ -88,7 +56,7 @@
 									$counter = 0;
 									while ( $query->have_posts() ) {
 										$query->the_post();
-										$counter ++;
+										++$counter;
 										$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
 										get_template_part( 'parts/loop', get_post_type() );
 									}
@@ -100,12 +68,8 @@
 
 						<?php
 						// Load navigation
-						if ( is_tax( 'topic' ) ) {
-							get_template_part( 'parts/nav', 'thread' );
-						} elseif ( get_query_var( 'reviewed_as' ) ) {
+						if ( get_query_var( 'reviewed_as' ) ) {
 							get_template_part( 'parts/nav', 'review' );
-						} elseif ( ( ( ! is_ranking() || ! get_query_var( 'reviewed_as' ) ) && is_home() ) || is_post_type_archive( 'post' ) || is_category() || is_tag() || is_search() ) {
-							get_template_part( 'parts/nav' );
 						}
 						?>
 
@@ -132,13 +96,8 @@
 					// Extras
 					if ( is_singular( 'lists' ) || is_post_type_archive( 'lists' ) ) {
 						get_template_part( 'parts/nav', 'lists' );
-					} elseif ( is_tax( 'faq_cat' ) ) {
-						get_template_part( 'parts/nav', 'faq' );
-						get_search_form();
 					} elseif ( is_tax( 'campaign' ) ) {
 						get_template_part( 'parts/content-campaign', get_term_meta( get_queried_object_id(), '_is_collaboration', true ) ? 'collaboration' : '' );
-					} elseif ( ! hametuha_is_profile_page() ) {
-						get_search_form();
 					}
 					// Content
 					if ( ( is_category() || is_tag() || is_tax() ) && ( $content = get_term_meta( get_queried_object_id(), '_term_content', true ) ) ) {
@@ -150,13 +109,26 @@
 			</div>
 			<!-- //.main-container -->
 
-			<?php get_sidebar(); ?>
+			<?php
+
+			get_sidebar( 'post' );
+			?>
 
 		</div>
 		<!-- // .offcanvas -->
 
 	</div><!-- //.container -->
 
+<?php get_footer( 'books' ); ?>
+
+<section style="padding: 20px 0; background-color: var( --bs-gray-200 );">
+	<?php get_footer( 'ebooks' ); ?>
+	<p class="text-center">
+		<a class="btn btn-primary" href="<?php echo home_url( 'kdp' ); ?>">
+			<?php esc_html_e( 'すべての電子書籍', 'hametuha' ); ?>
+		</a>
+	</p>
+</section>
+
 <?php
-get_footer( 'books' );
 get_footer();

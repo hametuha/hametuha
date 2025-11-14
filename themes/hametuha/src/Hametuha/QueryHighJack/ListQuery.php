@@ -15,21 +15,6 @@ use WPametu\API\QueryHighJack;
  */
 class ListQuery extends QueryHighJack {
 
-
-	/**
-	 * リストID
-	 *
-	 * @var int
-	 */
-	private $list_id = 0;
-
-	/**
-	 * 空のリストを除外する
-	 *
-	 * @var bool
-	 */
-	private $exclude_empty = false;
-
 	/**
 	 * 使用するモデル
 	 *
@@ -42,9 +27,7 @@ class ListQuery extends QueryHighJack {
 	/**
 	 * @var array
 	 */
-	protected $query_var = [ 'my-content', 'in_list' ];
-
-
+	protected $query_var = [ 'my-content', 'in_list', 'exclude_empty' ];
 
 	/**
 	 * リライトルール
@@ -52,10 +35,12 @@ class ListQuery extends QueryHighJack {
 	 * @var array
 	 */
 	protected $rewrites = [
-		'^your/lists/?$'                => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&author=0',
-		'^your/lists/paged/([0-9]+)/?$' => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&paged=$matches[1]&author=0',
-		'^recommends/?$'                => 'index.php?my-content=recommends&post_type=lists&post_status=publish',
-		'^recommends/paged/([0-9]+)/?$' => 'index.php?my-content=recommends&post_type=lists&post_status=publish&paged=$matches[1]',
+		'^your/lists/?$'                      => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&author=0',
+		'^your/lists/paged/([0-9]+)/?$'       => 'index.php?my-content=lists&post_type=lists&post_status=publish,private,future&paged=$matches[1]&author=0',
+		'^lists/by/([^/]+)/?$'                => 'index.php?author_name=$matches[1]&post_type=lists&post_status=publish',
+		'^lists/by/([^/]+)/paged/([0-9]+)/?$' => 'index.php?author_name=$matches[1]&post_type=lists&post_status=publish&paged=$matches[2]',
+		'^recommends/?$'                      => 'index.php?my-content=recommends&post_type=lists&post_status=publish',
+		'^recommends/paged/([0-9]+)/?$'       => 'index.php?my-content=recommends&post_type=lists&post_status=publish&paged=$matches[1]',
 	];
 
 	/**
@@ -92,27 +77,10 @@ class ListQuery extends QueryHighJack {
 					'key'   => Lists::META_KEY_RECOMMEND,
 					'value' => 1,
 				],
-			]);
-			$this->exclude_empty = true;
-		}
-		// 指定されたリストの子供を表示する
-		elseif ( 'in_list' == $wp_query->get( 'post_type' ) ) {
-			$wp_query->set( 'post_type', 'any' );
-			$this->list_id = (int) $wp_query->get( 'post_parent' );
-			$wp_query->set( 'post_parent', '' );
-		}
-		// リスト一覧なら、publishのみ
-		elseif ( 'lists' == $wp_query->get( 'post_type' ) ) {
-			if ( $wp_query->get( 'p' ) ) {
-				if ( ! current_user_can( 'edit_post', $wp_query->get( 'p' ) ) ) {
-					$this->exclude_empty = true;
-				}
-			} else {
-				if ( ! $wp_query->get( 'post_status' ) ) {
-					$wp_query->set( 'post_status', 'publish' );
-				}
-				$this->exclude_empty = true;
-			}
+			] );
+			$wp_query->set( 'exclude_empty', 1 );
+		} elseif ( 'lists' == $wp_query->get( 'post_type' ) && ! $wp_query->get( 'p' ) ) {
+			$wp_query->set( 'exclude_empty', 1 );
 		}
 	}
 
@@ -126,12 +94,12 @@ class ListQuery extends QueryHighJack {
 	 * @return mixed|string
 	 */
 	public function posts_join( $join, \WP_Query $wp_query ) {
-		if ( $this->list_id ) {
+		if ( $wp_query->get( 'in_list' ) ) {
 			$join .= <<<SQL
 			LEFT JOIN {$this->lists->table}
 			ON {$this->lists->posts}.ID = {$this->lists->table}.object_id
 SQL;
-		} elseif ( $this->exclude_empty ) {
+		} elseif ( $wp_query->get( 'exclude_empty' ) ) {
 			$join .= <<<SQL
 			LEFT JOIN (
 				SELECT list_table.subject_id, COUNT(list_table.object_id) AS count
@@ -156,39 +124,22 @@ SQL;
 	 * @return string
 	 */
 	public function posts_where( $where, \WP_Query $wp_query ) {
-		if ( $this->list_id ) {
+		if ( $wp_query->get( 'in_list' ) ) {
 			$query  = <<<SQL
-			AND (
-				{$this->lists->table}.rel_type = %s
-				AND
-				{$this->lists->table}.subject_id = %d
-			)
+				AND (
+					{$this->lists->table}.rel_type = %s
+					AND
+					{$this->lists->table}.subject_id = %d
+				)
 SQL;
-			$where .= $this->db->prepare( $query, 'list', $this->list_id );
-		} elseif ( $this->exclude_empty ) {
+			$where .= $this->db->prepare( $query, 'list', $wp_query->get( 'in_list' ) );
+		} elseif ( $wp_query->get( 'exclude_empty' ) ) {
 			$where .= <<<SQL
-			AND ( list_children.count > 0 )
+				AND ( list_children.count > 0 )
 SQL;
 		}
-
 		return $where;
 	}
-
-
-	/**
-	 * リストIDをリセットする
-	 *
-	 * @param string $request
-	 * @param \WP_Query $wp_query
-	 *
-	 * @return mixed|string
-	 */
-	public function posts_request( $request, \WP_Query $wp_query ) {
-		$this->list_id       = 0;
-		$this->exclude_empty = false;
-		return $request;
-	}
-
 
 	/**
 	 * Posts results
@@ -210,17 +161,16 @@ SQL;
 		if ( count( $lists ) ) {
 			foreach ( $this->lists->num_children( array_keys( $lists ) ) as $row ) {
 				if ( isset( $lists[ $row->subject_id ] ) ) {
-					$lists[ $row->subject_id ] = $row->count;
+					$lists[ $row->subject_id ] = (int) $row->count;
 				}
 			}
 		}
 		// 投稿データにアサイン
 		foreach ( $posts as &$post ) {
-			if ( isset( $lists[ $post->ID ] ) ) {
-				$post->num_children = $lists[ $post->ID ];
+			if ( 'lists' === $post->post_type ) {
+				$post->num_children = $lists[ $post->ID ] ?? 0;
 			}
 		}
 		return $posts;
 	}
-
 }

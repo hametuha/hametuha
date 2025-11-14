@@ -43,7 +43,7 @@ class JobMeta extends Model {
 				$this->db->prepare( '%s', $created ),
 			];
 		}
-		$input = implode( ', ', array_map( function( $row ) {
+		$input = implode( ', ', array_map( function ( $row ) {
 			return '(' . implode( ', ', $row ) . ' )';
 		}, $input ) );
 		$query = <<<SQL

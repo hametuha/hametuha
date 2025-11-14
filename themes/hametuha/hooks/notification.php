@@ -5,7 +5,7 @@
  *
  * @param WP_Comment_Query $comment_query
  */
-add_action( 'pre_get_comments', function( &$comment_query ) {
+add_action( 'pre_get_comments', function ( &$comment_query ) {
 	if ( ! $comment_query->query_vars['type'] ) {
 		// コメントのタイプが指定されていなかったら、excludeを設定
 		$exclude                                   = (array) $comment_query->query_vars['type__not_in'];
@@ -17,7 +17,7 @@ add_action( 'pre_get_comments', function( &$comment_query ) {
 /**
  * Send mail
  */
-add_action( 'hametuha_notification', function( $template, $subject, $to, $data = [] ) {
+add_action( 'hametuha_notification', function ( $template, $subject, $to, $data = [] ) {
 	if ( ! ( $body = hameplate( "templates/mail/{$template}", '', $data, false ) ) ) {
 		return;
 	}
@@ -31,7 +31,7 @@ add_action( 'hametuha_notification', function( $template, $subject, $to, $data =
  * @param int $comment_id
  * @param \stdClass $comment_object
  */
-add_action( 'wp_insert_comment', function( $comment_id, $comment_object ) {
+add_action( 'wp_insert_comment', function ( $comment_id, $comment_object ) {
 	if ( ! $comment_object->comment_type
 		&& ( $post = get_post( $comment_object->comment_post_ID ) )
 		&& $comment_object->user_id && ( $post->post_author != $comment_object->user_id )
@@ -59,7 +59,7 @@ add_action( 'wp_insert_comment', function( $comment_id, $comment_object ) {
  * @param string $old_status
  * @param \WP_Post $post
  */
-add_action( 'transition_post_status', function( $new_status, $old_status, \WP_Post $post ) {
+add_action( 'transition_post_status', function ( $new_status, $old_status, \WP_Post $post ) {
 	if ( 'publish' === $new_status ) {
 		if ( false === array_search( $old_status, [ 'new', 'draft', 'pending', 'auto-draft', 'future' ] ) ) {
 			return;
@@ -85,11 +85,10 @@ add_action( 'transition_post_status', function( $new_status, $old_status, \WP_Po
  * @param \WP_Post $post
  * @param int $user_id
  * @param array $reviewed_terms
- * @param int $rank
  */
-add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $reviewed_terms = [], $rank = 0 ) {
+add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $reviewed_terms = [] ) {
 	$count = Hametuha\Model\Review::get_instance()->get_review_count( $post->ID );
-	for ( $i = 4; $i >= 0; $i -- ) {
+	for ( $i = 4; $i >= 0; $i-- ) {
 		$step = pow( 10, $i );
 		if ( $step == $count ) {
 			$key = '_is_notified_' . $step;
@@ -127,13 +126,13 @@ add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $
 /**
  * Register cron task for daily notification
  */
-add_action( 'init', function() {
+add_action( 'init', function () {
 	$cron_action = 'hametuha_daily_notification';
 	if ( ! wp_next_scheduled( $cron_action ) ) {
 		$time = date_i18n( 'Y-m-dT11:00:00+09:00', current_time( 'timestamp' ) + 60 * 60 * 24 );
 		wp_schedule_event( strtotime( $time ), 'daily', $cron_action );
 	}
-	add_action( $cron_action, function() {
+	add_action( $cron_action, function () {
 		switch ( date_i18n( 'N' ) ) {
 			case '5': // 金曜日（週間ランキング発表）
 				$message                    = '【お知らせ】おめでとうございます。%s付の週間ランキングで%d位になりました。';

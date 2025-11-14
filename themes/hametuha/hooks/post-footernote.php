@@ -46,7 +46,7 @@ function hametuha_get_footer_notes( $post = null ) {
 	if ( preg_match_all( '#<small class="footernote-ref">(.*?)</small>#u', $post->post_content, $matches, PREG_SET_ORDER ) ) {
 		$counter = 0;
 		foreach ( $matches as $match ) {
-			$counter++;
+			++$counter;
 			$footernotes[] = sprintf( '<li class="footernote-item" id="footernote-%1$d"><a class="footernote-link" href="#noteref-%1$d">%1$d. </a>%2$s</li>', $counter, $match[1] );
 		}
 	}
@@ -59,9 +59,9 @@ function hametuha_get_footer_notes( $post = null ) {
  *
  * @param string $content Post contnet.
  */
-add_filter( 'the_content', function( $content ) {
+add_filter( 'the_content', function ( $content ) {
 	$counter = 0;
-	return preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function( $matches ) use ( &$counter ) {
+	return preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$counter ) {
 		$counter++;
 		return sprintf( '<a class="noteref-link" id="noteref-%1$d" href="#footernote-%1$d"><sup>*%1$d</sup></a>', $counter );
 	}, $content );

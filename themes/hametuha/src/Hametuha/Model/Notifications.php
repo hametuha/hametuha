@@ -113,7 +113,7 @@ class Notifications extends Model {
 		$limit         = 5;
 		if ( false === $notifications ) {
 			$notifications = $this->where( 'recipient_id = %d', $user_id )
-								  ->limit( $limit )->order_by( 'created', 'desc' )->result();
+									->limit( $limit )->order_by( 'created', 'desc' )->result();
 			if ( $notifications ) {
 				wp_cache_set( $user_id, $notifications, 'hametuha_notifications', 1800 );
 			}

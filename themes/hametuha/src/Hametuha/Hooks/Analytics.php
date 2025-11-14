@@ -77,7 +77,7 @@ class Analytics extends Singleton {
 		// Contact Form 7
 		add_action( 'wp_enqueue_scripts', [ $this, 'add_inline_script' ] );
 		// Add filter for Cookie Tasting.
-		add_filter( 'cookie_tasting_uuid_key', function() {
+		add_filter( 'cookie_tasting_uuid_key', function () {
 			return 'google_analytics_id';
 		} );
 	}
@@ -95,6 +95,9 @@ class Analytics extends Singleton {
 	public function do_tracking_code() {
 		// Get cookie and if set, use it.
 		// If not set, generate via uuid4 and overwrite it.
+		if ( 'local' === wp_get_environment_type() && ! defined( 'HAMETUHA_LOCAL_GA4' ) ) {
+			return;
+		}
 		?>
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
@@ -209,15 +212,15 @@ class Analytics extends Singleton {
 		?>
 		<!-- Facebook Pixel Code -->
 		<script>
-		  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+			!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 			n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 			n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 			t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 			document,'script','//connect.facebook.net/en_US/fbevents.js');
-		  fbq('init', '<?php echo $this->pixel_id; ?>');
-		  fbq('track', "PageView");</script>
+			fbq('init', '<?php echo $this->pixel_id; ?>');
+			fbq('track', "PageView");</script>
 		<noscript><img height="1" width="1" style="display:none"
-					   src="https://www.facebook.com/tr?id=<?php echo $this->pixel_id; ?>&ev=PageView&noscript=1"
+						src="https://www.facebook.com/tr?id=<?php echo $this->pixel_id; ?>&ev=PageView&noscript=1"
 			/></noscript>
 		<!-- End Facebook Pixel Code -->
 		<?php
@@ -308,7 +311,8 @@ JS;
 				return AnalyticsMesurementApi::get_instance( [
 					'ua' => $this->ua,
 				] );
-				break;
+			default:
+				return null;
 		}
 	}
 }

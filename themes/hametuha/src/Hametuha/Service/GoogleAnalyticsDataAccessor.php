@@ -25,7 +25,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	protected function parse_args( $args ) {
 		try {
 			$date = new \DateTime( 'now', new \DateTimeZone( wp_timezone_string() ) );
-			$end = $date->format( 'Y-m-d' );
+			$end  = $date->format( 'Y-m-d' );
 			$date->sub( new \DateInterval( 'P7D' ) );
 			$start = $date->format( 'Y-m-d' );
 		} catch ( \Exception $e ) {
@@ -52,7 +52,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	public function save_popular_posts( $category, $params = [] ) {
 		$params    = $this->parse_args( $params );
 		$calc_date = $params['end'];
-		$result = $this->popular_posts( $params );
+		$result    = $this->popular_posts( $params );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -64,7 +64,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 				continue 1;
 			}
 			if ( $this->save_record( $category, $post_id, (int) $pv, $calc_date ) ) {
-				$updated++;
+				++$updated;
 			}
 		}
 		return $updated;
@@ -120,19 +120,19 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			'name' => $this->proper_range_dimension( $params['start'], $params['end'] ),
 		];
 		// Set filters.
-		$filters    = [];
+		$filters = [];
 		if ( $params['post_type'] ) {
 			$dimensions[] = [
 				'name' => 'customEvent:post_type',
 			];
-			$filters[] = $this->post_type_filter( $params['post_type'] );
+			$filters[]    = $this->post_type_filter( $params['post_type'] );
 		}
 		if ( $params['author'] ) {
 			$dimensions[] = [
 				'name' => 'customEvent:author',
 			];
 			if ( is_numeric( $params['author'] ) ) {
-				$filters[]    = [
+				$filters[] = [
 					'fieldName'    => 'customEvent:author',
 					'stringFilter' => [
 						'matchType' => 'EXACT',
@@ -142,14 +142,14 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			}
 		}
 		$request = [
-			'dimensions'      => $dimensions,
-			'dateRanges'      => [
+			'dimensions' => $dimensions,
+			'dateRanges' => [
 				[
 					'startDate' => $params['start'],
 					'endDate'   => $params['end'],
 				],
 			],
-			'orderBys'        => [
+			'orderBys'   => [
 				[
 					'dimension' => [
 						'dimensionName' => $dimensions[0]['name'],
@@ -158,10 +158,10 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					'desc'      => false,
 				],
 			],
-			'limit'           => $params['limit']
+			'limit'      => $params['limit'],
 		];
 		if ( ! empty( $filters ) ) {
-			$request[ 'dimensionFilter' ] = $this->convert_filters( $filters );
+			$request['dimensionFilter'] = $this->convert_filters( $filters );
 		}
 		if ( 0 < $params['offset'] ) {
 			$request['offset'] = $params['offset'];
@@ -178,17 +178,17 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	public function popular_posts( $params = [] ) {
 		$params     = $this->parse_args( $params );
 		$dimensions = $this->posts_dimensions();
-		$request = [
-			'dimensions'      => $dimensions,
-			'dateRanges'      => [
+		$request    = [
+			'dimensions' => $dimensions,
+			'dateRanges' => [
 				[
 					'startDate' => $params['start'],
 					'endDate'   => $params['end'],
 				],
 			],
-			'limit'           => $params['limit']
+			'limit'      => $params['limit'],
 		];
-		$filters = [];
+		$filters    = [];
 		if ( $params['post_type'] ) {
 			$filters[] = $this->post_type_filter( $params['post_type'] );
 		}
@@ -214,7 +214,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 		if ( $params['at_least'] ) {
 			$request['metricFilter'] = [
 				'filter' => [
-					'fieldName'    => 'screenPageViews',
+					'fieldName'     => 'screenPageViews',
 					'numericFilter' => [
 						'operation' => 'GREATER_THAN_OR_EQUAL',
 						'value'     => [
@@ -241,14 +241,14 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 		if ( is_null( $this->ga ) ) {
 			return [];
 		}
-		$result = $this->ga->ga4_get_report( $request, function( $row ) {
+		$result = $this->ga->ga4_get_report( $request, function ( $row ) {
 			// Flatten result row.
 			$filtered = [];
 			foreach ( [ 'dimensionValues', 'metricValues' ] as $key ) {
 				if ( ! isset( $row[ $key ] ) ) {
 					continue;
 				}
-				foreach  ( $row[ $key ] as $value ) {
+				foreach ( $row[ $key ] as $value ) {
 					$filtered[] = $value['value'];
 				}
 			}
@@ -274,15 +274,15 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 		}
 		if ( 1 === count( $post_types ) ) {
 			return [
-				'fieldName' => 'customEvent:post_type',
+				'fieldName'    => 'customEvent:post_type',
 				'stringFilter' => [
 					'matchType' => 'EXACT',
-					'value' => $post_types[0],
+					'value'     => $post_types[0],
 				],
 			];
 		} else {
 			return [
-				'fieldName' => 'customEvent:post_type',
+				'fieldName'    => 'customEvent:post_type',
 				'inListFilter' => [
 					'values' => $post_types,
 				],
@@ -355,12 +355,12 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					'endDate'   => $end,
 				],
 			],
-			'metrics' => [
+			'metrics'    => [
 				[
 					'name' => 'sessions',
 				],
 			],
-			'orderBys' => [
+			'orderBys'   => [
 				[
 					'dimension' => [
 						'dimensionName' => 'sessions',
@@ -371,7 +371,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			],
 			'limit'      => 100,
 		];
-		$groups = [
+		$groups  = [
 			'gender'     => [
 				'dimensions' => [
 					[
@@ -393,62 +393,62 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					],
 				],
 			],
-			'region'       => [
+			'region'     => [
 				'dimensions' => [
 					[
 						'name' => 'region',
-					]
+					],
 				],
-				"limit" => 50,
+				'limit'      => 50,
 			],
-			'source' => [
+			'source'     => [
 				'dimensions' => [
 					[
 						'name' => 'firstUserSource',
 					],
 				],
-				'limit' => 20,
+				'limit'      => 20,
 			],
-			'referrer' => [
+			'referrer'   => [
 				'dimensions' => [
 					[
 						'name' => 'firstUserMedium',
 					],
 				],
-				'filters' => [
+				'filters'    => [
 					[
-						'fieldName' => 'firstUserCampaignName',
+						'fieldName'    => 'firstUserCampaignName',
 						'inListFilter' => [
 							'values' => [ 'share-single', 'share-auto', 'share-dashboard' ],
 						],
 					],
 				],
-				'limit' => 20,
+				'limit'      => 20,
 			],
-			'profile' => [
+			'profile'    => [
 				'dimensions' => [
 					[
 						'name' => $this->proper_range_dimension( $start, $end ),
 					],
 				],
-				'filters' => [
+				'filters'    => [
 					[
-						'fieldName' => 'pagePath',
+						'fieldName'    => 'pagePath',
 						'stringFilter' => [
 							'matchType' => 'BEGINS_WITH',
-							'value' => '/doujin/detail/',
+							'value'     => '/doujin/detail/',
 						],
 					],
 				],
-				'limit' => 20,
-			]
+				'limit'      => 20,
+			],
 		];
 		if ( ! array_key_exists( $group, $groups ) ) {
 			return new \WP_Error( 'audience_not_found', __( '指定された読者グループは存在しません。', 'hametuha' ) );
 		}
 		$group_option = $groups[ $group ];
 		$filters      = [];
-		if ( ! empty( $group_option['filters'] )) {
+		if ( ! empty( $group_option['filters'] ) ) {
 			$filters = $group_option['filters'];
 			unset( $group_option['filters'] );
 		}
@@ -457,10 +457,10 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 			switch ( $group ) {
 				case 'profile':
 					$filters[] = [
-						'fieldName' => 'pagePath',
+						'fieldName'    => 'pagePath',
 						'stringFilter' => [
 							'matchType' => 'BEGINS_WITH',
-							'value' => '/doujin/detail/' . $author->user_nicename,
+							'value'     => '/doujin/detail/' . $author->user_nicename,
 						],
 					];
 					break;
@@ -468,7 +468,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 					$request['dimensions'][] = [
 						'name' => 'customEvent:author',
 					];
-					$filters[] = [
+					$filters[]               = [
 						'fieldName'    => 'customEvent:author',
 						'stringFilter' => [
 							'matchType' => 'EXACT',
@@ -494,7 +494,7 @@ class GoogleAnalyticsDataAccessor extends Singleton {
 	 * @param string $date     Datetime.
 	 * @return bool|int|\mysqli_result|resource|null
 	 */
-	public function save_record( $category, $id, $value, $date) {
+	public function save_record( $category, $id, $value, $date ) {
 		return $this->db->insert(
 			$this->table,
 			[

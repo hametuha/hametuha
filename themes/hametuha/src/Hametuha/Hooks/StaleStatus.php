@@ -42,7 +42,7 @@ class StaleStatus extends Singleton {
 	 * @return void
 	 */
 	public function register_meta_box( $post_type ) {
-		if ( $this->is_supported( $post_type ) ){
+		if ( $this->is_supported( $post_type ) ) {
 			add_meta_box( 'stale_status', __( '作品のステータス', 'hametuha' ), [ $this, 'render_meta_box' ], $post_type, 'side', 'low' );
 		}
 	}
@@ -85,10 +85,10 @@ class StaleStatus extends Singleton {
 		?>
 		<p>
 			<label>
-				<input type="checkbox" value="1" name="post-is-stale" <?php checked( ! empty( $staled_at ) ) ?> />
+				<input type="checkbox" value="1" name="post-is-stale" <?php checked( ! empty( $staled_at ) ); ?> />
 				<?php esc_html_e( '投稿を期限切れにする', 'hametuha' ); ?>
 				<?php if ( $staled_at ) : ?>
-				<small><?php printf( esc_html__( '%sに期限切れと判例', 'hametuha' ), mysql2date( get_option( 'date_format' ), $staled_at ) ) ?></small>
+				<small><?php printf( esc_html__( '%sに期限切れと判例', 'hametuha' ), mysql2date( get_option( 'date_format' ), $staled_at ) ); ?></small>
 				<?php endif; ?>
 			</label>
 		</p>
@@ -125,7 +125,7 @@ class StaleStatus extends Singleton {
 			return $statuses;
 		}
 		if ( self::is_stabled( $post ) ) {
-			$statuses[ 'post-is-staled' ] = __( '期限切れ', 'hametuha' );
+			$statuses['post-is-staled'] = __( '期限切れ', 'hametuha' );
 		}
 		return $statuses;
 	}
@@ -138,7 +138,7 @@ class StaleStatus extends Singleton {
 	 * @return int|\WP_Post[]
 	 */
 	public function bulk_stale( $period = 365, $dry_run = false ) {
-		$args = [
+		$args               = [
 			'post_type'      => [ 'post', 'series' ],
 			'posts_per_page' => 100,
 			'paged'          => 1,
@@ -153,9 +153,9 @@ class StaleStatus extends Singleton {
 				'before' => sprintf( '-%d days', $period ),
 			],
 		];
-		$list    = [];
-		$updated = 0;
-		$has_next = true;
+		$list               = [];
+		$updated            = 0;
+		$has_next           = true;
 		while ( $has_next ) {
 			$query = new \WP_Query( $args );
 			if ( ! $query->have_posts() ) {
@@ -184,10 +184,10 @@ class StaleStatus extends Singleton {
 					continue 1;
 				}
 				update_post_meta( $post->ID, '_stale', current_time( 'mysql' ) );
-				$updated++;
+				++$updated;
 			}
 			// ページを増やして次のループへ
-			$args['paged']++;
+			++$args['paged'];
 		}
 		return $dry_run ? $list : $updated;
 	}

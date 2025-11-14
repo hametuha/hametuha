@@ -41,7 +41,7 @@
       border-color: $brand-danger;
       &:after{
         font-family: "hameticon";
-        @extend .icon-pencil:before;
+        @extend .icon-pencil, :before;
         position: absolute;
         right: 0;
         top: 0;

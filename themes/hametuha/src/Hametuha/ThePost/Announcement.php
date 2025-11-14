@@ -3,6 +3,7 @@
 namespace Hametuha\ThePost;
 
 
+use Hametuha\Master\AnnouncementMeta;
 use WPametu\Utility\PostHelper;
 
 
@@ -21,42 +22,7 @@ use WPametu\Utility\PostHelper;
  */
 class Announcement extends PostHelper {
 
-	const START_OPTION = '_hametuha_announcement_start';
-
-	const END_OPTION = '_hametuha_announcement_end';
-
-	const NOTICE = '_hametuha_announcement_notice';
-
-	const POINT = '_hametuha_announcement_point';
-
-	const PLACE = '_hametuha_announcement_place';
-
-	const ADDRESS = '_hametuha_announcement_address';
-
-	const BUILDING = '_hametuha_announcement_building';
-
-	const ACCESS = '_hametuha_announcement_access';
-
-	const COMMIT_START = '_hametuha_commit_start';
-
-	const COMMIT_END = '_hametuha_commit_end';
-
-	const COMMIT_CONDITION = '_hametuha_commit_condition';
-
-	const COMMIT_COST = '_hametuha_commit_cost';
-
-	const COMMIT_LIMIT = '_hametuha_commit_limit';
-
-	const COMMIT_TYPE = '_hametuha_commit_type';
-
-	const COMMIT_TO = '_hametuha_commit_to';
-
-	const COMMIT_FILE = '_hametuha_commit_file';
-
-	const COMMIT_POST_TYPE = '_hametuha_commit_post_type';
-
-	const COMMIT_CATEGORY = '_hametuha_commit_category';
-
+	use AnnouncementMeta;
 
 	/**
 	 * 開催期間が存在するか
@@ -135,7 +101,7 @@ class Announcement extends PostHelper {
 	 *
 	 * @return bool
 	 */
-	public function is_participating() {
+	public function can_participate() {
 		return (bool) get_post_meta( $this->post->ID, self::COMMIT_TYPE, true );
 	}
 
@@ -348,10 +314,14 @@ class Announcement extends PostHelper {
 	/**
 	 * 参加定員
 	 *
-	 * @return string
+	 * @formatted bool フォーマット済みで返すか否か
+	 * @return string|int
 	 */
-	public function participating_limit() {
-		$limit = get_post_meta( $this->post->ID, self::COMMIT_LIMIT, true );
+	public function participating_limit( $formatted = true ) {
+		$limit = (int) get_post_meta( $this->post->ID, self::COMMIT_LIMIT, true );
+		if ( ! $formatted ) {
+			return $limit;
+		}
 		if ( $limit > 0 ) {
 			return number_format_i18n( $limit ) . '名';
 		} else {
@@ -479,5 +449,4 @@ EOS;
 				break;
 		}
 	}
-
 }

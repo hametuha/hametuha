@@ -118,6 +118,4 @@ class Epub extends Singleton {
 				return null;
 		}
 	}
-
-
 }

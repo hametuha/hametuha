@@ -44,7 +44,7 @@ class Collaborators extends WpApi {
 			'series_id' => [
 				'type'              => 'integer',
 				'required'          => true,
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					$post = get_post( $var );
 					return $post && 'series' === $post->post_type;
 				},
@@ -56,7 +56,7 @@ class Collaborators extends WpApi {
 					'required'          => true,
 					'type'              => 'integer',
 					'description'       => 'ID of user who is added as collaborator.',
-					'validate_callback' => function( $var, \WP_REST_Request $request ) {
+					'validate_callback' => function ( $var, \WP_REST_Request $request ) {
 						return is_numeric( $var ) && $this->collaborators->collaborator_exists( $request->get_param( 'series_id' ), $var );
 					},
 				],
@@ -68,7 +68,7 @@ class Collaborators extends WpApi {
 					'include_waiting' => [
 						'default'           => true,
 						'type'              => 'boolean',
-						'sanitize_callback' => function( $var ) {
+						'sanitize_callback' => function ( $var ) {
 							return (bool) $var;
 						},
 					],
@@ -79,7 +79,7 @@ class Collaborators extends WpApi {
 						'required'          => true,
 						'type'              => 'string',
 						'description'       => 'User nice name',
-						'validate_callback' => function( $var ) {
+						'validate_callback' => function ( $var ) {
 							return ! empty( $var ) && $this->authors->get_by_nice_name( $var );
 						},
 					],
@@ -87,7 +87,7 @@ class Collaborators extends WpApi {
 						'required'          => true,
 						'type'              => 'integer',
 						'description'       => 'Margin for user. Should be more than 0',
-						'validate_callback' => function( $var ) {
+						'validate_callback' => function ( $var ) {
 							return is_numeric( $var ) && ( 0 < $var ) && ( 0 < 100 );
 						},
 					],
@@ -98,7 +98,7 @@ class Collaborators extends WpApi {
 						'required'          => true,
 						'type'              => 'integer',
 						'description'       => 'Revenue margin in percentile.',
-						'validate_callback' => function( $var ) {
+						'validate_callback' => function ( $var ) {
 							return is_numeric( $var ) && ( 100 >= $var && 0 <= $var );
 						},
 					],
@@ -118,7 +118,7 @@ class Collaborators extends WpApi {
 		$series_id       = $request->get_param( 'series_id' );
 		$collaborators   = $this->collaborators->get_collaborators( $series_id );
 		$include_waiting = $request->get_param( 'include_waiting' ) && current_user_can( 'edit_post', $series_id );
-		return new \WP_REST_Response( array_values( array_map( [ $this, 'to_array' ], array_filter( $collaborators, function( $user ) use ( $include_waiting ) {
+		return new \WP_REST_Response( array_values( array_map( [ $this, 'to_array' ], array_filter( $collaborators, function ( $user ) use ( $include_waiting ) {
 			return $include_waiting || 0 <= (int) $user->location;
 		} ) ) ) );
 	}

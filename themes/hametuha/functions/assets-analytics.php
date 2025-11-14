@@ -14,7 +14,7 @@ function hametuha_ga_ranking( $start, $end, $params = [], $metrics = 'screenPage
 	if ( ! class_exists( 'Kunoichi\GaCommunicator' ) ) {
 		return new WP_Error( 'api_error', __( '必要なライブラリga-commmunicatorがなく、APIを利用できません。', 'hametuha' ) );
 	}
-	$params = wp_parse_args( $params, [
+	$params                = wp_parse_args( $params, [
 		'max-results'     => 10,
 		'dimensions'      => 'pageTitle',
 		'sort'            => 'screenPageViews',
@@ -27,8 +27,8 @@ function hametuha_ga_ranking( $start, $end, $params = [], $metrics = 'screenPage
 			'endDate'   => $end,
 		],
 	];
-	$request['limit'] = $params['max-results'];
-	$request['orderBys'] = [
+	$request['limit']      = $params['max-results'];
+	$request['orderBys']   = [
 		[
 			'metric' => [
 				'metricName' => $params['sort'],
@@ -50,7 +50,7 @@ function hametuha_ga_ranking( $start, $end, $params = [], $metrics = 'screenPage
 			];
 		}
 	}
-	$result = \Kunoichi\GaCommunicator::get_instance()->ga4_get_report( $request, function( $row ) {
+	$result = \Kunoichi\GaCommunicator::get_instance()->ga4_get_report( $request, function ( $row ) {
 		$return = [];
 		foreach ( [ 'dimensionValues', 'metricValues' ] as $key ) {
 			foreach ( $row[ $key ] as $v ) {
@@ -83,8 +83,8 @@ function hametuha_hot_posts( $start, $end, $post_type = 'post', $limit = 3 ) {
 				],
 			],
 		],
-		'dimensions'  => 'pageTitle,pagePath,customEvent:post_type',
-		'max-results' => $limit,
+		'dimensions'      => 'pageTitle,pagePath,customEvent:post_type',
+		'max-results'     => $limit,
 	];
 	return hametuha_ga_ranking( $start, $end, $params );
 }

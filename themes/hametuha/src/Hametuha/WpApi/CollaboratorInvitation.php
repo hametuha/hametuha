@@ -42,7 +42,7 @@ class CollaboratorInvitation extends WpApi {
 			'user_id' => [
 				'required'          => true,
 				'type'              => 'string',
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					if ( 'me' === $var ) {
 						return true;
 					} elseif ( ! is_numeric( $var ) ) {
@@ -59,7 +59,7 @@ class CollaboratorInvitation extends WpApi {
 					'paged' => [
 						'type'              => 'integer',
 						'default'           => 1,
-						'sanitize_callback' => function( $var ) {
+						'sanitize_callback' => function ( $var ) {
 							return max( 1, (int) $var );
 						},
 					],

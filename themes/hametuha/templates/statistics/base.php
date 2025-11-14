@@ -62,15 +62,15 @@ $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 					<div class="statistics statistics--main">
 
 						<form class="form-inline statistics__form" id="analytics-date-form" method="get"
-							  action="">
+								action="">
 							<div class="form-group">
 								<input type="text" class="form-control datepicker" id="from" name="from"
-									   value="<?php echo $from; ?>"/>
+										value="<?php echo $from; ?>"/>
 								<label for="from">から</label>
 							</div>
 							<div class="form-group">
 								<input type="text" class="form-control datepicker" id="to" name="to"
-									   value="<?php echo $to; ?>"/>
+										value="<?php echo $to; ?>"/>
 								<label for="to">まで</label>
 							</div>
 							<button type="submit" class="btn btn-primary">更新</button>

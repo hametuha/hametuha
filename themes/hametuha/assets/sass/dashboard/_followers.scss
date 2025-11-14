@@ -1,0 +1,59 @@
+.follower {
+
+	&__container {
+		margin: 20px 0;
+	}
+
+	&__wrap {
+		list-style: none;
+		padding: 0;
+		margin: 20px 0;
+		display: block !important;
+		flex-direction: column;
+	}
+
+	&__item {
+		margin-bottom: 15px;
+		padding: 10px 0;
+		border-bottom: 1px solid $thin-border;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		h4 {
+			margin: 0 0 8px;
+			font-size: 16px;
+			font-weight: 700;
+		}
+	}
+
+	&__avatar {
+		width: 60px;
+		height: auto;
+		object-fit: cover;
+	}
+
+	&__name {
+		margin: 0 0 8px;
+		font-size: 18px;
+		font-weight: 700;
+	}
+
+	&__label {
+		display: inline-block;
+		margin-left: 10px;
+		padding: 2px 8px;
+		font-size: 12px;
+		border-radius: 3px;
+		background-color: #f0f0f0;
+		color: $shade-font;
+		font-weight: normal;
+	}
+
+	&__actions {
+		.btn + .btn {
+			margin-left: 10px;
+		}
+	}
+}

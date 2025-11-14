@@ -9,21 +9,21 @@
 /**
  * Change login header URL.
  */
-add_filter( 'login_headerurl', function() {
+add_filter( 'login_headerurl', function () {
 	return home_url();
 } );
 
 /**
  * Change login header string.
  */
-add_filter( 'login_headertext', function() {
+add_filter( 'login_headertext', function () {
 	return get_bloginfo( 'name' );
 } );
 
 /**
  * Change icon if site icon is set.
  */
-add_action( 'login_head', function() {
+add_action( 'login_head', function () {
 	wp_enqueue_style( 'hametuha-login-screen', get_stylesheet_directory_uri() . '/assets/css/login.css', [], hametuha_version() );
 	wp_enqueue_script( 'hametuha-login-helper', get_stylesheet_directory_uri() . '/assets/js/dist/components/login-helper.js', [ 'jquery' ], hametuha_version(), true );
 	wp_localize_script( 'hametuha-login-helper', 'HametuhaLoginHelper', [
@@ -55,13 +55,13 @@ add_action( 'login_head', function() {
 /**
  * Add mail magazine.
  */
-add_action( 'register_form', function() {
+add_action( 'register_form', function () {
 	?>
 	<p class="hametuha-email-subscribe">
-	  <label>
-		  <input type="checkbox" name="optin" value="1" checked />
-		  <?php esc_html_e( 'メールマガジンに登録する', 'hametuha' ); ?>
-	  </label>
+		<label>
+			<input type="checkbox" name="optin" value="1" checked />
+			<?php esc_html_e( 'メールマガジンに登録する', 'hametuha' ); ?>
+		</label>
 	</p>
 	<?php
 }, 2 );
@@ -71,7 +71,7 @@ add_action( 'register_form', function() {
  *
  * @param int $user_id
  */
-add_action( 'register_new_user', function( $user_id ) {
+add_action( 'register_new_user', function ( $user_id ) {
 	if ( filter_input( INPUT_POST, 'optin' ) ) {
 		update_user_meta( $user_id, 'optin', 1 );
 	}
@@ -94,17 +94,17 @@ add_action( 'login_form', 'hametuha_login_divider', 2 );
 /**
  * Add login tag line
  */
-add_filter( 'login_message', function( $messages ) {
-	$messages = sprintf( '<p class="login-tagline">%s</p>', esc_html(  get_bloginfo( 'name' ) . ' ' . get_bloginfo( 'description' ) ) ) . $messages;
+add_filter( 'login_message', function ( $messages ) {
+	$messages = sprintf( '<p class="login-tagline">%s</p>', esc_html( get_bloginfo( 'name' ) . ' ' . get_bloginfo( 'description' ) ) ) . $messages;
 	return $messages;
 }, 9999 );
 
 /**
  * Change login message for
  */
-add_filter( 'login_message', function( $messages ) {
+add_filter( 'login_message', function ( $messages ) {
 	// Change login message.
-	$messages = preg_replace_callback( '#<p class="message register">([^<]+)</p>#u', function( $matches ) {
+	$messages = preg_replace_callback( '#<p class="message register">([^<]+)</p>#u', function ( $matches ) {
 		return sprintf(
 			'<p class="message register">%s</p>',
 			sprintf(

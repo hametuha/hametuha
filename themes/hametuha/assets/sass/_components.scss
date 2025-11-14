@@ -11,11 +11,38 @@ a[disabled], input[disabled] {
 	margin-bottom: 20px;
 }
 
+// 画像
+.img-responsive {
+	max-width: 100%;
+	width: auto;
+	height: auto;
+}
+
+// テキストアライン
+.text {
+	&-left {
+		text-align: left !important;
+	}
+
+	&-right {
+		text-align: right !important;
+	}
+
+	&-center {
+		text-align: center !important;
+	}
+}
+
+//区切り戦
+hr.divider {
+	margin: 20px 0;
+	border-color: currentColor;
+}
+
 // ヘルプボタン
 .help-tip {
-	padding: 1px 5px;
-	@include border-radius(10px);
-	margin-left: 1em;
+	margin-left: 0.5em;
+	text-decoration: none !important;
 }
 
 .btn {
@@ -207,7 +234,7 @@ i.rotation {
 		i {
 			&:before {
 				@include hameticon();
-				@extend .icon-plus-circle2:before;
+				@extend .icon-plus-circle2, :before;
 			}
 
 			vertical-align: middle;
@@ -223,7 +250,7 @@ i.rotation {
 
 			i {
 				&:before {
-					@extend .icon-close3:before;
+					@extend .icon-close3, :before;
 				}
 
 				color: inherit;
@@ -242,6 +269,9 @@ i.rotation {
 	&.no-tag + .alert {
 		display: block;
 	}
+}
+.alert > *:last-child {
+	margin-bottom: 0;
 }
 
 // スピナー
@@ -352,12 +382,6 @@ i.rotation {
 
 	h3 {
 		margin-top: 0;
-
-		small {
-			@media only screen and (max-width: $screen-xs-max) {
-				display: block;
-			}
-		}
 	}
 
 	.avatar {
@@ -396,7 +420,7 @@ i.rotation {
 ul.metadata {
 	border-bottom: 1px solid #eee;
 	color: #999;
-	padding: 7px 15px;
+	padding: 7px 0;
 	margin-bottom: 20px;
 	@media only screen and (max-width: $screen-xs-max) {
 		padding-right: 0;
@@ -408,64 +432,12 @@ ul.metadata {
 	}
 
 	li {
-		border-left: 1px solid #eee;
 		padding: 0.25em 0.5em;
 
 		&:first-child {
-			border-left: none;
 			@media only screen and (max-width: $screen-xs-max) {
 				border-left: 1px solid #ddd;
-			}
-		}
-	}
-}
-
-
-//
-// 一覧ページのリスト
-//
-// --------------------
-//
-// タブ
-.nav-tabs--archive {
-	li {
-		.icon-arrow-up {
-			display: none;
-		}
-
-		&.active {
-			a:hover {
-				cursor: pointer;
-
-				.icon-arrow-up {
-					display: inline-block;
-				}
-
-				.icon-arrow-down {
-					display: none;
-				}
-			}
-		}
-
-		&.asc {
-			.icon-arrow-up {
-				display: inline-block;
-			}
-
-			.icon-arrow-down {
-				display: none;
-			}
-
-			&.active {
-				a:hover {
-					.icon-arrow-down {
-						display: inline-block;
-					}
-
-					.icon-arrow-up {
-						display: none;
-					}
-				}
+				padding-left: 0.5em;
 			}
 		}
 	}
@@ -474,6 +446,7 @@ ul.metadata {
 // コンテナ
 .archive-container {
 	margin: 20px 0;
+	padding: 0;
 	border-top: 1px solid $thin-border;
 	// タブが上にある場合はマージンなし
 	.nav-tabs--archive + .tab-content & {
@@ -481,14 +454,28 @@ ul.metadata {
 		margin-top: 0;
 	}
 
+	.loop-media {
+		h2 {
+			font-size: 22px;
+			font-weight: bold;
+
+			small {
+				display: inline-block;
+				font-size: 0.65em;
+				padding: 0.25em 0.5em;
+				margin-left: 1em;
+				background-color: $primary;
+				color: $white;
+				vertical-align: text-top;
+				white-space: nowrap;
+			}
+		}
+	}
+
 	& > li {
 		margin-top: 0;
 		padding: 0;
 		border-bottom: 1px solid $thin-border;
-
-		&:nth-child(even) {
-			background-color: $zebra-bg;
-		}
 
 		.media__link {
 			@extend .clearfix;
@@ -566,10 +553,15 @@ ul.metadata {
 		}
 
 		li {
-			border-left: 1px solid #ddd;
+			padding: 0.25em 0.5em;
 
 			&:first-child {
 				border-left: none;
+				padding-left: 0;
+			}
+
+			.badge {
+				vertical-align: text-top;
 			}
 		}
 	}
@@ -588,45 +580,6 @@ ul.metadata {
 .post-pager {
 	margin: 20px 0;
 }
-
-// ページネーション
-.link-pages {
-	margin: 1.5em 0 2em !important;
-	text-align: center;
-	font-family: sans-serif;
-	text-indent: 0 !important;
-
-	& > span, a {
-		font-size: 12px;
-		@include inline-block();
-		margin-left: 0.5em;
-		padding: 0.4em 0.75em;
-		@include border-radius(2px);
-		color: #fff;
-	}
-
-	& > span {
-		background-color: $shade-font;
-	}
-
-	a {
-		&:link, &:visited {
-			background-color: $link-color;
-			text-decoration: none;
-		}
-
-		&:hover {
-			background-color: $link-active;
-			text-decoration: none;
-		}
-
-		&:active {
-			background-color: lighten($link-active, 10);
-			text-decoration: none;
-		}
-	}
-}
-
 
 //
 // イベント情報

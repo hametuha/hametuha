@@ -60,10 +60,10 @@ class UserTag extends RestJSON {
 			$this->method_not_found();
 		}
 		if ( $this->user_tag->add_user_tag( get_current_user_id(), $post_id, $tag->term_taxonomy_id ) < 0 ) {
-			return ['success' => false, 'message' => 'このタグはすでに追加済みです。'];
+			return [ 'success' => false, 'message' => 'このタグはすでに追加済みです。' ];
 		} else {
 			$tag = $this->user_tag->get_latest_tag( $post_id, $tag->term_taxonomy_id, get_current_user_id() );
-			return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false];
+			return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false ];
 		}
 	}
 
@@ -76,10 +76,10 @@ class UserTag extends RestJSON {
 	public function post_add( $post_id ) {
 		$this->is_valid_request( $post_id, $this->input->post( 'taxonomy_id' ) );
 		if ( $this->user_tag->add_user_tag( get_current_user_id(), $post_id, $this->input->post( 'taxonomy_id' ) ) < 0 ) {
-			return ['success' => false, 'message' => 'このタグはすでに追加済みです。'];
+			return [ 'success' => false, 'message' => 'このタグはすでに追加済みです。' ];
 		} else {
 			$tag = $this->user_tag->get_latest_tag( $post_id, $this->input->post( 'taxonomy_id' ), get_current_user_id() );
-			return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false];
+			return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false ];
 		}
 	}
 
@@ -95,7 +95,7 @@ class UserTag extends RestJSON {
 			$this->method_not_found();
 		}
 		$tag = $this->user_tag->get_latest_tag( $post_id, $this->input->post( 'taxonomy_id' ), get_current_user_id() );
-		return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false];
+		return [ 'success' => true, 'tag' => $tag ? $this->convert_tag( $tag ) : false ];
 	}
 
 	/**
@@ -147,6 +147,4 @@ class UserTag extends RestJSON {
 			return [];
 		}
 	}
-
-
 }

@@ -160,7 +160,7 @@ TEXT;
 			<label>
 				<span class="dashicons dashicons-book"></span> 連載状況:
 				<input type="checkbox" name="is_finished"
-					   value="1" <?php checked( $this->series->is_finished( $post->ID ) ); ?> /> 完結済み
+						value="1" <?php checked( $this->series->is_finished( $post->ID ) ); ?> /> 完結済み
 			</label>
 		</div>
 
@@ -218,7 +218,7 @@ TEXT;
 				<label>
 					<span class="dashicons dashicons-cart"></span> ASIN:
 					<input type="text" name="asin" class="regular-text"
-						   value="<?php echo esc_attr( $this->series->get_asin( $post->ID ) ); ?>"/>
+							value="<?php echo esc_attr( $this->series->get_asin( $post->ID ) ); ?>"/>
 				</label>
 			</div>
 		<?php endif; ?>
@@ -230,10 +230,10 @@ TEXT;
 				<span class="dashicons dashicons-money"></span> 販売価格:
 				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
 					<input type="number" name="kdp_price" class="regular-text"
-					   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
+						value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
 				<?php else : ?>
 					<input type="number" readonly class="regular-text"
-						   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
+							value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_price', true ) ); ?>"/>
 				<?php endif; ?>
 				<br />
 				<?php if ( is_series_price_unmatch( $post ) ) : ?>
@@ -249,7 +249,7 @@ TEXT;
 				</label>
 				<label id="change-price-box" class="hidden block">
 					<input type="number" name="kdp_required_price" class="regular-text"
-						   value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?>"/>
+							value="<?php echo esc_attr( get_post_meta( $post->ID, '_kdp_required_price', true ) ); ?>"/>
 				</label>
 				<hr />
 			<?php endif; ?>
@@ -263,7 +263,7 @@ TEXT;
 				switch ( $status ) {
 					case 1:
 						if ( $errors ) {
-							echo implode( '<br />', array_map( function( $string ) {
+							echo implode( '<br />', array_map( function ( $string ) {
 								return sprintf( '<span style="color: red;"><i class="dashicons dashicons-no"></i> %s</span>', esc_html( $string ) );
 							}, $errors->get_error_messages() ) );
 						} else {
@@ -288,7 +288,7 @@ TEXT;
 				<div class="misc-pub-section misc-pub-section--epub misc-pub-section--secret">
 					<label>
 						<input type="checkbox" value="1"
-							   name="secret_ebook" <?php checked( hametuha_is_secret_book( $post ) ); ?> />
+								name="secret_ebook" <?php checked( hametuha_is_secret_book( $post ) ); ?> />
 						シークレットブックにする
 					</label>
 				</div>
@@ -302,7 +302,8 @@ TEXT;
 
 		<?php endif; ?>
 
-		<?php if ( current_user_can( 'publish_epub', $post->ID ) ) :
+		<?php
+		if ( current_user_can( 'publish_epub', $post->ID ) ) :
 			wp_enqueue_script( 'hametuha-epub-generator' );
 			$js = <<<'JS'
 (function(){

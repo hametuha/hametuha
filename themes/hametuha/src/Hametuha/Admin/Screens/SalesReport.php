@@ -53,22 +53,22 @@ class SalesReport extends Screen {
 					throw new \Exception( $this->input->file_error_message( 'csv' ) );
 				}
 				// Validate rows
-				$csv_obj  = new \SplFileObject( $csv, 'r' );
+				$csv_obj = new \SplFileObject( $csv, 'r' );
 				$csv_obj->setFlags( \SplFileObject::READ_CSV );
 				$counter = 0;
 				$values  = [];
 				$errors  = 0;
 				while ( $line = $csv_obj->fgetcsv() ) {
 					if ( ! $counter ) {
-						$counter++;
+						++$counter;
 						continue;
 					}
 					switch ( ( $type = $this->input->post( 'type' ) ) ) {
 						case 'kdp':
 							if ( count( $line ) !== 16 ) {
-								$errors ++;
+								++$errors;
 							} else {
-								$line = array_map( 'trim', $line );
+								$line  = array_map( 'trim', $line );
 								$value = [
 									'store'    => 'Amazon',
 									'date'     => date_i18n( 'Y-m-d', strtotime( $line[0] ) ),
@@ -80,7 +80,7 @@ class SalesReport extends Screen {
 									'currency' => $line[15],
 								];
 								if ( is_wp_error( $this->sales->validate( $value ) ) ) {
-									$errors ++;
+									++$errors;
 								} else {
 									$values[] = $value;
 								}
@@ -93,7 +93,7 @@ class SalesReport extends Screen {
 								throw new \Exception( "{$date} は不正な日付です。" );
 							}
 							if ( count( $line ) !== 7 ) {
-								$errors ++;
+								++$errors;
 							} else {
 								$value = array_map( 'trim', [
 									'store'    => 'KENP',
@@ -106,7 +106,7 @@ class SalesReport extends Screen {
 									'currency' => $line[6],
 								] );
 								if ( is_wp_error( $this->sales->validate( $value ) ) ) {
-									$errors ++;
+									++$errors;
 								} else {
 									$values[] = $value;
 								}
@@ -116,7 +116,7 @@ class SalesReport extends Screen {
 							throw new \Exception( "{$type}は不正なオペレーションです。" );
 							break;
 					}
-					$counter ++;
+					++$counter;
 				}
 				if ( $errors ) {
 					throw new \Exception( sprintf( '合計%d行にエラーが見つかりました。', $errors ) );
@@ -124,7 +124,7 @@ class SalesReport extends Screen {
 				$added = 0;
 				foreach ( $values as $value ) {
 					if ( $this->sales->add_record( $value ) ) {
-						$added ++;
+						++$added;
 					}
 				}
 				$this->prg->addMessage( sprintf( '%d件のデータを挿入しました', $added ) );
@@ -173,7 +173,7 @@ HTML;
 			KDP売り上げアップロード
 		</h3>
 		<form method="post" enctype="multipart/form-data"
-			  action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
+				action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
 			<?php wp_nonce_field( 'import_kdp_data' ); ?>
 			<input type="hidden" name="type" value="kdp" />
 			<input type="file" name="csv" value="選択してください"/>
@@ -184,7 +184,7 @@ HTML;
 			KENPアップロード
 		</h3>
 		<form method="post" enctype="multipart/form-data"
-			  action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
+				action="<?php echo esc_url( admin_url( 'edit.php?post_type=series&page=' . $this->slug ) ); ?>">
 			<?php wp_nonce_field( 'import_kdp_data' ); ?>
 			<input type="hidden" name="type" value="kenp" />
 			<p>
@@ -221,6 +221,4 @@ HTML;
 				break;
 		}
 	}
-
-
 }

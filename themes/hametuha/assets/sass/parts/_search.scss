@@ -1,3 +1,83 @@
 .nav-pills + form{
   margin-top: 20px;
 }
+
+.post-archive {
+
+	&-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+
+		h1 {
+			font-size: 24px;
+			margin: 0;
+			font-weight: $font-weight-bold;
+		}
+
+		small {
+			font-size: 0.8em;
+			padding: 0.25em 0.5em;
+			background-color: $primary;
+			color: $white;
+		}
+	}
+
+	&-desc {
+		p {
+
+		}
+	}
+}
+
+
+//
+// 一覧ページのリスト
+//
+// --------------------
+//
+// タブ
+.nav-tabs--archive {
+	li {
+		.icon-arrow-up {
+			display: none;
+		}
+
+		.active {
+			a:hover {
+				cursor: pointer;
+
+				.icon-arrow-up {
+					display: inline-block;
+				}
+
+				.icon-arrow-down {
+					display: none;
+				}
+			}
+		}
+
+		.asc {
+			.icon-arrow-up {
+				display: inline-block;
+			}
+
+			.icon-arrow-down {
+				display: none;
+			}
+
+			&.active {
+				a:hover {
+					.icon-arrow-down {
+						display: inline-block;
+					}
+
+					.icon-arrow-up {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+}

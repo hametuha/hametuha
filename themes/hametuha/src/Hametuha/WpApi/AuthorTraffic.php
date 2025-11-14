@@ -24,9 +24,9 @@ class AuthorTraffic extends Pattern\AnalyticsPattern {
 	 */
 	public function handle_get( $request ) {
 		// Create date dimension
-		$params = [
-			'start'     => $request->get_param( 'from' ),
-			'end'       => $request->get_param( 'to' ),
+		$params  = [
+			'start' => $request->get_param( 'from' ),
+			'end'   => $request->get_param( 'to' ),
 		];
 		$user_id = $this->to_author_id( $request->get_param( 'user_id' ) );
 		// Fill profile pv.
@@ -41,7 +41,7 @@ class AuthorTraffic extends Pattern\AnalyticsPattern {
 						// skip
 						continue 1;
 					}
-					if ( sprintf(  '%s%02d', $y, $i ) > sprintf( '%s%02d', $to_year, $to_month ) ) {
+					if ( sprintf( '%s%02d', $y, $i ) > sprintf( '%s%02d', $to_year, $to_month ) ) {
 						break 2;
 					}
 					$profiles[ sprintf( '%d/%02d', $y, $i ) ] = 0;
@@ -71,12 +71,12 @@ class AuthorTraffic extends Pattern\AnalyticsPattern {
 			$profiles_result[] = [ $date, $pv ];
 		}
 		$response = [
-			'start' => $params['start'],
-			'end'   => $params['end'],
-			'source' => array_map( function( $row ) {
+			'start'        => $params['start'],
+			'end'          => $params['end'],
+			'source'       => array_map( function ( $row ) {
 				return $row;
 			}, $this->ga4->audiences( 'source', $params['start'], $params['end'], $user_id ) ),
-			'contributors' => array_map( function( $row ) use ( $user_id ) {
+			'contributors' => array_map( function ( $row ) use ( $user_id ) {
 				$contributor = (int) $row[0];
 				if ( ! $contributor ) {
 					$author = __( 'ゲスト', 'hametuha' );
@@ -91,7 +91,7 @@ class AuthorTraffic extends Pattern\AnalyticsPattern {
 				}
 				return [ $author, $contributor, $row[ count( $row ) - 1 ] ];
 			}, $this->ga4->audiences( 'referrer', $params['start'], $params['end'], $user_id ) ),
-			'profiles' => $profiles_result,
+			'profiles'     => $profiles_result,
 		];
 
 		return new \WP_REST_Response( $response, 200 );

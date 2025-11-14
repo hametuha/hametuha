@@ -46,8 +46,8 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
 	<!-- Begin MailChimp Signup Form -->
 	<div id="mc_embed_signup">
 		<form action="//gianism.us14.list-manage.com/subscribe/post?u=9b5777bb4451fb83373411d34&amp;id=0565845d29"
-			  method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
-			  target="_blank" novalidate>
+				method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+				target="_blank" novalidate>
 			<div id="mc_embed_signup_scroll" class="mc-form">
 				<fieldset class="form-fieldset">
 
@@ -64,7 +64,7 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
 							メールアドレス <span class="form-required">*</span>
 						</label>
 						<input type="email" value="" name="EMAIL" class="form-control" id="mce-EMAIL"
-							   placeholder="hametuah@example.com">
+								placeholder="hametuah@example.com">
 					</div>
 
 					<div class="form-group">
@@ -76,22 +76,22 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
 
 					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 					<div style="display: none;" aria-hidden="true"><input type="text"
-																							  name="b_9b5777bb4451fb83373411d34_0565845d29"
-																							  tabindex="-1" value="">
+																								name="b_9b5777bb4451fb83373411d34_0565845d29"
+																								tabindex="-1" value="">
 					</div>
 					<div class="clear">
 
 						<input type="submit" value="購読する" name="subscribe" id="mc-embedded-subscribe"
-											  class="btn btn-success btn-lg">
+												class="btn btn-success btn-lg">
 
 						<span class="form-helper">
 							<a href="http://us14.campaign-archive1.com/home/?u=9b5777bb4451fb83373411d34&id=0565845d29"
-							   target="_blank" class="form-helper-link">
+								target="_blank" class="form-helper-link">
 								こんなメールが届きます
 							</a>
 							<span class="form-helper-sep">|</span>
 							<a href="http://gianism.us14.list-manage.com/unsubscribe?u=9b5777bb4451fb83373411d34&id=0565845d29"
-							   target="_blank" class="form-helper-link">
+								target="_blank" class="form-helper-link">
 								購読を解除する
 							</a>
 						</span>
@@ -116,7 +116,7 @@ add_shortcode( 'ALO-EASYMAIL-PAGE', function () {
  * @param WP_User $user
  * @return array
  */
-add_filter( 'hamail_user_field', function( $fields, $user ) {
+add_filter( 'hamail_user_field', function ( $fields, $user ) {
 	$fields['optin']  = (int) get_user_meta( $user->ID, 'optin', true );
 	$fields['pseudo'] = preg_match( '/@pseudo\./u', $user->user_email ) ? 'pseudo' : 'valid';
 	return $fields;
@@ -128,7 +128,7 @@ add_filter( 'hamail_user_field', function( $fields, $user ) {
  * @param array $groups
  * @return array
  */
-add_filter( 'hamail_generic_user_group', function( $groups ) {
+add_filter( 'hamail_generic_user_group', function ( $groups ) {
 	if ( class_exists( 'Hametuha\\Hamail\\Pattern\\RecipientSelector' ) ) {
 		$groups[] = [
 			'id'       => 'hamail_tag_authors',
@@ -155,7 +155,7 @@ if ( class_exists( 'Hametuha\Hamail\Pattern\Filters\UserFilterInputPattern' ) ) 
  * @param string[] $path
  * @return string[]
  */
-add_filter( 'hamail_css_path', function( $path ) {
+add_filter( 'hamail_css_path', function ( $path ) {
 	$path[] = get_template_directory() . '/assets/css/hamail.css';
 	return $path;
 } );

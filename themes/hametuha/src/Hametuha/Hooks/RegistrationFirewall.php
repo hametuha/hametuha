@@ -32,6 +32,9 @@ class RegistrationFirewall extends Singleton {
 			<span class="description user-registration-description">「おはめつ」と入力するだけです。スパム登録防止にご協力ください。</span>
 			<input type="text" name="user_message2" id="user_message2" class="input" value="" />
 		</p>
+		<p>
+
+		</p>
 		<?php
 	}
 
@@ -55,5 +58,4 @@ class RegistrationFirewall extends Singleton {
 		}
 		return $errors;
 	}
-
 }

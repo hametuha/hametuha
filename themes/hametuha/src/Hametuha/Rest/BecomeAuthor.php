@@ -41,7 +41,7 @@ class BecomeAuthor extends RestTemplate {
 
 		$this->check();
 
-		add_filter('body_class', function( $classes ) {
+		add_filter('body_class', function ( $classes ) {
 			$classes[] = 'page-template-page-login-php';
 			return $classes;
 		});
@@ -54,7 +54,6 @@ class BecomeAuthor extends RestTemplate {
 
 		nocache_headers();
 		$this->load_template( 'templates/form', 'become' );
-
 	}
 
 	public function post_register() {
@@ -124,5 +123,4 @@ class BecomeAuthor extends RestTemplate {
 	public function enqueue_assets( $page = '' ) {
 		wp_enqueue_script( 'hametuha-become-author' );
 	}
-
 }

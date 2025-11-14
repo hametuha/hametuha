@@ -1,15 +1,22 @@
-<?php get_template_part( 'templates/faq/header-faq' ); ?>
+<?php
+/**
+ * FAQ用アーカイブ
+ *
+ * @feature-group faq
+ */
+get_template_part( 'templates/faq/header-faq' );
+?>
 
-<div class="container archive">
+<div class="container archive mt-3">
 
-		<div class="row row-offcanvas row-offcanvas-right">
+		<div class="row">
 
-			<div class="col-xs-12 col-sm-9 main-container">
+			<div class="col-12 col-md-9 main-container">
 
 				<div class="archive-meta">
 					<h1>
 						<?php get_template_part( 'parts/h1' ); ?>
-						<span class="label label-default"><?php echo number_format_i18n( loop_count() ); ?>件</span>
+						<span class="badge bg-secondary"><?php echo number_format_i18n( loop_count() ); ?>件</span>
 					</h1>
 
 					<div class="desc">
@@ -40,6 +47,7 @@
 
 	</div><!-- //.container -->
 
-<?php get_footer( 'books' ); ?>
-
-<?php get_footer(); ?>
+<?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
+get_footer();

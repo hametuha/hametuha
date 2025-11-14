@@ -20,7 +20,7 @@ get_header();
 					?>
 
 				<article itemscope
-						 itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
+						itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
 
 					<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
 
@@ -71,4 +71,5 @@ endif;
 	</div><!-- //.container -->
 
 <?php
+get_footer( 'books' );
 get_footer();

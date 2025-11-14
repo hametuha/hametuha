@@ -64,7 +64,7 @@ get_header();
 
 					<hr/>
 
-					<?php get_template_part( 'parts/jumbotron', 'news' ); ?>
+					<?php get_template_part( 'templates/news/jumbotron' ); ?>
 
 				</article><!-- //.single-container -->
 
@@ -81,4 +81,6 @@ endif;
 	</div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

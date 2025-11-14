@@ -66,7 +66,7 @@ class CompiledFileTable extends \WP_List_Table {
 			return [];
 		}
 		$base_url = admin_url( 'edit.php' );
-		$args = [
+		$args     = [
 			'post_type' => 'series',
 			'page'      => 'hamepub-files',
 		];
@@ -76,15 +76,15 @@ class CompiledFileTable extends \WP_List_Table {
 				$args[ $key ] = $value;
 			}
 		}
-		$url = add_query_arg( $args, $base_url );
+		$url   = add_query_arg( $args, $base_url );
 		$views = [
-			'all'    => sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html__( 'すべて', 'hametuha' ) ),
+			'all' => sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html__( 'すべて', 'hametuha' ) ),
 		];
 		if ( $post_id ) {
 			$post = get_post( $post_id );
 			if ( $post ) {
 				$views['author'] = sprintf( '<a href="%s">%s</a>', esc_url( add_query_arg( [ 'author' => $post->post_author ], $base_url ) ), esc_html( get_the_author_meta( 'display_name', $post->post_author ) ) );
-				$views['post']   = sprintf( '<a href="#" class="current">%s</a>',  esc_html( get_the_title( $post_id ) ) );
+				$views['post']   = sprintf( '<a href="#" class="current">%s</a>', esc_html( get_the_title( $post_id ) ) );
 			}
 		} elseif ( $author ) {
 			$views['author'] = sprintf( '<a href="#" class="current">%s</a>', esc_html( get_the_author_meta( 'display_name', $author ) ) );

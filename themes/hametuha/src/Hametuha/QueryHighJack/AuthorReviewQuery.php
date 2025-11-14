@@ -126,5 +126,4 @@ SQL;
 		$term = get_term( $term_id, $this->review->taxonomy );
 		return $term && ! is_wp_error( $term ) ? $term : false;
 	}
-
 }

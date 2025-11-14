@@ -80,9 +80,9 @@ function has_image_attachment( $post = null ) {
  */
 function hametuha_sideload_image( $file, $post_id, $desc = null ) {
 	// 写真アップロード用のライブラリを読み込み
-	require_once( ABSPATH . 'wp-admin/includes/file.php' );
-	require_once( ABSPATH . 'wp-admin/includes/media.php' );
-	require_once( ABSPATH . 'wp-admin/includes/image.php' );
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
 	if ( empty( $file ) ) {
 		return new WP_Error( 500, 'ファイル名が指定されていません。', [ 'status' => 500 ] );
 	}

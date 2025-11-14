@@ -80,7 +80,7 @@ add_action( 'edit_user_profile', function ( \WP_User $user ) {
 					<?php echo $new_img; ?>
 				</p>
 				<input type="hidden" name="profile_pick_id"
-					   value="<?php echo $instance->has_profile_pic( $user->ID ) ?: ''; ?>"/>
+						value="<?php echo $instance->has_profile_pic( $user->ID ) ?: ''; ?>"/>
 				<a class="button-primary" href="#">変更</a>
 				<a class="button" href="#">削除</a>
 			</td>
