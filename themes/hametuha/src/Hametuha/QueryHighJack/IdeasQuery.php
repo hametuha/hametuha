@@ -71,7 +71,7 @@ class IdeasQuery extends QueryHighJack {
 			if ( ! is_user_logged_in() ) {
 				if ( ! $wp_query->is_main_query() ) {
 					// メインクエリならリダイレクト
-					auth_redirect( home_url( sprintf( 'ideas/%s/', get_query_var( 'idea_type' ) )  ) );
+					auth_redirect( home_url( sprintf( 'ideas/%s/', get_query_var( 'idea_type' ) ) ) );
 					exit;
 				} else {
 					// そうでなければ404にする
@@ -114,7 +114,7 @@ class IdeasQuery extends QueryHighJack {
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return in_array($wp_query->get( 'idea_type' ), [ 'mine', 'stock' ], true );
+		return in_array( $wp_query->get( 'idea_type' ), [ 'mine', 'stock' ], true );
 	}
 
 	/**

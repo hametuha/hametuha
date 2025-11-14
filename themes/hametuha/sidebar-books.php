@@ -41,8 +41,8 @@ $args = wp_parse_args( $args, [
 			if ( 12 <= $counter ) {
 				break;
 			}
-			$counter++;
-			$img = $book['media']['woocommerce_single'];
+			++$counter;
+			$img   = $book['media']['woocommerce_single'];
 			$title = $book['title'];
 			if ( ! empty( $book['price'] ) && is_numeric( $book['price'] ) ) {
 				$title .= sprintf( '（税抜%s円）', number_format( $book['price'] ) );

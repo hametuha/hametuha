@@ -20,10 +20,10 @@ global $wp_query;
 		</p>
 		<p>
 			<a class="btn btn-trans btn-lg btn-amazon" href="https://amzn.to/3XqCRt0" target="_blank"
-			   data-outbound="kdp"
-			   data-action="search"
-			   data-label=""
-			   data-value="0">
+				data-outbound="kdp"
+				data-action="search"
+				data-label=""
+				data-value="0">
 				<i class="icon-amazon"></i>
 				Amazonで見る
 			</a>
@@ -40,10 +40,13 @@ global $wp_query;
 		<div class="col-xs-12 main-container">
 
 
-			<?php  if ( have_posts() ) : ?>
+			<?php if ( have_posts() ) : ?>
 
 				<ul class="list-book list-book-kdp">
-					<?php while ( have_posts() ) : the_post(); ?>
+					<?php
+					while ( have_posts() ) :
+						the_post();
+						?>
 
 						<li class="list-book-item">
 							<a href="<?php the_permalink(); ?>" class="list-book-link">
@@ -64,7 +67,7 @@ global $wp_query;
 
 								<p class="list-book-action">
 									<a href="<?php the_permalink(); ?>">詳細</a>
-									<a href="<?php hametuha_the_kdp_url(); ?>" title="<?php esc_attr_e( 'Amazonで買う', 'hametuha' ) ?>"><i class="icon-amazon"></i></a>
+									<a href="<?php hametuha_the_kdp_url(); ?>" title="<?php esc_attr_e( 'Amazonで買う', 'hametuha' ); ?>"><i class="icon-amazon"></i></a>
 								</p>
 
 							</div>

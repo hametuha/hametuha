@@ -34,7 +34,7 @@ global $wp_query;
 	<div class="idea-filter mb-5 mt-5">
 		<?php
 		// アイデアの絞り込み
-		$ideas_by = [
+		$ideas_by              = [
 			''      => 'みんなのアイデア',
 			'mine'  => 'あなたのアイデア',
 			'stock' => 'ストックしたアイデア',
@@ -44,7 +44,7 @@ global $wp_query;
 		// 検索クエリ
 		$s = get_query_var( 's' );
 		// 現在のタグ
-		$terms = get_terms( [
+		$terms   = get_terms( [
 			'taxonomy'   => 'post_tag',
 			'hide_empty' => false,
 			'parent'     => 0,
@@ -98,10 +98,10 @@ global $wp_query;
 					<h2 class="h6 form-label"><?php esc_html_e( '種別', 'hametuha' ); ?></h2>
 					<?php
 					foreach ( $ideas_by as $value => $label ) :
-						$id = 'idea-type' . ( $value ? '-' . $value : '' );
+						$id  = 'idea-type' . ( $value ? '-' . $value : '' );
 						$url = trailingslashit( get_post_type_archive_link( 'ideas' ) );
 						if ( $value ) {
-							$url .=  $value . '/';
+							$url .= $value . '/';
 						}
 						?>
 						<div class="form-check">
@@ -175,7 +175,7 @@ global $wp_query;
 		</div>
 
 		<?php wp_pagenavi(); ?>
-	<?php
+		<?php
 	else :
 		// 該当するコンテンツがない
 		?>

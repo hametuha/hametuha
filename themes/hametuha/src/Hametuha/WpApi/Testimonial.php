@@ -43,26 +43,26 @@ class Testimonial extends WpApi {
 		if ( in_array( $method, [ 'POST', 'PUT' ] ) ) {
 			$args = array_merge( $args, [
 				'testimonial-source' => [
-					'default' => '',
-					'type'    => 'string',
+					'default'           => '',
+					'type'              => 'string',
 					'validate_callback' => [ $this, 'only_empty_with_twitter_url' ],
 				],
-				'testimonial-text' => [
-					'default' => '',
-					'type'    => 'string',
+				'testimonial-text'   => [
+					'default'           => '',
+					'type'              => 'string',
 					'validate_callback' => [ $this, 'only_empty_with_twitter_url' ],
 				],
-				'testimonial-rank' => [
+				'testimonial-rank'   => [
 					'default'           => 0,
 					'type'              => 'integer',
-					'validate_callback' => function( $rank ) {
+					'validate_callback' => function ( $rank ) {
 						return in_array( $rank, range( 0, 5 ) );
 					},
 				],
-				'testimonial-url' => [
-					'default' => '',
-					'type'    => 'string',
-					'validate_callback' => function( $url ) {
+				'testimonial-url'    => [
+					'default'           => '',
+					'type'              => 'string',
+					'validate_callback' => function ( $url ) {
 						return empty( $url ) || wp_http_validate_url( $url );
 					},
 				],
@@ -70,7 +70,7 @@ class Testimonial extends WpApi {
 		}
 		if ( 'PUT' === $method ) {
 			$args = array_merge( $args, [
-				'testimonial-display' => [
+				'testimonial-display'  => [
 					'required'          => true,
 					'type'              => 'integer',
 					'validate_callback' => function ( $status ) {
@@ -84,7 +84,7 @@ class Testimonial extends WpApi {
 						return is_numeric( $priority ) && $priority >= 0;
 					},
 				],
-				'testimonial-excerpt' => [
+				'testimonial-excerpt'  => [
 					'default' => '',
 					'type'    => 'string',
 				],
@@ -100,7 +100,7 @@ class Testimonial extends WpApi {
 	 * @param $request
 	 */
 	protected function handle_post( $request ) {
-		$post_id = $request->get_param( 'id' );
+		$post_id    = $request->get_param( 'id' );
 		$comment_id = wp_insert_comment( [
 			'comment_author'       => $request->get_param( 'testimonial-source' ),
 			'user_id'              => get_current_user_id(),

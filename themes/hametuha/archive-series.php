@@ -49,7 +49,7 @@ global $wp_query;
 		<div class="col-xs-12 main-container">
 
 
-			<?php  if ( have_posts() ) : ?>
+			<?php if ( have_posts() ) : ?>
 
 				<ul class="list-book">
 					<?php

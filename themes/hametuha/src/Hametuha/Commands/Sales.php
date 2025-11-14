@@ -43,7 +43,7 @@ class Sales extends Command {
 			$counter = 0;
 			$table->setHeaders( [ '#', '適用', 'ユーザー', '数', '小計', '源泉徴収', '通貨' ] );
 			foreach ( $result as $sales ) {
-				$counter++;
+				++$counter;
 				$table->addRow( [ $counter, $sales->label, get_the_author_meta( 'display_name', $sales->user_id ) ?: '削除されたユーザー', $sales->unit, $sales->total, $sales->deducting, $sales->currency ] );
 			}
 			$table->display();
@@ -57,7 +57,7 @@ class Sales extends Command {
 			update_option( 'kdp_sales_record', $record, false );
 			self::s( sprintf( '%d of %d records were saved.', $success, $total ) );
 			if ( $messages = $errors->get_error_messages() ) {
-				array_map( function( $message ) {
+				array_map( function ( $message ) {
 					\WP_CLI::warning( $message );
 				}, $messages );
 			}

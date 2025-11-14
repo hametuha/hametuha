@@ -116,7 +116,7 @@ JS;
 			sprintf(
 				'<p style="color:#999">%s</p>',
 				sprintf(
-				__( 'このサイトはreCAPTCHAで保護されており、Googleの<a href="%s">プライバシーポリシー</a>と<a href="%s">利用規約</a>が適用されます。', 'hametuha' ),
+					__( 'このサイトはreCAPTCHAで保護されており、Googleの<a href="%1$s">プライバシーポリシー</a>と<a href="%2$s">利用規約</a>が適用されます。', 'hametuha' ),
 					'https://policies.google.com/privacy',
 					'https://policies.google.com/terms'
 				)
@@ -177,7 +177,7 @@ JS;
 	 * Add setting fields
 	 */
 	public function add_setting_fields() {
-		add_settings_section( 'recaptcha', __( 'Google reCAPTCHA', 'hametuha' ), function() {
+		add_settings_section( 'recaptcha', __( 'Google reCAPTCHA', 'hametuha' ), function () {
 			printf( '<p class="description">%s</p>', esc_html__( 'Add Google reCAPTCHA to protect your site.', 'hametuha' ) );
 		}, 'writing' );
 		foreach ( [
@@ -185,13 +185,13 @@ JS;
 			[ 'secret_key', __( 'Secret Key', 'hametuha' ), $this->secret_key_defined ],
 		] as list( $name, $title, $is_defined ) ) {
 			$option_name = 'recaptcha_v3_' . $name;
-			add_settings_field( $option_name, $title, function() use ( $name, $is_defined, $option_name ) {
+			add_settings_field( $option_name, $title, function () use ( $name, $is_defined, $option_name ) {
 				$value = $this->{$name};
 				?>
 				<input name="<?php echo esc_attr( $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>"
-					   type="text" class="regular-text"
-					   value="<?php echo esc_attr( $value ); ?>" <?php echo $is_defined ? 'readonly="readonly"' : ''; ?>
-					   placeholder="xxxxxxxx" />
+						type="text" class="regular-text"
+						value="<?php echo esc_attr( $value ); ?>" <?php echo $is_defined ? 'readonly="readonly"' : ''; ?>
+						placeholder="xxxxxxxx" />
 				<?php
 				if ( $is_defined ) {
 					printf( '<p class="description">%s</p>', esc_html__( 'This value is defined in code.', 'hametuha' ) );
@@ -240,6 +240,4 @@ JS;
 				return null;
 		}
 	}
-
-
 }

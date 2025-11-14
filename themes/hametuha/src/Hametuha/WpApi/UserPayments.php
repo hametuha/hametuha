@@ -37,7 +37,7 @@ class UserPayments extends WpApi {
 		$args = [
 			'user_id' => [
 				'required'          => true,
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					return preg_match( '#^(all|me|\d+)$#', $var ) ?: new \WP_Error( 'malformat', 'ユーザーIDが不正です。' );
 				},
 			],
@@ -46,7 +46,7 @@ class UserPayments extends WpApi {
 			case 'GET':
 				$args['year'] = [
 					'default'           => date_i18n( 'Y' ),
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return preg_match( '#\d{4}#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
 				];

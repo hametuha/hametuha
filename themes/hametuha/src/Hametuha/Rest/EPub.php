@@ -68,12 +68,12 @@ class EPub extends RestTemplate {
 		}
 		nocache_headers();
 		$this->title = get_the_title( $series_id );
-		add_filter( 'body_class', function( $classes ) {
+		add_filter( 'body_class', function ( $classes ) {
 			$classes[] = 'single-post';
 			$classes[] = 'series-print';
 			return $classes;
 		} );
-		add_filter( 'the_content', function( $content ) {
+		add_filter( 'the_content', function ( $content ) {
 			return preg_replace( "#<p>([^{$this->no_indent}])#u", '<p class="indent">$1', $content );
 		} );
 		$this->set_data([
@@ -502,5 +502,4 @@ class EPub extends RestTemplate {
 	public function epub_attr() {
 		echo ' epub:type="cover"';
 	}
-
 }

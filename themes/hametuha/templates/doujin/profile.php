@@ -20,7 +20,7 @@ $query = new WP_Query( [
 					<div class="col-12 col-sm-3 text-center">
 						<?php
 						echo get_avatar( $this->doujin->ID, 300, '', $this->doujin->display_name, [
-							'class'    => 'doujin__img rounded-circle avatar',
+							'class' => 'doujin__img rounded-circle avatar',
 						] )
 						?>
 					</div>
@@ -83,8 +83,8 @@ $query = new WP_Query( [
 							<li>
 								<?php if ( $this->doujin->twitter ) : ?>
 									<a href="https://twitter.com/<?php echo esc_attr( $this->doujin->twitter ); ?>"
-									   class="twitter-follow-button" data-show-count="false"
-									   data-lang="ja">フォロー</a>
+										class="twitter-follow-button" data-show-count="false"
+										data-lang="ja">フォロー</a>
 								<?php else : ?>
 									<i class="icon-twitter"></i>
 									<span class="text-muted">なし</span>

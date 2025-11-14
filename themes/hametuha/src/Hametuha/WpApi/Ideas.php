@@ -10,7 +10,7 @@ use Hametuha\WpApi\Pattern\IdeaApiPattern;
 class Ideas extends IdeaApiPattern {
 
 	protected function get_route() {
-		RETURN 'idea/(?<post_id>\d+)/?';
+		return 'idea/(?<post_id>\d+)/?';
 	}
 
 	protected function get_arguments( $method ) {
@@ -24,7 +24,7 @@ class Ideas extends IdeaApiPattern {
 		if ( 'PUT' === $method ) {
 			$args['user_id'] = [
 				'type'              => 'integer',
-				'validate_callback' => function( $user_id ) {
+				'validate_callback' => function ( $user_id ) {
 					// ユーザーが存在するか
 					if ( ! is_numeric( $user_id ) || ! get_user_by( 'id', $user_id ) ) {
 						return new \WP_Error( 'invalid_user', '該当するユーザーは存在しません。', [ 'status' => 400 ] );
@@ -45,7 +45,7 @@ class Ideas extends IdeaApiPattern {
 	 */
 	public function handle_get( $request ) {
 		$post_id = $request->get_param( 'post_id' );
-		$post = get_post( $post_id );
+		$post    = get_post( $post_id );
 
 		if ( ! $post ) {
 			return new \WP_Error( 'not_found', 'アイデアが見つかりません。', [ 'status' => 404 ] );
@@ -57,18 +57,18 @@ class Ideas extends IdeaApiPattern {
 		}
 
 		// タグを取得
-		$tags = wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] );
+		$tags  = wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] );
 		$genre = ! empty( $tags ) ? $tags[0] : '';
 
 		return new \WP_REST_Response( [
-			'success' => true,
-			'post_id' => $post->ID,
-			'title' => $post->post_title,
-			'content' => $post->post_content,
-			'status' => $post->post_status,
-			'genre' => $genre,
+			'success'   => true,
+			'post_id'   => $post->ID,
+			'title'     => $post->post_title,
+			'content'   => $post->post_content,
+			'status'    => $post->post_status,
+			'genre'     => $genre,
 			'author_id' => $post->post_author,
-			'can_edit' => current_user_can( 'edit_post', $post->ID ),
+			'can_edit'  => current_user_can( 'edit_post', $post->ID ),
 		] );
 	}
 
@@ -90,7 +90,7 @@ class Ideas extends IdeaApiPattern {
 			if ( get_current_user_id() != $post->post_author ) {
 				$notified = $this->notifications->add_idea_stocked( $post->post_author, $post->ID,
 					sprintf( '%sさんがあなたのアイデア「%s」をストックしました。', $current_user->display_name, $post->post_title ),
-					get_current_user_id() );
+				get_current_user_id() );
 			}
 		}
 

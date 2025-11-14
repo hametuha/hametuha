@@ -54,7 +54,7 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 			<td>
 				<label>
 					<input type="checkbox" name="is_secret_publisher" id="is_secret_publisher"
-						   value="1"<?php checked( hametuha_is_secret_guest( $user->ID ) ); ?> />
+							value="1"<?php checked( hametuha_is_secret_guest( $user->ID ) ); ?> />
 					シークレットゲストにする
 				</label>
 			</td>
@@ -71,8 +71,8 @@ add_action( 'edit_user_profile', function ( WP_User $user ) {
 				<th><label for="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th>
 				<td>
 					<input class="regular-text" type="text" name="<?php echo esc_attr( $key ); ?>"
-						   id="<?php echo esc_attr( $key ); ?>"
-						   value="<?php echo esc_html( get_user_meta( $user->ID, '_' . $key, true ) ); ?>"
+							id="<?php echo esc_attr( $key ); ?>"
+							value="<?php echo esc_html( get_user_meta( $user->ID, '_' . $key, true ) ); ?>"
 					/>
 				</td>
 			</tr>

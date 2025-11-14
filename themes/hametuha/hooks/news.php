@@ -9,7 +9,7 @@
 /**
  * ニュース関連の投稿タイプを作成する。
  */
-add_action( 'init', function() {
+add_action( 'init', function () {
 
 	// キーワード
 	register_taxonomy( 'nouns', 'news', [
@@ -95,7 +95,7 @@ function wpb_change_title_text( $title ) {
  * @param WP_Post $post 投稿オブジェクト
  * @return string
  */
-add_filter( 'enter_title_here', function( $title, $post ) {
+add_filter( 'enter_title_here', function ( $title, $post ) {
 	if ( 'news' === $post->post_type ) {
 		$title = __( 'タイトル例・【快挙！】破滅派2000号がノーベル文学賞を受賞！', 'hametuha' );
 	}
@@ -256,7 +256,7 @@ HTML;
  * @param string $title
  * @return string
  */
-add_filter( 'get_wp_title_rss', function( $title ) {
+add_filter( 'get_wp_title_rss', function ( $title ) {
 	if ( is_post_type_archive( 'news' ) ) {
 		$title = 'はめにゅー | 文芸関連ニュース';
 	}
@@ -266,7 +266,7 @@ add_filter( 'get_wp_title_rss', function( $title ) {
 /**
  * AMPを変更
  */
-add_filter( 'bloginfo_rss', function( $value, $show ) {
+add_filter( 'bloginfo_rss', function ( $value, $show ) {
 	if ( 'description' == $show && is_post_type_archive( 'news' ) ) {
 		$value = get_post_type_object( 'news' )->description;
 	}
@@ -276,7 +276,7 @@ add_filter( 'bloginfo_rss', function( $value, $show ) {
 /**
  * ニュースの関連記事を追加
  */
-add_filter( 'related_posts_post_types', function( $post_types ) {
+add_filter( 'related_posts_post_types', function ( $post_types ) {
 	$post_types[] = 'news';
 	return $post_types;
 }  );
@@ -297,7 +297,7 @@ add_filter( 'related_posts_taxonomy_score', function ( $scores, $post_type ) {
 /**
  * ニュース関連記事のタクソノミーを追加する
  */
-add_filter( 'related_post_patch_main_taxonomy', function( $taxonomy, $post ) {
+add_filter( 'related_post_patch_main_taxonomy', function ( $taxonomy, $post ) {
 	if ( 'news' === $post->post_type ) {
 		$taxonomy = 'genre';
 	}

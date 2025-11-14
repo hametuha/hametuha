@@ -26,16 +26,16 @@ class EpubFiles extends EpubFilePattern {
 		switch ( $method ) {
 			case 'GET':
 				return [
-					's' => [
+					's'              => [
 						'type'        => 'string',
 						'description' => 'Search Term',
 						'default'     => '',
 					],
-					'p' => [
-						'type'        => 'integer',
-						'description' => 'Series ID. Needs permission to edit the post.',
-						'default'     => 0,
-						'validate_callback' => function( $var ) {
+					'p'              => [
+						'type'              => 'integer',
+						'description'       => 'Series ID. Needs permission to edit the post.',
+						'default'           => 0,
+						'validate_callback' => function ( $var ) {
 							if ( 1 > $var ) {
 								return current_user_can( 'edit_others_posts' );
 							} else {
@@ -43,11 +43,11 @@ class EpubFiles extends EpubFilePattern {
 							}
 						},
 					],
-					'author' => [
-						'type'        => 'integer',
-						'description' => 'Author ID',
-						'default'     => 0,
-						'validate_callback' => function( $var ) {
+					'author'         => [
+						'type'              => 'integer',
+						'description'       => 'Author ID',
+						'default'           => 0,
+						'validate_callback' => function ( $var ) {
 							if ( ! $var ) {
 								return current_user_can( 'edit_others_posts' );
 							} else {
@@ -56,28 +56,28 @@ class EpubFiles extends EpubFilePattern {
 						},
 					],
 					'posts_per_page' => [
-						'type'        => 'integer',
-						'description' => 'Number per page',
-						'default'     => 10,
-						'validate_callback' => function( $var ) {
+						'type'              => 'integer',
+						'description'       => 'Number per page',
+						'default'           => 10,
+						'validate_callback' => function ( $var ) {
 							return ( 0 < $var ) && ( 200 > $var );
 						},
 					],
-					'paged' => [
-						'type'        => 'integer',
-						'description' => 'Page number',
-						'default'     => 1,
-						'sanitize_callback' => function( $var ) {
+					'paged'          => [
+						'type'              => 'integer',
+						'description'       => 'Page number',
+						'default'           => 1,
+						'sanitize_callback' => function ( $var ) {
 							return max( 1, (int) $var );
 						},
 					],
-					'order' => [
+					'order'          => [
 						'type'        => 'string',
 						'description' => 'Order',
 						'default'     => 'DESC',
 						'enum'        => [ 'ASC', 'DESC' ],
 					],
-					'orderby' => [
+					'orderby'        => [
 						'type'        => 'string',
 						'description' => 'Order',
 						'default'     => 'DESC',
@@ -87,10 +87,10 @@ class EpubFiles extends EpubFilePattern {
 			case 'POST':
 				return [
 					'p' => [
-						'required'    => true,
-						'type'        => 'integer',
-						'description' => 'Post ID',
-						'validate_callback' => function( $var ) {
+						'required'          => true,
+						'type'              => 'integer',
+						'description'       => 'Post ID',
+						'validate_callback' => function ( $var ) {
 							return ( 'series' === get_post_type( $var ) ) && current_user_can( 'edit_post', $var );
 						},
 					],
@@ -107,11 +107,11 @@ class EpubFiles extends EpubFilePattern {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_get( $request ) {
-		$args = [
-			's'      => $request->get_param( 's' ),
-			'p'      => $request->get_param( 'p' ),
-			'author' => $request->get_param( 'author' ),
-			'order'  => $request->get_param( 'order' ),
+		$args  = [
+			's'       => $request->get_param( 's' ),
+			'p'       => $request->get_param( 'p' ),
+			'author'  => $request->get_param( 'author' ),
+			'order'   => $request->get_param( 'order' ),
 			'orderby' => $request->get_param( 'orderby' ),
 		];
 		$files = $this->files->get_files( $args, $request->get_param( 'posts_per_page' ), $request->get_param( 'paged' ) - 1 );

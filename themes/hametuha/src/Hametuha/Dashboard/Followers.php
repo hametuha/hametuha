@@ -36,6 +36,4 @@ class Followers extends Screen {
 		<div id="hametuha-follower-container"></div>
 		<?php
 	}
-
-
 }

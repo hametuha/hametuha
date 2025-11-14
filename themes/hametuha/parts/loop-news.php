@@ -5,7 +5,7 @@
  * @feature-group news
  * @var array $args
  */
-$args = wp_parse_args( $args, [
+$args        = wp_parse_args( $args, [
 	'type' => 'normal',
 ] );
 $class_names = [ 'news-list__item' ];

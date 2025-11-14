@@ -173,5 +173,4 @@ SQL;
 		}
 		return $posts;
 	}
-
 }

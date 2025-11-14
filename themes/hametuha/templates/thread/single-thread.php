@@ -102,7 +102,7 @@ get_template_part( 'templates/thread/header-thread' );
 
 				</article><!-- //.single-container -->
 
-			<?php
+				<?php
 			endwhile;
 		endif;
 		?>

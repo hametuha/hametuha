@@ -14,13 +14,13 @@
 
 		<div class="media-body">
 			<h3 class="title">
-			   <?php echo hametuha_censor( get_the_title() ); ?>
+				<?php echo hametuha_censor( get_the_title() ); ?>
 				<small><i class="icon-calendar"></i> <?php echo hametuha_passed_time( $post->post_date ); ?></small>
 			</h3>
 			<ul class="list-inline">
 				<li><i class="icon-tags"></i>
 					<?php
-						echo implode(' ', array_map(function( $term ) {
+						echo implode(' ', array_map(function ( $term ) {
 							return esc_html( $term->name );
 						}, get_the_terms( $post, 'topic' )));
 						?>

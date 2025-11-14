@@ -81,7 +81,7 @@ add_action( 'init', function () {
  * 安否情報の権限制御
  * read権限を持つユーザーは安否情報を投稿・編集・削除できる
  */
-add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
+add_filter( 'map_meta_cap', function ( $caps, $cap, $user_id, $args ) {
 	// edit_post, delete_post, read_post の場合、投稿タイプを確認
 	if ( in_array( $cap, [ 'edit_post', 'delete_post', 'read_post' ], true ) ) {
 		if ( ! empty( $args[0] ) ) {
@@ -117,7 +117,7 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 	}
 
 	// 安否情報関連の権限名でない場合はスキップ
-	if ( ! preg_match( '/_anpis?$/u', $cap) ) {
+	if ( ! preg_match( '/_anpis?$/u', $cap ) ) {
 		return $caps;
 	}
 
@@ -134,7 +134,7 @@ add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
 /**
  * 安否情報で読み込むテンプレートを変更する
  */
-add_filter( 'template_include', function( $template ) {
+add_filter( 'template_include', function ( $template ) {
 	if ( ! is_tax( 'anpi_cat' ) ) {
 		return $template;
 	}

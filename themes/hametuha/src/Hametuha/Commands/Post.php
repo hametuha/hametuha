@@ -53,7 +53,7 @@ class Post extends Command {
 		$total  = 0;
 		$length = 0;
 		foreach ( $posts as $post ) {
-			$length++;
+			++$length;
 			$content     = strip_tags( apply_filters( 'the_content', $post->post_content ) );
 			$char_length = mb_strlen( $content, 'utf-8' );
 			$total      += $char_length;
@@ -136,10 +136,10 @@ class Post extends Command {
 				case 'text':
 					// Extract captions.
 					// todo: wp-caption, wp-block-image.
-					$images = [];
-					$content = preg_replace_callback( '#\[caption id="attachment_(\d+)".*](.*)\[/caption]#u', function( $matches ) use ( &$images ) {
+					$images  = [];
+					$content = preg_replace_callback( '#\[caption id="attachment_(\d+)".*](.*)\[/caption]#u', function ( $matches ) use ( &$images ) {
 						list( $match, $id, $caption ) = $matches;
-						$images[ $id ] = trim( $caption );
+						$images[ $id ]                = trim( $caption );
 						return '';
 					}, $post->post_content );
 					if ( ! empty( $images ) ) {
@@ -184,7 +184,7 @@ class Post extends Command {
 				case 'csv':
 					if ( ! $lines ) {
 						self::l( 'お届け先郵便番号,お届け先氏名,お届け先敬称,お届け先住所1行目,お届け先住所2行目,お届け先住所3行目,お届け先住所4行目,内容品' );
-						$lines++;
+						++$lines;
 					}
 					$line = [];
 					foreach ( [ 'zip', 'name', 'address', 'address2' ] as $key ) {
@@ -275,7 +275,7 @@ class Post extends Command {
 		$content = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $content );
 
 		// Remove empty line.
-		$content = trim( implode( "\n", array_map( function( $line ) {
+		$content = trim( implode( "\n", array_map( function ( $line ) {
 			return '&nbsp;' === $line ? '' : $line;
 		}, explode( "\n", $content ) ) ) );
 		if ( $endmark ) {
@@ -283,7 +283,7 @@ class Post extends Command {
 		}
 		// Convert Footernote.
 		$note_id = 0;
-		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function( $matches ) use ( &$note_id ) {
+		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id ) {
 			$note_id++;
 			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
 		}, $content );
@@ -313,7 +313,7 @@ class Post extends Command {
 			'#<ul>(.*?)</ul>#us' => 'UnorderedList',
 			'#<ol>(.*?)</ol>#us' => 'OrderedList',
 		] as $preg => $style ) {
-			$content = preg_replace_callback( $preg, function( $matches ) use ( $style ) {
+			$content = preg_replace_callback( $preg, function ( $matches ) use ( $style ) {
 				list( $match, $lists ) = $matches;
 				$lists                 = preg_replace( '#^\s*?<li>(.*?)</li>#um', '<ParaStyle:' . $style . '>$1', $lists );
 				return $lists;
@@ -325,20 +325,20 @@ class Post extends Command {
 		// Block quote, Aside, pre.
 		foreach ( [ 'Aside', 'BlockQuote', 'Pre' ] as $tag ) {
 			$tag_name = strtolower( $tag );
-			$content  = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function( $match ) use ( $tag ) {
+			$content  = preg_replace_callback( "#<{$tag_name}>(.*?)</{$tag_name}>#us", function ( $match ) use ( $tag ) {
 				$lines = trim( str_replace( "\n\n", "\n", $match[1] ) );
-				return implode( "\n", array_map( function( $line ) use ( $tag ) {
+				return implode( "\n", array_map( function ( $line ) use ( $tag ) {
 					return sprintf( '<ParaStyle:%s>', ucfirst( $tag ) ) . $line;
 				}, explode( "\n", $lines ) ) );
 			}, $content );
 		}
 		// paragraph
 		foreach ( [
-			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function( $match ) {
+			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$align = ucfirst( trim( str_replace( ';', '', $match[1] ) ) );
 				return sprintf( '<ParaStyle:Align%s>%s', $align, $match[2] );
 			},
-			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function( $match ) {
+			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$indent = preg_replace( '/\D/', '', $match[2] );
 				return $match[1] ? sprintf( '<ParaStyle:Indent%d>%s', str_replace( ';', '', $indent ), $match[3] ) : $match[3];
 			},
@@ -348,7 +348,7 @@ class Post extends Command {
 		// Remove span
 		$content = preg_replace( '#<span([^>]*?>)(.*?)</span>#u', '$2', $content );
 		// Add normal style.
-		return implode( "\n", array_map( function( $line ) {
+		return implode( "\n", array_map( function ( $line ) {
 			if ( 0 === strpos( $line, '<ParaStyle' ) ) {
 				return $line;
 			} else {
@@ -432,9 +432,9 @@ class Post extends Command {
 	 * @return void
 	 */
 	public function stales( $args, $assoc ) {
-		$dry_run = $assoc['dry-run'] ?? false;
+		$dry_run      = $assoc['dry-run'] ?? false;
 		list( $days ) = $args;
-		$result = StaleStatus::get_instance()->bulk_stale( $days, $dry_run );
+		$result       = StaleStatus::get_instance()->bulk_stale( $days, $dry_run );
 		if ( is_array( $result ) ) {
 			// Display table.
 			$table = new Table();
@@ -468,7 +468,7 @@ SQL;
 		foreach ( $wpdb->get_results( $query ) as $row ) {
 			update_user_meta( $row->post_author, 'work_count', $row->work_count );
 			echo '.';
-			$total++;
+			++$total;
 		}
 		\WP_CLI::success( sprintf( 'Done: %d', $total ) );
 	}
@@ -532,9 +532,9 @@ SQL;
 					$old_length = get_post_meta( $post_id, '_post_length', true );
 					update_post_meta( $post_id, '_post_length', $length );
 					if ( $old_length !== $length ) {
-						$updated++;
+						++$updated;
 					} else {
-						$skipped++;
+						++$skipped;
 					}
 				}
 
@@ -624,9 +624,9 @@ SQL;
 					\WP_CLI::line( sprintf( 'Would update #%d with average: %s, count: %d', $post_id, $avg ?: 'null', $count ) );
 				} else {
 					if ( $rating->update_post_average( $post_id ) ) {
-						$updated++;
+						++$updated;
 					} else {
-						$skipped++;
+						++$skipped;
 					}
 				}
 
@@ -724,9 +724,9 @@ SQL;
 					) );
 				} else {
 					if ( $review->update_post_review_tags( $post_id ) ) {
-						$updated++;
+						++$updated;
 					} else {
-						$skipped++;
+						++$skipped;
 					}
 				}
 

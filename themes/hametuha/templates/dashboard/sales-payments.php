@@ -61,7 +61,7 @@ $endpoint = $args['endpoint'] ?? '';
 				<?php
 				$this_year = (int) date_i18n( 'Y' );
 				for ( $i = $this_year; $i >= 2015; $i-- ) {
-					printf(  '<option value="%d">%s</option>', $i, sprintf( esc_html__( '%d年度', 'hametuha' ), $i ) );
+					printf( '<option value="%d">%s</option>', $i, sprintf( esc_html__( '%d年度', 'hametuha' ), $i ) );
 				}
 				?>
 			</select>

@@ -30,12 +30,14 @@ ob_start();
 ?>
 <h2 class="dividing-header"><?php esc_html_e( 'アイデアで良く使われるタグ', 'hametuha' ); ?></h2>
 <div class="tag-cloud mb-5">
-	<?php echo wp_generate_tag_cloud( array_map( function( $term ) {
+	<?php
+	echo wp_generate_tag_cloud( array_map( function ( $term ) {
 		$term->link = add_query_arg( [
 			'tag' => rawurlencode( $term->slug ),
 		], get_post_type_archive_link( 'ideas' ) );
 		return $term;
-	}, $terms ) ); ?>
+	}, $terms ) );
+	?>
 </div>
 <?php
 $content = ob_get_contents();

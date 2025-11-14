@@ -34,8 +34,8 @@ $author_id = (int) get_the_author_meta( 'ID' );
 
 		<div class="author-profile__actions">
 			<a class="btn btn-default btn--author"
-			   href="<?php echo home_url( sprintf( '/doujin/detail/%s/', rawurlencode( get_the_author_meta( 'nicename' ) ) ) ); ?>"
-			   itemprop="url">
+				href="<?php echo home_url( sprintf( '/doujin/detail/%s/', rawurlencode( get_the_author_meta( 'nicename' ) ) ) ); ?>"
+				itemprop="url">
 				詳しく見る
 			</a>
 			<?php hametuha_follow_btn( $author_id, false ); ?>

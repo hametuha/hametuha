@@ -56,7 +56,7 @@ class ImageGen extends RestTemplate {
 			'text' => $job->meta['text'],
 			'user' => get_userdata( $job->issuer_id ),
 		] );
-		add_filter( 'body_class', function( $classes ) {
+		add_filter( 'body_class', function ( $classes ) {
 			$classes[] = 'quote';
 			return $classes;
 		} );

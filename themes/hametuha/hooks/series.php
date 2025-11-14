@@ -50,7 +50,7 @@ add_filter( 'manage_posts_columns', function ( $columns, $post_type ) {
 	}
 	if ( isset( $new_columns['menu_order'] ) ) {
 		// menu_orderがカラムに存在したら、ソート順を追加
-		add_filter( 'manage_edit-series_sortable_columns', function( $sortable_columns ) {
+		add_filter( 'manage_edit-series_sortable_columns', function ( $sortable_columns ) {
 			$sortable_columns['menu_order'] = [ 'menu_order', false ];
 			return $sortable_columns;
 		}, 10, 3 );
@@ -139,7 +139,7 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 					printf( esc_html__( 'ほか％d名', 'hametuha' ), count( $collaborators ) );
 					break;
 				}
-				printf('<a style="margin-right: 0.5em;" href="%s">%s</a>', esc_url( hametuha_author_url( $collaborator->ID ) ), esc_html( $collaborator->display_name ) );
+				printf( '<a style="margin-right: 0.5em;" href="%s">%s</a>', esc_url( hametuha_author_url( $collaborator->ID ) ), esc_html( $collaborator->display_name ) );
 			}
 			break;
 		default:
@@ -151,7 +151,7 @@ add_action( 'manage_posts_custom_column', function ( $column, $post_id ) {
 /**
  * 完結済み作品のリライトルールを登録する
  */
-add_action( 'init', function() {
+add_action( 'init', function () {
 	add_rewrite_rule( 'series/finished/page/(\d+)/?$', 'index.php?post_type=series&is_finished=1&paged=$matches[1]', 'top' );
 	add_rewrite_rule( 'series/finished/?$', 'index.php?post_type=series&is_finished=1', 'top' );
 }, 20 );
@@ -159,7 +159,7 @@ add_action( 'init', function() {
 /**
  * クエリバーを追加する
  */
-add_filter( 'query_vars', function( $vars ) {
+add_filter( 'query_vars', function ( $vars ) {
 	$vars[] = 'is_finished';
 	return $vars;
 } );
@@ -167,11 +167,11 @@ add_filter( 'query_vars', function( $vars ) {
 /**
  * リライトルールにフックをかける
  */
-add_action( 'pre_get_posts', function( WP_Query &$wp_query ) {
-	if ( ! $wp_query->get( 'is_finished') ) {
+add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
+	if ( ! $wp_query->get( 'is_finished' ) ) {
 		return;
 	}
-	$meta_query = $wp_query->get( 'meta_query' ) ?: [];
+	$meta_query   = $wp_query->get( 'meta_query' ) ?: [];
 	$meta_query[] = [
 		'key'   => '_series_finished',
 		'value' => '1',

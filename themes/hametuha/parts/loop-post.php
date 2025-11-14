@@ -71,7 +71,7 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 				</li>
 				<li class="list-inline-item date">
 					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
-					<?php if ( rand(0,1) < 0.5 ) : // is_recent_date( $post->post_date, 3 ) ) : ?>
+					<?php if ( rand( 0, 1 ) < 0.5 ) : // is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="badge text-bg-danger"><?php esc_html_e( '新着', 'hametuha' ); ?></span>
 					<?php endif; ?>
 				</li>
@@ -93,14 +93,16 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 				<?php endif; ?>
 				<?php
 				$comment_count = get_comment_count( get_the_ID() );
-				if ( $comment_count['approved'] ) : ?>
+				if ( $comment_count['approved'] ) :
+					?>
 					<li class="static list-inline-item">
 						<i class="icon-bubble"></i> <?php printf( '%s件', number_format( $comment_count['approved'] ) ); ?>
 					</li>
 				<?php endif; ?>
 				<?php
-				$rating = (int) get_post_meta( get_the_ID(), '_rating_count', true);
-				if ( $rating > 0 ) : ?>
+				$rating = (int) get_post_meta( get_the_ID(), '_rating_count', true );
+				if ( $rating > 0 ) :
+					?>
 					<li class="static list-inline-item">
 						<i class="icon-star"></i> <?php printf( '%s件の評価', number_format( $rating ) ); ?>
 					</li>

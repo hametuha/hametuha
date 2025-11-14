@@ -31,6 +31,6 @@
 
 <?php if ( is_author() ) : ?>
 <div class="mb-5">
-	<?php get_template_part( 'parts/author', 'narrow', [ 'responsibility' => false, ] ); ?>
+	<?php get_template_part( 'parts/author', 'narrow', [ 'responsibility' => false ] ); ?>
 </div>
 <?php endif; ?>

@@ -38,14 +38,14 @@ class Testimonial extends RestTemplate {
 	}
 
 	public function wp_title( $title, $sep, $location ) {
-		return implode( " {$sep} ",  [ 'レビュー管理', '破滅派' ] );
+		return implode( " {$sep} ", [ 'レビュー管理', '破滅派' ] );
 	}
 
 	public function get_add( $id ) {
 		nocache_headers();
 		$this->check_login();
 		$this->content_type = 'text/html';
-		$series = $this->check_series( $id );
+		$series             = $this->check_series( $id );
 		$this->set_data( $series, 'post' );
 		$this->set_template( 'form-add' );
 		$this->response();

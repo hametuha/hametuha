@@ -12,7 +12,7 @@ if ( is_hamenew( 'front' ) ) {
 } elseif ( is_tax() ) {
 	ob_start();
 	single_term_title();
-	$title = ob_get_clean();
+	$title     = ob_get_clean();
 	$term_desc = term_description();
 	if ( ! empty( $term_desc ) ) {
 		$description = $term_desc;

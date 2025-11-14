@@ -41,7 +41,7 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_denied', function( $user, $post ) {
+		add_action( 'hametuha_collaborators_denied', function ( $user, $post ) {
 			static::exec( [
 				$post->post_author => [
 					'collaborator' => $user->display_name,
@@ -51,6 +51,4 @@ HTML;
 			] );
 		}, 10, 2 );
 	}
-
-
 }

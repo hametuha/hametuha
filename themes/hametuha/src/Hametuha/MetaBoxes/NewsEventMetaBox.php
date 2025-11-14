@@ -82,8 +82,5 @@ class NewsEventMetaBox extends EditMetaBox {
 	文学賞などの公募情報の場合、終了日だけを設定してください。
 </p>
 HTML;
-
 	}
-
-
 }

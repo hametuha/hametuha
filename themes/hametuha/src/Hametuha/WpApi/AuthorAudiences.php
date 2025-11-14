@@ -35,14 +35,14 @@ class AuthorAudiences extends Pattern\AnalyticsPattern {
 				$user_id = (int) $request['user_id'];
 				break;
 		}
-		$start = $request['from'];
-		$end   = $request['to'];
+		$start    = $request['from'];
+		$end      = $request['to'];
 		$response = [];
 		foreach ( [
 			'gender',
 			'new',
 			'generation',
-			'region'
+			'region',
 		] as $key ) {
 			$response[ $key ] = $this->ga4->audiences( $key, $start, $end, $user_id );
 		}

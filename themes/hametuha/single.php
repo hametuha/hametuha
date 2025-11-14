@@ -83,7 +83,7 @@ get_header( 'breadcrumb' );
 
 					</article><!-- //.single-container -->
 
-				<?php
+					<?php
 				endwhile;
 			endif;
 			?>

@@ -18,7 +18,7 @@ $ideas = \Hametuha\Model\Ideas::get_instance();
 					<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
 				</h2>
 				<span class="idea-status">
-					<?php if ( ! in_array( get_post_status(), [ 'publish', 'future' ], true )  ) : ?>
+					<?php if ( ! in_array( get_post_status(), [ 'publish', 'future' ], true ) ) : ?>
 						<i class="icon-lock" title="<?php esc_attr_e( '非公開', 'hametuha' ); ?>"></i>
 					<?php endif; ?>
 					<?php if ( is_user_logged_in() && $ideas->is_stocked( get_current_user_id(), get_the_ID() ) ) : ?>
@@ -30,7 +30,8 @@ $ideas = \Hametuha\Model\Ideas::get_instance();
 
 			<?php
 			$terms = get_the_tags( get_the_ID() );
-			if ( $terms && ! is_wp_error( $terms ) ) : ?>
+			if ( $terms && ! is_wp_error( $terms ) ) :
+				?>
 				<p>
 					<?php
 					echo implode( ' ', array_map( function ( $term ) {
@@ -68,7 +69,7 @@ $ideas = \Hametuha\Model\Ideas::get_instance();
 				<?php echo hametuha_passed_time( $post->post_date ); ?>
 			</span>
 			<span>
-				<i class="icon-heart<?php echo $post->stock ? ' idea-stocked ' : '' ?>"></i>
+				<i class="icon-heart<?php echo $post->stock ? ' idea-stocked ' : ''; ?>"></i>
 				<?php
 				printf(
 					esc_html__( '%s人がストック', 'hametuha' ),

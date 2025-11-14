@@ -5,7 +5,7 @@
  * @feature-group campaign
  * @var WP_Term $args
  */
-$campaign = $args[ 'campaign' ];
+$campaign = $args['campaign'];
 ?>
 <div class="widget-campaign-item">
 	<a href="<?php echo get_term_link( $campaign ); ?>">

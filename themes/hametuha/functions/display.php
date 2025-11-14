@@ -73,7 +73,7 @@ function hametuha_grab_domain( $url ) {
  */
 function the_tweet( $post = null ) {
 	$post = get_post( $post );
-	echo wpautop( preg_replace_callback( '@https?://[^ 　\\n\\r\\t\\z]+@', function( $match ) {
+	echo wpautop( preg_replace_callback( '@https?://[^ 　\\n\\r\\t\\z]+@', function ( $match ) {
 		return sprintf( '<a href="%s" rel="nofollow">%s</a>', esc_url( $match[0] ), $match[0] );
 	}, esc_html( $post->post_excerpt ) ) );
 }
@@ -282,7 +282,7 @@ endswitch;
 						break;
 				}
 				?>
-					 | <i class="icon-clock"></i> <span
+					| <i class="icon-clock"></i> <span
 						itemprop=""><?php echo get_comment_date( 'Y-m-d H:i' ); ?></span></small>
 			</h4>
 		</div><!-- .comment-author .vcard -->
@@ -350,7 +350,7 @@ function trim_long_sentence( $sentence, $length = 100, $elipsis = '…' ) {
 function hametuha_censor( $string ) {
 	foreach ( explode( "\r\n", get_option( 'four_words', '' ) ) as $four_word ) {
 		if ( $four_word ) {
-			$string = preg_replace_callback( "#{$four_word}#u", function( $match ) {
+			$string = preg_replace_callback( "#{$four_word}#u", function ( $match ) {
 				$replace = '';
 				for ( $i = 0, $l = mb_strlen( $match[0], 'utf-8' ); $i < $l; $i++ ) {
 					$replace .= '●';
@@ -392,7 +392,7 @@ HTML;
 /**
  * ログインしている人にだけ見える文字列
  */
-add_shortcode( 'fyeo', function( $atts = [], $content = '' ) {
+add_shortcode( 'fyeo', function ( $atts = [], $content = '' ) {
 	$atts = shortcode_atts( [
 		'tag_line'   => '',
 		'capability' => '',

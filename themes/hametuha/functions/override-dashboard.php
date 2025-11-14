@@ -13,7 +13,7 @@ add_filter( 'admin_footer_text', function ( $string ) {
 /**
  * Allow editor components to have styles.
  */
-add_action( 'admin_enqueue_scripts', function() {
+add_action( 'admin_enqueue_scripts', function () {
 	wp_enqueue_style( 'wp-components' );
 } );
 
@@ -98,7 +98,7 @@ add_filter( 'get_user_option_metaboxhidden_post', function ( $result, $option, $
 /**
  * 検閲用情報を入力する
  */
-add_action( 'admin_init', function() {
+add_action( 'admin_init', function () {
 	// 検閲
 	add_settings_section( 'censorship', '検閲', function () {
 		echo '<p>コンテンツの検閲を行うための設定です。正規表現が使えます。デリミタは<code>#</code>です。</p>';
@@ -109,4 +109,3 @@ add_action( 'admin_init', function() {
 	}, 'discussion', 'censorship' );
 	register_setting( 'discussion', 'four_words' );
 } );
-

@@ -1,6 +1,6 @@
 <?php
 
-use \Hametuha\QueryHighJack\RankingQuery;
+use Hametuha\QueryHighJack\RankingQuery;
 
 
 /**
@@ -9,7 +9,7 @@ use \Hametuha\QueryHighJack\RankingQuery;
  * @param string $content
  * @return string
  */
-add_shortcode('ranking_url', function( $atts = [], $content = '' ) {
+add_shortcode('ranking_url', function ( $atts = [], $content = '' ) {
 	foreach ( [
 		'url'  => home_url( '/ranking/weekly/' . get_latest_ranking_day( 'Ymd/' ) ),
 		'date' => get_latest_ranking_day( get_option( 'date_format' ) ),
@@ -77,7 +77,7 @@ function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 		ORDER BY pm.meta_value + 0 DESC
 		LIMIT 0,%d
 SQL;
-	return array_map( function( $row ) {
+	return array_map( function ( $row ) {
 		return new WP_Post( $row );
 	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
 }
@@ -103,7 +103,7 @@ function hametuha_get_author_recent_works( $post = null, $limit = 5 ) {
 		ORDER BY post_date DESC
 		LIMIT 0,%d
 SQL;
-	return array_map( function( $row ) {
+	return array_map( function ( $row ) {
 		return new WP_Post( $row );
 	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
 }
@@ -119,7 +119,7 @@ SQL;
 function hametuha_get_author_work_siblings( $limit = 6, $post = null, $series = false ) {
 	$post = get_post( $post );
 	if ( 0 !== $limit % 2 ) {
-		$limit++;
+		++$limit;
 	}
 	$found = [
 		'before' => [],
@@ -130,13 +130,13 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null, $series = 
 		'after'  => 'ASC',
 	] as $param => $order ) {
 		$args = [
-			'post_type'      => $post->post_type,
-			'post_status'    => 'publish',
-			'author'         => $post->post_author,
-			'post__not_in'   => [ $post->ID ],
-			'posts_per_page' => $limit,
-			'orderby'        => [ 'date' => $order ],
-			'date_query'     => [
+			'post_type'        => $post->post_type,
+			'post_status'      => 'publish',
+			'author'           => $post->post_author,
+			'post__not_in'     => [ $post->ID ],
+			'posts_per_page'   => $limit,
+			'orderby'          => [ 'date' => $order ],
+			'date_query'       => [
 				[
 					$param => mysql2date( 'Y-m-d H:i', $post->post_date ),
 				],
@@ -191,7 +191,7 @@ function is_ranking( $type = '' ) {
 				break;
 			default:
 				if ( empty( $type ) ) {
-					 return true;
+					return true;
 				} else {
 					return false;
 				}
@@ -274,4 +274,3 @@ function ranking_title() {
 			return 'ランキング';
 	}
 }
-

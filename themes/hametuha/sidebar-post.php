@@ -6,7 +6,7 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 
 $queried_object = get_queried_object();
 // カテゴリー
-$current_cat  = get_query_var( 'cat' );
+$current_cat = get_query_var( 'cat' );
 // 現在していされているタグを取得
 $current_tags = hametuha_queried_tags();
 if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
@@ -17,7 +17,7 @@ $cur_length = isset( $_GET['length'] ) ? (array) $_GET['length'] : [];
 // 星による評価
 $cur_rating = get_query_var( 'rating' );
 // 感想
-$cur_reviews = isset( $_GET[ 'reaction' ] ) ? (array) $_GET[ 'reaction' ] : [];
+$cur_reviews = isset( $_GET['reaction'] ) ? (array) $_GET['reaction'] : [];
 // コメント数
 $cur_comments = get_query_var( 'comments' );
 ?>
@@ -40,7 +40,7 @@ $cur_comments = get_query_var( 'comments' );
 	if ( ! empty( $search_keyword ) ) {
 		$params_without_s = $current_params;
 		unset( $params_without_s['s'] );
-		$url = add_query_arg( $params_without_s, home_url( 'latest' ) );
+		$url              = add_query_arg( $params_without_s, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( 'キーワード: %s', esc_html( $search_keyword ) ),
 			'url'   => $url,
@@ -52,7 +52,7 @@ $cur_comments = get_query_var( 'comments' );
 		$category           = get_category( $current_cat );
 		$params_without_cat = $current_params;
 		unset( $params_without_cat['cat'] );
-		$url = add_query_arg( $params_without_cat, home_url( 'latest' ) );
+		$url              = add_query_arg( $params_without_cat, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( 'ジャンル: %s', esc_html( $category->name ) ),
 			'url'   => $url,
@@ -61,13 +61,13 @@ $cur_comments = get_query_var( 'comments' );
 
 	// タグ
 	foreach ( $current_tags as $tag_name ) {
-		$params_without_tag   = $current_params;
-		$remaining_tags       = array_diff( $current_tags, [ $tag_name ] );
+		$params_without_tag      = $current_params;
+		$remaining_tags          = array_diff( $current_tags, [ $tag_name ] );
 		$params_without_tag['t'] = $remaining_tags;
 		if ( empty( $remaining_tags ) ) {
 			unset( $params_without_tag['t'] );
 		}
-		$url = add_query_arg( $params_without_tag, home_url( 'latest' ) );
+		$url              = add_query_arg( $params_without_tag, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
 			'url'   => $url,
@@ -79,13 +79,13 @@ $cur_comments = get_query_var( 'comments' );
 		$length_categories = hametuha_story_length_category();
 		foreach ( $cur_length as $length_key ) {
 			if ( isset( $length_categories[ $length_key ] ) ) {
-				$params_without_length   = $current_params;
-				$remaining_length        = array_diff( $cur_length, [ $length_key ] );
+				$params_without_length           = $current_params;
+				$remaining_length                = array_diff( $cur_length, [ $length_key ] );
 				$params_without_length['length'] = $remaining_length;
 				if ( empty( $remaining_length ) ) {
 					unset( $params_without_length['length'] );
 				}
-				$url = add_query_arg( $params_without_length, home_url( 'latest' ) );
+				$url              = add_query_arg( $params_without_length, home_url( 'latest' ) );
 				$active_filters[] = [
 					'label' => sprintf( '文字数: %s', esc_html( $length_categories[ $length_key ]['label'] ) ),
 					'url'   => $url,
@@ -96,7 +96,7 @@ $cur_comments = get_query_var( 'comments' );
 
 	// 評価
 	if ( $cur_rating ) {
-		$rating_labels = [
+		$rating_labels         = [
 			'4' => '★★★★ 4点台',
 			'3' => '★★★ 3点台',
 			'2' => '★★ 2点台',
@@ -104,7 +104,7 @@ $cur_comments = get_query_var( 'comments' );
 		];
 		$params_without_rating = $current_params;
 		unset( $params_without_rating['rating'] );
-		$url = add_query_arg( $params_without_rating, home_url( 'latest' ) );
+		$url              = add_query_arg( $params_without_rating, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( '評価: %s', isset( $rating_labels[ $cur_rating ] ) ? $rating_labels[ $cur_rating ] : $cur_rating ),
 			'url'   => $url,
@@ -114,13 +114,13 @@ $cur_comments = get_query_var( 'comments' );
 	// 感想（レビュータグ）
 	if ( ! empty( $cur_reviews ) ) {
 		foreach ( $cur_reviews as $review_tag ) {
-			$params_without_review   = $current_params;
-			$remaining_reviews       = array_diff( $cur_reviews, [ $review_tag ] );
+			$params_without_review             = $current_params;
+			$remaining_reviews                 = array_diff( $cur_reviews, [ $review_tag ] );
 			$params_without_review['reaction'] = $remaining_reviews;
 			if ( empty( $remaining_reviews ) ) {
 				unset( $params_without_review['reaction'] );
 			}
-			$url = add_query_arg( $params_without_review, home_url( 'latest' ) );
+			$url              = add_query_arg( $params_without_review, home_url( 'latest' ) );
 			$active_filters[] = [
 				'label' => sprintf( '感想: %s', esc_html( $review_tag ) ),
 				'url'   => $url,
@@ -140,7 +140,7 @@ $cur_comments = get_query_var( 'comments' );
 		}
 		$params_without_comments = $current_params;
 		unset( $params_without_comments['comments'] );
-		$url = add_query_arg( $params_without_comments, home_url( 'latest' ) );
+		$url              = add_query_arg( $params_without_comments, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( 'コメント数: %s', esc_html( $comment_label ? $comment_label : $cur_comments . '件以上' ) ),
 			'url'   => $url,
@@ -183,10 +183,10 @@ $cur_comments = get_query_var( 'comments' );
 						<div class="d-flex flex-wrap gap-2">
 							<?php
 							foreach ( $popular_tags as $tag ) :
-								$tag_link_classes   = [ 'btn', 'btn-sm', 'btn'];
+								$tag_link_classes   = [ 'btn', 'btn-sm', 'btn' ];
 								$tag_link_classes[] = in_array( $tag->name, $current_tags, true ) ? 'btn-primary' : 'btn-outline-primary';
 								?>
-								<a class="<?php echo implode( ' ', $tag_link_classes ) ?>"
+								<a class="<?php echo implode( ' ', $tag_link_classes ); ?>"
 									href="<?php echo esc_url( get_term_link( $tag ) ); ?>">
 									<?php echo esc_html( $tag->name ); ?>
 								</a>
@@ -198,8 +198,8 @@ $cur_comments = get_query_var( 'comments' );
 				?>
 
 				<div class="search-input mb-3">
-					<label class="form-label"><?php esc_html_e( 'キーワード検索', 'hametuha' ) ?></label>
-					<input class="form-control" type="search" name="s" value="<?php the_search_query(); ?>" placeholder="<?php esc_attr_e( '例・檸檬', 'hametuha' ) ?>" id="post-search-keyword" />
+					<label class="form-label"><?php esc_html_e( 'キーワード検索', 'hametuha' ); ?></label>
+					<input class="form-control" type="search" name="s" value="<?php the_search_query(); ?>" placeholder="<?php esc_attr_e( '例・檸檬', 'hametuha' ); ?>" id="post-search-keyword" />
 				</div>
 
 				<!-- フィルターアコーディオン -->
@@ -229,7 +229,7 @@ $cur_comments = get_query_var( 'comments' );
 									?>
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="genre"
-											data-action="<?php echo esc_url( get_term_link( $category ) ) ?>"
+											data-action="<?php echo esc_url( get_term_link( $category ) ); ?>"
 											value=""
 											<?php checked( $current_cat, $category->term_id ); ?>
 											id="genre-<?php echo esc_attr( $category->slug ); ?>">
@@ -256,8 +256,8 @@ $cur_comments = get_query_var( 'comments' );
 								<?php
 								// 人気タグをもっと多く取得（20個）
 								$filter_tags    = hametuha_get_popular_tags( 20 );
-								$tag_to_display = array_filter( $current_tags, function( $t ) use ( $filter_tags ) {
-									return ! in_array( $t, array_map( function( $f ) {
+								$tag_to_display = array_filter( $current_tags, function ( $t ) use ( $filter_tags ) {
+									return ! in_array( $t, array_map( function ( $f ) {
 										return $f->name;
 									}, $filter_tags ), true );
 								} );
@@ -290,7 +290,6 @@ $cur_comments = get_query_var( 'comments' );
 
 					<!-- 長さ -->
 					<div class="accordion-item">
-						<?php  ?>
 						<h3 class="accordion-header">
 							<button class="accordion-button<?php echo ! empty( $cur_length ) ? '' : ' collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#lengthFilter" aria-expanded="<?php echo ! empty( $cur_length ) ? 'true' : 'false'; ?>" aria-controls="lengthFilter">
 								文字数
@@ -305,7 +304,7 @@ $cur_comments = get_query_var( 'comments' );
 									?>
 									<div class="form-check">
 										<input class="form-check-input" type="checkbox" name="length[]"
-											value="<?php echo esc_attr( $length_category ) ?>" id="<?php echo esc_attr( $id ); ?>"
+											value="<?php echo esc_attr( $length_category ); ?>" id="<?php echo esc_attr( $id ); ?>"
 											<?php checked( in_array( $length_category, $cur_length, true ) ); ?>
 											/>
 										<label class="form-check-label" for="<?php echo esc_attr( $id ); ?>">
@@ -322,10 +321,11 @@ $cur_comments = get_query_var( 'comments' );
 								<small class="form-text text-muted">
 									<?php
 									printf(
-										wp_kses_post( __( '長編は<a href="%s">%s</a>からお探しください', 'hametuha' ) ),
+										wp_kses_post( __( '長編は<a href="%1$s">%2$s</a>からお探しください', 'hametuha' ) ),
 										esc_url( get_post_type_archive_link( 'serires' ) ),
 										esc_html( get_post_type_object( 'series' )->label )
-									); ?>
+									);
+									?>
 								</small>
 							</div>
 						</div>
@@ -374,13 +374,14 @@ $cur_comments = get_query_var( 'comments' );
 						<div id="reviewFilter" class="accordion-collapse<?php echo ! empty( $cur_reviews ) ? '' : ' collapse'; ?>">
 							<div class="accordion-body">
 								<?php
-								$review_model   = \Hametuha\Model\Review::get_instance();
+								$review_model = \Hametuha\Model\Review::get_instance();
 								foreach ( $review_model->feedback_tags as $key => $terms ) :
 									$label = $review_model->review_tag_label( $key );
 									?>
 									<div class="mb-3">
 										<strong class="d-block mb-2"><?php echo esc_html( $label ); ?></strong>
-										<?php foreach ( $terms as $term ) :
+										<?php
+										foreach ( $terms as $term ) :
 											$term_id = 'reaction-' . sanitize_title( $term );
 											?>
 											<div class="form-check">
@@ -448,6 +449,9 @@ HTML;
 					</a>
 					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( get_post_type_archive_link( 'series' ) ); ?>">
 						<?php esc_html_e( '連載から探す', 'hametuha' ); ?>
+					</a>
+					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( home_url( 'ranking' ) ); ?>">
+						<?php esc_html_e( 'ランキングで探す', 'hametuha' ); ?>
 					</a>
 					<a class="btn btn-block btn-outline-secondary mb-1" href="<?php echo esc_url( get_post_type_archive_link( 'lists' ) ); ?>">
 						<?php esc_html_e( 'みんなのリスト', 'hametuha' ); ?>

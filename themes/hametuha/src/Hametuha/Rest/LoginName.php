@@ -58,7 +58,6 @@ class LoginName extends RestTemplate {
 
 		nocache_headers();
 		$this->load_template( 'templates/form', 'login' );
-
 	}
 
 	/**
@@ -134,5 +133,4 @@ class LoginName extends RestTemplate {
 	public function enqueue_assets( $page = '' ) {
 		wp_enqueue_script( 'hametuha-login-changer' );
 	}
-
 }

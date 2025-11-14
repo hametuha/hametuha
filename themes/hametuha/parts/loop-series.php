@@ -6,7 +6,7 @@
  */
 
 $has_kdp = 2 === (int) get_post_meta( get_the_ID(), '_kdp_status', true );
-$class = [ 'loop-series', 'shadow-sm' ];
+$class   = [ 'loop-series', 'shadow-sm' ];
 if ( $has_kdp ) {
 	$class[] = 'has-kdp';
 }
@@ -51,7 +51,7 @@ if ( $has_kdp ) {
 					</span>
 					<?php if ( is_series_finished() ) : ?>
 						<span class="badge rounded-pill text-bg-primary">完結</span>
-					<?php else: ?>
+					<?php else : ?>
 						<span class="badge rounded-pill text-bg-secondary">連載中</span>
 					<?php endif; ?>
 				</li>
@@ -66,7 +66,8 @@ if ( $has_kdp ) {
 	</a>
 
 	<?php
-	if ( $has_kdp ) : ?>
+	if ( $has_kdp ) :
+		?>
 		<div class="loop-series__kdp">
 			<a class="btn btn-outline-primary" href="<?php hametuha_the_kdp_url(); ?>">
 				Amazonで販売中 <i class="icon-newtab"></i>

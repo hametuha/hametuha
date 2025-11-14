@@ -98,9 +98,9 @@ SQL;
 	public function wp_title( $title, $sep, $sep_location ) {
 		$titles = [ '歴代ベスト' ];
 		if ( is_category() ) {
-			$titles []= sprintf( '%s部門', get_queried_object()->name );
+			$titles [] = sprintf( '%s部門', get_queried_object()->name );
 		}
-		$titles []= get_bloginfo( 'name' );
+		$titles [] = get_bloginfo( 'name' );
 		return implode( ' ' . $sep . ' ', $titles );
 	}
 }

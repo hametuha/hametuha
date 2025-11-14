@@ -47,7 +47,7 @@ class CampaignController extends Singleton {
 				return;
 			}
 			// シングルページなので、キャンペーンに属しているかチェック
-			$terms  = get_the_terms( $post, 'campaign' );
+			$terms = get_the_terms( $post, 'campaign' );
 			if ( ! $terms || is_wp_error( $terms ) ) {
 				return;
 			}
@@ -112,13 +112,13 @@ class CampaignController extends Singleton {
 		$args = [
 			'orderby'    => 'user_registered',
 			'order'      => 'ASC',
-			'meta_query' => []
+			'meta_query' => [],
 		];
 		if ( is_array( $term_or_terms ) ) {
 			$args['meta_query'][] = [
 				'key'     => 'supporting_campaigns',
 				'compare' => 'IN',
-				'value'   => array_map( function( $term ) {
+				'value'   => array_map( function ( $term ) {
 					return is_a( $term, 'WP_Term' ) ? $term->term_id : $term;
 				}, $term_or_terms ),
 			];
@@ -140,7 +140,7 @@ class CampaignController extends Singleton {
 	 * @return void
 	 */
 	public function notify_new_supporter( $term, $user_id ) {
-		$user = get_userdata( $user_id );
+		$user    = get_userdata( $user_id );
 		$message = _x( '公募「%1$s」に %3$s さんがサポーターとして参加されました %2$s', 'slack', 'hametuha' );
 		$message = sprintf( $message, $term->name, get_term_link( $term ), $user->display_name );
 		hametuha_slack( $message, [], '#magazine' );

@@ -161,7 +161,7 @@ add_action( 'transition_post_status', function ( $new_status, $old_status, $post
 }, 10, 3 );
 
 // Facebookページのパーミッションを取得
-add_filter( 'gianism_facebook_permissions', function( $permissions, $action ) {
+add_filter( 'gianism_facebook_permissions', function ( $permissions, $action ) {
 	if ( in_array( $action, [ 'publish', 'admin' ], true ) ) {
 		$permissions[] = 'publish_pages';
 	}

@@ -42,9 +42,9 @@ global $wp_query;
 						}
 						?>
 					</ul>
-					<?php wp_pagenavi( [ 'query' => $wp_query ] ); ?>
+						<?php wp_pagenavi( [ 'query' => $wp_query ] ); ?>
 
-					<?php else: ?>
+					<?php else : ?>
 						<div class="alert alert-warning">
 							<p>
 								<?php esc_html_e( '該当する執筆者は見つかりませんでした。あらためて検索してみてください。', 'hametuha' ); ?>

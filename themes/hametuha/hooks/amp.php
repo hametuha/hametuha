@@ -8,7 +8,7 @@
 /**
  * Add fallback rewrite rules.
  */
-add_filter( 'rewrite_rules_array', function( $rules ) {
+add_filter( 'rewrite_rules_array', function ( $rules ) {
 	return array_merge( [
 		'^news/(\d+)/amp/?$' => 'index.php?p=$matches[1]&post_type=news',
 	], $rules );

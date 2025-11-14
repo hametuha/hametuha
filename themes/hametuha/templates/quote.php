@@ -1,6 +1,6 @@
 <?php
 
-add_filter( 'body_class', function( $classes ) {
+add_filter( 'body_class', function ( $classes ) {
 	$classes[] = 'quote-style-' . ( ( isset( $_GET['style'] ) ) ? (int) $_GET['style'] : rand( 1, 3 ) );
 	return $classes;
 } );
@@ -48,10 +48,10 @@ setup_postdata( $post );
 </div>
 <script>
 	jQuery(document).ready(function($){
-	  var $body = $('.quote-body');
-	  var footer = $('.quote-meta').height();
-	  var size = Math.ceil( ( 1100 - footer ) / Math.sqrt( $body.text().length ) / 1.8 );
-	  $body.css('font-size', size + 'px');
+		var $body = $('.quote-body');
+		var footer = $('.quote-meta').height();
+		var size = Math.ceil( ( 1100 - footer ) / Math.sqrt( $body.text().length ) / 1.8 );
+		$body.css('font-size', size + 'px');
 	});
 </script>
 <?php wp_footer(); ?>

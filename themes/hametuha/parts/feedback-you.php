@@ -15,7 +15,7 @@
 			<?php foreach ( $review as $index => list( $label, $value, $checked ) ) : ?>
 				<label class="btn btn-xs btn-default<?php echo $checked ? ' active' : ''; ?>">
 					<input type="radio" class="btn btn-xs btn-info" name="<?php echo $key; ?>"
-						   value="<?php echo $value; ?>" <?php checked( $checked ); ?> />
+							value="<?php echo $value; ?>" <?php checked( $checked ); ?> />
 					<?php echo esc_html( $label ); ?>
 				</label>
 			<?php endforeach; ?>

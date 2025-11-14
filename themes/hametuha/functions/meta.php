@@ -52,8 +52,8 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 		$title = get_queried_object()->name;
 	} elseif ( is_tag() ) {
 		$pos_type_obj = get_post_type_object( get_query_var( 'post_type' ) );
-		$type = $pos_type_obj ? $pos_type_obj->label : '作品';
-		$title = sprintf( 'タグ「%s」を含む%s', get_queried_object()->name, $type );
+		$type         = $pos_type_obj ? $pos_type_obj->label : '作品';
+		$title        = sprintf( 'タグ「%s」を含む%s', get_queried_object()->name, $type );
 	} elseif ( is_ranking() ) {
 		$title = ranking_title() . " {$sep} ";
 	} elseif ( is_singular( 'info' ) ) {
@@ -71,8 +71,8 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 		$title = get_the_title( get_queried_object() ) . $sep . '告知';
 	} elseif ( is_singular( 'anpi' ) ) {
 		$author = get_queried_object()->post_author;
-		$user = get_userdata( $author );
-		$title = sprintf( '%sさんの安否情報 #%d（%s）', $user->display_name, get_queried_object_id(), mysql2date( get_option( 'date_format' ), get_queried_object()->post_date) );
+		$user   = get_userdata( $author );
+		$title  = sprintf( '%sさんの安否情報 #%d（%s）', $user->display_name, get_queried_object_id(), mysql2date( get_option( 'date_format' ), get_queried_object()->post_date ) );
 	} elseif ( is_singular( 'ideas' ) || is_post_type_archive( 'ideas' ) ) {
 		$title .= 'アイデア';
 	} elseif ( is_singular( 'thread' ) ) {
@@ -112,7 +112,7 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
  */
 function hametuha_taxonomy_for_title( $taxonomy, $post = null, $sep = '・' ) {
 	$terms = get_the_terms( get_post( $post ), $taxonomy );
-	return ( ! $terms || is_wp_error( $terms ) ) ? '' : implode( $sep, array_map( function( $term ) {
+	return ( ! $terms || is_wp_error( $terms ) ) ? '' : implode( $sep, array_map( function ( $term ) {
 		return $term->name;
 	}, $terms ) );
 }
@@ -333,7 +333,7 @@ add_filter( 'wp_robots', function ( $robots ) {
 			// 投稿の作者がspam認定
 			return wp_robots_sensitive_page( $robots );
 		}
-	}  elseif ( get_query_var( 'ranking' ) ) {
+	} elseif ( get_query_var( 'ranking' ) ) {
 		$noindex = false;
 		switch ( get_query_var( 'ranking' ) ) {
 			case 'best':
@@ -362,7 +362,7 @@ add_filter( 'wp_robots', function ( $robots ) {
  * 1. カテゴリー、タグ、タクソノミーのアーカイブページでカノニカルを出力
  * 2. rel=prev, rel=next を出力
  */
-add_action( 'wp_head', function() {
+add_action( 'wp_head', function () {
 	if ( is_front_page() ) {
 		return;
 	}
@@ -400,7 +400,7 @@ add_action( 'wp_head', function() {
 /**
  * 404を確実に出す
  */
-add_action( 'template_redirect', function() {
+add_action( 'template_redirect', function () {
 	if ( is_404() ) {
 		status_header( 404, get_status_header_desc( 404 ) );
 	}

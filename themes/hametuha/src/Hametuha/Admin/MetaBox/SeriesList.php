@@ -257,6 +257,4 @@ HTML;
 		</table>
 		<?php
 	}
-
-
 }

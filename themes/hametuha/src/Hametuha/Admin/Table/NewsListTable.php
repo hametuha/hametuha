@@ -190,7 +190,7 @@ class NewsListTable extends \WP_List_Table {
 				if ( ! $terms || is_wp_error( $terms ) ) {
 					echo '<span style="color: lightgrey">---</span>';
 				} else {
-					echo implode( ', ', array_map( function( $term ) {
+					echo implode( ', ', array_map( function ( $term ) {
 						return sprintf(
 							'<a href="%s">%s</a>',
 							admin_url( 'edit.php?post_type=news&page=hamenew-score&genre=' . $term->term_id ),

@@ -51,7 +51,7 @@ add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
 /**
  * 新しい画面を追加
  */
-add_filter( 'hashboard_screens', function( $screens ) {
+add_filter( 'hashboard_screens', function ( $screens ) {
 	$new_screens = [];
 	foreach ( $screens as  $key => $class_name ) {
 		if ( 'profile' == $key ) {
@@ -76,9 +76,9 @@ add_filter( 'hashboard_screens', function( $screens ) {
  * サイドバーにリンクを追加
  */
 add_filter( 'hashboard_sidebar_links', function ( $links ) {
-	$new_links   = [];
+	$new_links         = [];
 	$add_divider_after = [
-		'reviews'
+		'reviews',
 	];
 	foreach ( $links as $key => $html ) {
 		if ( 'profile' === $key ) {
@@ -93,8 +93,8 @@ add_filter( 'hashboard_sidebar_links', function ( $links ) {
 HTML;
 		}
 		if ( 'friends' === $key ) {
-			$anpi_url = admin_url( 'edit.php?post_type=anpi' );
-			$new_links[ 'anpi' ] = <<<HTML
+			$anpi_url          = admin_url( 'edit.php?post_type=anpi' );
+			$new_links['anpi'] = <<<HTML
 				<li class="hb-menu-item">
 					<a href="{$anpi_url}">
 						<i class="material-icons">live_help</i> 安否情報
@@ -104,7 +104,7 @@ HTML;
 
 		}
 		if ( in_array( $key, [ 'profile', 'threads', 'notifications' ], true ) ) {
-			$new_links[ $key . '-divider'] = '<li class="divider"></li>';
+			$new_links[ $key . '-divider' ] = '<li class="divider"></li>';
 		}
 		$new_links[ $key ] = $html;
 		if ( 'dashboard' === $key ) {
@@ -121,7 +121,7 @@ HTML;
 /**
  * ダッシュボードをカスタマイズ
  */
-add_filter( 'hashboard_dashboard_blocks', function( $blocks ) {
+add_filter( 'hashboard_dashboard_blocks', function ( $blocks ) {
 	ob_start();
 	?>
 	<div class="widget-campaign-list">

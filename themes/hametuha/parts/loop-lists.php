@@ -5,7 +5,7 @@
  * @feature-group list
  *
  */
-$is_mine =( get_current_user_id() === (int) get_the_author_meta( 'ID' ) );
+$is_mine = ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) );
 ?>
 <div data-post-id="<?php the_ID(); ?>" class="col-sm-6 col-md-4 mb-4">
 

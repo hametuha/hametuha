@@ -30,17 +30,17 @@ class ListEditor extends WpApi {
 	protected function get_arguments( $method ) {
 		$args = [
 			'list_id' => [
-				'required' => true,
-				'type'     => in_array( $method, [ 'GET', 'POST' ], true ) ? 'string' : 'integer',
+				'required'          => true,
+				'type'              => in_array( $method, [ 'GET', 'POST' ], true ) ? 'string' : 'integer',
 				'validate_callback' => function ( $list_id ) {
 					$post = get_post( $list_id );
 					return ( $post && 'lists' === $post->post_type );
-				}
+				},
 			],
 		];
 		// POST, GETの場合はnewも受け入れる
 		if ( in_array( $method, [ 'GET', 'POST' ], true ) ) {
-			$args['list_id']['validate_callback'] = function( $list_id, WP_REST_Request $request ) {
+			$args['list_id']['validate_callback'] = function ( $list_id, WP_REST_Request $request ) {
 				if ( 'new' === $list_id ) {
 					// newの場合は新規作成
 					return true;
@@ -56,28 +56,28 @@ class ListEditor extends WpApi {
 		}
 		// POSTの場合はタイトル、抜粋文、ステータスが必要
 		if ( 'POST' === $method ) {
-			$args['list_name'] = [
-				'required' => true,
-				'type'     => 'string',
+			$args['list_name']    = [
+				'required'          => true,
+				'type'              => 'string',
 				'validate_callback' => function ( $list_name ) {
 					return ! empty( $list_name );
 				},
 			];
 			$args['list_excerpt'] = [
-				'required' => true,
-				'type'     => 'string',
-				'validate_callback' => function ( $list_excerpt) {
+				'required'          => true,
+				'type'              => 'string',
+				'validate_callback' => function ( $list_excerpt ) {
 					return ! empty( $list_excerpt );
 				},
 			];
-			$args['list_status'] = [
-				'required' => true,
-				'type'     => 'string',
+			$args['list_status']  = [
+				'required'          => true,
+				'type'              => 'string',
 				'validate_callback' => function ( $list_status ) {
-					return in_array( $list_status , [ 'publish', 'private' ], true );
+					return in_array( $list_status, [ 'publish', 'private' ], true );
 				},
 			];
-			$args['list_option'] = [
+			$args['list_option']  = [
 				'required' => false,
 				'type'     => 'string',
 				'default'  => '',
@@ -97,19 +97,19 @@ class ListEditor extends WpApi {
 		// PUTの場合はステータスと投稿ID
 		if ( 'PUT' === $method ) {
 			$args['post_id'] = [
-				'required' => true,
-				'type'     => 'integer',
-				'validate_callback' => function( $post_id ) {
+				'required'          => true,
+				'type'              => 'integer',
+				'validate_callback' => function ( $post_id ) {
 					$post = get_post( $post_id );
 					return ( $post && 'post' === $post->post_type );
-				}
+				},
 			];
-			$args['action'] = [
-				'required' => true,
-				'type'     => 'string',
-				'validate_callback' => function( $action ) {
+			$args['action']  = [
+				'required'          => true,
+				'type'              => 'string',
+				'validate_callback' => function ( $action ) {
 					return in_array( $action, [ 'add', 'remove' ], true );
-				}
+				},
 			];
 		}
 		return $args;
@@ -126,7 +126,7 @@ class ListEditor extends WpApi {
 	 */
 	protected function handle_get( $request ) {
 		if ( 'all' === $request['list_id'] ) {
-			$query = new \WP_Query( [
+			$query    = new \WP_Query( [
 				'post_type'      => 'lists',
 				'my-content'     => 'lists',
 				'posts_per_page' => 100,
@@ -150,9 +150,9 @@ class ListEditor extends WpApi {
 			}
 			$includes = $request->get_param( 'includes' );
 			if ( $includes && ! empty( $response ) ) {
-				$includings = $this->lists->is_assigned_to( array_map( function( $list ) {
+				$includings = $this->lists->is_assigned_to( array_map( function ( $list ) {
 					return $list['id'];
-				}, $response) , $includes );
+				}, $response), $includes );
 				foreach ( $response as &$item ) {
 					$item['includes'] = in_array( $item['id'], $includings, true );
 				}
@@ -183,15 +183,15 @@ class ListEditor extends WpApi {
 			'post_status'  => $request->get_param( 'list_status' ),
 			'post_type'    => 'lists',
 		];
-		$post_id = $request->get_param( 'list_id' );
+		$post_id   = $request->get_param( 'list_id' );
 		if ( 'new' === $post_id ) {
 			// 新規作成
 			$posts_arr['post_author'] = get_current_user_id();
-			$new_post_id = wp_insert_post( $posts_arr, true );
+			$new_post_id              = wp_insert_post( $posts_arr, true );
 		} else {
 			// 更新
 			$posts_arr['ID'] = $post_id;
-			$new_post_id = wp_update_post( $posts_arr, true );
+			$new_post_id     = wp_update_post( $posts_arr, true );
 		}
 		// 失敗していたらエラー
 		if ( is_wp_error( $new_post_id ) ) {
@@ -206,7 +206,7 @@ class ListEditor extends WpApi {
 		}
 		return new WP_REST_Response( [
 			'success' => true,
-			'post' => [
+			'post'    => [
 				'ID' => $new_post_id,
 			],
 		] );

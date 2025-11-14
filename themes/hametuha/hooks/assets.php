@@ -30,7 +30,7 @@ add_action( 'init', function () {
 
 	// FontAwesome
 	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
-	add_filter( 'style_loader_tag', function( $tag, $handle, $src, $media ) {
+	add_filter( 'style_loader_tag', function ( $tag, $handle, $src, $media ) {
 		if ( 'font-awesome' !== $handle ) {
 			return $tag;
 		}
@@ -48,7 +48,6 @@ add_action( 'init', function () {
 	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
 	wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
 
-
 	// メインJS
 	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
 		'twitter-bootstrap',
@@ -56,7 +55,7 @@ add_action( 'init', function () {
 		'font-plus',
 		'hametuheader',
 	], hametuha_version(), true );
-	wp_localize_script('hametuha-common', 'HametuhaGlobal', []);
+	wp_localize_script( 'hametuha-common', 'HametuhaGlobal', [] );
 
 	// シングルページ用JS
 	wp_register_script( 'hametuha-single', get_template_directory_uri() . '/assets/js/dist/single-post.js', [
@@ -77,13 +76,6 @@ add_action( 'init', function () {
 	wp_register_script( 'hametuha-become-author', get_template_directory_uri() . '/assets/js/dist/components/become-author.js', [
 		'jquery-form',
 		'hametuha-common',
-	], hametuha_version(), true );
-
-	// フロントページ用JS
-	wp_register_script( 'hametuha-front', get_template_directory_uri() . '/assets/js/dist/components/front-helper.js', [
-		'jquery-masonry',
-		'imagesloaded',
-		'chart-js',
 	], hametuha_version(), true );
 
 	// ソーシャル計測
@@ -113,7 +105,6 @@ add_action( 'init', function () {
 
 	// 税金関係書類のCSS
 	wp_register_style( 'hametuha-accounting-paper', get_template_directory_uri() . '/assets/css/proof.css', [ 'hametuha-app' ], hametuha_version(), 'all' );
-
 
 	// Register all hashboard.
 	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [], hametuha_version() );
@@ -188,7 +179,7 @@ add_action( 'wp_enqueue_scripts', function () {
 /**
  * Dequeue Assets.
  */
-add_action( 'wp_enqueue_scripts', function() {
+add_action( 'wp_enqueue_scripts', function () {
 	// If contact form is not
 	if ( ! is_singular() || ! has_shortcode( get_queried_object()->post_content, 'contact-form-7' ) ) {
 		wp_dequeue_style( 'contact-form-7' );
@@ -232,14 +223,14 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
  *
  * @todo hashboard v1.0.0になったらかえる？
  */
-add_action( 'hashboard_enqueue_scripts', function() {
+add_action( 'hashboard_enqueue_scripts', function () {
 	wp_enqueue_style( 'hametuha-hashboard' );
 } );
 
 /**
  * jQueryをフッターに動かす
  */
-add_action( 'init', function() {
+add_action( 'init', function () {
 	if ( is_admin() || 'wp-login.php' === basename( $_SERVER['SCRIPT_FILENAME'] ) ) {
 		return;
 	}

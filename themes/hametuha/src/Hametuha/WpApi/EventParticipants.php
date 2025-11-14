@@ -22,7 +22,7 @@ class EventParticipants extends WpApi {
 				'required'          => true,
 				'type'              => 'integer',
 				'description'       => 'Event Post ID to handle.',
-				'validate_callback' => function( $post_id ) {
+				'validate_callback' => function ( $post_id ) {
 					if ( ! is_numeric( $post_id ) ) {
 						return false;
 					}
@@ -48,12 +48,12 @@ class EventParticipants extends WpApi {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	protected function handle_get( $request ) {
-		$post  = get_post( $request['post_id'] );
-		$event = new Announcement( $post );
+		$post    = get_post( $request['post_id'] );
+		$event   = new Announcement( $post );
 		$user_id = get_current_user_id();
 
 		return new \WP_REST_Response( [
-			'participants'     => $event->get_participants(),
+			'participants'    => $event->get_participants(),
 			'count'           => $event->participating_count(),
 			'limit'           => $event->participating_limit( false ),
 			'in_list'         => $event->in_list( $user_id ),
@@ -91,7 +91,7 @@ class EventParticipants extends WpApi {
 			$ticket_id = wp_insert_comment( [
 				'comment_type'     => 'participant',
 				'comment_post_ID'  => $post->ID,
-				'comment_content'  => $request->get_param('text'),
+				'comment_content'  => $request->get_param( 'text' ),
 				'comment_approved' => 1,
 				'user_id'          => get_current_user_id(),
 			] );
@@ -171,7 +171,7 @@ class EventParticipants extends WpApi {
 		$comment = $request->get_param( 'text' );
 		if ( ! empty( $comment ) ) {
 			$all_comment   = [ get_comment( $ticket_id )->comment_content ];
-			$all_comment[] = sprintf( "%s: %s", date_i18n( 'Y/m/d H:i' ), $comment );
+			$all_comment[] = sprintf( '%s: %s', date_i18n( 'Y/m/d H:i' ), $comment );
 			wp_update_comment( [
 				'comment_ID'      => $ticket_id,
 				'comment_content' => implode( "\n\n---\n\n", array_filter( $all_comment ) ),

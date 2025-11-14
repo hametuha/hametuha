@@ -120,7 +120,7 @@ class IdeasMine extends IdeaApiPattern {
 			$result->status      = get_post_status_object( $result->post_status )->label;
 			$result->author      = get_the_author_meta( 'display_name', $result->post_author );
 			$result->avatar      = preg_replace( '#^.*src=[\'"]([^\'"]+)[\'"].*$#', '$1', get_avatar( $result->post_author, 96 ) );
-			$result->category    = implode(', ', array_map(function( $term ) {
+			$result->category    = implode(', ', array_map(function ( $term ) {
 				return $term->name;
 			}, get_the_tags( $result->ID ) ) );
 		}

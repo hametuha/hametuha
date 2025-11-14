@@ -77,7 +77,7 @@ class UserSales extends Model {
 	 *
 	 * @var array
 	 */
-	protected  $status_class = [
+	protected $status_class = [
 		0  => 'success',
 		1  => 'warning',
 		-1 => 'danger',
@@ -315,7 +315,7 @@ class UserSales extends Model {
 			} else {
 				// Actually save reports.
 				foreach ( $royalties as $royalty ) {
-					$retrieved++;
+					++$retrieved;
 					list( $label, $user_id, $price, $unit, $tax, $deducting, $total ) = $royalty;
 					$result = RevenueModel::get_instance()->add_revenue( 'kdp', $user_id, $price, [
 						'unit'        => $unit,
@@ -328,7 +328,7 @@ class UserSales extends Model {
 					if ( is_wp_error( $result ) ) {
 						$errors->add( 'dberror', $result->get_error_message() );
 					} elseif ( $result ) {
-						$success++;
+						++$success;
 					}
 				}
 			}
@@ -361,10 +361,10 @@ class UserSales extends Model {
 					'tax'         => $tax,
 				] );
 				if ( $result && ! is_wp_error( $result ) ) {
-					$done++;
+					++$done;
 				}
 			} else {
-				$none++;
+				++$none;
 			}
 		}
 		return [ $done, $none ];
@@ -403,15 +403,15 @@ class UserSales extends Model {
 					'total' => 0,
 				];
 			}
-			$result[ $post->post_author ]['count'] ++;
+			++$result[ $post->post_author ]['count'];
 			$get = 0;
 			if ( $guarantee = Sales::get_instance()->get_guarantee( $post->post_author, 'news' ) ) {
 				$get = $guarantee;
-				$result[ $post->post_author ]['valid'] ++;
+				++$result[ $post->post_author ]['valid'];
 			} else {
 				if ( 2000 < get_post_meta( $post->ID, '_current_pv', true ) ) {
 					$get = 500;
-					$result[ $post->post_author ]['valid'] ++;
+					++$result[ $post->post_author ]['valid'];
 				}
 			}
 			$result[ $post->post_author ]['total'] += $get;
@@ -478,7 +478,7 @@ class UserSales extends Model {
 			->where_in( 'user_id', $user_ids, '%d' )
 			->where_in( 'meta_key', [ '_billing_name', '_billing_number', '_billing_address' ] )
 			->result();
-		return array_map( function( $user ) use ( $metas ) {
+		return array_map( function ( $user ) use ( $metas ) {
 			$user->my_number = '';
 			$user->address   = '';
 			foreach ( $metas as $row ) {
@@ -486,7 +486,7 @@ class UserSales extends Model {
 					continue;
 				}
 				switch ( $row->meta_key ) {
-					case '_billing_name';
+					case '_billing_name':
 						$user->display_name = $row->meta_value;
 						break;
 					case '_billing_number':
@@ -574,6 +574,5 @@ SQL;
 	 * @return array
 	 */
 	public function get_accounting_result( $user_id, $year ) {
-
 	}
 }

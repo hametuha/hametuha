@@ -293,7 +293,7 @@ SQL;
 			list( $pos, $nega ) = $val;
 			$labels[0][]        = $pos;
 			$labels[1][]        = $nega;
-			for ( $i = 0, $l = count( $val ); $i < $l; $i ++ ) {
+			for ( $i = 0, $l = count( $val ); $i < $l; $i++ ) {
 				$score = 0;
 				foreach ( $points as $point ) {
 					if ( $point->name == $val[ $i ] ) {
@@ -335,8 +335,8 @@ HTML;
 	 */
 	public function get_post_chart_points( $post_id, $parent = false ) {
 		$this->select( "COUNT({$this->table}.user_id) AS score, {$this->terms}.name" )
-			 ->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
-			 ->group_by( "{$this->terms}.term_id" );
+			->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
+			->group_by( "{$this->terms}.term_id" );
 		if ( $parent ) {
 			$sub_query = <<<SQL
                 SELECT ID FROM {$this->db->posts}
@@ -362,13 +362,13 @@ SQL;
 			call_user_func_array( [ $this, 'join' ], $join );
 		}
 		$result = $this->select( "COUNT({$this->table}.user_id) AS score, {$this->terms}.name" )
-					   ->join( $this->posts, "{$this->table}.object_id = {$this->posts}.ID" )
+						->join( $this->posts, "{$this->table}.object_id = {$this->posts}.ID" )
 					->wheres( [
 						"{$this->term_taxonomy}.taxonomy = %s" => $this->taxonomy,
 						"{$this->posts}.post_author = %d" => $user_id,
 					] )
-					   ->group_by( "{$this->terms}.term_id" )
-					   ->result();
+						->group_by( "{$this->terms}.term_id" )
+						->result();
 		$json   = [];
 		foreach ( $this->feedback_tags as $key => $terms ) {
 			$json[ $key ] = [
@@ -376,7 +376,7 @@ SQL;
 				'positive' => [],
 				'negative' => [],
 			];
-			for ( $i = 0; $i < 2; $i ++ ) {
+			for ( $i = 0; $i < 2; $i++ ) {
 				$value = 0;
 				$label = $i ? 'negative' : 'positive';
 				foreach ( $result as $r ) {
@@ -403,7 +403,7 @@ SQL;
 	 * @return \WP_Comment[]
 	 */
 	public function get_author_comments( $user_id, $args = [] ) {
-		$args = wp_parse_args( $args, [
+		$args           = wp_parse_args( $args, [
 			'paged'          => 1,
 			'posts_per_page' => 20,
 			's'              => '',
@@ -411,7 +411,7 @@ SQL;
 		$paged          = $args['paged'];
 		$posts_per_page = $args['posts_per_page'];
 		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
-		$wheres = [
+		$wheres         = [
 			$this->db->prepare( 'p.post_author = %d', $user_id ),
 			'p.post_type = "post"',
 			$this->db->prepare( 'c.user_id != %d', $user_id ),
@@ -420,7 +420,7 @@ SQL;
 			$wheres[] = $this->db->prepare( 'c.comment_content LIKE %s', '*' . $args['s'] . '*' );
 		}
 		$wheres = implode( ' AND ', $wheres );
-		$sql = <<<SQL
+		$sql    = <<<SQL
 			SELECT SQL_CALC_FOUND_ROWS
 		    	c.*
 			FROM {$this->db->comments} as c
@@ -436,10 +436,9 @@ SQL;
 			'found'    => $found,
 			'current'  => $paged,
 			'total'    => ceil( $found / $posts_per_page ),
-			'comments' => array_map( function( $row ) {
+			'comments' => array_map( function ( $row ) {
 				return new \WP_Comment( $row );
 			}, $result ),
 		];
 	}
 }
-

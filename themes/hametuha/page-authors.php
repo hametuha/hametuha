@@ -40,7 +40,7 @@ $newbiews = new WP_User_Query( [
 	'meta_query'  => [
 		'relation' => 'AND',
 		[
-			'relation' =>'OR',
+			'relation' => 'OR',
 			[
 				'key'     => 'flag_spam',
 				'value'   => '0',
@@ -96,7 +96,7 @@ $editors = new WP_User_Query( [
 					<h2 class="author-group-header"><?php esc_html_e( 'プロ作家', 'hametuha' ); ?></h2>
 					<ul class="author-group-list">
 						<?php
-						foreach( $professionals->get_results() as $author ) {
+						foreach ( $professionals->get_results() as $author ) {
 							get_template_part( 'templates/doujin/loop', '', [ 'author' => $author ] );
 						}
 						?>
@@ -112,7 +112,7 @@ $editors = new WP_User_Query( [
 					<h2 class="author-group-header"><?php esc_html_e( '新人さん', 'hametuha' ); ?></h2>
 					<ul class="author-group-list">
 						<?php
-						foreach( $newbiews->get_results() as $author ) {
+						foreach ( $newbiews->get_results() as $author ) {
 							get_template_part( 'templates/doujin/loop', '', [ 'author' => $author ] );
 						}
 						?>
@@ -132,7 +132,7 @@ $editors = new WP_User_Query( [
 				<h2 class="author-group-header"><?php esc_html_e( '破滅派編集部の面々', 'hametuha' ); ?></h2>
 				<ul class="author-group-list">
 					<?php
-					foreach( $editors->get_results() as $author ) {
+					foreach ( $editors->get_results() as $author ) {
 						get_template_part( 'templates/doujin/loop', '', [ 'author' => $author ] );
 					}
 					?>

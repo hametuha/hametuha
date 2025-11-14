@@ -6,7 +6,7 @@
 /**
  * 報酬の種別を追加
  */
-add_filter( 'sharee_labels', function( $labels ) {
+add_filter( 'sharee_labels', function ( $labels ) {
 	return array_merge( $labels, [
 		'kdp'   => __( 'KDP', 'hametuha' ),
 		'task'  => __( '依頼', 'hametuha' ),
@@ -19,7 +19,7 @@ add_filter( 'sharee_labels', function( $labels ) {
 /**
  * 報酬登録アクション
  */
-add_action( 'wp_ajax_hametuha_user_reward', function() {
+add_action( 'wp_ajax_hametuha_user_reward', function () {
 	$input = \WPametu\Http\Input::get_instance();
 	try {
 		$model = \Hametuha\Sharee\Models\RevenueModel::get_instance();
@@ -75,7 +75,7 @@ TXT;
 		wp_redirect( admin_url( 'users.php?page=user-reward' ) );
 		exit;
 	} catch ( \Exception $e ) {
-		add_filter( 'wp_die_ajax_handler', function() {
+		add_filter( 'wp_die_ajax_handler', function () {
 			return '_default_wp_die_handler';
 		} );
 		wp_die( $e->getMessage(), get_status_header_desc( $e->getCode() ), [
@@ -88,7 +88,7 @@ TXT;
 /**
  * 報酬追加フォームを表示
  */
-add_action( 'sharee_after_table', function( $table_class ) {
+add_action( 'sharee_after_table', function ( $table_class ) {
 	if ( \Hametuha\Sharee\Table\RewardListTable::class !== $table_class ) {
 		return;
 	}
@@ -178,6 +178,5 @@ add_action( 'sharee_after_table', function( $table_class ) {
 		</form>
 		<?php
 	endif;
-
 } );
 

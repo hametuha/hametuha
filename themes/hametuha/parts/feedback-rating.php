@@ -19,14 +19,14 @@ foreach ( $all_rating as $count ) {
 <div class="rating">
 	<h3 class="text-center"><?php esc_html_e( 'みんなの評価', 'hametuha' ); ?></h3>
 	<p class="star-rating">
-		<?php for ( $i = 1; $i <= 5; $i ++ ) : ?>
+		<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
 			<i data-value="<?php echo $i; ?>" class="icon-star6<?php echo $i <= $rating_avg ? ' active' : ''; ?>"></i>
 		<?php endfor; ?>
 	</p>
 	<p class="rating-stats text-center text-muted" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
 		<?php
 		printf(
-			__( '<span itemprop="ratingValue">%s</span>点（<span itemprop="ratingCount">%d</span>件の評価）', 'hametuha' ),
+			__( '<span itemprop="ratingValue">%1$s</span>点（<span itemprop="ratingCount">%2$d</span>件の評価）', 'hametuha' ),
 			number_format_i18n( $rating_avg, 1 ),
 			$rating_total
 		);
@@ -36,11 +36,12 @@ foreach ( $all_rating as $count ) {
 		<p class="text-center text-muted">
 			<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link">ログイン</a>すると、星の数によって冷酷な評価を突きつけることができます。
 		</p>
-	<?php elseif( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
+	<?php elseif ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
 		<p class="text-center text-muted">
 			※自分の作品は評価できません。
 		</p>
-	<?php else :
+		<?php
+	else :
 		wp_enqueue_script( 'hametuha-components-post-rating' );
 		$rating = $rating->get_users_rating( get_the_ID(), get_current_user_id() );
 		?>
@@ -58,9 +59,11 @@ foreach ( $all_rating as $count ) {
 			?>
 			<tr>
 				<th>
-					<?php for ( $i = 0; $i < $score; $i++ ) {
+					<?php
+					for ( $i = 0; $i < $score; $i++ ) {
 						echo '<i class="icon-star6"></i>';
-					} ?>
+					}
+					?>
 				</th>
 				<td class="rating-table-bar">
 					<span class="rating-table-bar-bg">

@@ -85,11 +85,11 @@ class Anpis extends Model {
 			return [];
 		}
 		$users  = $this->select( 'r.object_id, u.*' )
-					   ->from( "{$this->user_content_relationships} AS r" )
-					   ->join( "{$this->db->users} AS u", 'u.ID = r.user_id', 'inner' )
-					   ->where( 'r.rel_type = %s', 'mention' )
-					   ->where_in( 'r.object_id', $post_ids, '%d' )
-					   ->result();
+						->from( "{$this->user_content_relationships} AS r" )
+						->join( "{$this->db->users} AS u", 'u.ID = r.user_id', 'inner' )
+						->where( 'r.rel_type = %s', 'mention' )
+						->where_in( 'r.object_id', $post_ids, '%d' )
+						->result();
 		$result = [];
 		foreach ( $users as $user ) {
 			if ( ! isset( $result[ $user->object_id ] ) ) {
@@ -141,5 +141,4 @@ class Anpis extends Model {
 		$post = get_post( $post );
 		return 'anpi' == $post->post_type && get_post_meta( $post->ID, '_is_tweet', true );
 	}
-
 }

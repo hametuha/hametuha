@@ -50,11 +50,11 @@ if ( $announcement->can_participate() ) :
 						?>
 						<?php if ( current_user_can( 'read' ) ) : ?>
 							<div class="event-detail-list">
-								<?php foreach ( $announcement->get_participants() as $participant ) :?>
+								<?php foreach ( $announcement->get_participants() as $participant ) : ?>
 								<div class="event-detail-user" uib-tooltip="<?php echo esc_attr( $participant['text'] ); ?>" tooltip-placement="top">
 									<?php echo get_avatar( $participant['id'], 96, '', $participant['name'] ); ?>
 									<strong>
-										<a href="<?php echo esc_url( $participant['url'] ) ?>">
+										<a href="<?php echo esc_url( $participant['url'] ); ?>">
 											<?php echo esc_html( $participant['name'] ); ?>
 										</a>
 									</strong>
@@ -73,7 +73,7 @@ if ( $announcement->can_participate() ) :
 					if ( $announcement->participating_limit( false ) <= $announcement->participating_count() ) :
 						?>
 						<div class="alert alert-warning event-detail-alert">
-							<?php esc_html_e( 'このイベントはすでに定員を超過しています。', 'hametuha '); ?>
+							<?php esc_html_e( 'このイベントはすでに定員を超過しています。', 'hametuha ' ); ?>
 						</div>
 						<?php
 					else :
@@ -124,7 +124,7 @@ if ( 2 == $announcement->commit_type ) :
 					<small>@<?php echo mysql2date( 'Y/m/d', $p->post_date ); ?></small>
 				</li>
 				<?php
-				$counter ++;
+				++$counter;
 endforeach;
 			?>
 		</ol>

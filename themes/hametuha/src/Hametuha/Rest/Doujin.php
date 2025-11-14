@@ -58,7 +58,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				'args'                => [
 					'mode' => [
 						'required'          => true,
-						'validate_callback' => function( $var ) {
+						'validate_callback' => function ( $var ) {
 							return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
 						},
 					],
@@ -146,7 +146,6 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		unset( $user->user_activation_key );
 
 		return $user;
-
 	}
 
 	/**
@@ -189,10 +188,10 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 		$this->set_member( $author_name );
 		$this->title = $this->doujin->display_name . 'のプロフィール | ' . get_bloginfo( 'name' );
 		// カノニカルを設定
-		add_action( 'wp_head', function() use ( $author_name ) {
+		add_action( 'wp_head', function () use ( $author_name ) {
 			echo hametuha_canonical( home_url( "doujin/detail/{$author_name}/" ) );
 		}, 1 );
-		header(  'Content-Type: text/html;charset=UTF-8' );
+		header( 'Content-Type: text/html;charset=UTF-8' );
 		$this->set_data( [
 			'breadcrumb' => false,
 			'current'    => false,
@@ -222,9 +221,9 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	public function ogp( array $values ) {
 		if ( $this->doujin ) {
-			$values[ 'url' ] = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
-			$values[ 'image' ] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
-			$values[ 'desc' ] = $this->doujin->user_description;
+			$values['url']   = home_url( '/doujin/detail/' . $this->doujin->user_nicename . '/' );
+			$values['image'] = preg_replace( '#<img[^>]*src=[\'"](.*?)[\'"][^>]*>#', '$1', get_avatar( $this->doujin->ID, 600 ) );
+			$values['desc']  = $this->doujin->user_description;
 		}
 
 		return $values;

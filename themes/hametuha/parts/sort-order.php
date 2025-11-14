@@ -25,7 +25,7 @@ $current = [
 ];
 switch ( $orderby ) {
 	case 'popular':
-		$current['popular'][]     = 'active';
+		$current['popular'][] = 'active';
 		if ( 'desc' == $order ) {
 			$args['popular']['order'] = 'asc';
 		} else {

@@ -27,7 +27,7 @@ class FeedbackReview extends WpApi {
 			'post_id' => [
 				'required'          => true,
 				'type'              => 'integer',
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					$post = get_post( $var );
 					// 自分の投稿はレビューできない
 					return $post && ( get_current_user_id() !== (int) $post->post_author );
@@ -36,11 +36,11 @@ class FeedbackReview extends WpApi {
 		];
 		if ( 'POST' === $method ) {
 			foreach ( $this->review->feedback_tags as $key => $labels ) {
-				$args[$key] =[
+				$args[ $key ] = [
 					'required'          => false,
 					'type'              => 'string',
 					'default'           => '',
-					'validate_callback' => function( $var ) use ( $labels ) {
+					'validate_callback' => function ( $var ) use ( $labels ) {
 						return empty( $var ) || in_array( $var, $labels, true );
 					},
 				];

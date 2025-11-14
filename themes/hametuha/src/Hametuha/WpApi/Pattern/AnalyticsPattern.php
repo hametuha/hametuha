@@ -50,7 +50,7 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @return string
 	 */
 	protected function n_days_ago( $n ) {
-		$now  = new \DateTime( 'now', wp_timezone() );
+		$now = new \DateTime( 'now', wp_timezone() );
 		$now->sub( new \DateInterval( 'P' . $n . 'D' ) );
 		return $now->format( 'Y-m-d' );
 	}
@@ -79,7 +79,7 @@ abstract class AnalyticsPattern extends WpApi {
 		$fields[ $key ] = [
 			'required'          => true,
 			'default'           => $default,
-			'validate_callback' => function( $var ) use ( $key ) {
+			'validate_callback' => function ( $var ) use ( $key ) {
 				return $this->str->is_date( $var ) ?: new \WP_Error( 'malformat', sprintf( '%sは日付形式でなければなりません。', $key ) );
 			},
 		];

@@ -42,7 +42,7 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_approved', function( $collaborator, $post_id ) {
+		add_action( 'hametuha_collaborators_approved', function ( $collaborator, $post_id ) {
 			static::exec( [
 				get_post( $post_id )->post_author => [
 					'collaborator' => $collaborator->display_name,
@@ -52,6 +52,4 @@ HTML;
 			] );
 		}, 10, 2 );
 	}
-
-
 }

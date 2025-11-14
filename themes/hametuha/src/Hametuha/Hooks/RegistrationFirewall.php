@@ -58,5 +58,4 @@ class RegistrationFirewall extends Singleton {
 		}
 		return $errors;
 	}
-
 }

@@ -99,6 +99,4 @@ class Sales extends Screen {
 			'slug' => 'dashboard-sales-footer',
 		] );
 	}
-
-
 }

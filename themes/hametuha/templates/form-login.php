@@ -19,7 +19,7 @@
 		<div class="form-group has-feedback">
 			<label for="login_name">新しいログイン名</label>
 			<input class="form-control" type="text" id="login_name" name="login_name" data-check="<?php echo $check_url; ?>"
-				   value="" autocomplete="off"/>
+					value="" autocomplete="off"/>
 			<?php input_icon(); ?>
 			<p class="help-block">
 				ログイン名は半角英数字および半角スペースをはじめとした各種半角記号が利用できます。

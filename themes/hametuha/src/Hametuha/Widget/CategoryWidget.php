@@ -38,15 +38,15 @@ class CategoryWidget extends Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				タイトル<br/>
 				<input name="<?php echo $this->get_field_name( 'title' ); ?>"
-					   id="<?php echo $this->get_field_id( 'title' ); ?>"
-					   value="<?php echo esc_attr( $atts['title'] ); ?>"/>
+						id="<?php echo $this->get_field_id( 'title' ); ?>"
+						value="<?php echo esc_attr( $atts['title'] ); ?>"/>
 			</label>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'taxonomy' ); ?>">
 				タクソノミー<br />
 				<select name="<?php echo $this->get_field_name( 'taxonomy' ); ?>"
-					   id="<?php echo $this->get_field_id( 'taxonomy' ); ?>">
+						id="<?php echo $this->get_field_id( 'taxonomy' ); ?>">
 					<option value=""<?php selected( '', $atts['taxonomy'] ); ?>>選択してください</option>
 					<?php foreach ( $taxonomies as $taxonomy => $tax_object ) : ?>
 						<option value="<?php echo esc_attr( $taxonomy ); ?>" <?php selected( $taxonomy, $atts['taxonomy'] ); ?>><?php echo esc_html( $tax_object->label ); ?></option>

@@ -45,5 +45,4 @@ class SeriesEPubMetaBox extends LeadMetaBox {
 			'description' => '入力した場合、本文の前に挿入されます。序文や献辞としてお使いください。HTMLを使用することができます。',
 		],
 	];
-
 }

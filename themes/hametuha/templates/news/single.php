@@ -11,7 +11,7 @@ get_header();
 		<?php get_header( 'breadcrumb' ); ?>
 	</div>
 
-	<div class="container single mt-3">
+	<div class="container single mt-3 mb-5">
 
 		<div class="row">
 
@@ -209,7 +209,7 @@ get_header();
 
 					</article><!-- //.single-container -->
 
-				<?php
+					<?php
 				endwhile;
 			endif;
 			?>
@@ -217,17 +217,6 @@ get_header();
 			<?php get_sidebar( 'news' ); ?>
 
 		</div><!-- //.row -->
-
-		<h2 class="page-header text-center">
-			<small>eBooks</small><br />
-			破滅派の電子書籍
-		</h2>
-		<?php
-		hameplate( 'templates/recommendations', '', [
-			'author' => get_the_author_meta( 'ID' ),
-			'fill'   => true,
-		] )
-		?>
 
 	</div><!-- //.container -->
 <?php

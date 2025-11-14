@@ -123,14 +123,13 @@ class UserTags extends TermUserRelationships {
 	 */
 	public function tag_search( $query, $offset = 0, $per_page = 10 ) {
 		$result = $this->select( "{$this->terms}.*, {$this->term_taxonomy}.*" )
-					   ->from( $this->terms )
-					   ->join( $this->term_taxonomy, "{$this->terms}.term_id = {$this->term_taxonomy}.term_id", 'INNER' )
-					   ->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
-					   ->where_like( "{$this->terms}.name", $query )
-					   ->order_by( "{$this->terms}.name", 'ASC' )
-					   ->limit( $per_page, $offset * $per_page )->result();
+						->from( $this->terms )
+						->join( $this->term_taxonomy, "{$this->terms}.term_id = {$this->term_taxonomy}.term_id", 'INNER' )
+						->where( "{$this->term_taxonomy}.taxonomy = %s", $this->taxonomy )
+						->where_like( "{$this->terms}.name", $query )
+						->order_by( "{$this->terms}.name", 'ASC' )
+						->limit( $per_page, $offset * $per_page )->result();
 
 		return $result;
 	}
-
 }

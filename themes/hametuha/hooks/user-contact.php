@@ -3,7 +3,7 @@
 /**
  * Slackでの登録情報
  */
-add_filter( 'hameslack_invite_args', function( $args, $user ) {
+add_filter( 'hameslack_invite_args', function ( $args, $user ) {
 	unset( $args['last_name'] );
 	$args['first_name'] = $user->user_login;
 	return $args;
@@ -13,7 +13,7 @@ add_filter( 'hameslack_invite_args', function( $args, $user ) {
 /**
  * ユーザー連絡にイベント参加者を追加する
  */
-add_filter( 'hamail_search_results', function( $results, $string ) {
+add_filter( 'hamail_search_results', function ( $results, $string ) {
 	$events = get_posts( [
 		'post_type'      => [ 'announcement', 'news' ],
 		'post_status'    => [ 'publish', 'private' ],
@@ -42,7 +42,7 @@ add_filter( 'hamail_search_results', function( $results, $string ) {
 /**
  * イベントの参加者を取得する
  */
-add_filter( 'hamail_extra_search', function( $results, $type, $id ) {
+add_filter( 'hamail_extra_search', function ( $results, $type, $id ) {
 	switch ( $type ) {
 		case 'participants':
 			if ( $post = get_post( $id ) ) {
@@ -66,7 +66,7 @@ add_filter( 'hamail_extra_search', function( $results, $type, $id ) {
 /**
  * Replace contact form output.
  */
-add_filter( 'sp4cf7_output', function( $out, $post, $error ) {
+add_filter( 'sp4cf7_output', function ( $out, $post, $error ) {
 	/** @var WP_Post $post */
 	if ( ! $error ) {
 		ob_start();
@@ -74,7 +74,7 @@ add_filter( 'sp4cf7_output', function( $out, $post, $error ) {
 		<div class="wpcf7-post-content">
 			<h3>
 				「<?php echo esc_html( get_the_title( $post ) ); ?>」の作者
-				<?php echo  esc_html( get_the_author_meta( 'display_name', $post->post_author ) ); ?>へのお問い合わせ
+				<?php echo esc_html( get_the_author_meta( 'display_name', $post->post_author ) ); ?>へのお問い合わせ
 			</h3>
 			<p class="text-right">
 				<a href="<?php echo esc_url( home_url( 'doujin/detail/' . get_the_author_meta( 'nicename', $post->post_author ) ) ); ?>" class="btn btn-outlined-secondary btn-sm">

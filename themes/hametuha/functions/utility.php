@@ -12,7 +12,7 @@ function hametuha_financial_year( $date = 'now' ) {
 	$time = new DateTime( $date, $tz );
 	$year = $time->format( 'Y' );
 	if ( 3 > $time->format( 'n' ) ) {
-		$year --;
+		--$year;
 	}
 
 	return $year;
@@ -391,7 +391,7 @@ function is_new_post( $offset = 7, $post = null ) {
  * @param int    $offset    Default 7 days.
  * @return bool
  */
-function hametuha_is_new( $date_time, $offset = 7) {
+function hametuha_is_new( $date_time, $offset = 7 ) {
 	$now  = new DateTime( 'now', wp_timezone() );
 	$date = new DateTime( $date_time, wp_timezone() );
 	$now->sub( new DateInterval( 'P' . $offset . 'D' ) );
@@ -422,11 +422,11 @@ function get_post_children_count( $post_type = 'post', $status = 'publish', $pos
 function needs_left_sidebar() {
 	return (bool) (
 		( is_archive() &&
-		  ! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
+			! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
 		)
 		||
 		( is_search() &&
-		  ! ( is_post_type_archive( 'faq' ) || is_post_type_archive( 'thread' ) )
+			! ( is_post_type_archive( 'faq' ) || is_post_type_archive( 'thread' ) )
 		)
 		||
 		is_404()

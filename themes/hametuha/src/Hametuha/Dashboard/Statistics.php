@@ -80,6 +80,4 @@ class Statistics extends Screen {
 			'slug' => 'dashboard-analytics-footer',
 		] );
 	}
-
-
 }

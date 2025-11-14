@@ -98,6 +98,4 @@ class Works extends Screen {
 			'slug' => 'dashboard-posts-footer',
 		] );
 	}
-
-
 }

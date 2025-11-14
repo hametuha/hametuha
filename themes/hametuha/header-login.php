@@ -1,5 +1,5 @@
 <?php
-add_filter( 'body_class', function( $classes ) {
+add_filter( 'body_class', function ( $classes ) {
 	$classes[] = 'no-header';
 	return $classes;
 } );

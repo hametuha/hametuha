@@ -4,7 +4,7 @@
  *
  * @param array $atts
  */
-$term = get_queried_object();
+$term       = get_queried_object();
 $controller = \Hametuha\Hooks\CampaignController::get_instance();
 ?>
 
@@ -23,7 +23,7 @@ $controller = \Hametuha\Hooks\CampaignController::get_instance();
 
 	<?php if ( ! is_user_logged_in() ) : ?>
 		<a href="<?php echo esc_url( wp_login_url( get_term_link( $term ) ) ); ?>" rel="nofollow">ログイン</a>してください。
-	<?php elseif ( $controller->is_user_participating( $term, get_current_user_id()) ) : ?>
+	<?php elseif ( $controller->is_user_participating( $term, get_current_user_id() ) ) : ?>
 		<p class="description">
 			<i class="icon-checkmark"></i>
 			<u>あなたはこの公募に寄稿者として参加中です。</u>

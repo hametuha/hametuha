@@ -7,7 +7,7 @@
 		<?php else : ?>
 			<span class="badge bg-secondary">リスト</span>
 		<?php endif; ?>
-		<?php if ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) )  : ?>
+		<?php if ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
 			<span class="badge bg-success">あなたのリスト</span>
 		<?php endif; ?>
 	</h1>

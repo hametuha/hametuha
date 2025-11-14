@@ -37,14 +37,14 @@ get_header( 'sub' );
 						$counter = 0;
 						while ( have_posts() ) {
 							the_post();
-							$counter ++;
+							++$counter;
 							$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
 							get_template_part( 'parts/loop', get_post_type() );
 						}
 						?>
 					</ol>
 					<?php wp_pagenavi(); ?>
-				<?php
+					<?php
 				else :
 					get_template_part( 'parts/no-content' );
 				endif;

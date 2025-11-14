@@ -82,5 +82,4 @@ class Profile extends PostHelper {
 				break;
 		}
 	}
-
 }

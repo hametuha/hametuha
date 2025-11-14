@@ -39,7 +39,7 @@ get_template_part( 'templates/idea/form' );
 								// ステータス
 								$class_name = in_array( get_post_status(), [
 									'private',
-									'protected'
+									'protected',
 								] ) ? 'danger' : 'success';
 								?>
 								<span
@@ -145,12 +145,13 @@ get_template_part( 'templates/idea/form' );
 											<button class="btn btn-primary btn-block" data-post-id="<?php the_ID(); ?>"">
 												編集する
 											</button>
-										<?php else :
+											<?php
+										else :
 											// ストックボタンを表示する
 											$class_names = [ 'stock-container' ];
 											if ( $ideas->is_stocked( get_current_user_id(), get_the_ID() ) ) :
 												?>
-												<button class="btn btn-primary btn-block" data-stock="<?php the_ID() ?>" data-stock-action="delete">
+												<button class="btn btn-primary btn-block" data-stock="<?php the_ID(); ?>" data-stock-action="delete">
 													ストック済み
 												</button>
 											<?php else : ?>
@@ -198,7 +199,7 @@ get_template_part( 'templates/idea/form' );
 									foreach ( $ideas->get_stockers( get_the_ID() ) as $user ) :
 										?>
 										<li class="ideas__stocker">
-											<?php if ( $user->ID == get_current_user_id() || ! user_can( $user->ID, 'edit_posts ' )) : ?>
+											<?php if ( $user->ID == get_current_user_id() || ! user_can( $user->ID, 'edit_posts ' ) ) : ?>
 												<span class="ideas__stocker--link">
 													<?php
 													echo get_avatar( $user->ID, 32 );
@@ -216,7 +217,7 @@ get_template_part( 'templates/idea/form' );
 											<?php endif; ?>
 										</li>
 										<?php
-										$int ++;
+										++$int;
 									endforeach;
 									?>
 									<?php if ( $total > 10 ) : ?>
@@ -252,7 +253,7 @@ get_template_part( 'templates/idea/form' );
 
 					</article><!-- //.single-container -->
 
-				<?php
+					<?php
 				endwhile;
 			endif;
 			?>

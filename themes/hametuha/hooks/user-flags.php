@@ -62,7 +62,7 @@ function hametuha_user_flags( $exclude_negative = false ) {
  *
  * @param int $user_id User ID.
  */
-add_action( 'edit_user_profile_update', function( $user_id ) {
+add_action( 'edit_user_profile_update', function ( $user_id ) {
 	foreach ( hametuha_user_flags() as $flag ) {
 		$key = 'flag_' . $flag['id'];
 		update_user_meta( $user_id, $key, (int) filter_input( INPUT_POST, $key ) );
@@ -102,7 +102,7 @@ add_action( 'edit_user_profile', function ( $user ) {
  *
  * @param WP_User $user
  */
-add_action( 'show_user_profile', function( $user ) {
+add_action( 'show_user_profile', function ( $user ) {
 	?>
 	<hr />
 	<h3><?php esc_html_e( 'ユーザー情報', 'hametuha' ); ?></h3>
@@ -131,7 +131,7 @@ add_action( 'show_user_profile', function( $user ) {
 /**
  * Render flags.
  */
-add_action( 'hashboard_before_fields_rendered', function( $slug, $page, $name ) {
+add_action( 'hashboard_before_fields_rendered', function ( $slug, $page, $name ) {
 	if ( ( 'profile' !== $slug ) || ( '' !== $page ) || ( 'names' !== $name ) ) {
 		return;
 	}
@@ -151,7 +151,7 @@ add_action( 'hashboard_before_fields_rendered', function( $slug, $page, $name ) 
 /**
  * 作者の投稿数を返す
  */
-add_action( 'save_post', function( $post_id, $post ) {
+add_action( 'save_post', function ( $post_id, $post ) {
 	if ( 'post' !== $post->post_type ) {
 		return;
 	}

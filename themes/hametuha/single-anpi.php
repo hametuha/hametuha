@@ -8,7 +8,7 @@ get_header();
 
 the_post();
 
-$author = get_the_author_meta( 'ID' );
+$author    = get_the_author_meta( 'ID' );
 $is_author = user_can( $author, 'edit_posts' );
 ?>
 <div class="container">
@@ -115,7 +115,7 @@ $is_author = user_can( $author, 'edit_posts' );
 			}
 			?>
 			</div>
-		<?php
+			<?php
 		endif;
 		wp_reset_postdata();
 		?>

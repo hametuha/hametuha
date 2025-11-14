@@ -36,20 +36,22 @@ get_header( 'sub' );
 				<?php esc_html_e( '安否報告する', 'hametuha' ); ?>
 			</button>
 		</p>
-		<?php
-		$terms = get_terms( [ 'taonomy' => 'anpi_cat' ] );
-		if ( $terms && ! is_wp_error( $terms ) ) :
-			?>
+			<?php
+			$terms = get_terms( [ 'taonomy' => 'anpi_cat' ] );
+			if ( $terms && ! is_wp_error( $terms ) ) :
+				?>
 			<p>
-			<?php foreach ( $terms as $term ) :
-				printf(
-					'<a href="%s" class="btn btn-outline-primary" style="margin-right: 1em;">%s</a>',
-					esc_url( get_term_link( $term ) ),
-					esc_html( $term->name )
-				);
-			endforeach; ?>
+				<?php
+				foreach ( $terms as $term ) :
+					printf(
+						'<a href="%s" class="btn btn-outline-primary" style="margin-right: 1em;">%s</a>',
+						esc_url( get_term_link( $term ) ),
+						esc_html( $term->name )
+					);
+				endforeach;
+				?>
 			</p>
-		<?php endif; ?>
+			<?php endif; ?>
 
 		<?php endif; ?>
 	</div>
@@ -78,7 +80,7 @@ get_header( 'sub' );
 		</div>
 
 		<?php wp_pagenavi(); ?>
-	<?php
+		<?php
 	else :
 		// 該当するコンテンツがない
 		?>

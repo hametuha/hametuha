@@ -31,7 +31,8 @@ $feedback = \Hametuha\Model\Review::get_instance();
 				<div class="alert alert-warning mt-3">
 					<?php esc_html_e( '自分の作品にはレビューをつけられません。', 'hametuha' ); ?>
 				</div>
-			<?php else :
+				<?php
+			else :
 				$tags = [];
 				foreach ( $feedback->feedback_tags as $group => $terms ) {
 					$tags[] = [

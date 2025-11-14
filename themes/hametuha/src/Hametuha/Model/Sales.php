@@ -110,7 +110,7 @@ class Sales extends Model {
 		$from_ts = strtotime( $from );
 		$to_ts   = strtotime( $to );
 		$diff    = ceil( ( $to_ts - $from_ts ) / ( 60 * 60 * 24 ) );
-		for ( $i = 0; $i <= $diff; $i ++ ) {
+		for ( $i = 0; $i <= $diff; $i++ ) {
 			$results[ date_i18n( 'Y-m-d', $from_ts + ( $i * 60 * 60 * 24 ) ) ] = [
 				'free'     => 0,
 				'paid'     => 0,

@@ -145,7 +145,7 @@ class Recent extends Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				タイトル<br/>
 				<input name="<?php echo $this->get_field_name( 'title' ); ?>"
-					   id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
+						id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
 			</label>
 		</p>
 
@@ -156,7 +156,7 @@ class Recent extends Widget {
 						id="<?php echo $this->get_field_id( 'post_type' ); ?>">
 					<?php foreach ( get_post_types( array( 'public' => true ), 'objects' ) as $type ) : ?>
 						<option value="<?php echo $type->name; ?>"
-												  <?php
+													<?php
 													if ( $post_type == $type->name ) {
 														echo ' selected="selected"';
 													}
@@ -171,14 +171,14 @@ class Recent extends Widget {
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>">
 				件数<br/>
 				<input name="<?php echo $this->get_field_name( 'number' ); ?>"
-					   id="<?php echo $this->get_field_id( 'number' ); ?>" value="<?php echo (int) $number; ?>"/>
+						id="<?php echo $this->get_field_id( 'number' ); ?>" value="<?php echo (int) $number; ?>"/>
 			</label>
 		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'layout' ); ?>">レイアウト</label><br/>
 			<textarea rows="5" name="<?php echo $this->get_field_name( 'layout' ); ?>"
-					  id="<?php echo $this->get_field_id( 'layout' ); ?>"><?php echo $layout; ?></textarea><br/>
+						id="<?php echo $this->get_field_id( 'layout' ); ?>"><?php echo $layout; ?></textarea><br/>
 				<span class="description">
 				</span>
 		</p>
@@ -197,7 +197,7 @@ class Recent extends Widget {
 					foreach ( $sizes as $size ) :
 						?>
 						<option value="<?php echo $size; ?>" 
-												  <?php
+													<?php
 													if ( $thumbnail_size == $size ) {
 														echo ' selected="selected"';
 													}
@@ -209,5 +209,4 @@ class Recent extends Widget {
 		</p>
 		<?php
 	}
-
 }

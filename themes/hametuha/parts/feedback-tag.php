@@ -56,7 +56,7 @@ if ( empty( $tags ) ) {
 	<p class="tag-container">
 		<?php if ( $tags = get_the_tags() ) : ?>
 			<?php
-			echo implode(' ', array_map(function( $tag ) {
+			echo implode(' ', array_map(function ( $tag ) {
 				return sprintf( '<a href="%s"><span itemprop="keywords">%s</span></a>', get_tag_link( $tag ), esc_html( $tag->name ) );
 			}, $tags))
 			?>

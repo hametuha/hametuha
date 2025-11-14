@@ -257,9 +257,9 @@ SQL;
 				if ( $execute ) {
 					update_user_meta( $user_id, 'optin', 1 );
 				}
-				$matched++;
+				++$matched;
 			} else {
-				$skipped++;
+				++$skipped;
 			}
 			echo $user_id ? 'm' : 's';
 		}
@@ -295,7 +295,7 @@ SQL;
 		$end       = $assoc['end'] ?? date_i18n( 'Y-m-d' );
 		$limit     = $assoc['limit'] ?? 10;
 		$post_type = $assoc['post_type'] ?? 'post';
-		$result = hametuha_hot_posts( $start, $end, $post_type, $limit );
+		$result    = hametuha_hot_posts( $start, $end, $post_type, $limit );
 		if ( is_wp_error( $result ) ) {
 			\WP_CLI::error( $result->get_error_message() );
 		}

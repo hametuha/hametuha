@@ -147,13 +147,13 @@ SQL;
 			'users'  => [],
 		];
 		$this->calc()->select( 'u.*' )
-			 ->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
+			->join( "$this->users AS u", "u.ID = {$this->table}.target_id", 'INNER' )
 			->wheres( [
 				"{$this->table}.user_id = %d" => $user_id,
 				"{$this->table}.status = %d"  => 1,
 			] )
-			 ->order_by( "{$this->table}.updated", 'DESC' )
-			 ->limit( 20, (int) ( $offset / 20 ) );
+			->order_by( "{$this->table}.updated", 'DESC' )
+			->limit( 20, (int) ( $offset / 20 ) );
 		if ( $query ) {
 			$this->where( 'u.display_name LIKE %s OR u.user_login LIKE %s', [ "%{$query}%", "%{$query}%" ] );
 		}
@@ -179,5 +179,4 @@ SQL;
 							'status = %d'    => 0,
 						] )->get_var();
 	}
-
 }

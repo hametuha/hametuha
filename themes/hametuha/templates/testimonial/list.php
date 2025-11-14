@@ -148,7 +148,7 @@ get_header();
 													編集
 												</button>
 												<?php if ( $comment->comment_post_ID == $post->ID ) : ?>
-													<button data-path="<?php echo esc_attr('/hametuha/v1/testimonials/' . $comment->comment_ID . '/' ); ?>"
+													<button data-path="<?php echo esc_attr( '/hametuha/v1/testimonials/' . $comment->comment_ID . '/' ); ?>"
 														class="testimonial-delete btn w-100 btn-danger">
 														削除
 													</button>
@@ -160,14 +160,16 @@ get_header();
 										</div>
 
 										<div class="modal fade" id="comment-modal-<?php echo $comment->comment_ID; ?>"
-											 tabindex="-1" role="dialog">
+											tabindex="-1" role="dialog">
 											<div class="modal-dialog" role="document">
 												<div class="modal-content">
 													<div class="modal-body">
-														<?php get_template_part( 'templates/testimonial/form-add', '', [
+														<?php
+														get_template_part( 'templates/testimonial/form-add', '', [
 															'comment' => $comment,
 															'layout'  => 'horizontal',
-														] ) ?>
+														] )
+														?>
 													</div>
 													<!-- //.modal-body -->
 												</div>

@@ -11,7 +11,7 @@ if ( ! is_singular( 'post' ) ) {
 	echo ' itemscope itemtype="http://schema.org/WebPage"';
 }
 ?>
- <?php body_class(); ?>>
+<?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <!-- Load Facebook SDK for JavaScript -->
 <div id="fb-root"></div>

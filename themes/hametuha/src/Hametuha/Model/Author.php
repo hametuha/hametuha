@@ -51,7 +51,7 @@ class Author extends Model {
 				'(administrator|editor|author)'
 			);
 		}
-		return array_map( function( $row ) {
+		return array_map( function ( $row ) {
 			return new \WP_User( $row );
 		}, $this->result() );
 	}
@@ -65,8 +65,8 @@ class Author extends Model {
 	 */
 	public function get_by_nice_name( $nice_name ) {
 		$user_id = (int) $this->select( 'ID' )
-							  ->where( 'user_nicename = %s', $nice_name )
-							  ->get_var();
+								->where( 'user_nicename = %s', $nice_name )
+								->get_var();
 
 		return get_userdata( $user_id );
 	}
@@ -99,13 +99,13 @@ class Author extends Model {
 	 */
 	public function get_letter_count( $user_id ) {
 		return (int) $this->select( 'SUM( CHAR_LENGTH(post_content) )' )
-						  ->from( $this->posts )
-						  ->where_in( 'post_type', get_post_types( [ 'public' => true ] ) )
+							->from( $this->posts )
+							->where_in( 'post_type', get_post_types( [ 'public' => true ] ) )
 						->wheres( [
 							'post_status = %s' => 'publish',
 							'post_author = %d' => $user_id,
 						] )
-						  ->get_var();
+							->get_var();
 	}
 
 	/**
@@ -117,8 +117,8 @@ class Author extends Model {
 	 */
 	public function get_star_count( $user_id ) {
 		return (int) $this->select( 'SUM(u.location * 10)' )
-						  ->from( "{$this->user_content_relationships} as u" )
-						  ->join( "{$this->posts} AS p", 'u.object_id = p.ID' )
+							->from( "{$this->user_content_relationships} as u" )
+							->join( "{$this->posts} AS p", 'u.object_id = p.ID' )
 						->wheres( [
 							'u.rel_type = %s'    => 'rank',
 							'p.post_author = %d' => $user_id,
@@ -180,7 +180,6 @@ class Author extends Model {
 			LIMIT 10
 SQL;
 		return $this->db->get_results( $this->db->prepare( $query, $user_id, $user_id, $user_id ) );
-
 	}
 
 	/**
@@ -192,13 +191,13 @@ SQL;
 	 */
 	public function get_sns_count( $user_id ) {
 		return (int) $this->select( 'SUM(CAST(pm.meta_value AS SIGNED))' )
-						  ->from( "{$this->postmeta} AS pm" )
-						  ->join( "{$this->posts} AS p", 'p.ID = pm.post_id' )
-						  ->where( 'p.post_author = %d', $user_id )
+							->from( "{$this->postmeta} AS pm" )
+							->join( "{$this->posts} AS p", 'p.ID = pm.post_id' )
+							->where( 'p.post_author = %d', $user_id )
 						->where_in( 'pm.meta_key', array_map( function ( $b ) {
-							  return '_sns_count_' . $b;
+								return '_sns_count_' . $b;
 						}, [ 'facebook', 'twitter', 'hatena', 'googleplus', 'googleplus' ] ) )
-						  ->get_var();
+							->get_var();
 	}
 
 	/**

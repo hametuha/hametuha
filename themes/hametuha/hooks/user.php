@@ -46,18 +46,18 @@ add_filter( 'manage_users_columns', function ( $columns ) {
  */
 add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 	if ( 'display_name' == $column ) {
-		$ruby = (string) get_user_meta( $user_id, 'last_name', true );
-		$name = (string) get_the_author_meta( 'display_name', $user_id );
+		$ruby  = (string) get_user_meta( $user_id, 'last_name', true );
+		$name  = (string) get_the_author_meta( 'display_name', $user_id );
 		$roles = [];
 		if ( hametuha_is_secret_guest( $user_id ) ) {
 			$roles[] = 'シークレット';
 		}
 		foreach ( hametuha_user_flags() as $flag ) {
-			if ( hametuha_user_has_flag( $user_id, $flag['id' ] ) ) {
+			if ( hametuha_user_has_flag( $user_id, $flag['id'] ) ) {
 				$roles[] = $flag['label'];
 			}
 		}
-		$role = implode( '', array_map( function( $r ) {
+		$role = implode( '', array_map( function ( $r ) {
 			return sprintf( ' - <strong>%s</strong>', esc_html( $r ) );
 		}, $roles ) );
 		return sprintf( '<ruby>%s<rt>%s</rt></ruby>%s', esc_html( $name ), esc_html( $ruby ), $role );
@@ -69,7 +69,7 @@ add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
 /**
  * Add extra values to user cookie.
  */
-add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
+add_filter( 'cookie_tasting_values', function ( $values, $user_id ) {
 	$values['role']      = hametuha_user_role( $user_id );
 	$values['is_author'] = user_can( $user_id, 'edit_posts' ) ? 'true' : '';
 	return $values;
@@ -79,7 +79,7 @@ add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
 /**
  * If user is editor, then can't resign.
  */
-add_filter( 'nlmg_validate_user', function( WP_Error $error, $user_id ) {
+add_filter( 'nlmg_validate_user', function ( WP_Error $error, $user_id ) {
 	if ( user_can( $user_id, 'edit_others_posts' ) ) {
 		$error->add( 'editor_cannot_resign', '編集者は退会できません。何か嫌なことがありましたか？　話し合いましょう。' );
 	}
@@ -89,7 +89,7 @@ add_filter( 'nlmg_validate_user', function( WP_Error $error, $user_id ) {
 /**
  * Move news to anonymous user.
  */
-add_action( 'nlmg_before_leave', function( $user_id ) {
+add_action( 'nlmg_before_leave', function ( $user_id ) {
 	$anoymous = hametuha_get_anonymous_user();
 	global $wpdb;
 	$query = <<<SQL

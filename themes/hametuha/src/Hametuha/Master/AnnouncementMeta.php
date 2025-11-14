@@ -44,6 +44,4 @@ trait AnnouncementMeta {
 	const COMMIT_POST_TYPE = '_hametuha_commit_post_type';
 
 	const COMMIT_CATEGORY = '_hametuha_commit_category';
-
-
 }

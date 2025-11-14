@@ -226,7 +226,8 @@
 		.avatar {
 			width: 30px;
 			height: 30px;
-			@include border-radius(50%);
+			border-radius: 50%;
+			margin-right: 0.5em;
 		}
 
 		// サムネイルがあるとき

@@ -100,7 +100,7 @@ endswitch;
 				<form action="<?php echo esc_url( home_url( 'wp-comments-post.php' ) ); ?>" method="post" id="commentform" class="clearfix">
 					<p class="comment-text">
 						<textarea placeholder="ここにコメントを記載してください" name="comment" id="comment" class="form-control"
-								  rows="10" tabindex="4"><?php echo isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : ''; ?></textarea>
+									rows="10" tabindex="4"><?php echo isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : ''; ?></textarea>
 					</p>
 
 					<p class="comment-allowed-tags">
@@ -117,8 +117,8 @@ endswitch;
 
 					<p class="text-center">
 						<input class="btn btn-outline-primary" name="submit" type="submit" id="submit" tabindex="5"
-							   value="<?php esc_attr_e( '規約に同意してコメントを投稿する', 'hametuha' ); ?>"
-							   onclick="this.value = '送信中...';" />
+								value="<?php esc_attr_e( '規約に同意してコメントを投稿する', 'hametuha' ); ?>"
+								onclick="this.value = '送信中...';" />
 						<?php comment_id_fields(); ?>
 					</p>
 

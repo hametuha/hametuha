@@ -66,6 +66,4 @@ class Requests extends Screen {
 	public function footer( $child = '' ) {
 		wp_enqueue_script( 'hametuha-hb-requests' );
 	}
-
-
 }

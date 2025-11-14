@@ -37,7 +37,7 @@ class UserReward extends WpApi {
 		$args = [
 			'user_id' => [
 				'required'          => true,
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					return preg_match( '#^(total|me|\d+)$#', $var ) ?: new \WP_Error( 'malformat', 'ユーザーIDが不正です。' );
 				},
 			],
@@ -46,19 +46,19 @@ class UserReward extends WpApi {
 			case 'GET':
 				$args['year']   = [
 					'default'           => date_i18n( 'Y' ),
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return preg_match( '#^\d{4}$#', $var ) ?: new \WP_Error( 'malformat', '年は4桁の整数です。' );
 					},
 				];
 				$args['month']  = [
 					'default'           => date_i18n( 'm' ),
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return preg_match( '#^\d{1,2}$#', $var ) ?: new \WP_Error( 'malformat', '月は2桁の整数です。' );
 					},
 				];
 				$args['status'] = [
 					'default'           => 'all',
-					'validate_callback' => function( $var ) {
+					'validate_callback' => function ( $var ) {
 						return in_array( $var, [ 'all', '0', '1' ] ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
 					},
 				];

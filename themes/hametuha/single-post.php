@@ -51,7 +51,7 @@ if ( have_posts() ) :
 							$list = [];
 							foreach (
 								[
-									'campaign'                              => esc_html( '%s応募作品', 'hametuha' ),
+									'campaign' => esc_html( '%s応募作品', 'hametuha' ),
 									\Hametuha\Hooks\Qualification::TAXONOMY => esc_html( '%s', 'hametuha' ),
 								] as $taxonomy => $replace
 							) {
@@ -181,17 +181,17 @@ HTML;
 							?>
 							<div class="external-link">
 								<div class="row">
-									<?php if ( $ogp[ 'img' ] ) : ?>
+									<?php if ( $ogp['img'] ) : ?>
 										<div class="col-12 col-md-3 mb-3 mb-md-0">
-											<img loading="lazy" src="<?php echo esc_url( $ogp[ 'img' ] ); ?>"
-												class="img-responsive" alt="<?php echo esc_attr( $ogp[ 'title' ] ); ?>" />
+											<img loading="lazy" src="<?php echo esc_url( $ogp['img'] ); ?>"
+												class="img-responsive" alt="<?php echo esc_attr( $ogp['title'] ); ?>" />
 										</div>
 									<?php endif; ?>
 									<div class="col-12 col-md-9">
 										<h3 class="text-left">
-											<?php echo esc_html( $ogp[ 'title' ] ); ?>
+											<?php echo esc_html( $ogp['title'] ); ?>
 										</h3>
-										<p class="text-left"><?php echo esc_html( $ogp[ 'desc' ] ); ?></p>
+										<p class="text-left"><?php echo esc_html( $ogp['desc'] ); ?></p>
 										<a class="btn btn-primary" href="<?php echo esc_url( $external ); ?>" rel="nofollow" target="_blank">
 											<?php esc_html_e( '外部サイトへ移動', 'hametuha' ); ?>
 										</a>
@@ -319,9 +319,11 @@ HTML;
 
 			<div class="container">
 
-				<?php get_sidebar( 'books', [
+				<?php
+				get_sidebar( 'books', [
 					'title' => true,
-				] ); ?>
+				] );
+				?>
 
 				<h2 class="series__title--share text-center">
 					<small class="series__title--caption">eBooks</small>
@@ -357,7 +359,8 @@ HTML;
 
 				<hr/>
 
-				<?php if ( current_user_can( 'read' ) ) :
+				<?php
+				if ( current_user_can( 'read' ) ) :
 					// ログイン済みならリスト用のJSを追加
 					wp_enqueue_script( 'hametuha-components-list-in-post' );
 					?>

@@ -46,5 +46,4 @@ abstract class SeriesBase extends EmptyMetaBox {
 				return parent::__get( $name );
 		}
 	}
-
 }

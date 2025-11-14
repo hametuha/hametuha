@@ -17,21 +17,23 @@ global $wp_query;
 <header class="book-list-header">
 	<div class="container">
 		<small>Anthology</small>
-		<h1><?php
+		<h1>
+		<?php
 			$author_name = get_query_var( 'author_name' );
 			$is_mine     = get_query_var( 'my-content' );
-			if ( $author_name ) {
-				$author = get_user_by( 'slug', $author_name );
-				if ( $author ) {
-					$author_name = $author->display_name;
-				}
-				printf( __( '%sによる選書', 'hametuha' ), esc_html( $author_name ) );
-			} elseif ( 'lists' === $is_mine ) {
-				esc_html_e( 'あなたの選書', 'hametuha' );
-			} else {
-				esc_html_e( '破滅派選書', 'hametuha' );
+		if ( $author_name ) {
+			$author = get_user_by( 'slug', $author_name );
+			if ( $author ) {
+				$author_name = $author->display_name;
 			}
-		?></h1>
+			printf( __( '%sによる選書', 'hametuha' ), esc_html( $author_name ) );
+		} elseif ( 'lists' === $is_mine ) {
+			esc_html_e( 'あなたの選書', 'hametuha' );
+		} else {
+			esc_html_e( '破滅派選書', 'hametuha' );
+		}
+		?>
+		</h1>
 		<p class="description">
 			<?php echo esc_html( get_post_type_object( 'lists' )->description ); ?>
 		</p>
@@ -61,8 +63,8 @@ global $wp_query;
 				$list_pages[] = [ __( 'あなたのリスト', 'hametuha' ), home_url( 'your/lists/' ), 'your' ];
 			}
 			foreach ( $list_pages as list( $label, $url, $current_query ) ) {
-				$active = $current_query === $list_query;
-				$classes = [ 'btn', 'btn-lg' ];
+				$active    = $current_query === $list_query;
+				$classes   = [ 'btn', 'btn-lg' ];
 				$classes[] = $active ? 'btn-secondary' : 'btn-outline-secondary';
 				printf(
 					'<a href="%s" class="%s" style="margin-right: 0.5em">%s</a>',
@@ -99,7 +101,7 @@ global $wp_query;
 		</div>
 
 		<?php wp_pagenavi(); ?>
-	<?php
+		<?php
 	else :
 		// 該当するコンテンツがない
 		?>

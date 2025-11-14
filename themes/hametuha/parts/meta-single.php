@@ -7,7 +7,7 @@
 			<i class="icon-user"></i>
 			<?php if ( user_can( $post->post_author, 'edit_posts' ) ) : ?>
 				<a itemprop="editor"
-				   href="<?php echo hametuha_author_url( $post->post_author ); ?>">
+					href="<?php echo hametuha_author_url( $post->post_author ); ?>">
 					<?php echo esc_html( get_the_author_meta( 'display_name', $post->post_author ) ); ?>
 				</a>
 			<?php else : ?>
@@ -80,11 +80,11 @@
 	<?php endif; ?>
 
 	<?php if ( is_hamenew() ) : ?>
-	   <!-- News -->
+		<!-- News -->
 		<?php if ( $terms = get_the_terms( get_post(), 'genre' ) ) : ?>
 		<li class="list-inline-item">
 			<?php
-			echo implode( ' ', array_map( function( $term ) {
+			echo implode( ' ', array_map( function ( $term ) {
 				return sprintf( '<a class="btn btn-sm btn-link" href="%s"><i class="icon-tag5"></i> %s</a>', get_term_link( $term ), esc_html( $term->name ) );
 			}, $terms ) );
 			?>

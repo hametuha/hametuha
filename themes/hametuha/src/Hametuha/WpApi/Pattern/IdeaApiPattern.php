@@ -4,7 +4,7 @@ namespace Hametuha\WpApi\Pattern;
 
 
 use Hametuha\Model\Ideas;
-use \Hametuha\Model\Notifications;
+use Hametuha\Model\Notifications;
 use WPametu\API\Rest\WpApi;
 
 

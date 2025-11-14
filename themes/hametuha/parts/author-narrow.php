@@ -10,7 +10,7 @@ $args = wp_parse_args( $args, [
 ?>
 <div class="news-author row">
 	<a class="news-author__link clearfix"
-	   href="<?php echo home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ); ?>">
+		href="<?php echo home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ); ?>">
 		<?php echo get_avatar( get_the_author_meta( 'ID' ), 48, '', get_the_author(), [ 'class' => ' img-circle news-author__img' ] ); ?>
 		<?php if ( $args['responsibility'] ) : ?>
 			文責:

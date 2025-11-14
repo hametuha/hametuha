@@ -31,7 +31,7 @@ class StructuredDataManager extends Singleton {
 		}
 		foreach ( $json as $j ) {
 			$j['@context'] = 'http://schema.org';
-			$rendered = json_encode( $j );
+			$rendered      = json_encode( $j );
 			echo <<<HTML
 <!-- Hametuha JSON-LD // -->
 <script type="application/ld+json">
@@ -73,7 +73,7 @@ HTML;
 			'@id'           => get_permalink( $post ),
 			'url'           => get_permalink( $post ),
 			'datePublished' => mysql2date( \DateTime::ATOM, $post->post_date_gmt, false ),
-  			'dateModified'  => mysql2date( \DateTime::ATOM, $post->post_modified_gmt, false	 ),
+			'dateModified'  => mysql2date( \DateTime::ATOM, $post->post_modified_gmt, false ),
 			'publisher'     => $this->organization_clause(),
 			'author'        => [ $this->author_clause( $post->post_author ) ],
 			'headline'      => get_the_title( $post ),
@@ -81,8 +81,8 @@ HTML;
 		// サムネイルを設定
 		if ( has_post_thumbnail( $post ) ) {
 			list( $url, $width, $height ) = wp_get_attachment_image_src( get_post_thumbnail_id( $post ), 'full' );
-			$json['image'] = [
-				'@type' => 'ImageObject',
+			$json['image']                = [
+				'@type'      => 'ImageObject',
 				'contentUrl' => $url,
 				'url'        => $url,
 				'width'      => $width,
@@ -123,7 +123,7 @@ HTML;
 				if ( $post->post_parent && is_post_publicly_viewable( $post->post_parent ) ) {
 					$json['isPartOf'] = get_permalink( $post->post_parent );
 				}
-				$terms = get_the_category( $post->ID );
+				$terms         = get_the_category( $post->ID );
 				$json['@type'] = 'CreativeWork';
 				foreach ( $terms as $term ) {
 					switch ( $term->slug ) {
@@ -158,14 +158,14 @@ HTML;
 			'url'   => hametuha_author_url( $author_id ),
 		];
 		if ( $detaild ) {
-			$user = get_userdata( $author_id );
+			$user    = get_userdata( $author_id );
 			$contact = [];
 			// 顔写真
 			$profile_pic_id = has_original_picture( $author_id );
 			if ( $profile_pic_id ) {
 				list( $img_url, $img_width, $img_height ) = wp_get_attachment_image_src( $profile_pic_id, 'full' );
-				$json['image'] = [
-					'@type' => 'ImageObject',
+				$json['image']                            = [
+					'@type'      => 'ImageObject',
 					'contentUrl' => $img_url,
 					'url'        => $img_url,
 					'width'      => $img_width,
@@ -175,7 +175,7 @@ HTML;
 				$gravatar = get_avatar_url( $user->user_email, [ 'size' => 600 ] );
 				if ( $gravatar ) {
 					$json['image'] = [
-						'@type' => 'ImageObject',
+						'@type'      => 'ImageObject',
 						'contentUrl' => $gravatar,
 						'url'        => $gravatar,
 						'width'      => 600,
@@ -197,7 +197,7 @@ HTML;
 			}
 			foreach ( [
 				'location'    => 'homeLocation',
-				'birth_place' => 'birthPlace'
+				'birth_place' => 'birthPlace',
 			] as $key => $label ) {
 				$meta = get_the_author_meta( $key, $author_id );
 				if ( $meta ) {
@@ -211,9 +211,9 @@ HTML;
 			// 募集していたら、探す
 			if ( hametuha_user_allow_contact( $author_id ) ) {
 				$posts = get_posts( [
-					'post_type'   => 'post',
-					'post_status' => 'publish',
-					'post_author' => $author_id,
+					'post_type'      => 'post',
+					'post_status'    => 'publish',
+					'post_author'    => $author_id,
 					'posts_per_page' => 1,
 				] );
 				if ( $posts ) {
@@ -236,14 +236,14 @@ HTML;
 	 */
 	public function site_clause( $with_organization = false ) {
 		$json = [
-			'@type'    => 'WebSite',
-			'@id'      => home_url(),
-			'url'      => home_url(),
+			'@type'           => 'WebSite',
+			'@id'             => home_url(),
+			'url'             => home_url(),
 			'potentialAction' => array(
-				'@type' => 'SearchAction',
-				'target' => home_url( '?s={search_term_string}' ),
-				'query-input' => 'required name=search_term_string'
-			)
+				'@type'       => 'SearchAction',
+				'target'      => home_url( '?s={search_term_string}' ),
+				'query-input' => 'required name=search_term_string',
+			),
 		];
 		if ( $with_organization ) {
 			$json['publisher'] = $this->organization_clause( true );
@@ -259,27 +259,27 @@ HTML;
 	 */
 	public function organization_clause( $with_funder = false ) {
 		$json = [
-			'@type'    => 'Organization',
-			'url'      => 'https://hametuha.com',
-			'logo'     => [
+			'@type'     => 'Organization',
+			'url'       => 'https://hametuha.com',
+			'logo'      => [
 				'@type'  => 'ImageObject',
 				'url'    => get_theme_file_uri( 'assets/img/hametuha-logo.png' ),
 				'width'  => 300,
 				'height' => 150,
 			],
-			'name'     => '破滅派',
+			'name'      => '破滅派',
 			'telephone' => '050 5532 8327',
-			'sameAs' => [
+			'sameAs'    => [
 				'https://www.facebook.com/hametuha.inc',
 				'https://twitter.com/hametuha',
 			],
 		];
 		if ( $with_funder ) {
 			$json['funder'] = [
-				'@type'    => 'Corporation',
-				'url'      => 'https://hametuha.co.jp',
-				'name'     => '株式会社破滅派',
-				'address'  => [
+				'@type'     => 'Corporation',
+				'url'       => 'https://hametuha.co.jp',
+				'name'      => '株式会社破滅派',
+				'address'   => [
 					'@type'           => 'PostalAddress',
 					'streetAddress'   => '銀座1-3-3 G1ビル7F 1211',
 					'addressLocality' => '中央区',

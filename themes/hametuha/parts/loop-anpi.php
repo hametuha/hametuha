@@ -21,11 +21,11 @@ $anpi = \Hametuha\Model\Anpis::get_instance();
 				<h2 class="h4 card-title">
 					<?php
 						$title = $anpi->is_tweet() ? sprintf(
-						esc_html__( '%sさんの安否報告#%d', 'hametuha' ),
-						get_the_author( 'display_name' ),
+							esc_html__( '%1$sさんの安否報告#%2$d', 'hametuha' ),
+							get_the_author( 'display_name' ),
 							get_the_ID()
 						) : get_the_title();
-					?>
+						?>
 					<a href="<?php the_permalink(); ?>"><?php echo esc_html( $title ); ?></a>
 				</h2>
 			</div>
@@ -33,7 +33,8 @@ $anpi = \Hametuha\Model\Anpis::get_instance();
 
 			<?php
 			$terms = get_the_terms( get_the_ID(), 'anpi_cat' );
-			if ( $terms && ! is_wp_error( $terms ) ) : ?>
+			if ( $terms && ! is_wp_error( $terms ) ) :
+				?>
 				<p>
 					<?php
 					echo implode( ' ', array_map( function ( $term ) {

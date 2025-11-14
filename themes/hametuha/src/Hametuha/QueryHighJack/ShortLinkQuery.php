@@ -63,6 +63,4 @@ class ShortLinkQuery extends QueryHighJack {
 	protected function is_valid_query( \WP_Query $wp_query ) {
 		return (bool) $wp_query->get( 'short_link' );
 	}
-
-
 }

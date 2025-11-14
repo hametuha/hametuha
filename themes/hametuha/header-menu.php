@@ -4,7 +4,7 @@
  */
 
 $cache_key = 'hametuha-header-menu-' . wp_get_theme()->get( 'Version' );
-$cached = get_transient( $cache_key );
+$cached    = get_transient( $cache_key );
 if ( 'local' !== wp_get_environment_type() && false !== $cached ) {
 	// キャッシュが存在していたらそれを返して終了。
 	echo $cached;
@@ -85,7 +85,7 @@ ob_start();
 								'meta_query' => [
 									[
 										'key'   => 'genre',
-										'value' => 'サブジャンル'
+										'value' => 'サブジャンル',
 									],
 								],
 							] );
@@ -173,10 +173,12 @@ ob_start();
 				</div>
 				<?php
 				$topics = get_terms( 'topic' );
-				if ( $topics && ! is_wp_error( $topics ) ) : ?>
+				if ( $topics && ! is_wp_error( $topics ) ) :
+					?>
 					<ul class="collapse nav flex-column ps-3" id="threadSubmenu">
 						<?php
-						foreach ( $topics as $term ) : ?>
+						foreach ( $topics as $term ) :
+							?>
 							<li class="nav-item">
 								<a class="nav-link" href="<?php echo get_term_link( $term ); ?>">
 									<?php echo esc_html( $term->name ); ?>

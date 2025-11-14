@@ -27,7 +27,7 @@ class FeedbackRating extends WpApi {
 			'post_id' => [
 				'required'          => true,
 				'type'              => 'integer',
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					$post = get_post( $var );
 					// 自分の投稿はレビューできない
 					return $post && ( get_current_user_id() !== (int) $post->post_author );
@@ -35,10 +35,10 @@ class FeedbackRating extends WpApi {
 			],
 		];
 		if ( 'POST' === $method ) {
-			$args['rating'] =[
+			$args['rating'] = [
 				'required'          => true,
 				'type'              => 'integer',
-				'validate_callback' => function( $var ) {
+				'validate_callback' => function ( $var ) {
 					return in_array( $var, range( 0, 5 ) );
 				},
 			];
