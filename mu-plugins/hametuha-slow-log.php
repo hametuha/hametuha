@@ -147,7 +147,7 @@ add_action( 'wp_footer', function() {
 				dataLayer.push( arguments );
 			}
 			gtag( 'event', 'wp_server_time', {
-				wp_server_ms: <?php echo (int) $server_ms; ?>,
+				value: <?php echo (int) $server_ms; ?>,
 				route: '<?php echo esc_js( $route ); ?>'
 			} );
 		})();

@@ -84,7 +84,7 @@ endswitch;
 <?php if ( comments_open() ) : ?>
 	<div id="respond" class="panel panel-default">
 
-		<div class="panel-heading">
+		<div class="panel-heading mb-2">
 			<i class="icon-bubble-plus"></i>
 			<?php comment_form_title( 'コメントを残してください', '%s に返信する' ); ?>
 		</div>
@@ -100,7 +100,7 @@ endswitch;
 				<form action="<?php echo esc_url( home_url( 'wp-comments-post.php' ) ); ?>" method="post" id="commentform" class="clearfix">
 					<p class="comment-text">
 						<textarea placeholder="ここにコメントを記載してください" name="comment" id="comment" class="form-control"
-								  rows="10" tabindex="4"><?php echo isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : ''; ?></textarea>
+									rows="10" tabindex="4"><?php echo isset( $_POST['comment'] ) ? esc_textarea( $_POST['comment'] ) : ''; ?></textarea>
 					</p>
 
 					<p class="comment-allowed-tags">
@@ -111,13 +111,14 @@ endswitch;
 					<p class="comment-allowed-tags">
 						<strong>コメント規約: </strong>
 						コメントは一度投稿されると編集・削除できません。よく確認してから投稿してください。
-						また、退会後は非表示の上で保存されますので、<a href="<?php echo home_url( 'copyright' ); ?>" target="_blank" rel="noopener noreferrer">著作権について</a>をご覧になってください。
+						誹謗中傷・攻撃的・個人情報の披瀝などに対してはアカウントの停止・削除などの措置を取ることがあります。
+						また、退会後は名前を非表示の上で保存されますので、<a href="<?php echo home_url( 'copyright' ); ?>" target="_blank" rel="noopener noreferrer">著作権について</a>をご覧になってください。
 					</p>
 
 					<p class="text-center">
-						<input class="btn btn-primary btn-block" name="submit" type="submit" id="submit" tabindex="5"
-							   value="<?php esc_attr_e( '規約に同意してコメントを投稿する', 'hametuha' ); ?>"
-							   onclick="this.value = '送信中...';" />
+						<input class="btn btn-outline-primary" name="submit" type="submit" id="submit" tabindex="5"
+								value="<?php esc_attr_e( '規約に同意してコメントを投稿する', 'hametuha' ); ?>"
+								onclick="this.value = '送信中...';" />
 						<?php comment_id_fields(); ?>
 					</p>
 

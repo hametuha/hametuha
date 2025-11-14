@@ -3,7 +3,7 @@
  * Display series status.
  *
  */
-$series    = Hametuha\Model\Series::get_instance();
+$series = Hametuha\Model\Series::get_instance();
 
 $series_id = ( 'series' == get_post_type() ) ? get_the_ID() : $post->post_parent;
 if ( ! $series_id ) {
@@ -19,11 +19,11 @@ $permalink = get_permalink( $series_id );
 $title     = get_the_title( $series_id );
 if ( is_array( $limit ) ) {
 	sort( $limit );
-	$msg = sprintf( '%sは%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function ( $number ) {
+	$msg = sprintf( '『%s』は%sを無料で読むことができます。', esc_html( $title ), implode( '、', array_map( function ( $number ) {
 		return sprintf( '%d話', $number );
 	}, $limit ) ) );
 } elseif ( $limit ) {
-	$msg = sprintf( '%sは%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
+	$msg = sprintf( '『%s』は%d話まで無料で読むことができます。', esc_html( $title ), number_format( $limit ) );
 } else {
 	$msg = sprintf( '%sの全文は電子書籍でご覧頂けます。', esc_html( $title ) );
 }
@@ -33,18 +33,18 @@ switch ( $series->get_status( $series_id ) ) {
 		<div class="series__row--single text-center">
 			<a href="<?php echo get_permalink( $series_id ); ?>">
 				<img
-					src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( $series_id ), 'medium' )[ 0 ]; ?>"
+					src="<?php echo wp_get_attachment_image_src( get_post_thumbnail_id( $series_id ), 'medium' )[0]; ?>"
 					alt="<?php echo esc_attr( $title ); ?>" class="series__single--image"/>
 			</a>
 			<p class="text-muted">
-				<?php echo $msg; ?>
+				<?php echo $msg; ?><br />
 				続きはAmazonでご利用ください。
 			</p>
 			<a class="btn btl-lg btn-trans btn-amazon" href="<?php echo $series->get_kdp_url( $series_id ); ?>"
-			   data-outbound="kdp"
-			   data-action="<?php echo esc_attr( $series->get_asin( $series_id ) ); ?>"
-			   data-label="<?php the_ID(); ?>"
-			   data-value="<?php echo get_series_price( $series_id ); ?>">
+				data-outbound="kdp"
+				data-action="<?php echo esc_attr( $series->get_asin( $series_id ) ); ?>"
+				data-label="<?php the_ID(); ?>"
+				data-value="<?php echo get_series_price( $series_id ); ?>">
 				<i class="icon-amazon"></i> Amazonへ行く
 			</a>
 		</div>

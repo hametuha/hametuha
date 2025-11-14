@@ -9,7 +9,7 @@
  * @author WP Beginners
  * @return array
  */
-add_filter( 'user_contactmethods', function( $contact_methods ) {
+add_filter( 'user_contactmethods', function ( $contact_methods ) {
 	$contact_methods['aim'] = 'Webサイト名';
 	unset( $contact_methods['jabber'] );
 	unset( $contact_methods['yim'] );
@@ -30,7 +30,7 @@ add_filter( 'user_contactmethods', function( $contact_methods ) {
  * @param \Hametuha\Hashboard\Pattern\Screen $page
  * @param string $child
  */
-add_action( 'hashboard_after_main', function( \Hametuha\Hashboard\Pattern\Screen $page, $child ) {
+add_action( 'hashboard_after_main', function ( \Hametuha\Hashboard\Pattern\Screen $page, $child ) {
 	if ( 'sales' !== $page->slug() ) {
 		return;
 	}
@@ -44,9 +44,9 @@ add_action( 'hashboard_after_main', function( \Hametuha\Hashboard\Pattern\Screen
  * @param int   $user_id
  * @return array
  */
-add_filter( 'cookie_tasting_values', function( $values, $user_id ) {
+add_filter( 'cookie_tasting_values', function ( $values, $user_id ) {
 	if ( user_can( $user_id, 'edit_posts' ) ) {
-		$values[ 'profile' ] = hametuha_author_url( $user_id );
+		$values['profile'] = hametuha_author_url( $user_id );
 	}
 	return $values;
 }, 10, 2 );

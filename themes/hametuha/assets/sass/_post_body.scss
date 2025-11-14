@@ -440,11 +440,13 @@
 		ol,
 		dl {
 			margin: 1em 0;
+			padding-inline-start: 1.5em;
 			// リスト内の入れ子はマージンを切る
 			ul,
 			ol,
 			dl {
 				margin: 0;
+				padding-inline-start: 0.5em;
 			}
 		}
 
@@ -567,6 +569,9 @@
 		// 引用
 		blockquote {
 			margin: 1em 0 1em 2em;
+			@include media-breakpoint-down(md) {
+				margin-left: 1em;
+			}
 			color: #444;
 			border-left: none;
 			padding: 0;
@@ -643,10 +648,11 @@
 		dl,
 		ol {
 			margin: 1em 0;
-
+			padding-inline-start: 1.5em;
 			ul,
 			dl,
 			ol {
+				padding-inline-start: 0.5em;
 				margin: 0;
 			}
 		}

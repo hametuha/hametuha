@@ -62,7 +62,7 @@ class HotPost extends CronBase {
 				$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
 				break;
 			case '22':
-				$message = '【定期ポスト】昨日よく読まれたニュースはこちらです。';
+				$message   = '【定期ポスト】昨日よく読まれたニュースはこちらです。';
 				$post_type = 'news';
 				$channel   = '#news';
 				break;
@@ -76,10 +76,20 @@ class HotPost extends CronBase {
 			return;
 		} else {
 			$lines = [ $message ];
+			$hit   = false;
 			foreach ( $results as list( $title, $path, $pv ) ) {
 				list( $post_title ) = explode( '|', $title );
-				$lines[]            = trim( $post_title ) . "\n" . home_url( $path );
+				$url                = home_url( $path );
+				$post               = url_to_postid( $url );
+				if ( ! $post || hametuha_post_by_spam( $post ) ) {
+					continue;
+				}
+				$lines[] = trim( $post_title ) . "\n" . $url;
+				$hit     = true;
 				break;
+			}
+			if ( ! $hit ) {
+				return;
 			}
 			$message = implode( "\n\n", $lines );
 			// twitterにつぶやく

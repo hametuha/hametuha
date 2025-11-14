@@ -58,9 +58,9 @@ if ( ! $query->have_posts() ) {
 						<div class="caption">
 							<p class="text-center">
 								<a data-outbound="kdp"
-								   data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
-								   data-label="<?php the_ID(); ?>" data-value="<?php echo get_series_price(); ?>"
-								   class="btn btn-amazon btn-sm" href="<?php echo $series->get_kdp_url( get_the_ID() ); ?>"><i
+									data-action="<?php echo esc_attr( $series->get_asin( get_the_ID() ) ); ?>"
+									data-label="<?php the_ID(); ?>" data-value="<?php echo get_series_price(); ?>"
+									class="btn btn-amazon btn-sm" href="<?php echo $series->get_kdp_url( get_the_ID() ); ?>"><i
 										class="icon-amazon"></i> 購入</a>
 							</p>
 						</div>

@@ -29,7 +29,7 @@ class EpubFile extends EpubFilePattern {
 				'required'          => true,
 				'type'              => 'integer',
 				'description'       => 'File ID to handle.',
-				'validate_callback' => function( $file_id ) {
+				'validate_callback' => function ( $file_id ) {
 					if ( ! is_numeric( $file_id ) ) {
 						return false;
 					}
@@ -57,7 +57,7 @@ class EpubFile extends EpubFilePattern {
 						'default'           => '',
 						'type'              => 'string',
 						'description'       => 'The datetime of publication',
-						'validate_callback' => function( $var ) {
+						'validate_callback' => function ( $var ) {
 							return empty( $var ) || ( 'DELETE' === $var ) || preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/u', $var );
 						},
 					],

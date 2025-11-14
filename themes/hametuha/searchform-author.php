@@ -8,7 +8,7 @@
 
 	<div class="input-group">
 		<input placeholder="<?php esc_attr_e( '検索したい名前を入れて下さい', 'hametuha' ); ?>" type="text" name="s" class="form-control"
-			   value="<?php the_search_query(); ?>">
+				value="<?php the_search_query(); ?>">
 		<span class="input-group-btn">
 			<input type="submit" class="btn btn-default" value="検索">
 		</span>

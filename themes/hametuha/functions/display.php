@@ -26,12 +26,18 @@ function hameplate( $slug, $name = '', $args = [], $echo = true, $deprecated = '
 /**
  * ヘルプ用アイコンを出力する
  *
- * @param string $string
- * @param string $place left top right bottom
+ * Bootstrap 5対応版
+ *
+ * @param string $string ツールチップのテキスト
+ * @param string $place  left, top, right, bottom (Bootstrap 5では start, top, end, bottom も使用可能)
  */
-function help_tip( $string, $place = null ) {
-	printf( '<a href="#" class="btn btn-xs btn-default help-tip" data-toggle="tooltip" data-original-title="%s"%s><i class="icon-question5"></i></a>',
-	esc_attr( $string ), ( $place ? 'data-placement="' . esc_attr( $place ) . '"' : '' ) );
+function help_tip( $string, $place = 'top' ) {
+	$placement = $place ? sprintf( ' data-bs-placement="%s"', esc_attr( $place ) ) : '';
+	printf(
+		'<a href="#" class="help-tip" data-bs-toggle="tooltip" data-bs-title="%s"%s><i class="icon-question4"></i></a>',
+		esc_attr( $string ),
+		$placement
+	);
 }
 
 /**
@@ -67,7 +73,7 @@ function hametuha_grab_domain( $url ) {
  */
 function the_tweet( $post = null ) {
 	$post = get_post( $post );
-	echo wpautop( preg_replace_callback( '@https?://[^ 　\\n\\r\\t\\z]+@', function( $match ) {
+	echo wpautop( preg_replace_callback( '@https?://[^ 　\\n\\r\\t\\z]+@', function ( $match ) {
 		return sprintf( '<a href="%s" rel="nofollow">%s</a>', esc_url( $match[0] ), $match[0] );
 	}, esc_html( $post->post_excerpt ) ) );
 }
@@ -126,33 +132,51 @@ HTML;
 add_filter( 'wp_pagenavi', function ( $html ) {
 	// Remove div.
 	$html = trim( preg_replace( '/<\/?div([^>]*)?>/u', '', $html ) );
-	// Wrap links with li.
-	$html = preg_replace( '/(<a[^>]*?>[^<]*<\/a>)/u', '<li>$1</li>', $html );
+
+	// Bootstrap 5: Add page-link class to all <a> tags
+	$html = preg_replace_callback( '/<a([^>]*?)>/u', function ( $matches ) {
+		// Check if class attribute already exists
+		if ( strpos( $matches[1], 'class=' ) !== false ) {
+			// Add page-link to existing class
+			return '<a' . preg_replace( '/class=["\']([^"\']*)["\']/', 'class="$1 page-link"', $matches[1] ) . '>';
+		} else {
+			// Add new class attribute
+			return '<a' . $matches[1] . ' class="page-link">';
+		}
+	}, $html );
+
+	// Wrap links with li and add page-item class
+	$html = preg_replace( '/(<a[^>]*?>[^<]*<\/a>)/u', '<li class="page-item">$1</li>', $html );
+
 	// Wrap links with span considering class name.
 	$html = preg_replace_callback( '/<span([^>]*?)>[^<]*<\/span>/u', function ( $matches ) {
+		// Add page-link class to span
+		$span_with_class = preg_replace( '/<span/', '<span class="page-link"', $matches[0] );
+
 		if ( false !== strpos( $matches[1], 'current' ) ) {
 			// This is current page.
-			$class_name = 'active';
+			$class_name = 'page-item active';
 		} elseif ( false !== strpos( $matches[1], 'pages' ) ) {
 			// This is page number.
-			$class_name = 'disabled';
+			$class_name = 'page-item disabled';
 		} elseif ( false !== strpos( $matches[1], 'extend' ) ) {
 			// This is ellipsis.
-			$class_name = 'disabled';
+			$class_name = 'page-item disabled';
 		} else {
 			// No class.
-			$class_name = '';
+			$class_name = 'page-item';
 		}
 
-		return "<li class=\"{$class_name}\">{$matches[0]}</li>";
+		return "<li class=\"{$class_name}\">{$span_with_class}</li>";
 	}, $html );
 
 	$html = str_replace( 'ページ', '', $html );
 
 	// Wrap with ul as you like.
+	// Bootstrap 5: pagination-centeredは廃止、justify-content-centerを使用
 	return <<<HTML
-<div class="row text-center">
-    <ul class="pagination pagination-centered">{$html}</ul>
+<div class="row justify-content-center">
+    <ul class="pagination justify-content-center">{$html}</ul>
 </div>
 HTML;
 }, 10, 2 );
@@ -167,18 +191,26 @@ HTML;
  * @return string
  */
 function hametuha_format_pagination( $pagination, $size = '' ) {
+	if ( empty( $pagination ) ) {
+		return '';
+	}
 	$out = [];
 	foreach ( explode( "\n", $pagination ) as $link ) {
+		// Bootstrap 5: page-itemクラスを追加、page-linkクラスも必要
+		$link = preg_replace( '/<a/', '<a class="page-link"', $link );
+		$link = preg_replace( '/<span/', '<span class="page-link"', $link );
+
 		if ( false !== strpos( $link, 'current' ) ) {
-			$out[] = sprintf( '<li class="active">%s</li>', $link );
+			$out[] = sprintf( '<li class="page-item active">%s</li>', $link );
 		} else {
-			$out[] = sprintf( '<li>%s</li>', $link );
+			$out[] = sprintf( '<li class="page-item">%s</li>', $link );
 		}
 	}
 	if ( $size ) {
 		$size = ' pagination-' . $size;
 	}
-	return '<ul class="pagination pagination-centered' . $size . '">' . implode( "\n", $out ) . '</ul>';
+	// Bootstrap 5: pagination-centeredは廃止、justify-content-centerを使用
+	return '<ul class="pagination justify-content-center' . $size . '">' . implode( "\n", $out ) . '</ul>';
 }
 
 
@@ -250,7 +282,7 @@ endswitch;
 						break;
 				}
 				?>
-					 | <i class="icon-clock"></i> <span
+					| <i class="icon-clock"></i> <span
 						itemprop=""><?php echo get_comment_date( 'Y-m-d H:i' ); ?></span></small>
 			</h4>
 		</div><!-- .comment-author .vcard -->
@@ -318,7 +350,7 @@ function trim_long_sentence( $sentence, $length = 100, $elipsis = '…' ) {
 function hametuha_censor( $string ) {
 	foreach ( explode( "\r\n", get_option( 'four_words', '' ) ) as $four_word ) {
 		if ( $four_word ) {
-			$string = preg_replace_callback( "#{$four_word}#u", function( $match ) {
+			$string = preg_replace_callback( "#{$four_word}#u", function ( $match ) {
 				$replace = '';
 				for ( $i = 0, $l = mb_strlen( $match[0], 'utf-8' ); $i < $l; $i++ ) {
 					$replace .= '●';
@@ -360,7 +392,7 @@ HTML;
 /**
  * ログインしている人にだけ見える文字列
  */
-add_shortcode( 'fyeo', function( $atts = [], $content = '' ) {
+add_shortcode( 'fyeo', function ( $atts = [], $content = '' ) {
 	$atts = shortcode_atts( [
 		'tag_line'   => '',
 		'capability' => '',
@@ -509,20 +541,20 @@ function hametuha_remote_ogp( $url, $time = 3600 ) {
  * @param null|int|WP_Post $post
  * @return string
  */
-function hametuha_first_corrected( $format = false, $post = null ) {
+function hametuha_first_collected( $format = false, $post = null ) {
 	$post      = get_post( $post );
-	$corrected = get_post_meta( $post->ID, '_first_collected', true );
+	$collected = get_post_meta( $post->ID, '_first_collected', true );
 	$url       = get_post_meta( $post->ID, 'oldurl', true );
-	if ( ! $corrected && ! $url ) {
+	if ( ! $collected && ! $url ) {
 		return '';
 	}
-	if ( ! $corrected ) {
-		$corrected = $url;
+	if ( ! $collected ) {
+		$collected = $url;
 	}
 	if ( ! $format || ! $url ) {
-		return esc_html( $corrected );
+		return esc_html( $collected );
 	} else {
-		return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $corrected ) );
+		return sprintf( '<a href="%s" target="_blank" rel="nofollow">%s</a>', esc_url( $url ), esc_html( $collected ) );
 	}
 }
 

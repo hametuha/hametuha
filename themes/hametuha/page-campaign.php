@@ -1,6 +1,8 @@
 <?php
 /**
  * Template Name: キャンペーン一覧
+ *
+ * @feature-group campaign
  */
 get_header();
 get_header( 'sub' );
@@ -47,4 +49,7 @@ get_header( 'breadcrumb' );
 
 	</div><!-- //.container -->
 
-<?php get_footer(); ?>
+<?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
+get_footer();

@@ -28,7 +28,7 @@
 					<strong><i class="icon-map"></i>
 						場所</strong> <?php echo esc_html( $post->_event_address . ' ' . $post->_event_bld ); ?>
 					<a href="https://maps.google.com/?q=<?php echo rawurlencode( $post->_event_address ); ?>"
-					   target="_blank">地図</a>
+						target="_blank">地図</a>
 				</p>
 			<?php endif; ?>
 

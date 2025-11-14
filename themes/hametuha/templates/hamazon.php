@@ -30,7 +30,7 @@ if ( $total > 0 ) {
 		<select name="SearchIndex">
 			<?php foreach ( $wp_hamazon_parser->searchIndex as $k => $v ) : ?>
 			<option value="<?php echo $k; ?>"
-									  <?php
+										<?php
 										if ( ( isset( $_GET['SearchIndex'] ) && $_GET['SearchIndex'] == $k ) || ( ! isset( $_GET['s'] ) && $k == 'Books' ) ) {
 											echo ' selected="selected"';}
 										?>
@@ -58,7 +58,7 @@ if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) :
 			<?php
 			$counter = 0;
 			foreach ( $results->Items->Item as $item ) :
-				$counter++;
+				++$counter;
 				?>
 			<li>
 				<?php echo $hamazon_list->format_amazon( $item->ASIN ); ?>
@@ -83,7 +83,7 @@ else :
 		<?php
 		$counter = 0;
 		foreach ( $hamazon_posts as $p ) :
-			$counter++;
+			++$counter;
 			?>
 			<dt class="clearfix">
 				<?php $obj = get_post_type_object( $p->post_type ); ?>

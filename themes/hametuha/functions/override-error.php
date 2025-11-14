@@ -12,7 +12,7 @@
  * @return string
  */
 add_filter('wp_die_handler', function ( $function ) {
-	 return '_hametuha_wp_die';
+	return '_hametuha_wp_die';
 }, 1000);
 
 /**
@@ -85,7 +85,7 @@ function _hametuha_wp_die( $message, $title = '', $args = array() ) {
 /**
  * PHPエラーページのメッセージをカスタマイズ
  */
-add_action( 'wp_php_error_message', function( $message ) {
+add_action( 'wp_php_error_message', function ( $message ) {
 	$message = <<<HTML
 <p><strong>システムエラー</strong></p>
 <p>大変申し訳ございません。技術的な問題が発生しました。時間をおいてもう一度お試しください。</p>

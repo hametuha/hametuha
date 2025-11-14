@@ -8,7 +8,7 @@
 					return esc_html( $cat->name );
 			}, get_the_category() ) )
 			?>
-				   </small>
+					</small>
 		</h4>
 		<div class="recommend__meta">
 			<span

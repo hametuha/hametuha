@@ -43,7 +43,7 @@ $total_length = 0;
 		</div>
 		<div class="work-content print-content">
 			<?php the_content(); ?>
-			<?php for ( $i = 1; $i < 20; $i ++ ) : ?>
+			<?php for ( $i = 1; $i < 20; $i++ ) : ?>
 				<div class="print-wedge" style="top: <?php echo $i * 5; ?>%">
 					<?php echo $i * 5; ?>%
 				</div>

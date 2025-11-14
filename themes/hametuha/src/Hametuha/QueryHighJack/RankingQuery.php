@@ -185,7 +185,7 @@ SQL;
 		switch ( $wp_query->get( 'ranking' ) ) {
 			case 'yearly':
 				if ( $previous ) {
-					$year--;
+					--$year;
 				}
 				$wheres[] = $this->db->prepare( 'YEAR(calc_date) = %d', $year );
 				break;

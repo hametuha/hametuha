@@ -52,7 +52,7 @@ class Notifications extends WpApi {
 						'type'              => 'integer',
 						'description'       => sprintf( '1ページあたり%d件が表示されます。整数にキャストされます。', NotificationsModel::PER_PAGE ),
 						'default'           => 1,
-						'sanitize_callback' => function( $num ) {
+						'sanitize_callback' => function ( $num ) {
 							return max( 1, (int) $num );
 						},
 					],
@@ -60,7 +60,7 @@ class Notifications extends WpApi {
 						'type'              => 'integer',
 						'description'       => '1ページあたりの件数です。',
 						'default'           => NotificationsModel::PER_PAGE,
-						'sanitize_callback' => function( $num ) {
+						'sanitize_callback' => function ( $num ) {
 							return max( 1, (int) $num );
 						},
 					],
@@ -101,7 +101,7 @@ class Notifications extends WpApi {
 			$notifications = $this->notifications->get_notifications( $user_ids, '', $request->get_param( 'paged' ), $per_page );
 			$total         = $this->notifications->found_count();
 		}
-		$notifications = array_map( function( $notification ) {
+		$notifications = array_map( function ( $notification ) {
 			ob_start();
 			$this->block( $notification );
 			$block = ob_get_contents();

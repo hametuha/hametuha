@@ -4,9 +4,24 @@
 //
 .page-header {
 
+	small {
+		font-weight: $font-weight-normal;
+		color: $shade-font;
+		margin-bottom: 0.5em;
+	}
+
 	.single & {
 		margin-bottom: 0;
 	}
+
+	.badge {
+		font-size: 0.6em;
+		vertical-align: text-bottom;
+	}
+}
+h2.page-header {
+	margin-top: 40px;
+	font-weight: $font-weight-bold;
 }
 
 //
@@ -42,6 +57,13 @@
 			text-decoration: none;
 		}
 	}
+}
+
+.dividing-header {
+	margin: 20px 0;
+	font-family: $font-family-serif;
+	padding: 20px 0 0;
+	border-top: 2px solid currentColor;
 }
 
 //

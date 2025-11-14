@@ -50,17 +50,17 @@ abstract class MyContentPattern extends WpApi {
 				'required'    => true,
 				'enum'        => $this->allowed_types(),
 			],
-			'paged' => [
+			'paged'     => [
 				'type'              => 'integer',
 				'description'       => __( 'ページ番号', 'hametuha' ),
 				'default'           => 1,
-				'sanitize_callback' => function( $num ) {
+				'sanitize_callback' => function ( $num ) {
 					return max( 1, (int) $num );
 				},
 			],
-			's' => [
-				'type' => 'string',
-				'default' => '',
+			's'         => [
+				'type'        => 'string',
+				'default'     => '',
 				'description' => __( '検索文字列', 'hametuha' ),
 			],
 		];
@@ -85,7 +85,7 @@ abstract class MyContentPattern extends WpApi {
 		if ( ! $terms || is_wp_error( $terms ) ) {
 			return [];
 		}
-		return array_map( function( $term ) {
+		return array_map( function ( $term ) {
 			return [
 				'name' => $term->name,
 				'url'  => get_term_link( $term ),
@@ -107,14 +107,14 @@ abstract class MyContentPattern extends WpApi {
 	 * @return array
 	 */
 	protected function convert_response( $object, $as = 'author' ) {
-		$format    = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-		$metas = [];
+		$format = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+		$metas  = [];
 		if ( is_a( $object, 'WP_Post' ) ) {
 			/** @var \WP_Post $post */
-			$post     = $object;
-			$date     = new \DateTime( $post->post_date, wp_timezone() );
-			$modified = new \DateTime( $post->post_modified, wp_timezone() );
-			$diff     = $modified->diff( $date );
+			$post        = $object;
+			$date        = new \DateTime( $post->post_date, wp_timezone() );
+			$modified    = new \DateTime( $post->post_modified, wp_timezone() );
+			$diff        = $modified->diff( $date );
 			$is_modified = ( 'publish' === $post->post_status ) && $diff && $diff->invert && 3 < $diff->days;
 			switch ( $post->post_type ) {
 				case 'series':
@@ -130,10 +130,10 @@ abstract class MyContentPattern extends WpApi {
 					$metas['person'] = get_the_author_meta( 'display_name', $post->post_author );
 					break;
 			}
-			if ( ! empty( $post->reviewed_at) ) {
+			if ( ! empty( $post->reviewed_at ) ) {
 				// this is rating.
-				$is_modified = false;
-				$metas['star'] = sprintf( __(  '%d/5点', 'hametuha' ), $post->rating * 10 );
+				$is_modified   = false;
+				$metas['star'] = sprintf( __( '%d/5点', 'hametuha' ), $post->rating * 10 );
 			}
 			if ( 'reader' === $as ) {
 				// Add author.
@@ -152,22 +152,22 @@ abstract class MyContentPattern extends WpApi {
 					'name'  => $post->post_status,
 					'label' => get_post_status_object( $post->post_status )->label,
 				],
-				'parent'    => ( $post->post_parent ) ? [
+				'parent'   => ( $post->post_parent ) ? [
 					'title' => get_the_title( $post->post_parent ),
 					'url'   => get_permalink( $post->post_parent ),
 				] : null,
-				'terms'     => $this->get_post_terms( $post ),
-				'metas'     => $metas,
+				'terms'    => $this->get_post_terms( $post ),
+				'metas'    => $metas,
 			];
-			if ( ! empty( $post->reviewed_at) ) {
+			if ( ! empty( $post->reviewed_at ) ) {
 				// this is rating.
-				$return['parent'] = [
+				$return['parent']   = [
 					'title' => get_the_title( $post ),
 					'url'   => get_permalink( $post ),
 				];
 				$return['edit_url'] = false;
-				$title = '';
-				$rate = (int) ( $post->rating * 10 );
+				$title              = '';
+				$rate               = (int) ( $post->rating * 10 );
 				for ( $i = 1; $i <= 5; $i++ ) {
 					$title .= ( $i <= $rate ) ? '★' : '☆';
 				}
@@ -177,12 +177,12 @@ abstract class MyContentPattern extends WpApi {
 				}
 			}
 			return $return;
-		} elseif ( is_a( $object, 'WP_Comment') ) {
+		} elseif ( is_a( $object, 'WP_Comment' ) ) {
 			/** @var \WP_Comment $comment */
 			$comment = $object;
 			if ( 'reader' === $as ) {
 				$metas['person'] = get_the_author_meta( 'display_name', get_post( $comment->comment_post_ID )->post_author );
-			} elseif( $comment->user_id ) {
+			} elseif ( $comment->user_id ) {
 				$metas['person'] = get_the_author_meta( 'display_name', $comment->user_id ) ?: __( '退会したユーザー', 'hametuha' );
 			} else {
 				$metas['person'] = $comment->comment_author;
@@ -200,12 +200,12 @@ abstract class MyContentPattern extends WpApi {
 					'name'  => ( $comment->comment_approved ) ? 'approved' : 'pending',
 					'label' => ( $comment->comment_approved ) ? __( '承認済み', 'hametuha' ) : __( '未承認', 'hametuha' ),
 				],
-				'parent'    => ( $comment->comment_post_ID ) ? [
+				'parent'   => ( $comment->comment_post_ID ) ? [
 					'title' => get_the_title( $comment->comment_post_ID ),
 					'url'   => get_permalink( $comment->comment_post_ID ),
 				] : null,
-				'terms'     => [],
-				'metas'     => $metas,
+				'terms'    => [],
+				'metas'    => $metas,
 			];
 		} else {
 			return $object;

@@ -7,6 +7,7 @@ use WPametu\UI\Widget;
 /**
  * Recent news
  *
+ * @feature-group news
  * @package hametuha
  */
 class RecentNewsWidget extends Widget {
@@ -33,7 +34,7 @@ class RecentNewsWidget extends Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				タイトル<br/>
 				<input name="<?php echo $this->get_field_name( 'title' ); ?>"
-					   id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $atts['title'] ); ?>"/>
+						id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $atts['title'] ); ?>"/>
 			</label>
 		</p>
 		<?php
@@ -58,13 +59,15 @@ class RecentNewsWidget extends Widget {
 			] );
 			while ( $recent->have_posts() ) {
 				$recent->the_post();
-				get_template_part( 'parts/loop', 'news' );
+				get_template_part( 'parts/loop', 'news', [
+					'type' => 'widget',
+				] );
 			}
 			wp_reset_postdata();
 			?>
 		</ul>
 		<p class="m20">
-			<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-default btn-block">もっと見る</a>
+			<a href="<?php echo get_post_type_archive_link( 'news' ); ?>" class="btn btn-secondary w-100">もっと見る</a>
 		</p>
 		<?php
 		$content = ob_get_contents();

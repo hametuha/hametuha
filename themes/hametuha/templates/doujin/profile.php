@@ -3,7 +3,7 @@
 $query = new WP_Query( [
 	'post_type'      => 'post',
 	'author'         => $this->doujin->ID,
-	'posts_per_page' => 3,
+	'posts_per_page' => 5,
 	'orderby'        => [ 'date' => 'DESC' ],
 	'post_status'    => 'publish',
 ] );
@@ -17,22 +17,22 @@ $query = new WP_Query( [
 
 				<div class="row">
 
-					<div class="col-xs-12 col-sm-3 text-center">
+					<div class="col-12 col-sm-3 text-center">
 						<?php
 						echo get_avatar( $this->doujin->ID, 300, '', $this->doujin->display_name, [
-							'class'    => 'doujin__img img-circle avatar',
+							'class' => 'doujin__img rounded-circle avatar',
 						] )
 						?>
 					</div>
 
-					<div class="col-xs-12 col-sm-9">
+					<div class="col-12 col-sm-9">
 
 						<h1 class="doujin__name">
 							<ruby>
 								<span><?php echo esc_html( $this->doujin->display_name ); ?></span>
 								<rt><?php echo esc_html( $this->doujin->user_lastname ); ?></rt>
 							</ruby>
-							<small><?php echo hametuha_user_role( $this->doujin->ID ); ?></small>
+							<small class="badge bg-secondary"><?php echo hametuha_user_role( $this->doujin->ID ); ?></small>
 
 							<?php hametuha_follow_btn( $this->doujin->ID ); ?>
 
@@ -83,8 +83,8 @@ $query = new WP_Query( [
 							<li>
 								<?php if ( $this->doujin->twitter ) : ?>
 									<a href="https://twitter.com/<?php echo esc_attr( $this->doujin->twitter ); ?>"
-									   class="twitter-follow-button" data-show-count="false"
-									   data-lang="ja">フォロー</a>
+										class="twitter-follow-button" data-show-count="false"
+										data-lang="ja">フォロー</a>
 								<?php else : ?>
 									<i class="icon-twitter"></i>
 									<span class="text-muted">なし</span>
@@ -133,7 +133,7 @@ $query = new WP_Query( [
 		<div class=" doujin__row doujin__row--activity">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-4 col-xs-12 doujin__item">
+					<div class="col-sm-4 col-12 doujin__item">
 						<h2 class="doujin__item--title text-center">最新投稿</h2>
 						<?php
 						if ( $query->have_posts() ) :
@@ -146,8 +146,11 @@ $query = new WP_Query( [
 								}
 								?>
 							</ul>
-							<a class="btn btn-primary btn-lg btn-block"
-							   href="<?php echo get_author_posts_url( $this->doujin->ID ); ?>">もっと見る</a>
+							<p class="mt-3 text-center">
+								<a class="btn btn-primary" href="<?php echo get_author_posts_url( $this->doujin->ID ); ?>">
+									<?php printf( __( '%sのすべての作品', 'hametuha' ), esc_html( $this->doujin->display_name ) ); ?>
+								</a>
+							</p>
 						<?php else : ?>
 							<div class="alert alert-warning">
 								投稿がありません
@@ -155,7 +158,7 @@ $query = new WP_Query( [
 						<?php endif; ?>
 
 					</div>
-					<div class="col-sm-4 col-xs-12 doujin__item">
+					<div class="col-sm-4 col-12 doujin__item mt-5 mt-sm-0">
 						<h2 class="doujin__item--title text-center">最近の活動</h2>
 						<ul class="doujin__activities">
 							<?php foreach ( $this->author->get_activities( $this->doujin->ID ) as $activity ) : ?>
@@ -166,12 +169,19 @@ $query = new WP_Query( [
 											switch ( get_comment_type( $activity->post_id ) ) {
 												case 'review':
 													$url  = get_permalink( $activity->parent_id );
-													$verb = 'レビューを送りました';
+													$verb = 'レビューを追加しました';
 													break;
 												default:
 													$url  = get_comment_link( $activity->post_id );
 													$verb = 'コメントしました';
 													break;
+											}
+											$label     = '';
+											$post_type = get_post_type( $activity->parent_id );
+											if ( $post_type ) {
+												$label = get_post_type_object( $post_type )->label;
+											} else {
+												$url = false;
 											}
 											$title = sprintf( '%s「%s」に%s',
 												get_post_type_object( get_post_type( $activity->parent_id ) )->label,
@@ -207,6 +217,12 @@ $query = new WP_Query( [
 												case 'thread':
 													$action = 'スレ立て';
 													break;
+												case 'lists':
+													$action = '編纂';
+													break;
+												case 'idea':
+													$action = 'アイデアとしてメモ';
+													break;
 												case 'announcement':
 													$action = '告知';
 													break;
@@ -217,33 +233,41 @@ $query = new WP_Query( [
 											$title = sprintf( '「%s」を%sしました。', get_the_title( $activity->post_id ), $action );
 											break;
 									}
+									if ( $url ) {
+										printf(
+											'<a href="%s"><span>%s</span><small>%s</small></a>',
+											esc_url( $url ),
+											esc_html( $title ),
+											esc_html( hametuha_passed_time( $activity->date ) )
+										);
+									} else {
+										printf(
+											'<span>%s</span><small>%s</small>',
+											esc_html( $title ),
+											esc_html( hametuha_passed_time( $activity->date ) )
+										);
+									}
 									?>
-									<a href="<?php echo esc_url( $url ); ?>">
-										<span><?php echo esc_html( $title ); ?></span>
-										<small
-											class="label label-default"><?php echo hametuha_passed_time( $activity->date ); ?></small>
-									</a>
 								</li>
 							<?php endforeach; ?>
 						</ul>
 					</div>
-					<div class="col-sm-4 col-xs-12 doujin__item">
+					<div class="col-sm-4 col-12 mt-5 mt-sm-0 doujin__item">
 						<h2 class="doujin__item--title text-center">統計</h2>
-						<dl class="dl-horizontal">
-							<dt>活動日数</dt>
-							<dd><?php echo number_format( $this->author->get_active_days( $this->doujin->ID ) ); ?></dd>
-							<dt>作品数</dt>
-							<dd><?php echo number_format( get_author_work_count( $this->doujin->ID ) ); ?></dd>
-							<dt>文字数</dt>
-							<dd><?php echo number_format( $this->author->get_letter_count( $this->doujin->ID ) ); ?></dd>
-							<dt>スター</dt>
-							<dd><?php echo number_format( $this->author->get_star_count( $this->doujin->ID ) ); ?></dd>
-							<dt>SNS戦闘力</dt>
-							<dd><?php echo number_format( $this->author->get_sns_count( $this->doujin->ID ) ); ?></dd>
+						<dl class="row">
+							<dt class="col-6">活動日数</dt>
+							<dd class="col-6"><?php echo number_format( $this->author->get_active_days( $this->doujin->ID ) ); ?></dd>
+							<dt class="col-6">作品数</dt>
+							<dd class="col-6"><?php echo number_format( get_author_work_count( $this->doujin->ID ) ); ?></dd>
+							<dt class="col-6">文字数</dt>
+							<dd class="col-6"><?php echo number_format( $this->author->get_letter_count( $this->doujin->ID ) ); ?></dd>
+							<dt class="col-6">スター</dt>
+							<dd class="col-6"><?php echo number_format( $this->author->get_star_count( $this->doujin->ID ) ); ?></dd>
+							<dt class="col-6">SNS戦闘力</dt>
+							<dd class="col-6"><?php echo number_format( $this->author->get_sns_count( $this->doujin->ID ) ); ?></dd>
 						</dl>
 						<h2 class="doujin__item--title text-center">レビュー</h2>
-						<div id="review-graph" class="doujin__item--chart">
-						</div>
+						<div id="review-graph" class="doujin__item--chart"></div>
 					</div>
 				</div>
 
@@ -257,29 +281,26 @@ $query = new WP_Query( [
 			'post_status'    => 'publish',
 			'posts_per_page' => 3,
 		] );
-		?>
-		<div class="doujin__row doujin__row--list">
-			<div class="container">
-				<div class="row">
+		if ( $query->have_posts() ) :
+			?>
+			<div class="doujin__row doujin__row--list">
+				<div class="container">
 					<h2 class="doujin__title--major text-center">リスト</h2>
-					<?php if ( $query->have_posts() ) : ?>
-						<ol class="archive-container media-list">
-							<?php
-							while ( $query->have_posts() ) {
-								$query->the_post();
-								get_template_part( 'parts/loop', get_post_type() );
-							}
-							?>
-						</ol>
-						<a class="btn btn-primary btn-lg btn-block"
-						   href="<?php echo get_author_posts_url( $this->doujin->ID ); ?>?post_type=lists">もっと見る</a>
-					<?php else : ?>
-						<div class="alert alert-warning">
-							投稿がありません
-						</div>
-					<?php endif; ?>
+					<ol class="archive-container row">
+						<?php
+						while ( $query->have_posts() ) {
+							$query->the_post();
+							get_template_part( 'parts/loop', get_post_type() );
+						}
+						?>
+					</ol>
+					<p class="mt-3 text-center">
+						<a class="btn btn-primary btn-lg" href="<?php echo home_url( "lists/by/{$this->doujin->user_nicename}/" ); ?>">
+							もっと見る
+						</a>
+					</p>
 				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 
 	</section><!-- //#doujin-detail -->

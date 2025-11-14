@@ -1,6 +1,7 @@
 # WordPress core and test suite
 /wp/
 /wp-tests/
+wp-config-local.php
 
 # Uploads and other runtime files
 /uploads/
@@ -53,6 +54,7 @@ Thumbs.db
 /themes/hametuha/composer.lock
 /themes/hametuha/package-lock.json
 /themes/hametuha/wp-dependencies.json
+/themes/hametuha/tests/sample/はい
 
 # IDE files
 .idea/

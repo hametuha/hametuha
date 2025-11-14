@@ -1,6 +1,5 @@
 .tweet{
   &--big{
-    padding-top: $navbar-height + $subnavbar-height + 40;
     padding-bottom: 40px;
     background: #f9f9f9;
   }
@@ -13,7 +12,6 @@
     border-radius:10px;
     margin-bottom: 40px;
   }
-
 
   &__link{
     &--loop{

@@ -3,7 +3,7 @@
  * ランキング用ループ
  */
 
-$rank = get_the_ranking();
+$rank       = get_the_ranking();
 $rank_class = 'rank-list-score-normal';
 if ( in_array( $rank, [ 1, 2, 3 ], true ) ) {
 	$rank_class = 'rank-list-score-' . $rank;
@@ -59,7 +59,7 @@ switch ( strlen( $rank ) ) {
 				echo hametuha_censor( get_the_title() );
 				$categories = get_the_category();
 				if ( $categories && ! is_wp_error( $categories ) ) {
-					printf( '<small>%s</small>', implode( ', ', array_map( function( WP_Term $category ) {
+					printf( '<small>%s</small>', implode( ', ', array_map( function ( WP_Term $category ) {
 						return esc_html( $category->name );
 					}, $categories ) ) );
 				}

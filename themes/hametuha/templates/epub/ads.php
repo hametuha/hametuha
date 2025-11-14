@@ -51,7 +51,7 @@ if ( count( $recommends ) < 10 ) {
 		</blockquote>
 
 		<?php
-		$counter++;
+		++$counter;
 endforeach;
 	?>
 

@@ -106,7 +106,7 @@ class Editor extends Singleton {
 		$fp  = fopen( $path, 'r' );
 		$len = 0;
 		while ( $len < 10 && ( $line = fgets( $fp, 1024 ) ) ) {
-			$len++;
+			++$len;
 			if ( preg_match( '/@wpdeps(.*)$/u', $line, $matches ) ) {
 				$deps = array_filter( array_map( 'trim', explode( ',', $matches[1] ) ) );
 				break;
@@ -141,8 +141,8 @@ class Editor extends Singleton {
 				break;
 			case 'post':
 				if ( 0 < $post->post_parent && get_post( $post->post_parent ) ) {
-					$link = get_edit_post_link( $post->post_parent );
-					$title = get_the_title( $post->post_parent );
+					$link                       = get_edit_post_link( $post->post_parent );
+					$title                      = get_the_title( $post->post_parent );
 					$post_states['post-parent'] = $link ? sprintf( '<a href="%s">%s</a>', $link, esc_html( $title ) ) : esc_html( $title );
 				}
 				break;

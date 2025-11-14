@@ -39,7 +39,7 @@ class PostReadMore extends EditMetaBox {
 			'required'    => false,
 			'description' => '書籍化などで外部のURLで続きを読んで欲しい場合はこちらにURLを入力してください。投稿がチラ見せ状態になります。',
 			'placeholder' => '例）https://amazon.co.jp/example',
-			'input_type'  =>  'url',
+			'input_type'  => 'url',
 		],
 		'_external_url_limit' => [
 			'class'       => Date::class,

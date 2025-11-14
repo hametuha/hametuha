@@ -1,0 +1,40 @@
+// タグ関連のデザイン
+
+.tag-cloud a,
+.term-link {
+	display: inline-block;
+	padding: 3px 7px;
+	border-radius: 7px;
+	border: 1px solid currentColor;
+	color: $gray-600;
+	margin-right: 0.5em;
+
+	&:last-child{
+		margin-right: 0;
+	}
+
+	&:link,
+	&:visited {
+		text-decoration: none;
+		color: $gray-600;
+	}
+
+	&:hover,
+	&:active {
+		background-color: $gray-600;
+		color: $white;
+	}
+
+	&-sm {
+		font-size: $font-size-sm;
+		padding: 0.2em 0.5em;
+	}
+}
+
+.tag-cloud {
+	margin: 20px 0;
+
+	a {
+		margin-bottom: 10px;
+	}
+}

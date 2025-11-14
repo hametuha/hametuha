@@ -21,11 +21,4 @@ $min = $args['min'] ?? 1;
 	</ul>
 	<div class="user-picker__loader text-center"></div>
 	<input type="hidden" name="<?php echo esc_attr( $id ); ?>" id="<?php echo esc_attr( $id ); ?>"/>
-	<script type="text/x-jsrender" id="<?php echo esc_attr( $id ); ?>-template">
-		<li class="user-picker__item" data-user-id="{{:ID}}">
-			<a class="user-picker__link" href="#" data-user-id="{{:ID}}">
-				<img src="{{:avatar}}"> {{:display_name}} <i class="icon-close"></i>
-			</a>
-		</li>
-	</script>
 </div><!-- //.user-picker -->

@@ -1,9 +1,17 @@
 <?php
-/** @var \Hametuha\Rest\Testimonial $this */
-/** @var WP_Post $post */
-/** @var array $testimonials */
+/**
+ * レビューの管理
+ *
+ * @feature-group series
+ * @var \Hametuha\Rest\Testimonial $this
+ *
+ * @var WP_Post $post
+ * @var array $testimonials
+ */
+
+wp_enqueue_script( 'hametuha-components-edit-testimonials-helper' );
+get_header();
 ?>
-<?php get_header(); ?>
 
 	<div id="breadcrumb" itemprop="breadcrumb">
 		<div class="container">
@@ -18,9 +26,9 @@
 
 	<div class="container single">
 
-		<div class="row row-offcanvas row-offcanvas-right">
+		<div class="row">
 
-			<div class="col-xs-12">
+			<div class="col-12">
 
 				<h2>
 					<?php echo get_the_title( $post ); ?>のレビュー管理
@@ -59,7 +67,7 @@
 
 										<div class="testimonialList__meta">
 											<ul class="list-inline">
-												<li>
+												<li class="list-inline-item">
 													<?php if ( $comment->display ) : ?>
 														<span class="ok">
 															<i class="icon-bubble-check"></i>
@@ -72,15 +80,15 @@
 														</span>
 													<?php endif; ?>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong
 														class="name"><?php echo esc_html( $comment->comment_author ); ?></strong>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong>公開日</strong>
 													<?php echo mysql2date( get_option( 'date_format' ), $comment->comment_date ); ?>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong>種別</strong>
 													<?php
 													if ( ! $comment->comment_type ) {
@@ -95,7 +103,7 @@
 													}
 													?>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong>評価</strong>
 													<?php if ( $comment->rank ) : ?>
 														<i class="icon-star6"></i> &times; <?php echo $comment->rank; ?>
@@ -103,7 +111,7 @@
 														<span class="text-muted">評価なし</span>
 													<?php endif; ?>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong>登録者</strong>
 													<?php
 													if ( $comment->user_id && ( $user = get_userdata( $comment->user_id ) ) ) {
@@ -113,9 +121,9 @@
 													}
 													?>
 												</li>
-												<li>
+												<li class="list-inline-item">
 													<strong>優先順位</strong>
-													<?php echo number_format( $comment->priority ); ?>
+													<?php echo number_format( (int) $comment->priority ); ?>
 												</li>
 											</ul>
 
@@ -123,7 +131,7 @@
 										<!-- //.testimonialList__meta -->
 										<div class="testimonialList__display row">
 
-											<div class="testimonialList__content col-xs-10">
+											<div class="testimonialList__content col-10">
 											<?php if ( $comment->twitter ) : ?>
 												<?php show_twitter_status( $comment->comment_author_url ); ?>
 											<?php else : ?>
@@ -133,157 +141,41 @@
 											<?php endif; ?>
 											</div>
 
-											<div class="testimonialList__controller col-xs-2 clearfix">
-												<button data-toggle="modal"
-														data-target="#comment-modal-<?php echo $comment->comment_ID; ?>"
-														class="testimonialList__link testimonialList__link--edit btn btn-block btn-primary">
+											<div class="testimonialList__controller col-2 clearfix">
+												<button data-bs-toggle="modal"
+														data-bs-target="#comment-modal-<?php echo $comment->comment_ID; ?>"
+														class="testimonialList__link testimonialList__link--edit btn w-100 btn-primary mb-2 mt-2">
 													編集
 												</button>
 												<?php if ( $comment->comment_post_ID == $post->ID ) : ?>
-												<a href="<?php echo home_url( '/testimonials/delete/' . $comment->comment_ID . '/', 'https' ); ?>"
-												   class="testimonialList__link testimonailList__link--delete btn btn-block btn-danger">削除</a>
+													<button data-path="<?php echo esc_attr( '/hametuha/v1/testimonials/' . $comment->comment_ID . '/' ); ?>"
+														class="testimonial-delete btn w-100 btn-danger">
+														削除
+													</button>
 												<?php else : ?>
-												<button class="btn btn-block btn-danger" disabled>削除</button>
+													<button class="btn w-100 btn-danger" disabled>削除</button>
 												<?php endif; ?>
 											</div>
 
 										</div>
 
 										<div class="modal fade" id="comment-modal-<?php echo $comment->comment_ID; ?>"
-											 tabindex="-1" role="dialog">
-											<form class="form-horizontal" method="post"
-												  action="<?php echo home_url( '/testimonials/edit/' . $comment->comment_ID . '/', 'https' ); ?>">
-												<?php wp_nonce_field( 'manage_testimonial' ); ?>
-												<div class="modal-dialog" role="document">
-													<div class="modal-content">
-														<div class="modal-body">
-															<?php if ( $post->ID == $comment->comment_post_ID ) : ?>
-																<?php if ( ! $comment->twitter ) : ?>
-																<div class="form-group">
-																	<label for="comment-author"
-																		   class="col-sm-4 control-label">名前</label>
-
-																	<div class="col-sm-8">
-																		<input type="text" name="comment-author"
-																			   id="comment-author"
-																			   class="form-control"
-																			   value="<?php echo esc_attr( $comment->comment_author ); ?>"/>
-																	</div>
-																</div>
-																<div class="form-group">
-																	<label for="comment-rank"
-																		   class="col-sm-4 control-label">五段階評価</label>
-
-																	<div class="col-sm-8">
-																		<select class="form-control" id="comment-rank"
-																				name="comment-rank">
-																			<?php
-																			foreach (
-																				[
-																					'0' => '評価なし',
-																					'5' => 'とても良い',
-																					'4' => '良い',
-																					'3' => '普通',
-																					'2' => '悪い',
-																					'1' => 'とても悪い',
-																				] as $index => $label
-																			) {
-																				printf( '<option value="%1$s"%2$s>%1$s %3$s</option>', $index, selected( $index == $comment->rank, true, false ), $label );
-																			}
-																			?>
-																		</select>
-																	</div>
-																</div>
-																<?php endif; ?>
-
-																<div class="form-group">
-																	<label for="comment-url"
-																		   class="col-sm-4 control-label">URL</label>
-
-																	<div class="col-sm-8">
-																		<input type="text" name="comment-url"
-																			   id="comment-url"
-																			   class="form-control"
-																			   value="<?php echo esc_attr( $comment->comment_author_url ); ?>"/>
-																	</div>
-																</div>
-															<?php endif; ?>
-
-															<div class="form-group">
-																<label class="col-sm-4 control-label">公開状態</label>
-
-																<div class="col-sm-8">
-																	<label class="radio-inline">
-																		<input type="radio" name="comment-status"
-																			   value="0" <?php checked( ! $comment->display ); ?>>
-																		公開しない
-																	</label>
-																	<label class="radio-inline">
-																		<input type="radio" name="comment-status"
-																			   value="1" <?php checked( $comment->display ); ?>>
-																		公開する
-																	</label>
-																</div>
-															</div>
-
-															<div class="form-group">
-																<label class="col-sm-4 control-label"
-																	   for="comment-priority">
-																	優先順位
-																</label>
-
-																<div class="col-sm-8">
-																	<input type="number" name="comment-priority"
-																		   id="comment-priority"
-																		   value="<?php echo esc_attr( $comment->priority ); ?>"
-																		   min="0">
-																	<?php help_tip( 'コメントは「優先順位の高さ＞日付の新しい順」で表示されます。重要なものの順位を高くしてください。' ); ?>
-																</div>
-															</div>
-
-															<?php if ( ! $comment->twitter ) : ?>
-
-																<div class="form-group">
-																<label class="col-sm-4 control-label"
-																	   for="comment-content">コメント本文</label>
-
-																<div class="col-sm-8">
-																	<?php if ( 'review' === $comment->comment_type ) : ?>
-																		<textarea class="form-control"
-																				  id="comment-content"
-																				  name="comment-content"
-																				  rows="5"><?php echo esc_textarea( $comment->comment_content ); ?></textarea>
-																	<?php else : ?>
-																		<textarea class="form-control"
-																			id="comment-content"
-																			name="comment-excerpt"
-																			rows="3"><?php echo esc_textarea( get_comment_meta( $comment->comment_ID, 'comment_excerpt', true ) ); ?></textarea>
-																		<span class="help-block">
-																			投稿へ付けられたコメントの一部を抜粋できます。含まれていない文字列は無効です。
-																			抜粋がない場合は全文が表示されます。
-																		</span>
-																		<pre><?php echo esc_html( $comment->comment_content ); ?></pre>
-																	<?php endif; ?>
-																</div>
-															</div>
-
-															<?php endif; ?>
-
-														</div>
-														<!-- //.modal-body -->
-
-														<div class="modal-footer">
-															<button type="button" class="btn btn-default"
-																	data-dismiss="modal">キャンセル
-															</button>
-															<input type="submit" class="btn btn-primary" value="更新">
-														</div>
-
+											tabindex="-1" role="dialog">
+											<div class="modal-dialog" role="document">
+												<div class="modal-content">
+													<div class="modal-body">
+														<?php
+														get_template_part( 'templates/testimonial/form-add', '', [
+															'comment' => $comment,
+															'layout'  => 'horizontal',
+														] )
+														?>
 													</div>
-													<!-- //.modal-content -->
+													<!-- //.modal-body -->
 												</div>
-												<!-- //.modal-dialog -->
-											</form>
+												<!-- //.modal-content -->
+											</div>
+											<!-- //.modal-dialog -->
 										</div>
 										<!-- //.modal -->
 

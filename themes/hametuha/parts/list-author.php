@@ -46,14 +46,12 @@ $authors_recent = hametuha_get_author_work_siblings();
 </div>
 <?php endif; ?>
 
-<section class="m20">
+<section class="m20 mb-2 mt-2">
 
-	<div class="row">
-		<div class="col-xs-8 col-xs-offset-2">
-			<a href="<?php echo home_url( '/doujin/detail/' . get_the_author_meta( 'nicename' ) . '/' ); ?>" class="btn btn-default btn-lg btn-block">
-				<?php esc_html_e( '著者詳細プロフィール', 'hametuha' ); ?>
-			</a>
-		</div>
+	<div class="text-center">
+		<a href="<?php echo home_url( '/doujin/detail/' . get_the_author_meta( 'nicename' ) . '/' ); ?>" class="btn btn-primary btn-lg">
+			<?php esc_html_e( '著者詳細プロフィール', 'hametuha' ); ?>
+		</a>
 	</div>
 
 </section>

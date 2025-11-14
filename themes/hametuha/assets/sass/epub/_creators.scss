@@ -22,7 +22,7 @@
     float: right;
     margin: 0.5em 0 1.5em 1.5em;
     border-radius: 50%;
-    @media only screen and (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
       max-width: 60px;
       width: 60px;
       height: 60px;
@@ -30,7 +30,7 @@
   }
   dl{
     $dt-width: 8em;
-    @media only screen and (max-width: $screen-sm-max) {
+    @include media-breakpoint-down(md) {
       clear: both;
     }
     dt{

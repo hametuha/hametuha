@@ -1,49 +1,73 @@
-<li data-post-id="<?php the_ID(); ?>" <?php post_class( 'media tweet--loop' ); ?>>
+<?php
+/**
+ * 安否情報をカードレイアウトで表示する
+ *
+ * @feature-group anpi
+ * @var array $args
+ */
+$args = wp_parse_args( [
+	'type' => 'card',
+] );
+$anpi = \Hametuha\Model\Anpis::get_instance();
+?>
+<div data-post-id="<?php the_ID(); ?>" class="col-sm-6 col-md-4 mb-4">
 
-	<a href="<?php the_permalink(); ?>" class="tweet__link--loop">
-		<div class="tweet__author">
-			<h2 class="tweet__author--header clearfix">
-				<?php echo get_avatar( get_the_author_meta( 'ID' ), 96, '', get_the_author(), [ 'class' => 'avatart img-circle' ] ); ?>
-				<span class="tweet__author--name"><?php the_author(); ?></span>
-				<small><?php echo hametuha_user_role( get_the_author_meta( 'ID' ) ); ?></small>
-				<br/>
-				<small class="tweet__date text-muted">
-					<i class="icon-calendar"></i> <?php the_time( get_option( 'date_format' ) . ' H:i' ); ?>
-				</small>
-			</h2>
-		</div>
+	<div class="card card-idea card-list-item">
 
-		<div class="tweet__content tweet__content--loop">
-			<?php if ( ! \Hametuha\Model\Anpis::get_instance()->is_tweet() ) : ?>
-				<h2 class="tweet__content--title"><?php the_title(); ?></h2>
+		<div class="card-body">
+
+			<!-- Title -->
+			<div class="mb-3 d-flex justify-content-between align-items-start">
+				<h2 class="h4 card-title">
+					<?php
+						$title = $anpi->is_tweet() ? sprintf(
+							esc_html__( '%1$sさんの安否報告#%2$d', 'hametuha' ),
+							get_the_author( 'display_name' ),
+							get_the_ID()
+						) : get_the_title();
+						?>
+					<a href="<?php the_permalink(); ?>"><?php echo esc_html( $title ); ?></a>
+				</h2>
+			</div>
+
+
+			<?php
+			$terms = get_the_terms( get_the_ID(), 'anpi_cat' );
+			if ( $terms && ! is_wp_error( $terms ) ) :
+				?>
+				<p>
+					<?php
+					echo implode( ' ', array_map( function ( $term ) {
+						return sprintf(
+							'<a href="%s" class="term-link term-link-sm">#%s</a>',
+							esc_url( get_term_link( $term ) ),
+							esc_html( $term->name )
+						);
+					}, $terms ) );
+					?>
+				</p>
 			<?php endif; ?>
-			<?php the_excerpt(); ?>
-		</div>
 
-		<div class="tweet__meta">
-			<span class="tweet__comment">
-				<i class="icon-bubble"></i> | <?php comments_number( '0', '1', '%' ); ?>
-			</span>
-			<span class="tweet__mentions">
-				@ |
-				<?php if ( $post->mention_to ) : ?>
-					<?php foreach ( $post->mention_to as $user ) : ?>
-						<span
-						   class="help-tip"
-						   title="<?php echo esc_attr( $user->display_name ); ?>">
-							<?php
-							echo get_avatar( $user->ID, 32, '', $user->display_name, [
-								'title' => $user->display_name,
-								'class' => 'img-circle avatar tweet__mentions--img',
-							] )
-							?>
-						</span>
-					<?php endforeach; ?>
-				<?php else : ?>
-					-
-				<?php endif; ?>
+			<p class="card-text idea-excerpt">
+				<?php echo esc_html( get_the_excerpt() ); ?>
+			</p>
+
+			<p class="author-info">
+				<?php
+				echo get_avatar( get_the_author_meta( 'ID' ), 40, '', get_the_author_meta( 'display_name' ), [
+					'class' => 'img-circle',
+				] );
+				?>
+				<span>
+					<?php the_author(); ?>
+				</span>
+			</p>
+		</div><!-- .card-body -->
+
+		<div class="card-footer d-flex justify-content-between text-muted">
+			<span>
+				<?php echo hametuha_passed_time( $post->post_date ); ?>
 			</span>
 		</div>
-	</a>
-
-</li>
+	</div><!-- .card -->
+</div>

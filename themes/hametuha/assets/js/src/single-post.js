@@ -190,7 +190,7 @@ Chart.defaults.global.responsive = true;
                 $article.attr('id', defaultView).removeClass('show-nav');
                 $(window).trigger('toggle.scroll.hametuha', [true]);
             };
-        $nav.on('click', 'a', function(e){
+        $nav.on('click', 'a.has-wrapper', function(e){
             e.preventDefault();
             if( $(this).hasClass('active') ){
                 $(this).removeClass('active');
@@ -245,58 +245,6 @@ Chart.defaults.global.responsive = true;
                 $radar.replaceWith('<p class="alert alert-danger">Canvasに対応していないため、ご利用の環境ではレーダーチャートを表示できません。</p>');
             }
         }
-
-        // 評価送信
-        $(document).on('submit', '#review-form', function(e){
-            e.preventDefault();
-            var $btn = $(this).find('input[type=submit]');
-            $btn.button('loading');
-            $(this).ajaxSubmit({
-                dataType: 'json',
-                success: function(result){
-                    $btn.button('reset');
-                    if( result.error ){
-                        Hametuha.alert(result.message, true);
-                    }else{
-                        Hametuha.alert(result.message);
-                        $btn.button('complete');
-                        if( result.guest ){
-                            setTimeout(function(){
-                                $btn.attr('disabled', true);
-                            }, 50);
-                        }
-                    }
-                },
-                error: function(){
-                    Hametuha.alert('評価を送信できませんでした。', true);
-                    $btn.button('reset');
-                }
-
-            });
-        });
-
-        // スターレーティング
-        $(document).on('click', '.star-rating i', function(){
-            var value = parseInt($(this).attr('data-value'), 10);
-            $('.star-rating i').each(function(index, elt){
-                if( parseInt($(elt).attr('data-value'), 10) <= value ){
-                    $(elt).addClass('active');
-                }else{
-                    $(elt).removeClass('active');
-                }
-            });
-            $(this).nextAll('input[type=hidden]').val(value);
-        });
-
-
-        // リスト作成完了
-        $(document).on('created.hametuha', '.list-create-form', function(event, post){
-            $('#list-changer').append('<div class="checkbox"><label>' +
-            '<input type="checkbox" name="lists[]" value="' + post.ID + '" checked>' +
-            ( 'private' === post.post_status ? '非公開: ' : '公開　: ') + post.post_title +
-            '</label></div>');
-        });
-
     });
 
     // 脚注

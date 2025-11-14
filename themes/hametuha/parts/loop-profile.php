@@ -5,7 +5,7 @@ $profile = $post->helper;
 <li <?php post_class( 'media media--profile' ); ?>>
 
 	<a class="media__link media__link--nopad"
-	   href="<?php echo home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ); ?>">
+		href="<?php echo home_url( sprintf( '/doujin/detail/%s/', get_the_author_meta( 'user_nicename' ) ) ); ?>">
 
 		<div class="pull-left comment-face">
 			<?php echo $profile->avatar( 120 ); ?>
@@ -23,7 +23,7 @@ $profile = $post->helper;
 
 			<?php if ( $profile->score ) : ?>
 				<div class="media__score">
-					<?php for ( $i = 0; $i < $profile->score; $i ++ ) : ?>
+					<?php for ( $i = 0; $i < $profile->score; $i++ ) : ?>
 						★
 					<?php endfor; ?>
 				</div>

@@ -12,7 +12,7 @@ function hametuha_financial_year( $date = 'now' ) {
 	$time = new DateTime( $date, $tz );
 	$year = $time->format( 'Y' );
 	if ( 3 > $time->format( 'n' ) ) {
-		$year --;
+		--$year;
 	}
 
 	return $year;
@@ -177,6 +177,16 @@ function loop_count() {
 }
 
 /**
+ * ページ数を返す。listで受け取る。
+ *
+ * @return int[] 現在のページ、総ページ
+ */
+function hametuha_page_numbers() {
+	global $wp_query;
+	return [ max( 1, $wp_query->get( 'paged' ) ), $wp_query->max_num_pages ];
+}
+
+/**
  * アドセンス広告を出力する
  *
  * @param type $type
@@ -259,6 +269,19 @@ function the_post_length( $prefix = '', $suffix = '', $placeholder = '0', $per_p
 	} else {
 		echo $prefix . number_format_i18n( max( array( 1, round( $length / $per_page ) ) ) ) . $suffix;
 	}
+}
+
+/**
+ * 平均読了時間を表示
+ *
+ * @param int              $letters_per_minute
+ * @param null|int|WP_Post $post
+ *
+ * @return float
+ */
+function hametuha_reading_time( $letters_per_minute = 500, $post = null ) {
+	$length = get_post_length( $post );
+	return round( $length / $letters_per_minute );
 }
 
 /**
@@ -368,7 +391,7 @@ function is_new_post( $offset = 7, $post = null ) {
  * @param int    $offset    Default 7 days.
  * @return bool
  */
-function hametuha_is_new( $date_time, $offset = 7) {
+function hametuha_is_new( $date_time, $offset = 7 ) {
 	$now  = new DateTime( 'now', wp_timezone() );
 	$date = new DateTime( $date_time, wp_timezone() );
 	$now->sub( new DateInterval( 'P' . $offset . 'D' ) );
@@ -399,11 +422,11 @@ function get_post_children_count( $post_type = 'post', $status = 'publish', $pos
 function needs_left_sidebar() {
 	return (bool) (
 		( is_archive() &&
-		  ! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
+			! ( is_tax( 'faq_cat' ) || is_post_type_archive( 'faq' ) || is_tax( 'topic' ) || is_post_type_archive( 'thread' ) )
 		)
 		||
 		( is_search() &&
-		  ! ( is_post_type_archive( 'faq' ) || is_post_type_archive( 'thread' ) )
+			! ( is_post_type_archive( 'faq' ) || is_post_type_archive( 'thread' ) )
 		)
 		||
 		is_404()

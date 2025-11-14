@@ -3,7 +3,7 @@ if ( is_preview() ) {
 	return;
 }
 ?>
-<div class="row row--share share__container">
+<div class="share__container">
 
 	<?php
 	if ( is_singular() ) {

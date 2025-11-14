@@ -41,7 +41,7 @@ class ShortLinks extends Model {
 	 * @param int $term_taxonomy_id
 	 * @return bool
 	 */
-	protected  function record_exists( $user_id, $post_id, $term_taxonomy_id ) {
+	protected function record_exists( $user_id, $post_id, $term_taxonomy_id ) {
 		return (bool) $this->select( 'COUNT(*)' )
 			->wheres([
 				"{$this->table}.user_id = %d"          => $user_id,
@@ -111,7 +111,7 @@ class ShortLinks extends Model {
 		$base  = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$limit = strlen( $string );
 		$res   = strpos( $base, $string[0] );
-		for ( $i = 1; $i < $limit; $i ++ ) {
+		for ( $i = 1; $i < $limit; $i++ ) {
 			$res = $b * $res + strpos( $base, $string[ $i ] );
 		}
 		return $res;
@@ -136,5 +136,4 @@ class ShortLinks extends Model {
 		]);
 		return (int) $this->db->insert_id;
 	}
-
 }

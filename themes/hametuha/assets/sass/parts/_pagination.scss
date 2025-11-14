@@ -1,0 +1,45 @@
+// ページネーション
+$page-links-color: $gray-800 !default;
+
+.link-pages {
+	margin: 1.5em 0 2em !important;
+	text-align: center;
+	font-family: sans-serif;
+	text-indent: 0 !important;
+
+	& > span,
+	a {
+		font-size: 14px;
+		@include inline-block();
+		margin-right: 0.5em;
+		padding: 0.25em 0.75em;
+		border-radius: 5px;
+		color: $white;
+		border: 1px solid $page-links-color;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+
+	& > span {
+		background-color: $page-links-color;
+		color: $white;
+	}
+
+	a {
+		&:link,
+		&:visited {
+			background-color: $white !important;
+			color: $page-links-color;
+			text-decoration: none;
+		}
+
+		&:hover,
+		&:active{
+			background-color: $page-links-color !important;
+			color: $white;
+			text-decoration: none;
+		}
+	}
+}

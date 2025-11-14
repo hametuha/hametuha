@@ -76,6 +76,4 @@ class Readings extends Screen {
 			'slug' => 'dashboard-reading-footer',
 		] );
 	}
-
-
 }

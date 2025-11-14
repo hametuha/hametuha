@@ -8,12 +8,15 @@
 	$height: 80px;
 
 	&__container {
-		margin-top: $height * 0.5;
-		margin-bottom: $height * 0.5;
-		padding-top: 1em;
+		margin-top: $height * 0.25;
+		margin-bottom: $height * 0.25;
 		display: flex;
 		justify-content: center;
 		gap: 0.75rem;
+
+		p {
+			margin: 0;
+		}
 
 		.shareContainer__wrapper * {
 			padding-top: $height / 2;
@@ -35,6 +38,10 @@
 		border-radius: 10px;
 		border: 2px solid currentColor;
 		font-weight: 700;
+		@include media-breakpoint-down(sm) {
+			border-radius: 50%;
+			border-width: 3px;
+		}
 
 		&:link,
 		&:visited {
@@ -76,11 +83,17 @@
 			line-height: 1;
 			font-size: 14px;
 			vertical-align: text-bottom;
+			@include media-breakpoint-down(sm) {
+				vertical-align: middle;
+			}
 		}
 	}
 
 	&__text {
 		font-size: 14px;
 		margin-left: 0.125em;
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
 	}
 }

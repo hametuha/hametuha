@@ -82,8 +82,8 @@ class SeriesCollaborators extends SeriesBase {
 				<th><label for="owner_label">責任者</label></th>
 				<td>
 					<input type="text" name="owner_label" id="owner_label" class="widefat"
-						   value="<?php echo esc_attr( get_post_meta( $post->ID, '_owner_label', true ) ); ?>"
-						   placeholder="<?php echo esc_attr( get_the_author_meta( 'display_name', $post->post_author ) ); ?>"/>
+							value="<?php echo esc_attr( get_post_meta( $post->ID, '_owner_label', true ) ); ?>"
+							placeholder="<?php echo esc_attr( get_the_author_meta( 'display_name', $post->post_author ) ); ?>"/>
 					<p class="description">責任者の名前を変更したい場合はこちらに入力してください（例・破滅派編集部）</p>
 				</td>
 			</tr>
@@ -100,7 +100,7 @@ class SeriesCollaborators extends SeriesBase {
 				</td>
 			</tr>
 		</table>
-		<div id="series-collaborators" data-post-id="<?php echo esc_attr( $post->ID); ?>"></div>
+		<div id="series-collaborators" data-post-id="<?php echo esc_attr( $post->ID ); ?>"></div>
 		<?php
 	}
 }

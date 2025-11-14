@@ -8,19 +8,19 @@
 /**
  * Change thread setting.
  */
-add_filter( 'hamethread_post_setting', function( $args ) {
+add_filter( 'hamethread_post_setting', function ( $args ) {
 	$args['description'] = '破滅派BBSは参加者達が意見交換をする場所です。積極的にご参加ください。匿名での投稿もできます。';
 	return $args;
 } );
 
-add_filter( 'private_title_format', function() {
+add_filter( 'private_title_format', function () {
 	return '%s';
 } );
 
 /**
  * Allow private thread.
  */
-add_filter( 'hamethread_user_can_start_private_thread', function( $allow ) {
+add_filter( 'hamethread_user_can_start_private_thread', function ( $allow ) {
 	return true;
 } );
 
@@ -29,7 +29,7 @@ add_filter( 'hamethread_user_can_start_private_thread', function( $allow ) {
  *
  *
  */
-add_action( 'hamethread_after_thread_form', function( $args, $default ) {
+add_action( 'hamethread_after_thread_form', function ( $args, $default ) {
 	if ( $args['post'] ) {
 		return;
 	}
@@ -58,7 +58,7 @@ add_action( 'hamethread_after_thread_form', function( $args, $default ) {
 /**
  * Validation for private && anonymous
  */
-add_filter( 'hamethread_new_thread_validation', function( WP_Error $error, WP_REST_Request $request ) {
+add_filter( 'hamethread_new_thread_validation', function ( WP_Error $error, WP_REST_Request $request ) {
 	if ( $request->get_param( 'is_private' ) && $request->get_param( 'post_as_anonymous' ) ) {
 		$error->add( 'hidden_thread', '匿名かつ非公開だと誰も見られないスレッドになってしまいます。', [
 			'response' => 400,
@@ -71,12 +71,12 @@ add_filter( 'hamethread_new_thread_validation', function( WP_Error $error, WP_RE
 /**
  * Add post arguments.
  */
-add_filter( 'hamethread_new_thread_post_params', function( $args ) {
+add_filter( 'hamethread_new_thread_post_params', function ( $args ) {
 	$args['notify_to_editor']  = [
 		'type'              => 'int',
 		'description'       => 'Flag to detect send notification to editor.',
 		'default'           => 0,
-		'validate_callback' => function( $var ) {
+		'validate_callback' => function ( $var ) {
 			return is_numeric( $var );
 		},
 	];
@@ -84,7 +84,7 @@ add_filter( 'hamethread_new_thread_post_params', function( $args ) {
 		'type'              => 'int',
 		'description'       => 'Flag to detect post as anonymous.',
 		'default'           => 0,
-		'validate_callback' => function( $var ) {
+		'validate_callback' => function ( $var ) {
 			return is_numeric( $var );
 		},
 	];
@@ -94,7 +94,7 @@ add_filter( 'hamethread_new_thread_post_params', function( $args ) {
 /**
  * Allow anonymous post.
  */
-add_filter( 'hamethread_new_thread_post_arg', function( array $args, WP_REST_Request $request ) {
+add_filter( 'hamethread_new_thread_post_arg', function ( array $args, WP_REST_Request $request ) {
 	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
 		$args['post_author'] = $anonymous->ID;
 	}
@@ -104,7 +104,7 @@ add_filter( 'hamethread_new_thread_post_arg', function( array $args, WP_REST_Req
 /**
  * Remove current user from watch list.
  */
-add_filter( 'hamethread_default_subscribers', function( array $subscribers, $post_id, $user_id, WP_REST_Request $request ) {
+add_filter( 'hamethread_default_subscribers', function ( array $subscribers, $post_id, $user_id, WP_REST_Request $request ) {
 	if ( $request->get_param( 'post_as_anonymous' ) ) {
 		$filtered = [];
 		foreach ( $subscribers as $subscriber ) {
@@ -120,7 +120,7 @@ add_filter( 'hamethread_default_subscribers', function( array $subscribers, $pos
 /**
  * Anonymous and notification staff
  */
-add_action( 'hamethread_new_thread_inserted', function( $post_id, WP_REST_Request $request ) {
+add_action( 'hamethread_new_thread_inserted', function ( $post_id, WP_REST_Request $request ) {
 	$post = get_post( $post_id );
 	// If anonymous, mark ID.
 	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) && $post->post_author == $anonymous->ID ) {
@@ -145,13 +145,13 @@ add_action( 'hamethread_new_thread_inserted', function( $post_id, WP_REST_Reques
 /**
  * Allow anonymous comment.
  */
-add_filter( 'hamethread_new_comment_rest_args', function( $args, $http_method ) {
+add_filter( 'hamethread_new_comment_rest_args', function ( $args, $http_method ) {
 	if ( 'POST' === $http_method ) {
 		$args['post_as_anonymous'] = [
 			'type'              => 'int',
 			'description'       => 'Flag to detect post as anonymous.',
 			'default'           => 0,
-			'validate_callback' => function( $var ) {
+			'validate_callback' => function ( $var ) {
 				return is_numeric( $var );
 			},
 		];
@@ -162,7 +162,7 @@ add_filter( 'hamethread_new_comment_rest_args', function( $args, $http_method ) 
 /**
  * Display anonymous comment toggle.
  */
-add_action( 'hamethread_after_comment_form', function( $args, $comment = null ) {
+add_action( 'hamethread_after_comment_form', function ( $args, $comment = null ) {
 	if ( $comment ) {
 		return;
 	}
@@ -183,7 +183,7 @@ add_action( 'hamethread_after_comment_form', function( $args, $comment = null ) 
 /**
  * Display floating button.
  */
-add_action( 'hametuha_after_whole_body', function() {
+add_action( 'hametuha_after_whole_body', function () {
 	if ( ! ( is_singular( 'thread' ) || is_post_type_archive( 'thread' ) || is_tax( 'topic' ) ) ) {
 		return;
 	}
@@ -204,7 +204,7 @@ add_action( 'hametuha_after_whole_body', function() {
 /**
  * Post comment.
  */
-add_filter( 'hamethread_new_comment_params', function( array $params, WP_REST_Request $request ) {
+add_filter( 'hamethread_new_comment_params', function ( array $params, WP_REST_Request $request ) {
 	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
 		$params = array_merge( $params, [
 			'comment_author'       => $anonymous->display_name,
@@ -219,7 +219,7 @@ add_filter( 'hamethread_new_comment_params', function( array $params, WP_REST_Re
 /**
  * Save original author comment.
  */
-add_action( 'hamethread_new_comment_inserted', function( $comment_id, array $comment_param, WP_REST_Request $request ) {
+add_action( 'hamethread_new_comment_inserted', function ( $comment_id, array $comment_param, WP_REST_Request $request ) {
 	if ( $request->get_param( 'post_as_anonymous' ) && ( $anonymous = hametuha_get_anonymous_user() ) ) {
 		update_comment_meta( $comment_id, '_anonymous_author', get_current_user_id() );
 	}
@@ -228,9 +228,9 @@ add_action( 'hamethread_new_comment_inserted', function( $comment_id, array $com
 /**
  * Remove anonymous user from subscribers.
  */
-add_filter( 'hamethread_subscribers', function( $subscribers, $post ) {
+add_filter( 'hamethread_subscribers', function ( $subscribers, $post ) {
 	if ( $anonymous = hametuha_get_anonymous_user() ) {
-		$subscribers = array_filter( $subscribers, function( $subscriber ) use ( $anonymous ) {
+		$subscribers = array_filter( $subscribers, function ( $subscriber ) use ( $anonymous ) {
 			return $subscriber != $anonymous->ID;
 		} );
 	}
@@ -258,7 +258,7 @@ add_filter( 'get_comment_author', function ( $author, $comment_id, $comment ) {
  * @param string     $comment_text
  * @param WP_Comment $comment
  */
-add_filter( 'get_comment_text', function( $comment_text, $comment ) {
+add_filter( 'get_comment_text', function ( $comment_text, $comment ) {
 	if ( hametuha_is_deleted_users_comment( $comment ) && ! current_user_can( 'edit_post', $comment->comment_post_ID ) ) {
 		$comment_text = <<<HTML
 退会したユーザーのコメントは表示されません。
@@ -271,7 +271,7 @@ HTML;
 /**
  * Comments can only editable by editors.
  */
-add_filter( 'map_meta_cap', function( $caps, $cap, $user_id, $args ) {
+add_filter( 'map_meta_cap', function ( $caps, $cap, $user_id, $args ) {
 	if ( 'edit_comment' === $cap ) {
 		$caps = [ 'edit_others_posts' ];
 	}

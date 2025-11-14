@@ -1,0 +1,50 @@
+// @feature-group feedback
+
+.feeling-control {
+
+	border-bottom: 1px solid $thin-border;
+
+	&__title {
+		font-size: 1em;
+		font-weight: $font-weight-bold;
+	}
+
+	label {
+		position: relative;
+		cursor: pointer;
+		display: block;
+		padding: 3px 5px;
+
+		input[type="radio"] {
+			z-index: 2;
+			accent-color: $primary;
+			vertical-align: middle;
+			margin-right: 2px;
+
+			&:checked + span {
+				color: $white;
+				&::before {
+					background-color: $primary;
+				}
+			}
+		}
+
+		span  {
+			font-size: 14px;
+
+			&::before {
+				content: "";
+				position: absolute;
+				z-index: -1;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background-color: transparent;
+				border: 1px solid $primary;
+				border-radius: 5px;
+			}
+
+		}
+	}
+}

@@ -18,5 +18,4 @@ class JobStatus {
 	const CLOSE = 'close';
 
 	const FAILED = 'failed';
-
 }

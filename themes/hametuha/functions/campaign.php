@@ -136,7 +136,7 @@ function hametuha_review_terms( $year, $ascendant = true ) {
 		'orderby'    => 'meta_value',
 		'order'      => 'DESC',
 	] );
-	return ( ! $terms || is_wp_error( $terms ) ) ? [] : array_filter( $terms, function( $term ) {
+	return ( ! $terms || is_wp_error( $terms ) ) ? [] : array_filter( $terms, function ( $term ) {
 		return 0 === strpos( $term->slug, 'joint-review' );
 	} );
 }
@@ -176,20 +176,20 @@ function hametuha_get_nearing_deadline_campaigns( $start_date = 'now', $end_date
 		'meta_query' => [],
 	];
 	if ( $start_date ) {
-		if ( !$end_date ) {
-			$args[ 'meta_query' ][] = [
-				'key' => '_campaign_limit',
-				'value' => $start_date,
+		if ( ! $end_date ) {
+			$args['meta_query'][] = [
+				'key'     => '_campaign_limit',
+				'value'   => $start_date,
 				'compare' => '>=',
-				'type' => 'DATE',
+				'type'    => 'DATE',
 			];
 		} else {
 			// 範囲指定されている。
-			$args[ 'meta_query' ][] = [
-				'key' => '_campaign_limit',
-				'value' => [ $start_date, $end_date ],
+			$args['meta_query'][] = [
+				'key'     => '_campaign_limit',
+				'value'   => [ $start_date, $end_date ],
 				'compare' => 'BETWEEN',
-				'type' => 'DATE',
+				'type'    => 'DATE',
 			];
 		}
 	}
@@ -240,7 +240,7 @@ function hametuha_campaign_length( $term, $format = 'paper' ) {
 	if ( ! $term || is_wp_error( $term ) ) {
 		return false;
 	}
-	$formatter = function( $number, $min = true ) use ( $format ) {
+	$formatter = function ( $number, $min = true ) use ( $format ) {
 		switch ( $format ) {
 			case 'paper':
 				$return = sprintf( '%s枚', number_format( $number / 400 ) );
@@ -282,7 +282,7 @@ function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
 	}
 	if ( hametuha_campaign_has_limit( $campaign_id ) ) {
 		if ( ( false !== array_search( $post->post_status, [ 'future', 'publish', 'private' ] ) )
-			 && ! hametuha_is_available_campaign( $campaign, $post->post_date )
+			&& ! hametuha_is_available_campaign( $campaign, $post->post_date )
 		) {
 			$error->add( '500', '応募期限を過ぎています。' );
 		}
@@ -337,7 +337,7 @@ function hametuha_is_participating( $campaign_id, $user_id = null ) {
 	}
 	// 興味があると明言しているか
 	$terms = get_user_meta( $user_id, 'interested_campaigns' );
-	return in_array(  (string) $campaign_id, $terms, true );
+	return in_array( (string) $campaign_id, $terms, true );
 }
 
 /**
@@ -346,7 +346,7 @@ function hametuha_is_participating( $campaign_id, $user_id = null ) {
  * @return WP_Post
  */
 function hametuha_get_campaign_page() {
-	$args = [
+	$args  = [
 		'post_type'      => 'page',
 		'post_status'    => 'publish',
 		'no_found_rows'  => true,

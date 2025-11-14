@@ -2,6 +2,7 @@
 /**
  * 作品集ページで呼び出される
  *
+ * @feature-group series
  * @package hametuha
  * @var array $args
  */
@@ -25,17 +26,17 @@ $counter = $args['counter'] ?? 0;
 
 			<!-- Post Data -->
 			<ul class="list-inline series__item--info">
-				<li>
+				<li class="list-inline-item">
 					<?php
 					echo implode( ' ', array_map( function ( $term ) {
 						printf( '<span class="series__item--term">%s</span>', esc_html( $term->name ) );
 					}, get_the_category() ) );
 					?>
 				</li>
-				<li>
+				<li class="list-inline-item">
 					<span class="series__item--length"><?php echo number_format( get_post_length() ); ?>文字</span>
 				</li>
-				<li>
+				<li class="list-inline-item">
 					<?php the_time( get_option( 'date_format' ) ); ?>公開
 					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="label label-danger">New!</span>

@@ -94,7 +94,7 @@
 				<td>
 						<?php
 						if ( $starting && ! $ended ) :
-							$out_date++;
+							++$out_date;
 							$calc_date     = current_time( 'timestamp' ) - 60 * 60 * 72;
 							$date_to_ouput = strtotime( sprintf( '%d/%02d/%02d', $year, $month, $out_date ) );
 							if ( $out_date == get_query_var( 'day' ) ) :

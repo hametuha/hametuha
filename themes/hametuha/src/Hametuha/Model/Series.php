@@ -9,8 +9,10 @@ use WPametu\DB\Model;
  * Series model
  *
  * @package Hametuha\Model
+ * @feature-group series
  *
  * @property CompiledFiles $files
+ * @property \WP_Post_Type $post_type
  */
 class Series extends Model {
 
@@ -400,7 +402,7 @@ SQL;
 	}
 
 	/**
-	 * Get previous link
+	 * ページングを出力する
 	 *
 	 * @param string $before
 	 * @param string $after
@@ -410,25 +412,40 @@ SQL;
 	 * @return string
 	 */
 	public function prev( $before = '<li>', $after = '</li>', $post = null, $next = false ) {
-		$post    = get_post( $post );
-		$index   = $this->get_index( $post );
-		$icon    = $next ? 'right2' : 'left';
-		$link    = <<<'HTML'
-			<a class="series-pager-link" href="%3$s">
-				<small class="series-pager-nombre">第%2$s話</small>
-				<span class="series-pager-text hidden-xs">%1$s</span>
-				<i class="series-pager-icon icon-arrow-%6$s"></i>
-			</a>
-HTML;
-		$operand = $next ? 1 : - 1;
-		$target  = $this->get_sibling( $index + $operand, $post );
-		if ( ( $index < 0 ) || ! $index || ( $index < 2 && ! $next ) || ! $target ) {
+		$post  = get_post( $post );
+		$index = $this->get_index( $post );
+		if ( $index < 0 ) {
+			// 異常値なので終了
 			return '';
 		}
+		$icon         = $next ? 'arrow-right2' : 'arrow-left';
+		$target_index = $index + ( $next ? 1 : - 1 );
+		$target       = $this->get_sibling( $target_index, $post );
+		// リンクがない場合のプレースホルダー
+		$no_link = <<<'HTML'
+			<span class="series-pager-link">
+				<span class="series-pager-text text-muted">%s</span>
+				<i class="series-pager-icon icon-%s"></i>
+			</span>
+HTML;
+		if ( $index < 2 && ! $next ) {
+			// 第一話
+			return $before . sprintf( $no_link, __( 'これが第一話です', 'hametuha' ), 'book' ) . $after;
+		}
+		if ( $next && ! $target ) {
+			// 続きがない
+			$last = $this->is_finished( $post->ID ) ? __( 'これが最終話です', 'hametuha' ) : __( 'これが最新話です', 'hametuha' );
+			return $before . sprintf( $no_link, $last, 'book2' ) . $after;
+		}
+		$link    = <<<'HTML'
+			<a class="series-pager-link" href="%2$s">
+				<span class="series-pager-text">第%1$s話</span>
+				<i class="series-pager-icon icon-%5$s"></i>
+			</a>
+HTML;
 		return sprintf(
-			'%4$s' . $link . '%5$s',
-			esc_html( get_the_title( $target ) ),
-			$index + $operand,
+			'%3$s' . $link . '%4$s',
+			$target_index,
 			get_permalink( $target ),
 			$before,
 			$after,
@@ -543,16 +560,16 @@ SQL;
 	 * @return bool
 	 */
 	public function is_service( $url, $service ) {
+		if ( empty( $url ) ) {
+			return false;
+		}
 		switch ( $service ) {
 			case 'twitter':
-				return (bool) preg_match( '#^https?://(www\.)?twitter\.com/[^/]+/status/[0-9]+/?#u', $url );
-				break;
+				return (bool) preg_match( '#^https?://(www\.)?(twitter|x)\.com/[^/]+/status/[0-9]+/?#u', $url );
 			case 'amazon':
 				return (bool) preg_match( '#^https?://([a-z0-9\-\.].*\.)?amazon.(co\.jp|com)#u', $url );
-				break;
 			default:
 				return false;
-				break;
 		}
 	}
 
@@ -731,6 +748,8 @@ SQL;
 		switch ( $name ) {
 			case 'files':
 				return CompiledFiles::get_instance();
+			case 'post_type':
+				return get_post_type_object( 'series' );
 			default:
 				return parent::__get( $name );
 		}

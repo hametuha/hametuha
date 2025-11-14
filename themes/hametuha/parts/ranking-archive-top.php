@@ -23,7 +23,7 @@ if ( $latest_week->have_posts() ) :
 			$latest_week->the_post();
 			?>
 			<?php get_template_part( 'parts/loop', 'ranking' ); ?>
-		<?php
+			<?php
 		endwhile;
 		wp_reset_postdata();
 		?>
@@ -55,7 +55,7 @@ if ( $latest_day->have_posts() ) :
 			$latest_day->the_post();
 			?>
 			<?php get_template_part( 'parts/loop', 'ranking' ); ?>
-		<?php
+			<?php
 		endwhile;
 		wp_reset_postdata();
 		?>
@@ -87,7 +87,7 @@ if ( $latest_month->have_posts() ) :
 			$latest_month->the_post();
 			?>
 			<?php get_template_part( 'parts/loop', 'ranking' ); ?>
-		<?php
+			<?php
 		endwhile;
 		wp_reset_postdata();
 		?>
@@ -117,7 +117,7 @@ if ( $bests->have_posts() ) :
 			$bests->the_post();
 			?>
 			<?php get_template_part( 'parts/loop', 'ranking' ); ?>
-		<?php
+			<?php
 		endwhile;
 		wp_reset_postdata();
 		?>

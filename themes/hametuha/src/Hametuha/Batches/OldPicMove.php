@@ -56,8 +56,8 @@ class OldPicMove extends Batch {
 		$maximum_processed = 0;
 		foreach ( scandir( $base_dir ) as $dir ) {
 			if ( is_numeric( $dir ) ) {
-				$total++;
-				$index++;
+				++$total;
+				++$index;
 				if ( $offset < $index && $offset + $this->per_process >= $index ) {
 					$user_id      = $dir;
 					$picture_path = '';
@@ -84,6 +84,4 @@ class OldPicMove extends Batch {
 		$has_next = $total > $maximum_processed;
 		return new BatchResult( $maximum_processed, $total, $has_next );
 	}
-
-
 }

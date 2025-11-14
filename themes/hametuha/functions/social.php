@@ -42,7 +42,7 @@ HTML;
 /**
  * Mark as this page needs chat plugin.
  */
-add_action( 'wp_footer', function() {
+add_action( 'wp_footer', function () {
 	wp_localize_script( 'hametuha-social', 'HametuhaSocial', [
 		'needChat' => ( is_page( 'help' ) || is_post_type_archive( 'faq' ) || is_singular( 'faq' ) || is_tax( 'faq_cat' ) ),
 	] );
@@ -196,11 +196,11 @@ add_action( 'admin_notices', function () {
 				投稿を宣伝してみんなに読んでもらいましょう。
 			</p>
 			<div class="fb-share-button"
-				 data-href="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ); ?>"
-				 data-layout="button_count"></div>
+				data-href="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Facebook' ); ?>"
+				data-layout="button_count"></div>
 			<a href="https://twitter.com/share" class="twitter-share-button"
-			   data-url="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ); ?>"
-			   data-text="<?php echo get_the_title( $post ); ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
+				data-url="<?php echo hametuha_user_link( get_permalink( $post ), 'share-dashboard', 'Twitter' ); ?>"
+				data-text="<?php echo get_the_title( $post ); ?>" data-via="hametuha" data-hashtags="破滅派">Tweet</a>
 
 		</div>
 		<?php
@@ -236,7 +236,7 @@ function hametuha_slack( $content, $attachment = [], $channel = '#general' ) {
 /**
  * パーミッションを変更する
  */
-add_filter( 'gianism_facebook_permissions', function( array $permissions, $context ) {
+add_filter( 'gianism_facebook_permissions', function ( array $permissions, $context ) {
 	switch ( $context ) {
 		case 'admin':
 			$permissions[] = 'publish_pages';
@@ -329,7 +329,7 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 			}
 			?>
 			<a href="#" data-follower-id="<?php echo $author_id; ?>" class="btn btn-primary btn-follow<?php echo $class_name; ?>"
-			   rel="nofollow">
+				rel="nofollow">
 				<span class="remove">フォロー中</span>
 				<span class="add">
 					<i class="icon-user-plus2"></i> フォロー
@@ -339,8 +339,10 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 				</span>
 			</a>
 		<?php else : ?>
-			<a class="btn btn-primary" href="<?php echo home_url( '/doujin/follower/', 'https' ); ?>"><i class="icon-user"></i>
-				フォロワー確認</a>
+			<a class="btn btn-primary" href="<?php echo home_url( 'dashboard/friends/' ); ?>">
+				<i class="icon-user"></i>
+				フォロワー確認
+			</a>
 			<?php
 		endif;
 	else :

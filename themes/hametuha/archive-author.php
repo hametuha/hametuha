@@ -33,7 +33,7 @@ global $wp_query;
 						<?php printf( esc_html__( '%d名の執筆者', 'hametuha' ), $wp_query->found_posts ); ?>
 					</h2>
 					<?php if ( have_posts() ) : ?>
-					<ul class="author-group-list">
+					<ul class="author-group-list mb-3">
 						<?php
 						while ( have_posts() ) {
 							the_post();
@@ -42,9 +42,9 @@ global $wp_query;
 						}
 						?>
 					</ul>
-					<?php wp_pagenavi( [ 'query' => $wp_query ] ); ?>
+						<?php wp_pagenavi( [ 'query' => $wp_query ] ); ?>
 
-					<?php else: ?>
+					<?php else : ?>
 						<div class="alert alert-warning">
 							<p>
 								<?php esc_html_e( '該当する執筆者は見つかりませんでした。あらためて検索してみてください。', 'hametuha' ); ?>
@@ -66,5 +66,6 @@ global $wp_query;
 </div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

@@ -6,7 +6,7 @@
 /**
  * Register fields
  */
-add_filter( 'taf_default_positions', function() {
+add_filter( 'taf_default_positions', function () {
 	return [
 		'dashboard-analytics-footer' => [
 			'name'        => 'アクセス解析',
@@ -18,4 +18,3 @@ add_filter( 'taf_default_positions', function() {
 		],
 	];
 } );
-

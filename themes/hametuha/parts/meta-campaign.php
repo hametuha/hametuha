@@ -38,12 +38,12 @@ $desc      = get_term_meta( $campaign->term_id, '_campaign_detail', true );
 
 		<dt><?php esc_html_e( '備考', 'hametuha' ); ?></dt>
 		<dd>
-			<?php echo  $desc ? nl2br( strip_tags( $desc, '<strong>' ) ) : '---'; ?>
+			<?php echo $desc ? nl2br( strip_tags( $desc, '<strong>' ) ) : '---'; ?>
 		</dd>
 
 		<dt><?php esc_html_e( '関連リンク', 'hametuha' ); ?></dt>
 		<dd>
-			<?php echo  $url ? sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( explode( '/', preg_replace( '#https?://#', '', $url ) )[0] ) ) : '---'; ?>
+			<?php echo $url ? sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( explode( '/', preg_replace( '#https?://#', '', $url ) )[0] ) ) : '---'; ?>
 		</dd>
 		<dt><?php esc_html_e( '他の公募', 'hametuha' ); ?></dt>
 		<dd>

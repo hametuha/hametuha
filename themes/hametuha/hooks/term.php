@@ -45,7 +45,7 @@ add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 				<?php foreach ( $terms as $tag ) : ?>
 					<label class="hametuha-tag-label">
 						<input type="checkbox" class="hametuha-tag-cb"
-							   value="<?php echo esc_attr( $tag->name ); ?>" <?php checked( has_tag( $tag->term_id, $post ) ); ?>/> <?php echo esc_attr( $tag->name ); ?>
+								value="<?php echo esc_attr( $tag->name ); ?>" <?php checked( has_tag( $tag->term_id, $post ) ); ?>/> <?php echo esc_attr( $tag->name ); ?>
 					</label>
 				<?php endforeach; ?>
 				<?php

@@ -11,15 +11,14 @@
     var Hametuha = window.Hametuha = {
         ga: {
             /**
-             * Google Analyticsのイベントを呼ぶ
+             * Google Analyticsのイベントを呼ぶ（GA4対応）
              *
              * @param {String} category
              * @param {String} action
              * @param {String} label
              * @param {...Number} value Default 1
-             * @param {...Boolean} nonInteraction Default false
              */
-            hitEvent: function (category, action, label, value, nonInteraction) {
+            hitEvent: function (category, action, label, value) {
                 try {
                     if ('undefined' === typeof value) {
                         value = 1;
@@ -27,14 +26,13 @@
                     gtag( 'event', action, {
                         event_category : category,
                         event_label : label,
-                        value : value,
-                        non_interaction: !!nonInteraction
+                        value : value
                     });
                 } catch (err) {}
             },
 
             /**
-             * URLの移動をGAに記録する
+             * URLの移動をGAに記録する（GA4対応）
              *
              * @param {Event} event
              * @param {String} url
@@ -53,7 +51,7 @@
                         event_category : category,
                         event_label : label,
                         value : value,
-                        hitCallback: function() {
+                        event_callback: function() {
                             window.location.href = url;
                         }
                     });
@@ -111,7 +109,7 @@
                     break;
             }
             body = '<div class="alert alert-' + typeName + ' alert-dismissible alert-sticky" role="alert"><div class="container">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+				'<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
                     message +
                 '</div></div>';
             $alert = $(body);
@@ -163,16 +161,6 @@
          */
         isTategaki: function () {
             return $('body').hasClass('tategaki');
-        },
-
-        /**
-         * Angularのtemplateを返す
-         *
-         * @param templateName
-         * @returns {*}
-         */
-        template: function(templateName){
-            return HametuhaGlobal.angularTemplateDir + templateName;
         },
 
         /**

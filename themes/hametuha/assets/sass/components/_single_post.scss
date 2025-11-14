@@ -1,27 +1,19 @@
 // 投稿タイプを示すバー
 .post-type-bar {
 	margin: 0;
-	position: relative;
-	padding: 0 1em;
-	height: 46px;
-	line-height: 46px;
+	padding: 0.5em 0;
 	color: $shade-font;
-	border-top: 3px double $shade-font;
-	border-bottom: 3px double $shade-font;
+	border-top: 1px solid $thin-border;
+	border-bottom: 1px solid $thin-border;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 
 	.small-button {
 		@extend .btn;
 		@extend .btn-default;
 		@extend .btn-sm;
-		position: absolute;
-		right: 5px;
-		top: 5px;
 	}
-
-	& + .post-title-thumbnail {
-		padding-top: 15px;
-	}
-
 }
 
 // サムネイル
@@ -267,17 +259,12 @@ p.pixiv-embed-illust {
 // メインカラムの最大幅を制限
 .work-wrapper {
 	max-width: 970px;
-}
-
-// スマホのとき
-@media only screen and (max-width: $screen-xs-max) {
-
-	// メインにを取る
-	.work-wrapper {
+	margin-right: auto;
+	margin-left: auto;
+	@include media-breakpoint-down(lg) {
 		margin-right: 15px;
 		margin-left: 15px;
 	}
-
 }
 
 // 本文フォント
@@ -303,12 +290,21 @@ p.pixiv-embed-illust {
 		flex-direction: column;
 	}
 
+	// 文字数
+	.length {
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		color: $more-shade-font;
+		font-size: 12px;
+	}
+
 
 	// ジャンル
 	.genre {
 		position: absolute;
-		top: 0.5em;
-		left: 0;
+		top: 15px;
+		left: 15px;
 
 		a {
 			@include inline-block;
@@ -385,15 +381,6 @@ p.pixiv-embed-illust {
 				color: $link-active;
 			}
 		}
-	}
-
-	// 文字数
-	.length {
-		position: absolute;
-		right: 0;
-		top: 0.5em;
-		color: $more-shade-font;
-		font-size: 12px;
 	}
 
 	// リード
@@ -499,23 +486,26 @@ p.pixiv-embed-illust {
 
 // ナビゲーション
 .series-pager {
-	@include clearfix();
 	margin: 20px 0 0;
 	padding: 0;
 	border-top: $divide-border;
+	border-bottom: 1px solid $thin-border;
+	display: flex;
+	align-items: stretch;
 
 	&-title {
 		font-family: $work-title;
 	}
 
 	li {
-		width: 50%;
-		float: left;
+		margin: 0;
+		padding: 0;
 		list-style: none;
+		width: 50%;
+		box-sizing: border-box;
 
 		&.next {
 			text-align: right;
-			float: right;
 			border-left: 1px solid $thin-border;
 		}
 	}
@@ -528,15 +518,12 @@ p.pixiv-embed-illust {
 		}
 	}
 
-	&-nombre {
-		display: block;
-	}
-
 	&-link {
+		height: 100%;
 		display: block;
 		position: relative;
 		font-size: 16px;
-		padding: 40px 20px;
+		padding: 10px 20px;
 
 		.previous & {
 			padding-left: 40px;
@@ -546,15 +533,17 @@ p.pixiv-embed-illust {
 			padding-right: 40px;
 		}
 
-		&:link, &:visited {
-			color: #000;
+		&:link,
+		&:visited {
+			color: $primary;
 			text-decoration: none;
 		}
 
-		&:hover {
-			color: $brand-primary;
+		&:hover,
+		&:active {
+			color: $primary;
 			text-decoration: none;
-			background: #f9f9f9;
+			background: $gray-200;
 		}
 	}
 
@@ -579,9 +568,9 @@ p.pixiv-embed-illust {
 // コピーライト
 #single-post-footernote {
 	text-align: center;
-	margin: 1em 0;
-	padding-top: 1em;
-	border-top: $divide-border;
+	margin: 1em 0 3em;
+	padding-bottom: 3em;
+	border-bottom: $divide-border;
 	color: $shade-font;
 	font-family: $work-title;
 	font-size: 16px;
@@ -601,6 +590,41 @@ p.pixiv-embed-illust {
 	i {
 		margin-top: 0.5em;
 		font-size: 1.8em;
+	}
+}
+
+.series-toc {
+	margin: 20px auto;
+
+	h2 {
+		font-size: 1em;
+		font-weight: $font-weight-bold;
+	}
+
+	ul {
+		padding: 0;
+		border-bottom: 1px solid $thin-border;
+		border-top: 1px solid $thin-border;
+
+		li {
+			margin: 0;
+			display: flex;
+			list-style: none;
+			justify-content: space-between;
+			padding: 0.5em;
+
+			&.current {
+				background-color: $gray-200;
+				span {
+					color: $gray-700;
+				}
+			}
+
+			span,
+			a {
+				font-weight: $font-weight-bold;
+			}
+		}
 	}
 }
 
@@ -688,15 +712,58 @@ p.pixiv-embed-illust {
 
 	i {
 		font-size: 20px;
-		cursor: pointer;
 		color: $more-shade-font;
 		-webkit-text-stroke: 1px $more-shade-font;
 
-		&.active, &:hover {
+		&.active {
 			color: $start-font;
 			-webkit-text-stroke: 1px #000;
 		}
 	}
+}
+
+.rating-container {
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	border-bottom: 3px double $thin-border;
+}
+
+.rating-table {
+	width: 100%;
+	table-layout: auto;
+	th {
+		width: 5em;
+		padding: 0.5em 0.5em 0.5em 0;
+	}
+	&-bar {
+		padding: 0.5em 0;
+		display: block;
+		&-bg {
+			background-color: $gray-200;
+			display: block;
+		}
+		&-inner {
+			display: block;
+			background-color: $start-font;
+		}
+	}
+	td:last-child {
+		padding: 0.5em 0 0.5em 0.5em;
+		width: 5em;
+	}
+}
+
+.hametuha-post-rating {
+	text-align: center;
+
+	.text-star {
+		font-size: 1.2em;
+	}
+}
+
+.text-star {
+	color: $start-font;
+	-webkit-text-stroke: 1px #000;
 }
 
 // 評価ボタン

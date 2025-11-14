@@ -13,79 +13,79 @@ get_header( 'breadcrumb' );
 					the_post();
 					?>
 
-				<article itemscope
-						 itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
+					<article itemscope
+						itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
 
-					<?php if ( ! is_page() ) : ?>
-						<?php get_template_part( 'parts/bar', 'posttype' ); ?>
-					<?php endif; ?>
+						<?php if ( ! is_page() ) : ?>
+							<?php get_template_part( 'parts/bar', 'posttype' ); ?>
+						<?php endif; ?>
 
-					<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
+						<?php get_template_part( 'parts/meta', 'thumbnail' ); ?>
 
-					<!-- title -->
-					<div class="page-header">
+						<!-- title -->
+						<div class="page-header">
 
-						<h1 class="post-title" itemprop="headline">
-							<?php the_title(); ?>
-						</h1>
-					</div><!-- //.page-header -->
-
-
-					<!-- Meta data -->
-					<div <?php post_class( 'post-meta' ); ?>>
-						<?php get_template_part( 'parts/meta', 'single' ); ?>
-					</div><!-- //.post-meta -->
+							<h1 class="post-title" itemprop="headline">
+								<?php the_title(); ?>
+							</h1>
+						</div><!-- //.page-header -->
 
 
-					<?php if ( has_excerpt() ) : ?>
-						<div class="excerpt" itemprop="description">
-							<?php the_excerpt(); ?>
-						</div><!-- //.excerpt -->
-					<?php endif; ?>
-
-					<?php get_template_part( 'parts/alert', 'old' ); ?>
-
-					<div class="post-content clearfix" itemprop="articleBody">
-						<?php the_content(); ?>
-					</div><!-- //.post-content -->
+						<!-- Meta data -->
+						<div <?php post_class( 'post-meta' ); ?>>
+							<?php get_template_part( 'parts/meta', 'single' ); ?>
+						</div><!-- //.post-meta -->
 
 
-					<?php if ( is_singular( 'announcement' ) ) : ?>
-						<?php get_template_part( 'parts/meta', 'announcement' ); ?>
-					<?php endif; ?>
+						<?php if ( has_excerpt() ) : ?>
+							<div class="excerpt" itemprop="description">
+								<?php the_excerpt(); ?>
+							</div><!-- //.excerpt -->
+						<?php endif; ?>
+
+						<?php get_template_part( 'parts/alert', 'old' ); ?>
+
+						<div class="post-content clearfix" itemprop="articleBody">
+							<?php the_content(); ?>
+						</div><!-- //.post-content -->
+
+
+						<?php if ( is_singular( 'announcement' ) ) : ?>
+							<?php get_template_part( 'parts/meta', 'announcement' ); ?>
+						<?php endif; ?>
+
+						<?php
+						wp_link_pages( [
+							'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
+							'after'       => '</p></div>',
+							'link_before' => '<span>',
+							'link_after'  => '</span>',
+						] );
+						?>
+
+						<?php if ( in_array( get_post_type(), [ 'faq', 'anpi', 'announcement' ], true ) ) : ?>
+
+							<h2><i class="icon-vcard"></i> 著者情報</h2>
+							<?php get_template_part( 'parts/author', 'narrow' ); ?>
+
+						<?php endif; ?>
+
+
+						<?php get_template_part( 'parts/share' ); ?>
+
+						<?php get_template_part( 'parts/pager' ); ?>
+
+						<div class="more">
+							<?php if ( post_type_supports( get_post_type(), 'comments' ) ) : ?>
+								<?php comments_template(); ?>
+							<?php endif; ?>
+						</div>
+
+					</article><!-- //.single-container -->
 
 					<?php
-					wp_link_pages( [
-						'before'      => '<div class="row"><p class="link-pages clrB">ページ: ',
-						'after'       => '</p></div>',
-						'link_before' => '<span>',
-						'link_after'  => '</span>',
-					] );
-					?>
-
-									<?php if ( false !== array_search( get_post_type(), [ 'faq', 'anpi', 'announcement' ] ) ) : ?>
-
-						<h2><i class="icon-vcard"></i> 著者情報</h2>
-										<?php get_template_part( 'parts/author', 'narrow' ); ?>
-
-					<?php endif; ?>
-
-
-					<?php get_template_part( 'parts/share' ); ?>
-
-					<?php get_template_part( 'parts/pager' ); ?>
-
-					<div class="more">
-						<?php if ( post_type_supports( get_post_type(), 'comments' ) ) : ?>
-							<?php comments_template(); ?>
-						<?php endif; ?>
-					</div>
-
-				</article><!-- //.single-container -->
-
-							<?php
-			endwhile;
-endif;
+				endwhile;
+			endif;
 			?>
 
 			<?php get_sidebar(); ?>
@@ -95,4 +95,6 @@ endif;
 	</div><!-- //.container -->
 
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

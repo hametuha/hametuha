@@ -35,7 +35,7 @@ class TagAuthor extends RecipientSelector {
 	 */
 	protected function get_from_ids( $ids ) {
 		$this->total = 0;
-		$term_ids    = array_map( function( $id ) {
+		$term_ids    = array_map( function ( $id ) {
 			$taxonomy = explode( '_', $id );
 			$term_id  = array_pop( $taxonomy );
 			return intval( $term_id );
@@ -104,7 +104,7 @@ SQL;
 		$query       = $wpdb->prepare( $query, $term, $term, ( $paged - 1 ) * $this->per_page, $this->per_page );
 		$results     = $wpdb->get_results( $query );
 		$this->total = parent::get_search_total( $term, $paged );
-		return array_map( function( $result ) {
+		return array_map( function ( $result ) {
 			$taxonomy_obj = get_taxonomy( $result->taxonomy );
 			$id           = sprintf( '%s_%d', $result->taxonomy, $result->term_id );
 			$type         = 'term';

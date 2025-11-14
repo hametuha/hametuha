@@ -80,6 +80,4 @@ class OldPv extends Batch {
 		}
 		return new BatchResult( $count, $total, $next );
 	}
-
-
 }

@@ -44,7 +44,7 @@ HTML;
 	 * Register hooks here.
 	 */
 	public static function register() {
-		add_action( 'hametuha_collaborators_updated', function( $collaborator, $series_id, $margin ) {
+		add_action( 'hametuha_collaborators_updated', function ( $collaborator, $series_id, $margin ) {
 			static::exec( [
 				$collaborator->ID => [
 					'title'  => get_the_title( $series_id ),
@@ -54,6 +54,4 @@ HTML;
 			] );
 		}, 10, 3 );
 	}
-
-
 }

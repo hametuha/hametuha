@@ -27,7 +27,7 @@ class Works extends Screen {
 	 * @return string
 	 */
 	public function label() {
-		return __( 'あなたの作品', 'hametuha' );
+		return __( 'あなたの作ったもの', 'hametuha' );
 	}
 
 	/**
@@ -46,6 +46,8 @@ class Works extends Screen {
 				return __( 'これまで受け取った星によるレーティングです。', 'hametuha' );
 			case 'lists':
 				return __( 'あなたの作品が含まれているリストの一覧です。', 'hametuha' );
+			case 'reviews':
+				return __( 'あなたのレビューです。', 'hametuha' );
 			default:
 				return __( 'あなたが破滅派に登録した作品です。', 'hametuha' );
 		}
@@ -56,8 +58,8 @@ class Works extends Screen {
 	 */
 	protected function default_children() {
 		return [
-			'works'    => '投稿',
-			'series'   => '作品集',
+			'works'    => '作品',
+			'series'   => '連載・作品集',
 			'comments' => 'コメント',
 			'reviews'  => 'レビュー',
 			'lists'    => 'リスト',
@@ -66,6 +68,8 @@ class Works extends Screen {
 
 	/**
 	 * Render HTML
+	 *
+	 * @todo ちょっと歪な作りなので将来的に直す
 	 *
 	 * @param string $page
 	 */
@@ -94,6 +98,4 @@ class Works extends Screen {
 			'slug' => 'dashboard-posts-footer',
 		] );
 	}
-
-
 }

@@ -15,7 +15,7 @@ add_filter( 'private_title_format', function ( $title, $post ) {
 /**
  * Display watermark.
  */
-add_action( 'wp_footer', function() {
+add_action( 'wp_footer', function () {
 	if ( ! is_singular() ) {
 		return;
 	}
@@ -32,5 +32,3 @@ add_action( 'wp_footer', function() {
 		printf( '<div id="watermark" class="%2$s">%1$s</div>', $label, $class );
 	}
 } );
-
-

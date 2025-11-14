@@ -98,24 +98,23 @@ class KdpWidget extends Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 				タイトル<br/>
 				<input name="<?php echo $this->get_field_name( 'title' ); ?>"
-					   id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
+						id="<?php echo $this->get_field_id( 'title' ); ?>" value="<?php echo esc_attr( $title ); ?>"/>
 			</label>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>">
 				件数<br/>
 				<input name="<?php echo $this->get_field_name( 'number' ); ?>"
-					   id="<?php echo $this->get_field_id( 'number' ); ?>" value="<?php echo (int) $number; ?>"/>
+						id="<?php echo $this->get_field_id( 'number' ); ?>" value="<?php echo (int) $number; ?>"/>
 			</label>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'desc' ); ?>">
 				説明<br/>
 				<textarea name="<?php echo $this->get_field_name( 'desc' ); ?>"
-						  id="<?php echo $this->get_field_id( 'desc' ); ?>"><?php echo esc_textarea( $desc ); ?></textarea>
+							id="<?php echo $this->get_field_id( 'desc' ); ?>"><?php echo esc_textarea( $desc ); ?></textarea>
 			</label>
 		</p>
 		<?php
 	}
-
 }

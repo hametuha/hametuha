@@ -20,10 +20,10 @@ class CampaignSupport extends WpApi {
 	protected function get_arguments( $method ) {
 		return [
 			'term_id' => [
-				'type'        => 'integer',
-				'description' => 'Campaign ID',
-				'required'    => true,
-				'validate_callback' => function( $term_id ) {
+				'type'              => 'integer',
+				'description'       => 'Campaign ID',
+				'required'          => true,
+				'validate_callback' => function ( $term_id ) {
 					$term = get_term( $term_id, 'campaign' );
 					if ( ! $term || is_wp_error( $term ) ) {
 						return false;

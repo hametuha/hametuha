@@ -1,4 +1,11 @@
-<?php get_template_part( 'templates/faq/header-faq' ); ?>
+<?php
+/**
+ * FAQ用サイドバー
+ *
+ * @feature-group faq
+ */
+get_template_part( 'templates/faq/header-faq' );
+?>
 
 	<div class="container single">
 
@@ -10,7 +17,7 @@
 					?>
 
 				<article itemscope
-						 itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-xs-12 col-sm-9 main-container' ); ?>>
+						itemtype="http://schema.org/BlogPosting" <?php post_class( 'col-12 col-md-9 main-container' ); ?>>
 
 					<!-- title -->
 					<div class="page-header">
@@ -65,7 +72,7 @@ endif;
 
 	</div><!-- //.container -->
 
-<?php get_footer( 'books' ); ?>
-
 <?php
+get_footer( 'ebooks' );
+get_footer( 'books' );
 get_footer();

@@ -66,7 +66,6 @@ class CompiledFiles extends Model {
 	}
 
 	public function get_children_files( $post_id ) {
-
 	}
 
 	/**
@@ -125,14 +124,14 @@ class CompiledFiles extends Model {
 	public function get_files( array $args, $limit = 20, $page = 0 ) {
 		$results = [];
 		$this->calc()
-			 ->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
-			 ->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
-			 ->limit( $limit, $page );
+			->join( $this->posts, "{$this->table}.post_id = {$this->posts}.ID", 'left' )
+			->join( $this->users, "{$this->posts}.post_author = {$this->users}.ID", 'inner' )
+			->limit( $limit, $page );
 		$args = wp_parse_args( $args, [
-			's'      => '',
-			'p'      => 0,
-			'author' => 0,
-			'secret' => false,
+			's'       => '',
+			'p'       => 0,
+			'author'  => 0,
+			'secret'  => false,
 			'orderby' => 'updated',
 			'order'   => 'DESC',
 		] );
@@ -158,7 +157,7 @@ class CompiledFiles extends Model {
 		}
 		$this->order_by( "{$this->table}." . $args['orderby'], $args['order'] );
 
-		return array_map( function( $row ) {
+		return array_map( function ( $row ) {
 			$row->label = $this->type_labels[ $row->type ];
 			$row->path  = $this->build_file_path( $row );
 			return $row;
@@ -304,7 +303,7 @@ class CompiledFiles extends Model {
 	 */
 	public function record_exists( $post_id, $type = '' ) {
 		$this->select( 'COUNT(file_id)' )
-			 ->where( 'post_id = %d', $post_id );
+			->where( 'post_id = %d', $post_id );
 		if ( $type ) {
 			$this->where( 'type = %s', $type );
 		}
@@ -326,6 +325,4 @@ class CompiledFiles extends Model {
 				return parent::__get( $name );
 		}
 	}
-
-
 }
