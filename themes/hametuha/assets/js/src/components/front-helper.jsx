@@ -1,5 +1,7 @@
-/**
- * Description
+/*!
+ * フロントページで読み込むスクリプト
+ *
+ * @deps jquery, chart-js
  */
 
 /*global Chart: true*/
@@ -37,15 +39,6 @@
                 });
             }
         }
-
-        // masonry
-        var container = $('.frontpage-widget');
-        // initialize Masonry after all images have loaded
-        container.imagesLoaded( function() {
-            container.masonry({
-                itemSelector: '.col-sm-4'
-            });
-        });
     });
 
 })(jQuery);

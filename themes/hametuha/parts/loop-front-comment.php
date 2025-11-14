@@ -4,7 +4,7 @@
  *
  * @var array $args
  */
-$args            = wp_parse_args( $args, [
+$args = wp_parse_args( $args, [
 	'no_title' => false,
 	'no_desc'  => is_front_page(),
 ] );
@@ -28,9 +28,9 @@ if ( isset( $taxonomy[ get_post_type() ] ) ) {
 
 // タグ
 $tag_taxonomy = [
-	'post' => 'post_tag',
+	'post'   => 'post_tag',
 ];
-$tags         = [];
+$tags = [];
 if ( isset( $tag_taxonomy[ get_post_type() ] ) ) {
 	$tag_terms = get_the_terms( get_post(), $tag_taxonomy[ get_post_type() ] );
 	if ( $tag_terms && ! is_wp_error( $tag_terms ) ) {
@@ -38,7 +38,7 @@ if ( isset( $tag_taxonomy[ get_post_type() ] ) ) {
 			if ( 2 < $index ) {
 				break;
 			}
-			$tags [] = $term;
+			$tags []= $term;
 		}
 	}
 }
@@ -59,15 +59,8 @@ if ( isset( $tag_taxonomy[ get_post_type() ] ) ) {
 					<?php
 				endforeach;
 			}
-			if ( 'series' == get_post_type() ) :
-				?>
-				<small class="list-heading-category">
-					<?php
-					if ( isset( $post->children ) ) {
-						printf( __( '全%d話', 'hametuha' ), $post->children );
-					}
-					?>
-				</small>
+			if ( 'series' == get_post_type() ) : ?>
+				<span class="badge"><?php echo number_format( $post->children ); ?></span>
 			<?php endif; ?>
 		</h3>
 		<?php endif; ?>
@@ -87,19 +80,17 @@ if ( isset( $tag_taxonomy[ get_post_type() ] ) ) {
 				<small>
 					<time datetime="<?php the_time( DateTime::ATOM ); ?>"><?php the_time( get_option( 'date_format' ) ); ?></time>
 					<?php
-					$count = get_comment_count( $post->ID );
-					if ( $count['approved'] > 0 ) :
+					$count = get_comment_count($post->ID );
+					if ( $count > 0 ) :
 						?>
 						｜
-						<span class="ml-2"><i class="icon-bubble"></i> <?php printf( __( '%d件', 'hametuha' ), $count['approved'] ); ?></span>
+						<span class="ml-2"><i class="icon-bubble"></i> <?php printf( __( '%d件', 'hametuha' ), $count ); ?></span>
 					<?php endif; ?>
-					<?php
-					if ( ! empty( $tags ) ) {
+					<?php if ( ! empty( $tags ) ) {
 						foreach ( $tags as $tag ) {
 							printf( '<span class="tag-link" style="margin-left: 0.5em;">#%s</span>', esc_html( $tag->name ) );
 						}
-					}
-					?>
+					} ?>
 				</small>
 			</p>
 		</div>

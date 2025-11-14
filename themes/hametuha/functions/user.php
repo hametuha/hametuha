@@ -94,7 +94,7 @@ function hametuha_user_write_actions() {
 			// タームの編集権限がある
 			$term = get_queried_object();
 			if ( is_a( $term, 'WP_Term' ) ) {
-				$taxonomy = get_taxonomy( $term->taxonomy );
+				$taxonomy       = get_taxonomy( $term->taxonomy );
 				$editor_actions = array_merge( [
 					// translators: %1$s is taxonomy name, %2$s is term name.
 					'tag' => [ get_edit_term_link( $term ), sprintf( __( '%1$s「%2$s」を編集', 'hametuha' ), $taxonomy->label, $term->name ), false, '', false ],
@@ -333,7 +333,7 @@ function hametuha_recent_authors( $num = 5, $days = 30 ) {
 EOS;
 	$query = $wpdb->prepare( $query, $time, $time, $num );
 	$users = $wpdb->get_results( $query );
-	return array_map( function( $user ) {
+	return array_map( function ( $user ) {
 		return new WP_User( $user );
 	}, $users );
 }
@@ -409,9 +409,9 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 			'prepare',
 		), array_merge( $args, $meta_keys ) ) );
 		//プロフィール写真
-		$total ++;
+		++$total;
 		if ( has_original_picture( $user_id ) || has_gravatar( $user_id ) ) {
-			$filled ++;
+			++$filled;
 		}
 		//パーセントを計算
 		$total  += count( $meta_keys );
@@ -486,7 +486,6 @@ function hametuha_user_contact_url( $post = null ) {
 	} else {
 		return home_url( 'inquiry' );
 	}
-
 }
 
 /**
@@ -542,4 +541,20 @@ function hametuha_is_deleted_users_comment( $comment ) {
 		}
 	}
 	return false;
+}
+
+/**
+ * 投稿の作者がスパムユーザーかどうか。
+ *
+ * @param int|null|WP_Post $post
+ *
+ * @return bool
+ */
+function hametuha_post_by_spam( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return true;
+	}
+	$flag_spam = get_user_meta( $post->post_author, 'flag_spam', true );
+	return '1' === $flag_spam;
 }

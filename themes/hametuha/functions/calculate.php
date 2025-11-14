@@ -86,32 +86,32 @@ function hametuha_remarkably_old( $days = 30, $post = null ) {
  */
 function hametuha_story_length_category( $include_novel = false ) {
 	$stories = [
-		'flash' => [
-			'label' => __( '掌編',  'hametuha' ),
-			'min' => 0,
-			'max' => 2000,
+		'flash'     => [
+			'label' => __( '掌編', 'hametuha' ),
+			'min'   => 0,
+			'max'   => 2000,
 		],
-		'short' => [
-			'label' => __( '短編',  'hametuha' ),
-			'min' => 2000,
-			'max' => 16000,
+		'short'     => [
+			'label' => __( '短編', 'hametuha' ),
+			'min'   => 2000,
+			'max'   => 16000,
 		],
 		'novelette' => [
-			'label' => __( '中編',  'hametuha' ),
-			'min' => 16000,
-			'max' => 40000,
+			'label' => __( '中編', 'hametuha' ),
+			'min'   => 16000,
+			'max'   => 40000,
 		],
-		'novella' => [
-			'label' => __( '中長編',  'hametuha' ),
-			'min' => 40000,
-			'max' => 80000,
+		'novella'   => [
+			'label' => __( '中長編', 'hametuha' ),
+			'min'   => 40000,
+			'max'   => 80000,
 		],
 	];
 	if ( $include_novel ) {
 		$stories['novel'] = [
-			'label' => __( '長編',  'hametuha' ),
-			'min' => 80000,
-			'max' => 9999999999,
+			'label' => __( '長編', 'hametuha' ),
+			'min'   => 80000,
+			'max'   => 9999999999,
 		];
 	}
 	return $stories;
@@ -148,12 +148,12 @@ function hametuha_length_ranges( $length_categories ) {
 	}
 
 	// min値でソート
-	uasort( $categories_data, function( $a, $b ) {
+	uasort( $categories_data, function ( $a, $b ) {
 		return $a['min'] - $b['min'];
 	} );
 
 	// 連続する範囲を統合
-	$ranges = [];
+	$ranges        = [];
 	$current_range = null;
 
 	foreach ( $categories_data as $data ) {
@@ -168,7 +168,7 @@ function hametuha_length_ranges( $length_categories ) {
 			$current_range['max'] = max( $current_range['max'], $data['max'] );
 		} else {
 			// 連続していない場合は現在の範囲を保存して新しい範囲を開始
-			$ranges[] = $current_range;
+			$ranges[]      = $current_range;
 			$current_range = [
 				'min' => $data['min'],
 				'max' => $data['max'],
@@ -205,4 +205,45 @@ function hametuha_comment_count_group() {
 			'label' => __( '大盛り上がり', 'hametuha' ),
 		],
 	];
+}
+
+/**
+ * Get site statistics with caching
+ *
+ * @return array{posts:int, authors:int, readers:int}
+ */
+function hametuha_get_site_stats() {
+	$transient_key = 'hametuha_site_stats';
+	$stats         = get_transient( $transient_key );
+
+	if ( false === $stats ) {
+		// 投稿数
+		$count_posts = wp_count_posts( 'post' );
+		$posts       = $count_posts->publish;
+
+		// ユーザー数の取得
+		$users = count_users();
+
+		// 作家数（contributor以上）
+		$authors = 0;
+		foreach ( [ 'contributor', 'author', 'editor', 'administrator' ] as $role ) {
+			if ( isset( $users['avail_roles'][ $role ] ) ) {
+				$authors += $users['avail_roles'][ $role ];
+			}
+		}
+
+		// 読者数（全ユーザー）
+		$readers = $users['total_users'];
+
+		$stats = [
+			'posts'   => (int) $posts,
+			'authors' => (int) $authors,
+			'readers' => (int) $readers,
+		];
+
+		// 6時間キャッシュ
+		set_transient( $transient_key, $stats, 6 * HOUR_IN_SECONDS );
+	}
+
+	return $stats;
 }

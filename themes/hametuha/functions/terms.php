@@ -19,7 +19,7 @@ function hametuha_get_nouns( $post = null, $filter = true ) {
 	if ( ! $filter ) {
 		return $terms;
 	}
-	return array_filter( $terms, function( $term ) {
+	return array_filter( $terms, function ( $term ) {
 		return 1 < $term->count;
 	} );
 }
@@ -46,7 +46,7 @@ function hametuha_terms_to_hashtag( $taxonomies, $post = null, $link = false, $p
 			$assigned_terms[] = $term;
 		}
 	}
-	return array_map( function( WP_Term $term ) use ( $link, $prefix, $class_name ) {
+	return array_map( function ( WP_Term $term ) use ( $link, $prefix, $class_name ) {
 		$label = $prefix . $term->name;
 		return $link ? sprintf( '<a class="%s" href="%s">%s</a>', esc_attr( $class_name ), esc_url( get_term_link( $term ) ), esc_html( $label ) ) : $label;
 	}, $assigned_terms );
@@ -83,7 +83,7 @@ function hametuha_get_canonical_tags( $types = [] ) {
 		$types = hametuha_tag_types();
 	}
 	// meta_query で genre in $typesで検索する
-	$args = [
+	$args  = [
 		'taxonomy'   => 'post_tag',
 		'hide_empty' => false,
 		'meta_query' => [
@@ -115,7 +115,7 @@ function hametuha_get_popular_tags( $limit = 5, $types = [] ) {
 		return [];
 	}
 	// $term->countで降順ソート
-	usort( $tags, function( $a, $b ) {
+	usort( $tags, function ( $a, $b ) {
 		return $b->count - $a->count;
 	} );
 	// 上限数で切り取り
@@ -151,4 +151,72 @@ function hametuha_queried_tags( $query = null ) {
 	}
 	// 重複を除去して返す
 	return array_values( array_unique( $tags ) );
+}
+
+/**
+ * Get tags from recent posts with minimum total count
+ *
+ * @param int $recent_days 最近の投稿の日数（デフォルト30日）
+ * @param int $min_count タグの最小総件数（デフォルト10件）
+ * @param int $limit 表示するタグの最大数（デフォルト20件）
+ * @return WP_Term[] タグの配列
+ */
+function hametuha_get_popular_recent_tags( $recent_days = 30, $min_count = 10, $limit = 20 ) {
+	// トランジェントキーを生成
+	$transient_key = sprintf( 'popular_recent_tags_%d_%d_%d', $recent_days, $min_count, $limit );
+	$tags          = get_transient( $transient_key );
+
+	if ( false !== $tags ) {
+		return $tags;
+	}
+
+	// 最近の投稿を取得
+	$recent_posts = get_posts( [
+		'post_type'      => 'post',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'date_query'     => [
+			[
+				'after' => sprintf( '%d days ago', $recent_days ),
+			],
+		],
+		'fields'         => 'ids',
+	] );
+
+	if ( empty( $recent_posts ) ) {
+		return [];
+	}
+
+	// それらの投稿についているタグを取得
+	$tag_ids = [];
+	foreach ( $recent_posts as $post_id ) {
+		$post_tags = wp_get_post_tags( $post_id, [ 'fields' => 'ids' ] );
+		$tag_ids   = array_merge( $tag_ids, $post_tags );
+	}
+
+	// 重複を削除
+	$tag_ids = array_unique( $tag_ids );
+
+	if ( empty( $tag_ids ) ) {
+		return [];
+	}
+
+	// タグオブジェクトを取得（総件数が一定以上のもののみ）
+	$tags = get_tags( [
+		'include'    => $tag_ids,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+		'number'     => $limit,
+		'hide_empty' => true,
+	] );
+
+	// 最小件数でフィルタリング
+	$tags = array_filter( $tags, function ( $tag ) use ( $min_count ) {
+		return $tag->count >= $min_count;
+	} );
+
+	// 3時間キャッシュ
+	set_transient( $transient_key, $tags, 3 * HOUR_IN_SECONDS );
+
+	return $tags;
 }

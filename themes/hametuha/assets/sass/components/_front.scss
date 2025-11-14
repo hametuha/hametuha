@@ -1,13 +1,35 @@
 .front-container {
-	padding-top: $navbar-height + $subnavbar-height;
+	padding-top: $navbar-height;
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
 
-	h1,
-	h1 + p {
+	&__hero {
 		color: $white;
 		text-shadow: 0 0 5px $black;
+
+		&--title {
+		}
+
+		&--excerpt {
+		}
+
+		&--buttons {
+			a {
+				border-radius: 0;
+				border-width: 2px;
+
+				+ a {
+					margin-left: 1em;
+				}
+			}
+		}
+	}
+
+	&--inverse {
+		background-color: $gray-200;
+		padding-bottom: 40px;
+		padding-top: 1px;
 	}
 
 	& + .front-container {
@@ -27,7 +49,7 @@
 		font-family: $work-title;
 	}
 
-	.frontpage-widget {
+	.front-page-widget {
 		font-family: $work-body;
 		$widget-padding: 40px;
 
@@ -77,23 +99,209 @@
 	}
 }
 
-// レーダー
-#genre-context {
-	max-width: 100%;
-	height: 300px;
+// お知らせ
+.front-announcement {
+	border-top: 1px solid $thin-border;
+	border-bottom: 1px solid $thin-border;
+	padding: 10px 0;
+
+	&__list {
+		padding: 0;
+		margin: 0;
+		overflow: hidden;
+		height: 38px;
+		position: relative;
+	}
+
+	&__item {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		line-height: 1;
+		align-items: center;
+		font-size: 16px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		animation: fade-in-out 12s infinite;
+		background-color: $white;
+
+		&:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		&:nth-child(2) {
+			animation-delay: 4s;
+		}
+
+		&:nth-child(3) {
+			animation-delay: 8s;
+		}
+
+		a {
+			display: flex;
+			gap: 1em;
+			padding: 10px;
+			align-items: center;
+
+			&:link,
+			&:visited {
+				text-decoration: none;
+			}
+
+			&:hover,
+			&:active {
+				text-decoration: none;
+				background-color: $link-active-bg;
+			}
+		}
+
+		span {
+			font-weight: $font-weight-bold;
+			flex: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			min-width: 0; // flexアイテムのellipsisに必要
+		}
+
+		time {
+			flex-shrink: 0; // 日付部分は縮まない
+			strong:last-child {
+				width: 9em;
+			}
+			display: inline-block;
+			padding: 3px 5px;
+			font-size: 12px;
+			background-color: $danger;
+			color: $white;
+			border-radius: 3px;
+		}
+	}
+
+	.btn {
+		padding-top: 7px;
+		padding-bottom: 7px;
+	}
+}
+
+@keyframes fade-in-out {
+	0% {
+		opacity: 0;
+		visibility: hidden;
+	}
+	1% {
+		opacity: 1;
+		visibility: visible;
+	}
+	33% {
+		opacity: 1;
+		visibility: visible;
+	}
+	34%, 100% {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+
+// レビュー
+.front-review {
+
+	&__label {
+		font-family: $font-family-base;
+		font-size: 1rem;
+		font-weight: $font-weight-bold;
+	}
+}
+
+// 公募
+.front-campaign {
+	a {
+		display: block;
+		padding: 1em 2em;
+		border-radius: 1em;
+
+		&:link,
+		&:visited {
+			text-decoration: none;
+			color: $white;
+			background-color: $primary;
+		}
+
+		&:hover,
+		&:active {
+			text-decoration: none;
+			color: $white;
+			background-color: $secondary;
+		}
+	}
+
+	&__title {
+		font-size: 1.4em;
+		font-weight: $font-weight-bold;
+	}
+
+	&__limit {
+		display: block;
+	}
+
+	.badge {
+		font-size: 1.4em;
+	}
+}
+
+// ニュース
+.front-news {
+	&__card {
+		img {
+			object-fit: cover;
+		}
+
+		a {
+			display: block;
+
+			&:link,
+			&:visited {
+				text-decoration: none;
+			}
+
+			&:hover,
+			&:active {
+				text-decoration: none;
+
+				.card {
+					background-color: $link-active-bg;
+				}
+			}
+		}
+	}
+
+	&__term {
+		font-size: 0.8em;
+		padding: 3px 5px;
+		border-radius: 3px;
+		color: $primary;
+		border: 1px solid currentColor;
+	}
 }
 
 // 破滅派について
 #about-us {
+	padding-top: 80px;
 	padding-bottom: 80px;
+
+	h2 {
+		font-weight: $font-weight-bold;
+	}
 
 	h3 {
 		text-align: center;
 	}
 
 	p.icon {
-		height: 180px;
-		line-height: 180px;
+		height: 120px;
+		line-height: 120px;
 		text-align: center;
 
 		i {
@@ -104,5 +312,25 @@
 
 	.caption {
 		font-family: $work-body;
+	}
+
+	.about-us__stats {
+		margin-top: 40px;
+		margin-bottom: 40px;
+		padding-bottom: 40px;
+		border-bottom: 1px solid $thin-border;
+		text-align: center;
+		font-family: $work-title;
+
+		&--title {
+
+		}
+
+		&--score {
+			font-size: 1.2em;
+			strong {
+				font-size: 1.8em;
+			}
+		}
 	}
 }
