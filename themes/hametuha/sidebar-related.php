@@ -8,50 +8,61 @@
 	<div class="row row--recommend row--catNav">
 
 		<div class="col-xs-12 col-sm-4">
-			<h3 class="list-title">オススメ</h3>
-			<ul class="post-list">
-				<?php
-				$lists = get_posts( [
-					'post_type'      => 'lists',
-					'meta_query'     => [
-						[
-							'key'   => '_recommended_list',
-							'value' => '1',
-						],
-					],
-					'post_status'    => 'publish',
-					'posts_per_page' => 1,
-					'orderby'        => [ 'date' => 'DESC' ],
-				] );
-				foreach ( $lists as $list ) :
+			<?php
+			$lists = new WP_Query( [
+				'my-content'     => 'recommends',
+				'post_type'      => 'lists',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'orderby'        => [ 'date' => 'DESC' ],
+			] );
+			if ( $lists->have_posts() )  :
+				foreach ( $lists->posts as $list ) :
 					$sub_query = new WP_Query( [
-						'post_type'      => 'in_list',
+						'post_type'      => 'post',
 						'post_status'    => 'publish',
-						'post_parent'    => $list->ID,
+						'in_list'    => $list->ID,
 						'posts_per_page' => '3',
 					] );
-					while ( $sub_query->have_posts() ) {
-						$sub_query->the_post();
-						get_template_part( 'parts/loop', 'front' );
-					}
-					wp_reset_postdata();
 					?>
+					<h3 class="list-title"><?php echo esc_html( get_the_title( $list ) ); ?></h3>
+					<ul class="post-list">
+						<?php
+						while ( $sub_query->have_posts() ) {
+							$sub_query->the_post();
+							get_template_part( 'parts/loop', 'front' );
+						}
+						wp_reset_postdata();
+						?>
+					</ul>
 				<?php endforeach; ?>
-			</ul>
-
+			<?php else : ?>
+			<div class="alert alert-warning">
+				編集部の怠慢により、おすすめリストが整備されていません。お手数ですが、編集部までお知らせください。
+			</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="col-xs-12 col-sm-4">
 			<h3 class="list-title">新着</h3>
-			<ul class="post-list">
-				<?php
-				foreach ( hametuha_recent_posts( 3 ) as $post ) {
-					setup_postdata( $post );
-					get_template_part( 'parts/loop', 'front' );
-				}
-				wp_reset_postdata();
+			<?php
+			$recent_posts = hametuha_recent_posts( 3 );
+			if ( ! empty( $recent_posts ) ) :
 				?>
-			</ul>
+				<ul class="post-list">
+					<?php
+					foreach ( $recent_posts as $post ) {
+						setup_postdata( $post );
+						get_template_part( 'parts/loop', 'front' );
+					}
+					wp_reset_postdata();
+					?>
+				</ul>
+			<?php else : ?>
+				<div class="alert alert-warning mt-3">
+					最近、誰も作品を公開していません。破滅派存続の危機です。
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<div class="col-xs-12 col-sm-4">
