@@ -235,14 +235,14 @@ $query = new WP_Query( [
 									}
 									if ( $url ) {
 										printf(
-											'<a href="%s"><span>%s</span><small>%s</small></a>',
+											'<a href="%s"><span>%s</span><small class="badge text-bg-secondary">%s</small></a>',
 											esc_url( $url ),
 											esc_html( $title ),
 											esc_html( hametuha_passed_time( $activity->date ) )
 										);
 									} else {
 										printf(
-											'<span>%s</span><small>%s</small>',
+											'<span>%s</span><small class="badge text-bg-secondary">%s</small>',
 											esc_html( $title ),
 											esc_html( hametuha_passed_time( $activity->date ) )
 										);
