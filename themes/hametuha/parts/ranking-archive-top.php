@@ -16,7 +16,7 @@ $latest_week   = new WP_Query([
 ]);
 if ( $latest_week->have_posts() ) :
 	?>
-	<h2><i class="icon-calendar4"></i> 最新週間ランキング <span class="label label-success">確定済み</span></h2>
+	<h2 class="archive-ranking-title"><i class="icon-calendar4"></i> 最新週間ランキング <span class="badge text-bg-success">確定済み</span></h2>
 	<p><?php echo date_i18n( 'Y年n月j日（D）', $monday ); ?>〜<?php echo date_i18n( 'Y年n月j日（D）', $sunday ); ?></p>
 	<ol class="archive-container media-list">
 		<?php
