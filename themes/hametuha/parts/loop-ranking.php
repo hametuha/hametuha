@@ -74,7 +74,7 @@ switch ( strlen( $rank ) ) {
 				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
 					<li class="list-inline-item">
 						<i class="icon-chart"></i>
-						<?php echo number_format( $post->pv ); ?>PV
+						<?php echo number_format( (float) $post->pv ); ?>PV
 					</li>
 				<?php endif; ?>
 			</ul>
