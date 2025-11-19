@@ -124,6 +124,10 @@ class BestQuery extends QueryHighJack {
 		if ( is_category() ) {
 			$titles [] = sprintf( '%s部門', get_queried_object()->name );
 		}
+		$paged = (int) get_query_var( 'paged' );
+		if ( 2 <= $paged ) {
+			$titles[] = sprintf( '%d位〜', ( $paged - 1 ) * 10 + 1 );
+		}
 		$titles [] = get_bloginfo( 'name' );
 		return implode( ' ' . $sep . ' ', $titles );
 	}

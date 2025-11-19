@@ -25,7 +25,7 @@ if ( $query->have_posts() ) :
 
 	<?php
 	// 最大で10ページまでに制限する
-	$query->found_posts = min( $query->max_num_pages, 10 );
+	$query->max_num_pages = min( $query->max_num_pages, hametuha_ranking_max_pagenum( $query ) );
 	wp_pagenavi( [ 'query' => $query ] );
 	?>
 
