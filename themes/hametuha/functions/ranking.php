@@ -263,28 +263,33 @@ function is_fixed_ranking() {
 		return get_query_var( 'year' ) < (int) $now->format( 'Y' );
 	} elseif ( is_ranking( 'monthly' ) ) {
 		// 現在の日時が翌月3日以降かをチェック
-		$next_month_3rd = new DateTime(
-			sprintf( '%d-%02d-03 00:00:00', get_query_var( 'year' ), ( get_query_var( 'monthnum' ) + 1 ) ),
+		$target_month = new DateTime(
+			sprintf( '%d-%02d-01 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ) ),
 			wp_timezone()
 		);
-		return $now > $next_month_3rd;
+		$target_month->modify( 'first day of next month' );
+		$target_month->modify( '+3 days' );
+		return $now > $target_month;
 	} elseif ( is_ranking( 'weekly' ) ) {
 		// 指定された日曜日が最終日曜日よりも前か否か
 		$specified_sunday = new DateTime(
 			sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) ),
 			wp_timezone()
 		);
-		// 最終日曜日を取得（先週の木曜日基準）
+		// 最終日曜日を取得（今日が木曜日の場合は今日、それ以外は直近の木曜日を基準にする）
 		$last_sunday = new DateTime( 'now', wp_timezone() );
-		$last_sunday->modify( 'Previous Thursday' );
+		if ( (int) $last_sunday->format( 'N' ) !== 4 ) {
+			$last_sunday->modify( 'Previous Thursday' );
+		}
 		$last_sunday->modify( 'Previous Sunday' );
 		return $specified_sunday <= $last_sunday;
 	} elseif ( is_ranking( 'daily' ) ) {
 		// 指定日の3日後以降かをチェック
 		$three_days_after = new DateTime(
-			sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), ( get_query_var( 'day' ) + 3 ) ),
+			sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) ),
 			wp_timezone()
 		);
+		$three_days_after->add( new DateInterval( 'P3D' ) );
 		return $now > $three_days_after;
 	} else {
 		return false;

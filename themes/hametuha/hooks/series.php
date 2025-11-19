@@ -178,3 +178,27 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 	];
 	$wp_query->set( 'meta_query', $meta_query );
 } );
+
+/**
+ * 子作品が1つもない場合はシリーズとして公開できない
+ */
+add_filter( 'posts_join', function ( $join, WP_Query $wp_query ) {
+	if ( ! $wp_query->is_main_query() || is_admin() ) {
+		return $join;
+	}
+	if ( 'series' !== $wp_query->get( 'post_type' ) ) {
+		return $join;
+	}
+
+	global $wpdb;
+	// 少なくとも1つは公開済みの子投稿が紐づいている連載のみを表示
+	$join .= " INNER JOIN (
+		SELECT DISTINCT post_parent
+		FROM {$wpdb->posts}
+		WHERE post_parent > 0
+		AND post_status = 'publish'
+		AND post_type = 'post'
+	) AS series_children ON {$wpdb->posts}.ID = series_children.post_parent";
+
+	return $join;
+}, 10, 2 );
