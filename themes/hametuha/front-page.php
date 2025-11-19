@@ -128,7 +128,7 @@ else :
 	<div class="container front-container pb-5">
 		<div class="row">
 
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5">
 				<h2>
 					人気の投稿
 				</h2>
@@ -164,7 +164,7 @@ else :
 				$query->the_post();
 				$url = get_permalink();
 				?>
-				<div class="col-12 col-sm-4 front-page-widget">
+				<div class="col-12 col-sm-4 front-page-widget mb-5">
 					<h2>
 						<?php the_title(); ?>
 					</h2>
@@ -192,7 +192,7 @@ else :
 			endif;
 			?>
 
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5">
 				<h2>
 					<?php esc_html_e( '最近の高評価', 'hametuha' ); ?>
 				</h2>
@@ -215,8 +215,7 @@ else :
 				</p>
 			</div>
 
-
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 				<h2>
 					<?php esc_html_e( 'サクッと読める短編', 'hametuha' ); ?>
 				</h2>
@@ -240,7 +239,7 @@ else :
 				</p>
 			</div>
 
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 				<h2>
 					<?php esc_html_e( '完結済み', 'hametuha' ); ?>
 				</h2>
@@ -269,7 +268,7 @@ else :
 			</div>
 
 			<?php if ( $recent_posts = hametuha_recent_posts( 5 ) ) : ?>
-				<div class="col-12 col-sm-4 front-page-widget">
+				<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 					<h2>新着投稿</h2>
 					<ul class="post-list">
 						<?php
@@ -305,7 +304,7 @@ else :
 		<div class="container pt-5 pb-5">
 			<div class="row">
 
-				<div class="col-12 col-sm-4 front-page-widget">
+				<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 					<h2><?php esc_html_e( '作品の形式', 'hametuha' ); ?></h2>
 					<ul class="post-list">
 						<?php
@@ -320,7 +319,7 @@ else :
 											<?php printf( '%s件', number_format( $category->count ) ); ?>
 										</small>
 									</h3>
-									<div class="list-excerpt">
+									<div class="list-excerpt" style="font-size: 0.8em;">
 										<?php echo esc_html( $category->description ); ?>
 									</div>
 								</a>
@@ -329,7 +328,7 @@ else :
 					</ul>
 				</div>
 
-				<div class="col-12 col-sm-4 front-page-widget">
+				<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 					<h2><?php esc_html_e( '感想', 'hametuha' ); ?></h2>
 					<?php
 					$reviews = \Hametuha\Model\Review::get_instance();
@@ -351,7 +350,7 @@ else :
 					<?php endforeach; ?>
 				</div>
 
-				<div class="col-12 col-sm-4 front-page-widget">
+				<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 					<h2>人気のタグ</h2>
 					<p class="tag-cloud">
 						<?php
@@ -402,7 +401,7 @@ else :
 		</h2>
 
 		<div class="row">
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 				<h2><?php esc_html_e( '最近のコメント', 'hametuha' ); ?></h2>
 				<ul class="post-list">
 					<?php
@@ -434,7 +433,7 @@ else :
 				</ul>
 			</div>
 
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 				<h2><?php esc_html_e( '安否情報', 'hametuha' ); ?></h2>
 				<ul class="post-list">
 					<?php
@@ -457,7 +456,7 @@ else :
 					</a>
 				</p>
 			</div>
-			<div class="col-12 col-sm-4 front-page-widget">
+			<div class="col-12 col-sm-4 front-page-widget mb-5 mb-sm-0">
 				<h2><?php esc_html_e( '掲示板', 'hametuha' ); ?></h2>
 
 				<ul class="post-list">
@@ -608,7 +607,7 @@ endif;
 
 			<div class="row">
 
-				<div class="col-sm-4 col-12">
+				<div class="col-sm-4 col-12 mb-5 mb-sm-0">
 					<p class="icon">
 						<i class="icon-ha"></i>
 					</p>
@@ -625,7 +624,7 @@ endif;
 					</div>
 				</div>
 
-				<div class="col-sm-4 col-12">
+				<div class="col-sm-4 col-12 mb-5 mb-sm-0">
 					<p class="icon">
 						<i class="icon-reading"></i>
 					</p>
@@ -641,7 +640,7 @@ endif;
 					</div>
 				</div>
 
-				<div class="col-sm-4 col-12">
+				<div class="col-sm-4 col-12 mb-5 mb-sm-0">
 					<p class="icon">
 						<i class="icon-enter"></i>
 					</p>
