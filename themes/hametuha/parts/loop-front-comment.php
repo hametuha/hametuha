@@ -46,7 +46,7 @@ if ( ! $comment ) {
 		</div>
 
 		<div class="list-excerpt">
-			<?php echo esc_html( hametuha_censor( $comment->comment_content ) ); ?>
+			<?php echo esc_html( trim_long_sentence( hametuha_censor( $comment->comment_content ), 88 ) ); ?>
 		</div>
 	</a>
 </li>
