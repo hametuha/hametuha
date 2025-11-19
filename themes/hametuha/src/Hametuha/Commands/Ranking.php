@@ -199,6 +199,133 @@ SQL;
 	}
 
 	/**
+	 * 2023-07-01以降のwpg_ga_rankingデータを既存の_current_pvに追加する
+	 *
+	 * @synopsis [--post_type=<post_type>] [--start=<start>] [--end=<end>] [--dry-run]
+	 * @param array $args      Command arguments.
+	 * @param array $assoc_args Command options.
+	 * @return void
+	 */
+	public function rebuild_current_pv( $args, $assoc_args ) {
+		$post_type = $assoc_args['post_type'] ?? 'post';
+		$dry_run   = isset( $assoc_args['dry-run'] );
+
+		// GA4のデータが確定するまで3日かかるため、デフォルトは3日前まで
+		$three_days_ago = new \DateTime( 'now', wp_timezone() );
+		$three_days_ago->modify( '-3 days' );
+
+		$start = $assoc_args['start'] ?? '2023-07-01';
+		$end   = $assoc_args['end'] ?? $three_days_ago->format( 'Y-m-d' );
+
+		$this->add_pv_to_current( $start, $end, $post_type, $dry_run );
+	}
+
+	/**
+	 * 指定期間のwpg_ga_rankingデータを既存の_current_pvに追加する
+	 *
+	 * @synopsis [--post_type=<post_type>] [--start=<start>] [--end=<end>] [--dry-run]
+	 * @param array $args      Command arguments.
+	 * @param array $assoc_args Command options.
+	 * @return void
+	 */
+	public function update_current_pv( $args, $assoc_args ) {
+		$post_type = $assoc_args['post_type'] ?? 'post';
+		$dry_run   = isset( $assoc_args['dry-run'] );
+
+		// GA4のデータが確定するまで3日かかるため、デフォルトは3日前
+		$three_days_ago = new \DateTime( 'now', wp_timezone() );
+		$three_days_ago->modify( '-3 days' );
+
+		$start = $assoc_args['start'] ?? $three_days_ago->format( 'Y-m-d' );
+		$end   = $assoc_args['end'] ?? $three_days_ago->format( 'Y-m-d' );
+
+		$this->add_pv_to_current( $start, $end, $post_type, $dry_run );
+	}
+
+	/**
+	 * 指定期間のwpg_ga_rankingデータを既存の_current_pvに追加する（共通処理）
+	 *
+	 * @param string $start     開始日（Y-m-d形式）
+	 * @param string $end       終了日（Y-m-d形式）
+	 * @param string $post_type 投稿タイプ
+	 * @param bool   $dry_run   ドライランモード
+	 * @return void
+	 */
+	private function add_pv_to_current( $start, $end, $post_type, $dry_run ) {
+		if ( $dry_run ) {
+			\WP_CLI::warning( __( 'ドライランモードで実行しています。', 'hametuha' ) );
+		}
+
+		// 指定期間のデータを集計
+		$query = $this->ga()->db->prepare(
+			"SELECT object_id, SUM(object_value) as total_pv
+			FROM {$this->ga()->table}
+			WHERE category = 'general'
+			AND calc_date BETWEEN %s AND %s
+			GROUP BY object_id
+			HAVING total_pv > 0",
+			$start,
+			$end
+		);
+
+		\WP_CLI::log( sprintf( __( '%s から %s のPVデータを集計中...', 'hametuha' ), $start, $end ) );
+		$ranking_data = $this->ga()->db->get_results( $query, ARRAY_A );
+
+		if ( empty( $ranking_data ) ) {
+			\WP_CLI::warning( __( '指定期間のランキングデータが見つかりませんでした。', 'hametuha' ) );
+			return;
+		}
+
+		\WP_CLI::log( sprintf( __( '%d件のレコードを処理します。', 'hametuha' ), count( $ranking_data ) ) );
+
+		$updated_count = 0;
+		$skipped_count = 0;
+		$progress = \WP_CLI\Utils\make_progress_bar( __( '_current_pvを更新中', 'hametuha' ), count( $ranking_data ) );
+
+		foreach ( $ranking_data as $row ) {
+			$post_id = (int) $row['object_id'];
+			$new_pv  = (int) $row['total_pv'];
+
+			// 投稿が存在し、指定されたpost_typeか確認
+			$post = get_post( $post_id );
+			if ( ! $post || $post->post_type !== $post_type ) {
+				$skipped_count++;
+				$progress->tick();
+				continue;
+			}
+
+			// 既存の_current_pvを取得
+			$current_pv = (int) get_post_meta( $post_id, '_current_pv', true );
+
+			// 指定期間のPVを加算
+			$total_pv = $current_pv + $new_pv;
+
+			if ( ! $dry_run ) {
+				update_post_meta( $post_id, '_current_pv', $total_pv );
+				$updated_count++;
+			}
+
+			$progress->tick();
+		}
+
+		$progress->finish();
+
+		if ( $dry_run ) {
+			\WP_CLI::success( sprintf(
+				__( 'ドライラン完了: %d件を更新予定、%d件をスキップ', 'hametuha' ),
+				count( $ranking_data ) - $skipped_count,
+				$skipped_count
+			) );
+		} else {
+			\WP_CLI::success( sprintf(
+				__( '%d件の_current_pvを更新しました（%d件スキップ）。', 'hametuha' ),
+				$updated_count,
+				$skipped_count
+			) );
+		}
+	}
+
+	/**
 	 * Get Google Analytics Accessor.
 	 *
 	 * @return GoogleAnalyticsDataAccessor
