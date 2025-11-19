@@ -6,8 +6,9 @@ namespace Hametuha\QueryHighJack;
 use WPametu\API\QueryHighJack;
 
 /**
- * ランキング取得用のクエリ
+ * 期間ランキング取得用のクエリ
  *
+ * @feature-group ranking
  * @package Hametuha\QueryHighJack
  */
 class RankingQuery extends QueryHighJack {
@@ -32,6 +33,7 @@ class RankingQuery extends QueryHighJack {
 		'ranking/([0-9]{4})/([0-9]{2})/?'                  => 'index.php?ranking=monthly&year=$matches[1]&monthnum=$matches[2]',
 		'ranking/([0-9]{4})/page/([0-9]+)/?'               => 'index.php?ranking=yearly&year=$matches[1]&paged=$matches[2]',
 		'ranking/([0-9]{4})/?'                             => 'index.php?ranking=yearly&year=$matches[1]',
+		'ranking/last-week/?'                              => 'index.php?ranking=last_week',
 		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/page/([0-9]+)/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]',
 		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]',
 		'ranking/?$'                                       => 'index.php?ranking=top',
@@ -248,43 +250,7 @@ SQL;
 	 * {@inheritdoc}
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		$titles = [];
-		switch ( get_query_var( 'ranking' ) ) {
-			case 'top':
-				$titles[] = '厳粛なランキング';
-				break;
-			case 'daily':
-			case 'monthly':
-			case 'yearly':
-			case 'weekly':
-				$titles[] = $this->get_ranking_title();
-				break;
-		}
-		$titles[] = get_bloginfo( 'name' );
+		$titles = [ ranking_title(), get_bloginfo( 'name' ) ];
 		return implode( ' ' . $sep . ' ', $titles );
-	}
-
-	/**
-	 * ランキングページのタイトル
-	 *
-	 * @return string
-	 */
-	protected function get_ranking_title() {
-		$year  = get_query_var( 'year' );
-		$month = get_query_var( 'monthnum' );
-		$day   = get_query_var( 'day' );
-		$title = $year . '年';
-		if ( $month ) {
-			$title .= sprintf( '%d月', $month );
-		}
-		if ( $day ) {
-			$title .= sprintf( '%d日', $day );
-		}
-		if ( 'weekly' === get_query_var( 'ranking' ) ) {
-			$title .= '付の週間ランキング';
-		} else {
-			$title .= 'のランキング';
-		}
-		return $title;
 	}
 }

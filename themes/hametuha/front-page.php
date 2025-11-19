@@ -147,8 +147,9 @@ else :
 					?>
 				</ul>
 				<p>
-					<a href="<?php echo home_url( '/ranking/' ); ?>"
-						class="btn btn-outline-secondary w-100">ランキング一覧</a>
+					<a href="<?php echo home_url( '/ranking/last-week/' ); ?>" class="btn btn-outline-secondary w-100">
+						<?php esc_html_e( '先週のランキング', '' ); ?>
+					</a>
 				</p>
 			</div>
 

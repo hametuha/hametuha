@@ -36,7 +36,9 @@
 				<?php if ( ! is_ranking( 'top' ) ) : ?>
 
 					<p class="ranking-back-to-top text-center">
-						<a class="btn btn-lg btn-default" href="<?php echo home_url( '/ranking/' ); ?>">ランキングトップへ</a>
+						<a class="btn btn-lg btn-outline-primary" href="<?php echo home_url( '/ranking/' ); ?>">
+							ランキングトップへ
+						</a>
 					</p>
 
 				<?php endif; ?>
@@ -45,11 +47,11 @@
 
 				<div id="ranking-detail">
 
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h2 class="panel-title">ランキングの仕組み</h2>
+					<div class="card">
+						<div class="card-header">
+							<h2 class="card-title">ランキングの仕組み</h2>
 						</div>
-						<div class="panel-body">
+						<div class="card-body">
 
 							<h3>基本原則</h3>
 							<ul>
@@ -81,5 +83,6 @@
 
 <?php
 get_sidebar( 'related' );
+get_footer( 'ebooks' );
 get_footer( 'books' );
 get_footer();

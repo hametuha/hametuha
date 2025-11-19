@@ -3,8 +3,14 @@
 namespace Hametuha\QueryHighJack;
 
 
+use WP_Query;
 use WPametu\API\QueryHighJack;
 
+/**
+ * 歴代ベストを表示する
+ *
+ * @feature-group ranking
+ */
 class BestQuery extends QueryHighJack {
 
 	protected $query_var = [ 'ranking' ];
@@ -23,9 +29,28 @@ class BestQuery extends QueryHighJack {
 	 */
 	public function pre_get_posts( \WP_Query &$wp_query ) {
 		if ( $this->is_valid_query( $wp_query ) ) {
+			// 最低条件
+			$wp_query->set( 'post_type', 'post' );
+			$wp_query->set( 'post_status', 'publish' );
+			// ベストの場合は上位100件までなので、明示的に指定されていた場合を除き1ページに最大で10件
+			$per_page = $wp_query->get( 'posts_per_page' );
+			if ( is_numeric( $per_page ) ) {
+				$per_page = min( $per_page, 10 );
+			} else {
+				$per_page = 10;
+			}
+			$wp_query->set( 'posts_per_page', $per_page );
+			// かつ、PVが1000以上
 			$wp_query->set( 'orderby', 'meta_value_num' );
 			$wp_query->set( 'order', 'DESC' );
-			$wp_query->set( 'meta_key', '_current_pv' );
+			$wp_query->set( 'meta_query', [
+				[
+					'key'     => '_current_pv',
+					'value'   => 1000,
+					'type'    => 'NUMERIC',
+					'compare' => '>=',
+				],
+			] );
 		}
 	}
 
@@ -41,42 +66,33 @@ class BestQuery extends QueryHighJack {
 		if ( ! $this->is_valid_query( $wp_query ) ) {
 			return $posts;
 		}
-		// Ranking Query
-		$rank_query = <<<SQL
-			SELECT COUNT(post_id) FROM {$this->db->postmeta}
-			WHERE meta_key = '_current_pv'
-			  AND CAST(meta_value AS SIGNED) > %d
-SQL;
-		// PV diff query
-		$yesterday  = date_i18n( 'Y-m-d', current_time( 'timestamp' ) - 60 * 60 * 24 );
-		$object_ids = [];
-		foreach ( $posts as $post ) {
-			$object_ids[] = $post->ID;
-		}
-		if ( $object_ids ) {
-			$object_ids = implode( ', ', array_map( 'intval', $object_ids ) );
-			$diff_query = <<<SQL
-			SELECT object_id, object_value FROM {$this->db->prefix}wpg_ga_ranking
-			WHERE category = 'diff'
-			  AND object_id IN ({$object_ids})
-			  AND calc_date = '{$yesterday}'
-SQL;
-			$result     = $this->db->get_results( $diff_query );
-		} else {
-			$result = [];
-		}
-		$object_values = [];
-		foreach ( $result as $row ) {
-			$object_values[ $row->object_id ] = $row->object_value;
-		}
+		// 1件目のPVより多い投稿の数を返す
+		$current_pv = get_post_meta( $posts[0]->ID, '_current_pv', true );
+		$query_args = array_merge( $wp_query->query_vars, [
+			'ranking'        => '',
+			'posts_per_page' => 1,
+			'meta_query'     => [
+				[
+					'key'     => '_current_pv',
+					'value'   => $current_pv,
+					'type'    => 'NUMERIC',
+					'compare' => '>',
+				]
+			],
+			'orderby'     => 'date',
+		] );
+		$query = new \WP_Query( $query_args );
+		$rank = $query->found_posts;
 		foreach ( $posts as &$post ) {
 			$post->pv         = (int) get_post_meta( $post->ID, '_current_pv', true );
-			$post->rank       = $this->db->get_var( $this->db->prepare( $rank_query, $post->pv ) ) + 1;
-			$post->transition = isset( $object_values[ $post->ID ] ) ? (int) ( 0 < $object_values[ $post->ID ] ) : 0;
+			if ( $current_pv > $post->pv ) {
+				++$rank;
+				$current_pv = $post->pv;
+			}
+			$post->rank       = $rank + 1;
 		}
 		return $posts;
 	}
-
 
 	/**
 	 * Detect if query var is valid
@@ -86,7 +102,15 @@ SQL;
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return 'best' == $wp_query->get( 'ranking' );
+		if ( 'best' !== $wp_query->get( 'ranking' ) ) {
+			return false;
+		}
+		// 1ページに10件で、10ページ超えてたらだめ
+		$paged = (int) $wp_query->get( 'paged' );
+		if ( 10 < $paged ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

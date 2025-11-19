@@ -1,4 +1,9 @@
 <?php
+/**
+ * ランキング関連の関数
+ *
+ * @feature-group ranking
+ */
 
 use Hametuha\QueryHighJack\RankingQuery;
 
@@ -179,7 +184,8 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null, $series = 
  * @return bool
  */
 function is_ranking( $type = '' ) {
-	if ( $ranking = get_query_var( 'ranking' ) ) {
+	$ranking = get_query_var( 'ranking' );
+	if ( $ranking ) {
 		switch ( $type ) {
 			case 'yearly':
 			case 'monthly':
@@ -187,15 +193,14 @@ function is_ranking( $type = '' ) {
 			case 'weekly':
 			case 'top':
 			case 'best':
+			case 'last_week':
 				return $type == $ranking;
-				break;
 			default:
 				if ( empty( $type ) ) {
 					return true;
 				} else {
 					return false;
 				}
-				break;
 		}
 	} else {
 		return false;
@@ -261,6 +266,8 @@ function ranking_title() {
 			return sprintf( '%d年%d月%d日のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
 		case 'weekly':
 			return sprintf( '%d年%d月%d日までの週間ランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+		case 'last_week':
+			return __( '先週のランキング', 'hametuha' );
 		case 'best':
 			$title = '歴代ベスト';
 			if ( $slug = get_query_var( 'category_name' ) ) {

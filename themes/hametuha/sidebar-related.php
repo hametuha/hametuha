@@ -1,8 +1,17 @@
 <?php
 /**
  * 作品リストを表示する
+ *
+ * このサイドバーは全ページで共通なので、10分キャッシュする
  */
-
+$sidebar_cache_key = 'hametuha-sidebar-related';
+$sidebar_cache = get_transient( $sidebar_cache_key );
+if ( false !== $sidebar_cache ) {
+	// キャッシュがあればそれを返して終了
+	echo $sidebar_cache;
+	return;
+}
+ob_start();
 ?>
 <div class="container recommend-wrapper">
 	<div class="row row--recommend row--catNav">

@@ -1,6 +1,8 @@
 <?php
 /**
  * ランキングアーカイブ
+ *
+ * @feature-group ranking
  */
 
 global $wp_query;
@@ -21,7 +23,11 @@ if ( $query->have_posts() ) :
 		?>
 	</ol>
 
-	<?php wp_pagenavi( [ 'query' => $query ] ); ?>
+	<?php
+	// 最大で10ページまでに制限する
+	$query->found_posts = min( $query->max_num_pages, 10 );
+	wp_pagenavi( [ 'query' => $query ] );
+	?>
 
 
 <?php else : ?>

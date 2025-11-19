@@ -33,6 +33,8 @@ add_action( 'bcn_after_fill', function ( bcn_breadcrumb_trail $bcn ) {
 		}
 		// ベストのトップ
 		$bcn->add( new bcn_breadcrumb( '歴代ベスト', null, [ 'ranking-best' ], home_url( 'ranking/best/' ), '', $link_last ) );
+	} elseif ( is_ranking( 'last_week' ) ) {
+		$bcn->add( new bcn_breadcrumb( '先週のランキング', null, [ 'ranking-last-week' ], home_url( 'ranking/last-week/' ), '', $link_last ) );
 	} else {
 		// 通常のアーカイブ
 		$y = get_query_var( 'year' );
