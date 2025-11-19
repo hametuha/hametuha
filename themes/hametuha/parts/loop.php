@@ -1,8 +1,17 @@
 <?php
+/**
+ * アーカイブページで使用される
+ *
+ * @var array $args;
+ */
+$args = wp_parse_args( $args, [
+	'should_censor' => true,
+] );
+$should_censor = $args['should_censor'];
 $title           = get_the_title();
-$title_display   = hametuha_censor( $title );
+$title_display   = $should_censor ? hametuha_censor( $title ) : $title;
 $excerpt         = trim_long_sentence( get_the_excerpt(), 98 );
-$excerpt_display = hametuha_censor( $excerpt );
+$excerpt_display = $should_censor ? hametuha_censor( $excerpt ) : $excerpt;
 $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
 $announcement    = null;
 if ( 'announcement' === get_post_type() ) {

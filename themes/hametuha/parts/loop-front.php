@@ -5,13 +5,21 @@
  * @var array $args
  */
 $args            = wp_parse_args( $args, [
-	'no_title' => false,
-	'no_desc'  => is_front_page(),
+	'no_title'      => false,
+	'no_desc'       => is_front_page(),
+	'should_censor' => true,
 ] );
 $title           = get_the_title();
-$title_display   = hametuha_censor( $title );
 $excerpt         = trim_long_sentence( get_the_excerpt(), 98 );
-$excerpt_display = hametuha_censor( $excerpt );
+// 検閲を行う
+$should_censor = $args['should_censor'];
+if ( $should_censor ) {
+	$title_display   = hametuha_censor( $title );
+	$excerpt_display = hametuha_censor( $excerpt );
+} else {
+	$title_display   = $title;
+	$excerpt_display = $excerpt;
+}
 $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
 $no_desc         = $args['no_desc'];
 

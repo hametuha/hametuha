@@ -1,10 +1,10 @@
 <?php if ( is_ranking( 'best' ) ) : ?>
 
 	<ul class="nav nav-pills">
-		<li class="<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>"><a href="<?php echo home_url( '/ranking/best/' ); ?>">全体ランキング</a></li>
+		<li class="nav-item"><a class="nav-link<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>" href="<?php echo home_url( '/ranking/best/' ); ?>">全体ランキング</a></li>
 		<?php
 		foreach ( get_categories() as $cat ) {
-			printf( '<li class="%s"><a href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? 'active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
+			printf( '<li class="nav-item"><a class="nav-link%s" href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? ' active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
 		}
 		?>
 	</ul>
