@@ -1,4 +1,8 @@
 <?php
+/**
+ * 著者の人気作品を表示する
+ *
+ */
 // 人気作品
 $authors_ranking = hametuha_get_author_popular_works( null, 6 );
 // 前後の作品
@@ -13,12 +17,10 @@ $authors_recent = hametuha_get_author_work_siblings();
 
 		<ul class="post-list post-list-card">
 			<?php
-			foreach ( $authors_recent as $post ) :
+			foreach ( $authors_recent as $post ) {
 				setup_postdata( $post );
-				?>
-				<?php get_template_part( 'parts/loop', 'front' ); ?>
-				<?php
-			endforeach;
+				get_template_part( 'parts/loop', 'front', [ 'should_censor' => false ] );
+			}
 			wp_reset_postdata();
 			?>
 		</ul>
@@ -33,12 +35,10 @@ $authors_recent = hametuha_get_author_work_siblings();
 
 	<ul class="post-list post-list-card">
 		<?php
-		foreach ( $authors_ranking as $post ) :
+		foreach ( $authors_ranking as $post ) {
 			setup_postdata( $post );
-			?>
-			<?php get_template_part( 'parts/loop', 'front' ); ?>
-			<?php
-		endforeach;
+			get_template_part( 'parts/loop', 'front', [ 'should_censor' => false ] );
+		}
 		wp_reset_postdata();
 		?>
 	</ul>
