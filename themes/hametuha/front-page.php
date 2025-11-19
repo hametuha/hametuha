@@ -137,7 +137,7 @@ else :
 					<?php
 					$ranking_query = new WP_Query( [
 						'ranking'        => 'last_week',
-						'posts_per_page' => 3,
+						'posts_per_page' => 5,
 					] );
 					while ( $ranking_query->have_posts() ) {
 						$ranking_query->the_post();
@@ -174,7 +174,7 @@ else :
 						$sub_query = new WP_Query( [
 							'post_type'      => 'post',
 							'post_status'    => 'publish',
-							'posts_per_page' => 3,
+							'posts_per_page' => 5,
 							'in_list'        => get_the_ID(),
 						] );
 						while ( $sub_query->have_posts() ) {
@@ -201,7 +201,7 @@ else :
 					$sub_query = new WP_Query( [
 						'post_type'      => 'post',
 						'post_status'    => 'publish',
-						'posts_per_page' => '3',
+						'posts_per_page' => 5,
 						'rating'         => 4,
 					] );
 					while ( $sub_query->have_posts() ) {
@@ -225,7 +225,7 @@ else :
 					$sub_query = new WP_Query( [
 						'post_type'          => 'post',
 						'post_status'        => 'publish',
-						'posts_per_page'     => '3',
+						'posts_per_page'     => 5,
 						'length'             => 'short',
 						'author_not_flagged' => 'spam',
 					] );
@@ -249,7 +249,7 @@ else :
 					$sub_query = new WP_Query( [
 						'post_type'      => 'series',
 						'post_status'    => 'publish',
-						'posts_per_page' => '3',
+						'posts_per_page' => 5,
 						'meta_query'     => [
 							[
 								'key'   => '_series_finished',
