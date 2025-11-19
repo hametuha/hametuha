@@ -142,7 +142,7 @@ $query = new WP_Query( [
 								<?php
 								while ( $query->have_posts() ) {
 									$query->the_post();
-									get_template_part( 'parts/loop', 'front' );
+									get_template_part( 'parts/loop', 'front', [ 'should_censor' => false ] );
 								}
 								?>
 							</ul>

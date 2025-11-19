@@ -6,8 +6,9 @@ namespace Hametuha\QueryHighJack;
 use WPametu\API\QueryHighJack;
 
 /**
- * ランキング取得用のクエリ
+ * 期間ランキング取得用のクエリ
  *
+ * @feature-group ranking
  * @package Hametuha\QueryHighJack
  */
 class RankingQuery extends QueryHighJack {
@@ -32,6 +33,7 @@ class RankingQuery extends QueryHighJack {
 		'ranking/([0-9]{4})/([0-9]{2})/?'                  => 'index.php?ranking=monthly&year=$matches[1]&monthnum=$matches[2]',
 		'ranking/([0-9]{4})/page/([0-9]+)/?'               => 'index.php?ranking=yearly&year=$matches[1]&paged=$matches[2]',
 		'ranking/([0-9]{4})/?'                             => 'index.php?ranking=yearly&year=$matches[1]',
+		'ranking/last-week/?'                              => 'index.php?ranking=last_week',
 		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/page/([0-9]+)/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]',
 		'ranking/weekly/([0-9]{4})([0-9]{2})([0-9]{2})/?$' => 'index.php?ranking=weekly&year=$matches[1]&monthnum=$matches[2]&day=$matches[3]',
 		'ranking/?$'                                       => 'index.php?ranking=top',
@@ -71,11 +73,22 @@ class RankingQuery extends QueryHighJack {
 			$wheres = $this->get_wheres( $wp_query );
 			// 初期条件を追加してWhere節を作る
 			$where_clause = implode( ' AND ', $wheres );
-			// オフセット
-			$per_page = intval( $wp_query->get( 'posts_per_page' ) ?: get_option( 'posts_per_page' ) );
-			$offset   = ( ( max( 1, $wp_query->get( 'paged' ) ) - 1 ) * $per_page );
-			$request  = <<<SQL
-            SELECT SQL_CALC_FOUND_ROWS
+			// オフセットは明示的にして切れされている場合はを除いて最大で10
+			$per_page  = $wp_query->get( 'posts_per_page' );
+			if ( is_numeric( $per_page ) ) {
+				$per_page = min( 10, $per_page );
+			} else {
+				$per_page = 10;
+			}
+			$offset  = ( ( max( 1, $wp_query->get( 'paged' ) ) - 1 ) * $per_page );
+			// 最小PV閾値を取得（低PVのレコードを除外してパフォーマンス向上）
+			$min_pv = $this->get_min_pv( $wp_query );
+			$having_clause = $min_pv > 0 ? "HAVING pv >= {$min_pv}" : '';
+			// 必要ならcalc_found_rows。
+			// todo: いつかなくす
+			$calc_found_rows = 1 < hametuha_ranking_max_pagenum( $wp_query ) ? 'SQL_CALC_FOUND_ROWS' : '';
+			$request = <<<SQL
+            SELECT {$calc_found_rows}
                 p.*,
                 ranking.pv
             FROM (
@@ -85,12 +98,13 @@ class RankingQuery extends QueryHighJack {
                 FROM {$this->db->prefix}wpg_ga_ranking
                 WHERE {$where_clause}
                 GROUP BY object_id
+                {$having_clause}
             ) AS ranking
             INNER JOIN {$this->db->posts} AS p
             ON p.ID = ranking.object_id
             WHERE p.post_status = 'publish'
               AND p.post_type = 'post'
-            ORDER BY ranking.pv DESC, p.post_date DESC
+            ORDER BY ranking.pv DESC
             LIMIT {$offset}, {$per_page}
 SQL;
 		}
@@ -98,7 +112,7 @@ SQL;
 	}
 
 	/**
-	 * 投稿のランクと上昇値を取得する
+	 * 投稿のランクを取得する
 	 *
 	 * @param array $posts
 	 * @param \WP_Query $wp_query
@@ -106,76 +120,53 @@ SQL;
 	 */
 	public function the_posts( array $posts, \WP_Query $wp_query ) {
 		if ( $this->is_valid_query( $wp_query ) ) {
-			$where_clause = implode( ' AND ', $this->get_wheres( $wp_query ) );
-			$query        = <<<SQL
-                SELECT COUNT(*)
-                FROM (
-                    SELECT
-                        object_id,
-                        SUM(object_value) AS pv
-                    FROM {$this->db->prefix}wpg_ga_ranking
-                    WHERE {$where_clause}
-                    GROUP BY object_id
-                ) AS ranking
-                INNER JOIN {$this->db->posts} AS p
-                ON p.ID = ranking.object_id
-                WHERE p.post_status = 'publish'
-                  AND p.post_type = 'post'
-                  AND ranking.pv > %d
-SQL;
-			$prev_where   = implode( ' AND ', $this->get_wheres( $wp_query, true ) );
-			// 先週のPVを取得するクエリ
-			$pv_query = <<<SQL
-               SELECT SUM(object_value)
-               FROM {$this->db->prefix}wpg_ga_ranking
-               WHERE object_id = %d AND {$prev_where}
-SQL;
-			// 先週の順位を取得するクエリ
-			$prev_rank_query = <<<SQL
-              SELECT COUNT(*)
-                FROM (
-                    SELECT
-                        object_id,
-                        SUM(object_value) AS pv
-                    FROM {$this->db->prefix}wpg_ga_ranking
-                    WHERE {$prev_where}
-                    GROUP BY object_id
-                ) AS ranking
-                INNER JOIN {$this->db->posts} AS p
-                ON p.ID = ranking.object_id
-                WHERE p.post_status = 'publish'
-                  AND p.post_type = 'post'
-                  AND ranking.pv > %d
-SQL;
-
+			$rank       = ( max( 1, (int) $wp_query->get( 'paged' ) ) - 1 ) * 10;
+			$current_pv = (int) $posts[0]->pv;
+			$buff       = -1;
 			foreach ( $posts as &$post ) {
 				// 順位を取得する
-				if ( isset( $post->pv ) ) {
-					$post->rank = $this->db->get_var( $this->db->prepare( $query, $post->pv ) ) + 1;
+				if ( $current_pv > $post->pv ) {
+					$rank += $buff + 1;
+					$buff = 0;
+					$current_pv = (int) $post->pv;
+				} elseif ( $current_pv === (int) $post->pv ) {
+					++$buff;
 				}
-				// 先週のPVを取得する
-				$prev_pv = $this->db->get_var( $this->db->prepare( $pv_query, $post->ID ) );
-				if ( ! $prev_pv ) {
-					// なければnull
-					$post->transition = null;
-				} else {
-					// 先週の順位を取得する
-					$prev_rank        = $this->db->get_var( $this->db->prepare( $prev_rank_query, $prev_pv ) ) + 1;
-					$post->transition = version_compare( $prev_rank, $post->rank );
-				}
+				$post->rank = $rank + 1;
 			}
 		}
 		return $posts;
 	}
 
 	/**
+	 * Get minimum PV threshold for ranking
+	 *
+	 * @param \WP_Query $wp_query
+	 * @return int
+	 */
+	private function get_min_pv( \WP_Query $wp_query ) {
+		switch ( $wp_query->get( 'ranking' ) ) {
+			case 'yearly':
+				return 100;
+			case 'monthly':
+				return 50;
+			case 'weekly':
+				return 10;
+			case 'daily':
+			case 'last_week':
+			default:
+				return 0; // 閾値なし
+		}
+	}
+
+	/**
 	 * Get where clause
 	 *
 	 * @param \WP_Query $wp_query
-	 * @param bool $previous trueにすると前の期間を取得。相対評価のため。
+	 * @param bool $deprecated まえはtrueにすると前の期間を取得していたが、重すぎて廃止。
 	 * @return array
 	 */
-	private function get_wheres( \WP_Query $wp_query, $previous = false ) {
+	private function get_wheres( \WP_Query $wp_query, $deprecated = false ) {
 		$wheres = [
 			"category = 'general'",
 		];
@@ -184,48 +175,41 @@ SQL;
 		$day    = $wp_query->get( 'day' );
 		switch ( $wp_query->get( 'ranking' ) ) {
 			case 'yearly':
-				if ( $previous ) {
-					--$year;
-				}
-				$wheres[] = $this->db->prepare( 'YEAR(calc_date) = %d', $year );
+				$year_start = sprintf( '%d-01-01', $year );
+				$year_end   = sprintf( '%d-12-31', $year );
+				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $year_start, $year_end );
 				break;
 			case 'monthly':
-				if ( $previous ) {
-					$last_month = strtotime( sprintf( '%04d-%02d-01 00:00:00', $year, $month ) ) - 1;
-					$year       = date_i18n( 'Y', $last_month );
-					$month      = date_i18n( 'n', $last_month );
-				}
-				$wheres[] = $this->db->prepare( 'YEAR(calc_date) = %d', $year );
-				$wheres[] = $this->db->prepare( 'MONTH(calc_date) = %d', $month );
+				$month_start = sprintf( '%d-%02d-01', $year, $month );
+				$month_end   = new \DateTime( $month_start, wp_timezone() );
+				$month_end->modify( 'last day of this month' );
+				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $month_start, $month_end->format( 'Y-m-d' ) );
 				break;
 			case 'daily':
-				$day = sprintf( '%s-%s-%s', $year, $month, $day );
-				if ( $previous ) {
-					$day = date_i18n( 'Y-m-d', strtotime( $day . ' 00:00:00' ) - 1 );
-				}
+				$day = sprintf( '%04d-%02d-%02d', $year, $month, $day );
 				$wheres[] = $this->db->prepare( 'calc_date = %s', $day );
 				break;
 			case 'last_week':
-				$prev_thursday = strtotime( 'Previous Thursday', current_time( 'timestamp' ) );
-				if ( $previous ) {
-					$prev_thursday -= 60 * 60 * 24 * 7;
-				}
-				$sunday   = date_i18n( 'Y-m-d', strtotime( 'Previous Sunday', $prev_thursday ) );
-				$monday   = date_i18n( 'Y-m-d', strtotime( 'Previous Monday', strtotime( $sunday . ' 00:00:00' ) ) );
-				$wheres[] = $this->db->prepare( 'calc_date <= %s', $sunday );
-				$wheres[] = $this->db->prepare( 'calc_date >= %s', $monday );
+				// 先週の木曜日を基準に、その週の日曜日（週の終わり）を取得
+				$now = new \DateTime( 'now', wp_timezone() );
+				$now->modify( 'Previous Thursday' );
+				$now->modify( 'Previous Sunday' );
+				$sunday = $now->format( 'Y-m-d' );
+				// 日曜日の週の月曜日（週の始まり）を取得
+				$now->modify( 'Previous Monday' );
+				$monday = $now->format( 'Y-m-d' );
+				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday, $sunday );
 				break;
 			case 'range':
-				// TODO: 範囲指定に対応する
+				// TODO: 範囲指定に対応する。対応未定。
 				break;
 			case 'weekly':
-				$sunday = sprintf( '%d-%02d-%02d', $year, $month, $day );
-				if ( $previous ) {
-					$sunday = date_i18n( 'Y-m-d', strtotime( $sunday . ' 00:00:00' ) - 60 * 60 * 24 * 7 );
-				}
-				$monday   = date_i18n( 'Y-m-d', strtotime( 'Previous Monday', strtotime( $sunday ) ) );
-				$wheres[] = $this->db->prepare( 'calc_date <= %s', $sunday );
-				$wheres[] = $this->db->prepare( 'calc_date >= %s', $monday );
+				// 指定された日曜日（週の終わり）を基準に、その週の月曜日（週の始まり）を取得
+				$sunday_str = sprintf( '%d-%02d-%02d', $year, $month, $day );
+				$sunday_obj = new \DateTime( $sunday_str, wp_timezone() );
+				$sunday_obj->modify( 'Previous Monday' );
+				$monday = $sunday_obj->format( 'Y-m-d' );
+				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday, $sunday_str );
 				break;
 			default:
 				$wheres[] = '1 = 2';
@@ -241,50 +225,28 @@ SQL;
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return in_array( $wp_query->get( 'ranking' ), [ 'yearly', 'monthly', 'daily', 'weekly', 'top', 'last_week' ], true );
+		if ( ! in_array( $wp_query->get( 'ranking' ), [ 'yearly', 'monthly', 'daily', 'weekly', 'top', 'last_week' ], true ) ) {
+			return false;
+		}
+		// 10ページを超えていたら404にする
+		$paged = (int) get_query_var( 'paged' );
+		if ( hametuha_ranking_max_pagenum( $wp_query ) < $paged ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		$titles = [];
-		switch ( get_query_var( 'ranking' ) ) {
-			case 'top':
-				$titles[] = '厳粛なランキング';
-				break;
-			case 'daily':
-			case 'monthly':
-			case 'yearly':
-			case 'weekly':
-				$titles[] = $this->get_ranking_title();
-				break;
+		$titles = [ ranking_title() ];
+		$cur_page = (int) get_query_var( 'paged' );
+		if ( 2 <= $cur_page ) {
+			// 2ページ目以降
+			$titles[] = sprintf( '%d位〜', ( $cur_page - 1 ) * 10 + 1 );
 		}
-		$titles[] = get_bloginfo( 'name' );
+		$titles []= get_bloginfo( 'name' );
 		return implode( ' ' . $sep . ' ', $titles );
-	}
-
-	/**
-	 * ランキングページのタイトル
-	 *
-	 * @return string
-	 */
-	protected function get_ranking_title() {
-		$year  = get_query_var( 'year' );
-		$month = get_query_var( 'monthnum' );
-		$day   = get_query_var( 'day' );
-		$title = $year . '年';
-		if ( $month ) {
-			$title .= sprintf( '%d月', $month );
-		}
-		if ( $day ) {
-			$title .= sprintf( '%d日', $day );
-		}
-		if ( 'weekly' === get_query_var( 'ranking' ) ) {
-			$title .= '付の週間ランキング';
-		} else {
-			$title .= 'のランキング';
-		}
-		return $title;
 	}
 }

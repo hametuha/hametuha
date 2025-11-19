@@ -1,6 +1,8 @@
 <?php
 /**
  * ランキングアーカイブ
+ *
+ * @feature-group ranking
  */
 
 global $wp_query;
@@ -21,7 +23,11 @@ if ( $query->have_posts() ) :
 		?>
 	</ol>
 
-	<?php wp_pagenavi( [ 'query' => $query ] ); ?>
+	<?php
+	// 最大で10ページまでに制限する
+	$query->max_num_pages = min( $query->max_num_pages, hametuha_ranking_max_pagenum( $query ) );
+	wp_pagenavi( [ 'query' => $query ] );
+	?>
 
 
 <?php else : ?>

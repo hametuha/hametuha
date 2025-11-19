@@ -55,10 +55,17 @@ get_header( 'breadcrumb' );
 									<?php
 									$counter = 0;
 									while ( $query->have_posts() ) {
+										$should_censor = true;
+										if ( is_author() && ( get_the_author_meta( 'user_nicename' ) === get_query_var( 'author_name' ) ) ) {
+											// 著者アーカイブかつ、表示されている著者が一緒なら検閲なし
+											$should_censor = false;
+										}
 										$query->the_post();
 										++$counter;
 										$even = ( 0 === $counter % 2 ) ? ' even' : ' odd';
-										get_template_part( 'parts/loop', get_post_type() );
+										get_template_part( 'parts/loop', get_post_type(), [
+											'should_censor' => $should_censor,
+										] );
 									}
 									?>
 								</ol>

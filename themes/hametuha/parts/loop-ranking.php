@@ -1,6 +1,8 @@
 <?php
 /*
  * ランキング用ループ
+ *
+ * @feature-group ranking
  */
 
 $rank       = get_the_ranking();
@@ -35,20 +37,6 @@ switch ( strlen( $rank ) ) {
 				<strong class="<?php echo esc_attr( $rank_length ); ?>"><?php echo $rank; ?></strong>
 			</div>
 
-			<div class="rank-list-status">
-				<?php
-				if ( is_null( $post->transition ) ) {
-					$icon = 'icon-new';
-				} elseif ( -1 >= $post->transition ) {
-					$icon = 'icon-arrow-down-right2';
-				} elseif ( 1 <= $post->transition ) {
-					$icon = 'icon-arrow-up-right2';
-				} else {
-					$icon = 'icon-arrow-right5';
-				}
-				printf( '<i class="rank-status %s"></i>', esc_attr( $icon ) );
-				?>
-			</div>
 		</div><!-- rank list header. -->
 
 		<div class="rank-list-body">
@@ -68,11 +56,11 @@ switch ( strlen( $rank ) ) {
 
 			<!-- Post Data -->
 			<ul class="list-inline rank-list-meta">
-				<li class"author-info">
+				<li class="list-inline-item author-info">
 					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
 					<?php the_author(); ?>
 				</li>
-				<li class="date">
+				<li class="list-inline-item date">
 					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
 					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="label label-danger">New!</span>
@@ -80,11 +68,12 @@ switch ( strlen( $rank ) ) {
 						<span class="label label-info">更新</span>
 					<?php endif; ?>
 				</li>
-				<li class="static">
+				<li class="list-inline-item static">
 					<i class="icon-reading"></i> <?php echo number_format( get_post_length() ); ?>文字
 				</li>
 				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>
-					<li>
+					<li class="list-inline-item">
+						<i class="icon-chart"></i>
 						<?php echo number_format( $post->pv ); ?>PV
 					</li>
 				<?php endif; ?>

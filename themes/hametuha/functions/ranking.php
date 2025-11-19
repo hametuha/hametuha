@@ -1,4 +1,9 @@
 <?php
+/**
+ * ランキング関連の関数
+ *
+ * @feature-group ranking
+ */
 
 use Hametuha\QueryHighJack\RankingQuery;
 
@@ -36,9 +41,14 @@ function the_ranking( \WP_Post $post = null ) {
  * @return string
  */
 function get_latest_ranking_day( $format = '' ) {
-	$thursday = date_i18n( 'N' ) == 4 ? current_time( 'timestamp' ) : strtotime( 'Previous Thursday', current_time( 'timestamp' ) );
-	$sunday   = strtotime( 'Previous Sunday', $thursday );
-	return date_i18n( $format, $sunday );
+	// 今日が木曜日の場合は今日、それ以外は直近の木曜日を基準にする
+	$now = new DateTime( 'now', wp_timezone() );
+	if ( (int) $now->format( 'N' ) !== 4 ) {
+		$now->modify( 'Previous Thursday' );
+	}
+	// その週の日曜日（週の終わり）を取得
+	$now->modify( 'Previous Sunday' );
+	return $now->format( $format );
 }
 
 /**
@@ -53,6 +63,24 @@ function get_the_ranking( \WP_Post $post = null ) {
 }
 
 /**
+ * ランキングに相応しいページ数を出力する
+ *
+ * @param WP_Query $wp_query
+ * @return int
+ */
+function hametuha_ranking_max_pagenum( $wp_query ) {
+	switch ( $wp_query->get( 'ranking' ) ) {
+		case 'daily':
+		case 'last_week':
+			return 1;
+		case 'weekly':
+			return 3;
+		default:
+			return 10;
+	}
+}
+
+/**
  * 作者の一番人気のある作品を取得する
  *
  * @param null|int|WP_Post $post
@@ -64,22 +92,24 @@ function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 	if ( ! $post ) {
 		return [];
 	}
-	global $wpdb;
-	$query = <<<SQL
-		SELECT p.* FROM (
-			SELECT * FROM {$wpdb->posts}
-			WHERE post_type   = 'post'
-			  AND post_status = 'publish'
-		      AND post_author = %d
-		) AS p
-		INNER JOIN {$wpdb->postmeta} AS pm
-		ON p.ID = pm.post_id AND pm.meta_key = '_current_pv'
-		ORDER BY pm.meta_value + 0 DESC
-		LIMIT 0,%d
-SQL;
-	return array_map( function ( $row ) {
-		return new WP_Post( $row );
-	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
+	$query = new WP_Query( [
+		'posts_per_page' => $limit,
+		'no_found_rows'  => true,
+		'post_status'    => 'publish',
+		'post_type'      => 'post',
+		'author'         => $post->post_author,
+		'meta_query'     => [
+			[
+				'key'     => '_current_pv',
+				'value'   => 10,
+				'type'    => 'NUMERIC',
+				'compare' => '>'
+			]
+		],
+		'meta_key'       => '_current_pv',
+		'orderby'        => 'meta_value_num',
+	] );
+	return $query->posts;
 }
 
 /**
@@ -179,7 +209,8 @@ function hametuha_get_author_work_siblings( $limit = 6, $post = null, $series = 
  * @return bool
  */
 function is_ranking( $type = '' ) {
-	if ( $ranking = get_query_var( 'ranking' ) ) {
+	$ranking = get_query_var( 'ranking' );
+	if ( $ranking ) {
 		switch ( $type ) {
 			case 'yearly':
 			case 'monthly':
@@ -187,15 +218,14 @@ function is_ranking( $type = '' ) {
 			case 'weekly':
 			case 'top':
 			case 'best':
+			case 'last_week':
 				return $type == $ranking;
-				break;
 			default:
 				if ( empty( $type ) ) {
 					return true;
 				} else {
 					return false;
 				}
-				break;
 		}
 	} else {
 		return false;
@@ -213,14 +243,11 @@ function ranking_class( $rank ) {
 	switch ( $rank ) {
 		case 1:
 			return ' king';
-			break;
 		case 2:
 		case 3:
 			return ' ranker';
-			break;
 		default:
 			return ' normal';
-			break;
 	}
 }
 
@@ -230,17 +257,35 @@ function ranking_class( $rank ) {
  * @return bool
  */
 function is_fixed_ranking() {
+	$now = new DateTime( 'now', wp_timezone() );
+
 	if ( is_ranking( 'yearly' ) ) {
-		return get_query_var( 'year' ) < date_i18n( 'Y' );
+		return get_query_var( 'year' ) < (int) $now->format( 'Y' );
 	} elseif ( is_ranking( 'monthly' ) ) {
 		// 現在の日時が翌月3日以降かをチェック
-		return current_time( 'timestamp' ) > strtotime( sprintf( '%d-%02d-03 00:00:00', get_query_var( 'year' ), ( get_query_var( 'monthnum' ) + 1 ) ) );
+		$next_month_3rd = new DateTime(
+			sprintf( '%d-%02d-03 00:00:00', get_query_var( 'year' ), ( get_query_var( 'monthnum' ) + 1 ) ),
+			wp_timezone()
+		);
+		return $now > $next_month_3rd;
 	} elseif ( is_ranking( 'weekly' ) ) {
-		// 指定された曜日が最終日曜日よりも前か否か
-		return strtotime( sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) ) ) <= strtotime( 'Previous Sunday', strtotime( 'Previous Thursday', current_time( 'timestamp' ) ) );
+		// 指定された日曜日が最終日曜日よりも前か否か
+		$specified_sunday = new DateTime(
+			sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) ),
+			wp_timezone()
+		);
+		// 最終日曜日を取得（先週の木曜日基準）
+		$last_sunday = new DateTime( 'now', wp_timezone() );
+		$last_sunday->modify( 'Previous Thursday' );
+		$last_sunday->modify( 'Previous Sunday' );
+		return $specified_sunday <= $last_sunday;
 	} elseif ( is_ranking( 'daily' ) ) {
-		// 基本OK
-		return current_time( 'timestamp' ) > strtotime( sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), ( get_query_var( 'day' ) + 3 ) ) );
+		// 指定日の3日後以降かをチェック
+		$three_days_after = new DateTime(
+			sprintf( '%d-%02d-%02d 00:00:00', get_query_var( 'year' ), get_query_var( 'monthnum' ), ( get_query_var( 'day' ) + 3 ) ),
+			wp_timezone()
+		);
+		return $now > $three_days_after;
 	} else {
 		return false;
 	}
@@ -261,6 +306,8 @@ function ranking_title() {
 			return sprintf( '%d年%d月%d日のランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
 		case 'weekly':
 			return sprintf( '%d年%d月%d日までの週間ランキング', get_query_var( 'year' ), get_query_var( 'monthnum' ), get_query_var( 'day' ) );
+		case 'last_week':
+			return __( '先週のランキング', 'hametuha' );
 		case 'best':
 			$title = '歴代ベスト';
 			if ( $slug = get_query_var( 'category_name' ) ) {
