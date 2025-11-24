@@ -70,6 +70,10 @@ class CampaignController extends Singleton {
 	 * @return bool
 	 */
 	public function is_user_participating( $term, $user_id ) {
+		if ( ! get_term_meta( $term->term_id, '_is_collaboration', true ) ) {
+			// 共同型でないので、サポートできない
+			return false;
+		}
 		$query = new \WP_Query( [
 			'post_type'      => 'post',
 			'posts_per_page' => 1,

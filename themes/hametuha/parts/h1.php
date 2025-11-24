@@ -8,6 +8,10 @@ if ( hametuha_is_profile_page() ) {
 
 	echo '著者一覧';
 
+} elseif ( \Hametuha\QueryHighJack\ReactionQuery::get_instance()->is_reaction_page() ) {
+
+	echo esc_html( \Hametuha\QueryHighJack\ReactionQuery::get_instance()->reaction_page_title() );
+
 } elseif ( is_home() ) {
 
 	echo '作品一覧';

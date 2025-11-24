@@ -4,7 +4,6 @@
  *
  */
 
-
 /**
  * 検索クエリでpost_typeが指定されていない場合、postに限定する
  *
@@ -23,7 +22,7 @@ add_action( 'pre_get_posts', function ( $query ) {
 } );
 
 /**
- * 検索用のクエリばーを追加する
+ * 検索用のクエリバーを追加する
  *
  * @param array $vars
  * @return array
@@ -33,7 +32,6 @@ add_filter( 'query_vars', function ( $vars ) {
 	$vars[] = 'length'; // 長さ
 	$vars[] = 'comments'; // コメント数
 	$vars[] = 'rating'; // レーティング（星評価の平均）
-	$vars[] = 'reaction'; // レビュータグ（複数指定可能）
 	$vars[] = 'author_not_flagged'; // 指定されたフラグを持つユーザーを除外
 	$vars[] = 'author_flagged'; // 指定されたフラグを持つユーザーのみ
 	return $vars;
@@ -195,64 +193,6 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
 } );
 
 /**
- * レビュータグが指定されている場合は絞り込み
- *
- * クエリパラメータ:
- * - reaction[]=知的&reaction[]=泣ける: 複数のレビュータグで絞り込み（AND条件）
- *
- * 各タグは _review_tag_{タグ名} というpost_metaに件数が保存されている
- * 1件以上獲得しているものを絞り込む
- */
-add_action( 'pre_get_posts', function ( WP_Query $query ) {
-	$reviews = $query->get( 'reaction' );
-	if ( empty( $reviews ) ) {
-		return;
-	}
-
-	// 配列に変換
-	if ( ! is_array( $reviews ) ) {
-		$reviews = [ $reviews ];
-	}
-
-	// エンコードされているかもしれないので復元
-	$reviews = array_map( function ( $tag ) {
-		// URLエンコードされている場合はデコード
-		return urldecode( $tag );
-	}, $reviews );
-
-	// 有効なレビュータグのリストを取得
-	$review_model = \Hametuha\Model\Review::get_instance();
-	$valid_tags   = [];
-	foreach ( $review_model->feedback_tags as $key => $terms ) {
-		$valid_tags = array_merge( $valid_tags, $terms );
-	}
-
-	// 指定されたタグをフィルタリング
-	$reviews = array_filter( $reviews, function ( $tag ) use ( $valid_tags ) {
-		return in_array( $tag, $valid_tags, true );
-	} );
-
-	if ( empty( $reviews ) ) {
-		return;
-	}
-
-	// 既存のmeta_queryを取得
-	$meta_query = $query->get( 'meta_query' ) ?: [];
-
-	// 各レビュータグでAND条件を追加
-	foreach ( $reviews as $tag ) {
-		$meta_query[] = [
-			'key'     => '_review_tag_' . $tag,
-			'value'   => 1,
-			'type'    => 'NUMERIC',
-			'compare' => '>=',
-		];
-	}
-
-	$query->set( 'meta_query', $meta_query );
-} );
-
-/**
  * ユーザーフラグによる絞り込み
  *
  * クエリパラメータ:
@@ -347,3 +287,4 @@ add_filter( 'posts_results', function ( $posts, WP_Query $query ) {
 
 	return $posts;
 }, 10, 2 );
+

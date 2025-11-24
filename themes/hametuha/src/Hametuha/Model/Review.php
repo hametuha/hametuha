@@ -91,6 +91,21 @@ class Review extends TermUserRelationships {
 	}
 
 	/**
+	 * 登録されているタグかどうか
+	 *
+	 * @param string $reaction リアクションの名称
+	 * @return bool
+	 */
+	public function is_valid_tag( $reaction ) {
+		foreach ( $this->feedback_tags as $key => $values ) {
+			if ( in_array( $reaction, $values, true ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * レビュー数を取得する
 	 *
 	 * @param int $post_id
