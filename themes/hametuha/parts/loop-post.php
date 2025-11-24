@@ -86,11 +86,24 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 				<li class="static list-inline-item">
 					<i class="icon-clock"></i> <?php printf( '読了%s分', hametuha_reading_time() ); ?>
 				</li>
-				<?php if ( in_array( $post->post_status, [ 'private', 'protected' ] ) ) : ?>
-					<li class="list-inline-item">
-						<span class="badge text-bg-secondary"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
-					</li>
-				<?php endif; ?>
+				<?php
+				// 特定の投稿ステータスの場合はラベルを表示
+				foreach ( [
+					'private'   => 'secondary',
+					'protected' => 'secondary',
+					'pending'   => 'secondary',
+					'draft'     => 'secondary',
+					'future'    => 'info',
+				] as $status => $class_name ) {
+					if ( $post->post_status === $status ) :
+						?>
+						<li class="list-inline-item">
+							<span class="badge text-bg-<?php echo esc_attr( $class_name ); ?>"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
+						</li>
+						<?php
+					endif;
+				}
+				?>
 				<?php if ( $censored ) : ?>
 					<li class="list-inline-item">
 						<span class="badge text-bg-danger">検閲済み</span>
