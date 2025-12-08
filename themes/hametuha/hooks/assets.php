@@ -156,8 +156,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	// Social scripts
 	wp_enqueue_script( 'hametuha-social' );
 
-	// Common Scripts
-	wp_enqueue_script( 'hametuha-common' );
+	// Common Scripts (hashboardでは読み込まない - Bootstrap重複回避)
+	if ( ! get_query_var( 'hashboard' ) ) {
+		wp_enqueue_script( 'hametuha-common' );
+	}
 	// Single post.
 	if ( is_singular( 'post' ) ) {
 		wp_enqueue_script( 'hametuha-single' );

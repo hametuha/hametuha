@@ -6,6 +6,9 @@
 // Custom variables and mixins
 @import "mixins";
 
+// Components (includes %loading-indicator placeholder)
+@import "components";
+
 // Main styles
 body {
   // Basic body styles
