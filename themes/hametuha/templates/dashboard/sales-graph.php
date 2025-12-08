@@ -10,6 +10,6 @@ $endpoint = $args['endpoint'] ?? '';
 ?>
 <div
 	id="sales-container"
-	data-endpoint="<?php echo esc_url( $endpoint ); ?>"
+	data-endpoint="<?php echo esc_attr( $endpoint ); ?>"
 	data-slug="history"
 ></div>

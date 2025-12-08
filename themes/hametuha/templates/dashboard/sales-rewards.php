@@ -11,6 +11,6 @@ $page     = $args['page'] ?? '';
 ?>
 <div
 	id="sales-container"
-	data-endpoint="<?php echo esc_url( $endpoint ); ?>"
+	data-endpoint="<?php echo esc_attr( $endpoint ); ?>"
 	data-slug="<?php echo esc_attr( $page ); ?>"
 ></div>
