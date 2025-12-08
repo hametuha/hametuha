@@ -7,7 +7,7 @@
 		"php": ">=8.2",
 		"hametuha/wpametu": "^1.2.1",
 		"hametuha/hamepub": "^1.0.0",
-		"hametuha/hashboard": "^1.0.0",
+		"hametuha/hashboard": "^1.0.2",
 		"hametuha/sharee": "^1.0.0",
 		"league/commonmark": "^1.6|^2.3",
 		"kunoichi/ga-communicator": "^3.3",

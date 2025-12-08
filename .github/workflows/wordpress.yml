@@ -36,19 +36,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
       - name: Start MySQL
         run: |
           sudo systemctl start mysql
           mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
 
       - name: Install WordPress
-        run: bash themes/hametuha/bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
+        run: bash ../../bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
+        working-directory: themes/hametuha
 
       - name: Run test suite
         run: |
