@@ -135,15 +135,18 @@ const getDaysInMonth = ( year, month ) => {
 	return days[ month - 1 ];
 };
 
+// Get hashboard plugins
+const { toast } = globalThis.hb?.plugins || {};
+
 /**
  * Show toast message
  * @param {string} message
  * @param {string} type - 'success' | 'error'
  */
 const showToast = ( message, type = 'error' ) => {
-	if ( window.Hashboard && window.Hashboard.toast ) {
-		const icon = type === 'error' ? 'close' : 'check';
-		window.Hashboard.toast( `<i class="material-icons ${ type }">${ icon }</i>${ message }`, 4000 );
+	if ( toast ) {
+		const toastType = type === 'error' ? 'danger' : 'success';
+		toast( message, toastType );
 	}
 };
 
