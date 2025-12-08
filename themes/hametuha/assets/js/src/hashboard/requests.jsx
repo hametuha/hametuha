@@ -2,16 +2,15 @@
  * HashBoard Requests - React version
  *
  * @handle hametuha-hb-requests
- * @deps wp-element, wp-api-fetch, wp-i18n, hb-components-loading, hb-components-pagination, hb-plugins-toast
+ * @deps wp-element, wp-api-fetch, wp-i18n, hametuha-loading-indicator, hametuha-pagination, hametuha-toast
  */
 
 const { createRoot, useState, useEffect, useCallback } = wp.element;
 const { __ } = wp.i18n;
 const { apiFetch } = wp;
 
-// Get hashboard components
-const { LoadingIndicator, Pagination } = globalThis.hb?.components || {};
-const { toast } = globalThis.hb?.plugins || {};
+// Get hametuha theme components
+const { LoadingIndicator, Pagination, toast } = wp.hametuha;
 
 /**
  * Format date to localized string
@@ -210,7 +209,7 @@ const RequestList = ( { type } ) => {
 				)
 			) }
 
-			{ Pagination && totalPages > 1 && (
+			{ totalPages > 1 && (
 				<Pagination
 					current={ currentPage }
 					total={ totalPages }
@@ -218,7 +217,7 @@ const RequestList = ( { type } ) => {
 				/>
 			) }
 
-			{ LoadingIndicator && <LoadingIndicator loading={ loading } /> }
+			<LoadingIndicator loading={ loading } />
 		</div>
 	);
 };

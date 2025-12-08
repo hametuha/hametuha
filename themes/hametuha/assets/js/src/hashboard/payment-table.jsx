@@ -710,7 +710,7 @@ const SalesContainer = ( { endpoint, slug } ) => {
 		case 'payments':
 			return <SalesPayments endpoint={ endpoint } />;
 		default:
-			return <div className="alert alert-danger">Unknown page type: { slug }</div>;
+			return <div className="alert alert-danger">{ __( '不明なページタイプです。', 'hametuha' ) } { slug }</div>;
 	}
 };
 
