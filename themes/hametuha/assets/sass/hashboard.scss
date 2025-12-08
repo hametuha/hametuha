@@ -15,11 +15,6 @@ body {
   min-height: 150px;
 }
 
-// Custom variables (can override Bootstrap if needed)
-$hover-bg: #fcfcfc;
-$shade-font: #888;
-$navbar-default-bg: #f9f9f9;
-
 .clearfix {
   &:after {
     content: "";
@@ -35,12 +30,10 @@ $navbar-default-bg: #f9f9f9;
 }
 
 // Import component styles
-@import "components/loading"; // Required for loading-indicator placeholder
 @import "parts/notification";
 @import "parts/campaign";
 @import "parts/requests";
 @import "parts/doujin";
-@import "components/toast";
 
 .hb-header-dropdown {
 	position: absolute !important;

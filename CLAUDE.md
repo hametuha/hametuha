@@ -113,7 +113,7 @@ docker compose exec wordpress bash -c "cd themes/hametuha && npm run watch"
 ## 開発コマンド
 
 コマンドにはDockerの中で実行した方がよいもの（例・phpunit）とそうでないもの（例・rootのcomposerインストール）があります。
-それらの差分を吸収したものとして、composer.jsonに composer scriptsを定義してあります。として実行可能なものもあります。
+それらの差分を吸収したものとして、composer.jsonに composer scriptsを定義してあります。
 実際の中身はcomposer.jsonを参照してください。
 
 ### Dockerコンテナ操作
@@ -156,6 +156,21 @@ cd themes/hametuha && npm run package
 # 監視モード
 cd themes/hametuha && npm run watch 
 ```
+
+トランスパイルには @kunoichi/grab-deps を一部使っており、これらのファイルではファイルヘッダーに依存関係が書いてあります。
+
+```js
+/*!
+ * フォロワーUI
+ *
+ * @handle hametuha-hb-followers
+ * @deps wp-api-fetch, wp-element, wp-i18n, hametuha-loading-indicator, hametuha-pagination, wp-url
+ */
+```
+
+これらの情報は wp-settings.json にまとめられ、PHPから自動で読み取られます。
+ハンドル名（@deps）や依存関係（@deps）が自動的に解決されます。
+grab-desp対応のJSファイルは便宜的に拡張子をJSXにしています。
 
 ### WP-CLI
 
