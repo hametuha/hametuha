@@ -31,6 +31,7 @@ class Sales extends Screen {
 	 * Head action
 	 */
 	public function head( $child = '' ) {
+		parent::head( $child );
 		wp_enqueue_script( 'hametuha-hb-payment-table' );
 	}
 
