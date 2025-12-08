@@ -159,8 +159,8 @@ add_filter( 'hashboard_dashboard_blocks', function ( $blocks ) {
 			'id'    => 'announcement',
 			'title' => '告知',
 			'html'  => sprintf(
-				'<hb-post-list post-type="announcement" more-button="%s" @post-list-updated="updated()" new="7"></hb-post-list>',
-				get_post_type_archive_link( 'announcement' )
+				'<div id="hametuha-announcement-list" data-more-button="%s"></div>',
+				esc_url( get_post_type_archive_link( 'announcement' ) )
 			),
 			'size'  => 1,
 		],
@@ -170,8 +170,8 @@ add_filter( 'hashboard_dashboard_blocks', function ( $blocks ) {
 			'id'    => 'recent-works',
 			'title' => '最近の作品',
 			'html'  => sprintf(
-				'<hb-post-list post-type="posts" more-button="%s" author="%d" @post-list-updated="updated()" new="7"></hb-post-list>',
-				admin_url( 'edit.php' ),
+				'<div id="hametuha-recent-works" data-more-button="%s" data-author="%d"></div>',
+				esc_url( admin_url( 'edit.php' ) ),
 				get_current_user_id()
 			),
 			'size'  => 1,

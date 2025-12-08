@@ -2,7 +2,7 @@
  * Hametuha Dashboard - React version
  *
  * @handle hametuha-hb-dashboard
- * @deps wp-element, wp-api-fetch, wp-i18n, hametuha-loading-indicator, hametuha-toast
+ * @deps wp-element, wp-api-fetch, wp-i18n, hametuha-loading-indicator, hametuha-toast, hb-components-post-list
  */
 
 const { createRoot, useState, useEffect } = wp.element;
@@ -11,6 +11,9 @@ const { apiFetch } = wp;
 
 // Get hametuha theme components
 const { LoadingIndicator, toast } = wp.hametuha;
+
+// Get hashboard components
+const { PostList } = globalThis.hb?.components || {};
 
 /**
  * Notification block component for dashboard
@@ -90,4 +93,36 @@ if ( slackButton ) {
 			slackButton.disabled = false;
 		}
 	} );
+}
+
+// Mount announcement post list
+const announcementContainer = document.getElementById( 'hametuha-announcement-list' );
+if ( announcementContainer && PostList ) {
+	const moreButton = announcementContainer.dataset.moreButton || '';
+	createRoot( announcementContainer ).render(
+		<PostList
+			postType="announcement"
+			moreButton={ moreButton }
+			moreLabel={ __( 'もっと読む', 'hametuha' ) }
+			newDays="7"
+			max="3"
+		/>
+	);
+}
+
+// Mount recent works post list
+const recentWorksContainer = document.getElementById( 'hametuha-recent-works' );
+if ( recentWorksContainer && PostList ) {
+	const moreButton = recentWorksContainer.dataset.moreButton || '';
+	const author = recentWorksContainer.dataset.author || '0';
+	createRoot( recentWorksContainer ).render(
+		<PostList
+			postType="post"
+			moreButton={ moreButton }
+			moreLabel={ __( 'もっと読む', 'hametuha' ) }
+			newDays="7"
+			max="3"
+			author={ author }
+		/>
+	);
 }
