@@ -145,8 +145,8 @@ add_filter( 'hashboard_dashboard_blocks', function ( $blocks ) {
 			'title' => '通知',
 			'size'  => 1,
 			'html'  => sprintf(
-				'<hametuha-notification-block link="%s"></hametuha-notification-block>',
-				home_url( 'dashboard/notifications' )
+				'<div id="hametuha-notification-block" data-link="%s"></div>',
+				esc_url( home_url( 'dashboard/notifications' ) )
 			),
 		],
 		[
