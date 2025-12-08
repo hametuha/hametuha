@@ -12,7 +12,8 @@ const { apiFetch } = wp;
 const { addQueryArgs } = wp.url;
 
 const div = document.getElementById( 'post-list-container' );
-const { postType, as } = div.dataset;
+const postType = div?.dataset?.postType || '';
+const as = div?.dataset?.as || '';
 
 class PostList extends Component {
 
@@ -191,8 +192,10 @@ class PostList extends Component {
 }
 
 
-if ( createRoot ) {
-	createRoot( div ).render( <PostList postType={ postType } /> );
-} else {
-	render( <PostList postType={ postType } />, div );
+if ( div ) {
+	if ( createRoot ) {
+		createRoot( div ).render( <PostList postType={ postType } /> );
+	} else {
+		render( <PostList postType={ postType } />, div );
+	}
 }

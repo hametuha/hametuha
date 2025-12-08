@@ -37,11 +37,11 @@ add_action( 'init', function () {
 		return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
 	}, 10, 4 );
 
-	// Prop Types
-	wp_register_script( 'prop-types', 'https://unpkg.com/prop-types/prop-types.min.js', [ 'wp-element' ], null, true );
+	// Prop Types (versioned URL to avoid redirects)
+	wp_register_script( 'prop-types', 'https://unpkg.com/prop-types@15.8.1/prop-types.min.js', [ 'react' ], '15.8.1', true );
 
-	// Recharts
-	wp_register_script( 'recharts', 'https://unpkg.com/recharts/umd/Recharts.js', [ 'prop-types' ], null, true );
+	// Recharts (versioned URL to avoid redirects, depends on react/react-dom)
+	wp_register_script( 'recharts', 'https://unpkg.com/recharts@2.15.0/umd/Recharts.js', [ 'prop-types', 'react', 'react-dom' ], '2.15.0', true );
 
 	// Select2
 	wp_register_script( 'select2-src', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
@@ -107,7 +107,7 @@ add_action( 'init', function () {
 	wp_register_style( 'hametuha-accounting-paper', get_template_directory_uri() . '/assets/css/proof.css', [ 'hametuha-app' ], hametuha_version(), 'all' );
 
 	// Register all hashboard.
-	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [], hametuha_version() );
+	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'hb-app' ], hametuha_version() );
 
 	// Load wp-dependencies.json.
 	$deps = get_template_directory() . '/wp-dependencies.json';
@@ -221,10 +221,11 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 /**
  * Hashboard用にCSSを読み込む
  *
- * @todo hashboard v1.0.0になったらかえる？
  */
-add_action( 'hashboard_enqueue_scripts', function () {
-	wp_enqueue_style( 'hametuha-hashboard' );
+add_action( 'wp_enqueue_scripts', function () {
+	if ( \Hametuha\Hashboard::is_page() ) {
+		wp_enqueue_style( 'hametuha-hashboard' );
+	}
 } );
 
 /**
