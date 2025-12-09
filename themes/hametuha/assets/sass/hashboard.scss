@@ -6,7 +6,10 @@
 // Custom variables and mixins
 @import "mixins";
 
-// Components (includes %loading-indicator placeholder)
+// Loading indicator placeholder (must be imported before components)
+@import "components/loading";
+
+// Components (uses %loading-indicator placeholder)
 @import "components";
 
 // Main styles
