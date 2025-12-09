@@ -54,6 +54,9 @@
 		"webpack": "^5.101.3",
 		"webpack-stream": "^6.1.2"
 	},
+	"engines": {
+		"node": "16.20.2"
+	},
 	"volta": {
 		"node": "16.20.2"
 	},

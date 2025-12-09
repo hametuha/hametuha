@@ -24,7 +24,6 @@ jobs:
     uses: tarosky/workflows/.github/workflows/phpcs.yml@main
     with:
       version: 8.2
-      working_directory: themes/hametuha
 
   asset:
     runs-on: ubuntu-latest
@@ -41,10 +40,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # CSSをビルドするためにvendorを入れる
+      - name: Install Vendro
+        working-directory: themes/hametuha
+        run: composer install --no-dev
+
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install Dependencies
         run: npm install && composer install
