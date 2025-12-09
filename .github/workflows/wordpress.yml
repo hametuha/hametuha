@@ -60,7 +60,7 @@ jobs:
 
   status-check:
     name: Status Check
-    needs: [asset]
+    needs: [asset, test]
     runs-on: ubuntu-latest
     if: always()
     steps:
