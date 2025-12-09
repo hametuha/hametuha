@@ -153,6 +153,12 @@ JS/CSSのトランスパイルおよび構文チェックは基本的にthemes/h
 ```bash
 # ビルド
 cd themes/hametuha && npm run package
+# CSSのビルド
+cd themes/hametuha && npm run sass
+# JSのビルド（3種類あり、1つに統合予定）
+cd themes/hametuha && npm run commonjs # assets/js/src/common の中を連結して assets/js/src/common.js にする（廃止予定）
+cd themes/hametuha && npm run js # JSをミニファイする（廃止予定）
+cd themes/hametuha && npm run jsx # JSXを含むES Nextの記法をトランスパイルする
 # 監視モード
 cd themes/hametuha && npm run watch 
 ```
