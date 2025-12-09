@@ -1,205 +1,230 @@
 /*!
- * HashBoard Requests
+ * HashBoard Requests - React version
  *
  * @handle hametuha-hb-requests
- * @deps hb-components-loading,wp-api-fetch,hashboard-rest,hb-components-pagination, hb-filters-moment
+ * @deps wp-element, wp-api-fetch, wp-i18n, hametuha-loading-indicator, hametuha-pagination, hametuha-toast
  */
 
-/*global Vue:false*/
+const { createRoot, useState, useEffect, useCallback } = wp.element;
+const { __ } = wp.i18n;
+const { apiFetch } = wp;
 
-const $ = jQuery;
+// Get hametuha theme components
+const { LoadingIndicator, Pagination, toast } = wp.hametuha;
 
-Vue.component( 'hametuha-request', {
-  template: `
-    <li class="hametuha-request-item list-group-item">
-        <div class="d-flex w-100 justify-content-between mb-1">
-          <h5>共同編集者としての招待</h5>
-          <small>{{ request.updated | moment( 'lll' ) }}</small>
-        </div>
-        <p class="mb-1 text-muted">
-           作品集『<a :href="request.permalink">{{request.post_title}}</a>』に {{request.name}}さんが（{{request.label}}）として
-           <span v-if="approved"><strong>参加中</strong>です。</span>
-           <span v-else>招待を受け付けています。</span>
-           報酬はロイヤリティの <strong>{{ revenue }}%</strong> です。
-        </p>
-        <p class="text-muted text-right">
-            <small class="badge badge-light">アクション</smallc>
-        </p>
-        <p class="text-right hametuha-request-actions">
-            <button v-for="btn in actions" :class="btn.className" :key="btn.method" @click="handleClick( btn.method )">
-                {{ btn.label }}
-            </button>
-        </p>
-    </li>
-  `,
-  props: {
-    type: {
-      type: String,
-      default: '',
-    },
-    request: {
-      type: Object,
-      default: {},
-    },
-  },
-  computed: {
-    approved: function() {
-      return this.request.ratio >= 0;
-    },
-    revenue: function() {
-      return Math.abs( parseInt( this.request.ratio, 10 ) );
-    },
-    actions: function() {
-      const btn = [];
-      if ( ! this.approved ) {
-        btn.push({
-          label: '承諾する',
-          method: 'approve',
-          className: 'btn btn-success btn-sm',
-        });
-      }
-      btn.push( {
-        label: '辞退する',
-        method: 'delete',
-        className: 'btn btn-danger btn-sm',
-      } );
-      return btn;
-    }
-  },
-  mounted: function() {
+/**
+ * Format date to localized string
+ *
+ * @param {string} dateString
+ * @returns {string}
+ */
+const formatDate = ( dateString ) => {
+	if ( ! dateString ) {
+		return '';
+	}
+	const date = new Date( dateString );
+	return date.toLocaleString( 'ja-JP', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+	} );
+};
 
-  },
-  methods: {
-    handleClick: function( method ) {
-      switch ( method ) {
-        case 'approve':
-          this.$emit( 'request-approved', this.request.id, this.request.post_id );
-          break;
-        case 'delete':
-          if ( window.confirm( '辞退してもよろしいですか？　この操作は取り消せません。' ) ) {
-            this.$emit( 'request-denied', this.request.id, this.request.post_id );
-          }
-          break;
-        default:
-          console && console.log( `Undefined method '${method}' is invoked.` );
-          break;
-      }
-    }
-  }
-});
+/**
+ * Single request item component
+ */
+const RequestItem = ( { request, onApprove, onDeny } ) => {
+	const approved = request.ratio >= 0;
+	const revenue = Math.abs( parseInt( request.ratio, 10 ) );
 
-new Vue( {
+	const handleApprove = () => {
+		onApprove( request.id, request.post_id );
+	};
 
-  el: '#hametuha-requests',
+	const handleDeny = () => {
+		if ( window.confirm( __( '辞退してもよろしいですか？　この操作は取り消せません。', 'hametuha' ) ) ) {
+			onDeny( request.id, request.post_id );
+		}
+	};
 
-  template: `
-    <div class="hametuha-hb-request-list" data-loading-wrapper="true" style="position: relative;">
-      <div v-if="total">
-        <p class="text-muted text-right">{{curPage}} / {{total}}ページ</p>
-      </div>
-      <ul v-if="requests.length" class="notification-loop-container list-group">
-        <hametuha-request class="notification-loop" v-for="request in requests" :request="request" :type="type" @request-approved="approvedHandler" @request-denied="deniedHandler"></hametuha-request>
-      </ul>
-      <div v-else-if="!loading" class="alert alert-secondary">
-        <p>リクエストはありません。</p>
-      </div>
-      <hb-pagination v-if="total > 1" :total="total" :current="curPage" @pageChanged="pagination"></hb-pagination>
-      <hb-loading :loading="loading" title="読み込み中……"></hb-loading>
-    </div>`,
+	return (
+		<li className="hametuha-request-item list-group-item">
+			<div className="d-flex w-100 justify-content-between mb-1">
+				<h5>{ __( '共同編集者としての招待', 'hametuha' ) }</h5>
+				<small>{ formatDate( request.updated ) }</small>
+			</div>
+			<p className="mb-1 text-muted">
+				{ __( '作品集', 'hametuha' ) }『<a href={ request.permalink }>{ request.post_title }</a>』{ __( 'に', 'hametuha' ) } { request.name }{ __( 'さんが', 'hametuha' ) }（{ request.label }）{ __( 'として', 'hametuha' ) }
+				{ approved ? (
+					<strong>{ __( '参加中', 'hametuha' ) }</strong>
+				) : (
+					<span>{ __( '招待を受け付けています。', 'hametuha' ) }</span>
+				) }
+				{ __( '報酬はロイヤリティの', 'hametuha' ) } <strong>{ revenue }%</strong> { __( 'です。', 'hametuha' ) }
+			</p>
+			<p className="text-muted text-end">
+				<small className="badge text-bg-light">{ __( 'アクション', 'hametuha' ) }</small>
+			</p>
+			<p className="text-end hametuha-request-actions">
+				{ ! approved && (
+					<button
+						className="btn btn-success btn-sm me-2"
+						onClick={ handleApprove }
+					>
+						{ __( '承諾する', 'hametuha' ) }
+					</button>
+				) }
+				<button
+					className="btn btn-danger btn-sm"
+					onClick={ handleDeny }
+				>
+					{ __( '辞退する', 'hametuha' ) }
+				</button>
+			</p>
+		</li>
+	);
+};
 
-  data: {
-    type: '',
-    curPage: 1,
-    total: 0,
-    loading: false,
-    requests: []
-  },
+/**
+ * Request list component
+ */
+const RequestList = ( { type } ) => {
+	const [ loading, setLoading ] = useState( false );
+	const [ requests, setRequests ] = useState( [] );
+	const [ currentPage, setCurrentPage ] = useState( 1 );
+	const [ totalPages, setTotalPages ] = useState( 0 );
 
-  props: {
-    type: {
-      type: String,
-      required: true
-    }
-  },
+	const fetchRequests = useCallback( async ( page ) => {
+		setLoading( true );
+		try {
+			const response = await apiFetch( {
+				path: `/hametuha/v1/collaborators/invitations/me?paged=${ page }`,
+				parse: false,
+			} );
 
-  beforeMount: function () {
-    this.type = this.$el.getAttribute('data-type');
-  },
+			const totalPagesHeader = response.headers.get( 'X-WP-Total-Pages' );
+			setTotalPages( parseInt( totalPagesHeader, 10 ) || 0 );
+			setCurrentPage( page );
 
-  mounted: function () {
-    this.fetch( 1 );
-  },
+			const data = await response.json();
+			setRequests( data );
+		} catch ( error ) {
+			const message = error?.message || __( 'エラーが発生しました。', 'hametuha' );
+			if ( toast ) {
+				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+			}
+		} finally {
+			setLoading( false );
+		}
+	}, [] );
 
-  methods: {
-    fetch: function( page ) {
-      this.loading = true;
-      wp.apiFetch( {
-        path: `/hametuha/v1/collaborators/invitations/me?paged=${page}`,
-        parse: false,
-      }).then( res => {
-        this.curPage = page;
-        this.total   = res.headers.get( 'X-WP-Total-Pages' );
-        return res.json();
-      }).then( res => {
-        this.requests = res;
-      }).catch( res => {
-        res.json().then( json => {
-          $.hbErrorMessage( json.message );
-        }).catch( res => {
-          $.hbErrorMessage( 'エラーが発生しました。' );
-        });
-      }).finally( () => {
-        this.loading = false;
-      });
-    },
+	useEffect( () => {
+		fetchRequests( 1 );
+	}, [ fetchRequests ] );
 
-    pagination: function( number ) {
-      this.fetch( number );
-    },
+	const handleApprove = useCallback( async ( userId, postId ) => {
+		setLoading( true );
+		try {
+			const response = await apiFetch( {
+				path: '/hametuha/v1/collaborators/invitations/me',
+				method: 'POST',
+				data: {
+					series_id: postId,
+				},
+			} );
 
-    approvedHandler( userId, postId ) {
-      this.loading = true;
-      wp.apiFetch( {
-        path: 'hametuha/v1/collaborators/invitations/me',
-        method: 'POST',
-        data: {
-          series_id: postId,
-        }
-      } ).then( res => {
-        $.hbMessage( res.message, 'success' );
-        this.fetch( this.curPage );
-      }).catch( res => {
-        let message = 'エラーが発生しました。';
-        if ( res.message ) {
-          message += res.message;
-        }
-        $.hbErrorMessage( message );
-      }).finally( res => {
-        this.loading = false;
-      });
-    },
+			if ( toast ) {
+				toast( response.message, 'success', __( '成功', 'hametuha' ) );
+			}
+			fetchRequests( currentPage );
+		} catch ( error ) {
+			let message = __( 'エラーが発生しました。', 'hametuha' );
+			if ( error?.message ) {
+				message += error.message;
+			}
+			if ( toast ) {
+				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+			}
+			setLoading( false );
+		}
+	}, [ currentPage, fetchRequests ] );
 
-    deniedHandler( userId, postId ) {
-      this.loading = true;
-      wp.apiFetch( {
-        path: 'hametuha/v1/collaborators/invitations/me',
-        method: 'DELETE',
-        data: {
-          series_id: postId,
-        }
-      } ).then( res => {
-        $.hbMessage( res.message, 'success' );
-        this.fetch( this.curPage );
-      }).catch( res => {
-        let message = 'エラーが発生しました。';
-        if ( res.message ) {
-          message += res.message;
-        }
-        $.hbErrorMessage( message );
-      }).finally( res => {
-        this.loading = false;
-      });
-    }
+	const handleDeny = useCallback( async ( userId, postId ) => {
+		setLoading( true );
+		try {
+			const response = await apiFetch( {
+				path: '/hametuha/v1/collaborators/invitations/me',
+				method: 'DELETE',
+				data: {
+					series_id: postId,
+				},
+			} );
 
-  }
-});
+			if ( toast ) {
+				toast( response.message, 'success', __( '成功', 'hametuha' ) );
+			}
+			fetchRequests( currentPage );
+		} catch ( error ) {
+			let message = __( 'エラーが発生しました。', 'hametuha' );
+			if ( error?.message ) {
+				message += error.message;
+			}
+			if ( toast ) {
+				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+			}
+			setLoading( false );
+		}
+	}, [ currentPage, fetchRequests ] );
+
+	const handlePageChange = useCallback( ( page ) => {
+		fetchRequests( page );
+	}, [ fetchRequests ] );
+
+	return (
+		<div className="hametuha-hb-request-list" style={ { position: 'relative' } }>
+			{ totalPages > 0 && (
+				<p className="text-muted text-end">
+					{ currentPage } / { totalPages }{ __( 'ページ', 'hametuha' ) }
+				</p>
+			) }
+
+			{ requests.length > 0 ? (
+				<ul className="notification-loop-container list-group">
+					{ requests.map( ( request, index ) => (
+						<RequestItem
+							key={ `${ request.id }-${ request.post_id }-${ index }` }
+							request={ request }
+							onApprove={ handleApprove }
+							onDeny={ handleDeny }
+						/>
+					) ) }
+				</ul>
+			) : (
+				! loading && (
+					<div className="alert alert-secondary">
+						<p className="mb-0">{ __( 'リクエストはありません。', 'hametuha' ) }</p>
+					</div>
+				)
+			) }
+
+			{ totalPages > 1 && (
+				<Pagination
+					current={ currentPage }
+					total={ totalPages }
+					onChange={ handlePageChange }
+				/>
+			) }
+
+			<LoadingIndicator loading={ loading } />
+		</div>
+	);
+};
+
+// Mount the component
+const container = document.getElementById( 'hametuha-requests' );
+if ( container ) {
+	const type = container.dataset.type || '';
+	createRoot( container ).render( <RequestList type={ type } /> );
+}

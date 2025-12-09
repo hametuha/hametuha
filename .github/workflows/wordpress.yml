@@ -8,73 +8,22 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         php: [ '8.2' ]        # PHP versions to check.
         wp: [ '6.8', 'latest' ]      # WordPress version to check.
-    services:
-      mysql:
-        image: mysql:5.7
-        options: --health-cmd "mysqladmin ping -h localhost" --health-interval 20s --health-timeout 10s --health-retries 10
-        env:
-          MYSQL_ROOT_PASSWORD: root
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
-    steps:
-      - uses: actions/checkout@main
-
-      # ubuntu-latest requires subversion.
-      # see: https://github.com/10up/action-wordpress-plugin-deploy/releases/tag/2.3.0
-      - name: Install SVN
-        run: sudo apt-get install -y subversion
-
-      - name: Setup PHP with composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
-
-      - name: Start MySQL
-        run: |
-          sudo systemctl start mysql
-          mysql -h 127.0.0.1 --port 3306 -u root --password=root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';"
-
-      - name: Install WordPress
-        run: bash themes/hametuha/bin/install-wp-tests.sh wordpress root root 127.0.0.1 ${{ matrix.wp }}
-
-      - name: Run test suite
-        run: |
-          cd themes/hametuha
-          composer install
-          composer test
+    uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@main
+    with:
+      php_version: ${{ matrix.php }}
+      wp_version: ${{ matrix.wp }}
+      working_directory: themes/hametuha
 
   lint-php:
-    runs-on: ubuntu-latest
-    name: PHP Lint
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP with composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Run PHP CodeSniffer
-        run: composer lint:theme
+    name: PHP Syntax Check
+    uses: tarosky/workflows/.github/workflows/phpcs.yml@main
+    with:
+      version: 8.2
 
   asset:
     runs-on: ubuntu-latest
@@ -91,10 +40,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # CSSをビルドするためにvendorを入れる
+      - name: Install Vendro
+        working-directory: themes/hametuha
+        run: composer install --no-dev
+
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install Dependencies
         run: npm install && composer install
@@ -106,7 +60,7 @@ jobs:
 
   status-check:
     name: Status Check
-    needs: [asset]
+    needs: [asset, test]
     runs-on: ubuntu-latest
     if: always()
     steps:

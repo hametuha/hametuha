@@ -31,6 +31,7 @@ class Sales extends Screen {
 	 * Head action
 	 */
 	public function head( $child = '' ) {
+		parent::head( $child );
 		wp_enqueue_script( 'hametuha-hb-payment-table' );
 	}
 
@@ -81,17 +82,17 @@ class Sales extends Screen {
 			case 'deposit':
 				hameplate( 'templates/dashboard/sales', 'rewards', [
 					'page'     => $page,
-					'endpoint' => rest_url( 'hametuha/v1/sales/rewards/me' ),
+					'endpoint' => '/hametuha/v1/sales/rewards/me',
 				] );
 				break;
 			case 'payments':
 				hameplate( 'templates/dashboard/sales', 'payments', [
-					'endpoint' => rest_url( 'hametuha/v1/sales/payments/me' ),
+					'endpoint' => '/hametuha/v1/sales/payments/me',
 				] );
 				break;
 			default:
 				hameplate( 'templates/dashboard/sales', 'graph', [
-					'endpoint' => rest_url( 'hametuha/v1/sales/history/me' ),
+					'endpoint' => '/hametuha/v1/sales/history/me',
 				] );
 				break;
 		}

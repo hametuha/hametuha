@@ -72,7 +72,7 @@ class Statistics extends Screen {
 			default:
 				wp_enqueue_script( 'hametuha-hb-stats-pv' );
 				hameplate( 'templates/dashboard/analytics', 'access', [
-					'endpoint' => rest_url( 'hametuha/v1/stats/access/me' ),
+					'endpoint' => '/hametuha/v1/stats/access/me',
 				] );
 				break;
 		}

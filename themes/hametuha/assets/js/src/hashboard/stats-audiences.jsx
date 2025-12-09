@@ -14,7 +14,7 @@ const { PieChart, Pie, Cell, CartesianGrid, Bar, BarChart, XAxis, YAxis, Respons
 
 // Get div elements.
 const div = document.getElementById( 'hametuha-user-analytics' );
-const { target } = div.dataset;
+const target = div?.dataset?.target || '';
 // Set default dates.
 const to = new Date();
 const from = new Date();
@@ -249,8 +249,10 @@ class StatsAudiences extends Component {
 	}
 }
 
-if ( createRoot ) {
-	createRoot( div ).render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
-} else {
-	render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
+if ( div ) {
+	if ( createRoot ) {
+		createRoot( div ).render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
+	} else {
+		render( <StatsAudiences target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
+	}
 }

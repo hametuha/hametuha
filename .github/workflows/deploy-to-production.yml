@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node with npm
         uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 16
 
       - name: Install PHP dependencies in Theme
         run: composer install --no-dev --no-interaction --no-progress --optimize-autoloader --prefer-dist
