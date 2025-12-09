@@ -120,3 +120,20 @@
   @extend .d-lg-none !optional;
   @extend .d-xl-block !optional;
 }
+
+// Bootstrap 3 animation mixin (ベンダープレフィックス不要)
+@mixin animation($animation...) {
+  animation: $animation;
+}
+
+// 背景色点滅アニメーション用mixin
+@mixin bg-blink($name, $color1, $color2) {
+  @keyframes #{$name} {
+    0%, 100% {
+      background-color: $color1;
+    }
+    50% {
+      background-color: $color2;
+    }
+  }
+}
