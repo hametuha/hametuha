@@ -4,6 +4,11 @@ namespace Hametuha\Dashboard;
 
 use Hametuha\Hashboard\Pattern\Screen;
 
+/**
+ * リクエスト一覧を表示する画面
+ *
+ * @feature-group user-request
+ */
 class Requests extends Screen {
 
 	protected $icon = 'verified_user';

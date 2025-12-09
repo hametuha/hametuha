@@ -240,4 +240,7 @@ class HametuHeader extends Component {
 	}
 }
 
-createRoot( document.getElementById( 'user-info' ) ).render( <HametuHeader /> );
+const userInfoContainer = document.getElementById( 'user-info' );
+if ( userInfoContainer ) {
+	createRoot( userInfoContainer ).render( <HametuHeader /> );
+}

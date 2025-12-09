@@ -14,7 +14,7 @@ const { PieChart, Pie, Cell, Bar, Line, LineChart, ResponsiveContainer, Legend, 
 
 // Get div elements.
 const div = document.getElementById( 'hametuha-user-analytics' );
-const { target } = div.dataset;
+const target = div?.dataset?.target || '';
 // Set default dates.
 const to = new Date();
 const from = new Date();
@@ -229,8 +229,10 @@ class Stats extends Component {
 	}
 }
 
-if ( createRoot ) {
-	createRoot( div ).render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
-} else {
-	render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
+if ( div ) {
+	if ( createRoot ) {
+		createRoot( div ).render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } /> );
+	} else {
+		render( <Stats target={ target } from={ toDateTime( from ) } to={ toDateTime( to ) } />, div );
+	}
 }

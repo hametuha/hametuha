@@ -33,6 +33,9 @@ wp-config-local.php
 /data/*
 !/data/.gitkeep
 
+# メモ保管場所
+/memo/*
+
 # Node dependencies (theme specific)
 /themes/hametuha/node_modules/
 /node_modules/

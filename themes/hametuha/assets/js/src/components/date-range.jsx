@@ -22,16 +22,16 @@ class DateRange extends Component {
 		const { from, to } = this.state;
 		const { onChange } = this.props;
 		return (
-			<div className="form-row align-items-end">
-				<div className="form-group col">
-					<label htmlFor="user-pv-from">{ __( '開始', 'hametuha' ) }</label>
+			<div className="row g-3 align-items-end">
+				<div className="col">
+					<label htmlFor="user-pv-from" className="form-label">{ __( '開始', 'hametuha' ) }</label>
 					<input id="user-pv-from" className="form-control" type="date" value={ from } onChange={ e => this.setState( { from: e.target.value } ) }/>
 				</div>
-				<div className="form-group col">
-					<label id="user-pv-to">{ __( '終了', 'hametuha' ) }</label>
+				<div className="col">
+					<label htmlFor="user-pv-to" className="form-label">{ __( '終了', 'hametuha' ) }</label>
 					<input id="user-pv-to" className="form-control" type="date" value={ to } onChange={ e => this.setState( { to: e.target.value } ) }/>
 				</div>
-				<div className="form-group col">
+				<div className="col-auto">
 					<button className="btn btn-primary" onClick={ () => {
 						onChange( from, to );
 					} }>

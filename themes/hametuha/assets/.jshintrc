@@ -8,7 +8,7 @@
 	"debug": true,
 	"jquery": true,
 	"globals": {
-		"angular": false,
+		"wp": false,
 		"Hametuha": true,
 		"google": false,
 		"WP_API_Settings": false,
@@ -16,7 +16,7 @@
 		"bootbox": false,
 		"gtag": false,
 		"FB": false,
-		"Vue": false,
+		"hb": false,
 		"Recharts": false,
 		"Hashboard": false,
 		"HametuhaComponents": false

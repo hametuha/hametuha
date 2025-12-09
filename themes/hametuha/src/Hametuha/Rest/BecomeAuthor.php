@@ -121,6 +121,10 @@ class BecomeAuthor extends RestTemplate {
 	 * @param string $page
 	 */
 	public function enqueue_assets( $page = '' ) {
+		// hashboardページではBootstrap重複を避けるため読み込まない
+		if ( \Hametuha\Hashboard::is_page() ) {
+			return;
+		}
 		wp_enqueue_script( 'hametuha-become-author' );
 	}
 }

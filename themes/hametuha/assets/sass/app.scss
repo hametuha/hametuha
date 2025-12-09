@@ -10,6 +10,9 @@
 
 @import "mixins";
 
+// Loading indicator placeholder (must be imported before components)
+@import "components/loading";
+
 @import "components";
 
 @import "post_body";
