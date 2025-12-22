@@ -5,7 +5,7 @@ namespace Hametuha\MetaBoxes;
 
 use WPametu\UI\Admin\LeadMetaBox;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\Textarea;
+use WPametu\UI\Field\TextArea;
 use WPametu\UI\Field\Radio;
 
 class SeriesEPubMetaBox extends LeadMetaBox {
@@ -28,7 +28,7 @@ class SeriesEPubMetaBox extends LeadMetaBox {
 			'description' => 'サブタイトルがあればつけてください。',
 		],
 		'excerpt'  => [
-			'class'       => Textarea::class,
+			'class'       => TextArea::class,
 			'label'       => 'リード',
 			'required'    => true,
 			'rows'        => 5,
@@ -38,7 +38,7 @@ class SeriesEPubMetaBox extends LeadMetaBox {
 			'placeholder' => 'ex. 都内有数のお嬢様学校をゾンビの群れが襲撃する！　そのときたまたま編入した「俺」は今年から共学になったこの学校唯一の男子として、全校生徒を守るべく釘バット一本で立ち向かう。21世紀を代表する新たなゾンビ文学の金字塔、ここに爆誕。',
 		],
 		'_preface' => [
-			'class'       => Textarea::class,
+			'class'       => TextArea::class,
 			'label'       => 'はじめに',
 			'required'    => false,
 			'rows'        => 10,

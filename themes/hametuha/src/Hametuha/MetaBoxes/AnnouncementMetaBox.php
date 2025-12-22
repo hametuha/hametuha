@@ -9,7 +9,7 @@ use WPametu\UI\Field\DateTime;
 use WPametu\UI\Field\GeoChecker;
 use WPametu\UI\Field\Number;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\Textarea;
+use WPametu\UI\Field\TextArea;
 use WPametu\UI\Field\Radio;
 
 /**
