@@ -177,7 +177,7 @@ HTML;
 						<?php
 						// OGPカードが取得できれば表示
 						$ogp = hametuha_remote_ogp( $external );
-						if ( $ogp ) :
+						if ( $ogp && ! is_wp_error( $ogp ) ) :
 							?>
 							<div class="external-link">
 								<div class="row">
