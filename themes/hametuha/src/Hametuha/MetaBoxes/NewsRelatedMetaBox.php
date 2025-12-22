@@ -8,7 +8,7 @@ use WPametu\UI\Field\DateTime;
 use WPametu\UI\Field\GeoChecker;
 use WPametu\UI\Field\Radio;
 use WPametu\UI\Field\Text;
-use WPametu\UI\Field\Textarea;
+use WPametu\UI\Field\TextArea;
 
 class NewsRelatedMetaBox extends EditMetaBox {
 
@@ -24,14 +24,14 @@ class NewsRelatedMetaBox extends EditMetaBox {
 
 	protected $fields = [
 		'_news_related_links' => [
-			'class'       => Textarea::class,
+			'class'       => TextArea::class,
 			'label'       => '関連リンク',
 			'description' => 'ニュースソース、引用元などの重要なリンクは本文中に書かず、こちらに記載してください。URLとタイトルをパイプ（|）でつなげてください。1行ごとに一つのリンクと判断されます。',
 			'rows'        => 3,
 			'placeholder' => 'http://example.jp/|関連するサイトの例',
 		],
 		'_news_related_books' => [
-			'class'       => Textarea::class,
+			'class'       => TextArea::class,
 			'label'       => '関連書籍',
 			'description' => 'ISBNまたはASINを1行に1つ入力してください。ASINはAmazonの商品コードで、Amazonサイトで調べることができます。',
 			'rows'        => 3,

@@ -54,7 +54,6 @@ class MyContents extends MyContentPattern {
 					$args['s'] = $s;
 				}
 				$query = new \WP_Query( $args );
-				error_log( $query->request );
 				return new \WP_REST_Response( [
 					'posts'       => array_map( [ $this, 'convert_response' ], $query->posts ),
 					'found_posts' => $query->found_posts,
