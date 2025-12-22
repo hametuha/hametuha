@@ -57,6 +57,9 @@ HTML;
 		}
 		if ( is_doujin_profile_page() ) {
 			$user = get_user_by( 'slug', is_doujin_profile_page() );
+			if ( ! $user ) {
+				return [];
+			}
 			return [ $this->author_clause( $user->ID, true ) ];
 		}
 	}
