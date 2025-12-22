@@ -77,7 +77,9 @@ function hamenew_pr_label( $post = null ) {
 	if ( get_post_meta( $post->ID, '_is_owned_ad', true ) ) {
 		$string = '破滅派';
 	}
-	if ( $advertiser = get_post_meta( $post->ID, '_advertiser', true ) ) {
+	// 広告はPRか？
+	$advertiser = get_post_meta( $post->ID, '_advertiser', true );
+	if ( $advertiser ) {
 		$string = $advertiser;
 	}
 
@@ -124,10 +126,11 @@ function hamenew_related( $limit = 5, $post = null ) {
 		ORDER BY t.score DESC, p.post_date DESC
 		LIMIT %d
 SQL;
-
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	$posts = $wpdb->get_results( $wpdb->prepare( $query, $post->ID, $limit ) );
 	return array_map( function ( $post ) {
 		return new WP_Post( $post );
-	}, $wpdb->get_results( $wpdb->prepare( $query, $post->ID, $limit ) ) );
+	}, $posts );
 }
 
 /**
@@ -145,7 +148,7 @@ function hamenew_event_date( $from, $to = '', $date_format = 'Y年n月j日（D�
 	if ( ! $to ) {
 		return mysql2date( $format, $from );
 	}
-	if ( mysql2date( 'Y-m-d', $from ) == mysql2date( 'Y-m-d', $to ) ) {
+	if ( mysql2date( 'Y-m-d', $from ) === mysql2date( 'Y-m-d', $to ) ) {
 		return mysql2date( $format, $from ) . '〜' . mysql2date( $time_format, $to );
 	} else {
 		return mysql2date( $date_format, $from ) . '〜' . mysql2date( $date_format, $to );
@@ -157,7 +160,7 @@ function hamenew_event_date( $from, $to = '', $date_format = 'Y年n月j日（D�
  *
  * @param null|int|WP_Post $post
  *
- * @return array
+ * @return array{string[]}
  */
 function hamenew_links( $post = null ) {
 	$post  = get_post( $post );
@@ -165,8 +168,7 @@ function hamenew_links( $post = null ) {
 	if ( ! $links ) {
 		return [];
 	}
-
-	return array_filter( array_map( function ( $line ) {
+	$lines = array_map( function ( $line ) {
 		$line = explode( '|', $line );
 		if ( 2 > count( $line ) ) {
 			return false;
@@ -175,9 +177,10 @@ function hamenew_links( $post = null ) {
 		$title = implode( '|', $line );
 
 		return [ $title, $url ];
-        }, explode( "\r\n", $links ) ), function ( $var ) {
+	}, explode( "\r\n", $links ) );
+	return array_values( array_filter( $lines, function ( $var ) {
 		return $var && is_array( $var );
-	} );
+	} ) );
 }
 
 /**
@@ -202,17 +205,27 @@ function hamenew_books( $post = null ) {
 		$cache_key = 'amazon_api5_' . $code;
 		$result    = get_transient( $cache_key );
 		if ( ! $result ) {
-			$result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
-			if ( is_wp_error( $result ) || ! $result ) {
-				return false;
+			// Check fallback cache before calling API.
+			// If fallback cache exists, it means API recently failed (e.g., 403 error).
+			$fallback_cache_key = 'hamazon_fallback_' . $code . '_JP';
+			$fallback_cache     = get_transient( $fallback_cache_key );
+			if ( false !== $fallback_cache ) {
+				// Fallback cache exists, use it without calling API.
+				$result = $fallback_cache;
+			} else {
+				// No caches exist, try API.
+				$result = \Hametuha\WpHamazon\Constants\AmazonConstants::get_item_by_asin( $code );
+				if ( is_wp_error( $result ) ) {
+					return false;
+				}
+				set_transient( $cache_key, $result, 60 * 60 * 24 );
 			}
-			set_transient( $cache_key, $result, 60 * 60 * 24 );
 		}
-		$url   = $result['url'];
-		$title = $result['title'];
-		if ( ! $url || ! $title ) {
+		$url = $result['url'] ?? '';
+		if ( ! $url ) {
 			return false;
 		}
+		$title     = $result['title'] ?: 'タイトル不明';
 		$rank      = $result['rank'] ?: 'N/A';
 		$publisher = 'N/A';
 		foreach ( [ 'brand', 'manufacturer' ] as $key ) {
@@ -310,6 +323,6 @@ SQL;
 	if ( $limit ) {
 		$query .= sprintf( ' LIMIT %d', $limit );
 	}
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 	return $wpdb->get_results( $query );
 }
-
