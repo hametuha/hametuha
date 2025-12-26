@@ -241,3 +241,84 @@ add_filter( 'get_terms_args', function ( $args, $taxonomies ) {
 	return $args;
 }, 10, 2 );
 
+/**
+ * 管理画面のターム一覧で$_GETパラメータをクエリ引数に変換
+ *
+ * @param array $args       クエリ引数
+ * @param array $taxonomies タクソノミー配列
+ * @return array
+ */
+add_filter( 'get_terms_args', function ( $args, $taxonomies ) {
+	// 管理画面のターム一覧でのみ動作
+	if ( ! is_admin() ) {
+		return $args;
+	}
+	global $pagenow;
+	if ( 'edit-tags.php' !== $pagenow ) {
+		return $args;
+	}
+
+	// カウント絞り込みパラメータを$argsに変換
+	$count_params = [ 'clt', 'clte', 'cgt', 'cgte', 'ceq' ];
+	foreach ( $count_params as $param ) {
+		if ( isset( $_GET[ $param ] ) && is_numeric( $_GET[ $param ] ) ) {
+			$args[ $param ] = intval( $_GET[ $param ] );
+		}
+	}
+
+	return $args;
+}, 10, 2 );
+
+/**
+ * タームのカウント絞り込みクエリを実行
+ *
+ * $argsにclt, clte, cgt, cgte, ceqが設定されている場合にWHERE句を追加。
+ * new WP_Term_Query(['ceq' => 0]) のような使い方も可能。
+ *
+ * - clt:  count less than
+ * - clte: count less than or equal
+ * - cgt:  count greater than
+ * - cgte: count greater than or equal
+ * - ceq:  count equal
+ *
+ * @param array $clauses    SQL句の配列
+ * @param array $taxonomies タクソノミー配列
+ * @param array $args       クエリ引数
+ * @return array
+ */
+add_filter( 'terms_clauses', function ( $clauses, $taxonomies, $args ) {
+	$conditions = [];
+
+	// clt: count less than
+	if ( isset( $args['clt'] ) && is_numeric( $args['clt'] ) ) {
+		$conditions[] = sprintf( 'tt.count < %d', intval( $args['clt'] ) );
+	}
+
+	// clte: count less than or equal
+	if ( isset( $args['clte'] ) && is_numeric( $args['clte'] ) ) {
+		$conditions[] = sprintf( 'tt.count <= %d', intval( $args['clte'] ) );
+	}
+
+	// cgt: count greater than
+	if ( isset( $args['cgt'] ) && is_numeric( $args['cgt'] ) ) {
+		$conditions[] = sprintf( 'tt.count > %d', intval( $args['cgt'] ) );
+	}
+
+	// cgte: count greater than or equal
+	if ( isset( $args['cgte'] ) && is_numeric( $args['cgte'] ) ) {
+		$conditions[] = sprintf( 'tt.count >= %d', intval( $args['cgte'] ) );
+	}
+
+	// ceq: count equal
+	if ( isset( $args['ceq'] ) && is_numeric( $args['ceq'] ) ) {
+		$conditions[] = sprintf( 'tt.count = %d', intval( $args['ceq'] ) );
+	}
+
+	// 条件があれば WHERE 句に追加
+	if ( ! empty( $conditions ) ) {
+		$clauses['where'] .= ' AND ' . implode( ' AND ', $conditions );
+	}
+
+	return $clauses;
+}, 10, 3 );
+
