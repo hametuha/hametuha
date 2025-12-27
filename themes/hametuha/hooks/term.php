@@ -242,6 +242,92 @@ add_filter( 'get_terms_args', function ( $args, $taxonomies ) {
 }, 10, 2 );
 
 /**
+ * タグ一覧にカウント絞り込みUIを追加
+ */
+add_action( 'admin_footer-edit-tags.php', function () {
+	$screen = get_current_screen();
+	if ( ! $screen || 'post_tag' !== $screen->taxonomy ) {
+		return;
+	}
+
+	$comparisons = [
+		''     => '件数で絞り込み',
+		'ceq'  => '件数 =',
+		'clt'  => '件数 <',
+		'clte' => '件数 ≤',
+		'cgt'  => '件数 >',
+		'cgte' => '件数 ≥',
+	];
+
+	// 現在の選択状態を取得
+	$current_comparison = '';
+	$current_value      = '';
+	foreach ( array_keys( $comparisons ) as $key ) {
+		if ( $key && isset( $_GET[ $key ] ) && is_numeric( $_GET[ $key ] ) ) {
+			$current_comparison = $key;
+			$current_value      = intval( $_GET[ $key ] );
+			break;
+		}
+	}
+
+	$options_html = '';
+	foreach ( $comparisons as $key => $label ) {
+		$selected      = ( $key === $current_comparison ) ? ' selected' : '';
+		$options_html .= sprintf(
+			'<option value="%s"%s>%s</option>',
+			esc_attr( $key ),
+			$selected,
+			esc_html( $label )
+		);
+	}
+	?>
+	<script>
+	(function() {
+		const bulkActions = document.querySelector('.tablenav.top .bulkactions');
+		if (!bulkActions) return;
+
+		// UIを作成
+		const wrapper = document.createElement('div');
+		wrapper.className = 'alignleft actions';
+		wrapper.innerHTML = `
+			<select name="count_comparison" id="count-comparison-select">
+				<?php echo $options_html; ?>
+			</select>
+			<input type="number" id="count-value-input"
+				   value="<?php echo esc_attr( $current_value ); ?>"
+				   min="0" step="1" style="width: 80px;"
+				   placeholder="件数" />
+		`;
+
+		// bulkactionsの後に挿入
+		bulkActions.parentNode.insertBefore(wrapper, bulkActions.nextSibling);
+
+		// フォーム送信時の処理
+		const form = document.getElementById('posts-filter');
+		if (!form) return;
+
+		form.addEventListener('submit', function(e) {
+			const comparison = document.getElementById('count-comparison-select');
+			const value = document.getElementById('count-value-input');
+
+			if (!comparison || !value) return;
+
+			// 比較演算子が選択されていて値がある場合
+			if (comparison.value && value.value !== '') {
+				// 動的にhiddenフィールドを作成
+				const hidden = document.createElement('input');
+				hidden.type = 'hidden';
+				hidden.name = comparison.value;
+				hidden.value = value.value;
+				form.appendChild(hidden);
+			}
+		});
+	})();
+	</script>
+	<?php
+} );
+
+/**
  * 管理画面のターム一覧で$_GETパラメータをクエリ引数に変換
  *
  * @param array $args       クエリ引数
