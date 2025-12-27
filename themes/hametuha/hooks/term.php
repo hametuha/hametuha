@@ -280,6 +280,13 @@ add_action( 'admin_footer-edit-tags.php', function () {
 			esc_html( $label )
 		);
 	}
+	// 絞り込み用のパラメータを除いたベースURL
+	$count_params = [ 'clt', 'clte', 'cgt', 'cgte', 'ceq' ];
+	$base_params  = $_GET;
+	foreach ( $count_params as $param ) {
+		unset( $base_params[ $param ] );
+	}
+	$base_url = add_query_arg( $base_params, admin_url( 'edit-tags.php' ) );
 	?>
 	<script>
 	(function() {
@@ -297,30 +304,31 @@ add_action( 'admin_footer-edit-tags.php', function () {
 				   value="<?php echo esc_attr( $current_value ); ?>"
 				   min="0" step="1" style="width: 80px;"
 				   placeholder="件数" />
+			<button type="button" id="count-filter-button" class="button">絞り込み</button>
 		`;
 
 		// bulkactionsの後に挿入
 		bulkActions.parentNode.insertBefore(wrapper, bulkActions.nextSibling);
 
-		// フォーム送信時の処理
-		const form = document.getElementById('posts-filter');
-		if (!form) return;
-
-		form.addEventListener('submit', function(e) {
+		// 絞り込みボタンのクリックイベント
+		const filterButton = document.getElementById('count-filter-button');
+		filterButton.addEventListener('click', function() {
 			const comparison = document.getElementById('count-comparison-select');
 			const value = document.getElementById('count-value-input');
 
 			if (!comparison || !value) return;
 
-			// 比較演算子が選択されていて値がある場合
+			// ベースURL
+			let url = <?php echo wp_json_encode( $base_url ); ?>;
+
+			// 比較演算子が選択されていて値がある場合、パラメータを追加
 			if (comparison.value && value.value !== '') {
-				// 動的にhiddenフィールドを作成
-				const hidden = document.createElement('input');
-				hidden.type = 'hidden';
-				hidden.name = comparison.value;
-				hidden.value = value.value;
-				form.appendChild(hidden);
+				const separator = url.includes('?') ? '&' : '?';
+				url += separator + encodeURIComponent(comparison.value) + '=' + encodeURIComponent(value.value);
 			}
+
+			// ページ遷移
+			window.location.href = url;
 		});
 	})();
 	</script>
