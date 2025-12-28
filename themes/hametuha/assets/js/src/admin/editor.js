@@ -19,7 +19,7 @@
             tags.push( $(input).val() );
         } );
         // テキストエリアを取得
-        $.each( $extraInput.val().replace('、', ',').split(','), function(index, tag){
+        $.each( $extraInput.val().replace(/、/g, ',').split(','), function(index, tag){
           var t = $.trim(tag);
           if (t.length) {
             tags.push(t);
