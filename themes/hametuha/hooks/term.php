@@ -2,6 +2,59 @@
 
 
 /**
+ * ジャンル別タグデータを取得する
+ *
+ * @return array ジャンル別にグループ化されたタグデータ
+ */
+function hametuha_get_tags_by_genre() {
+	$cache_key = 'tags_by_genre';
+	$tags      = wp_cache_get( $cache_key, 'tags' );
+
+	if ( false === $tags ) {
+		$tags  = [];
+		$terms = get_tags( [
+			'hide_empty' => false,
+		] );
+
+		foreach ( $terms as $term ) {
+			$genre = get_term_meta( $term->term_id, 'genre', true );
+			if ( ! $genre ) {
+				$genre = 'その他';
+			}
+			if ( ! isset( $tags[ $genre ] ) ) {
+				$tags[ $genre ] = [];
+			}
+			$tags[ $genre ][] = [
+				'term_id' => $term->term_id,
+				'name'    => $term->name,
+				'count'   => $term->count,
+			];
+		}
+
+		// ジャンル順を整理（hametuha_tag_types()の順序に従う）
+		$ordered_tags = [];
+		foreach ( hametuha_tag_types() as $type ) {
+			if ( isset( $tags[ $type ] ) ) {
+				$ordered_tags[ $type ] = $tags[ $type ];
+				unset( $tags[ $type ] );
+			}
+		}
+		// 「その他」は最後に追加
+		if ( isset( $tags['その他'] ) ) {
+			$ordered_tags['その他'] = $tags['その他'];
+			unset( $tags['その他'] );
+		}
+		// 残りのジャンルを追加
+		$ordered_tags = array_merge( $ordered_tags, $tags );
+
+		wp_cache_set( $cache_key, $ordered_tags, 'tags', HOUR_IN_SECONDS );
+		$tags = $ordered_tags;
+	}
+
+	return $tags;
+}
+
+/**
  * タグのメタボックスをカスタマイズする
  *
  * @param array $args
@@ -12,53 +65,31 @@
 add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
 	if ( 'post_tag' == $taxonomy ) {
 		$args['meta_box_cb'] = function ( $post ) {
-			$tags = wp_cache_get( 'sub_genre', 'tags' );
-			if ( false === $tags ) {
-				$tags  = [];
-				$terms = get_tags( [
-					'hide_empty' => 0,
-				] );
-				foreach ( $terms as $term ) {
-					if ( ! ( $meta = get_term_meta( $term->term_id, 'genre', true ) ) ) {
-						continue;
-					}
-					if ( ! isset( $tags[ $meta ] ) ) {
-						$tags[ $meta ] = [];
-					}
-					$tags[ $meta ][] = $term;
-				}
-				wp_cache_set( 'sub_genre', $tags, 'tags', 60 * 60 );
-			}
-
+			// 現在の投稿に設定されているタグを取得
 			$posts_tags = get_the_tags( $post->ID );
 			if ( $posts_tags ) {
-				$value = implode( ', ', array_map( function ( $tag ) {
+				$selected_tags = array_map( function ( $tag ) {
 					return $tag->name;
-				}, $posts_tags ) );
+				}, $posts_tags );
+				$value         = implode( ', ', $selected_tags );
 			} else {
-				$value = '';
+				$selected_tags = [];
+				$value         = '';
 			}
+
+			// Reactコンポーネント用のスクリプトをエンキュー
+			wp_enqueue_script( 'hametuha-tag-selector' );
+			wp_localize_script( 'hametuha-tag-selector', 'HametuhaTagData', [
+				'tagsByGenre'   => hametuha_get_tags_by_genre(),
+				'selectedTags'  => $selected_tags,
+				'hiddenInputId' => 'hametuha-tag-input',
+			] );
 			?>
 			<input id="hametuha-tag-input" type="hidden" name="tax_input[post_tag]" value="<?php echo esc_attr( $value ); ?>"/>
-			<?php foreach ( $tags as $genre => $terms ) : ?>
-				<h4><?php echo esc_html( $genre ?: 'その他' ); ?></h4>
-				<?php foreach ( $terms as $tag ) : ?>
-					<label class="hametuha-tag-label">
-						<input type="checkbox" class="hametuha-tag-cb"
-								value="<?php echo esc_attr( $tag->name ); ?>" <?php checked( has_tag( $tag->term_id, $post ) ); ?>/> <?php echo esc_attr( $tag->name ); ?>
-					</label>
-				<?php endforeach; ?>
-				<?php
-			endforeach;
-			?>
-			<p class="description">
-				欲しいジャンルがない場合は<a href="<?php echo home_url( '/topic/feature-request/' ); ?>">掲示板</a>で要望を出してください。
+			<div id="hametuha-tag-selector-root"></div>
+			<p class="description" style="margin-top: 12px;">
+				欲しいジャンルがない場合は<a href="<?php echo esc_url( home_url( '/topic/feature-request/' ) ); ?>">掲示板</a>で要望を出してください。
 			</p>
-			<hr />
-			<label>
-				<textarea class="hametuha-tag-extra" rows="3" placeholder="タグ1, タグ2"></textarea>
-				<span>その他のタグはカンマ(,)区切りで入力してください</span>
-			</label>
 			<?php
 		};
 	}
