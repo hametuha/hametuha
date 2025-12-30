@@ -97,9 +97,6 @@ add_action( 'init', function () {
 		'wp-api',
 	], filemtime( get_stylesheet_directory() . $path ), true );
 
-	// 投稿編集画面
-	wp_register_script( 'hametuha-edit-form', get_template_directory_uri() . '/assets/js/dist/admin/editor.js', [ 'jquery' ], hametuha_version(), true );
-
 	// Watermark
 	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
 
@@ -207,11 +204,6 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 	$screen = get_current_screen();
 
 	wp_enqueue_style( 'hametuha-admin' );
-
-	// 編集画面
-	if ( 'post' == $screen->base ) {
-		wp_enqueue_script( 'hametuha-edit-form' );
-	}
 
 	// プロフィール編集画面
 	if ( 'user-edit.php' == $page ) {

@@ -166,65 +166,6 @@ add_filter( 'single_template', function ( $template ) {
 	return $template;
 } );
 
-
-
-/**
- * Show field on admin screen
- *
- * @param stdClass $term
- * @param string $taxonomy
- */
-add_action( 'post_tag_edit_form_fields', function ( $term ) {
-	?>
-	<tr>
-		<th><label for="tag-genre">タグの種別</label></th>
-		<td>
-			<select name="tag_genre" id="tag-genre">
-				<?php $genre = get_term_meta( $term->term_id, 'genre', true ); ?>
-				<option value="" <?php selected( ! $genre ); ?>>指定なし</option>
-				<?php
-				foreach ( hametuha_tag_types() as $val ) :
-					?>
-					<option
-						value="<?php echo esc_attr( $val ); ?>" <?php selected( $val == $genre ); ?>><?php echo esc_html( $val ); ?></option>
-				<?php endforeach; ?>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<th><label for="tag-type">オプション</label></th>
-		<td>
-			<?php
-			// todo: これがなんのためにあるのかわからない
-			?>
-			<script>
-				jQuery(document).ready(function ($) {
-					$('#my-color').wpColorPicker();
-				});
-			</script>
-			<?php wp_nonce_field( 'edit_tag_meta', '_tagmetanonce', false ); ?>
-		</td>
-	</tr>
-	<?php
-}, 10, 2 );
-
-/**
- * Save term meta
- *
- * @param int $term_id
- * @param string $taxonomy
- */
-add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
-	// Check and verify nonce.
-	if ( 'post_tag' == $taxonomy && isset( $_POST['_tagmetanonce'] ) && wp_verify_nonce( $_POST['_tagmetanonce'], 'edit_tag_meta' ) ) {
-		// Save term meta
-		update_term_meta( $term_id, 'tag_type', $_POST['tag_type'] );
-		update_term_meta( $term_id, 'genre', $_POST['tag_genre'] );
-		wp_cache_delete( 'tag_genre', 'tags' );
-	}
-}, 10, 2 );
-
-
 /**
  * 投稿本文をREST APIから削除
  *
