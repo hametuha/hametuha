@@ -8,7 +8,7 @@
 		"hametuha/wpametu": "^1.2.3",
 		"hametuha/hamepub": "^1.0.0",
 		"hametuha/hashboard": "^1.0.2",
-		"hametuha/sharee": "^1.0.0",
+		"hametuha/sharee": "^1.0.1",
 		"league/commonmark": "^1.6|^2.3",
 		"kunoichi/ga-communicator": "^3.3",
 		"youaoi/php-mecab": "^1.0"
