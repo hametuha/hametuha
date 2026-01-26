@@ -52,17 +52,18 @@ class HotPost extends CronBase {
 		if ( ! in_array( date_i18n( 'H' ), [ '08', '22' ], true ) ) {
 			return;
 		}
-		$yesterday = $this->get_yesterday();
-		$start     = $yesterday;
-		$end       = $yesterday;
-		$channel   = '#general';
-		$post_type = 'post';
+		$yesterday       = $this->get_yesterday();
+		$yesterday_label = $this->get_yesterday( -1, 'n月j日' );
+		$start           = $yesterday;
+		$end             = $yesterday;
+		$channel         = '#general';
+		$post_type       = 'post';
 		switch ( date_i18n( 'H' ) ) {
 			case '08':
-				$message = '【定期ポスト】昨日一番人気があった作品はこちらです。';
+				$message = sprintf( '【定期ポスト】%sに一番人気があった作品はこちらです。', $yesterday_label );
 				break;
 			case '22':
-				$message   = '【定期ポスト】昨日よく読まれたニュースはこちらです。';
+				$message   = sprintf( '【定期ポスト】%sによく読まれたニュースはこちらです。', $yesterday_label );
 				$post_type = 'news';
 				$channel   = '#news';
 				break;
