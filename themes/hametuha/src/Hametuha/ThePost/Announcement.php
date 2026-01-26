@@ -434,7 +434,7 @@ EOS;
 				}
 				break;
 			case 'commit_start':
-				$start = get_post( $this->post->ID, self::COMMIT_START, true );
+				$start = get_post_meta( $this->post->ID, self::COMMIT_START, true );
 
 				return $start ?: $this->post->post_date;
 				break;
