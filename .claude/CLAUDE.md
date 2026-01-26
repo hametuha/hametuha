@@ -16,6 +16,7 @@ hametuha/ (リポジトリルート)
 ├── themes/
 │   └── hametuha/    # テーマファイル
 ├── plugins/         # プラグイン（composer管理、.gitignore）
+│   ├── hamelp/      # このプラグインだけcomposerではなく、単体のGitリポジトリとして一時的に管理
 ├── uploads/         # アップロード（.gitignore）
 ├── docker/          # Docker設定ファイル
 │   ├── nginx/
