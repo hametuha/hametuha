@@ -103,6 +103,9 @@ class Analytics extends Singleton {
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
 		<script>
 		(function() {
+			if ( window.__PERCY__ ) {
+				return;
+			}
 			window.dataLayer = window.dataLayer || [];
 
 			function gtag() {

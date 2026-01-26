@@ -35,6 +35,23 @@ get_template_part( 'templates/faq/header-faq' );
 
 <section class="help-center-list">
 	<div class="container">
+		<?php
+		// Hamelpの生成AI機能があったら出力
+		if ( function_exists( 'hamelp_render_ai_overview' ) ) :
+			?>
+			<h2 class="text-center help-center mb-3"><?php esc_html_e( 'AIに質問', 'hametuha' ); ?></h2>
+			<p class="text-muted text-center">
+				<?php esc_html_e( 'この機能は実験的です。間違った情報を出力するかもしれません。', 'hametuha' ); ?>
+			</p>
+			<?php
+			echo hamelp_render_ai_overview( [
+				'placeholder'  => '例・破滅派で作品を発表するにはどうしたらよいですか',
+				'button_text'  => 'AIに聞く',
+				'show_sources' => true,
+			] );
+			?>
+			<hr class="mt-5 mb-5" />
+		<?php endif; ?>
 		<h2 class="text-center help-center">最新のヘルプ</h2>
 		<div class="row">
 			<?php
