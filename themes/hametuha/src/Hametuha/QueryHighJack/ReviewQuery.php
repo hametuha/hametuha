@@ -28,8 +28,8 @@ class ReviewQuery extends QueryHighJack {
 	 * @var array
 	 */
 	protected $rewrites = [
-		'your/reviews/?'                   => 'index.php?reviewer=0',
-		'your/reviews/page/([0-9]+)/?'     => 'index.php?reviewer=0&paged=$matches[1]',
+		'your/reviews/?'               => 'index.php?reviewer=0',
+		'your/reviews/page/([0-9]+)/?' => 'index.php?reviewer=0&paged=$matches[1]',
 	];
 
 	/**

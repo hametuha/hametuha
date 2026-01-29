@@ -5,10 +5,10 @@
  * タイトルと抜粋文は検閲すみ
  * @var array $args;
  */
-$args = wp_parse_args( $args, [
+$args            = wp_parse_args( $args, [
 	'should_censor' => true,
 ] );
-$should_censor = $args['should_censor'];
+$should_censor   = $args['should_censor'];
 $title           = get_the_title();
 $title_display   = $should_censor ? hametuha_censor( $title ) : $title;
 $excerpt         = trim_long_sentence( get_the_excerpt(), 98 );

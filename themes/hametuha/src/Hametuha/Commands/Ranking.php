@@ -268,7 +268,7 @@ SQL;
 			$end
 		);
 
-		\WP_CLI::log( sprintf( __( '%s から %s のPVデータを集計中...', 'hametuha' ), $start, $end ) );
+		\WP_CLI::log( sprintf( __( '%1$s から %2$s のPVデータを集計中...', 'hametuha' ), $start, $end ) );
 		$ranking_data = $this->ga()->db->get_results( $query, ARRAY_A );
 
 		if ( empty( $ranking_data ) ) {
@@ -280,7 +280,7 @@ SQL;
 
 		$updated_count = 0;
 		$skipped_count = 0;
-		$progress = \WP_CLI\Utils\make_progress_bar( __( '_current_pvを更新中', 'hametuha' ), count( $ranking_data ) );
+		$progress      = \WP_CLI\Utils\make_progress_bar( __( '_current_pvを更新中', 'hametuha' ), count( $ranking_data ) );
 
 		foreach ( $ranking_data as $row ) {
 			$post_id = (int) $row['object_id'];
@@ -289,7 +289,7 @@ SQL;
 			// 投稿が存在し、指定されたpost_typeか確認
 			$post = get_post( $post_id );
 			if ( ! $post || $post->post_type !== $post_type ) {
-				$skipped_count++;
+				++$skipped_count;
 				$progress->tick();
 				continue;
 			}
@@ -302,7 +302,7 @@ SQL;
 
 			if ( ! $dry_run ) {
 				update_post_meta( $post_id, '_current_pv', $total_pv );
-				$updated_count++;
+				++$updated_count;
 			}
 
 			$progress->tick();
@@ -312,13 +312,13 @@ SQL;
 
 		if ( $dry_run ) {
 			\WP_CLI::success( sprintf(
-				__( 'ドライラン完了: %d件を更新予定、%d件をスキップ', 'hametuha' ),
+				__( 'ドライラン完了: %1$d件を更新予定、%2$d件をスキップ', 'hametuha' ),
 				count( $ranking_data ) - $skipped_count,
 				$skipped_count
 			) );
 		} else {
 			\WP_CLI::success( sprintf(
-				__( '%d件の_current_pvを更新しました（%d件スキップ）。', 'hametuha' ),
+				__( '%1$d件の_current_pvを更新しました（%2$d件スキップ）。', 'hametuha' ),
 				$updated_count,
 				$skipped_count
 			) );

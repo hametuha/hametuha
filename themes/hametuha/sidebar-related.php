@@ -5,7 +5,7 @@
  * このサイドバーは全ページで共通なので、10分キャッシュする
  */
 $sidebar_cache_key = 'hametuha-sidebar-related';
-$sidebar_cache = get_transient( $sidebar_cache_key );
+$sidebar_cache     = get_transient( $sidebar_cache_key );
 if ( false !== $sidebar_cache ) {
 	// キャッシュがあればそれを返して終了
 	echo $sidebar_cache;
@@ -25,12 +25,12 @@ ob_start();
 				'posts_per_page' => 1,
 				'orderby'        => [ 'date' => 'DESC' ],
 			] );
-			if ( $lists->have_posts() )  :
+			if ( $lists->have_posts() ) :
 				foreach ( $lists->posts as $list ) :
 					$sub_query = new WP_Query( [
 						'post_type'      => 'post',
 						'post_status'    => 'publish',
-						'in_list'    => $list->ID,
+						'in_list'        => $list->ID,
 						'posts_per_page' => '3',
 					] );
 					?>

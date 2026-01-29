@@ -74,20 +74,20 @@ class RankingQuery extends QueryHighJack {
 			// 初期条件を追加してWhere節を作る
 			$where_clause = implode( ' AND ', $wheres );
 			// オフセットは明示的にして切れされている場合はを除いて最大で10
-			$per_page  = $wp_query->get( 'posts_per_page' );
+			$per_page = $wp_query->get( 'posts_per_page' );
 			if ( is_numeric( $per_page ) ) {
 				$per_page = min( 10, $per_page );
 			} else {
 				$per_page = 10;
 			}
-			$offset  = ( ( max( 1, $wp_query->get( 'paged' ) ) - 1 ) * $per_page );
+			$offset = ( ( max( 1, $wp_query->get( 'paged' ) ) - 1 ) * $per_page );
 			// 最小PV閾値を取得（低PVのレコードを除外してパフォーマンス向上）
-			$min_pv = $this->get_min_pv( $wp_query );
+			$min_pv        = $this->get_min_pv( $wp_query );
 			$having_clause = $min_pv > 0 ? "HAVING pv >= {$min_pv}" : '';
 			// 必要ならcalc_found_rows。
 			// todo: いつかなくす
 			$calc_found_rows = 1 < hametuha_ranking_max_pagenum( $wp_query ) ? 'SQL_CALC_FOUND_ROWS' : '';
-			$request = <<<SQL
+			$request         = <<<SQL
             SELECT {$calc_found_rows}
                 p.*,
                 ranking.pv
@@ -126,8 +126,8 @@ SQL;
 			foreach ( $posts as &$post ) {
 				// 順位を取得する
 				if ( $current_pv > $post->pv ) {
-					$rank += $buff + 1;
-					$buff = 0;
+					$rank      += $buff + 1;
+					$buff       = 0;
 					$current_pv = (int) $post->pv;
 				} elseif ( $current_pv === (int) $post->pv ) {
 					++$buff;
@@ -177,7 +177,7 @@ SQL;
 			case 'yearly':
 				$year_start = sprintf( '%d-01-01', $year );
 				$year_end   = sprintf( '%d-12-31', $year );
-				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $year_start, $year_end );
+				$wheres[]   = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $year_start, $year_end );
 				break;
 			case 'monthly':
 				$month_start = sprintf( '%d-%02d-01', $year, $month );
@@ -186,7 +186,7 @@ SQL;
 				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $month_start, $month_end->format( 'Y-m-d' ) );
 				break;
 			case 'daily':
-				$day = sprintf( '%04d-%02d-%02d', $year, $month, $day );
+				$day      = sprintf( '%04d-%02d-%02d', $year, $month, $day );
 				$wheres[] = $this->db->prepare( 'calc_date = %s', $day );
 				break;
 			case 'last_week':
@@ -197,7 +197,7 @@ SQL;
 				$sunday = $now->format( 'Y-m-d' );
 				// 日曜日の週の月曜日（週の始まり）を取得
 				$now->modify( 'Previous Monday' );
-				$monday = $now->format( 'Y-m-d' );
+				$monday   = $now->format( 'Y-m-d' );
 				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday, $sunday );
 				break;
 			case 'range':
@@ -208,7 +208,7 @@ SQL;
 				$sunday_str = sprintf( '%d-%02d-%02d', $year, $month, $day );
 				$sunday_obj = new \DateTime( $sunday_str, wp_timezone() );
 				$sunday_obj->modify( 'Previous Monday' );
-				$monday = $sunday_obj->format( 'Y-m-d' );
+				$monday   = $sunday_obj->format( 'Y-m-d' );
 				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday, $sunday_str );
 				break;
 			default:
@@ -240,13 +240,13 @@ SQL;
 	 * {@inheritdoc}
 	 */
 	public function wp_title( $title, $sep, $sep_location ) {
-		$titles = [ ranking_title() ];
+		$titles   = [ ranking_title() ];
 		$cur_page = (int) get_query_var( 'paged' );
 		if ( 2 <= $cur_page ) {
 			// 2ページ目以降
 			$titles[] = sprintf( '%d位〜', ( $cur_page - 1 ) * 10 + 1 );
 		}
-		$titles []= get_bloginfo( 'name' );
+		$titles [] = get_bloginfo( 'name' );
 		return implode( ' ' . $sep . ' ', $titles );
 	}
 }
