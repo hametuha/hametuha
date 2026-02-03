@@ -693,11 +693,11 @@ caption.outdated {
 	}
 
 	.good {
-		@extend .btn-success;
+		@extend .btn-outline-success;
 	}
 
 	.bad {
-		@extend .btn-default;
+		@extend .btn-outline-secondary;
 	}
 }
 
