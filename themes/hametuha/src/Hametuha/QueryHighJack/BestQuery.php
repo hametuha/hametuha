@@ -77,19 +77,19 @@ class BestQuery extends QueryHighJack {
 					'value'   => $current_pv,
 					'type'    => 'NUMERIC',
 					'compare' => '>',
-				]
+				],
 			],
-			'orderby'     => 'date',
+			'orderby'        => 'date',
 		] );
-		$query = new \WP_Query( $query_args );
-		$rank = $query->found_posts;
+		$query      = new \WP_Query( $query_args );
+		$rank       = $query->found_posts;
 		foreach ( $posts as &$post ) {
-			$post->pv         = (int) get_post_meta( $post->ID, '_current_pv', true );
+			$post->pv = (int) get_post_meta( $post->ID, '_current_pv', true );
 			if ( $current_pv > $post->pv ) {
 				++$rank;
 				$current_pv = $post->pv;
 			}
-			$post->rank       = $rank + 1;
+			$post->rank = $rank + 1;
 		}
 		return $posts;
 	}
