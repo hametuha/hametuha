@@ -287,4 +287,3 @@ add_filter( 'posts_results', function ( $posts, WP_Query $query ) {
 
 	return $posts;
 }, 10, 2 );
-

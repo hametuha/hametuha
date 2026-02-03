@@ -98,7 +98,7 @@ class ReactionQuery extends QueryHighJack {
 		}, $reactions );
 
 		// 有効なレビュータグのリストを取得
-		$valid_tags   = [];
+		$valid_tags = [];
 		foreach ( $this->review->feedback_tags as $key => $terms ) {
 			$valid_tags = array_merge( $valid_tags, $terms );
 		}

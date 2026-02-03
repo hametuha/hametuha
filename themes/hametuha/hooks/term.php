@@ -332,9 +332,9 @@ add_action( 'admin_footer-edit-tags.php', function () {
 				<?php echo $options_html; ?>
 			</select>
 			<input type="number" id="count-value-input"
-				   value="<?php echo esc_attr( $current_value ); ?>"
-				   min="0" step="1" style="width: 80px;"
-				   placeholder="件数" />
+					value="<?php echo esc_attr( $current_value ); ?>"
+					min="0" step="1" style="width: 80px;"
+					placeholder="件数" />
 			<button type="button" id="count-filter-button" class="button">絞り込み</button>
 		`;
 

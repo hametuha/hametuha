@@ -103,8 +103,8 @@ function hametuha_get_author_popular_works( $post = null, $limit = 5 ) {
 				'key'     => '_current_pv',
 				'value'   => 10,
 				'type'    => 'NUMERIC',
-				'compare' => '>'
-			]
+				'compare' => '>',
+			],
 		],
 		'meta_key'       => '_current_pv',
 		'orderby'        => 'meta_value_num',
