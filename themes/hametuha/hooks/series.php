@@ -189,6 +189,10 @@ add_filter( 'posts_join', function ( $join, WP_Query $wp_query ) {
 	if ( 'series' !== $wp_query->get( 'post_type' ) ) {
 		return $join;
 	}
+	// シングルページ（プレビュー含む）では子投稿チェックをスキップ
+	if ( $wp_query->is_singular() ) {
+		return $join;
+	}
 
 	global $wpdb;
 	// 少なくとも1つは公開済みの子投稿が紐づいている連載のみを表示
