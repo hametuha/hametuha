@@ -4,7 +4,10 @@
  *
  * Description: 閾値超のリクエストをテキスト＆EMFで記録。緊急のURI特定と、ルート別の長期トレンド可視化を両立。
  * Version: 1.0.0
+ *
  */
+
+// phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,7 +22,7 @@ if ( ! defined( 'SLOWREQ_TEXT_TAG' ) ) {
 	define( 'SLOWREQ_TEXT_TAG', '[WP SlowRequest]' );                              // テキスト行の識別子
 }
 
-$GLOBALS[ '__slowreq_start_ts' ] = microtime( true );
+$GLOBALS['__slowreq_start_ts'] = microtime( true );
 
 /**
  * アクセスタイプ分類
@@ -50,7 +53,7 @@ function slowreq_access_type(): string {
 function slowreq_route_bucket(): string {
 	// RESTはURIから素直にまとめる
 	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-		$uri = $_SERVER[ 'REQUEST_URI' ] ?? '';
+		$uri = $_SERVER['REQUEST_URI'] ?? '';
 		// クエリを除いたパス部分だけ。末尾のIDなどは落として大枠で合わせる
 		$path = parse_url( $uri, PHP_URL_PATH ) ?: '';
 		// 例: /wp-json/wp/v2/posts/123 -> /wp-json/wp/v2/posts
@@ -130,12 +133,12 @@ function slowreq_emit_line( string $line ): void {
 /**
  * フッターにGA4用のコードを出す
  */
-add_action( 'wp_footer', function() {
+add_action( 'wp_footer', function () {
 	if ( is_admin() ) {
 		return;
 	}
 	// かかった時間をマイクロ秒（少数）からミリ秒（整数）に変換
-	$total     = ( microtime( true ) - $GLOBALS[ '__slowreq_start_ts' ] ) * 1000;
+	$total     = ( microtime( true ) - $GLOBALS['__slowreq_start_ts'] ) * 1000;
 	$server_ms = (int) round( $total ); // サーバー処理時間(概算)
 	// 任意: ルート分類などを付けたい場合
 	$route = slowreq_route_bucket();
@@ -159,21 +162,21 @@ add_action( 'wp_footer', function() {
  * シャットダウン関数で記録する
  */
 add_action( 'shutdown', function () {
-	$elapsed = microtime( true ) - ( $GLOBALS[ '__slowreq_start_ts' ] ?? microtime( true ) );
+	$elapsed = microtime( true ) - ( $GLOBALS['__slowreq_start_ts'] ?? microtime( true ) );
 	if ( $elapsed < SLOWREQ_THRESHOLD_SEC ) {
 		return;
 	}
 
 	$elapsed_ms = (int) round( $elapsed * 1000 );
-	$method     = $_SERVER[ 'REQUEST_METHOD' ] ?? '';
-	$uri        = $_SERVER[ 'REQUEST_URI' ] ?? '';
-	$host       = $_SERVER[ 'HTTP_HOST' ] ?? ( function_exists( 'home_url' ) ? parse_url( home_url(), PHP_URL_HOST ) : '' );
+	$method     = $_SERVER['REQUEST_METHOD'] ?? '';
+	$uri        = $_SERVER['REQUEST_URI'] ?? '';
+	$host       = $_SERVER['HTTP_HOST'] ?? ( function_exists( 'home_url' ) ? parse_url( home_url(), PHP_URL_HOST ) : '' );
 	$status     = function_exists( 'http_response_code' ) ? (int) http_response_code() : 0;
 	$user_id    = function_exists( 'get_current_user_id' ) ? (int) get_current_user_id() : 0;
 	$blog_id    = function_exists( 'get_current_blog_id' ) ? (int) get_current_blog_id() : 0;
 	$access     = slowreq_access_type();
 	$route      = slowreq_route_bucket();
-	$req_id     = $_SERVER[ 'REQUEST_ID' ] ?? ( $_SERVER[ 'HTTP_X_REQUEST_ID' ] ?? '' );
+	$req_id     = $_SERVER['REQUEST_ID'] ?? ( $_SERVER['HTTP_X_REQUEST_ID'] ?? '' );
 	$now_iso    = ( new DateTime( 'now', function_exists( 'wp_timezone' ) ? wp_timezone() : new DateTimeZone( date_default_timezone_get() ) ) )->format( DateTime::ATOM );
 
 	// ① 緊急用：人が読みやすい一行
@@ -185,30 +188,30 @@ add_action( 'shutdown', function () {
 	// ② 長期統計用：EMF（埋め込みメトリクス）でメトリク化
 	if ( SLOWREQ_EMIT_EMF ) {
 		$emf = [
-			"_aws"       => [
-				"Timestamp"         => (int) round( microtime( true ) * 1000 ),
-				"CloudWatchMetrics" => [
+			'_aws'       => [
+				'Timestamp'         => (int) round( microtime( true ) * 1000 ),
+				'CloudWatchMetrics' => [
 					[
-						"Namespace"  => "App/SlowRequest",
+						'Namespace'  => 'App/SlowRequest',
 						// 重要：ディメンションは増やしすぎない（コスト＆管理）
-						"Dimensions" => [ [ "Site", "AccessType", "Route" ] ],
-						"Metrics"    => [ [ "Name" => "ElapsedMs", "Unit" => "Milliseconds" ] ],
-					]
+						'Dimensions' => [ [ 'Site', 'AccessType', 'Route' ] ],
+						'Metrics'    => [ [ 'Name' => 'ElapsedMs', 'Unit' => 'Milliseconds' ] ],
+					],
 				],
 			],
-			"Site"       => (string) $host,
-			"AccessType" => (string) $access,
-			"Route"      => (string) $route,   // ← “ニュースvs投稿”の比較はここで効く
-			"ElapsedMs"  => $elapsed_ms,
+			'Site'       => (string) $host,
+			'AccessType' => (string) $access,
+			'Route'      => (string) $route,   // ← “ニュースvs投稿”の比較はここで効く
+			'ElapsedMs'  => $elapsed_ms,
 
 			// 解析補助（ディメンションではない）
-			"Time"       => $now_iso,
-			"Method"     => $method,
-			"URI"        => $uri,
-			"Status"     => $status,
-			"ReqId"      => $req_id,
-			"BlogId"     => $blog_id,
-			"UserId"     => $user_id,
+			'Time'       => $now_iso,
+			'Method'     => $method,
+			'URI'        => $uri,
+			'Status'     => $status,
+			'ReqId'      => $req_id,
+			'BlogId'     => $blog_id,
+			'UserId'     => $user_id,
 		];
 		slowreq_emit_line( json_encode( $emf, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) );
 	}

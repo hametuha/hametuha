@@ -7,31 +7,31 @@
  */
 
 // Prevent direct access
-if ( ! defined('ABSPATH' ) ) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
  * ローカル環境の場合は管理バーをカスタマイズ
  */
-add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
-    $wp_admin_bar->add_menu([
-        'id'    => 'hametuha-info',
-        'title' => '［ローカル環境］',
-        'href'  => admin_url(),
-    ]);
+add_action('admin_bar_menu', function ( WP_Admin_Bar $wp_admin_bar ) {
+	$wp_admin_bar->add_menu([
+		'id'    => 'hametuha-info',
+		'title' => '［ローカル環境］',
+		'href'  => admin_url(),
+	]);
 	$counter = 1;
 	foreach ( [
 		'phpMyAdmin' => 'http://localhost:8081',
-		'Mailpit' => 'http://localhost:8026',
+		'Mailpit'    => 'http://localhost:8026',
 	] as $label => $link ) {
 		$wp_admin_bar->add_node( [
-			'id' => sprintf( 'hametuha-dev-%d', $counter ),
-			'title' => $label,
-			'href'  => $link,
+			'id'     => sprintf( 'hametuha-dev-%d', $counter ),
+			'title'  => $label,
+			'href'   => $link,
 			'parent' => 'hametuha-info',
-			'meta' => [
-				'target' => '_blank'
+			'meta'   => [
+				'target' => '_blank',
 			],
 		] );
 		++$counter;
@@ -49,7 +49,7 @@ add_action('admin_bar_menu', function( WP_Admin_Bar $wp_admin_bar ) {
  * ローカル環境でのみ動作します。
  * Chrome DevTools MCPのようなセッション/クッキーを保持できない環境でのテスト用。
  */
-add_filter( 'determine_current_user', function( $user_id ) {
+add_filter( 'determine_current_user', function ( $user_id ) {
 	if ( 'local' !== wp_get_environment_type() ) {
 		return $user_id;
 	}
@@ -94,7 +94,7 @@ if ( ! function_exists( 'auth_redirect' ) && 'local' === wp_get_environment_type
 		// 未ログインならログインページへリダイレクト
 		nocache_headers();
 
-		$redirect = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		$redirect  = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
 		$login_url = wp_login_url( $redirect, true );
 
 		wp_redirect( $login_url );
@@ -115,6 +115,7 @@ add_action( 'template_redirect', function () {
 	switch ( filter_input( INPUT_GET, 'error-preview' ) ) {
 		case 'wp':
 			wp_die( 'これは wp_die のテストです。', 'wp_die テスト', [ 'response' => 403 ] );
+			// no break.
 		case 'php':
 			// 存在しない関数を呼ぶ
 			hametuha_non_existing_function_for_error_preview();
