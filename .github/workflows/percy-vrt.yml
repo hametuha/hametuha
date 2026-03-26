@@ -42,6 +42,7 @@ jobs:
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           PERCY_BRANCH: wordpress-update
+          PERCY_TARGET_BRANCH: release
         run: npx percy snapshot snapshots.yml
 
       - name: Percy failure notification
