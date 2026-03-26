@@ -24,6 +24,7 @@ wp-config-local.php
 !/mu-plugins/hametuha-config.php
 !/mu-plugins/hametuha-opcache-admin.php
 !/mu-plugins/hametuha-slow-log.php
+!/mu-plugins/hametuha-vrt-trigger.php
 
 # contents（昔のHTMLで管理されていたもの）
 /contents/*

@@ -17,7 +17,7 @@ add_action( 'admin_menu', function () {
 		}
 
 		// Reset action (with nonce)
-		if ( isset( $_POST[ 'opcache_reset' ] ) && check_admin_referer( 'opcache_reset_nonce' ) ) {
+		if ( isset( $_POST['opcache_reset'] ) && check_admin_referer( 'opcache_reset_nonce' ) ) {
 			$ok = function_exists( 'opcache_reset' ) ? opcache_reset() : false;
 			echo '<div class="notice notice-' . ( $ok ? 'success' : 'error' ) . '"><p>OPcache reset: ' . ( $ok ? 'OK' : 'FAILED' ) . '</p></div>';
 		}
@@ -30,16 +30,16 @@ add_action( 'admin_menu', function () {
 			return;
 		}
 
-		$mem   = $status[ 'memory_usage' ];
-		$stats = $status[ 'opcache_statistics' ];
+		$mem   = $status['memory_usage'];
+		$stats = $status['opcache_statistics'];
 		echo '<table class="widefat" style="max-width:800px"><tbody>';
-		printf( '<tr><th>Used memory</th><td>%.1f MB</td></tr>', $mem[ 'used_memory' ] / 1048576 );
-		printf( '<tr><th>Free memory</th><td>%.1f MB</td></tr>', $mem[ 'free_memory' ] / 1048576 );
+		printf( '<tr><th>Used memory</th><td>%.1f MB</td></tr>', $mem['used_memory'] / 1048576 );
+		printf( '<tr><th>Free memory</th><td>%.1f MB</td></tr>', $mem['free_memory'] / 1048576 );
 		printf( '<tr><th>Wasted memory</th><td>%.1f MB (%.2f%%)</td></tr>',
-			$mem[ 'wasted_memory' ] / 1048576, $mem[ 'current_wasted_percentage' ] );
-		printf( '<tr><th>Cached scripts</th><td>%d</td></tr>', $stats[ 'num_cached_scripts' ] );
-		printf( '<tr><th>Hits / Misses</th><td>%d / %d</td></tr>', $stats[ 'hits' ], $stats[ 'misses' ] );
-		printf( '<tr><th>Hit rate</th><td>%.2f%%</td></tr>', $stats[ 'opcache_hit_rate' ] );
+		$mem['wasted_memory'] / 1048576, $mem['current_wasted_percentage'] );
+		printf( '<tr><th>Cached scripts</th><td>%d</td></tr>', $stats['num_cached_scripts'] );
+		printf( '<tr><th>Hits / Misses</th><td>%d / %d</td></tr>', $stats['hits'], $stats['misses'] );
+		printf( '<tr><th>Hit rate</th><td>%.2f%%</td></tr>', $stats['opcache_hit_rate'] );
 		echo '</tbody></table>';
 
 		echo '<form method="post" style="margin-top:1em">';
