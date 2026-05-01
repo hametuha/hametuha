@@ -61,8 +61,40 @@ class AnnouncementMetaBox extends EditMetaBox {
 	 * 詳細説明文
 	 */
 	protected function desc() {
-		echo <<<HTML
-        <p class="description">参加する何かの場合は入力してください<p>
-HTML;
+		return sprintf( '<p>%s</p>', esc_html__( '参加表明をするイベントの場合は条件を入力してください。', 'hametuha' ) );
+	}
+
+	/**
+	 * メタボックスの内容を描画
+	 *
+	 * @param \WP_Post $post
+	 */
+	public function render( \WP_Post $post ) {
+		parent::render( $post );
+		$event = new Announcement( $post );
+		if ( ! $event->can_participate() ) {
+			return;
+		}
+		$participants = $event->get_participants();
+		printf( '<h4 style="margin-top:1em;">参加者一覧（%d名）</h4>', count( $participants ) );
+		if ( empty( $participants ) ) {
+			echo '<p>まだ参加者はいません。</p>';
+			return;
+		}
+		echo '<ul class="hametuha-participants-list" style="display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:0;list-style:none;">';
+		foreach ( $participants as $p ) {
+			$user = get_userdata( $p['id'] );
+			if ( ! $user ) {
+				continue;
+			}
+			$url = home_url( '/doujin/detail/' . $user->user_nicename . '/' );
+			printf(
+				'<li style="margin:0;"><a href="%s" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:#f6f7f7;border:1px solid #ddd;border-radius:4px;text-decoration:none;">%s<span>%s</span></a></li>',
+				esc_url( $url ),
+				get_avatar( $user->ID, 24 ),
+				esc_html( $user->display_name )
+			);
+		}
+		echo '</ul>';
 	}
 }
