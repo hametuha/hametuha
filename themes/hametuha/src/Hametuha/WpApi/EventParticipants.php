@@ -106,11 +106,11 @@ class EventParticipants extends WpApi {
 			$organizer = get_userdata( $post->post_author );
 			do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
 				'post'        => $post,
-				'status'      => $request['status'],
+				'status'      => true,
 				'organizer'   => $organizer,
 				'participant' => get_userdata( get_current_user_id() ),
 				'update'      => $updated,
-				'message'     => $request['text'],
+				'message'     => $request->get_param( 'text' ),
 			] );
 		}
 		return new \WP_REST_Response( $event->get_user_object( $ticket_id ) );
@@ -175,6 +175,18 @@ class EventParticipants extends WpApi {
 			wp_update_comment( [
 				'comment_ID'      => $ticket_id,
 				'comment_content' => implode( "\n\n---\n\n", array_filter( $all_comment ) ),
+			] );
+		}
+		if ( get_current_user_id() != $post->post_author ) {
+			// 主催者に不参加を連絡
+			$organizer = get_userdata( $post->post_author );
+			do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
+				'post'        => $post,
+				'status'      => false,
+				'organizer'   => $organizer,
+				'participant' => get_userdata( get_current_user_id() ),
+				'update'      => true,
+				'message'     => $comment,
 			] );
 		}
 		return new \WP_REST_Response( [
