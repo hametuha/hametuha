@@ -8,10 +8,10 @@
  * @var bool $update
  * @var string $message
  */
-$participant = $args['participants'] ?? null;
+$participant = $args['participant'] ?? null;
 $update      = $args['update'] ?? false;
 $status      = $args['status'] ?? false;
-$message     = $args['message'] ?? ''
+$message     = $args['message'] ?? '';
 
 ?>
 <?php echo esc_html( $participant->display_name ); ?> さんの参加状況です。
@@ -21,7 +21,7 @@ $message     = $args['message'] ?? ''
 printf(
 	'%s: %s',
 	$update ? '更新' : '新規',
-	$status ? '<strong>参加</strong>' : '<em>不参加</em>'
+	$status ? '参加' : '不参加'
 );
 ?>
 

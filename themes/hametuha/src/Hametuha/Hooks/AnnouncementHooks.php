@@ -65,6 +65,12 @@ class AnnouncementHooks extends Singleton {
 			case 'participation':
 				if ( $event->can_participate() ) {
 					echo esc_html( $event->get_participating_period() );
+					$count = $event->participating_count();
+					$limit = $event->participating_limit( false );
+					$label = $limit > 0
+						? sprintf( '%d / %s', $count, number_format_i18n( $limit ) . '名' )
+						: sprintf( '%d名 / 無制限', $count );
+					echo '<br><strong>' . esc_html( $label ) . '</strong>';
 				} else {
 					echo '---';
 				}

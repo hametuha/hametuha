@@ -22,8 +22,5 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "volta": {
-    "node": "22.20.0"
   }
 }

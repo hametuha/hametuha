@@ -1,0 +1,52 @@
+name: Percy VRT (WordPress Update)
+
+on:
+  repository_dispatch:
+    types: [wordpress-update]
+  workflow_dispatch:
+    inputs:
+      update_type:
+        description: 'Update type (core/plugin/theme) for manual testing'
+        required: false
+        default: 'manual'
+
+permissions:
+  contents: read
+
+jobs:
+  percy:
+    name: Visual Regression Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@main
+        with:
+          sparse-checkout: |
+            .percy.yml
+            snapshots.yml
+            package.json
+
+      - name: Log update info
+        run: |
+          echo "Trigger: ${{ github.event_name }}"
+          echo "Update types: ${{ toJSON(github.event.client_payload.update_types) || inputs.update_type || 'unknown' }}"
+          echo "Site URL: ${{ github.event.client_payload.site_url || 'N/A' }}"
+
+      - name: Wait for update to propagate
+        run: sleep 30
+
+      - name: Install Percy CLI
+        run: npm i -D @percy/cli
+
+      - name: Run Percy snapshot
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PERCY_BRANCH: wordpress-update
+          PERCY_TARGET_BRANCH: release
+        run: npx percy snapshot snapshots.yml
+
+      - name: Percy failure notification
+        if: failure()
+        run: |
+          echo "::warning::Percy VRT after WordPress update failed!"
+          echo "Update types: ${{ toJSON(github.event.client_payload.update_types) || inputs.update_type || 'unknown' }}"
