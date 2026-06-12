@@ -218,6 +218,85 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 			</td>
 		</tr>
 		<?php
+		// 合評会（当日採点）— 採点のある公募（評価〆切あり）でのみ表示。
+		if ( get_term_meta( $tag->term_id, '_campaign_range_end', true ) ) :
+			$jr_state        = hametuha_jr_state( $tag->term_id );
+			$jr_participants = hametuha_jr_participants( $tag->term_id );
+			$jr_works        = hametuha_jr_works( $tag->term_id );
+			// 候補＝作品著者＋オンライン採点者＋既存の選択者。
+			$jr_candidates = array_values( array_unique( array_values( $jr_works ) ) );
+			$jr_record     = hametuha_campaign_record( $tag->term_id );
+			if ( $jr_record && ! is_wp_error( $jr_record ) && ! empty( $jr_record['participants'] ) ) {
+				$jr_candidates = array_merge( $jr_candidates, array_map( 'intval', array_keys( $jr_record['participants'] ) ) );
+			}
+			$jr_candidates = array_values( array_unique( array_merge( $jr_candidates, $jr_participants ) ) );
+			sort( $jr_candidates );
+			?>
+			<tr>
+				<th>合評会の当日採点</th>
+				<td>
+					<p>
+						<label>状態：
+							<select name="jr_state">
+								<?php
+								foreach ( [
+									''          => '未開催',
+									'open'      => '入力受付中（採点を開始）',
+									'published' => '確定・公開',
+								] as $value => $label ) {
+									printf(
+										'<option value="%s"%s>%s</option>',
+										esc_attr( $value ),
+										selected( $jr_state, $value, false ),
+										esc_html( $label )
+									);
+								}
+								?>
+							</select>
+						</label>
+					</p>
+					<p class="description">
+						持ち点＝参加人数（現在 <strong><?php echo count( $jr_participants ); ?></strong> 名）。
+						作品数 <?php echo count( $jr_works ); ?> 作。
+						入力済み <?php echo count( hametuha_jr_voters( $tag->term_id ) ); ?> 名。
+					</p>
+					<fieldset style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: .5em 1em;">
+						<legend style="font-weight: bold;">当日参加者（チェックした人だけが採点できます）</legend>
+						<?php if ( empty( $jr_candidates ) ) : ?>
+							<p class="description">候補者がいません。作品が投稿されると候補に表示されます。</p>
+						<?php else : ?>
+							<?php foreach ( $jr_candidates as $candidate_id ) : ?>
+								<?php
+								$candidate = get_userdata( $candidate_id );
+								if ( ! $candidate ) {
+									continue;
+								}
+								$is_author = in_array( (int) $candidate_id, array_map( 'intval', array_values( $jr_works ) ), true );
+								?>
+								<label style="display: inline-block; margin: 0 1em .3em 0;">
+									<input type="checkbox" name="jr_participants[]"
+											value="<?php echo esc_attr( $candidate_id ); ?>"
+											<?php checked( in_array( (int) $candidate_id, $jr_participants, true ) ); ?> />
+									<?php echo esc_html( $candidate->display_name ); ?>
+									<?php if ( $is_author ) : ?>
+										<span class="label label-danger" style="font-size:.7em;">書</span>
+									<?php endif; ?>
+								</label>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</fieldset>
+					<p style="margin-top:.5em;">
+						<label style="color:#a00;">
+							<input type="checkbox" name="jr_reset" value="1" />
+							当日点をすべてリセットして未開催に戻す
+						</label>
+					</p>
+				</td>
+			</tr>
+			<?php
+		endif;
+		?>
+		<?php
 	}
 } );
 
@@ -239,6 +318,20 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 		) {
 			if ( isset( $_POST[ $key ] ) ) {
 				update_term_meta( $term_id, '_' . $key, $_POST[ $key ] );
+			}
+		}
+		// 合評会（当日採点）の設定を保存。
+		if ( isset( $_POST['jr_state'] ) ) {
+			hametuha_jr_set_state( $term_id, sanitize_text_field( wp_unslash( $_POST['jr_state'] ) ) );
+			$jr_participants = isset( $_POST['jr_participants'] ) ? array_map( 'intval', (array) $_POST['jr_participants'] ) : [];
+			hametuha_jr_set_participants( $term_id, $jr_participants );
+			// リセット指定があれば当日点を全削除し未開催に戻す。
+			if ( ! empty( $_POST['jr_reset'] ) ) {
+				$jr_works = hametuha_jr_works( $term_id );
+				if ( $jr_works ) {
+					\Hametuha\Model\JointReview::get_instance()->clear_points( array_keys( $jr_works ) );
+				}
+				hametuha_jr_set_state( $term_id, '' );
 			}
 		}
 		// Clear cache
