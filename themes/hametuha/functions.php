@@ -98,6 +98,7 @@ require __DIR__ . '/functions/assets-eyecatch.php';
 require __DIR__ . '/functions/assets-tinymce.php';
 // キャンペーン
 require __DIR__ . '/functions/campaign.php';
+require __DIR__ . '/functions/joint-review.php';
 require __DIR__ . '/functions/calculate.php';
 // 表示
 require __DIR__ . '/functions/display.php';
