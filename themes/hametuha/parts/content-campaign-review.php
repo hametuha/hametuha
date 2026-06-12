@@ -180,7 +180,17 @@ $jr_user_id   = get_current_user_id();
 		</table>
 	</div><!-- //.campaign-score-wrapper -->
 
+	<details class="campaign-review-pre">
+		<summary class="campaign-review-pre__summary"><?php esc_html_e( '事前採点の詳細を見る', 'hametuha' ); ?></summary>
+		<?php
+		// オンライン（事前）採点の内訳テーブル。
+		get_template_part( 'parts/content-campaign' );
+		?>
+	</details>
+
 	<style>
+		.campaign-review-pre { margin-top: 1.5em; }
+		.campaign-review-pre__summary { cursor: pointer; font-weight: bold; }
 		.campaign-score--reveal tbody tr {
 			animation: jrFadeIn .4s ease both;
 			animation-delay: calc( var( --jr-row, 0 ) * .12s );
