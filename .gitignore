@@ -36,6 +36,7 @@ wp-config-local.php
 
 # メモ保管場所
 /memo/*
+/tasks/*
 
 # Node dependencies (theme specific)
 /themes/hametuha/node_modules/

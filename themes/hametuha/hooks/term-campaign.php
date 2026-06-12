@@ -31,6 +31,7 @@ add_action( 'init', function () {
 				<p class="description">応募できるものはありません。</p>
 				<?php
 			else :
+				$author_id      = (int) $post->post_author ? (int) $post->post_author : get_current_user_id();
 				$term_available = array_filter( $terms, function ( $term ) {
 					return hametuha_is_available_campaign( $term );
 				} );
@@ -54,13 +55,21 @@ add_action( 'init', function () {
 								応募しない
 							</label>
 						</li>
-						<?php foreach ( $term_available as $term ) : ?>
+						<?php
+						foreach ( $term_available as $term ) :
+							// 重複応募不可で、この投稿以外の作品で既に応募済みなら選択不可にする。
+							$already_applied = ! hametuha_campaign_allows_duplicate( $term )
+								&& ! has_term( $term->term_id, 'campaign', $post )
+								&& hametuha_user_applied_campaign( $term->term_id, $author_id, $post->ID );
+							?>
 							<li>
 								<label>
 									<input type="radio" name="tax_input[campaign][]"
-											value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?>/>
+											value="<?php echo esc_attr( $term->term_id ); ?>" <?php checked( has_term( $term->name, $term->taxonomy, $post ) ); ?> <?php disabled( $already_applied ); ?>/>
 									<?php echo esc_html( $term->name ); ?>
-									<?php if ( $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) : ?>
+									<?php if ( $already_applied ) : ?>
+										<small>（すでに応募済みです）</small>
+									<?php elseif ( $limit = get_term_meta( $term->term_id, '_campaign_limit', true ) ) : ?>
 										<small><?php echo mysql2date( 'Y年n月j日（D）まで', $limit ); ?></small>
 									<?php else : ?>
 										<small>期限なし</small>
@@ -217,6 +226,20 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
 				</p>
 			</td>
 		</tr>
+		<tr>
+			<th>
+				重複応募
+			</th>
+			<td>
+				<label style="display: block; margin: 0 1em 1em 0;">
+					<input type="checkbox" name="allow_duplicate" value="1" <?php checked( hametuha_campaign_allows_duplicate( $tag->term_id ) ); ?>/>
+					<?php esc_html_e( '一人が複数の作品を応募できるようにする', 'hametuha' ); ?>
+				</label>
+				<p class="description">
+					<?php esc_html_e( 'チェックを外すと、一人につき一作品しか応募できません（初期値）。', 'hametuha' ); ?>
+				</p>
+			</td>
+		</tr>
 		<?php
 	}
 } );
@@ -241,10 +264,74 @@ add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
 				update_term_meta( $term_id, '_' . $key, $_POST[ $key ] );
 			}
 		}
+		// 重複応募の許可（チェックボックスのため未チェック時は空で保存）
+		update_term_meta( $term_id, '_allow_duplicate', empty( $_POST['allow_duplicate'] ) ? '' : '1' );
 		// Clear cache
 		wp_cache_delete( $term_id, 'campaign_record' );
 	}
 }, 10, 2 );
+
+/**
+ * 重複応募を許可していないキャンペーンへの2作品目の応募を防ぐ
+ *
+ * UIは迂回され得るため、保存時にサーバー側でも検証し、
+ * 重複不可キャンペーンに別作品で既に応募しているユーザーの投稿からは
+ * campaign タームを静かに剥がす。剥がした場合は通知用トランジェントを残す。
+ *
+ * @param int     $post_id 投稿ID
+ * @param WP_Post $post    投稿オブジェクト
+ */
+add_action( 'save_post_post', function ( $post_id, $post ) {
+	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+		return;
+	}
+	$terms = get_the_terms( $post, 'campaign' );
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return;
+	}
+	$author_id = (int) $post->post_author;
+	$removed   = [];
+	foreach ( $terms as $term ) {
+		if ( hametuha_campaign_allows_duplicate( $term ) ) {
+			continue;
+		}
+		if ( hametuha_user_applied_campaign( $term->term_id, $author_id, $post_id ) ) {
+			wp_remove_object_terms( $post_id, $term->term_id, 'campaign' );
+			$removed[] = $term->name;
+		}
+	}
+	if ( $removed ) {
+		set_transient( 'hametuha_campaign_dup_' . $post_id . '_' . get_current_user_id(), $removed, MINUTE_IN_SECONDS );
+	}
+}, 20, 2 );
+
+/**
+ * 重複応募で campaign タームを剥がした場合、管理画面で通知する
+ */
+add_action( 'admin_notices', function () {
+	$screen = get_current_screen();
+	if ( ! $screen || 'post' !== $screen->base || 'post' !== $screen->post_type ) {
+		return;
+	}
+	global $post;
+	if ( ! $post ) {
+		return;
+	}
+	$key   = 'hametuha_campaign_dup_' . $post->ID . '_' . get_current_user_id();
+	$names = get_transient( $key );
+	if ( ! $names ) {
+		return;
+	}
+	delete_transient( $key );
+	printf(
+		'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
+		esc_html( sprintf(
+			/* translators: %s: campaign names. */
+			__( '公募「%s」には既に別の作品で応募済みのため、この作品は応募に追加されませんでした。', 'hametuha' ),
+			implode( '」「', $names )
+		) )
+	);
+} );
 
 /**
  * レビューが更新されたらキャッシュ削除
