@@ -299,6 +299,54 @@ function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
 }
 
 /**
+ * キャンペーンが重複応募を許可しているか
+ *
+ * 初期値は false（許可しない＝1人1作品）。
+ * タームメタ `_allow_duplicate` が真の場合のみ true。
+ *
+ * @param int|WP_Term $term キャンペーンIDまたはタームオブジェクト
+ * @return bool
+ */
+function hametuha_campaign_allows_duplicate( $term ) {
+	$term_id = is_a( $term, 'WP_Term' ) ? $term->term_id : (int) $term;
+	return (bool) get_term_meta( $term_id, '_allow_duplicate', true );
+}
+
+/**
+ * ユーザーが指定キャンペーンに「別の作品」で既に応募しているか
+ *
+ * 編集中の投稿自身は判定から除外する。
+ *
+ * @param int $campaign_id     キャンペーンID
+ * @param int $user_id         ユーザーID
+ * @param int $exclude_post_id 判定から除外する投稿ID（編集中の投稿自身）
+ * @return bool
+ */
+function hametuha_user_applied_campaign( $campaign_id, $user_id, $exclude_post_id = 0 ) {
+	$user_id = (int) $user_id;
+	if ( ! $user_id ) {
+		return false;
+	}
+	$query = new WP_Query( [
+		'post_type'      => 'post',
+		'post_status'    => 'any',
+		'author'         => $user_id,
+		'posts_per_page' => 1,
+		'no_found_rows'  => true,
+		'fields'         => 'ids',
+		'post__not_in'   => $exclude_post_id ? [ (int) $exclude_post_id ] : [],
+		'tax_query'      => [
+			[
+				'taxonomy' => 'campaign',
+				'field'    => 'term_id',
+				'terms'    => (int) $campaign_id,
+			],
+		],
+	] );
+	return ! empty( $query->posts );
+}
+
+/**
  * ユーザーがキャンペーンに参加しているか
  *
  * @param int      $campaign_id キャンペーンID
