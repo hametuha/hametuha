@@ -20,7 +20,11 @@ class IdeasMine extends IdeaApiPattern {
 			case 'GET':
 				return [
 					'offset' => [
-						'validate_callback' => 'is_numeric',
+						'validate_callback' => function ( $var ) {
+							// REST のコールバックは ( $value, $request, $param ) の3引数で呼ばれるため、
+							// 1引数しか取らない is_numeric を直接渡すと ArgumentCountError になる。
+							return is_numeric( $var );
+						},
 						'default'           => 0,
 					],
 					's'      => [
