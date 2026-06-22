@@ -274,10 +274,6 @@ class Post extends Command {
 						file_put_contents( "{$dir}/series-{$label}-plain.txt", $header . $content );
 						self::l( sprintf( 'series %s saved.', $label ) );
 						break;
-					case 'xml':
-						file_put_contents( "{$dir}/series-{$label}.xml", '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" . $content );
-						self::l( sprintf( 'series %s saved.', $label ) );
-						break;
 				}
 			}
 		}
