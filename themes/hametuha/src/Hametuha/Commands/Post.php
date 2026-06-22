@@ -5,6 +5,7 @@ namespace Hametuha\Commands;
 
 use Hametuha\Hooks\StaleStatus;
 use Hametuha\Model\Jobs;
+use Hametuha\Model\Series;
 use Hametuha\Sharee\Master\Address;
 use WPametu\Utility\Command;
 use cli\Table;
@@ -69,13 +70,13 @@ class Post extends Command {
 	 * ## OPTIONS
 	 *
 	 * : <taxonomy>
-	 *   taxonomy
+	 *   taxonomy slug, or "series" to compile a series by post ID.
 	 *
 	 * : <term>
-	 *   Term ID
+	 *   Term ID, or series post ID when taxonomy is "series".
 	 *
 	 * : <format>
-	 *   1 of xml, text, tag, csv. Default xml.
+	 *   1 of xml, text, plain, tags, csv. Default xml.
 	 *
 	 * : [--endmark]
 	 *   If set, add end mark.
@@ -93,34 +94,44 @@ class Post extends Command {
 		if ( ! in_array( $format, [ 'xml', 'text', 'plain', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
-		$term = get_term_by( 'id', $term_id, $taxonomy );
-		if ( ! $term ) {
-			self::e( sprintf( 'failed to get term %d of %s', $term_id, $taxonomy ) );
-		}
 		// End mark.
 		$endmark = ! empty( $assoc['endmark'] ) ? '<p style="text-align: right">——了</p>' : '';
 		if ( $endmark && ! empty( $assoc['endmark-string'] ) ) {
 			$endmark = $assoc['endmark-string'];
 		}
 		$upload_dir = wp_upload_dir();
-		$dir        = $upload_dir['basedir'] . '/indesign/' . $taxonomy . '/' . $term->slug;
+		$series     = null;
+		if ( 'series' === $taxonomy ) {
+			$series = get_post( (int) $term_id );
+			if ( ! $series || 'series' !== $series->post_type ) {
+				self::e( sprintf( 'Series #%d not found.', $term_id ) );
+			}
+			$dir   = $upload_dir['basedir'] . '/indesign/series/' . $series->post_name;
+			$posts = Series::get_series_posts( $series->ID );
+		} else {
+			$term = get_term_by( 'id', $term_id, $taxonomy );
+			if ( ! $term ) {
+				self::e( sprintf( 'failed to get term %d of %s', $term_id, $taxonomy ) );
+			}
+			$dir   = $upload_dir['basedir'] . '/indesign/' . $taxonomy . '/' . $term->slug;
+			$posts = get_posts( [
+				'post_type'      => 'post',
+				'post_status'    => 'any',
+				'tax_query'      => [
+					[
+						'taxonomy' => $taxonomy,
+						'terms'    => (int) $term_id,
+					],
+				],
+				'posts_per_page' => -1,
+			] );
+		}
 		if ( ! is_dir( $dir ) ) {
 			mkdir( $dir, 0755, true );
 		}
 		if ( ! is_dir( $dir ) ) {
 			self::e( sprintf( 'Directory %s missed.', $dir ) );
 		}
-		$posts = get_posts([
-			'post_type'      => 'post',
-			'post_status'    => 'any',
-			'tax_query'      => [
-				[
-					'taxonomy' => $taxonomy,
-					'terms'    => (int) $term_id,
-				],
-			],
-			'posts_per_page' => -1,
-		]);
 		if ( ! $posts ) {
 			self::e( 'No post found.' );
 		}
@@ -235,6 +246,35 @@ class Post extends Command {
 						$tags[ $tag_name ] = implode( ' ', $attributes );
 					}
 					break;
+			}
+		}
+		// Compile series preface and afterword.
+		if ( $series ) {
+			$extras = [
+				'preface'   => get_post_meta( $series->ID, '_preface', true ),
+				'afterword' => $series->post_content,
+			];
+			foreach ( $extras as $label => $content ) {
+				if ( empty( $content ) ) {
+					continue;
+				}
+				$content_post = new \WP_Post( (object) [ 'post_content' => $content ] );
+				switch ( $format ) {
+					case 'text':
+						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post );
+						file_put_contents( "{$dir}/series-{$label}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
+						self::l( sprintf( 'series %s saved.', $label ) );
+						break;
+					case 'plain':
+						$header = implode( "\n", [
+							'タイトル: ' . get_the_title( $series ) . "（{$label}）",
+							str_repeat( '-', 40 ),
+							'',
+						] );
+						file_put_contents( "{$dir}/series-{$label}-plain.txt", $header . $content );
+						self::l( sprintf( 'series %s saved.', $label ) );
+						break;
+				}
 			}
 		}
 		if ( $tags ) {
