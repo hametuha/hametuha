@@ -35,7 +35,7 @@ jobs:
         working-directory: themes/hametuha
 
       - name: Install Node.js dependencies
-        run: npm install --frozen-lockfile
+        run: npm ci
         working-directory: themes/hametuha
 
       - name: Build the theme assets
