@@ -189,7 +189,7 @@ class Post extends Command {
 						str_repeat( '-', 40 ),
 						'',
 					] );
-					file_put_contents( "{$dir}/post-{$post->ID}.txt", $header . $post->post_content );
+					file_put_contents( "{$dir}/post-{$post->ID}-plain.txt", $header . $post->post_content );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					break;
 				case 'csv':
