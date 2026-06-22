@@ -56,7 +56,6 @@ Thumbs.db
 /themes/hametuha/assets/img/*
 !/themes/hametuha/assets/img/src
 !/themes/hametuha/assets/img/covers
-/themes/hametuha/composer.lock
 /themes/hametuha/package-lock.json
 /themes/hametuha/wp-dependencies.json
 /themes/hametuha/tests/sample/はい
