@@ -90,7 +90,7 @@ class Post extends Command {
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
 		$format                     = $assoc['format'] ?? 'xml';
-		if ( ! in_array( $format, [ 'xml', 'text', 'tags', 'csv' ] ) ) {
+		if ( ! in_array( $format, [ 'xml', 'text', 'plain', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
 		$term = get_term_by( 'id', $term_id, $taxonomy );
@@ -180,6 +180,17 @@ class Post extends Command {
 					if ( ! empty( $post->post_excerpt ) ) {
 						file_put_contents( "{$dir}/post-{$post->ID}-excerpt.txt", $post->post_excerpt );
 					}
+					break;
+				case 'plain':
+					$header = implode( "\n", [
+						'タイトル: ' . get_the_title( $post ),
+						'著者: ' . get_the_author_meta( 'display_name', $post->post_author ),
+						'URL: ' . get_permalink( $post ),
+						str_repeat( '-', 40 ),
+						'',
+					] );
+					file_put_contents( "{$dir}/post-{$post->ID}.txt", $header . $post->post_content );
+					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					break;
 				case 'csv':
 					if ( ! $lines ) {
