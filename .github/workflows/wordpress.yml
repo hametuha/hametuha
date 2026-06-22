@@ -51,7 +51,7 @@ jobs:
           node-version: '16'
 
       - name: Install Dependencies
-        run: npm install && composer install
+        run: npm ci && composer install
         working-directory: themes/hametuha
 
       - name: Build Assets
