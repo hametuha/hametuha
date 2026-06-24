@@ -500,15 +500,15 @@
         },
         {
             "name": "wpackagist-plugin/hameslack",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/hameslack/",
-                "reference": "tags/2.1.0"
+                "reference": "tags/2.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/hameslack.2.1.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/hameslack.2.2.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
