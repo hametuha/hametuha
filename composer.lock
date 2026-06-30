@@ -392,15 +392,15 @@
         },
         {
             "name": "wpackagist-plugin/duplicate-post",
-            "version": "4.5",
+            "version": "4.6",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/duplicate-post/",
-                "reference": "tags/4.5"
+                "reference": "tags/4.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/duplicate-post.4.5.zip"
+                "url": "https://downloads.wordpress.org/plugin/duplicate-post.4.6.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
