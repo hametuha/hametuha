@@ -139,7 +139,7 @@ class SeriesList extends SeriesBase {
 		$override = esc_attr( get_post_meta( $post->ID, '_series_override', true ) );
 		$date     = mysql2date( get_option( 'date_format' ), $post->post_date );
 		$author   = esc_html( get_the_author_meta( 'display_name', $post->post_author ) );
-		$edit_url = get_edit_post_link( $post->ID );
+		$edit_url = esc_url( get_edit_post_link( $post->ID ) );
 		$permalink = esc_url( get_permalink( $post ) );
 		return <<<HTML
 		<li>
