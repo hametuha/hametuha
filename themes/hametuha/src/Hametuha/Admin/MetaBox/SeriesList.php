@@ -140,7 +140,7 @@ class SeriesList extends SeriesBase {
 		$date     = mysql2date( get_option( 'date_format' ), $post->post_date );
 		$author   = esc_html( get_the_author_meta( 'display_name', $post->post_author ) );
 		$edit_url = get_edit_post_link( $post->ID );
-		$permalink = get_permalink( $post );
+		$permalink = esc_url( get_permalink( $post ) );
 		return <<<HTML
 		<li>
 			<input type="hidden" name="series_order[{$post->ID}]" value="{$post->menu_order}" />
