@@ -139,13 +139,15 @@ class SeriesList extends SeriesBase {
 		$override = esc_attr( get_post_meta( $post->ID, '_series_override', true ) );
 		$date     = mysql2date( get_option( 'date_format' ), $post->post_date );
 		$author   = esc_html( get_the_author_meta( 'display_name', $post->post_author ) );
-		$edit_url = get_edit_post_link( $post->ID );
+		$edit_url = esc_url( get_edit_post_link( $post->ID ) );
+		$permalink = esc_url( get_permalink( $post ) );
 		return <<<HTML
 		<li>
 			<input type="hidden" name="series_order[{$post->ID}]" value="{$post->menu_order}" />
 			<strong class="series-title">{$title}</strong>
 			<span class="author-name">{$author}</span>
 			<span class="series-date">（{$date}）</span>
+			<a href="{$permalink}" target="_blank">表示</a> |
 			<a href="{$edit_url}" target="_blank">編集</a> |
 			<a href="#" data-id="{$post->ID}" class="button--delete">除外</a>
 			<br />
