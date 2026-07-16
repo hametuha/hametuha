@@ -258,7 +258,9 @@ class Post extends Command {
 				if ( empty( $content ) ) {
 					continue;
 				}
-				$content_post = new \WP_Post( (object) [ 'post_content' => $content ] );
+				// filter=raw を指定しないと get_post() が sanitize_post() 経由で false を返し、
+				// 序文・あとがきの内容が失われる（ID を持たない合成 WP_Post のため）。
+				$content_post = new \WP_Post( (object) [ 'post_content' => $content, 'filter' => 'raw' ] );
 				switch ( $format ) {
 					case 'text':
 						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post );
