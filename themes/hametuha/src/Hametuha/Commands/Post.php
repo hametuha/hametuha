@@ -173,13 +173,31 @@ class Post extends Command {
 						file_put_contents( "{$dir}/post-{$post->ID}-captions.json", json_encode( $json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 					}
 
+					// 本文中のリンクを脚注参照へ変換し、URL を脚注として書き出せるようにする。
+					// キャプションは to_text() と同じ正規表現で先に除去しておき、
+					// キャプション内リンクが本文に現れない脚注として混入するのを防ぐ（連番のズレ防止）。
+					$content_source            = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $post->post_content );
+					$content_with_notes        = $this->inject_link_footernotes( $content_source );
+					$has_link_notes            = ( $content_with_notes !== $content_source );
+					$export_post               = clone $post;
+					$export_post->post_content = $content_with_notes;
+
 					// Post content.
-					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post, $endmark );
+					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $export_post, $endmark );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					// Footernotes.
+					if ( $has_link_notes && get_post_meta( $post->ID, '_footernotes', true ) ) {
+						// リンク脚注と手動メタ脚注は同一連番へ統合できないため、本文から脚注リストを再生成する。
+						// ID を持たない合成 WP_Post を渡すことで get_post_meta() が空になり、
+						// hametuha_get_footer_notes() が本文の脚注参照から自動生成する。
+						self::l( sprintf( '  #%d: リンク脚注のため _footernotes メタを無視し、本文から脚注を再生成しました。', $post->ID ) );
+						$note_post = new \WP_Post( (object) [ 'post_content' => $content_with_notes, 'filter' => 'raw' ] );
+					} else {
+						$note_post = $export_post;
+					}
 					ob_start();
-					hametuha_footer_notes( '<aside>', '</aside>', '', $post );
+					hametuha_footer_notes( '<aside>', '</aside>', '', $note_post );
 					$footernote = trim( ob_get_contents() );
 					ob_end_clean();
 					if ( $footernote ) {
@@ -321,8 +339,10 @@ class Post extends Command {
 		// Fix double space.
 		$content = str_replace( "\r\n", "\n", $post->post_content );
 		$content = str_replace( "\n\n", "\n", $content );
-		// Remove Image and link
-		// TODO: link should be saved as footernote.
+		// Remove residual images and links.
+		// リンクは text 書き出し時に compile() 内で inject_link_footernotes() により
+		// 脚注参照へ変換済み。ここは変換対象外（序文・あとがき等）に残ったリンクを
+		// テキストのみ残す従来のフォールバック。
 		$content = preg_replace( '#<a[^>]+>(.*?)</a>#u', '$1', $content );
 		$content = preg_replace( '#<img[^>]+>#u', '', $content );
 		$content = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $content );
@@ -408,6 +428,34 @@ class Post extends Command {
 				return '<ParaStyle:Normal>' . $line;
 			}
 		}, explode( "\n", $content ) ) );
+	}
+
+	/**
+	 * 本文中のリンクを脚注参照へ変換する。
+	 *
+	 * `<a href="URL">text</a>` を `text<small class="footernote-ref">URL</small>` に変換し、
+	 * 既存の脚注機能と同じ経路（to_text() の本文側 *N と hametuha_get_footer_notes() のリスト側）を
+	 * 通すことで、リンクと脚注が文書順で一貫した連番になるようにする。
+	 *
+	 * @param string $content 変換対象の本文。
+	 * @return string リンクを脚注参照へ変換した本文。
+	 */
+	protected function inject_link_footernotes( $content ) {
+		return preg_replace_callback( '#<a\s([^>]*?)>(.*?)</a>#us', function ( $matches ) {
+			list( , $attributes, $text ) = $matches;
+			if ( ! preg_match( '#href\s*=\s*(["\'])(.*?)\1#u', $attributes, $href_match ) ) {
+				// href の無いアンカーはテキストのみ残す（従来挙動）。
+				return $text;
+			}
+			$url = trim( $href_match[2] );
+			// 内部アンカー（#foo）や空 URL は脚注化せずテキストのみ残す。
+			if ( '' === $url || '#' === $url[0] ) {
+				return $text;
+			}
+			// URL 内の & 等を XML 安全にエスケープしてから脚注参照へ埋め込む。
+			$url = htmlspecialchars( $url, ENT_QUOTES | ENT_XML1, 'UTF-8' );
+			return $text . sprintf( '<small class="footernote-ref">%s</small>', $url );
+		}, $content );
 	}
 
 	/**

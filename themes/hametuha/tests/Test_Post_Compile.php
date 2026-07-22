@@ -31,6 +31,11 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	protected $to_text;
 
 	/**
+	 * @var ReflectionMethod
+	 */
+	protected $inject;
+
+	/**
 	 * Set up
 	 */
 	public function setUp(): void {
@@ -38,6 +43,18 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		$this->command = new \Hametuha\Commands\Post();
 		$this->to_text = new ReflectionMethod( $this->command, 'to_text' );
 		$this->to_text->setAccessible( true );
+		$this->inject = new ReflectionMethod( $this->command, 'inject_link_footernotes' );
+		$this->inject->setAccessible( true );
+	}
+
+	/**
+	 * inject_link_footernotes() を呼び出す。
+	 *
+	 * @param string $html
+	 * @return string
+	 */
+	protected function inject( $html ) {
+		return $this->inject->invoke( $this->command, $html );
 	}
 
 	/**
@@ -96,5 +113,84 @@ class Test_Post_Compile extends WP_UnitTestCase {
 
 		// 現状は変換されず、生タグが残る（＝BlockQuote 段落スタイルにならない）
 		$this->assertStringNotContainsString( '<ParaStyle:BlockQuote>', $result );
+	}
+
+	/**
+	 * リンクがアンカーテキスト＋脚注参照マーカーへ変換されること。
+	 */
+	public function test_link_becomes_footernote_ref() {
+		$html   = '<a href="https://example.com/foo">破滅派</a>を参照。';
+		$result = $this->inject( $html );
+
+		$this->assertSame(
+			'破滅派<small class="footernote-ref">https://example.com/foo</small>を参照。',
+			$result
+		);
+	}
+
+	/**
+	 * URL 内の & が XML 安全にエスケープされること。
+	 */
+	public function test_link_url_is_xml_escaped() {
+		$html   = '<a href="https://example.com/?a=1&b=2" target="_blank" rel="nofollow">記事</a>';
+		$result = $this->inject( $html );
+
+		$this->assertStringContainsString(
+			'<small class="footernote-ref">https://example.com/?a=1&amp;b=2</small>',
+			$result
+		);
+	}
+
+	/**
+	 * 内部アンカー（#foo）や href の無いリンクはテキストのみ残し、脚注化しないこと。
+	 */
+	public function test_internal_and_hrefless_links_are_not_footernoted() {
+		$this->assertSame( '目次へ', $this->inject( '<a href="#toc">目次へ</a>' ) );
+		$this->assertSame( '名前', $this->inject( '<a name="anchor">名前</a>' ) );
+	}
+
+	/**
+	 * リンク由来の脚注が to_text() で *N に変換され、本文に脚注参照が出ること。
+	 */
+	public function test_link_footernote_appears_in_text_body() {
+		$html   = '<a href="https://example.com/">リンク</a>のテスト。';
+		$post   = new WP_Post( (object) [ 'post_content' => $this->inject( $html ), 'filter' => 'raw' ] );
+		$result = $this->to_text->invoke( $this->command, $post );
+
+		// アンカーテキストは残り、URL は *1 の脚注参照になる。
+		$this->assertStringContainsString( 'リンク<CharStyle:FooterNoteRef>*1<CharStyle:>', $result );
+		// 生のリンクタグや URL は本文に残らない。
+		$this->assertStringNotContainsString( '<a ', $result );
+		$this->assertStringNotContainsString( 'https://example.com', $result );
+	}
+
+	/**
+	 * 既存の脚注とリンク脚注が文書順で一貫した連番になり、
+	 * 本文の *N と脚注リストの項目数・順序が一致すること（整合性の核）。
+	 */
+	public function test_existing_footernote_and_link_share_sequential_numbering() {
+		$html = implode( '', [
+			'序文。<small class="footernote-ref">これは既存の脚注</small>',
+			'途中に<a href="https://example.com/link">リンク</a>があり、',
+			'最後にもう一つ<small class="footernote-ref">二つ目の脚注</small>。',
+		] );
+
+		$injected = $this->inject( $html );
+		$post     = new WP_Post( (object) [ 'post_content' => $injected, 'filter' => 'raw' ] );
+
+		// 本文側: 文書順で *1（既存脚注）→ *2（リンク）→ *3（既存脚注）。
+		$body = $this->to_text->invoke( $this->command, $post );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>', $body );
+		$this->assertStringContainsString( 'リンク<CharStyle:FooterNoteRef>*2<CharStyle:>', $body );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*3<CharStyle:>', $body );
+
+		// リスト側: 同じ文書順で 3 項目生成され、2 番目にリンク URL が入る。
+		$notes = hametuha_get_footer_notes( $post );
+		$this->assertStringContainsString( 'id="footernote-1"', $notes );
+		$this->assertStringContainsString( 'これは既存の脚注', $notes );
+		$this->assertStringContainsString( 'id="footernote-2"', $notes );
+		$this->assertStringContainsString( 'https://example.com/link', $notes );
+		$this->assertStringContainsString( 'id="footernote-3"', $notes );
+		$this->assertStringContainsString( '二つ目の脚注', $notes );
 	}
 }
