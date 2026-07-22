@@ -173,19 +173,32 @@ class Post extends Command {
 						file_put_contents( "{$dir}/post-{$post->ID}-captions.json", json_encode( $json, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 					}
 
+					// 本文中のリンクを脚注参照へ変換し、URL を脚注として書き出せるようにする。
+					// キャプションは to_text() と同じ正規表現で先に除去しておき、
+					// キャプション内リンクが本文に現れない脚注として混入するのを防ぐ（連番のズレ防止）。
+					$content_source            = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $post->post_content );
+					$content_with_notes        = $this->inject_link_footernotes( $content_source );
+					$has_link_notes            = ( $content_with_notes !== $content_source );
+					$export_post               = clone $post;
+					$export_post->post_content = $content_with_notes;
+
 					// Post content.
-					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $post, $endmark );
+					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $export_post, $endmark );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					// Footernotes.
-					ob_start();
-					hametuha_footer_notes( '<aside>', '</aside>', '', $post );
-					$footernote = trim( ob_get_contents() );
-					ob_end_clean();
+					if ( $has_link_notes && get_post_meta( $post->ID, '_footernotes', true ) ) {
+						// リンク脚注と手動メタ脚注は同一連番へ統合できないため、本文から脚注リストを再生成する。
+						// ID を持たない合成 WP_Post を渡すことで get_post_meta() が空になり、
+						// hametuha_get_footer_notes() が本文の脚注参照から自動生成する。
+						self::l( sprintf( '  #%d: リンク脚注のため _footernotes メタを無視し、本文から脚注を再生成しました。', $post->ID ) );
+						$note_post = new \WP_Post( (object) [ 'post_content' => $content_with_notes, 'filter' => 'raw' ] );
+					} else {
+						$note_post = $export_post;
+					}
+					$footernote = $this->to_footernote_text( $note_post );
 					if ( $footernote ) {
-						// Remove footer note link.
-						$footernote = preg_replace( '#<a class="footernote-link"[^>]+>(.*?)</a>#u', '', $footernote );
-						file_put_contents( "{$dir}/post-{$post->ID}-footernote.xml", '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" . $footernote );
+						file_put_contents( "{$dir}/post-{$post->ID}-footernote.txt", mb_convert_encoding( str_replace( "\n", "\r", $footernote ), 'UTF-16BE', 'utf-8' ) );
 					}
 					// Excerpt.
 					if ( ! empty( $post->post_excerpt ) ) {
@@ -321,8 +334,10 @@ class Post extends Command {
 		// Fix double space.
 		$content = str_replace( "\r\n", "\n", $post->post_content );
 		$content = str_replace( "\n\n", "\n", $content );
-		// Remove Image and link
-		// TODO: link should be saved as footernote.
+		// Remove residual images and links.
+		// リンクは text 書き出し時に compile() 内で inject_link_footernotes() により
+		// 脚注参照へ変換済み。ここは変換対象外（序文・あとがき等）に残ったリンクを
+		// テキストのみ残す従来のフォールバック。
 		$content = preg_replace( '#<a[^>]+>(.*?)</a>#u', '$1', $content );
 		$content = preg_replace( '#<img[^>]+>#u', '', $content );
 		$content = preg_replace( '#\[caption.*].*?\[/caption]#u', '', $content );
@@ -341,25 +356,8 @@ class Post extends Command {
 			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
 		}, $content );
 
-		// Inline elements.
-		foreach ( [
-			'#<strong>(.*?)</strong>#u'              => '<CharStyle:Strong>$1<CharStyle:>',
-			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
-			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
-			'#<s>(.*?)</s>#u'                        => '<CharStyle:Strike>$1<CharStyle:>',
-			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
-			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
-			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
-			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
-			'#<small>([^<]+)</small>#u'              => '〔<CharStyle:Notes>$1<CharStyle:>〕',
-		] as $regexp => $converted ) {
-			$content = preg_replace( $regexp, $converted, $content );
-		}
-
-		// Convert Dashes.
-		foreach ( [ '—', '―' ] as $char ) {
-			$content = str_replace( $char . $char, sprintf( '<CharStyle:Dash>%s<CharStyle:>', '―' ), $content );
-		}
+		// Inline elements and dashes.
+		$content = $this->apply_inline_styles( $content );
 
 		// UL, OL
 		foreach ( [
@@ -408,6 +406,101 @@ class Post extends Command {
 				return '<ParaStyle:Normal>' . $line;
 			}
 		}, explode( "\n", $content ) ) );
+	}
+
+	/**
+	 * インライン装飾（strong/em/ruby など）を InDesign 文字スタイルへ変換する。
+	 *
+	 * 本文（to_text）と脚注（to_footernote_text）の双方から利用する。
+	 *
+	 * @param string $content 変換対象。
+	 * @return string 文字スタイル変換後の文字列。
+	 */
+	protected function apply_inline_styles( $content ) {
+		// Inline elements.
+		foreach ( [
+			'#<strong>(.*?)</strong>#u'              => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
+			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<s>(.*?)</s>#u'                        => '<CharStyle:Strike>$1<CharStyle:>',
+			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
+			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
+			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
+			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<small>([^<]+)</small>#u'              => '〔<CharStyle:Notes>$1<CharStyle:>〕',
+		] as $regexp => $converted ) {
+			$content = preg_replace( $regexp, $converted, $content );
+		}
+		// Convert Dashes.
+		foreach ( [ '—', '―' ] as $char ) {
+			$content = str_replace( $char . $char, sprintf( '<CharStyle:Dash>%s<CharStyle:>', '―' ), $content );
+		}
+		return $content;
+	}
+
+	/**
+	 * 脚注を InDesign タグ付きテキストとして生成する。
+	 *
+	 * hametuha_footer_notes() が生成する脚注 HTML（自動生成・_footernotes メタ双方に対応）を
+	 * 解析し、各項目を `<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*N<CharStyle:>本文` の
+	 * 1 行に変換する。本文の *N と番号が一致する。脚注が無ければ空文字を返す。
+	 *
+	 * @param int|\WP_Post $note_post 脚注生成に使う投稿。
+	 * @return string タグ付きテキスト（<UNICODE-MAC> ヘッダ付き）。脚注が無ければ空文字。
+	 */
+	protected function to_footernote_text( $note_post ) {
+		ob_start();
+		hametuha_footer_notes( '', '', '', $note_post );
+		$html = trim( ob_get_clean() );
+		if ( '' === $html || ! preg_match_all( '#<li[^>]*>(.*?)</li>#us', $html, $matches ) ) {
+			return '';
+		}
+		$lines = [];
+		foreach ( $matches[1] as $index => $item ) {
+			// 「N. 」の戻りリンクを除去。
+			$item = preg_replace( '#<a class="footernote-link"[^>]*>.*?</a>#us', '', $item );
+			// 残ったリンクはテキストのみ残す。
+			$item = preg_replace( '#<a[^>]+>(.*?)</a>#us', '$1', $item );
+			// インライン装飾を InDesign 文字スタイルへ。
+			$item = $this->apply_inline_styles( $item );
+			// 未変換の HTML タグ（<p> 等）を除去。InDesign タグ（CharStyle/ParaStyle 等）は残す。
+			$item = preg_replace( '#</?(?!CharStyle|ParaStyle|cMojiRuby|cRubyString|cRuby)[a-zA-Z][^>]*>#u', '', $item );
+			// エンティティを実体へ戻し、空白・改行を整理。
+			$item = trim( preg_replace( '#\s+#u', ' ', html_entity_decode( $item, ENT_QUOTES, 'UTF-8' ) ) );
+			if ( '' === $item ) {
+				continue;
+			}
+			$lines[] = sprintf( '<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*%d<CharStyle:>%s', $index + 1, $item );
+		}
+		return empty( $lines ) ? '' : "<UNICODE-MAC>\n" . implode( "\n", $lines );
+	}
+
+	/**
+	 * 本文中のリンクを脚注参照へ変換する。
+	 *
+	 * `<a href="URL">text</a>` を `text<small class="footernote-ref">URL</small>` に変換し、
+	 * 既存の脚注機能と同じ経路（to_text() の本文側 *N と hametuha_get_footer_notes() のリスト側）を
+	 * 通すことで、リンクと脚注が文書順で一貫した連番になるようにする。
+	 *
+	 * @param string $content 変換対象の本文。
+	 * @return string リンクを脚注参照へ変換した本文。
+	 */
+	protected function inject_link_footernotes( $content ) {
+		return preg_replace_callback( '#<a\s([^>]*?)>(.*?)</a>#us', function ( $matches ) {
+			list( , $attributes, $text ) = $matches;
+			if ( ! preg_match( '#href\s*=\s*(["\'])(.*?)\1#u', $attributes, $href_match ) ) {
+				// href の無いアンカーはテキストのみ残す（従来挙動）。
+				return $text;
+			}
+			$url = trim( $href_match[2] );
+			// 内部アンカー（#foo）や空 URL は脚注化せずテキストのみ残す。
+			if ( '' === $url || '#' === $url[0] ) {
+				return $text;
+			}
+			// URL 内の & 等を XML 安全にエスケープしてから脚注参照へ埋め込む。
+			$url = htmlspecialchars( $url, ENT_QUOTES | ENT_XML1, 'UTF-8' );
+			return $text . sprintf( '<small class="footernote-ref">%s</small>', $url );
+		}, $content );
 	}
 
 	/**
