@@ -1,0 +1,14 @@
+# Snyk (https://snyk.io) policy file
+version: v1.5.0
+ignore:
+  # CVE-2023-22622: wp-cron.php を悪用した DoS。全バージョン該当・修正版なし（won't-fix）。
+  # 本番は DISABLE_WP_CRON 済み＋crontab運用で、nginx/edge で /wp-cron.php への
+  # 直接アクセスをブロックして緩和する。インフラ側対応: hametuha/hametuha-infra#19
+  SNYK-PHP-JOHNPBLOCHWORDPRESSCORE-3225115:
+    - '*':
+        reason: >-
+          CVE-2023-22622 (wp-cron.php DoS). No fixed version exists; mitigated at
+          the server/edge layer by blocking direct access to wp-cron.php.
+          Tracking: hametuha/hametuha-infra#19
+        expires: 2027-07-23T00:00:00.000Z
+patch: {}

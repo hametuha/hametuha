@@ -35,7 +35,7 @@
 	],
 	"require": {
 		"php": ">=7.4",
-		"johnpbloch/wordpress": "6.8.3",
+		"johnpbloch/wordpress": "6.8.6",
 		"composer/installers": "^2.0",
 		"hametuha/hamethread": "dev-master",
 		"hametuha/related-ad-patch": "dev-main",

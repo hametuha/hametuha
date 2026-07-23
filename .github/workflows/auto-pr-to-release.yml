@@ -34,17 +34,3 @@ jobs:
             *このPRは master ブランチへの push をトリガーにして自動生成されています。*
           pr_label: "deploy"
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  vulnerability:
-    name: Check Vulnerability
-    runs-on: ubuntu-latest
-    continue-on-error: true  # 脆弱性チェックの失敗を許可（WordPress 6.1.7の既知の問題）
-    steps:
-      - uses: actions/checkout@main
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/php@master
-        with:
-          args: --all-projects
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}
