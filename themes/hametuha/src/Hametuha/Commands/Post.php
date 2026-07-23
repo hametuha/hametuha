@@ -15,6 +15,13 @@ class Post extends Command {
 	const COMMAND_NAME = 'hampost';
 
 	/**
+	 * 本文注番号のデフォルト書式（sprintf）。
+	 *
+	 * 縦書きでは半角アスタリスクが正しく反応しないため、全角アスタリスクを既定とする。
+	 */
+	const DEFAULT_NOTE_FORMAT = '＊%d';
+
+	/**
 	 * Show statistic for specific condition
 	 *
 	 * ## OPTIONS
@@ -84,7 +91,11 @@ class Post extends Command {
 	 * : [--endmark-string=<endmark-string>]
 	 *   Set to change default endmark "——了"
 	 *
-	 * @synopsis <taxonomy> <term> [--format=<format>] [--endmark] [--endmark-string=<endmark-string>]
+	 * : [--note-format=<note-format>]
+	 *   text 書き出し時の注番号の sprintf 書式。%d が番号に置換される。
+	 *   既定は "＊%d"（全角アスタリスク）。例: "［%d］", "†%d"
+	 *
+	 * @synopsis <taxonomy> <term> [--format=<format>] [--endmark] [--endmark-string=<endmark-string>] [--note-format=<note-format>]
 	 * @param array $args
 	 * @param array $assoc
 	 */
@@ -93,6 +104,11 @@ class Post extends Command {
 		$format                     = $assoc['format'] ?? 'xml';
 		if ( ! in_array( $format, [ 'xml', 'text', 'plain', 'tags', 'csv' ] ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
+		}
+		// 注番号の書式（text 書き出しで使用）。%d が番号に置換される。
+		$note_format = $assoc['note-format'] ?? self::DEFAULT_NOTE_FORMAT;
+		if ( ! preg_match( '/%[\'\-0-9.]*d/', $note_format ) ) {
+			self::e( sprintf( 'Note format "%s" must contain a %%d placeholder (e.g. ＊%%d, ［%%d］).', $note_format ) );
 		}
 		// End mark.
 		$endmark = ! empty( $assoc['endmark'] ) ? '<p style="text-align: right">——了</p>' : '';
@@ -183,7 +199,7 @@ class Post extends Command {
 					$export_post->post_content = $content_with_notes;
 
 					// Post content.
-					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $export_post, $endmark );
+					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $export_post, $endmark, $note_format );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
 					// Footernotes.
@@ -196,7 +212,7 @@ class Post extends Command {
 					} else {
 						$note_post = $export_post;
 					}
-					$footernote = $this->to_footernote_text( $note_post );
+					$footernote = $this->to_footernote_text( $note_post, $note_format );
 					if ( $footernote ) {
 						file_put_contents( "{$dir}/post-{$post->ID}-footernote.txt", mb_convert_encoding( str_replace( "\n", "\r", $footernote ), 'UTF-16BE', 'utf-8' ) );
 					}
@@ -276,7 +292,7 @@ class Post extends Command {
 				$content_post = new \WP_Post( (object) [ 'post_content' => $content, 'filter' => 'raw' ] );
 				switch ( $format ) {
 					case 'text':
-						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post );
+						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post, '', $note_format );
 						file_put_contents( "{$dir}/series-{$label}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 						self::l( sprintf( 'series %s saved.', $label ) );
 						break;
@@ -324,12 +340,13 @@ class Post extends Command {
 	/**
 	 * Get tagged text for InDesign.
 	 *
-	 * @param null|int|\WP_Post $post    Post object to compile.
-	 * @param string            $endmark Add endmark if set.
+	 * @param null|int|\WP_Post $post        Post object to compile.
+	 * @param string            $endmark     Add endmark if set.
+	 * @param string            $note_format 注番号の sprintf 書式（%d が番号に置換される）。
 	 *
 	 * @return string
 	 */
-	protected function to_text( $post = null, $endmark = '' ) {
+	protected function to_text( $post = null, $endmark = '', $note_format = self::DEFAULT_NOTE_FORMAT ) {
 		$post = get_post( $post );
 		// Fix double space.
 		$content = str_replace( "\r\n", "\n", $post->post_content );
@@ -351,14 +368,15 @@ class Post extends Command {
 		}
 		// Convert Footernote.
 		// InDesign では文字スタイルだけの注番号を組版上の注番号にできないため、
-		// 半角スペースを親文字（FooterNoteRef で圧縮）にし、注番号 *N をそのルビとして付ける。
+		// 半角スペースを親文字（FooterNoteRef で圧縮）にし、注番号をそのルビとして付ける。
 		// こうすると前後の文脈に依存せず、リンク由来・通常脚注のどちらも同一形式で確実に出せる。
+		// 注番号の見た目（＊/［］/ダガー等）は $note_format で切り替えられる。
 		$note_id = 0;
-		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id ) {
+		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id, $note_format ) {
 			$note_id++;
 			return sprintf(
-				'<cMojiRuby:0><cRuby:1><cRubyString:*%d><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
-				$note_id
+				'<cMojiRuby:0><cRuby:1><cRubyString:%s><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+				sprintf( $note_format, $note_id )
 			);
 		}, $content );
 
@@ -448,13 +466,15 @@ class Post extends Command {
 	 * 脚注を InDesign タグ付きテキストとして生成する。
 	 *
 	 * hametuha_footer_notes() が生成する脚注 HTML（自動生成・_footernotes メタ双方に対応）を
-	 * 解析し、各項目を `<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*N<CharStyle:>本文` の
-	 * 1 行に変換する。本文の *N と番号が一致する。脚注が無ければ空文字を返す。
+	 * 解析し、各項目を `<ParaStyle:FooterNote><CharStyle:FooterNoteRef>{注番号}<CharStyle:>本文` の
+	 * 1 行に変換する。注番号は本文側と同じ $note_format を使うため見た目が一致する。
+	 * 脚注が無ければ空文字を返す。
 	 *
-	 * @param int|\WP_Post $note_post 脚注生成に使う投稿。
+	 * @param int|\WP_Post $note_post   脚注生成に使う投稿。
+	 * @param string       $note_format 注番号の sprintf 書式（%d が番号に置換される）。
 	 * @return string タグ付きテキスト（<UNICODE-MAC> ヘッダ付き）。脚注が無ければ空文字。
 	 */
-	protected function to_footernote_text( $note_post ) {
+	protected function to_footernote_text( $note_post, $note_format = self::DEFAULT_NOTE_FORMAT ) {
 		ob_start();
 		hametuha_footer_notes( '', '', '', $note_post );
 		$html = trim( ob_get_clean() );
@@ -476,7 +496,7 @@ class Post extends Command {
 			if ( '' === $item ) {
 				continue;
 			}
-			$lines[] = sprintf( '<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*%d<CharStyle:>%s', $index + 1, $item );
+			$lines[] = sprintf( '<ParaStyle:FooterNote><CharStyle:FooterNoteRef>%s<CharStyle:>%s', sprintf( $note_format, $index + 1 ), $item );
 		}
 		return empty( $lines ) ? '' : "<UNICODE-MAC>\n" . implode( "\n", $lines );
 	}

@@ -57,12 +57,17 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	/**
 	 * 本文（リンク変換済み）から脚注タグ付きテキストを生成する。
 	 *
-	 * @param string $html 変換前の本文 HTML。
+	 * @param string      $html   変換前の本文 HTML。
+	 * @param string|null $format 注番号書式（null で既定）。
 	 * @return string
 	 */
-	protected function footernote_text( $html ) {
+	protected function footernote_text( $html, $format = null ) {
 		$post = new WP_Post( (object) [ 'post_content' => $this->inject( $html ), 'filter' => 'raw' ] );
-		return $this->footernote->invoke( $this->command, $post );
+		$args = [ $this->command, $post ];
+		if ( null !== $format ) {
+			$args[] = $format;
+		}
+		return $this->footernote->invokeArgs( $this->command, array_slice( $args, 1 ) );
 	}
 
 	/**
@@ -88,6 +93,18 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		// compile() の序文パスと同じ形（filter=raw で合成 WP_Post を作る）。
 		$post = new WP_Post( (object) [ 'post_content' => $html, 'filter' => 'raw' ] );
 		return $this->to_text->invoke( $this->command, $post );
+	}
+
+	/**
+	 * 注番号書式を指定して to_text() に通す。
+	 *
+	 * @param string $html
+	 * @param string $format 注番号書式。
+	 * @return string
+	 */
+	protected function convert_with_format( $html, $format ) {
+		$post = new WP_Post( (object) [ 'post_content' => $this->inject( $html ), 'filter' => 'raw' ] );
+		return $this->to_text->invoke( $this->command, $post, '', $format );
 	}
 
 	/**
@@ -188,10 +205,10 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	 * @param int $n 注番号。
 	 * @return string
 	 */
-	protected function body_ref( $n ) {
+	protected function body_ref( $n, $format = '＊%d' ) {
 		return sprintf(
-			'<cMojiRuby:0><cRuby:1><cRubyString:*%d><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
-			$n
+			'<cMojiRuby:0><cRuby:1><cRubyString:%s><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+			sprintf( $format, $n )
 		);
 	}
 
@@ -235,9 +252,10 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		$post   = new WP_Post( (object) [ 'post_content' => $html, 'filter' => 'raw' ] );
 		$result = $this->to_text->invoke( $this->command, $post );
 
-		// 親文字＝半角スペース、ルビ＝*1。
+		// 親文字＝半角スペース、ルビ＝＊1（既定書式）。
 		$this->assertStringContainsString( '本文' . $this->body_ref( 1 ), $result );
-		// 旧形式（文字スタイルのみの注番号）は残らない。
+		// 本文はルビ形式で出るため、文字スタイルのみの平坦な注番号は残らない。
+		$this->assertStringNotContainsString( '<CharStyle:FooterNoteRef>＊1<CharStyle:>', $result );
 		$this->assertStringNotContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>', $result );
 	}
 
@@ -251,7 +269,7 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		// タグ付きテキストのヘッダが付く。
 		$this->assertStringStartsWith( '<UNICODE-MAC>', $result );
 		// 段落スタイル + 脚注参照 + 本文。
-		$this->assertStringContainsString( '<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*1<CharStyle:>これは脚注', $result );
+		$this->assertStringContainsString( '<ParaStyle:FooterNote><CharStyle:FooterNoteRef>＊1<CharStyle:>これは脚注', $result );
 		// XML の痕跡は残らない。
 		$this->assertStringNotContainsString( '<?xml', $result );
 		$this->assertStringNotContainsString( '<li', $result );
@@ -267,7 +285,7 @@ class Test_Post_Compile extends WP_UnitTestCase {
 
 		// & はエスケープされず実体に戻り、URL がそのまま脚注本文になる。
 		$this->assertStringContainsString(
-			'<ParaStyle:FooterNote><CharStyle:FooterNoteRef>*1<CharStyle:>https://example.com/?a=1&b=2',
+			'<ParaStyle:FooterNote><CharStyle:FooterNoteRef>＊1<CharStyle:>https://example.com/?a=1&b=2',
 			$result
 		);
 	}
@@ -295,9 +313,9 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		] );
 		$result = $this->footernote_text( $html );
 
-		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>一', $result );
-		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*2<CharStyle:>https://example.com/x', $result );
-		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*3<CharStyle:>三', $result );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>＊1<CharStyle:>一', $result );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>＊2<CharStyle:>https://example.com/x', $result );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>＊3<CharStyle:>三', $result );
 	}
 
 	/**
@@ -305,5 +323,39 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	 */
 	public function test_no_footernote_returns_empty() {
 		$this->assertSame( '', $this->footernote_text( '脚注もリンクも無い本文。' ) );
+	}
+
+	/**
+	 * 既定の注番号書式が全角アスタリスクであること（縦書き対応）。
+	 */
+	public function test_default_note_format_is_fullwidth_asterisk() {
+		$body = $this->convert( '本文<small class="footernote-ref">脚注</small>。' );
+		$this->assertStringContainsString( '<cRubyString:＊1>', $body );
+		// 半角アスタリスクは使わない。
+		$this->assertStringNotContainsString( '<cRubyString:*1>', $body );
+	}
+
+	/**
+	 * --note-format 相当の書式指定が本文・脚注リストの双方に反映されること。
+	 */
+	public function test_note_format_option_applies_to_body_and_list() {
+		$html = '本文<small class="footernote-ref">脚注</small>。';
+
+		// 本文側: ルビが ［1］ になる。
+		$body = $this->convert_with_format( $html, '［%d］' );
+		$this->assertStringContainsString( $this->body_ref( 1, '［%d］' ), $body );
+		$this->assertStringContainsString( '<cRubyString:［1］>', $body );
+
+		// 脚注リスト側: 同じ書式で番号が出る。
+		$notes = $this->footernote_text( $html, '［%d］' );
+		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>［1］<CharStyle:>脚注', $notes );
+	}
+
+	/**
+	 * ダガー等の任意記号も書式指定できること。
+	 */
+	public function test_note_format_supports_arbitrary_symbol() {
+		$body = $this->convert_with_format( '本文<small class="footernote-ref">脚注</small>。', '†%d' );
+		$this->assertStringContainsString( '<cRubyString:†1>', $body );
 	}
 }
