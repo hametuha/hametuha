@@ -34,17 +34,3 @@ jobs:
             *このPRは master ブランチへの push をトリガーにして自動生成されています。*
           pr_label: "deploy"
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-  vulnerability:
-    name: Check Vulnerability
-    runs-on: ubuntu-latest
-    continue-on-error: true  # Snykの結果は情報提供のみとし、CIをブロックしない（推移的依存の未修正Lowなどを許容するため）
-    steps:
-      - uses: actions/checkout@main
-
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/php@master
-        with:
-          args: --all-projects
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}

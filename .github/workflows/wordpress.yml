@@ -57,6 +57,22 @@ jobs:
         run: npm run package
         working-directory: themes/hametuha
 
+  vulnerability:
+    name: Check Vulnerability
+    runs-on: ubuntu-latest
+    # TODO: 脆弱性ゼロ（オールグリーン）を達成したら status-check の needs に追加し、
+    #       continue-on-error を外してマージゲート化する。
+    continue-on-error: true  # 当面は情報提供のみとし、CIをブロックしない
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/php@master
+        with:
+          args: --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN_FUMIKITO }}
+
   status-check:
     name: Status Check
     needs: [asset, test]
