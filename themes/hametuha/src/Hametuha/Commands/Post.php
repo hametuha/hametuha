@@ -350,10 +350,16 @@ class Post extends Command {
 			$content .= "\n" . $endmark;
 		}
 		// Convert Footernote.
+		// InDesign では文字スタイルだけの注番号を組版上の注番号にできないため、
+		// 半角スペースを親文字（FooterNoteRef で圧縮）にし、注番号 *N をそのルビとして付ける。
+		// こうすると前後の文脈に依存せず、リンク由来・通常脚注のどちらも同一形式で確実に出せる。
 		$note_id = 0;
 		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id ) {
 			$note_id++;
-			return sprintf( '<CharStyle:FooterNoteRef>*%d<CharStyle:>', $note_id );
+			return sprintf(
+				'<cMojiRuby:0><cRuby:1><cRubyString:*%d><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+				$note_id
+			);
 		}, $content );
 
 		// Inline elements and dashes.

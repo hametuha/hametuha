@@ -175,11 +175,24 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		$post   = new WP_Post( (object) [ 'post_content' => $this->inject( $html ), 'filter' => 'raw' ] );
 		$result = $this->to_text->invoke( $this->command, $post );
 
-		// アンカーテキストは残り、URL は *1 の脚注参照になる。
-		$this->assertStringContainsString( 'リンク<CharStyle:FooterNoteRef>*1<CharStyle:>', $result );
+		// アンカーテキストは残り、URL は *1 の注番号（半角スペース親文字＋ルビ）になる。
+		$this->assertStringContainsString( 'リンク' . $this->body_ref( 1 ), $result );
 		// 生のリンクタグや URL は本文に残らない。
 		$this->assertStringNotContainsString( '<a ', $result );
 		$this->assertStringNotContainsString( 'https://example.com', $result );
+	}
+
+	/**
+	 * 本文中に出力される注番号（半角スペースを親文字にしたルビ）の期待値。
+	 *
+	 * @param int $n 注番号。
+	 * @return string
+	 */
+	protected function body_ref( $n ) {
+		return sprintf(
+			'<cMojiRuby:0><cRuby:1><cRubyString:*%d><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+			$n
+		);
 	}
 
 	/**
@@ -198,9 +211,9 @@ class Test_Post_Compile extends WP_UnitTestCase {
 
 		// 本文側: 文書順で *1（既存脚注）→ *2（リンク）→ *3（既存脚注）。
 		$body = $this->to_text->invoke( $this->command, $post );
-		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>', $body );
-		$this->assertStringContainsString( 'リンク<CharStyle:FooterNoteRef>*2<CharStyle:>', $body );
-		$this->assertStringContainsString( '<CharStyle:FooterNoteRef>*3<CharStyle:>', $body );
+		$this->assertStringContainsString( $this->body_ref( 1 ), $body );
+		$this->assertStringContainsString( 'リンク' . $this->body_ref( 2 ), $body );
+		$this->assertStringContainsString( $this->body_ref( 3 ), $body );
 
 		// リスト側: 同じ文書順で 3 項目生成され、2 番目にリンク URL が入る。
 		$notes = hametuha_get_footer_notes( $post );
@@ -210,6 +223,22 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'https://example.com/link', $notes );
 		$this->assertStringContainsString( 'id="footernote-3"', $notes );
 		$this->assertStringContainsString( '二つ目の脚注', $notes );
+	}
+
+	/**
+	 * 通常脚注の本文注番号が、半角スペースを親文字にしたルビ形式で出力されること。
+	 *
+	 * InDesign で注番号（組版）にするための形式。文字スタイルのみの旧形式は使わない。
+	 */
+	public function test_body_footernote_ref_is_ruby_over_space() {
+		$html   = '本文<small class="footernote-ref">脚注</small>。';
+		$post   = new WP_Post( (object) [ 'post_content' => $html, 'filter' => 'raw' ] );
+		$result = $this->to_text->invoke( $this->command, $post );
+
+		// 親文字＝半角スペース、ルビ＝*1。
+		$this->assertStringContainsString( '本文' . $this->body_ref( 1 ), $result );
+		// 旧形式（文字スタイルのみの注番号）は残らない。
+		$this->assertStringNotContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>', $result );
 	}
 
 	/**
