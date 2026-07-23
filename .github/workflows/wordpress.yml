@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+# GITHUB_TOKEN の権限を最小限に制限（CodeQL: actions/missing-workflow-permissions）
+permissions:
+  contents: read
+
 jobs:
   test:
     strategy:
