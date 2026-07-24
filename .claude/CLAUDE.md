@@ -1,5 +1,10 @@
 # Hametuha Docker開発環境
 
+## 作業ルール（Claude 向け）
+
+- **セッション開始時に `tasks/*.md`（`tasks/todo.md`・`tasks/lessons.md` など）を読む。** これらは `.gitignore` 済みのローカル作業メモで、過去の教訓や進行中タスクが記録されている。同じミスを繰り返さないため、着手前に必ず目を通す。
+- **コミット直前に `git branch --show-current` で現在ブランチを確認する。** 作業中に IDE 等でブランチが切り替わっていることがあるため、デフォルトブランチ回避だけでなく「いまのタスクに適したブランチか」まで毎回チェックする。想定と違えば `git cherry-pick` で正しいブランチへ移し、誤った側は元に戻す。
+
 ## 概要
 wp-content相当をリポジトリルートとして管理する構成。
 
@@ -503,6 +508,31 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 2. `master` マージ → `release` へのPR自動作成
 3. `release` PRマージ → リリースドラフト作成
 4. リリース公開 → 本番環境へ自動デプロイ
+
+## MCPサーバー（分析用）
+
+サイトのアクセス解析・検索パフォーマンス分析のため、以下のMCPサーバーを利用できます。
+**設定が有効な場合のみ**利用可能です（後述）。
+
+### 利用できるサーバー
+
+| サーバー名 | 用途 | 主なツール |
+|---|---|---|
+| `google-analytics-mcp` | Google Analytics 4（アクセス解析） | `get_account_summaries`, `run_report`, `run_realtime_report`, `run_funnel_report` など |
+| `google-search-console` | Google Search Console（検索パフォーマンス） | `list_sites`, `search_analytics`, `enhanced_search_analytics`, `detect_quick_wins` など |
+
+### 対象サイト
+
+- **hametuha.com**
+  - GA4プロパティ: `properties/338754670`（オンライン文芸誌 破滅派 - GA4 / アカウント「破滅派　運営サイト」）
+  - Search Consoleサイト: `sc-domain:hametuha.com`
+
+### 前提・注意事項
+
+- **`.mcp.json` はGit管理していません**（`.gitignore` 済み）。認証用のサービスアカウント鍵へのパスを含むため、共有しません。
+  - したがって、これらのMCPサーバーは **`.mcp.json` が各自のローカルに設定されていれば使える** という位置づけです。設定がなければツール自体が現れません。
+  - 設定例（鍵のパスは各自の環境に合わせる）: `google-analytics-mcp` は `pipx run analytics-mcp`、`google-search-console` は `npx -y mcp-server-gsc` を使い、`GOOGLE_APPLICATION_CREDENTIALS` にサービスアカウント鍵のパスを指定。
+- 権限は **分析（読み取り）用途のみ**を想定。Search Consoleは `siteRestrictedUser` 権限のため、サイトマップ送信やインデックス登録などの書き込み系操作は使えません。
 
 ## 今後の課題
 - GCP移行時の設定変更（変数名は汎用的なので最小限の変更で済む）

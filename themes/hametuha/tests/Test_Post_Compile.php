@@ -206,8 +206,9 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	 * @return string
 	 */
 	protected function body_ref( $n, $format = '＊%d' ) {
+		// 文字スタイルはルビの外側（ルビを閉じてから CharStyle を解除する）。
 		return sprintf(
-			'<cMojiRuby:0><cRuby:1><cRubyString:%s><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+			'<CharStyle:FooterNoteRef><cMojiRuby:0><cRuby:1><cRubyString:%s> <cMojiRuby:><cRuby:><cRubyString:><CharStyle:>',
 			sprintf( $format, $n )
 		);
 	}
@@ -257,6 +258,9 @@ class Test_Post_Compile extends WP_UnitTestCase {
 		// 本文はルビ形式で出るため、文字スタイルのみの平坦な注番号は残らない。
 		$this->assertStringNotContainsString( '<CharStyle:FooterNoteRef>＊1<CharStyle:>', $result );
 		$this->assertStringNotContainsString( '<CharStyle:FooterNoteRef>*1<CharStyle:>', $result );
+		// 回帰防止: ルビを閉じる前に文字スタイルを解除する並び（InDesign でルビ終了タグ
+		// 不一致エラーになる）が出ないこと。CharStyle 解除はルビ終了より後。
+		$this->assertStringNotContainsString( '<CharStyle:><cMojiRuby:>', $result );
 	}
 
 	/**
