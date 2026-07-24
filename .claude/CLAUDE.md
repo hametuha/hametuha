@@ -504,6 +504,31 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 3. `release` PRマージ → リリースドラフト作成
 4. リリース公開 → 本番環境へ自動デプロイ
 
+## MCPサーバー（分析用）
+
+サイトのアクセス解析・検索パフォーマンス分析のため、以下のMCPサーバーを利用できます。
+**設定が有効な場合のみ**利用可能です（後述）。
+
+### 利用できるサーバー
+
+| サーバー名 | 用途 | 主なツール |
+|---|---|---|
+| `google-analytics-mcp` | Google Analytics 4（アクセス解析） | `get_account_summaries`, `run_report`, `run_realtime_report`, `run_funnel_report` など |
+| `google-search-console` | Google Search Console（検索パフォーマンス） | `list_sites`, `search_analytics`, `enhanced_search_analytics`, `detect_quick_wins` など |
+
+### 対象サイト
+
+- **hametuha.com**
+  - GA4プロパティ: `properties/338754670`（オンライン文芸誌 破滅派 - GA4 / アカウント「破滅派　運営サイト」）
+  - Search Consoleサイト: `sc-domain:hametuha.com`
+
+### 前提・注意事項
+
+- **`.mcp.json` はGit管理していません**（`.gitignore` 済み）。認証用のサービスアカウント鍵へのパスを含むため、共有しません。
+  - したがって、これらのMCPサーバーは **`.mcp.json` が各自のローカルに設定されていれば使える** という位置づけです。設定がなければツール自体が現れません。
+  - 設定例（鍵のパスは各自の環境に合わせる）: `google-analytics-mcp` は `pipx run analytics-mcp`、`google-search-console` は `npx -y mcp-server-gsc` を使い、`GOOGLE_APPLICATION_CREDENTIALS` にサービスアカウント鍵のパスを指定。
+- 権限は **分析（読み取り）用途のみ**を想定。Search Consoleは `siteRestrictedUser` 権限のため、サイトマップ送信やインデックス登録などの書き込み系操作は使えません。
+
 ## 今後の課題
 - GCP移行時の設定変更（変数名は汎用的なので最小限の変更で済む）
 - CI/CDパイプラインの最適化
