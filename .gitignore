@@ -70,6 +70,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+.mcp.json
 
 # Composer auth
 auth.json
