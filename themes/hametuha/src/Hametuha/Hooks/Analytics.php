@@ -98,14 +98,18 @@ class Analytics extends Singleton {
 		if ( 'local' === wp_get_environment_type() && ! defined( 'HAMETUHA_LOCAL_GA4' ) ) {
 			return;
 		}
+		// Skip tracking during Percy VRT capture.
+		// Percy re-renders the captured DOM on its own infrastructure (browser x width),
+		// so a client-side guard cannot stop pageviews. We must avoid outputting the tag
+		// into the snapshot at capture time. Percy visits carry ?vrt=percy (see snapshots.yml).
+		if ( isset( $_GET['vrt'] ) && 'percy' === sanitize_text_field( wp_unslash( $_GET['vrt'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
+		}
 		?>
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_js( $this->ga ); ?>"></script>
 		<script>
 		(function() {
-			if ( window.__PERCY__ ) {
-				return;
-			}
 			window.dataLayer = window.dataLayer || [];
 
 			function gtag() {
