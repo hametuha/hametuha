@@ -371,11 +371,15 @@ class Post extends Command {
 		// 半角スペースを親文字（FooterNoteRef で圧縮）にし、注番号をそのルビとして付ける。
 		// こうすると前後の文脈に依存せず、リンク由来・通常脚注のどちらも同一形式で確実に出せる。
 		// 注番号の見た目（＊/［］/ダガー等）は $note_format で切り替えられる。
+		//
+		// 文字スタイル（FooterNoteRef）はルビの外側に置く。内側に入れて <CharStyle:> で解除すると、
+		// まだ閉じていないルビの文字属性まで一緒にリセットされ、InDesign 側でルビ終了タグが
+		// 「対応する開始タグなし」エラーになるため。ルビを先に閉じてから文字スタイルを解除する。
 		$note_id = 0;
 		$content = preg_replace_callback( '#<small class="footernote-ref">(.*?)</small>#u', function ( $matches ) use ( &$note_id, $note_format ) {
 			$note_id++;
 			return sprintf(
-				'<cMojiRuby:0><cRuby:1><cRubyString:%s><CharStyle:FooterNoteRef> <CharStyle:><cMojiRuby:><cRuby:><cRubyString:>',
+				'<CharStyle:FooterNoteRef><cMojiRuby:0><cRuby:1><cRubyString:%s> <cMojiRuby:><cRuby:><cRubyString:><CharStyle:>',
 				sprintf( $note_format, $note_id )
 			);
 		}, $content );
