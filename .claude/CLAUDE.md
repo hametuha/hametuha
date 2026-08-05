@@ -198,28 +198,44 @@ composer wp plugin list
 
 ## ローカル環境専用機能
 
-### 自動ログイン機能
+### 管理画面をブラウザ自動操作で検証する
 
-ローカル環境（`wp_get_environment_type() === 'local'`）でのみ動作する、テスト用の自動ログイン機能が実装されています。Chrome DevTools MCPなどクッキーを保持できない環境でのテスト用です。
+**Playwright MCP で実ログインしてください。** Playwright はクッキーを保持できるので、GET も POST（保存）も検証できます。
 
-#### 使い方
+一時的な管理者を作って使い、終わったら削除するのが安全です（実ユーザーのパスワードを触る必要がありません）。
 
-`wp-config-local.php` に以下の定数を設定すると、すべてのリクエストで指定されたユーザーとして扱われます：
+```bash
+# 1. 一時管理者を作成（パスワードは控えておく）
+openssl rand -base64 18
+composer wp -- user create claude_test claude-test@example.com --role=administrator --user_pass="<上で出たパスワード>"
+
+# 2. Playwright で https://hametuha.info/wp-login.php からログインし、検証する
+
+# 3. 後始末
+composer wp -- user delete <ID> --yes
+```
+
+検証で汚したデータ（メタ・投稿・アップロードファイル等）は必ず元に戻してください。`post_modified` は `wp post update` だと再度更新されてしまうので、戻すときは `wp db query` で直接 UPDATE します。
+
+#### reCAPTCHA のスキップ
+
+フォーム送信を検証する場合は `wp-config-local.php` に以下を設定します。
 
 ```php
-// 自動ログイン機能
-define( 'HAMETUHA_LOGGED_IN_AS', 'user_login' );
-
-// reCAPTCHA検証をスキップ（オプション）
 define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 ```
 
-#### 注意事項
+`wp-config-local.php` はdockerの起動時にしか同期されません。変更した場合は再起動 `composer restart` してください。
 
-- ローカル環境でのみ動作します（本番環境では無効）
-- 指定する `user_login` は存在しているものでなければなりません。 `composer wp user list` などで検索ができます。
-- `wp-config-local.php` はdockerの起動時にしか同期されません。変更した場合は再起動 `composer restart` してください。
-- フロントエンド・保護ページ・wp-admin管理画面すべてにアクセス可能になります
+#### かつて存在した自動ログイン機能について
+
+`HAMETUHA_LOGGED_IN_AS` 定数で全リクエストを特定ユーザー扱いにする仕組みが `mu-plugins/hametuha-config.php` にありましたが、削除しました。Chrome DevTools MCP がクッキーを保持できなかった時期の回避策で、以下の問題があったためです。
+
+- 毎リクエストで `wp_set_auth_cookie()` を呼んで**新しいセッショントークンを発行**していた。nonce は `wp_get_session_token()` に紐づくため、GET で描画したフォームを POST すると必ず nonce 検証に失敗し、**保存は「リンクの期限が切れています」403 になった**（＝GET 専用だった）
+- `determine_current_user` に割り込むため、未ログイン状態の表示を検証できなかった
+- セッショントークンが無限に増えた
+
+古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
 ## 注意事項
 
