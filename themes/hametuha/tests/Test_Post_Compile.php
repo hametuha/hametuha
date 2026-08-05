@@ -151,6 +151,40 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	}
 
 	/**
+	 * ルビが <rp>（代替表示用の括弧）付きでも変換されること。
+	 *
+	 * エディタのルビ機能は <ruby>親<rp>(</rp><rt>ルビ</rt><rp>)</rp></ruby> の形を
+	 * 出力する。<rp> の中身は組版では不要なので捨てる。
+	 *
+	 * @dataProvider ruby_provider
+	 *
+	 * @param string $html 変換対象の HTML。
+	 */
+	public function test_ruby_converts_with_and_without_rp( $html ) {
+		$result = $this->convert( $html );
+
+		$this->assertStringContainsString(
+			'<cMojiRuby:0><cRuby:1><cRubyString:みたま>御霊<cMojiRuby:><cRuby:><cRubyString:>',
+			$result
+		);
+		// 生の HTML タグは残らない（InDesign は未知のタグで取り込みエラーになる）。
+		foreach ( [ '<ruby>', '</ruby>', '<rt>', '</rt>', '<rp>', '</rp>' ] as $tag ) {
+			$this->assertStringNotContainsString( $tag, $result );
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ruby_provider() {
+		return [
+			'rp なし' => [ '<ruby>御霊<rt>みたま</rt></ruby>' ],
+			'rp あり' => [ '<ruby>御霊<rp>(</rp><rt>みたま</rt><rp>)</rp></ruby>' ],
+			'rp 全角' => [ '<ruby>御霊<rp>（</rp><rt>みたま</rt><rp>）</rp></ruby>' ],
+		];
+	}
+
+	/**
 	 * <b> が B 文字スタイルに変換されること。
 	 *
 	 * <strong>（Strong）と使い分けられるよう、別スタイルに割り当てている。

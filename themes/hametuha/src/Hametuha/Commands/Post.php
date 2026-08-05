@@ -463,18 +463,21 @@ class Post extends Command {
 	protected function apply_inline_styles( $content ) {
 		// Inline elements.
 		foreach ( [
-			'#<strong>(.*?)</strong>#u'              => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong>(.*?)</strong>#u' => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
-			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
-			'#<s>(.*?)</s>#u'                        => '<CharStyle:Strike>$1<CharStyle:>',
-			'#<u>(.*?)</u>#u'                        => '<CharStyle:Underline>$1<CharStyle:>',
+			'#<em>([^<]+)</em>#u'       => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<s>(.*?)</s>#u'           => '<CharStyle:Strike>$1<CharStyle:>',
+			'#<u>(.*?)</u>#u'           => '<CharStyle:Underline>$1<CharStyle:>',
 			// <b> は <strong> と使い分けられるよう、そのまま B という文字スタイルに割り当てる。
-			'#<b>(.*?)</b>#u'                        => '<CharStyle:B>$1<CharStyle:>',
-			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
+			'#<b>(.*?)</b>#u'           => '<CharStyle:B>$1<CharStyle:>',
+			'#<cite>([^<]+)</cite>#u'   => '<CharStyle:Cite>$1<CharStyle:>',
 			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
-			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
-			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
-			'#<small>([^<]+)</small>#u'              => '〔<CharStyle:Notes>$1<CharStyle:>〕',
+			'#<del>([^<]+)</del>#u'     => '<CharStyle:Del>$1<CharStyle:>',
+			// ルビは <rp>（読みを括弧で囲むフォールバック）付きの形も来る。
+			// 例: <ruby>御霊<rp>(</rp><rt>みたま</rt><rp>)</rp></ruby>
+			// <rp> の中身は代替表示用なので組版では捨てる。
+			'#<ruby>([^<]+)(?:<rp>[^<]*</rp>)?<rt>([^<]+)</rt>(?:<rp>[^<]*</rp>)?</ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<small>([^<]+)</small>#u' => '〔<CharStyle:Notes>$1<CharStyle:>〕',
 		] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
