@@ -125,6 +125,101 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	}
 
 	/**
+	 * <u> が InDesign の Underline 文字スタイルに変換されること。
+	 */
+	public function test_underline_converts_to_char_style() {
+		$result = $this->convert( 'これは<u>下線</u>付きです。' );
+
+		$this->assertStringContainsString( '<CharStyle:Underline>下線<CharStyle:>', $result );
+		// 生の HTML タグは残らない（InDesign は未知のタグで取り込みエラーになる）。
+		$this->assertStringNotContainsString( '<u>', $result );
+		$this->assertStringNotContainsString( '</u>', $result );
+	}
+
+	/**
+	 * 空の <u></u> でも生タグが残らないこと。
+	 *
+	 * TinyMCE は装飾を解除した跡に空タグを残すことがある。文字数ゼロに
+	 * 文字スタイルが当たるだけで組版上の影響はないが、生タグが残ると
+	 * InDesign 側で取り込みエラーになるため変換されている必要がある。
+	 */
+	public function test_empty_underline_leaves_no_raw_tag() {
+		$result = $this->convert( '空タグ<u></u>のテスト。' );
+
+		$this->assertStringNotContainsString( '<u>', $result );
+		$this->assertStringNotContainsString( '</u>', $result );
+	}
+
+	/**
+	 * <b> が B 文字スタイルに変換されること。
+	 *
+	 * <strong>（Strong）と使い分けられるよう、別スタイルに割り当てている。
+	 */
+	public function test_bold_converts_to_char_style() {
+		$result = $this->convert( '<b>太字</b>と<strong>強調</strong>。' );
+
+		$this->assertStringContainsString( '<CharStyle:B>太字<CharStyle:>', $result );
+		// <strong> は従来どおり Strong のまま（使い分けが保たれる）。
+		$this->assertStringContainsString( '<CharStyle:Strong>強調<CharStyle:>', $result );
+		$this->assertStringNotContainsString( '<b>', $result );
+		$this->assertStringNotContainsString( '</b>', $result );
+	}
+
+	/**
+	 * 既知の制限: 文字スタイルの入れ子（例 <b><u>...</u></b>）は内側だけが効く。
+	 *
+	 * InDesign のタグ付きテキストは文字スタイルを重ねられず、後から現れた
+	 * <CharStyle:...> が直前の指定を置き換える。実データ（#11408「円周率
+	 * （旋律）」）に <b><u>...</u></b> があり、この場合は下線のみが適用される。
+	 * 太字＋下線を両立させるには組み合わせ用の文字スタイルを用意する必要がある。
+	 * 生タグは残らないので取り込みは通る。対応方針が決まるまでの記録。
+	 */
+	public function test_nested_char_styles_keep_inner_only() {
+		$result = $this->convert( '<b><u>太字下線</u></b>' );
+
+		// 生の HTML タグは残らない。
+		$this->assertStringNotContainsString( '<b>', $result );
+		$this->assertStringNotContainsString( '<u>', $result );
+		// 内側（下線）が直前の B を置き換えるため、実際に効くのは下線のみ。
+		$this->assertStringContainsString( '<CharStyle:B><CharStyle:Underline>太字下線<CharStyle:>', $result );
+	}
+
+	/**
+	 * 段落の配置指定が Align 段落スタイルに変換されること。
+	 *
+	 * CSS の text-align と非推奨の align 属性を同等に扱う。
+	 *
+	 * @dataProvider paragraph_align_provider
+	 *
+	 * @param string $html     変換対象の HTML。
+	 * @param string $expected 期待する段落スタイル。
+	 */
+	public function test_paragraph_align( $html, $expected ) {
+		$result = $this->convert( $html );
+
+		$this->assertStringContainsString( $expected, $result );
+		// 生の <p> タグは残らない。
+		$this->assertStringNotContainsString( '<p ', $result );
+	}
+
+	/**
+	 * @return array
+	 */
+	public function paragraph_align_provider() {
+		return [
+			'style（スペースあり）' => [ '<p style="text-align: right;">右寄せ</p>', '<ParaStyle:AlignRight>右寄せ' ],
+			'style（スペースなし）' => [ '<p style="text-align:center;">中央</p>', '<ParaStyle:AlignCenter>中央' ],
+			'align 属性'           => [ '<p align="right">右寄せ</p>', '<ParaStyle:AlignRight>右寄せ' ],
+			'align 属性（左）'     => [ '<p align="left">左寄せ</p>', '<ParaStyle:AlignLeft>左寄せ' ],
+			'align 属性（中央）'   => [ '<p align="center">中央</p>', '<ParaStyle:AlignCenter>中央' ],
+			// 両方ある場合はブラウザの描画と同じく CSS を優先する。
+			'両方（CSS優先）'      => [ '<p style="text-align: right;" align="left">両方</p>', '<ParaStyle:AlignRight>両方' ],
+			// style に他のプロパティが混ざっていても拾う。
+			'複数プロパティ'       => [ '<p style="color: red; text-align: center;">混在</p>', '<ParaStyle:AlignCenter>混在' ],
+		];
+	}
+
+	/**
 	 * blockquote 内でインライン装飾（strong/em）が併用できること。
 	 */
 	public function test_blockquote_keeps_inline_styles() {

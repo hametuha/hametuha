@@ -424,9 +424,14 @@ class Post extends Command {
 		}
 		// paragraph
 		foreach ( [
-			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function ( $match ) {
-				$align = ucfirst( trim( str_replace( ';', '', $match[1] ) ) );
-				return sprintf( '<ParaStyle:Align%s>%s', $align, $match[2] );
+			// 配置は CSS の text-align と非推奨の align 属性を同等に扱う。
+			// 両方ある投稿（例: <p style="text-align: right;" align="left">）が実在するため、
+			// ブラウザの描画と同じく CSS を優先する（＝先に処理して消費させる）。
+			'#<p[^>]*style="[^"]*text-align\s*:\s*(left|center|right|justify)[^"]*"[^>]*>(.*?)</p>#us' => function ( $match ) {
+				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( strtolower( $match[1] ) ), $match[2] );
+			},
+			'#<p[^>]*\salign="(left|center|right|justify)"[^>]*>(.*?)</p>#us' => function ( $match ) {
+				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( strtolower( $match[1] ) ), $match[2] );
 			},
 			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$indent = preg_replace( '/\D/', '', $match[2] );
@@ -462,6 +467,9 @@ class Post extends Command {
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
 			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
 			'#<s>(.*?)</s>#u'                        => '<CharStyle:Strike>$1<CharStyle:>',
+			'#<u>(.*?)</u>#u'                        => '<CharStyle:Underline>$1<CharStyle:>',
+			// <b> は <strong> と使い分けられるよう、そのまま B という文字スタイルに割り当てる。
+			'#<b>(.*?)</b>#u'                        => '<CharStyle:B>$1<CharStyle:>',
 			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
 			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
 			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
