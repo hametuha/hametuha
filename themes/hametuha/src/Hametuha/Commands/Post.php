@@ -280,14 +280,15 @@ class Post extends Command {
 		// Compile series preface and afterword.
 		if ( $series ) {
 			// キーはファイル名用のスラッグ、label は原稿に書き出す表示名。
-			// あとがきの表示名はシリーズ側で「解説」などに変更できる。
-			$extras = [
+			// 表示名はシリーズ側で「序」「解説」などに変更できる。
+			$series_model = Series::get_instance();
+			$extras       = [
 				'preface'   => [
-					'label'   => 'はじめに',
+					'label'   => $series_model->get_preface_title( $series->ID ),
 					'content' => get_post_meta( $series->ID, '_preface', true ),
 				],
 				'afterword' => [
-					'label'   => Series::get_instance()->get_afterword_title( $series->ID ),
+					'label'   => $series_model->get_afterword_title( $series->ID ),
 					'content' => $series->post_content,
 				],
 			];

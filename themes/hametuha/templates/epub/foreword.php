@@ -1,11 +1,12 @@
 <?php
 /** @var WP_Post $series */
+/** @var string $preface_title エスケープ済みの見出し。 */
 ?>
 <?php get_template_part( 'templates/epub/header' ); ?>
 
 <div class="header header--preface">
 	<h1 class="title">
-		はじめに
+		<?php echo $preface_title; ?>
 	</h1>
 </div>
 
