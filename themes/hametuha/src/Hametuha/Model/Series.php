@@ -17,6 +17,20 @@ use WPametu\DB\Model;
 class Series extends Model {
 
 	/**
+	 * Default title of preface.
+	 *
+	 * @var string
+	 */
+	const DEFAULT_PREFACE_TITLE = 'はじめに';
+
+	/**
+	 * Default title of afterword.
+	 *
+	 * @var string
+	 */
+	const DEFAULT_AFTERWORD_TITLE = 'あとがき';
+
+	/**
 	 * This seems a bug.
 	 *
 	 * @todo Fix this and make patch.
@@ -208,6 +222,52 @@ class Series extends Model {
 	 */
 	public function get_preface( $post_id ) {
 		return (string) get_post_meta( $post_id, '_preface', true );
+	}
+
+	/**
+	 * Get preface title.
+	 *
+	 * 序文の本文は `_preface`、見出しは `_preface_title` で
+	 * 「序」「献辞」などに変更できる。
+	 * 未設定・空白のみの場合はデフォルトの「はじめに」を返す。
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public function get_preface_title( $post_id ) {
+		return $this->get_custom_title( $post_id, '_preface_title', self::DEFAULT_PREFACE_TITLE );
+	}
+
+	/**
+	 * Get afterword title.
+	 *
+	 * あとがきの本文はシリーズ投稿の post_content だが、
+	 * 見出しは `_afterword_title` で「解説」「跋」などに変更できる。
+	 * 未設定・空白のみの場合はデフォルトの「あとがき」を返す。
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public function get_afterword_title( $post_id ) {
+		return $this->get_custom_title( $post_id, '_afterword_title', self::DEFAULT_AFTERWORD_TITLE );
+	}
+
+	/**
+	 * Get user defined title, or fallback to the default.
+	 *
+	 * @param int    $post_id
+	 * @param string $meta_key
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	protected function get_custom_title( $post_id, $meta_key, $default ) {
+		$title = (string) get_post_meta( $post_id, $meta_key, true );
+		// trim() は全角スペースを落とさないので、前後の空白は正規表現で除去する。
+		$title = preg_replace( '/\A[\s　]+|[\s　]+\z/u', '', $title );
+		return $title ?: $default;
 	}
 
 	/**

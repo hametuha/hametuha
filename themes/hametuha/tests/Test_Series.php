@@ -122,6 +122,49 @@ class Test_Series extends WP_UnitTestCase {
 	}
 
 	/**
+	 * 序文・あとがきのタイトルが上書きできることをテスト
+	 *
+	 * @dataProvider custom_title_provider
+	 *
+	 * @param string $method   Series モデルのメソッド名。
+	 * @param string $meta_key 上書き用のメタキー。
+	 * @param string $default  未設定時のデフォルト。
+	 * @param string $custom   上書きする値。
+	 */
+	public function test_custom_title( $method, $meta_key, $default, $custom ) {
+		// publish に遷移させると計測フック（cookie-tasting プラグイン依存）が走るため draft で作る。
+		$series_id = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+
+		// 未設定ならデフォルト。
+		$this->assertSame( $default, $this->series->$method( $series_id ) );
+
+		// 空白のみでもデフォルト（全角スペースを含む）。
+		update_post_meta( $series_id, $meta_key, " \n　" );
+		$this->assertSame( $default, $this->series->$method( $series_id ) );
+
+		// 入力があれば上書き。
+		update_post_meta( $series_id, $meta_key, $custom );
+		$this->assertSame( $custom, $this->series->$method( $series_id ) );
+
+		// 前後の空白は除去される。
+		update_post_meta( $series_id, $meta_key, " {$custom}　" );
+		$this->assertSame( $custom, $this->series->$method( $series_id ) );
+	}
+
+	/**
+	 * @return array
+	 */
+	public function custom_title_provider() {
+		return [
+			'あとがき' => [ 'get_afterword_title', '_afterword_title', 'あとがき', '解説' ],
+			'序文'     => [ 'get_preface_title', '_preface_title', 'はじめに', '献辞' ],
+		];
+	}
+
+	/**
 	 * 空文字列やnullのテスト
 	 */
 	public function test_empty_values() {
