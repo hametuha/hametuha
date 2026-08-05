@@ -151,6 +151,66 @@ class Test_Post_Compile extends WP_UnitTestCase {
 	}
 
 	/**
+	 * 安全網: 変換表に無い HTML タグが生のまま残らないこと。
+	 *
+	 * InDesign は `<` をタグの開始として読むため、未知のタグが残ると取り込み
+	 * エラーになる。装飾は失われてもテキストは残り、取り込みは通る状態にする。
+	 *
+	 * @dataProvider unconverted_html_provider
+	 *
+	 * @param string $html 変換対象の HTML。
+	 * @param string $text 残っていてほしいテキスト。
+	 */
+	public function test_unconverted_html_is_stripped( $html, $text ) {
+		$result = $this->convert( $html );
+
+		$this->assertStringContainsString( $text, $result );
+		// タグらしきものが残っていないこと（InDesign タグ以外の < が無い）。
+		$this->assertDoesNotMatchRegularExpression(
+			'#</?(?!CharStyle|ParaStyle|cMojiRuby|cRubyString|cRuby)[a-zA-Z]#',
+			$result
+		);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function unconverted_html_provider() {
+		return [
+			// Mac のメモ・Word からの貼り付けで付く謎のクラス。
+			'p class'    => [ '<p class="p1">貼り付けた段落</p>', '貼り付けた段落' ],
+			'p style'    => [ '<p style="margin: 0px">余白付き段落</p>', '余白付き段落' ],
+			'span 入れ子' => [ '<span style="color: red"><span class="s1">入れ子</span></span>', '入れ子' ],
+			'属性付き li' => [ '<ul class="foo"><li class="bar">項目</li></ul>', '項目' ],
+			'属性付き見出し' => [ '<h3 class="x">見出し</h3>', '見出し' ],
+			'テーブル'   => [ '<table><tr><td>セル</td></tr></table>', 'セル' ],
+			'定義リスト' => [ '<dl><dt>語</dt><dd>説明</dd></dl>', '説明' ],
+			'br'         => [ '一行目<br />二行目', '二行目' ],
+		];
+	}
+
+	/**
+	 * 安全網が InDesign 自身のタグを壊さないこと。
+	 *
+	 * ここが壊れると全ての書き出しが無意味になるため、変換済みタグが
+	 * そのまま残ることを明示的に検証する。
+	 */
+	public function test_safety_net_keeps_indesign_tags() {
+		$html   = '<p class="p1"><strong>強調</strong>と<ruby>御霊<rp>(</rp><rt>みたま</rt><rp>)</rp></ruby>と<u>下線</u></p>';
+		$result = $this->convert( $html );
+
+		$this->assertStringContainsString( '<ParaStyle:Normal>', $result );
+		$this->assertStringContainsString( '<CharStyle:Strong>強調<CharStyle:>', $result );
+		$this->assertStringContainsString( '<CharStyle:Underline>下線<CharStyle:>', $result );
+		$this->assertStringContainsString(
+			'<cMojiRuby:0><cRuby:1><cRubyString:みたま>御霊<cMojiRuby:><cRuby:><cRubyString:>',
+			$result
+		);
+		// 生の <p class="p1"> だけが落ちている。
+		$this->assertStringNotContainsString( '<p ', $result );
+	}
+
+	/**
 	 * ルビが <rp>（代替表示用の括弧）付きでも変換されること。
 	 *
 	 * エディタのルビ機能は <ruby>親<rp>(</rp><rt>ルビ</rt><rp>)</rp></ruby> の形を
