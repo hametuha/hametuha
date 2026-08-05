@@ -22,6 +22,16 @@ class Post extends Command {
 	const DEFAULT_NOTE_FORMAT = '＊%d';
 
 	/**
+	 * 直近の変換で除去した未変換 HTML タグ（タグ名 => 件数）。
+	 *
+	 * 何が落ちたかを compile() のログに出し、変換の取りこぼしを実データで
+	 * 把握できるようにするための記録。reset_stripped_tags() で初期化する。
+	 *
+	 * @var array
+	 */
+	protected $stripped_tags = [];
+
+	/**
 	 * Show statistic for specific condition
 	 *
 	 * ## OPTIONS
@@ -199,6 +209,7 @@ class Post extends Command {
 					$export_post->post_content = $content_with_notes;
 
 					// Post content.
+					$this->reset_stripped_tags();
 					$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $export_post, $endmark, $note_format );
 					file_put_contents( "{$dir}/post-{$post->ID}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
 					self::l( sprintf( '#%1$d %3$s「%2$s」', $post->ID, get_the_title( $post ), get_the_author_meta( 'display_name', $post->post_author ) ) );
@@ -215,6 +226,12 @@ class Post extends Command {
 					$footernote = $this->to_footernote_text( $note_post, $note_format );
 					if ( $footernote ) {
 						file_put_contents( "{$dir}/post-{$post->ID}-footernote.txt", mb_convert_encoding( str_replace( "\n", "\r", $footernote ), 'UTF-16BE', 'utf-8' ) );
+					}
+					// 変換表の取りこぼしを可視化する。落ちた装飾は原稿側の書き方か
+					// 変換表の追加で解消できるので、実データで優先順位を判断する材料にする。
+					$stripped = $this->format_stripped_tags();
+					if ( $stripped ) {
+						self::w( sprintf( '  #%d: 未変換のHTMLタグを除去しました: %s', $post->ID, $stripped ) );
 					}
 					// Excerpt.
 					if ( ! empty( $post->post_excerpt ) ) {
@@ -279,11 +296,22 @@ class Post extends Command {
 		}
 		// Compile series preface and afterword.
 		if ( $series ) {
-			$extras = [
-				'preface'   => get_post_meta( $series->ID, '_preface', true ),
-				'afterword' => $series->post_content,
+			// キーはファイル名用のスラッグ、label は原稿に書き出す表示名。
+			// 表示名はシリーズ側で「序」「解説」などに変更できる。
+			$series_model = Series::get_instance();
+			$extras       = [
+				'preface'   => [
+					'label'   => $series_model->get_preface_title( $series->ID ),
+					'content' => get_post_meta( $series->ID, '_preface', true ),
+				],
+				'afterword' => [
+					'label'   => $series_model->get_afterword_title( $series->ID ),
+					'content' => $series->post_content,
+				],
 			];
-			foreach ( $extras as $label => $content ) {
+			foreach ( $extras as $slug => $extra ) {
+				$label   = $extra['label'];
+				$content = $extra['content'];
 				if ( empty( $content ) ) {
 					continue;
 				}
@@ -292,9 +320,14 @@ class Post extends Command {
 				$content_post = new \WP_Post( (object) [ 'post_content' => $content, 'filter' => 'raw' ] );
 				switch ( $format ) {
 					case 'text':
+						$this->reset_stripped_tags();
 						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post, '', $note_format );
-						file_put_contents( "{$dir}/series-{$label}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
-						self::l( sprintf( 'series %s saved.', $label ) );
+						file_put_contents( "{$dir}/series-{$slug}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
+						self::l( sprintf( 'series %s (%s) saved.', $slug, $label ) );
+						$stripped = $this->format_stripped_tags();
+						if ( $stripped ) {
+							self::w( sprintf( '  series %s: 未変換のHTMLタグを除去しました: %s', $slug, $stripped ) );
+						}
 						break;
 					case 'plain':
 						$header = implode( "\n", [
@@ -302,8 +335,8 @@ class Post extends Command {
 							str_repeat( '-', 40 ),
 							'',
 						] );
-						file_put_contents( "{$dir}/series-{$label}-plain.txt", $header . $content );
-						self::l( sprintf( 'series %s saved.', $label ) );
+						file_put_contents( "{$dir}/series-{$slug}-plain.txt", $header . $content );
+						self::l( sprintf( 'series %s (%s) saved.', $slug, $label ) );
 						break;
 				}
 			}
@@ -413,9 +446,14 @@ class Post extends Command {
 		}
 		// paragraph
 		foreach ( [
-			'#<p style="text-align:([^"]+)">(.*?)</p>#us' => function ( $match ) {
-				$align = ucfirst( trim( str_replace( ';', '', $match[1] ) ) );
-				return sprintf( '<ParaStyle:Align%s>%s', $align, $match[2] );
+			// 配置は CSS の text-align と非推奨の align 属性を同等に扱う。
+			// 両方ある投稿（例: <p style="text-align: right;" align="left">）が実在するため、
+			// ブラウザの描画と同じく CSS を優先する（＝先に処理して消費させる）。
+			'#<p[^>]*style="[^"]*text-align\s*:\s*(left|center|right|justify)[^"]*"[^>]*>(.*?)</p>#us' => function ( $match ) {
+				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( strtolower( $match[1] ) ), $match[2] );
+			},
+			'#<p[^>]*\salign="(left|center|right|justify)"[^>]*>(.*?)</p>#us' => function ( $match ) {
+				return sprintf( '<ParaStyle:Align%s>%s', ucfirst( strtolower( $match[1] ) ), $match[2] );
 			},
 			'#<p style="(text-indent|padding-left):([^"]+)">(.*?)</p>#us' => function ( $match ) {
 				$indent = preg_replace( '/\D/', '', $match[2] );
@@ -426,6 +464,8 @@ class Post extends Command {
 		}
 		// Remove span
 		$content = preg_replace( '#<span([^>]*?>)(.*?)</span>#u', '$2', $content );
+		// 変換しきれなかった HTML タグを落とす（安全網）。
+		$content = $this->strip_unconverted_html( $content );
 		// Add normal style.
 		return implode( "\n", array_map( function ( $line ) {
 			if ( 0 === strpos( $line, '<ParaStyle' ) ) {
@@ -434,6 +474,59 @@ class Post extends Command {
 				return '<ParaStyle:Normal>' . $line;
 			}
 		}, explode( "\n", $content ) ) );
+	}
+
+	/**
+	 * 除去タグの記録を初期化する。
+	 *
+	 * 投稿単位でログを出したいので、compile() が投稿ごとに呼ぶ。
+	 */
+	protected function reset_stripped_tags() {
+		$this->stripped_tags = [];
+	}
+
+	/**
+	 * 直近の変換で除去した未変換 HTML タグを「タグ名 xN」の一覧で返す。
+	 *
+	 * @return string 除去したタグが無ければ空文字。
+	 */
+	protected function format_stripped_tags() {
+		if ( ! $this->stripped_tags ) {
+			return '';
+		}
+		$tags = $this->stripped_tags;
+		arsort( $tags );
+		$parts = [];
+		foreach ( $tags as $name => $count ) {
+			$parts[] = sprintf( '%s x%d', $name, $count );
+		}
+		return implode( ', ', $parts );
+	}
+
+	/**
+	 * 変換しきれなかった HTML タグを除去する（安全網）。
+	 *
+	 * InDesign のタグ付きテキストは `<` をタグの開始として読むため、未知のタグが
+	 * 残っていると取り込みエラーになる。変換表の取りこぼしで組版が止まるより、
+	 * 装飾だけ失って取り込みが通るほうが被害が小さいので最後に落とす。
+	 * 落としたタグは $stripped_tags に記録し、compile() のログで可視化する。
+	 *
+	 * InDesign 自身のタグ（CharStyle / ParaStyle / ルビ関連）と、ファイル先頭に
+	 * 付ける <UNICODE-MAC> は除去対象から外す。
+	 *
+	 * @param string $content 変換対象。
+	 * @return string HTML タグを除去した文字列。
+	 */
+	protected function strip_unconverted_html( $content ) {
+		return preg_replace_callback(
+			'#</?(?!CharStyle|ParaStyle|cMojiRuby|cRubyString|cRuby|UNICODE)([a-zA-Z][a-zA-Z0-9]*)[^>]*>#u',
+			function ( $matches ) {
+				$name                         = strtolower( $matches[1] );
+				$this->stripped_tags[ $name ] = ( $this->stripped_tags[ $name ] ?? 0 ) + 1;
+				return '';
+			},
+			$content
+		);
 	}
 
 	/**
@@ -447,15 +540,21 @@ class Post extends Command {
 	protected function apply_inline_styles( $content ) {
 		// Inline elements.
 		foreach ( [
-			'#<strong>(.*?)</strong>#u'              => '<CharStyle:Strong>$1<CharStyle:>',
+			'#<strong>(.*?)</strong>#u' => '<CharStyle:Strong>$1<CharStyle:>',
 			'#<strong class="text-emphasis">([^<]+)</strong>#u' => '<CharStyle:StrongSesami>$1<CharStyle:>',
-			'#<em>([^<]+)</em>#u'                    => '<CharStyle:Emphasis>$1<CharStyle:>',
-			'#<s>(.*?)</s>#u'                        => '<CharStyle:Strike>$1<CharStyle:>',
-			'#<cite>([^<]+)</cite>#u'                => '<CharStyle:Cite>$1<CharStyle:>',
+			'#<em>([^<]+)</em>#u'       => '<CharStyle:Emphasis>$1<CharStyle:>',
+			'#<s>(.*?)</s>#u'           => '<CharStyle:Strike>$1<CharStyle:>',
+			'#<u>(.*?)</u>#u'           => '<CharStyle:Underline>$1<CharStyle:>',
+			// <b> は <strong> と使い分けられるよう、そのまま B という文字スタイルに割り当てる。
+			'#<b>(.*?)</b>#u'           => '<CharStyle:B>$1<CharStyle:>',
+			'#<cite>([^<]+)</cite>#u'   => '<CharStyle:Cite>$1<CharStyle:>',
 			'#<span class="text-emphasis">([^<]+)</span>#u' => '<CharStyle:EmphasisSesami>$1<CharStyle:>',
-			'#<del>([^<]+)</del>#u'                  => '<CharStyle:Del>$1<CharStyle:>',
-			'#<ruby>([^<]+)<rt>([^>]+)</rt></ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
-			'#<small>([^<]+)</small>#u'              => '〔<CharStyle:Notes>$1<CharStyle:>〕',
+			'#<del>([^<]+)</del>#u'     => '<CharStyle:Del>$1<CharStyle:>',
+			// ルビは <rp>（読みを括弧で囲むフォールバック）付きの形も来る。
+			// 例: <ruby>御霊<rp>(</rp><rt>みたま</rt><rp>)</rp></ruby>
+			// <rp> の中身は代替表示用なので組版では捨てる。
+			'#<ruby>([^<]+)(?:<rp>[^<]*</rp>)?<rt>([^<]+)</rt>(?:<rp>[^<]*</rp>)?</ruby>#' => '<cMojiRuby:0><cRuby:1><cRubyString:$2>$1<cMojiRuby:><cRuby:><cRubyString:>',
+			'#<small>([^<]+)</small>#u' => '〔<CharStyle:Notes>$1<CharStyle:>〕',
 		] as $regexp => $converted ) {
 			$content = preg_replace( $regexp, $converted, $content );
 		}
@@ -494,7 +593,7 @@ class Post extends Command {
 			// インライン装飾を InDesign 文字スタイルへ。
 			$item = $this->apply_inline_styles( $item );
 			// 未変換の HTML タグ（<p> 等）を除去。InDesign タグ（CharStyle/ParaStyle 等）は残す。
-			$item = preg_replace( '#</?(?!CharStyle|ParaStyle|cMojiRuby|cRubyString|cRuby)[a-zA-Z][^>]*>#u', '', $item );
+			$item = $this->strip_unconverted_html( $item );
 			// エンティティを実体へ戻し、空白・改行を整理。
 			$item = trim( preg_replace( '#\s+#u', ' ', html_entity_decode( $item, ENT_QUOTES, 'UTF-8' ) ) );
 			if ( '' === $item ) {

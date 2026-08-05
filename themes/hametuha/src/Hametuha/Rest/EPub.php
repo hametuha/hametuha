@@ -154,7 +154,7 @@ class EPub extends RestTemplate {
 			// Add preface if exists
 			if ( $preface = $this->series->get_preface( $series->ID ) ) {
 				$html['foreword'] = [
-					'label' => 'はじめに',
+					'label' => $this->series->get_preface_title( $series->ID ),
 					'html'  => $this->get_content( $series_id, $series, 'foreword', $direction ),
 				];
 			}
@@ -168,7 +168,7 @@ class EPub extends RestTemplate {
 			// Add afterwords
 			if ( ! empty( $series->post_content ) ) {
 				$html['afterword'] = [
-					'label' => 'あとがき',
+					'label' => $this->series->get_afterword_title( $series->ID ),
 					'html'  => $this->get_content( $series_id, $series, 'afterword', $direction ),
 				];
 			}
@@ -350,10 +350,16 @@ class EPub extends RestTemplate {
 				$this->title = '著者一覧';
 				break;
 			case 'foreword':
-				$this->title = 'はじめに';
+				$this->title = $this->series->get_preface_title( $post->ID );
 				if ( ! $this->series->get_preface( $post->ID ) ) {
 					throw new \Exception( '序文は設定されていません。', 403 );
 				}
+				// 見出しはユーザー入力なのでエスケープしてから縦中横を適用する。
+				$this->set_data( [
+					'preface_title' => 'rtl' === $direction
+						? $this->factory( $id )->parser->tcyiz( esc_html( $this->title ) )
+						: esc_html( $this->title ),
+				] );
 				break;
 			case 'content':
 				$this->title = get_post_meta( $post->ID, '_series_override', true ) ?: get_the_title( $post );
@@ -378,10 +384,16 @@ class EPub extends RestTemplate {
 				$this->set_data( $this->factory( $id )->toc->getNavHTML( '本文' ), 'toc' );
 				break;
 			case 'afterword':
-				$this->title = 'あとがき';
+				$this->title = $this->series->get_afterword_title( $post->ID );
 				if ( empty( $post->post_content ) ) {
 					throw new \Exception( 'あとがきは設定されていません。', 403 );
 				}
+				// 見出しはユーザー入力なのでエスケープしてから縦中横を適用する。
+				$this->set_data( [
+					'afterword_title' => 'rtl' === $direction
+						? $this->factory( $id )->parser->tcyiz( esc_html( $this->title ) )
+						: esc_html( $this->title ),
+				] );
 				break;
 			case 'ads':
 				$this->title = '破滅派電子書籍近刊';
