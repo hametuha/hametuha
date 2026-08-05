@@ -17,6 +17,13 @@ use WPametu\DB\Model;
 class Series extends Model {
 
 	/**
+	 * Default title of afterword.
+	 *
+	 * @var string
+	 */
+	const DEFAULT_AFTERWORD_TITLE = 'あとがき';
+
+	/**
 	 * This seems a bug.
 	 *
 	 * @todo Fix this and make patch.
@@ -208,6 +215,24 @@ class Series extends Model {
 	 */
 	public function get_preface( $post_id ) {
 		return (string) get_post_meta( $post_id, '_preface', true );
+	}
+
+	/**
+	 * Get afterword title.
+	 *
+	 * あとがきの本文はシリーズ投稿の post_content だが、
+	 * 見出しは `_afterword_title` で「解説」「跋」などに変更できる。
+	 * 未設定・空白のみの場合はデフォルトの「あとがき」を返す。
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public function get_afterword_title( $post_id ) {
+		$title = (string) get_post_meta( $post_id, '_afterword_title', true );
+		// trim() は全角スペースを落とさないので、前後の空白は正規表現で除去する。
+		$title = preg_replace( '/\A[\s　]+|[\s　]+\z/u', '', $title );
+		return $title ?: self::DEFAULT_AFTERWORD_TITLE;
 	}
 
 	/**

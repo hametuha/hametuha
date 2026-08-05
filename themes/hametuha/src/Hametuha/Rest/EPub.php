@@ -168,7 +168,7 @@ class EPub extends RestTemplate {
 			// Add afterwords
 			if ( ! empty( $series->post_content ) ) {
 				$html['afterword'] = [
-					'label' => 'あとがき',
+					'label' => $this->series->get_afterword_title( $series->ID ),
 					'html'  => $this->get_content( $series_id, $series, 'afterword', $direction ),
 				];
 			}
@@ -378,10 +378,16 @@ class EPub extends RestTemplate {
 				$this->set_data( $this->factory( $id )->toc->getNavHTML( '本文' ), 'toc' );
 				break;
 			case 'afterword':
-				$this->title = 'あとがき';
+				$this->title = $this->series->get_afterword_title( $post->ID );
 				if ( empty( $post->post_content ) ) {
 					throw new \Exception( 'あとがきは設定されていません。', 403 );
 				}
+				// 見出しはユーザー入力なのでエスケープしてから縦中横を適用する。
+				$this->set_data( [
+					'afterword_title' => 'rtl' === $direction
+						? $this->factory( $id )->parser->tcyiz( esc_html( $this->title ) )
+						: esc_html( $this->title ),
+				] );
 				break;
 			case 'ads':
 				$this->title = '破滅派電子書籍近刊';

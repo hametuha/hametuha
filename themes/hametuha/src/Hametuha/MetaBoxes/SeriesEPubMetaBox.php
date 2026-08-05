@@ -21,13 +21,13 @@ class SeriesEPubMetaBox extends LeadMetaBox {
 	protected $priority = 'high';
 
 	protected $fields = [
-		'subtitle' => [
+		'subtitle'         => [
 			'class'       => Text::class,
 			'label'       => 'サブタイトル',
 			'required'    => false,
 			'description' => 'サブタイトルがあればつけてください。',
 		],
-		'excerpt'  => [
+		'excerpt'          => [
 			'class'       => TextArea::class,
 			'label'       => 'リード',
 			'required'    => true,
@@ -37,12 +37,19 @@ class SeriesEPubMetaBox extends LeadMetaBox {
 			'description' => 'リードは作品集のWebページおよび電子書籍販売ストアに一番最初に表示されます。作品を読むための非常に重要な要素なので、よく考えて入力してください。',
 			'placeholder' => 'ex. 都内有数のお嬢様学校をゾンビの群れが襲撃する！　そのときたまたま編入した「俺」は今年から共学になったこの学校唯一の男子として、全校生徒を守るべく釘バット一本で立ち向かう。21世紀を代表する新たなゾンビ文学の金字塔、ここに爆誕。',
 		],
-		'_preface' => [
+		'_preface'         => [
 			'class'       => TextArea::class,
 			'label'       => 'はじめに',
 			'required'    => false,
 			'rows'        => 10,
 			'description' => '入力した場合、本文の前に挿入されます。序文や献辞としてお使いください。HTMLを使用することができます。',
+		],
+		'_afterword_title' => [
+			'class'       => Text::class,
+			'label'       => 'あとがきのタイトル',
+			'required'    => false,
+			'placeholder' => 'あとがき',
+			'description' => 'あとがきの見出しと目次に表示される名前です。空欄の場合は「あとがき」になります。「解説」「跋」「あとがきにかえて」などに変更できます。',
 		],
 	];
 }

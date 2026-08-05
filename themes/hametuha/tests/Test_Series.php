@@ -122,6 +122,32 @@ class Test_Series extends WP_UnitTestCase {
 	}
 
 	/**
+	 * あとがきのタイトルが上書きできることをテスト
+	 */
+	public function test_afterword_title() {
+		// publish に遷移させると計測フック（cookie-tasting プラグイン依存）が走るため draft で作る。
+		$series_id = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+
+		// 未設定ならデフォルト。
+		$this->assertSame( 'あとがき', $this->series->get_afterword_title( $series_id ) );
+
+		// 空白のみでもデフォルト。
+		update_post_meta( $series_id, '_afterword_title', " \n　" );
+		$this->assertSame( 'あとがき', $this->series->get_afterword_title( $series_id ) );
+
+		// 入力があれば上書き。
+		update_post_meta( $series_id, '_afterword_title', '解説' );
+		$this->assertSame( '解説', $this->series->get_afterword_title( $series_id ) );
+
+		// 前後の空白は除去される。
+		update_post_meta( $series_id, '_afterword_title', ' あとがきにかえて ' );
+		$this->assertSame( 'あとがきにかえて', $this->series->get_afterword_title( $series_id ) );
+	}
+
+	/**
 	 * 空文字列やnullのテスト
 	 */
 	public function test_empty_values() {
