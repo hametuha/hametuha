@@ -279,11 +279,21 @@ class Post extends Command {
 		}
 		// Compile series preface and afterword.
 		if ( $series ) {
+			// キーはファイル名用のスラッグ、label は原稿に書き出す表示名。
+			// あとがきの表示名はシリーズ側で「解説」などに変更できる。
 			$extras = [
-				'preface'   => get_post_meta( $series->ID, '_preface', true ),
-				'afterword' => $series->post_content,
+				'preface'   => [
+					'label'   => 'はじめに',
+					'content' => get_post_meta( $series->ID, '_preface', true ),
+				],
+				'afterword' => [
+					'label'   => Series::get_instance()->get_afterword_title( $series->ID ),
+					'content' => $series->post_content,
+				],
 			];
-			foreach ( $extras as $label => $content ) {
+			foreach ( $extras as $slug => $extra ) {
+				$label   = $extra['label'];
+				$content = $extra['content'];
 				if ( empty( $content ) ) {
 					continue;
 				}
@@ -293,8 +303,8 @@ class Post extends Command {
 				switch ( $format ) {
 					case 'text':
 						$tagged_text = "<UNICODE-MAC>\n" . $this->to_text( $content_post, '', $note_format );
-						file_put_contents( "{$dir}/series-{$label}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
-						self::l( sprintf( 'series %s saved.', $label ) );
+						file_put_contents( "{$dir}/series-{$slug}.txt", mb_convert_encoding( str_replace( "\n", "\r", $tagged_text ), 'UTF-16BE', 'utf-8' ) );
+						self::l( sprintf( 'series %s (%s) saved.', $slug, $label ) );
 						break;
 					case 'plain':
 						$header = implode( "\n", [
@@ -302,8 +312,8 @@ class Post extends Command {
 							str_repeat( '-', 40 ),
 							'',
 						] );
-						file_put_contents( "{$dir}/series-{$label}-plain.txt", $header . $content );
-						self::l( sprintf( 'series %s saved.', $label ) );
+						file_put_contents( "{$dir}/series-{$slug}-plain.txt", $header . $content );
+						self::l( sprintf( 'series %s (%s) saved.', $slug, $label ) );
 						break;
 				}
 			}
