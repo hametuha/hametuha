@@ -57,22 +57,6 @@ function hametuha_is_standalone_book( $post = null ) {
 }
 
 /**
- * 単巻書籍の目次を取得する
- *
- * @param null|int|WP_Post $post
- *
- * @return string
- */
-function hametuha_get_book_toc( $post = null ) {
-	$post = get_post( $post );
-	if ( ! $post || 'series' !== $post->post_type ) {
-		return '';
-	}
-
-	return Series::get_instance()->get_toc( $post->ID );
-}
-
-/**
  * Convert post query arguments.
  *
  * @param array $args

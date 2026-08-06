@@ -231,11 +231,6 @@ class Test_Series extends WP_UnitTestCase {
 		$this->assertTrue( hametuha_is_standalone_book( $child_id ) );
 		// 親を持たない投稿は常に false。
 		$this->assertFalse( hametuha_is_standalone_book( $orphan_id ) );
-
-		// 目次は series からのみ取れる。
-		update_post_meta( $series_id, '_book_toc', '<ul><li>第一章</li></ul>' );
-		$this->assertSame( '<ul><li>第一章</li></ul>', hametuha_get_book_toc( $series_id ) );
-		$this->assertSame( '', hametuha_get_book_toc( $child_id ) );
 	}
 
 	/**
