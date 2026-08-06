@@ -165,6 +165,147 @@ class Test_Series extends WP_UnitTestCase {
 	}
 
 	/**
+	 * 単巻書籍フラグをテスト
+	 */
+	public function test_is_standalone() {
+		// publish に遷移させると計測フック（cookie-tasting プラグイン依存）が走るため draft で作る。
+		$series_id = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+
+		// 未設定なら連載扱い。子が0件でも単巻書籍とはみなさない。
+		$this->assertFalse( $this->series->is_standalone( $series_id ) );
+
+		update_post_meta( $series_id, '_standalone_book', 1 );
+		$this->assertTrue( $this->series->is_standalone( $series_id ) );
+
+		// 明示的に0を入れた場合も連載扱い。
+		update_post_meta( $series_id, '_standalone_book', 0 );
+		$this->assertFalse( $this->series->is_standalone( $series_id ) );
+	}
+
+	/**
+	 * 目次の取得をテスト
+	 */
+	public function test_get_toc() {
+		$series_id = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+
+		// 未設定なら空文字列。
+		$this->assertSame( '', $this->series->get_toc( $series_id ) );
+
+		// 空白のみでも空文字列として扱う（セクションを出さない判定に使うため）。
+		update_post_meta( $series_id, '_book_toc', "  \n " );
+		$this->assertSame( '', $this->series->get_toc( $series_id ) );
+
+		$toc = '<ol><li>吾輩は猫である</li></ol>';
+		update_post_meta( $series_id, '_book_toc', $toc );
+		$this->assertSame( $toc, $this->series->get_toc( $series_id ) );
+	}
+
+	/**
+	 * テンプレートタグが series と子投稿の両方で解決することをテスト
+	 */
+	public function test_standalone_template_tag() {
+		$series_id = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+		$child_id  = $this->factory->post->create( [
+			'post_type'   => 'post',
+			'post_status' => 'draft',
+			'post_parent' => $series_id,
+		] );
+		$orphan_id = $this->factory->post->create( [
+			'post_type'   => 'post',
+			'post_status' => 'draft',
+		] );
+
+		update_post_meta( $series_id, '_standalone_book', 1 );
+
+		$this->assertTrue( hametuha_is_standalone_book( $series_id ) );
+		// 子投稿からは親を辿る。
+		$this->assertTrue( hametuha_is_standalone_book( $child_id ) );
+		// 親を持たない投稿は常に false。
+		$this->assertFalse( hametuha_is_standalone_book( $orphan_id ) );
+
+		// 目次は series からのみ取れる。
+		update_post_meta( $series_id, '_book_toc', '<ul><li>第一章</li></ul>' );
+		$this->assertSame( '<ul><li>第一章</li></ul>', hametuha_get_book_toc( $series_id ) );
+		$this->assertSame( '', hametuha_get_book_toc( $child_id ) );
+	}
+
+	/**
+	 * 一覧から「子投稿のない連載」だけが除外されることをテスト
+	 *
+	 * hooks/series.php の posts_join フィルターの回帰テスト。SQL を直接書いているため
+	 * 壊れても表示を見るまで気づきにくい。
+	 */
+	public function test_archive_excludes_empty_series_but_keeps_standalone() {
+		$with_child = $this->create_published_series( '子のある連載' );
+		$this->create_published_post( '子作品', $with_child );
+
+		$empty = $this->create_published_series( '空の連載' );
+
+		$standalone = $this->create_published_series( '単巻書籍' );
+		update_post_meta( $standalone, '_standalone_book', 1 );
+
+		$this->go_to( home_url( '/?post_type=series' ) );
+		$found = wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' );
+
+		$this->assertContains( $with_child, $found, '子投稿のある連載は一覧に出る' );
+		$this->assertContains( $standalone, $found, '単巻書籍は子がなくても一覧に出る' );
+		$this->assertNotContains( $empty, $found, '空の連載は従来どおり一覧に出ない' );
+	}
+
+	/**
+	 * 公開済みの series を作る
+	 *
+	 * publish に遷移させると計測フック（cookie-tasting プラグイン依存）が走るため、
+	 * draft で作ってから DB を直接書き換える。
+	 *
+	 * @param string $title タイトル。
+	 * @return int
+	 */
+	protected function create_published_series( $title ) {
+		return $this->create_published( $title, 'series', 0 );
+	}
+
+	/**
+	 * 公開済みの投稿を作る
+	 *
+	 * @param string $title  タイトル。
+	 * @param int    $parent 親のseries ID。
+	 * @return int
+	 */
+	protected function create_published_post( $title, $parent ) {
+		return $this->create_published( $title, 'post', $parent );
+	}
+
+	/**
+	 * @param string $title     タイトル。
+	 * @param string $post_type 投稿タイプ。
+	 * @param int    $parent    親ID。
+	 * @return int
+	 */
+	protected function create_published( $title, $post_type, $parent ) {
+		global $wpdb;
+		$post_id = $this->factory->post->create( [
+			'post_type'   => $post_type,
+			'post_status' => 'draft',
+			'post_title'  => $title,
+			'post_parent' => $parent,
+		] );
+		$wpdb->update( $wpdb->posts, [ 'post_status' => 'publish' ], [ 'ID' => $post_id ] );
+		clean_post_cache( $post_id );
+
+		return $post_id;
+	}
+
+	/**
 	 * 空文字列やnullのテスト
 	 */
 	public function test_empty_values() {

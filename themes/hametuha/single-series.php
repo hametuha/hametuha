@@ -20,6 +20,9 @@ get_header( 'breadcrumb' );
 	$query         = \Hametuha\Model\Series::get_series_posts( get_the_ID(), 'publish', true );
 	$all_reviews   = $series->get_reviews( get_the_ID(), true, 1, 12 );
 	$ratings       = [];
+	// 単巻書籍は本文を破滅派に持たないので、収録作一覧のかわりに目次を出す。
+	$is_standalone = $series->is_standalone( get_the_ID() );
+	$toc           = $is_standalone ? $series->get_toc( get_the_ID() ) : '';
 	// Calc rating
 	if ( $query->have_posts() ) {
 		foreach ( $query->posts as $p ) {
@@ -112,9 +115,15 @@ get_header( 'breadcrumb' );
 endswitch;
 						?>
 						<span class="series__link--divider"></span>
-						<a href="#series-children" class="btn btn-trans page-anker">
-							<i class="icon-books"></i> <?php esc_html_e( '収録作一覧', 'hametuah' ); ?>
-						</a>
+						<?php if ( ! $is_standalone ) : ?>
+							<a href="#series-children" class="btn btn-trans page-anker">
+								<i class="icon-books"></i> <?php esc_html_e( '収録作一覧', 'hametuah' ); ?>
+							</a>
+						<?php elseif ( $toc ) : ?>
+							<a href="#series-children" class="btn btn-trans page-anker">
+								<i class="icon-books"></i> <?php esc_html_e( '目次', 'hametuha' ); ?>
+							</a>
+						<?php endif; ?>
 						<a href="#series-testimonials" class="btn btn-trans page-anker">
 							<i class="icon-star"></i> <?php esc_html_e( 'レビュー', 'hametuha' ); ?>
 						</a>
@@ -139,35 +148,42 @@ endswitch;
 					</p>
 				<?php endif; ?>
 				<ol class="series__status">
-					<li>
-						<?php
-						$range = $series->get_series_range( get_the_ID() );
-						if ( $series->is_finished( get_the_ID() ) ) :
-							?>
-							<i class="icon-checkmark3 ok"></i> 完結済み
-							（
-							<?php echo mysql2date( get_option( 'date_format' ), $range->start_date ); ?>
-							〜
-							<?php echo mysql2date( get_option( 'date_format' ), $range->last_date ); ?>
-							）
-						<?php else : ?>
-							<i class="icon-info2 ng"></i> 連載中
-							<small>
-								（最終更新： <?php echo mysql2date( get_option( 'date_format' ), $range->last_date ); ?>
+					<?php if ( $is_standalone ) : ?>
+						<?php // 単巻書籍は子投稿を持たないので、連載期間・作品数・文字数はいずれも算出できない。 ?>
+						<li>
+							<i class="icon-checkmark3 ok"></i> 刊行済み
+						</li>
+					<?php else : ?>
+						<li>
+							<?php
+							$range = $series->get_series_range( get_the_ID() );
+							if ( $series->is_finished( get_the_ID() ) ) :
+								?>
+								<i class="icon-checkmark3 ok"></i> 完結済み
+								（
+								<?php echo mysql2date( get_option( 'date_format' ), $range->start_date ); ?>
+								〜
+								<?php echo mysql2date( get_option( 'date_format' ), $range->last_date ); ?>
 								）
-							</small>
-						<?php endif; ?>
-					</li>
-					<li>
-						<i class="icon-books ok"></i> <?php echo number_format( $query->post_count ); ?> 作品収録
-					</li>
-					<li>
-						<i class="icon-reading ok"></i>
-						<?php
-							$length = get_post_length();
-							printf( '%1$s文字（400字詰原稿用紙%2$s枚）', number_format_i18n( $length ), number_format_i18n( ceil( $length / 400 ) ) );
-						?>
-					</li>
+							<?php else : ?>
+								<i class="icon-info2 ng"></i> 連載中
+								<small>
+									（最終更新： <?php echo mysql2date( get_option( 'date_format' ), $range->last_date ); ?>
+									）
+								</small>
+							<?php endif; ?>
+						</li>
+						<li>
+							<i class="icon-books ok"></i> <?php echo number_format( $query->post_count ); ?> 作品収録
+						</li>
+						<li>
+							<i class="icon-reading ok"></i>
+							<?php
+								$length = get_post_length();
+								printf( '%1$s文字（400字詰原稿用紙%2$s枚）', number_format_i18n( $length ), number_format_i18n( ceil( $length / 400 ) ) );
+							?>
+						</li>
+					<?php endif; ?>
 					<?php
 					$afterwords = trim( $post->post_content );
 					if ( ! empty( $afterwords ) ) :
@@ -240,54 +256,13 @@ endswitch;
 
 
 	<!-- //.series__row--author -->
-	<div class="series__row series__row--children" id="series-children">
-
-		<div class="container series__inner">
-
-			<div class="row">
-				<div class="col-12 col-sm-4">
-					<h2 class="series__title--list">
-						<small class="series__title--caption">Works</small>
-						収録作一覧
-					</h2>
-				</div>
-
-				<div class="col-12 col-sm-8">
-					<?php if ( $query->have_posts() ) : ?>
-						<ol class="series__list">
-							<?php
-							$counter = 0;
-							while ( $query->have_posts() ) {
-								++$counter;
-								$query->the_post();
-								hameplate( 'parts/loop-series', get_post_type(), [
-									'counter' => $counter,
-								] );
-							}
-							wp_reset_postdata();
-							?>
-						</ol>
-
-					<?php else : ?>
-
-						<div class="alert alert-warning">
-							<p>まだ作品が登録されていません。<a class="alert-link" href="#series-notification">破滅派をフォロー</a>して、作者の活躍に期待してください。
-							</p>
-						</div>
-
-						<?php
-					endif;
-					wp_reset_postdata();
-					?>
-				</div>
-			</div>
-
-
-		</div>
-		<!-- //.container -->
-
-	</div>
-	<!-- series_row--children -->
+	<?php
+	if ( $is_standalone ) {
+		hameplate( 'parts/series-toc', '', [ 'toc' => $toc ] );
+	} else {
+		hameplate( 'parts/series-children', '', [ 'query' => $query ] );
+	}
+	?>
 
 
 	<div class="series__row series__row--testimonials" id="series-testimonials">

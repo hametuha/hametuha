@@ -181,6 +181,9 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 
 /**
  * 子作品が1つもない場合はシリーズとして公開できない
+ *
+ * ただし単巻書籍（破滅派の外で制作し、本文を入稿していない書籍）は
+ * 子投稿を持たないのが正常なので除外しない。
  */
 add_filter( 'posts_join', function ( $join, WP_Query $wp_query ) {
 	if ( ! $wp_query->is_main_query() || is_admin() ) {
@@ -195,14 +198,19 @@ add_filter( 'posts_join', function ( $join, WP_Query $wp_query ) {
 	}
 
 	global $wpdb;
-	// 少なくとも1つは公開済みの子投稿が紐づいている連載のみを表示
+	// 公開済みの子投稿が1つ以上ある連載、または単巻書籍のみを表示
 	$join .= " INNER JOIN (
-		SELECT DISTINCT post_parent
+		SELECT DISTINCT post_parent AS series_id
 		FROM {$wpdb->posts}
 		WHERE post_parent > 0
 		AND post_status = 'publish'
 		AND post_type = 'post'
-	) AS series_children ON {$wpdb->posts}.ID = series_children.post_parent";
+		UNION
+		SELECT DISTINCT post_id AS series_id
+		FROM {$wpdb->postmeta}
+		WHERE meta_key = '_standalone_book'
+		AND meta_value = '1'
+	) AS series_children ON {$wpdb->posts}.ID = series_children.series_id";
 
 	return $join;
 }, 10, 2 );
