@@ -29,7 +29,7 @@ class SeriesFormatMetaBox extends EditMetaBox {
 	protected $priority = 'high';
 
 	protected $fields = [
-		'_standalone_book' => [
+		'_standalone_book'  => [
 			'class'       => Radio::class,
 			'label'       => '形態',
 			'options'     => [
@@ -37,14 +37,14 @@ class SeriesFormatMetaBox extends EditMetaBox {
 				1 => '単巻書籍（破滅派の外で制作し、本文を入稿しない）',
 			],
 			'default'     => 0,
-			'description' => '単巻書籍にすると、収録作一覧のかわりに下の目次が表示され、作品数・文字数・連載期間は表示されなくなります。売上報告や執筆者一覧はどちらでも同じように機能します。',
+			'description' => '単巻書籍にすると、収録作一覧のかわりに下の内容紹介が表示され、作品数・文字数・連載期間は表示されなくなります。売上報告や執筆者一覧はどちらでも同じように機能します。',
 		],
-		'_book_toc'        => [
+		'_book_description' => [
 			'class'       => TextArea::class,
-			'label'       => '目次',
+			'label'       => '内容紹介',
 			'required'    => false,
 			'rows'        => 10,
-			'description' => 'HTMLが使えます。<code>&lt;ol&gt;</code> や <code>&lt;ul&gt;</code> で目次を書いてください。空欄の場合、目次は表示されません。単巻書籍のときだけ使われます。',
+			'description' => 'HTMLが使えます。目次・装丁・初出など、本の中身が伝わることを自由に書いてください。空欄の場合、内容紹介は表示されません。単巻書籍のときだけ使われます。',
 		],
 	];
 }

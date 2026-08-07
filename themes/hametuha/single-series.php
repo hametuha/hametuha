@@ -20,9 +20,9 @@ get_header( 'breadcrumb' );
 	$query         = \Hametuha\Model\Series::get_series_posts( get_the_ID(), 'publish', true );
 	$all_reviews   = $series->get_reviews( get_the_ID(), true, 1, 12 );
 	$ratings       = [];
-	// 単巻書籍は本文を破滅派に持たないので、収録作一覧のかわりに目次を出す。
-	$is_standalone = $series->is_standalone( get_the_ID() );
-	$toc           = $is_standalone ? $series->get_toc( get_the_ID() ) : '';
+	// 単巻書籍は本文を破滅派に持たないので、収録作一覧のかわりに内容紹介を出す。
+	$is_standalone    = $series->is_standalone( get_the_ID() );
+	$book_description = $is_standalone ? $series->get_book_description( get_the_ID() ) : '';
 	// Calc rating
 	if ( $query->have_posts() ) {
 		foreach ( $query->posts as $p ) {
@@ -119,9 +119,9 @@ endswitch;
 							<a href="#series-children" class="btn btn-trans page-anker">
 								<i class="icon-books"></i> <?php esc_html_e( '収録作一覧', 'hametuah' ); ?>
 							</a>
-						<?php elseif ( $toc ) : ?>
+						<?php elseif ( $book_description ) : ?>
 							<a href="#series-children" class="btn btn-trans page-anker">
-								<i class="icon-books"></i> <?php esc_html_e( '目次', 'hametuha' ); ?>
+								<i class="icon-books"></i> <?php esc_html_e( '内容紹介', 'hametuha' ); ?>
 							</a>
 						<?php endif; ?>
 						<a href="#series-testimonials" class="btn btn-trans page-anker">
@@ -258,7 +258,7 @@ endswitch;
 	<!-- //.series__row--author -->
 	<?php
 	if ( $is_standalone ) {
-		hameplate( 'parts/series-toc', '', [ 'toc' => $toc ] );
+		hameplate( 'parts/series-description', '', [ 'description' => $book_description ] );
 	} else {
 		hameplate( 'parts/series-children', '', [ 'query' => $query ] );
 	}

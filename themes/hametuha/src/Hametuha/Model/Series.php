@@ -297,17 +297,17 @@ class Series extends Model {
 	}
 
 	/**
-	 * 単巻書籍の目次を取得する
+	 * 単巻書籍の内容紹介を取得する
 	 *
-	 * 本文が破滅派にないため収録作一覧を組み立てられない。書き手が自由記述した
-	 * HTML をそのまま保持する。
+	 * 本文が破滅派にないため収録作一覧を組み立てられない。目次・装丁・初出など、
+	 * 書き手が自由記述した HTML をそのまま保持する。
 	 *
 	 * @param int $post_id
 	 *
 	 * @return string
 	 */
-	public function get_toc( $post_id ) {
-		return trim( (string) get_post_meta( $post_id, '_book_toc', true ) );
+	public function get_book_description( $post_id ) {
+		return trim( (string) get_post_meta( $post_id, '_book_description', true ) );
 	}
 
 	/**

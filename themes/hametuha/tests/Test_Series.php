@@ -186,24 +186,24 @@ class Test_Series extends WP_UnitTestCase {
 	}
 
 	/**
-	 * 目次の取得をテスト
+	 * 内容紹介の取得をテスト
 	 */
-	public function test_get_toc() {
+	public function test_get_book_description() {
 		$series_id = $this->factory->post->create( [
 			'post_type'   => 'series',
 			'post_status' => 'draft',
 		] );
 
 		// 未設定なら空文字列。
-		$this->assertSame( '', $this->series->get_toc( $series_id ) );
+		$this->assertSame( '', $this->series->get_book_description( $series_id ) );
 
 		// 空白のみでも空文字列として扱う（セクションを出さない判定に使うため）。
-		update_post_meta( $series_id, '_book_toc', "  \n " );
-		$this->assertSame( '', $this->series->get_toc( $series_id ) );
+		update_post_meta( $series_id, '_book_description', "  \n " );
+		$this->assertSame( '', $this->series->get_book_description( $series_id ) );
 
-		$toc = '<ol><li>吾輩は猫である</li></ol>';
-		update_post_meta( $series_id, '_book_toc', $toc );
-		$this->assertSame( $toc, $this->series->get_toc( $series_id ) );
+		$description = '<ol><li>吾輩は猫である</li></ol>';
+		update_post_meta( $series_id, '_book_description', $description );
+		$this->assertSame( $description, $this->series->get_book_description( $series_id ) );
 	}
 
 	/**
