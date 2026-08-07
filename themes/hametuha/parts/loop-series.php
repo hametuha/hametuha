@@ -10,6 +10,8 @@ $class   = [ 'loop-series', 'shadow-sm' ];
 if ( $has_kdp ) {
 	$class[] = 'has-kdp';
 }
+// 責任者の肩書きは作品集ごとに違う（著・編集・監修・編著）。単体ページと同じものを使う。
+$owner_label = \Hametuha\Model\Collaborators::get_instance()->owner_label( get_the_ID() );
 ?>
 <li <?php post_class( implode( ' ', $class ) ); ?>>
 	<a class="loop-series__link" href="<?php the_permalink(); ?>">
@@ -38,23 +40,33 @@ if ( $has_kdp ) {
 			<ul class="loop-series__metas">
 				<li class="loop-series__meta loop-series__meta--author">
 					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
-					<?php the_author(); ?> 編
+					<?php the_author(); ?> <?php echo esc_html( $owner_label ); ?>
 				</li>
-				<li class="loop-series__meta loop-series__meta--date">
-					<i class="icon-calendar2"></i> <?php the_series_range(); ?>
-				</li>
-				<li class="loop-series__meta loop-series__meta--volume d-flex justify-content-between align-center">
-					<span>
-						<i class="icon-books"></i>
-						<?php echo number_format_i18n( get_post_children_count() ); ?>作
-						（<?php the_post_length( '全', '文字', '文字数不明' ); ?>）
-					</span>
-					<?php if ( is_series_finished() ) : ?>
-						<span class="badge rounded-pill text-bg-primary">完結</span>
-					<?php else : ?>
-						<span class="badge rounded-pill text-bg-secondary">連載中</span>
-					<?php endif; ?>
-				</li>
+				<?php if ( hametuha_is_standalone_book() ) : ?>
+					<?php // 単巻書籍は子投稿を持たないので、連載期間・作品数・文字数はいずれも算出できない。 ?>
+					<li class="loop-series__meta loop-series__meta--date">
+						<i class="icon-calendar2"></i> <?php echo esc_html( get_the_date() ); ?>
+					</li>
+					<li class="loop-series__meta loop-series__meta--volume d-flex justify-content-end align-center">
+						<span class="badge rounded-pill text-bg-primary">刊行済み</span>
+					</li>
+				<?php else : ?>
+					<li class="loop-series__meta loop-series__meta--date">
+						<i class="icon-calendar2"></i> <?php the_series_range(); ?>
+					</li>
+					<li class="loop-series__meta loop-series__meta--volume d-flex justify-content-between align-center">
+						<span>
+							<i class="icon-books"></i>
+							<?php echo number_format_i18n( get_post_children_count() ); ?>作
+							（<?php the_post_length( '全', '文字', '文字数不明' ); ?>）
+						</span>
+						<?php if ( is_series_finished() ) : ?>
+							<span class="badge rounded-pill text-bg-primary">完結</span>
+						<?php else : ?>
+							<span class="badge rounded-pill text-bg-secondary">連載中</span>
+						<?php endif; ?>
+					</li>
+				<?php endif; ?>
 			</ul>
 
 

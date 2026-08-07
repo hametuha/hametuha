@@ -72,7 +72,9 @@ class Collaborators extends Singleton {
 	 * @return string
 	 */
 	public function owner_label( $series_id ) {
-		return $this->owner_types[ $this->owner_type( $series_id ) ];
+		$type = $this->owner_type( $series_id );
+		// 一覧でも使うので、未知の値が1件でも混じって全体が落ちないようにする。
+		return $this->owner_types[ $type ] ?? $this->owner_types['writer'];
 	}
 
 	/**

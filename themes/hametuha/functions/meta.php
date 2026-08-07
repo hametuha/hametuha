@@ -30,13 +30,17 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 		);
 	} elseif ( is_singular( 'series' ) ) {
 		// 連載
+		$is_standalone = \Hametuha\Model\Series::get_instance()->is_standalone( get_queried_object_id() );
 		return sprintf(
-			'%s『%s』（%s, %d年-, %s）',
+			// 単巻書籍は連載期間を持たないので、開始年を示すハイフンをつけない。
+			$is_standalone ? '%s『%s』（%s, %d年, %s）' : '%s『%s』（%s, %d年-, %s）',
 			hametuha_author_name( get_queried_object() ),
 			get_the_title( get_queried_object() ),
 			get_bloginfo( 'name' ),
 			mysql2date( 'Y', get_queried_object()->post_date ),
-			\Hametuha\Model\Series::get_instance()->is_finished( get_queried_object_id() ) ? '完結' : '連載中'
+			$is_standalone
+				? '刊行済み'
+				: ( \Hametuha\Model\Series::get_instance()->is_finished( get_queried_object_id() ) ? '完結' : '連載中' )
 		);
 	} elseif ( is_singular( 'news' ) ) {
 		// ニュース
