@@ -30,7 +30,12 @@ if ( ! $description ) {
 
 			<div class="col-12 col-sm-8">
 				<div class="series__description">
-					<?php echo wp_kses_post( $description ); ?>
+					<?php
+					// 保存時は素通しなので、出力時に必ず kses を通す。将来この行に変換が
+					// 挟まっても守られるよう、サニタイザを最後に置く。
+					// wpautop はブロック要素を包まないので、HTMLで書いた場合はそのまま残る。
+					echo wp_kses_post( wpautop( $description ) );
+					?>
 				</div>
 			</div>
 		</div>
