@@ -282,6 +282,35 @@ class Series extends Model {
 	}
 
 	/**
+	 * 子投稿を持たない単巻書籍か
+	 *
+	 * 破滅派の外で制作した書籍をあとから電子化した場合、本文を入稿しないため
+	 * 子投稿が存在しない。「まだ作品が登録されていない空の連載」と区別する必要が
+	 * あるので、子の件数ではなく明示的なフラグで判定する。
+	 *
+	 * @param int $post_id
+	 *
+	 * @return bool
+	 */
+	public function is_standalone( $post_id ) {
+		return (bool) get_post_meta( $post_id, '_standalone_book', true );
+	}
+
+	/**
+	 * 単巻書籍の内容紹介を取得する
+	 *
+	 * 本文が破滅派にないため収録作一覧を組み立てられない。目次・装丁・初出など、
+	 * 書き手が自由記述した HTML をそのまま保持する。
+	 *
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
+	public function get_book_description( $post_id ) {
+		return trim( (string) get_post_meta( $post_id, '_book_description', true ) );
+	}
+
+	/**
 	 * Get visibility of series
 	 *
 	 * @param int $series_id

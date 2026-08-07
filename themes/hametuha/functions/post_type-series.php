@@ -37,6 +37,26 @@ function is_series_finished( $post = null ) {
 }
 
 /**
+ * 単巻書籍（子投稿を持たない電子書籍）か
+ *
+ * @param null|int|WP_Post $post
+ *
+ * @return bool
+ */
+function hametuha_is_standalone_book( $post = null ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return false;
+	}
+	$series_id = 'series' === $post->post_type ? $post->ID : $post->post_parent;
+	if ( ! $series_id ) {
+		return false;
+	}
+
+	return Series::get_instance()->is_standalone( $series_id );
+}
+
+/**
  * Convert post query arguments.
  *
  * @param array $args
