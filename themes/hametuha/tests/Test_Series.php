@@ -234,6 +234,32 @@ class Test_Series extends WP_UnitTestCase {
 	}
 
 	/**
+	 * 責任者の肩書きをテスト
+	 *
+	 * 一覧のカードでも使うため、不正な値で全体が落ちないことを担保する。
+	 */
+	public function test_owner_label() {
+		$collaborators = \Hametuha\Model\Collaborators::get_instance();
+		$series_id     = $this->factory->post->create( [
+			'post_type'   => 'series',
+			'post_status' => 'draft',
+		] );
+
+		// 未設定なら「著」。
+		$this->assertSame( '著', $collaborators->owner_label( $series_id ) );
+
+		update_post_meta( $series_id, '_owner_type', 'editor' );
+		$this->assertSame( '編集', $collaborators->owner_label( $series_id ) );
+
+		update_post_meta( $series_id, '_owner_type', 'self_produce' );
+		$this->assertSame( '編著', $collaborators->owner_label( $series_id ) );
+
+		// 未知の値でも例外にせず既定値へ倒す。
+		update_post_meta( $series_id, '_owner_type', 'unknown_type' );
+		$this->assertSame( '著', $collaborators->owner_label( $series_id ) );
+	}
+
+	/**
 	 * 一覧から「子投稿のない連載」だけが除外されることをテスト
 	 *
 	 * hooks/series.php の posts_join フィルターの回帰テスト。SQL を直接書いているため

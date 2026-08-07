@@ -10,6 +10,8 @@ $class   = [ 'loop-series', 'shadow-sm' ];
 if ( $has_kdp ) {
 	$class[] = 'has-kdp';
 }
+// 責任者の肩書きは作品集ごとに違う（著・編集・監修・編著）。単体ページと同じものを使う。
+$owner_label = \Hametuha\Model\Collaborators::get_instance()->owner_label( get_the_ID() );
 ?>
 <li <?php post_class( implode( ' ', $class ) ); ?>>
 	<a class="loop-series__link" href="<?php the_permalink(); ?>">
@@ -38,7 +40,7 @@ if ( $has_kdp ) {
 			<ul class="loop-series__metas">
 				<li class="loop-series__meta loop-series__meta--author">
 					<?php echo get_avatar( get_the_author_meta( 'ID' ), 40 ); ?>
-					<?php the_author(); ?> 編
+					<?php the_author(); ?> <?php echo esc_html( $owner_label ); ?>
 				</li>
 				<?php if ( hametuha_is_standalone_book() ) : ?>
 					<?php // 単巻書籍は子投稿を持たないので、連載期間・作品数・文字数はいずれも算出できない。 ?>
