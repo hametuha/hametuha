@@ -56,7 +56,9 @@
 		"wpackagist-plugin/anyway-feedback": "^1.2",
 		"wpackagist-plugin/cookie-tasting": "^1.0",
 		"wpackagist-plugin/query-monitor": "^4.0",
-		"wpackagist-plugin/hameslack": "2.1.0"
+		"wpackagist-plugin/hameslack": "2.1.0",
+		"wpackagist-plugin/ai": "^1.3",
+		"wpackagist-plugin/ai-provider-for-google": "^1.1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^9.6",
