@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea0c53f112ff8fabf6d729a35c756900",
+    "content-hash": "dfd7f2e453a77eb583c432faa6d37de1",
     "packages": [
         {
             "name": "composer/installers",
@@ -500,15 +500,15 @@
         },
         {
             "name": "wpackagist-plugin/hameslack",
-            "version": "2.2.0",
+            "version": "2.1.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/hameslack/",
-                "reference": "tags/2.2.0"
+                "reference": "tags/2.1.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/hameslack.2.2.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/hameslack.2.1.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
