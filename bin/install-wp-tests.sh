@@ -68,7 +68,10 @@ if [ ! -f "$WP_TESTS_DIR/wp-tests-config.php" ]; then
     download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR/wp-tests-config.php"
     
     # 設定の置換
-    WP_CORE_DIR="$(pwd)/wp"
+    # PHPUnitはコンテナ内で実行される（composer test）ため、ABSPATHはコンテナ側のパスを書く。
+    # ホスト側の絶対パス（$(pwd)/wp）を書くとコンテナから解決できず、install.phpがfatalになる。
+    # docker-compose.yml で ./wp を /var/www/html にマウントしている。
+    WP_CORE_DIR="/var/www/html"
     sed -i.bak "s:dirname( __FILE__ ) . '/src/':'$WP_CORE_DIR/':" "$WP_TESTS_DIR/wp-tests-config.php"
     sed -i.bak "s/youremptytestdbnamehere/wordpress_test/" "$WP_TESTS_DIR/wp-tests-config.php"
     sed -i.bak "s/yourusernamehere/wordpress/" "$WP_TESTS_DIR/wp-tests-config.php"
