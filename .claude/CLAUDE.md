@@ -257,9 +257,38 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 | キャッシュ系 | `hamecache` / `memcached` / `mo-cache` | `hamecache` は Cloudflare 連携、`memcached` は object-cache ドロップイン。いずれもローカルに対応するインフラが無く動作しない |
 | 外部要因対応 | `ads-txt` / `robots-txt-editor` | ads.txt / robots.txt は外部（広告配信・クローラ）向けの出力。ローカルで再現する意味がない |
 | 外部API依存 | `akismet` | スパム判定は Akismet のサーバ側。APIキーの無いローカルでは実質動作しない |
+| private リポジトリ | `gianism-mixi` / `selected-post-for-contact-form-7` | **下記のとおり性質が異なる。CI を壊さないための妥協** |
 
 **このため、キャッシュ絡みの不具合はローカルでは原理的に再現できません。**
 キャッシュが疑わしい調査は本番側のログ・`wp @production` での確認に頼ること。
+
+#### private リポジトリの2本について（他の除外とは意味が違う）
+
+上3分類は「ローカルで動かない／再現する意味がない」ものですが、**この2本は本番で現役稼働しており、
+ローカルでも動くはずのもの**です。composer に載せていないのは技術的な妥協であり、
+**ローカルが本番を再現できていない既知の穴**として扱うこと。
+
+- `gianism-mixi` — 破滅派の有料アドオン（mixi ログイン）。`hametuha/gianism-mixi` (private)
+- `selected-post-for-contact-form-7` — 「この投稿の作者に問い合わせる」CF7 拡張。`tarosky/selected-post-for-contact-form-7` (private)
+
+**載せられない理由:** ルート `composer.json` に private リポジトリを足すと、CI の
+`lint-php` ジョブ（`tarosky/workflows/.github/workflows/phpcs.yml@main`）が落ちる。
+このワークフローはルートで `composer install` を実行するが、トークン入力を持たず、
+Actions の `secrets.GITHUB_TOKEN` は呼び出し元リポジトリにしかスコープが無いため
+他リポジトリの private を読めない。解決するには共有ワークフロー側の改修が必要で、
+影響が破滅派の外（他の Tarosky プロジェクト）に及ぶ。
+
+**この2本が絡む挙動を検証するときは、手動で `plugins/` に配置すること。**
+
+```bash
+gh repo clone hametuha/gianism-mixi plugins/gianism-mixi
+gh repo clone tarosky/selected-post-for-contact-form-7 plugins/selected-post-for-contact-form-7
+```
+
+`plugins/` は `.gitignore` 済みなので、置いても Git には入らない。
+
+**再検討の条件:** private プラグインが増えて手動配置が現実的でなくなったら、
+共有ワークフローにトークン入力を足して `vcs` リポジトリ方式へ移行する。
 
 ### 除外の判断基準
 
