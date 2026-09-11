@@ -256,6 +256,7 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 |---|---|---|
 | キャッシュ系 | `hamecache` / `memcached` / `mo-cache` | `hamecache` は Cloudflare 連携、`memcached` は object-cache ドロップイン。いずれもローカルに対応するインフラが無く動作しない |
 | 外部要因対応 | `ads-txt` / `robots-txt-editor` | ads.txt / robots.txt は外部（広告配信・クローラ）向けの出力。ローカルで再現する意味がない |
+| 外部API依存 | `akismet` | スパム判定は Akismet のサーバ側。APIキーの無いローカルでは実質動作しない |
 
 **このため、キャッシュ絡みの不具合はローカルでは原理的に再現できません。**
 キャッシュが疑わしい調査は本番側のログ・`wp @production` での確認に頼ること。
