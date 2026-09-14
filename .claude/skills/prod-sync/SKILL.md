@@ -39,6 +39,35 @@ rg -n "function_exists\(|class_exists\(" plugins/<slug>/ | head -20
 
 ## 手順
 
+### 0. 宣言と実体が一致しているか確認する（最初にやる）
+
+**`wp/` と `plugins/` は .gitignore 済みのビルド生成物で、ブランチを切り替えても追随しない。** 別ブランチでの作業結果がディスクに残ったままになる。この状態で比較すると **composer.lock（宣言）とディスク（実体）が食い違い、比較結果そのものが信用できなくなる。**
+
+```bash
+# コア: 宣言と実体
+grep -n '"johnpbloch/wordpress"' composer.json
+grep -m1 'wp_version = ' wp/wp-includes/version.php
+
+# プラグイン: 代表数本の宣言と実体
+for p in contact-form-7 gianism query-monitor; do
+  printf "%-18s lock:%-10s disk:%s\n" "$p" \
+    "$(php -r '$l=json_decode(file_get_contents("composer.lock"),true); foreach($l["packages"] as $x){ if($x["name"]==="wpackagist-plugin/'$p'") echo $x["version"]; }')" \
+    "$(grep -m1 -i '^ \* Version:' plugins/$p/*.php 2>/dev/null | head -1 | sed 's/.*[Vv]ersion: *//')"
+done
+```
+
+ずれていたら `composer install` で宣言どおりに戻してから進む。**ただしこれはディスク上の環境を巻き戻す**ので、別ブランチの作業を保持したい場合はそちらへ切り替えてから実行すること。
+
+実例（2026-09-14）: master 起点のブランチでこのスキルを実行したところ、composer.json は WP 6.8.6 なのにディスクは 7.1、`contact-form-7` は lock 5.7.7 に対し実体 6.1.7 だった（別ブランチの作業結果が残っていた）。**「未管理9本」と報告されたプラグインも実際にはディスクに存在していた。**
+
+### 0.5. 同じ作業が既に別ブランチ/PRで進んでいないか確認する
+
+```bash
+gh pr list --state open --limit 10
+```
+
+差分がごっそり出たときは、**それを解消する PR が既に開いていないか**を疑う。あるならそのブランチに切り替えて続きをやる。master 起点で作り直すと、重複した2つ目の実装ができてコンフリクトの種になる。
+
 ### 1. 本番の実態を取得する
 
 ```bash
@@ -130,6 +159,9 @@ browser_console_messages でエラーを確認する。
 本番のプラグインはデプロイ対象外（デプロイはテーマのみ）なので、**本番側は手作業**になる。PR 本文に順序を明記すること。依存の向きがあるときは特に。
 
 ## 落とし穴（すべて実際に踏んだもの）
+
+**ブランチを切り替えても `wp/` と `plugins/` は変わらない**
+.gitignore 済みのため Git が管理していない。composer.lock を読む比較スクリプトは「宣言」を見るが、実際に動いているのは「実体」。手順 0 を飛ばすと、**比較結果を信じて不要な更新をかける**ことになる。
 
 **Docker の bind mount はディレクトリを作り直すと切れる**
 `rm -rf wp-tests` のようにマウント元を削除・再作成したら **必ず `composer restart`**。ホストにファイルがあるのにコンテナからは空に見える。症状は「Could not find /tmp/wordpress-tests-lib/...」のような**フォールバック先のパス**のエラーとして出るため原因が見えにくい。
