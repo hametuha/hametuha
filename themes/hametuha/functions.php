@@ -65,26 +65,6 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 }
 
 /**
- * Allowed sites for API callback
- *
- * @todo Remove absence of hametuha.pics
- */
-add_filter( 'http_request_host_is_external', function ( $allow, $host, $url ) {
-	return false !== array_search($host, [
-		'local.hametuha.top',
-		'hametuha.pics',
-		'local.hametuha.pics',
-	]);
-}, 10, 3 );
-
-
-$oauth_mo = WP_LANG_DIR . "/oauth-server-$locale.mo";
-if ( file_exists( $oauth_mo ) ) {
-	load_textdomain( 'default', $oauth_mo );
-}
-
-
-/**
  * 読み込むべきスクリプトのフラグ
  * @var array
  */
