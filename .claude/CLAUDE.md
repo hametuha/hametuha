@@ -244,6 +244,82 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 3. **プラグイン**は`plugins/`にcomposerでインストール
 4. **PhpStorm**では`wp/`をInclude Pathに追加してコードヒントを有効化
 
+## プラグイン管理方針（composerに載せるもの・載せないもの）
+
+`composer.json` は「ローカルで本番を再現するための構成定義」です。本番で動いているプラグインは
+原則すべて composer 管理下に置きますが、**ローカルで動かないもの・再現する意味がないものは
+意図的に除外します。** 載せても動かないなら、依存の記述として嘘になるためです。
+
+### 除外するもの
+
+| 分類 | 該当プラグイン | 理由 |
+|---|---|---|
+| キャッシュ系 | `hamecache` / `memcached` / `mo-cache` | `hamecache` は Cloudflare 連携、`memcached` は object-cache ドロップイン。いずれもローカルに対応するインフラが無く動作しない |
+| 外部要因対応 | `ads-txt` / `robots-txt-editor` | ads.txt / robots.txt は外部（広告配信・クローラ）向けの出力。ローカルで再現する意味がない |
+| 外部API依存 | `akismet` | スパム判定は Akismet のサーバ側。APIキーの無いローカルでは実質動作しない |
+| private リポジトリ | `gianism-mixi` / `selected-post-for-contact-form-7` | **下記のとおり性質が異なる。CI を壊さないための妥協** |
+
+**このため、キャッシュ絡みの不具合はローカルでは原理的に再現できません。**
+キャッシュが疑わしい調査は本番側のログ・`wp @production` での確認に頼ること。
+
+#### private リポジトリの2本について（他の除外とは意味が違う）
+
+上3分類は「ローカルで動かない／再現する意味がない」ものですが、**この2本は本番で現役稼働しており、
+ローカルでも動くはずのもの**です。composer に載せていないのは技術的な妥協であり、
+**ローカルが本番を再現できていない既知の穴**として扱うこと。
+
+- `gianism-mixi` — 破滅派の有料アドオン（mixi ログイン）。`hametuha/gianism-mixi` (private)
+- `selected-post-for-contact-form-7` — 「この投稿の作者に問い合わせる」CF7 拡張。`tarosky/selected-post-for-contact-form-7` (private)
+
+**載せられない理由:** ルート `composer.json` に private リポジトリを足すと、CI の
+`lint-php` ジョブ（`tarosky/workflows/.github/workflows/phpcs.yml@main`）が落ちる。
+このワークフローはルートで `composer install` を実行するが、トークン入力を持たず、
+Actions の `secrets.GITHUB_TOKEN` は呼び出し元リポジトリにしかスコープが無いため
+他リポジトリの private を読めない。解決するには共有ワークフロー側の改修が必要で、
+影響が破滅派の外（他の Tarosky プロジェクト）に及ぶ。
+
+**この2本が絡む挙動を検証するときは、手動で `plugins/` に配置すること。**
+
+```bash
+gh repo clone hametuha/gianism-mixi plugins/gianism-mixi
+gh repo clone tarosky/selected-post-for-contact-form-7 plugins/selected-post-for-contact-form-7
+```
+
+`plugins/` は `.gitignore` 済みなので、置いても Git には入らない。
+
+**再検討の条件:** private プラグインが増えて手動配置が現実的でなくなったら、
+共有ワークフローにトークン入力を足して `vcs` リポジトリ方式へ移行する。
+
+### 除外の判断基準
+
+新しいプラグインを本番に入れたとき、composer に載せるかは次で判断する。
+
+1. **ローカルで実際に動くか。** 外部SaaS・特定ホスティング機能に依存していて
+   ローカルでは起動すらしないなら除外。
+2. **ローカルで再現する価値があるか。** 出力先が外部にしか無いもの（ads.txt、robots.txt、
+   外部監視タグ等）は除外。
+3. 上記に当てはまらなければ **載せる。** 「たぶん使わない」は理由にならない。
+   載っていないプラグインはローカルに存在せず、その分ローカルは本番と別物になる。
+
+### 除外したものの記録
+
+除外は `composer.json` に痕跡が残らないため、**この表が唯一の記録**です。
+本番から消した・増やした場合はここを更新すること。
+
+### 入手経路が無いプラグイン
+
+wp.org にも自社 GitHub にも無く、composer で取得できないものは管理下に置けません。
+**現時点では該当なし。**
+
+このようなプラグインを見つけたら、管理下に置く方法を探すのではなく
+**本番から消せないかをまず検討すること。** 取得経路が無いということは
+更新経路も無いということで、脆弱性が出ても直せません。
+
+- 2026-09-12: `maintenance-mode` (5.4) を本番から削除。wp.org で **2017年に公開停止**され、
+  以降9年間更新されていなかった。破滅派は独自の `maintenance.php` ドロップイン
+  （コアの `wp_maintenance()` が拾い、`themes/hametuha/503.php` を描画）を持っており、
+  テーマ・mu-plugins からこのプラグインへの参照は1件も無かったため、機能的な影響なし。
+
 ## Feature Group タグシステム
 
 ### 概要
