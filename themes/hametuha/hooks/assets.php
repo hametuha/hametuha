@@ -161,10 +161,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( is_singular( 'post' ) ) {
 		wp_enqueue_script( 'hametuha-single' );
 	}
-	// Front page.
-	if ( is_front_page() ) {
-		wp_enqueue_script( 'hametuha-front' );
-	}
 	// Series.
 	if ( is_singular( 'series' ) ) {
 		wp_enqueue_script( 'hametuha-series' );
