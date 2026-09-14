@@ -43,15 +43,23 @@ if ( ! is_array( $lock ) ) {
 	exit( 2 );
 }
 
-$local = array();
-foreach ( array_merge( $lock['packages'], $lock['packages-dev'] ) as $p ) {
+$local   = array();
+$is_dev  = array();
+foreach ( $lock['packages'] as $p ) {
 	if ( preg_match( '#^(wpackagist-plugin|hametuha|tarosky)/(.+)$#', $p['name'], $m ) ) {
 		$local[ $m[2] ] = $p['version'];
 	}
 }
+foreach ( $lock['packages-dev'] as $p ) {
+	if ( preg_match( '#^(wpackagist-plugin|hametuha|tarosky)/(.+)$#', $p['name'], $m ) ) {
+		$local[ $m[2] ]  = $p['version'];
+		$is_dev[ $m[2] ] = true;
+	}
+}
 
-$match = array();
-$drift = array();
+$match     = array();
+$tracking  = array();
+$drift     = array();
 $unmanaged = array();
 $excluded = array();
 $local_only = $local;
@@ -79,9 +87,12 @@ foreach ( $prod as $p ) {
 		continue;
 	}
 	// dev-* は GitHub のリリースを追うため version_compare が意味を持たない。
+	// 設計どおりの状態なので「未解決」には数えない（終了コードに影響させない）。
 	if ( 0 === strpos( $lv, 'dev-' ) ) {
-		$judge = 'GitHubリリース追随（比較不能）';
-	} elseif ( version_compare( $lv, $pv, '>' ) ) {
+		$tracking[] = sprintf( '%-34s local:%-12s prod:%-12s GitHubリリース追随', $name, $lv, $pv );
+		continue;
+	}
+	if ( version_compare( $lv, $pv, '>' ) ) {
 		$judge = 'ローカルが新しい ← 本番が遅れている理由を確認すること';
 	} else {
 		$judge = 'ローカルが古い';
@@ -100,15 +111,16 @@ $section = function ( $title, array $rows ) {
 	}
 };
 
-printf( "本番のプラグイン: %d本 / composer管理: %d本\n", count( $match ) + count( $drift ) + count( $unmanaged ) + count( $excluded ), count( $local ) );
+printf( "本番のプラグイン: %d本 / composer管理: %d本\n", count( $match ) + count( $tracking ) + count( $drift ) + count( $unmanaged ) + count( $excluded ), count( $local ) );
 
 $section( '一致', $match );
-$section( 'バージョン差分', $drift );
+$section( 'バージョン差分（要判断）', $drift );
+$section( 'GitHubリリース追随（比較対象外）', $tracking );
 $section( '本番にあるが composer 未管理', $unmanaged );
 $section( '意図的に除外（CLAUDE.md 記載）', $excluded );
 $section( 'composer にあるが本番に無い', array_map(
-	function ( $k, $v ) {
-		return sprintf( '%-34s %s', $k, $v );
+	function ( $k, $v ) use ( $is_dev ) {
+		return sprintf( '%-34s %-10s %s', $k, $v, isset( $is_dev[ $k ] ) ? 'require-dev（ローカル専用。設計どおり）' : '要確認' );
 	},
 	array_keys( $local_only ),
 	$local_only
