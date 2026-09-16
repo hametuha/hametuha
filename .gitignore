@@ -84,3 +84,6 @@ mysql_data/
 # Other
 *.sql
 *.sql.gz
+
+# ローカル専用の wp-cli 設定（本番への接続先などを含む）
+wp-cli.local.yml
