@@ -51,7 +51,7 @@ class EpubFiles extends EpubFilePattern {
 							if ( ! $var ) {
 								return current_user_can( 'edit_others_posts' );
 							} else {
-								return current_user_can( 'edit_others_posts' ) || ( $var === get_current_user_id() );
+								return current_user_can( 'edit_others_posts' ) || ( get_current_user_id() === (int) $var );
 							}
 						},
 					],
