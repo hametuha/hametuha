@@ -204,8 +204,8 @@ class Series extends Model {
 	 */
 	public function get_published_count() {
 		return (int) $this->select( 'COUNT(p.ID)' )
-						  ->from( "{$this->db->posts} AS p" )
-						  ->join( "{$this->db->postmeta} AS pm", "pm.post_id = p.ID AND pm.meta_key = '_kdp_status'" )
+							->from( "{$this->db->posts} AS p" )
+							->join( "{$this->db->postmeta} AS pm", "pm.post_id = p.ID AND pm.meta_key = '_kdp_status'" )
 						->wheres( [
 							'p.post_type = %s'   => 'series',
 							'p.post_status = %s' => 'publish',
@@ -318,15 +318,16 @@ class Series extends Model {
 	 * @return int|string|array
 	 */
 	public function get_visibility( $series_id ) {
-		$key    = get_post_meta( $series_id, '_visibility', true );
-		$values = array_unique( array_filter( array_map( function( $var ) {
+		$key     = get_post_meta( $series_id, '_visibility', true );
+		$numbers = array_map( function ( $var ) {
 			$number = trim( $var );
 			if ( is_numeric( $var ) ) {
 				return (int) $var;
 			} else {
 				return '';
 			}
-            }, explode( ',', $key ) ), function( $numeric ) {
+		}, explode( ',', $key ) );
+		$values  = array_unique( array_filter( $numbers, function ( $numeric ) {
 			return is_numeric( $numeric );
 		} ) );
 		if ( empty( $values ) ) {
@@ -385,7 +386,7 @@ class Series extends Model {
 	 * @return int
 	 */
 	public function get_total( $post = null ) {
-		$post = get_post( $post );
+		$post  = get_post( $post );
 		$query = new \WP_Query( [
 			'post_type'      => 'post',
 			'post_status'    => [ 'publish', 'private' ],
@@ -423,14 +424,14 @@ class Series extends Model {
 			)
 SQL;
 			$index              = (int) $this->select( 'COUNT(ID)' )
-											 ->from( $this->db->posts )
+											->from( $this->db->posts )
 											->where( $query, [
 												$post->post_parent,
 												$post->menu_order,
 												$post->post_date,
 												$post->menu_order,
 											] )
-											 ->get_var();
+											->get_var();
 			$store[ $post->ID ] = $index;
 		}
 
@@ -526,7 +527,7 @@ HTML;
 			$last = $this->is_finished( $post->ID ) ? __( 'これが最終話です', 'hametuha' ) : __( 'これが最新話です', 'hametuha' );
 			return $before . sprintf( $no_link, $last, 'book2' ) . $after;
 		}
-		$link    = <<<'HTML'
+		$link = <<<'HTML'
 			<a class="series-pager-link" href="%2$s">
 				<span class="series-pager-text">第%1$s話</span>
 				<i class="series-pager-icon icon-%5$s"></i>
@@ -551,11 +552,7 @@ HTML;
 	 * @return bool
 	 */
 	public function update_order( $post_id, $order ) {
-		return (bool) $this->update( [
-			'menu_order' => $order,
-		], [
-				'ID' => $post_id,
-			], [ '%d' ], [ '%d' ], $this->db->posts );
+		return (bool) $this->update( [ 'menu_order' => $order ], [ 'ID' => $post_id ], [ '%d' ], [ '%d' ], $this->db->posts );
 	}
 
 	/**
@@ -722,7 +719,6 @@ SQL;
 	}
 
 	public function get_list( $type = 'sales', $limit = 10 ) {
-
 	}
 
 	/**
@@ -843,6 +839,4 @@ SQL;
 				return parent::__get( $name );
 		}
 	}
-
-
 }

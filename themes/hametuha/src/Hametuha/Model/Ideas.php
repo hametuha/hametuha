@@ -33,16 +33,16 @@ class Ideas extends Model {
 
 	protected $related = [
 		'posts',
-	    'users',
+		'users',
 	];
 
 	protected $default_placeholder = [
-		'rel_type' => '%s',
-		'user_id' => '%d',
+		'rel_type'  => '%s',
+		'user_id'   => '%d',
 		'object_id' => '%d',
-		'location' => '%f',
-	    'content' => '%s',
-	    'updated' => '%s',
+		'location'  => '%f',
+		'content'   => '%s',
+		'updated'   => '%s',
 	];
 
 	/**
@@ -54,13 +54,13 @@ class Ideas extends Model {
 	 *
 	 * @return false|int
 	 */
-	public function recommend($user_id, $target_user_id, $idea_id) {
+	public function recommend( $user_id, $target_user_id, $idea_id ) {
 		return $this->insert([
-			'rel_type' => $this->rel_stock,
-			'user_id'  => $target_user_id,
-		    'object_id' => $idea_id,
-		    'location'  => 0.5,
-		    'content'   => (int) $user_id,
+			'rel_type'  => $this->rel_stock,
+			'user_id'   => $target_user_id,
+			'object_id' => $idea_id,
+			'location'  => 0.5,
+			'content'   => (int) $user_id,
 		]);
 	}
 
@@ -72,15 +72,18 @@ class Ideas extends Model {
 	 *
 	 * @return false|int
 	 */
-	public function trash($user_id, $idea_id) {
-		return $this->update([
-			'location' => 0,
-			'updated'   => current_time( 'mysql' ),
-		], [
-			'rel_type'  => $this->rel_stock,
-		    'user_id'   => $user_id,
-		    'object_id' => $idea_id,
-		]);
+	public function trash( $user_id, $idea_id ) {
+		return $this->update(
+			[
+				'location' => 0,
+				'updated'  => current_time( 'mysql' ),
+			],
+			[
+				'rel_type'  => $this->rel_stock,
+				'user_id'   => $user_id,
+				'object_id' => $idea_id,
+			]
+		);
 	}
 
 	/**
@@ -91,13 +94,13 @@ class Ideas extends Model {
 	 *
 	 * @return false|int
 	 */
-	public function stock($user_id, $idea_id) {
+	public function stock( $user_id, $idea_id ) {
 		return $this->insert([
 			'rel_type'  => $this->rel_stock,
 			'user_id'   => $user_id,
 			'object_id' => $idea_id,
 			'location'  => 1,
-		    'content'   => 0,
+			'content'   => 0,
 			'updated'   => current_time( 'mysql' ),
 		]);
 	}
@@ -110,15 +113,18 @@ class Ideas extends Model {
 	 *
 	 * @return false|int
 	 */
-	public function restock($user_id, $idea_id) {
-		return $this->update( [
-			'location' => 1,
-			'updated'   => current_time( 'mysql' ),
-		], [
-			'rel_type'  => $this->rel_stock,
-			'user_id'   => $user_id,
-		    'object_id' => $idea_id,
-		]);
+	public function restock( $user_id, $idea_id ) {
+		return $this->update(
+			[
+				'location' => 1,
+				'updated'  => current_time( 'mysql' ),
+			],
+			[
+				'rel_type'  => $this->rel_stock,
+				'user_id'   => $user_id,
+				'object_id' => $idea_id,
+			]
+		);
 	}
 
 	/**
@@ -130,14 +136,14 @@ class Ideas extends Model {
 	 *
 	 * @return null|int
 	 */
-	public function is_stocked($user_id, $idea_id, $include_trash = false) {
+	public function is_stocked( $user_id, $idea_id, $include_trash = false ) {
 		$wheres = [
 			'rel_type = %s'  => $this->rel_stock,
 			'object_id = %d' => $idea_id,
 			'user_id = %d'   => $user_id,
 		];
 		if ( ! $include_trash ) {
-			$wheres[ 'location = %d' ] = 1;
+			$wheres['location = %d'] = 1;
 		}
 		return $this->select( 'ID' )->wheres( $wheres )->get_var();
 	}
@@ -159,7 +165,7 @@ class Ideas extends Model {
 		if ( is_null( $location ) ) {
 			return null;
 		} else {
-			return (float) $location ;
+			return (float) $location;
 		}
 	}
 
@@ -180,21 +186,21 @@ class Ideas extends Model {
 				  AND user_id = %d
 			) AS r
 SQL;
-		$sub_query = $this->db->prepare($sub_query, $user_id);
+		$sub_query = $this->db->prepare( $sub_query, $user_id );
 		$this->select( 'p.*, r.user_id AS stocker, r.location, r.content AS recommended_by' )
-		     ->calc()
-		     ->from( "{$this->db->posts} AS p" )
-		     ->join( $sub_query, 'p.ID = r.object_id' )
-		     ->where( 'p.post_type = %s', 'ideas' )
-		     ->where( '(r.user_id = %d AND r.location > 0 ) OR  (p.post_author = %d)', [ $user_id, $user_id ] )
-			 ->order_by( 'COALESCE(r.updated, p.post_date)', 'DESC' )
-		     ->limit( 10, $offset / 10 );
-		if( $query ){
-			$this->where('(p.post_title LIKE %s) OR (p.post_content LIKE %s)', ["%{$query}%", "%{$query}%"]);
+			->calc()
+			->from( "{$this->db->posts} AS p" )
+			->join( $sub_query, 'p.ID = r.object_id' )
+			->where( 'p.post_type = %s', 'ideas' )
+			->where( '(r.user_id = %d AND r.location > 0 ) OR  (p.post_author = %d)', [ $user_id, $user_id ] )
+			->order_by( 'COALESCE(r.updated, p.post_date)', 'DESC' )
+			->limit( 10, $offset / 10 );
+		if ( $query ) {
+			$this->where( '(p.post_title LIKE %s) OR (p.post_content LIKE %s)', [ "%{$query}%", "%{$query}%" ] );
 		}
 		$results = $this->result();
 		return [
-		    'query'  => $this->db->last_query,
+			'query'  => $this->db->last_query,
 			'total'  => $this->found_count(),
 			'offset' => (int) $offset,
 			'ideas'  => $results,
@@ -213,20 +219,20 @@ SQL;
 	 */
 	public function get_stockers( $idea_id, $offset = 0, $limit = 10, $include_trash = false ) {
 		$this->select( 'u.*' )
-		     ->calc()
-		     ->from( "{$this->table} AS r" )
-		     ->join( "{$this->users} AS u", 'u.ID = r.user_id', 'left' )
-		     ->wheres( [
-			     'r.rel_type = %s'  => $this->rel_stock,
-			     'r.object_id = %d' => $idea_id,
-		     ] );
+			->calc()
+			->from( "{$this->table} AS r" )
+			->join( "{$this->users} AS u", 'u.ID = r.user_id', 'left' )
+			->wheres( [
+				'r.rel_type = %s'  => $this->rel_stock,
+				'r.object_id = %d' => $idea_id,
+			] );
 		if ( ! $include_trash ) {
 			$this->where( 'r.location = %d', 1 );
 		}
 
 		return $this->order_by( 'r.updated', 'DESC' )
-		            ->limit( $limit, $offset )
-		            ->result();
+					->limit( $limit, $offset )
+					->result();
 	}
 
 	/**
@@ -256,10 +262,10 @@ SQL;
 	 */
 	public function get_stock_count( $idea_id, $include_trash = false ) {
 		$this->select( 'COUNT(user_id)' )
-		     ->wheres( [
-			     'rel_type = %s'  => $this->rel_stock,
-			     'object_id = %d' => $idea_id,
-		     ] );
+			->wheres( [
+				'rel_type = %s'  => $this->rel_stock,
+				'object_id = %d' => $idea_id,
+			] );
 		if ( ! $include_trash ) {
 			$this->where( 'location = %d', 1 );
 		}
@@ -288,9 +294,9 @@ SQL;
 			return [];
 		}
 		$this->select( 'object_id AS post_id, COUNT(user_id) AS score' )
-		     ->where( 'rel_type = %s', $this->rel_stock )
-		     ->where_in( 'object_id', $ids, '%d' )
-		     ->group_by( 'object_id' );
+			->where( 'rel_type = %s', $this->rel_stock )
+			->where_in( 'object_id', $ids, '%d' )
+			->group_by( 'object_id' );
 		if ( ! $include_trash ) {
 			$this->where( 'location = %d', 1 );
 		}
@@ -311,10 +317,10 @@ SQL;
 	 */
 	public function get_total( $include_private = false ) {
 		return (int) $this->select( 'COUNT(ID)' )
-		                  ->from( $this->posts )
-		                  ->where( 'post_type = %s', 'ideas' )
-		                  ->where_in( 'post_status', [ 'private', 'publish' ] )
-		                  ->get_var();
+							->from( $this->posts )
+							->where( 'post_type = %s', 'ideas' )
+							->where_in( 'post_status', [ 'private', 'publish' ] )
+							->get_var();
 	}
 
 	/**
@@ -326,17 +332,17 @@ SQL;
 	 */
 	public function popular_tags( $limit = 10 ) {
 		$terms = $this->select( 't.*, tt.*, COUNT(r.object_id) AS total' )
-		              ->from( "{$this->db->term_relationships} AS r" )
-		              ->join( "{$this->db->term_taxonomy} AS tt", 'tt.term_taxonomy_id = r.term_taxonomy_id', 'inner' )
-		              ->join( "{$this->db->terms} AS t", 'tt.term_id = t.term_id', 'inner' )
-		              ->join( "{$this->db->posts} AS p", 'p.ID = r.object_id' )
-		              ->wheres( [
-			              'tt.taxonomy = %s' => 'post_tag',
-			              'p.post_type = %s' => 'ideas',
-		              ] )
-		              ->group_by( 'r.term_taxonomy_id' )
-		              ->order_by( 'COUNT(r.object_id)', 'DESC' )
-		              ->limit( $limit )->result();
+						->from( "{$this->db->term_relationships} AS r" )
+						->join( "{$this->db->term_taxonomy} AS tt", 'tt.term_taxonomy_id = r.term_taxonomy_id', 'inner' )
+						->join( "{$this->db->terms} AS t", 'tt.term_id = t.term_id', 'inner' )
+						->join( "{$this->db->posts} AS p", 'p.ID = r.object_id' )
+						->wheres( [
+							'tt.taxonomy = %s' => 'post_tag',
+							'p.post_type = %s' => 'ideas',
+						] )
+						->group_by( 'r.term_taxonomy_id' )
+						->order_by( 'COUNT(r.object_id)', 'DESC' )
+						->limit( $limit )->result();
 
 		return $terms;
 	}
@@ -350,14 +356,14 @@ SQL;
 	 */
 	public function popular_ideas( $limit = 10 ) {
 		return $this->select( 'p.*, COUNT(r.ID) AS total' )
-		            ->from( "{$this->table} AS r" )
-		            ->join( "{$this->posts} AS p", 'r.object_id = p.ID' )
-		            ->group_by( 'r.object_id' )
-		            ->wheres( [
-			            'r.rel_type = %s' => $this->rel_stock,
-			            'r.location = %d' => 1,
-		            ] )
-		            ->order_by( 'COUNT(r.ID)', 'DESC' )
-		            ->limit( $limit )->result();
+					->from( "{$this->table} AS r" )
+					->join( "{$this->posts} AS p", 'r.object_id = p.ID' )
+					->group_by( 'r.object_id' )
+					->wheres( [
+						'r.rel_type = %s' => $this->rel_stock,
+						'r.location = %d' => 1,
+					] )
+					->order_by( 'COUNT(r.ID)', 'DESC' )
+					->limit( $limit )->result();
 	}
 }

@@ -13,6 +13,9 @@
 		<exclude name="Squiz.Commenting.FileComment" />
 		<exclude name="Squiz.PHP.CommentedOutCode" />
 		<exclude name="Squiz.PHP.DisallowMultipleAssignments.Found" />
+		<!-- if ( $post = get_post() ) のような条件式内代入を許可する -->
+		<exclude name="Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure" />
+		<exclude name="Generic.CodeAnalysis.AssignmentInCondition" />
 		<exclude name="Squiz.Commenting.VariableComment.Missing" />
 		<exclude name="Squiz.Commenting.LongConditionClosingComment.Missing" />
 		<exclude name="WordPress.WP.I18n.SingleUnderscoreGetTextFunction" />
@@ -35,6 +38,7 @@
 
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*.css</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 </ruleset>
