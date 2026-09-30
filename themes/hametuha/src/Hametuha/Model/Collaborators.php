@@ -299,7 +299,7 @@ SQL;
 			if ( ! isset( $users[ $child->post_author ] ) ) {
 				$child_writer = get_userdata( $child->post_author );
 				if ( $child_writer ) {
-					$child_writer->label == $this->get_collaborator_type( 'writer' );
+					$child_writer->label        = $this->get_collaborator_type( 'writer' );
 					$users[ $child_writer->ID ] = $child_writer;
 				}
 			}
