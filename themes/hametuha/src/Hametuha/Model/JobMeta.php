@@ -85,7 +85,7 @@ SQL;
 			'job_id'     => $job_id,
 			'meta_key'   => 'log',
 			'meta_value' => $message,
-			'created'    => current_time( 'timestamp' ),
+			'created'    => current_time( 'mysql' ),
 		] );
 	}
 }
