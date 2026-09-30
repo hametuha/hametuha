@@ -120,19 +120,15 @@ class Collaborators extends Singleton {
 	 * @return bool
 	 */
 	public function collaborator_exists( $series_id, $user_id, $only_valid = false ) {
-		$query  = <<<SQL
-			SELECT ID FROM {$this->relationships}
-			WHERE rel_type  = %d
-			  AND object_id = %d
-			  AND user_id   = %d
-SQL;
-		$wheres = [ $this->rel_type, $series_id, $user_id ];
-		if ( $only_valid ) {
-			$query .= ' AND location >= 0';
-		}
-		$query .= ' LIMIT 1';
-		array_unshift( $wheres, $query );
-		return (bool) $this->db->get_var( call_user_func_array( [ $this->db, 'prepare' ], $wheres ) );
+		return (bool) $this->db->get_var( $this->db->prepare(
+			$only_valid
+				? 'SELECT ID FROM %i WHERE rel_type = %s AND object_id = %d AND user_id = %d AND location >= 0 LIMIT 1'
+				: 'SELECT ID FROM %i WHERE rel_type = %s AND object_id = %d AND user_id = %d LIMIT 1',
+			$this->relationships,
+			$this->rel_type,
+			$series_id,
+			$user_id
+		) );
 	}
 
 	/**
