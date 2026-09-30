@@ -48,11 +48,7 @@ class EpubFiles extends EpubFilePattern {
 						'description'       => 'Author ID',
 						'default'           => 0,
 						'validate_callback' => function ( $var ) {
-							if ( ! $var ) {
-								return current_user_can( 'edit_others_posts' );
-							} else {
-								return current_user_can( 'edit_others_posts' ) || ( get_current_user_id() === (int) $var );
-							}
+							return current_user_can( 'edit_others_posts' );
 						},
 					],
 					'posts_per_page' => [
@@ -133,12 +129,14 @@ class EpubFiles extends EpubFilePattern {
 	}
 
 	/**
-	 * Permission check.
+	 * 編集者のみ
+	 *
+	 * 投稿者に開放すると、破滅派がePub生成機として使われてしまう。
 	 *
 	 * @param \WP_REST_Request $request
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		return current_user_can( 'edit_posts' );
+		return current_user_can( 'edit_others_posts' );
 	}
 }
