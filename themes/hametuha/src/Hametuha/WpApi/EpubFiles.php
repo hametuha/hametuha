@@ -32,28 +32,14 @@ class EpubFiles extends EpubFilePattern {
 						'default'     => '',
 					],
 					'p'              => [
-						'type'              => 'integer',
-						'description'       => 'Series ID. Needs permission to edit the post.',
-						'default'           => 0,
-						'validate_callback' => function ( $var ) {
-							if ( 1 > $var ) {
-								return current_user_can( 'edit_others_posts' );
-							} else {
-								return current_user_can( 'edit_post', $var );
-							}
-						},
+						'type'        => 'integer',
+						'description' => 'Series ID. Needs permission to edit the post.',
+						'default'     => 0,
 					],
 					'author'         => [
-						'type'              => 'integer',
-						'description'       => 'Author ID',
-						'default'           => 0,
-						'validate_callback' => function ( $var ) {
-							if ( ! $var ) {
-								return current_user_can( 'edit_others_posts' );
-							} else {
-								return current_user_can( 'edit_others_posts' ) || ( get_current_user_id() === (int) $var );
-							}
-						},
+						'type'        => 'integer',
+						'description' => 'Author ID',
+						'default'     => 0,
 					],
 					'posts_per_page' => [
 						'type'              => 'integer',
@@ -139,6 +125,19 @@ class EpubFiles extends EpubFilePattern {
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		return current_user_can( 'edit_posts' );
+		if ( 'GET' !== $request->get_method() ) {
+			return current_user_can( 'edit_posts' );
+		}
+		// 全体の一覧は編集者のみ。
+		if ( current_user_can( 'edit_others_posts' ) ) {
+			return true;
+		}
+		// 投稿者は自分が所有する作品集のファイルだけ見られる。
+		$series_id = (int) $request->get_param( 'p' );
+		if ( $series_id ) {
+			return current_user_can( 'edit_post', $series_id );
+		}
+		$author_id = (int) $request->get_param( 'author' );
+		return $author_id && get_current_user_id() === $author_id;
 	}
 }
