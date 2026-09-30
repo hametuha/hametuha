@@ -58,7 +58,7 @@ class Epub extends Singleton {
 				list( $post_id ) = $args;
 				$caps            = $this->remove_cap( $caps, $cap );
 				$post            = get_post( $post_id );
-				if ( $post->post_author != $user_id ) {
+				if ( (int) $post->post_author !== (int) $user_id ) {
 					$caps[] = 'edit_others_posts';
 				} elseif ( hametuha_is_secret_book( $post ) ) {
 					$caps[] = 'edit_posts';
@@ -70,9 +70,9 @@ class Epub extends Singleton {
 				$caps            = $this->remove_cap( $caps, $cap );
 				list( $file_id ) = $args;
 				$file            = $this->files->get_file( $file_id );
-				if ( ! $file || ! ( ( $post = get_post( $file->post_id ) ) && 'series' == $post->post_type ) ) {
+				if ( ! $file || ! ( ( $post = get_post( $file->post_id ) ) && 'series' === $post->post_type ) ) {
 					$caps[] = 'do_not_allow';
-				} elseif ( $post->post_author != $user_id ) {
+				} elseif ( (int) $post->post_author !== (int) $user_id ) {
 					$caps[] = 'edit_others_posts';
 				} elseif ( hametuha_is_secret_book( $post ) ) {
 					$caps[] = 'edit_posts';

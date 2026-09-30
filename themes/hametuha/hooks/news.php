@@ -81,7 +81,7 @@ add_action( 'init', function () {
 function wpb_change_title_text( $title ) {
 	$screen = get_current_screen();
 
-	if ( 'movie' == $screen->post_type ) {
+	if ( 'movie' === $screen->post_type ) {
 		$title = 'Enter movie name with release year';
 	}
 
@@ -204,7 +204,7 @@ add_filter( 'single_term_title', function ( $name ) {
  * ヘルプメニューを追加
  */
 add_action( 'admin_head', function () {
-	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! ( $screen = get_current_screen() ) || 'news' != $screen->post_type ) {
+	if ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ! ( $screen = get_current_screen() ) || 'news' !== $screen->post_type ) {
 		return;
 	}
 	foreach (
@@ -267,7 +267,7 @@ add_filter( 'get_wp_title_rss', function ( $title ) {
  * AMPを変更
  */
 add_filter( 'bloginfo_rss', function ( $value, $show ) {
-	if ( 'description' == $show && is_post_type_archive( 'news' ) ) {
+	if ( 'description' === $show && is_post_type_archive( 'news' ) ) {
 		$value = get_post_type_object( 'news' )->description;
 	}
 	return $value;

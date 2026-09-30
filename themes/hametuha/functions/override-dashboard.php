@@ -22,7 +22,7 @@ add_action( 'admin_enqueue_scripts', function () {
  */
 function _hametuha_admin_dashboard_metaboxes( $screen_id ) {
 	global $wp_meta_boxes;
-	if ( $screen_id == 'dashboard' ) {
+	if ( $screen_id === 'dashboard' ) {
 		$meta_boxes = array(
 			'normal' => array(
 				'network_dashboard_right_now', // 現在の状況（ネットワーク管理）
@@ -56,7 +56,7 @@ add_action( 'do_meta_boxes', '_hametuha_admin_dashboard_metaboxes' );
 function _hametuha_remove_metabox( $post_type, $context ) {
 	switch ( $context ) {
 		case 'normal':
-			if ( 'post' == $post_type ) {
+			if ( 'post' === $post_type ) {
 				//カスタムフィールド
 				remove_meta_box( 'postcustom', $post_type, $context );
 				//トラックバック

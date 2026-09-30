@@ -337,7 +337,7 @@ class Announcement extends PostHelper {
 	 * @return array
 	 */
 	public function get_committed_posts( $user_id = null ) {
-		if ( $this->commit_type != 2 ) {
+		if ( 2 !== (int) $this->commit_type ) {
 			return [];
 		}
 

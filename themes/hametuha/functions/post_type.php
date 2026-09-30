@@ -56,7 +56,7 @@ function is_my_content( $key = '' ) {
 
 		return ! empty( $var );
 	} else {
-		return $key == get_query_var( 'my-content' );
+		return $key === get_query_var( 'my-content' );
 	}
 }
 

@@ -287,7 +287,7 @@ SQL;
 	public function get_published_collaborators( $series_id ) {
 		$users = [];
 		$post  = get_post( $series_id );
-		if ( 'series' !== $post->post_type && 'publish' != $post->post_status ) {
+		if ( 'series' !== $post->post_type && 'publish' !== $post->post_status ) {
 			return $users;
 		}
 		$author               = get_userdata( $post->post_author );
@@ -434,7 +434,7 @@ SQL;
 	 */
 	public function get_final_margin( $series_id ) {
 		$series = get_post( $series_id );
-		if ( ! $series || 'series' != $series->post_type ) {
+		if ( ! $series || 'series' !== $series->post_type ) {
 			return [];
 		}
 		$margin_list = $this->get_margin_list( $series_id );
@@ -459,7 +459,7 @@ SQL;
 		if ( is_wp_error( $post ) ) {
 			return $post;
 		}
-		if ( $post->post_author == $user_id ) {
+		if ( (int) $post->post_author === (int) $user_id ) {
 			return new \WP_Error( 'invalid_collaborator_to_delete', '作品集の所有者は削除できません。', [
 				'status' => 404,
 			] );

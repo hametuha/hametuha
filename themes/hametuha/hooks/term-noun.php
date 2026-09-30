@@ -27,7 +27,7 @@ add_action( 'nouns_edit_form_fields', function ( $tag, $taxonomy ) {
 					'prize'    => '文学賞',
 				] as $key => $genre ) :
 					?>
-					<option value="<?php echo $key; ?>"<?php selected( $current == $key ); ?>>
+					<option value="<?php echo $key; ?>"<?php selected( $current, $key ); ?>>
 						<?php echo $genre; ?>
 					</option>
 				<?php endforeach; ?>

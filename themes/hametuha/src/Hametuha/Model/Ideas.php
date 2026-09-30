@@ -286,7 +286,7 @@ SQL;
 		foreach ( $idea_ids as $idea ) {
 			if ( is_numeric( $idea ) ) {
 				$ids[] = $idea;
-			} elseif ( isset( $idea->ID, $idea->post_type ) && 'ideas' == $idea->post_type ) {
+			} elseif ( isset( $idea->ID, $idea->post_type ) && 'ideas' === $idea->post_type ) {
 				$ids[] = $idea;
 			}
 		}

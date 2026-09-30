@@ -117,7 +117,7 @@ class Anpis extends Model {
 	 */
 	protected function get_biggest_id() {
 		$cache = wp_cache_get( 'biggest_id', 'anpi' );
-		if ( false == $cache ) {
+		if ( ! $cache ) {
 			$cache = (int) $this->select( 'ID' )
 								->from( $this->db->posts )
 								->order_by( 'ID', 'DESC' )
@@ -139,6 +139,6 @@ class Anpis extends Model {
 	 */
 	public function is_tweet( $post = null ) {
 		$post = get_post( $post );
-		return 'anpi' == $post->post_type && get_post_meta( $post->ID, '_is_tweet', true );
+		return 'anpi' === $post->post_type && get_post_meta( $post->ID, '_is_tweet', true );
 	}
 }

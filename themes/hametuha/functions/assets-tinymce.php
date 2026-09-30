@@ -146,7 +146,7 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
  * @param WP_Post $post
  */
 add_action( 'edit_form_after_title', function ( WP_Post $post ) {
-	if ( 'post' == $post->post_type ) {
+	if ( 'post' === $post->post_type ) {
 		echo '<h3>本文</h3>';
 	}
 }, 10000 );

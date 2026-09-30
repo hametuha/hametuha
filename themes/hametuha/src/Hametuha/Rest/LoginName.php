@@ -35,7 +35,7 @@ class LoginName extends RestTemplate {
 	 */
 	public function pager( $page = 1 ) {
 
-		if ( $page != 1 ) {
+		if ( 1 !== (int) $page ) {
 			$this->method_not_found();
 		}
 

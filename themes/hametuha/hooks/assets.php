@@ -202,7 +202,7 @@ add_action( 'admin_enqueue_scripts', function ( $page = '' ) {
 	wp_enqueue_style( 'hametuha-admin' );
 
 	// プロフィール編集画面
-	if ( 'user-edit.php' == $page ) {
+	if ( 'user-edit.php' === $page ) {
 		wp_enqueue_media();
 		wp_enqueue_script( 'hametuha-user-edit' );
 	}

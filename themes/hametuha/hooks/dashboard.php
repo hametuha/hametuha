@@ -54,7 +54,7 @@ add_action( 'admin_bar_menu', function ( WP_Admin_Bar &$admin_bar ) {
 add_filter( 'hashboard_screens', function ( $screens ) {
 	$new_screens = [];
 	foreach ( $screens as  $key => $class_name ) {
-		if ( 'profile' == $key ) {
+		if ( 'profile' === $key ) {
 			if ( current_user_can( 'edit_posts' ) ) {
 				$new_screens['works']      = \Hametuha\Dashboard\Works::class;
 				$new_screens['statistics'] = \Hametuha\Dashboard\Statistics::class;

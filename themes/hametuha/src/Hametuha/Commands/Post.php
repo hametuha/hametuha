@@ -682,7 +682,7 @@ class Post extends Command {
 		list( $job_id, $message ) = $args;
 		$jobs                     = Jobs::get_instance();
 		$job                      = $jobs->get( $job_id );
-		if ( ! $job || 'text_to_image' != $job->job_key ) {
+		if ( ! $job || 'text_to_image' !== $job->job_key ) {
 			self::e( 'エラー' );
 		}
 		try {

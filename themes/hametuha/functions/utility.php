@@ -152,7 +152,7 @@ function attr_search( $echo = true ) {
 function is_last_page() {
 	global $page, $numpages, $multipage;
 
-	return ! $multipage || ( $page == $numpages );
+	return ! $multipage || ( (int) $page === (int) $numpages );
 }
 
 /**
@@ -240,7 +240,7 @@ EOS;
 function get_post_length( $post = null ) {
 	global $wpdb;
 	$post = get_post( $post );
-	if ( $post->post_type == 'series' ) {
+	if ( $post->post_type === 'series' ) {
 		$sql = <<<EOS
 			SELECT post_content FROM {$wpdb->posts}
 			WHERE post_type = 'post' AND post_status IN ( 'publish', 'private' ) AND post_parent = %d

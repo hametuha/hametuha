@@ -84,7 +84,7 @@ add_filter( 'manage_web-hook_posts_columns', function ( $column ) {
 	$new_column = [];
 	foreach ( $column as $key => $value ) {
 		$new_column[ $key ] = $value;
-		if ( 'title' == $key ) {
+		if ( 'title' === $key ) {
 			$new_column['endpoint'] = 'エンドポイント';
 		}
 	}

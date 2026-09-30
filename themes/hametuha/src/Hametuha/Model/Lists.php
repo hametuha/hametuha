@@ -71,7 +71,7 @@ class Lists extends Model {
 	 */
 	public function user_can( $list_id, $user_id ) {
 		$list = get_post( $list_id );
-		if ( $list->post_author == $user_id ) {
+		if ( (int) $list->post_author === (int) $user_id ) {
 			return true;
 		} else {
 			$user = new \WP_User( $user_id );

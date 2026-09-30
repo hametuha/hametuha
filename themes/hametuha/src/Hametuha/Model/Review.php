@@ -297,7 +297,7 @@ SQL;
 			],
 		];
 		// ポイントを取得
-		$points = $this->get_post_chart_points( $post->ID, ( 'series' == $post->post_type ) );
+		$points = $this->get_post_chart_points( $post->ID, ( 'series' === $post->post_type ) );
 
 		// データ整形
 		$labels = [
@@ -311,7 +311,7 @@ SQL;
 			for ( $i = 0, $l = count( $val ); $i < $l; $i++ ) {
 				$score = 0;
 				foreach ( $points as $point ) {
-					if ( $point->name == $val[ $i ] ) {
+					if ( $point->name === $val[ $i ] ) {
 						$score = $point->score;
 						break;
 					}

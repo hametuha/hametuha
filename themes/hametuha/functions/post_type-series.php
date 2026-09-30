@@ -15,7 +15,7 @@ use Hametuha\Model\Series;
 function is_series( $post = null ) {
 	$post = get_post( $post );
 
-	return 'series' == get_post_type( $post->post_parent ) ? $post->post_parent : 0;
+	return 'series' === get_post_type( $post->post_parent ) ? $post->post_parent : 0;
 }
 
 /**
@@ -27,7 +27,7 @@ function is_series( $post = null ) {
  */
 function is_series_finished( $post = null ) {
 	$post = get_post( $post );
-	if ( 'series' == $post->post_type ) {
+	if ( 'series' === $post->post_type ) {
 		$series_id = $post->ID;
 	} else {
 		$series_id = $post->post_parent;
@@ -157,7 +157,7 @@ function get_series_price( $post = null ) {
 function get_kdp_remote_price( $post = null, $cache = true ) {
 	$post   = get_post( $post );
 	$series = Series::get_instance();
-	if ( 2 != $series->get_status( $post->ID ) ) {
+	if ( 2 !== $series->get_status( $post->ID ) ) {
 		return false;
 	}
 	$key   = 'kdp_price_' . $post->ID;
@@ -193,7 +193,7 @@ function is_series_price_unmatch( $post = null ) {
 	if ( ! ( is_numeric( $real_price ) && is_numeric( $request_price ) ) ) {
 		return false;
 	}
-	return $real_price != $request_price;
+	return (float) $real_price !== (float) $request_price;
 }
 
 /**

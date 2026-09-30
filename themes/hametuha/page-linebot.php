@@ -24,7 +24,7 @@ switch ( $content_type ) {
 			CURLOPT_SSL_VERIFYPEER => false,
 		] );
 		$res = json_decode( curl_exec( $ch ) );
-		if ( $res && 'success' == $res->status ) {
+		if ( $res && 'success' === $res->status ) {
 			$response = $res->result;
 		} else {
 			$response = sprintf( 'すいません、エラーです……（%s）', curl_errno( $ch ) );

@@ -45,7 +45,7 @@ add_filter( 'manage_users_columns', function ( $columns ) {
  * 名前を表示する
  */
 add_filter( 'manage_users_custom_column', function ( $td, $column, $user_id ) {
-	if ( 'display_name' == $column ) {
+	if ( 'display_name' === $column ) {
 		$ruby  = (string) get_user_meta( $user_id, 'last_name', true );
 		$name  = (string) get_the_author_meta( 'display_name', $user_id );
 		$roles = [];

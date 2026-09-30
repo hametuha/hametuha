@@ -71,7 +71,7 @@ add_filter( 'hashboard_field_groups', function ( $args, WP_User $user, $group, $
 		} else {
 			$args['names']['fields']['description']['description'] = '現在、破滅派では投稿者ではない人のプロフィールは表示されませんが、SNS的な機能がついた場合は表示されるようになります。さしつかえない範囲で入力してください。';
 		}
-	} elseif ( 'contacts' == $page ) {
+	} elseif ( 'contacts' === $page ) {
 		$fields = [
 			'url_sep'          => [
 				'type'  => 'separator',

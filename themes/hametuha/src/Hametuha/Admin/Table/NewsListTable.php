@@ -63,7 +63,7 @@ class NewsListTable extends \WP_List_Table {
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' != $which ) {
+		if ( 'top' !== $which ) {
 			return;
 		}
 
@@ -81,13 +81,13 @@ class NewsListTable extends \WP_List_Table {
 			<select name="news-year">
 				<option value="0"<?php selected( ! $this->input->get( 'news-year' ) ); ?>>すべての年</option>
 				<?php for ( $i = (int) date_i18n( 'Y' ); $i >= 2016; $i-- ) : ?>
-					<option value="<?php echo $i; ?>"<?php selected( $i == $this->input->get( 'news-year' ) ); ?>><?php echo $i; ?>年</option>
+					<option value="<?php echo $i; ?>"<?php selected( $i, $this->input->get( 'news-year' ) ); ?>><?php echo $i; ?>年</option>
 				<?php endfor; ?>
 			</select>
 			<select name="news-month">
 				<option value="0"<?php selected( ! $this->input->get( 'news-month' ) ); ?>>すべての月</option>
 				<?php for ( $i = 1; $i <= 12; $i++ ) : ?>
-					<option value="<?php echo $i; ?>"<?php selected( $i == $this->input->get( 'news-month' ) ); ?>><?php echo $i; ?>月</option>
+					<option value="<?php echo $i; ?>"<?php selected( $i, $this->input->get( 'news-month' ) ); ?>><?php echo $i; ?>月</option>
 				<?php endfor; ?>
 			</select>
 			<?php

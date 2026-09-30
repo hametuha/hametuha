@@ -144,7 +144,7 @@ class Series extends Model {
 	 * @return string
 	 */
 	public function get_direction( $post_id ) {
-		return 'vertical' == (string) get_post_meta( $post_id, 'orientation', true ) ? 'rtl' : 'ltr';
+		return 'vertical' === (string) get_post_meta( $post_id, 'orientation', true ) ? 'rtl' : 'ltr';
 	}
 
 	/**
@@ -449,7 +449,7 @@ SQL;
 		$post  = get_post( $post );
 		$index = $this->get_index( $post );
 		$total = $this->get_total( $post->post_parent );
-		if ( $total == $index ) {
+		if ( $total === $index ) {
 			return $this->is_finished( $post->post_parent ) ? '最終話' : '最新話';
 		} else {
 			return sprintf( '第%s話', $index );
@@ -625,7 +625,7 @@ SQL;
 			} else {
 				$row->domain = false;
 			}
-			if ( $row->comment_post_ID != $series_id ) {
+			if ( (int) $row->comment_post_ID !== (int) $series_id ) {
 				// 子投稿へのコメント
 				$row->display = ( ( '1' === $row->comment_approved ) && (bool) get_comment_meta( $row->comment_ID, 'as_testimonial', true ) );
 			} else {
@@ -668,7 +668,7 @@ SQL;
 	public function validate( $post = null ) {
 		$post   = get_post( $post );
 		$errors = new \WP_Error();
-		if ( 'series' != $post->post_type ) {
+		if ( 'series' !== $post->post_type ) {
 			$errors->add( 'fatal', 'これは作品集ではありません' );
 		}
 		// 表紙画像
@@ -677,7 +677,7 @@ SQL;
 		} else {
 			// TODO: これはバグでは？ 4.7.3から？
 			$thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), $this->image_size );
-			if ( 1200 != $thumbnail[1] || 1920 != $thumbnail[2] ) {
+			if ( 1200 !== (int) $thumbnail[1] || 1920 !== (int) $thumbnail[2] ) {
 				$errors->add( 'fatal', '表紙画像のサイズが不正です。サイズは幅1200px 高さ1920pxでなくてはなりません。これ以上大きい解像度でアップロードしてください。' );
 			}
 		}
