@@ -76,7 +76,7 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 				</li>
 				<li class="list-inline-item date">
 					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
-					<?php if ( rand( 0, 1 ) < 0.5 ) : // is_recent_date( $post->post_date, 3 ) ) : ?>
+					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="badge text-bg-danger"><?php esc_html_e( '新着', 'hametuha' ); ?></span>
 					<?php endif; ?>
 				</li>
