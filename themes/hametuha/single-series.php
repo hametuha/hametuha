@@ -142,7 +142,7 @@ endswitch;
 			<div class="row">
 				<div class="col-sm-4 d-none d-sm-block"></div>
 				<div class="col-12 col-sm-8">
-				<?php if ( 2 == $series->get_status( get_the_ID() ) ) : ?>
+				<?php if ( 2 === $series->get_status( get_the_ID() ) ) : ?>
 					<p class="series__price">
 						&yen; <strong><?php the_series_price(); ?></strong>
 					</p>
@@ -332,7 +332,7 @@ endswitch;
 									if ( $review->amazon ) {
 										$url  = $series->get_kdp_url( get_the_ID() );
 										$icon = '<i class="icon-amazon"></i> Amazonレビュー';
-									} elseif ( $review->comment_post_ID != get_the_ID() ) {
+									} elseif ( (int) $review->comment_post_ID !== get_the_ID() ) {
 										$url  = get_comment_link( $review );
 										$icon = 'from 破滅派';
 									} elseif ( preg_match( '#^https?://.+#u', $review->comment_author_url ) ) {

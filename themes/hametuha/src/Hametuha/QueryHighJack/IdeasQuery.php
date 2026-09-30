@@ -129,7 +129,7 @@ class IdeasQuery extends QueryHighJack {
 		if ( in_array( $wp_query->get( 'post_type' ), [ '', 'any', 'ideas' ], true ) ) {
 			$posts_to_retrieve = [];
 			foreach ( $posts as $post ) {
-				if ( 'ideas' == $post->post_type ) {
+				if ( 'ideas' === $post->post_type ) {
 					$posts_to_retrieve[] = $post->ID;
 					$post->stock         = 0; // Default value
 				}

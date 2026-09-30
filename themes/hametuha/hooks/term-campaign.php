@@ -105,7 +105,7 @@ add_action( 'init', function () {
 add_filter( 'manage_edit-campaign_columns', function ( $columns ) {
 	$new_columns = [];
 	foreach ( $columns as $col => $label ) {
-		if ( 'posts' == $col ) {
+		if ( 'posts' === $col ) {
 			$new_columns['limit'] = '募集期限';
 		}
 		if ( 'description' !== $col ) {
@@ -143,7 +143,7 @@ add_filter( 'manage_campaign_custom_column', function ( $return, $column, $term_
  * 日付を入力するフィールドを追加
  */
 add_action( 'edit_tag_form_fields', function ( $tag ) {
-	if ( 'campaign' == $tag->taxonomy ) {
+	if ( 'campaign' === $tag->taxonomy ) {
 		?>
 		<tr>
 			<th>
@@ -327,7 +327,7 @@ add_action( 'edit_tag_form_fields', function ( $tag ) {
  * 応募要項を保存
  */
 add_action( 'edit_terms', function ( $term_id, $taxonomy ) {
-	if ( 'campaign' == $taxonomy && isset( $_POST['campaign_limit'] ) ) {
+	if ( 'campaign' === $taxonomy && isset( $_POST['campaign_limit'] ) ) {
 		foreach (
 			[
 				'campaign_limit',

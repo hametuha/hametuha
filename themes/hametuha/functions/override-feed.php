@@ -42,7 +42,7 @@ XML;
 		</media:group>
 XML;
 	}
-	if ( 'series' == get_post_type() ) {
+	if ( 'series' === get_post_type() ) {
 		//  KDP ready
 		if ( 2 === $series->get_status( get_the_ID() ) ) {
 			$asin     = $series->get_asin( get_the_ID() );

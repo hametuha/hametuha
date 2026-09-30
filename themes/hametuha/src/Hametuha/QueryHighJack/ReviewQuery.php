@@ -74,7 +74,7 @@ class ReviewQuery extends QueryHighJack {
 				}
 			} else {
 				// IDが指定されている。現在のログインIDと異なったら非表示
-				if ( $reviewer_id != get_current_user_id() ) {
+				if ( (int) $reviewer_id !== get_current_user_id() ) {
 					$wp_query->set( 'reviewer', '' );
 					$wp_query->set_404();
 				}

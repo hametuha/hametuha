@@ -113,7 +113,7 @@ TEXT;
 			}
 		}
 		// 著者のみ可能なアクション
-		if ( get_current_user_id() == $post->post_author ) {
+		if ( get_current_user_id() === (int) $post->post_author ) {
 			// 販売済みの電子書籍の希望小売価格が変更されたら
 			$current_required_price = get_post_meta( $post->ID, '_kdp_required_price', true );
 			$new_required_price     = $this->input->post( 'kdp_required_price' );
@@ -121,7 +121,7 @@ TEXT;
 				update_post_meta( $post->ID, '_kdp_required_price', $new_required_price );
 			}
 			if ( '2' === get_post_meta( $post->ID, '_kdp_status', true ) ) {
-				if ( $current_required_price != $new_required_price ) {
+				if ( (int) $current_required_price !== (int) $new_required_price ) {
 					// Slackに通知
 					$from  = $current_required_price ? '￥' . number_format( $current_required_price ) : 'なし';
 					$to    = $new_required_price ? '￥' . number_format( $new_required_price ) : 'なし';
@@ -243,7 +243,7 @@ TEXT;
 				<?php endif; ?>
 			</label>
 			<?php endif; ?>
-			<?php if ( get_current_user_id() == $post->post_author ) : ?>
+			<?php if ( get_current_user_id() === (int) $post->post_author ) : ?>
 				<label class="block">
 					<input type="checkbox" id="change-price" name="change_price_flag" value="1" /> 希望小売価格を編集 <a href="<?php echo home_url( '/faq/pricing-strategy' ); ?>" target="_blank">[?]</a>
 				</label>

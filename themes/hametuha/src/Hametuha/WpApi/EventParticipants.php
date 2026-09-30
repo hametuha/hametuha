@@ -101,7 +101,7 @@ class EventParticipants extends WpApi {
 		}
 		// 更新する
 		update_comment_meta( $ticket_id, '_participating', 1 );
-		if ( get_current_user_id() != $post->post_author ) {
+		if ( get_current_user_id() !== (int) $post->post_author ) {
 			// 主催者に連絡
 			$organizer = get_userdata( $post->post_author );
 			do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [
@@ -177,7 +177,7 @@ class EventParticipants extends WpApi {
 				'comment_content' => implode( "\n\n---\n\n", array_filter( $all_comment ) ),
 			] );
 		}
-		if ( get_current_user_id() != $post->post_author ) {
+		if ( get_current_user_id() !== (int) $post->post_author ) {
 			// 主催者に不参加を連絡
 			$organizer = get_userdata( $post->post_author );
 			do_action( 'hametuha_notification', 'participant', "参加状況: {$post->post_title}", $organizer->user_email, [

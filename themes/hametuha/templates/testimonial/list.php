@@ -147,7 +147,7 @@ get_header();
 														class="testimonialList__link testimonialList__link--edit btn w-100 btn-primary mb-2 mt-2">
 													編集
 												</button>
-												<?php if ( $comment->comment_post_ID == $post->ID ) : ?>
+												<?php if ( (int) $comment->comment_post_ID === $post->ID ) : ?>
 													<button data-path="<?php echo esc_attr( '/hametuha/v1/testimonials/' . $comment->comment_ID . '/' ); ?>"
 														class="testimonial-delete btn w-100 btn-danger">
 														削除

@@ -157,7 +157,7 @@ class Recent extends Widget {
 					<?php foreach ( get_post_types( array( 'public' => true ), 'objects' ) as $type ) : ?>
 						<option value="<?php echo $type->name; ?>"
 													<?php
-													if ( $post_type == $type->name ) {
+													if ( $post_type === $type->name ) {
 														echo ' selected="selected"';
 													}
 													?>
@@ -198,7 +198,7 @@ class Recent extends Widget {
 						?>
 						<option value="<?php echo $size; ?>" 
 													<?php
-													if ( $thumbnail_size == $size ) {
+													if ( $thumbnail_size === $size ) {
 														echo ' selected="selected"';
 													}
 													?>

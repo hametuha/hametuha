@@ -196,7 +196,7 @@ function get_the_author_roles( $user_id = null ) {
  * @return string
  */
 function the_author_roles( $user_id = null, $echo = true ) {
-	if ( ! is_null( $user_id ) && $user_id == 0 ) {
+	if ( ! is_null( $user_id ) && 0 === (int) $user_id ) {
 		$roles = 'ゲスト';
 	} else {
 		$roles = get_the_author_roles( $user_id );
@@ -298,7 +298,7 @@ function is_pending_user() {
  * @return bool|string
  */
 function is_doujin_profile_page() {
-	if ( \Hametuha\Rest\Doujin::class == str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match ) ) {
+	if ( \Hametuha\Rest\Doujin::class === str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match ) ) {
 		return $match[1];
 	} else {
 		return false;

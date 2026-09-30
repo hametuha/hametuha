@@ -105,7 +105,7 @@ if ( $announcement->can_participate() ) :
 <?php endif; ?>
 
 <?php
-if ( 2 == $announcement->commit_type ) :
+if ( 2 === (int) $announcement->commit_type ) :
 	$committed_posts = $announcement->get_committed_posts();
 	?>
 	<?php if ( ! empty( $committed_posts ) ) : ?>
@@ -117,7 +117,7 @@ if ( 2 == $announcement->commit_type ) :
 			$counter = 0;
 			foreach ( $committed_posts as $p ) :
 				?>
-				<li class="<?php echo ( 0 == $counter % 2 ) ? 'even' : 'odd'; ?>">
+				<li class="<?php echo ( 0 === $counter % 2 ) ? 'even' : 'odd'; ?>">
 					<?php echo get_avatar( $p->post_author, 20 ); ?>
 					<?php echo get_the_author_meta( 'ID', $p->post_author ); ?>:
 					<a href="<?php echo get_permalink( $p->ID ); ?>"><?php echo $p->post_title; ?></a>

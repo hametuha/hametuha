@@ -55,9 +55,9 @@ function _hametuha_wp_die( $message, $title = '', $args = array() ) {
 		$message .= "\n<p><a class=\"btn btn-block btn-danger\" href='javascript:history.back()'>戻る</a></p>";
 	}
 
-	if ( defined( 'WP_SITEURL' ) && '' != WP_SITEURL ) {
+	if ( defined( 'WP_SITEURL' ) && '' !== WP_SITEURL ) {
 		$admin_dir = WP_SITEURL . '/wp-admin/';
-	} elseif ( function_exists( 'get_bloginfo' ) && '' != get_bloginfo( 'wpurl' ) ) {
+	} elseif ( function_exists( 'get_bloginfo' ) && '' !== get_bloginfo( 'wpurl' ) ) {
 		$admin_dir = get_bloginfo( 'wpurl' ) . '/wp-admin/';
 	} elseif ( strpos( $_SERVER['PHP_SELF'], 'wp-admin' ) !== false ) {
 		$admin_dir = '';

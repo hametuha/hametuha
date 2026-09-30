@@ -258,7 +258,7 @@ function hametuha_campaign_length( $term, $format = 'paper' ) {
 	if ( $max = get_term_meta( $term->term_id, '_campaign_max_length', true ) ) {
 		$return .= $formatter( $max, false );
 	}
-	if ( 'paper' == $format && $return ) {
+	if ( 'paper' === $format && $return ) {
 		$return = '400字詰原稿用紙' . $return;
 	}
 	return $return;

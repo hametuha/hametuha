@@ -61,7 +61,7 @@ function hametuha_genre_static( $limit = 0 ) {
 		$cat->url = get_category_link( $cat );
 	}
 	usort( $categories, function ( $a, $b ) {
-		if ( $a->count == $b->count ) {
+		if ( (int) $a->count === (int) $b->count ) {
 			return 0;
 		} else {
 			return $a->count < $b->count ? 1 : - 1;

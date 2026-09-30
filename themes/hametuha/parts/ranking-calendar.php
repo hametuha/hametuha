@@ -4,7 +4,7 @@
 		<li class="nav-item"><a class="nav-link<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>" href="<?php echo home_url( '/ranking/best/' ); ?>">全体ランキング</a></li>
 		<?php
 		foreach ( get_categories() as $cat ) {
-			printf( '<li class="nav-item"><a class="nav-link%s" href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? ' active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
+			printf( '<li class="nav-item"><a class="nav-link%s" href="%s">%s部門</a></li>', get_query_var( 'category_name' ) === $cat->slug ? ' active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
 		}
 		?>
 	</ul>
@@ -97,7 +97,7 @@
 							++$out_date;
 							$calc_date     = current_time( 'timestamp' ) - 60 * 60 * 72;
 							$date_to_ouput = strtotime( sprintf( '%d/%02d/%02d', $year, $month, $out_date ) );
-							if ( $out_date == get_query_var( 'day' ) ) :
+							if ( (int) get_query_var( 'day' ) === $out_date ) :
 								?>
 									<span class="on"><?php echo $out_date; ?></span>
 									<?php
@@ -114,7 +114,7 @@
 							&nbsp;
 						<?php endif; ?>
 				</td>
-				<?php if ( $l == 7 ) : ?>
+				<?php if ( 7 === $l ) : ?>
 					<?php if ( ! $unfixed ) : ?>
 						<td><a href="<?php echo home_url( sprintf( '/ranking/weekly/%04d%02d%02d/', $year, $month, $out_date ) ); ?>"><i class="icon-trophy-star"></i></a></td>
 					<?php else : ?>

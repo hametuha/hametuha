@@ -42,12 +42,12 @@ class ImageGen extends RestTemplate {
 	 */
 	public function get_quote( $job_id ) {
 		$job = $this->jobs->get( $job_id );
-		if ( ! $job || 'text_to_image' != $job->job_key ) {
+		if ( ! $job || 'text_to_image' !== $job->job_key ) {
 			throw new \Exception( '該当するクォートは存在しません。', 500 );
 		}
 
 		$post = get_post( $job->meta['post_id'] );
-		if ( ! $post || 'publish' != $post->post_status ) {
+		if ( ! $post || 'publish' !== $post->post_status ) {
 			throw new \Exception( '該当する投稿は存在しません。', 500 );
 		}
 		$this->title = get_the_title( $post );

@@ -105,7 +105,7 @@ add_action( 'profile_update', function ( $user_id, $old_user_data ) {
 		$profile_pick_id = $_POST['profile_pick_id'];
 		if ( is_numeric( $profile_pick_id ) ) {
 			$attachment = get_post( $profile_pick_id );
-			if ( $attachment && 'attachment' == $attachment->post_type ) {
+			if ( $attachment && 'attachment' === $attachment->post_type ) {
 				// 画像のID
 				$instance->assign_user_pic( $user_id, $attachment->ID );
 				wp_update_post( [

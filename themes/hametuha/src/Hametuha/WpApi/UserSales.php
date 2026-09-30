@@ -102,7 +102,7 @@ class UserSales extends WpApi {
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		if ( 'me' == $request->get_param( 'user_id' ) ) {
+		if ( 'me' === $request->get_param( 'user_id' ) ) {
 			return current_user_can( 'read' );
 		} else {
 			return current_user_can( 'edit_users' );

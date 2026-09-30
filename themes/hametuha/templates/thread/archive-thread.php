@@ -50,7 +50,7 @@ get_template_part( 'templates/thread/header-thread' );
 							<a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start" href="<?php the_permalink(); ?>">
 								<div class="flex-grow-1">
 								<?php echo get_avatar( get_the_author_meta( 'ID' ), 32 ); ?>
-								<?php if ( 'private' == get_post_status() ) : ?>
+								<?php if ( 'private' === get_post_status() ) : ?>
 									<i class="fa fa-lock text-warning"></i>
 								<?php endif; ?>
 								<?php if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) : ?>

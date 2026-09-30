@@ -219,7 +219,7 @@ function is_ranking( $type = '' ) {
 			case 'top':
 			case 'best':
 			case 'last_week':
-				return $type == $ranking;
+				return $type === $ranking;
 			default:
 				if ( empty( $type ) ) {
 					return true;

@@ -26,7 +26,7 @@ $current = [
 switch ( $orderby ) {
 	case 'popular':
 		$current['popular'][] = 'active';
-		if ( 'desc' == $order ) {
+		if ( 'desc' === $order ) {
 			$args['popular']['order'] = 'asc';
 		} else {
 			$current['popular'][] = 'asc';
@@ -34,7 +34,7 @@ switch ( $orderby ) {
 		break;
 	default:
 		$current['date'][] = 'active';
-		if ( 'desc' == $order ) {
+		if ( 'desc' === $order ) {
 			$args['date']['order'] = 'asc';
 		} else {
 			$current['date'][] = 'asc';

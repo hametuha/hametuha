@@ -12,7 +12,7 @@ foreach ( [
 			foreach ( $tags as $positive => $tag ) {
 				$term = get_term_by( 'name', $tag, $model->taxonomy );
 				printf('<li class="%s"><a href="%s" class="">%s</a></li>',
-					$term->term_id == get_query_var( 'reviewed_as' ) ? 'active' : '',
+					$term->term_id === (int) get_query_var( 'reviewed_as' ) ? 'active' : '',
 					home_url( "reviewed/{$pref}{$term->term_id}/" ),
 				esc_html( $term->name ));
 			}

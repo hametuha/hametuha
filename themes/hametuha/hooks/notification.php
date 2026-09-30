@@ -34,7 +34,7 @@ add_action( 'hametuha_notification', function ( $template, $subject, $to, $data 
 add_action( 'wp_insert_comment', function ( $comment_id, $comment_object ) {
 	if ( ! $comment_object->comment_type
 		&& ( $post = get_post( $comment_object->comment_post_ID ) )
-		&& $comment_object->user_id && ( $post->post_author != $comment_object->user_id )
+		&& $comment_object->user_id && ( (int) $post->post_author !== (int) $comment_object->user_id )
 	) {
 		$notifications = \Hametuha\Model\Notifications::get_instance();
 		// This is comment
@@ -44,8 +44,8 @@ add_action( 'wp_insert_comment', function ( $comment_id, $comment_object ) {
 		if ( $comment_object->comment_parent // これは返信であり
 			&& ( $parent = get_comment( $comment_object->comment_parent ) ) // 親コメントが存在し
 			&& $parent->user_id // 親コメントには通知すべきユーザーがおり
-			&& $post->post_author != $parent->user_id // 投稿作成者と親コメントのユーザーが一致せず
-			&& $parent->user_id != $comment_object->user_id // 投稿者と親コメント者が一緒じゃなければ
+			&& (int) $post->post_author !== (int) $parent->user_id // 投稿作成者と親コメントのユーザーが一致せず
+			&& (int) $parent->user_id !== (int) $comment_object->user_id // 投稿者と親コメント者が一緒じゃなければ
 		) {
 			$notifications->add_comment( $parent->user_id, $comment_id, sprintf( 'あなたのコメントに「%s」という返信がつきました。', $msg ), ( $comment_object->user_id ?: $comment_object->comment_author_email ) );
 		}
@@ -90,7 +90,7 @@ add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $
 	$count = Hametuha\Model\Review::get_instance()->get_review_count( $post->ID );
 	for ( $i = 4; $i >= 0; $i-- ) {
 		$step = pow( 10, $i );
-		if ( $step == $count ) {
+		if ( $step === $count ) {
 			$key = '_is_notified_' . $step;
 			if ( get_post_meta( $post->ID, $key, true ) ) {
 				break;

@@ -63,7 +63,7 @@ function hametuha_get_tags_by_genre() {
  * @return array
  */
 add_filter( 'register_taxonomy_args', function ( $args, $taxonomy ) {
-	if ( 'post_tag' == $taxonomy ) {
+	if ( 'post_tag' === $taxonomy ) {
 		$args['meta_box_cb'] = function ( $post ) {
 			// 現在の投稿に設定されているタグを取得
 			$posts_tags = get_the_tags( $post->ID );
@@ -139,7 +139,7 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
 				<?php
 				foreach ( hametuha_tag_types() as $val ) :
 					?>
-					<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $val == $genre ); ?>>
+					<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $val, $genre ); ?>>
 						<?php echo esc_html( $val ); ?>
 					</option>
 				<?php endforeach; ?>
@@ -171,7 +171,7 @@ add_action( 'post_tag_edit_form_fields', function ( $term ) {
  */
 add_action( 'edited_terms', function ( $term_id, $taxonomy ) {
 	// Check and verify nonce.
-	if ( 'post_tag' == $taxonomy && isset( $_POST['_tagmetanonce'] ) && wp_verify_nonce( $_POST['_tagmetanonce'], 'edit_tag_meta' ) ) {
+	if ( 'post_tag' === $taxonomy && isset( $_POST['_tagmetanonce'] ) && wp_verify_nonce( $_POST['_tagmetanonce'], 'edit_tag_meta' ) ) {
 		// Save term meta
 		update_term_meta( $term_id, 'tag_type', $_POST['tag_type'] );
 		update_term_meta( $term_id, 'genre', $_POST['tag_genre'] );

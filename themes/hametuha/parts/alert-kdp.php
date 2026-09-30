@@ -5,7 +5,7 @@
  */
 $series = Hametuha\Model\Series::get_instance();
 
-$series_id = ( 'series' == get_post_type() ) ? get_the_ID() : $post->post_parent;
+$series_id = ( 'series' === get_post_type() ) ? get_the_ID() : $post->post_parent;
 if ( ! $series_id ) {
 	return;
 }

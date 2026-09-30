@@ -51,7 +51,7 @@ class ListQuery extends QueryHighJack {
 	 * @return bool
 	 */
 	protected function is_valid_query( \WP_Query $wp_query ) {
-		return is_user_logged_in() && 'lists' == $wp_query->get( 'my-content' );
+		return is_user_logged_in() && 'lists' === $wp_query->get( 'my-content' );
 	}
 
 
@@ -70,7 +70,7 @@ class ListQuery extends QueryHighJack {
 			// クエリにユーザーIDを追加
 			$wp_query->set( 'author', get_current_user_id() );
 			$wp_query->set( 'post_status', [ 'publish', 'private', 'future' ] );
-		} elseif ( 'recommends' == $wp_query->get( 'my-content' ) ) {
+		} elseif ( 'recommends' === $wp_query->get( 'my-content' ) ) {
 			// おすすめの場合はメタクエリ追加
 			$wp_query->set('meta_query', [
 				[
@@ -79,7 +79,7 @@ class ListQuery extends QueryHighJack {
 				],
 			] );
 			$wp_query->set( 'exclude_empty', 1 );
-		} elseif ( 'lists' == $wp_query->get( 'post_type' ) && ! $wp_query->get( 'p' ) ) {
+		} elseif ( 'lists' === $wp_query->get( 'post_type' ) && ! $wp_query->get( 'p' ) ) {
 			$wp_query->set( 'exclude_empty', 1 );
 		}
 	}

@@ -36,7 +36,7 @@ class SeriesList extends SeriesBase {
 			return false;
 		}
 		$screen = get_current_screen();
-		return ( 'post' == $screen->base && $post_type == $screen->post_type );
+		return ( 'post' === $screen->base && $post_type === $screen->post_type );
 	}
 
 	/**

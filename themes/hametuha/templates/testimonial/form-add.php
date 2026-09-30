@@ -60,7 +60,7 @@ $input_wrap   = $args['layout'] === 'horizontal' ? 'col-sm-8' : '';
 
 	<?php
 	// 編集モードでかつ、自分のseriesに紐づくコメントでない場合は基本フィールドを表示しない
-	$show_basic_fields = ! $is_edit || ( isset( $post ) && $post->ID == $comment->comment_post_ID );
+	$show_basic_fields = ! $is_edit || ( isset( $post ) && $post->ID === (int) $comment->comment_post_ID );
 	?>
 
 	<?php if ( $show_basic_fields && ! $args['twitter'] ) : ?>

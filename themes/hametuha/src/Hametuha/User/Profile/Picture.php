@@ -278,7 +278,7 @@ class Picture extends Singleton {
 	 */
 	public function is_available_for( $user_id, $attachment_id ) {
 		$post = get_post( $attachment_id );
-		if ( ! $post || $post->post_author != $user_id || ! get_post_meta( $attachment_id, $this->post_meta_key, true ) ) {
+		if ( ! $post || (int) $post->post_author !== (int) $user_id || ! get_post_meta( $attachment_id, $this->post_meta_key, true ) ) {
 			return false;
 		} else {
 			return true;

@@ -80,7 +80,7 @@ class SalesReportTable extends \WP_List_Table {
 				printf( '%s <small>%s</small>', number_format( $item->royalty, 2 ), $item->currency );
 				break;
 			case 'unit':
-				if ( 'KENP' == $item->store ) {
+				if ( 'KENP' === $item->store ) {
 					$suffix = 'P';
 				} else {
 					$suffix = '部';

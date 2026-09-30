@@ -96,7 +96,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 				$users = array_map( [
 					$this,
 					'process_user_data',
-				], $this->author->search( $request['s'], 'any' != $request['mode'] ) );
+				], $this->author->search( $request['s'], 'any' !== $request['mode'] ) );
 				break;
 		}
 		return new \WP_REST_Response( $users );

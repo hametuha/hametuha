@@ -70,7 +70,7 @@ class OldPv extends Batch {
 					update_post_meta( $post_id, '_old_pv', $old_pv );
 				}
 			}
-			$next   = $count == $this->per_process;
+			$next   = $count === $this->per_process;
 			$count += $offset;
 			$total  = $result->totalResults;
 		} else {
