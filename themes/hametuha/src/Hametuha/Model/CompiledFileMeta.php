@@ -63,7 +63,7 @@ class CompiledFileMeta extends Model {
 	 */
 	public function get_all( $file_id ) {
 		return $this->wheres( [
-			'file_id'  => $file_id,
+			'file_id' => $file_id,
 		] )->result();
 	}
 
@@ -93,12 +93,13 @@ class CompiledFileMeta extends Model {
 	public function update_meta( $file_id, $key, $value ) {
 		$existing = $this->get_meta( $file_id, $key );
 		if ( $existing ) {
-			return (bool) $this->update( [
-				'meta_value' => $value,
-			], [
-				'file_id'  => $file_id,
-				'meta_key' => $key,
-			] );
+			return (bool) $this->update(
+				[ 'meta_value' => $value ],
+				[
+					'file_id'  => $file_id,
+					'meta_key' => $key,
+				]
+			);
 		} else {
 			return (bool) $this->insert( [
 				'file_id'    => $file_id,
