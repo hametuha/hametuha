@@ -92,10 +92,9 @@ add_filter( 'nlmg_validate_user', function ( WP_Error $error, $user_id ) {
 add_action( 'nlmg_before_leave', function ( $user_id ) {
 	$anoymous = hametuha_get_anonymous_user();
 	global $wpdb;
-	$query = <<<SQL
-		UPDATE {$wpdb->posts} SET post_author=%d
-		WHERE post_type   = 'news'
-          AND post_author = %d
-SQL;
-	$wpdb->query( $wpdb->prepare( $anoymous->ID, $user_id ) );
+	$wpdb->query( $wpdb->prepare(
+		"UPDATE {$wpdb->posts} SET post_author = %d WHERE post_type = 'news' AND post_author = %d",
+		$anoymous->ID,
+		$user_id
+	) );
 } );
