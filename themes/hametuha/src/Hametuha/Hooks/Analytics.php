@@ -172,7 +172,7 @@ class Analytics extends Singleton {
 						'thread' => 'topic',
 					] as $post_type => $taxonomy
 				) {
-					if ( $post_type !== get_queried_object()->post_type ) {
+					if ( get_queried_object()->post_type !== $post_type ) {
 						continue;
 					}
 					$terms = get_the_terms( get_queried_object(), $taxonomy );

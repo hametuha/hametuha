@@ -48,7 +48,7 @@ class Announcement extends PostHelper {
 	 * @return bool
 	 */
 	public function is_expired() {
-		return $this->is_limited() && current_time( 'timestamp' ) > strtotime( $this->end );
+		return $this->is_limited() && time() > (int) get_gmt_from_date( $this->end, 'U' );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Announcement extends PostHelper {
 	public function left_second_to_participate() {
 		$end = get_post_meta( $this->post->ID, self::COMMIT_END, true );
 		if ( $end ) {
-			$rest = strtotime( $end ) - current_time( 'timestamp' );
+			$rest = (int) get_gmt_from_date( $end, 'U' ) - time();
 			if ( $rest > 0 ) {
 				return $rest;
 			} else {
@@ -388,15 +388,14 @@ class Announcement extends PostHelper {
 		global $wpdb;
 		$categories = $this->commit_category;
 		if ( ! empty( $categories ) ) {
-			$categories = implode( ',', array_map( 'intval', $categories ) );
-			$sql        = <<<EOS
-			SELECT * FROM {$wpdb->terms} AS t
-			INNER JOIN {$wpdb->term_taxonomy} AS tt
-			ON t.term_id = tt.term_id
-			WHERE t.term_id IN ({$categories})
-EOS;
-
-			return $wpdb->get_results( $sql );
+			$categories = array_map( 'intval', $categories );
+			return $wpdb->get_results( $wpdb->prepare(
+				"SELECT * FROM {$wpdb->terms} AS t
+				INNER JOIN {$wpdb->term_taxonomy} AS tt
+				ON t.term_id = tt.term_id
+				WHERE t.term_id IN (" . implode( ',', array_fill( 0, count( $categories ), '%d' ) ) . ')',
+				$categories
+			) );
 		} else {
 			return array();
 		}

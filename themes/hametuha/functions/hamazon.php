@@ -14,15 +14,19 @@ function get_hamazon_posts() {
 	$paged    = max( 1, absint( $wp_query->query_vars['paged'] ) );
 	$paged   -= 1;
 	$offset   = $paged * $per_page;
-	$sql      = <<<EOS
+
+	return $wpdb->get_results( $wpdb->prepare(
+		<<<EOS
 		SELECT SQL_CALC_FOUND_ROWS ID, post_date, post_title, post_type,  post_content, post_author
 		FROM {$wpdb->posts}
-		WHERE post_status = 'publish' AND post_content LIKE '%[tmkm-amazon]%'
+		WHERE post_status = 'publish' AND post_content LIKE %s
 		ORDER BY post_date desc
-		LIMIT {$offset}, {$per_page}
-EOS;
-
-	return $wpdb->get_results( $sql );
+		LIMIT %d, %d
+EOS,
+		'%' . $wpdb->esc_like( '[tmkm-amazon]' ) . '%',
+		$offset,
+		$per_page
+	) );
 }
 
 /**

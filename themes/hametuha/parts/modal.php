@@ -1,3 +1,8 @@
+<?php
+/**
+ * 汎用モーダル
+ */
+?>
 
 <div id="hametu-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="hametuModalLabel" aria-hidden="true">
 	<div class="modal-dialog">

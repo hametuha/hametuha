@@ -61,7 +61,7 @@ add_action( 'wp_insert_comment', function ( $comment_id, $comment_object ) {
  */
 add_action( 'transition_post_status', function ( $new_status, $old_status, \WP_Post $post ) {
 	if ( 'publish' === $new_status ) {
-		if ( false === array_search( $old_status, [ 'new', 'draft', 'pending', 'auto-draft', 'future' ] ) ) {
+		if ( false === array_search( $old_status, [ 'new', 'draft', 'pending', 'auto-draft', 'future' ], true ) ) {
 			return;
 		}
 		$notifications = \Hametuha\Model\Notifications::get_instance();
@@ -129,7 +129,7 @@ add_action( 'hametuha_post_reviewed', function ( \WP_Post $post, $user_id = 0, $
 add_action( 'init', function () {
 	$cron_action = 'hametuha_daily_notification';
 	if ( ! wp_next_scheduled( $cron_action ) ) {
-		$time = date_i18n( 'Y-m-dT11:00:00+09:00', current_time( 'timestamp' ) + 60 * 60 * 24 );
+		$time = wp_date( 'Y-m-dT11:00:00+09:00', time() + 60 * 60 * 24 );
 		wp_schedule_event( strtotime( $time ), 'daily', $cron_action );
 	}
 	add_action( $cron_action, function () {

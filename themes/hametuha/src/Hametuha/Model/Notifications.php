@@ -56,7 +56,7 @@ class Notifications extends Model {
 	 * @return bool
 	 */
 	public function update_login( $user_id ) {
-		$time = current_time( 'timestamp' );
+		$time = current_time( 'timestamp' ); // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 通知の時刻（ローカル時刻のタイムスタンプ）と比べる
 		update_user_meta( $user_id, static::USER_KEY, $time );
 
 		return $time;

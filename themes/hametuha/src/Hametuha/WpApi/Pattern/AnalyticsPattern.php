@@ -144,7 +144,7 @@ abstract class AnalyticsPattern extends WpApi {
 	 * @return bool|\WP_Error
 	 */
 	public function validate_user_id( $var ) {
-		return ( is_numeric( $var ) || in_array( $var, [ 'me', 'all' ] ) ) ?: new \WP_Error( 'malformat', __( 'ユーザーIDの指定が不正です。', 'hametuha' ) );
+		return ( is_numeric( $var ) || in_array( $var, [ 'me', 'all' ], true ) ) ?: new \WP_Error( 'malformat', __( 'ユーザーIDの指定が不正です。', 'hametuha' ) );
 	}
 
 	/**

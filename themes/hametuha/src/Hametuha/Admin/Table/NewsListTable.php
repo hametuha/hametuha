@@ -35,7 +35,7 @@ class NewsListTable extends \WP_List_Table {
 	/**
 	 * @return array
 	 */
-	function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return [
 			'date' => [ 'date', 'DESC' ],
 			'pv'   => [ 'pv', false ],
@@ -218,7 +218,7 @@ class NewsListTable extends \WP_List_Table {
 	 *
 	 * @return string
 	 */
-	function no_items() {
+	public function no_items() {
 		echo '該当するニュースはありません';
 	}
 

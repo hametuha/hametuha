@@ -59,7 +59,7 @@ class UserReward extends WpApi {
 				$args['status'] = [
 					'default'           => 'all',
 					'validate_callback' => function ( $var ) {
-						return in_array( $var, [ 'all', '0', '1' ] ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
+						return in_array( (string) $var, [ 'all', '0', '1' ], true ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
 					},
 				];
 				break;

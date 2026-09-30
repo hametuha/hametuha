@@ -16,10 +16,17 @@ add_filter( 'pre_user_query', function ( WP_User_Query &$user_query ) {
 		ON {$wpdb->users}.ID = last_name.user_id AND last_name.meta_key = 'last_name'
 SQL;
 
-		$query                   = <<<SQL
-		( {$wpdb->users}.user_login LIKE %s OR {$wpdb->users}.user_nicename LIKE %s OR {$wpdb->users}.display_name LIKE %s OR last_name.meta_value LIKE %s)
-SQL;
-		$user_query->query_where = preg_replace( '/\(user_login LIKE \'%.*%\' OR user_nicename LIKE \'%.*%\'\)/u', $wpdb->prepare( $query, $where, $where, $where, $where ), $user_query->query_where );
+		$user_query->query_where = preg_replace(
+			'/\(user_login LIKE \'%.*%\' OR user_nicename LIKE \'%.*%\'\)/u',
+			$wpdb->prepare(
+				"( {$wpdb->users}.user_login LIKE %s OR {$wpdb->users}.user_nicename LIKE %s OR {$wpdb->users}.display_name LIKE %s OR last_name.meta_value LIKE %s)",
+				$where,
+				$where,
+				$where,
+				$where
+			),
+			$user_query->query_where
+		);
 	}
 } );
 
@@ -31,7 +38,7 @@ add_filter( 'manage_users_columns', function ( $columns ) {
 	foreach ( $columns as $key => $val ) {
 		if ( 'name' === $key ) {
 			$new_column['display_name'] = '表示名';
-		} elseif ( false !== array_search( $columns, [ 'backwpup_role', 'ure_roles' ] ) ) {
+		} elseif ( false !== array_search( $columns, [ 'backwpup_role', 'ure_roles' ], true ) ) {
 			// 邪魔なのは消す
 		} else {
 			$new_column[ $key ] = $val;

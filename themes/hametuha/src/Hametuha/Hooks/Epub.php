@@ -95,7 +95,7 @@ class Epub extends Singleton {
 	 * @return array
 	 */
 	public function remove_cap( $caps, $cap ) {
-		$index = array_search( $cap, $caps );
+		$index = array_search( $cap, $caps, true );
 		if ( false !== $index ) {
 			array_splice( $caps, $index, 1 );
 		}

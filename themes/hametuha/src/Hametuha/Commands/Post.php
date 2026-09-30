@@ -112,7 +112,7 @@ class Post extends Command {
 	public function compile( $args, $assoc ) {
 		list( $taxonomy, $term_id ) = $args;
 		$format                     = $assoc['format'] ?? 'xml';
-		if ( ! in_array( $format, [ 'xml', 'text', 'plain', 'tags', 'csv' ] ) ) {
+		if ( ! in_array( $format, [ 'xml', 'text', 'plain', 'tags', 'csv' ], true ) ) {
 			self::e( sprintf( 'Format %s is wrong.', $format ) );
 		}
 		// 注番号の書式（text 書き出しで使用）。%d が番号に置換される。
@@ -732,15 +732,16 @@ class Post extends Command {
 	 */
 	public function work_count() {
 		global $wpdb;
-		$query = <<<SQL
+		$total = 0;
+		foreach ( $wpdb->get_results(
+			<<<SQL
 			SELECT post_author, COUNT(ID) AS work_count
 			FROM {$wpdb->posts}
 			WHERE post_type = 'post'
 			  AND post_status = 'publish'
 			GROUP BY post_author
-SQL;
-		$total = 0;
-		foreach ( $wpdb->get_results( $query ) as $row ) {
+SQL
+		) as $row ) {
 			update_user_meta( $row->post_author, 'work_count', $row->work_count );
 			echo '.';
 			++$total;

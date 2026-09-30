@@ -4,7 +4,7 @@
  *
  * @package hametuha
  */
-if ( ! in_array( get_post_type(), [ 'announcement', 'faq' ] ) || ! hametuha_remarkably_old( 365 ) ) {
+if ( ! in_array( get_post_type(), [ 'announcement', 'faq' ], true ) || ! hametuha_remarkably_old( 365 ) ) {
 	return;
 }
 ?>

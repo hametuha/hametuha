@@ -37,7 +37,7 @@ class CompiledFileTable extends \WP_List_Table {
 	/**
 	 * @return array
 	 */
-	function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return [
 			'updated' => [ 'updated', false ],
 		];
@@ -204,7 +204,7 @@ class CompiledFileTable extends \WP_List_Table {
 	 * Returns string if nothing found
 	 * @return string
 	 */
-	function no_items() {
+	public function no_items() {
 		echo '該当するファイルはありません。';
 	}
 

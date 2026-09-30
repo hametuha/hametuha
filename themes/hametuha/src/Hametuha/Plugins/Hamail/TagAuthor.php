@@ -43,18 +43,17 @@ class TagAuthor extends RecipientSelector {
 		if ( empty( $term_ids ) ) {
 			return [];
 		}
-		$in_clause = implode( ',', $term_ids );
 		// 投稿の作者
 		global $wpdb;
-		$query    = <<<SQL
-			SELECT p.post_author
+		$user_ids = array_map( 'intval', $wpdb->get_col( $wpdb->prepare(
+			"SELECT p.post_author
 			FROM {$wpdb->term_relationships} AS tr
 			LEFT JOIN {$wpdb->posts} AS p
 			ON tr.object_id = p.ID
-			WHERE tr.term_taxonomy_id IN ( {$in_clause} )
-			GROUP BY p.post_author
-SQL;
-		$user_ids = array_map( 'intval', $wpdb->get_col( $query ) );
+			WHERE tr.term_taxonomy_id IN ( " . implode( ',', array_fill( 0, count( $term_ids ), '%d' ) ) . ' )
+			GROUP BY p.post_author',
+			$term_ids
+		) ) );
 		// サポーター
 		foreach ( CampaignController::get_instance()->get_supporters( $term_ids ) as $user ) {
 			if ( ! in_array( $user->ID, $user_ids, true ) ) {
@@ -84,7 +83,9 @@ SQL;
 	 */
 	protected function search( $term, $paged = 1 ) {
 		global $wpdb;
-		$query       = <<<SQL
+		$like        = '%' . $wpdb->esc_like( $term ) . '%';
+		$results     = $wpdb->get_results( $wpdb->prepare(
+			<<<SQL
 			SELECT SQL_CALC_FOUND_ROWS
 				t.*, tt.taxonomy, ttr.post_count
 			FROM {$wpdb->terms} AS t
@@ -99,11 +100,13 @@ SQL;
 			WHERE ( t.name LIKE %s OR tt.description LIKE %s )
 			ORDER BY tt.count DESC
 			LIMIT %d, %d
-SQL;
-		$term        = "%{$term}%";
-		$query       = $wpdb->prepare( $query, $term, $term, ( $paged - 1 ) * $this->per_page, $this->per_page );
-		$results     = $wpdb->get_results( $query );
-		$this->total = parent::get_search_total( $term, $paged );
+SQL,
+			$like,
+			$like,
+			( $paged - 1 ) * $this->per_page,
+			$this->per_page
+		) );
+		$this->total = parent::get_search_total( $like, $paged );
 		return array_map( function ( $result ) {
 			$taxonomy_obj = get_taxonomy( $result->taxonomy );
 			$id           = sprintf( '%s_%d', $result->taxonomy, $result->term_id );

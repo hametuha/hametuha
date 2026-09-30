@@ -7,9 +7,9 @@
 ?>
 <!-- 先週のランキング -->
 <?php
-$prev_thursday = strtotime( 'Previous Thursday', current_time( 'timestamp' ) );
-$sunday        = strtotime( 'Previous Sunday', $prev_thursday );
-$monday        = strtotime( 'Previous Monday', $sunday );
+$prev_thursday = new DateTimeImmutable( 'previous thursday', wp_timezone() );
+$sunday        = $prev_thursday->modify( 'previous sunday' )->getTimestamp();
+$monday        = $prev_thursday->modify( 'previous sunday' )->modify( 'previous monday' )->getTimestamp();
 $latest_week   = new WP_Query([
 	'ranking'        => 'last_week',
 	'posts_per_page' => 3,
@@ -17,7 +17,7 @@ $latest_week   = new WP_Query([
 if ( $latest_week->have_posts() ) :
 	?>
 	<h2 class="archive-ranking-title"><i class="icon-calendar4"></i> 最新週間ランキング <span class="badge text-bg-success">確定済み</span></h2>
-	<p><?php echo date_i18n( 'Y年n月j日（D）', $monday ); ?>〜<?php echo date_i18n( 'Y年n月j日（D）', $sunday ); ?></p>
+	<p><?php echo wp_date( 'Y年n月j日（D）', $monday ); ?>〜<?php echo wp_date( 'Y年n月j日（D）', $sunday ); ?></p>
 	<ol class="archive-container media-list">
 		<?php
 		while ( $latest_week->have_posts() ) :
@@ -30,7 +30,7 @@ if ( $latest_week->have_posts() ) :
 		?>
 	</ol>
 	<p>
-		<a class="btn btn-default btn-lg btn-block" href="<?php echo home_url( '/ranking/weekly/' . date_i18n( 'Ymd/', $sunday ) ); ?>">最新週間ランキングを見る</a>
+		<a class="btn btn-default btn-lg btn-block" href="<?php echo home_url( '/ranking/weekly/' . wp_date( 'Ymd/', $sunday ) ); ?>">最新週間ランキングを見る</a>
 	</p>
 
 	<hr />
@@ -39,17 +39,17 @@ if ( $latest_week->have_posts() ) :
 
 <!-- 直近のランキング -->
 <?php
-$latest_date = strtotime( '4 days ago', current_time( 'timestamp' ) );
+$latest_date = time() - 60 * 60 * 24 * 4;
 $latest_day  = new WP_Query([
 	'ranking'        => 'daily',
-	'year'           => date_i18n( 'Y', $latest_date ),
-	'monthnum'       => date_i18n( 'm', $latest_date ),
-	'day'            => date_i18n( 'd', $latest_date ),
+	'year'           => wp_date( 'Y', $latest_date ),
+	'monthnum'       => wp_date( 'm', $latest_date ),
+	'day'            => wp_date( 'd', $latest_date ),
 	'posts_per_page' => 3,
 ]);
 if ( $latest_day->have_posts() ) :
 	?>
-	<h2 class="archive-ranking-title"><?php echo date_i18n( 'Y年n月j日（D）', $latest_date ); ?>のランキング</h2>
+	<h2 class="archive-ranking-title"><?php echo wp_date( 'Y年n月j日（D）', $latest_date ); ?>のランキング</h2>
 	<ol class="archive-ranking">
 		<?php
 		while ( $latest_day->have_posts() ) :
@@ -62,8 +62,8 @@ if ( $latest_day->have_posts() ) :
 		?>
 	</ol>
 	<p class="text-center">
-		<a class="btn btn-default btn-lg" href="<?php echo home_url( '/ranking' . date_i18n( '/Y/m/d/', $latest_date ) ); ?>">
-			<?php echo date_i18n( 'Y年n月j日（D）', $latest_date ); ?>のランキングを見る
+		<a class="btn btn-default btn-lg" href="<?php echo home_url( '/ranking' . wp_date( '/Y/m/d/', $latest_date ) ); ?>">
+			<?php echo wp_date( 'Y年n月j日（D）', $latest_date ); ?>のランキングを見る
 		</a>
 	</p>
 
@@ -72,16 +72,16 @@ if ( $latest_day->have_posts() ) :
 
 <!-- 今月のランキング -->
 <?php
-$this_month   = date_i18n( 'j' ) >= 5 ? current_time( 'timestamp' ) : current_time( 'timestamp' ) - ( 60 * 60 * 24 * 5 );
+$this_month   = date_i18n( 'j' ) >= 5 ? time() : time() - ( 60 * 60 * 24 * 5 );
 $latest_month = new WP_Query([
 	'ranking'        => 'monthly',
-	'year'           => date_i18n( 'Y', $this_month ),
-	'monthnum'       => date_i18n( 'm', $this_month ),
+	'year'           => wp_date( 'Y', $this_month ),
+	'monthnum'       => wp_date( 'm', $this_month ),
 	'posts_per_page' => 3,
 ]);
 if ( $latest_month->have_posts() ) :
 	?>
-	<h2 class="archive-ranking-title"><?php echo date_i18n( 'Y年n月', $this_month ); ?>のランキング</h2>
+	<h2 class="archive-ranking-title"><?php echo wp_date( 'Y年n月', $this_month ); ?>のランキング</h2>
 	<ol class="archive-ranking">
 		<?php
 		while ( $latest_month->have_posts() ) :
@@ -94,8 +94,8 @@ if ( $latest_month->have_posts() ) :
 		?>
 	</ol>
 	<p class="text-center">
-		<a class="btn btn-default btn-lg" href="<?php echo home_url( '/ranking' . date_i18n( '/Y/m/', $this_month ) ); ?>">
-			<?php echo date_i18n( 'Y年n月', $this_month ); ?>のランキングを見る
+		<a class="btn btn-default btn-lg" href="<?php echo home_url( '/ranking' . wp_date( '/Y/m/', $this_month ) ); ?>">
+			<?php echo wp_date( 'Y年n月', $this_month ); ?>のランキングを見る
 		</a>
 	</p>
 

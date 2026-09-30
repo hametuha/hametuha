@@ -3,7 +3,7 @@
 /** @var bool $breadcrumb */
 /** @var bool $current */
 /** @var string $graph */
-$from = $this->input->get( 'from' ) ?: date_i18n( 'Y-m-d', strtotime( '1 month ago', current_time( 'timestamp' ) ) );
+$from = $this->input->get( 'from' ) ?: wp_date( 'Y-m-d', strtotime( '1 month ago' ) );
 $to   = $this->input->get( 'to' ) ?: date_i18n( 'Y-m-d' );
 ?>
 <?php get_header(); ?>

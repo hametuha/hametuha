@@ -69,7 +69,7 @@ function is_recent_date( $datetime, $limit = 3 ) {
 	if ( ! is_numeric( $datetime ) ) {
 		$datetime = strtotime( $datetime );
 	}
-	$limit = current_time( 'timestamp' ) - $limit * 60 * 60 * 24;
+	$limit = current_time( 'timestamp' ) - $limit * 60 * 60 * 24; // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- strtotime() した日時と比べるのでローカル時刻のタイムスタンプ
 
 	return $limit < $datetime;
 }
@@ -87,7 +87,7 @@ function hametuha_passed_time( $datetime, $timestamp = false ) {
 	if ( ! $timestamp ) {
 		$datetime = strtotime( $datetime );
 	}
-	$diff = current_time( 'timestamp' ) - $datetime;
+	$diff = current_time( 'timestamp' ) - $datetime; // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 通知の時刻などローカル時刻のタイムスタンプを受け取る
 	if ( 60 * 60 > $diff ) {
 		$unit   = '分';
 		$divide = round( $diff / 60 );
@@ -214,22 +214,6 @@ function google_ads( $type = 'default' ) {
 
 
 /**
- * 現在登録されている作品の数を返す
- *
- * @global wpdb $wpdb
- * @return int
- */
-function get_current_post_count() {
-	global $wpdb;
-	$sql = <<<EOS
-		SELECT COUNT(ID) FROM {$wpdb->posts}
-		WHERE post_status = 'publish' AND post_type = 'post'
-EOS;
-
-	return (int) $wpdb->get_var( $sql );
-}
-
-/**
  * 投稿の長さを返す
  *
  * @global wpdb $wpdb
@@ -240,13 +224,15 @@ EOS;
 function get_post_length( $post = null ) {
 	global $wpdb;
 	$post = get_post( $post );
-	if ( $post->post_type === 'series' ) {
-		$sql = <<<EOS
+	if ( 'series' === $post->post_type ) {
+
+		$content = implode( "\n", $wpdb->get_col( $wpdb->prepare(
+			<<<EOS
 			SELECT post_content FROM {$wpdb->posts}
 			WHERE post_type = 'post' AND post_status IN ( 'publish', 'private' ) AND post_parent = %d
-EOS;
-
-		$content = implode( "\n", $wpdb->get_col( $wpdb->prepare( $sql, $post->ID ) ) );
+EOS,
+			$post->ID
+		) ) );
 	} else {
 		$content = $post->post_content;
 	}
@@ -284,28 +270,6 @@ function hametuha_reading_time( $letters_per_minute = 500, $post = null ) {
 	return round( $length / $letters_per_minute );
 }
 
-/**
- * 投稿の平均的な文字数を調べる
- *
- * @global wpdb $wpdb
- *
- * @param itn $parent_id
- *
- * @return int
- */
-function get_post_length_avg( $parent_id = 0 ) {
-	global $wpdb;
-	$sql = <<<EOS
-		SELECT AVG(CHAR_LENGTH(post_content)) FROM {$wpdb->posts}
-		WHERE post_status = 'publish' AND post_type = 'post'
-EOS;
-	if ( $parent_id ) {
-		$sql .= ' AND ' . $wpdb->prepare( 'post_parent = %d', $parent_id );
-	}
-
-	return $wpdb->get_var( $sql );
-}
-
 
 /**
  * 指定されたユーザーが投稿を行っているか
@@ -319,14 +283,16 @@ EOS;
  */
 function has_recent_post( $user_id, $post_type = 'post', $days = 30 ) {
 	global $wpdb;
-	$sql = <<<EOS
+
+	return (bool) $wpdb->get_var( $wpdb->prepare(
+		<<<EOS
 		SELECT ID FROM {$wpdb->posts}
 		WHERE post_type = %s AND post_author = %d AND post_status = 'publish'
 		  AND ( TO_DAYS(NOW()) - TO_DAYS(post_date) <= %d )
 		LIMIT 1
-EOS;
-
-	return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $post_type, $user_id, $days ) );
+EOS,
+		$post_type, $user_id, $days
+	) );
 }
 
 /**

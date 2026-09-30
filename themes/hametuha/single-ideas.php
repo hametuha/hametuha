@@ -40,7 +40,7 @@ get_template_part( 'templates/idea/form' );
 								$class_name = in_array( get_post_status(), [
 									'private',
 									'protected',
-								] ) ? 'danger' : 'success';
+								], true ) ? 'danger' : 'success';
 								?>
 								<span
 									class="badge rounded-pill text-bg-<?php echo $class_name; ?>"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
@@ -199,11 +199,11 @@ get_template_part( 'templates/idea/form' );
 									foreach ( $ideas->get_stockers( get_the_ID() ) as $user ) :
 										?>
 										<li class="ideas__stocker">
-											<?php if ( (int) $user->ID === get_current_user_id() || ! user_can( $user->ID, 'edit_posts ' ) ) : ?>
+											<?php if ( get_current_user_id() === (int) $user->ID || ! user_can( $user->ID, 'edit_posts ' ) ) : ?>
 												<span class="ideas__stocker--link">
 													<?php
 													echo get_avatar( $user->ID, 32 );
-													echo ( (int) $user->ID === get_current_user_id() ) ? 'あなた' : esc_html( $user->display_name );
+													echo ( get_current_user_id() === (int) $user->ID ) ? 'あなた' : esc_html( $user->display_name );
 													?>
 												</span>
 											<?php else : ?>

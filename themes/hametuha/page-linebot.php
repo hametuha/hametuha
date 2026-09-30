@@ -3,10 +3,10 @@
 // @see https://developers.line.me/bot-api/api-reference#receiving_messages
 nocache_headers();
 $json_string  = file_get_contents( 'php://input' );
-$jsonObj      = json_decode( $json_string );
-$to           = $jsonObj->result[0]->content->from;
-$message      = $jsonObj->result[0]->content->text;
-$content_type = $jsonObj->result[0]->content->contentType;
+$json_obj     = json_decode( $json_string );
+$to           = $json_obj->result[0]->content->from;
+$message      = $json_obj->result[0]->content->text;
+$content_type = $json_obj->result[0]->content->contentType;
 switch ( $content_type ) {
 	case 1:
 	case 10:

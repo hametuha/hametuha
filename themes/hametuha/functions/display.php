@@ -300,7 +300,7 @@ endswitch;
 		<div class="hidden" itemprop="url"><?php echo get_comment_link( $comment ); ?></div>
 
 		<div class="reply right">
-			<?php if ( $comment->comment_type === 'comment' || $comment->comment_type === '' ) : ?>
+			<?php if ( 'comment' === $comment->comment_type || '' === $comment->comment_type ) : ?>
 				<?php
 				comment_reply_link( array_merge( $args, array(
 					'reply_text' => '<i class="icon-reply"></i> このコメントに返信',

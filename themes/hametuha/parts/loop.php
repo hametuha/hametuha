@@ -114,7 +114,7 @@ endswitch;
 					<?php endif; ?>
 				</li>
 				<li class="static list-inline-item"><i class="icon-reading"></i> <?php echo number_format( get_post_length() ); ?>文字</li>
-				<?php if ( in_array( $post->post_status, [ 'private', 'protected' ] ) ) : ?>
+				<?php if ( in_array( $post->post_status, [ 'private', 'protected' ], true ) ) : ?>
 				<li>
 					<span class="label label-default"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
 				</li>

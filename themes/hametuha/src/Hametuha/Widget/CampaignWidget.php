@@ -24,8 +24,7 @@ class CampaignWidget extends Widget {
 	 * @return string
 	 */
 	protected function widget_content( array $instance = [] ) {
-		extract( $instance );
-		/** @var string $number */
+		$number = $instance['number'] ?? 5;
 		ob_start();
 		$campaigns = hametuha_recent_campaigns( $number );
 		if ( $campaigns ) :
@@ -60,11 +59,12 @@ class CampaignWidget extends Widget {
 	}
 
 	public function form( $instance ) {
-		$atts = shortcode_atts( array(
+		$atts   = shortcode_atts( array(
 			'title'  => '絶賛募集中！',
 			'number' => 5,
 		), $instance );
-		extract( $atts );
+		$title  = $atts['title'];
+		$number = $atts['number'];
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">

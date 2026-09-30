@@ -361,7 +361,7 @@ class Series extends Model {
 		}
 		$cur_index = $this->get_index( $post );
 		if ( is_array( $limit_index ) ) {
-			return false === array_search( $cur_index, $limit_index );
+			return false === array_search( $cur_index, $limit_index, true );
 		} else {
 			return $cur_index > $limit_index;
 		}

@@ -116,9 +116,9 @@ class IdeasMine extends IdeaApiPattern {
 	protected function handle_get( $request ) {
 		$results = $this->ideas->get_list( get_current_user_id(), $request['offset'], $request['s'] );
 		foreach ( $results['ideas'] as &$result ) {
-			$result->stocking    = (int) $result->stocker === get_current_user_id() && 1 === (int) $result->location;
+			$result->stocking    = get_current_user_id() === (int) $result->stocker && 1 === (int) $result->location;
 			$result->recommendor = $result->recommended_by ? get_the_author_meta( 'display_name', $result->recommended_by ) : false;
-			$result->own         = (int) $result->post_author === get_current_user_id();
+			$result->own         = get_current_user_id() === (int) $result->post_author;
 			$result->date        = mysql2date( get_option( 'date_format' ), $result->post_date );
 			$result->permalink   = get_permalink( $result );
 			$result->status      = get_post_status_object( $result->post_status )->label;

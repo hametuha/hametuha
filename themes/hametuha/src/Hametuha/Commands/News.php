@@ -33,7 +33,9 @@ class News extends Command {
 	public function fill_date( $args, $assoc_args ) {
 		/** @var \wpdb $wpdb */
 		global $wpdb;
-		$query = <<<SQL
+		$done = 0;
+		foreach ( $wpdb->get_results(
+			<<<SQL
 			SELECT ID, post_date FROM {$wpdb->posts}
 			WHERE post_type = 'news'
 			  AND post_status = 'publish'
@@ -42,9 +44,8 @@ class News extends Command {
 			  	WHERE meta_key = '_news_published'
 			  	  AND meta_value != ''
 			  )
-SQL;
-		$done  = 0;
-		foreach ( $wpdb->get_results( $query ) as $post ) {
+SQL
+		) as $post ) {
 			update_post_meta( $post->ID, '_news_published', $post->post_date );
 			++$done;
 			echo '.';
@@ -181,11 +182,6 @@ SQL;
 	 */
 	public function fix_event() {
 		global $wpdb;
-		$query = <<<SQL
-			UPDATE {$wpdb->postmeta}
-			SET meta_key = %s
-			WHERE meta_key = %s
-SQL;
 		foreach ( [
 			'_hametuha_announcement_place'    => '_event_title',
 			'_hametuha_announcement_building' => '_event_bld',
@@ -195,7 +191,14 @@ SQL;
 			'_lwp_event_start'                => '_event_start',
 			'_lwp_event_end'                  => '_event_end',
 		] as $old_key => $new_key ) {
-			$replaced = $wpdb->query( $wpdb->prepare( $query, $new_key, $old_key ) );
+			$replaced = $wpdb->query( $wpdb->prepare(
+				<<<SQL
+			UPDATE {$wpdb->postmeta}
+			SET meta_key = %s
+			WHERE meta_key = %s
+SQL,
+				$new_key, $old_key
+			) );
 			self::l( sprintf( 'Change %s to %s: %d', $old_key, $new_key, $replaced ) );
 		}
 		self::s( 'Changing key is finished. Please flush post cache.' );

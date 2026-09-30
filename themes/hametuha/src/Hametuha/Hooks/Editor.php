@@ -35,7 +35,7 @@ class Editor extends Singleton {
 	 * @return bool
 	 */
 	public function filter_block_editor( $use, $post_type ) {
-		return ! in_array( $post_type, $this->post_type_to_exclude );
+		return ! in_array( $post_type, $this->post_type_to_exclude, true );
 	}
 
 	/**
