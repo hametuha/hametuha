@@ -22,7 +22,7 @@ if ( ! isset( $error_code ) ) {
 }
 
 $theme_dir = '/wp-content/themes/hametuha/assets/';
-$ver       = 'error-' . date( 'YmdH' ); // 時間まで記載してキャッシュされるように
+$ver       = 'error-' . gmdate( 'YmdH' ); // 時間まで記載してキャッシュされるように
 ?>
 <!DOCTYPE html>
 <html>

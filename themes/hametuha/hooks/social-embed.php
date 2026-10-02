@@ -11,7 +11,7 @@ add_action( 'after_setup_theme', function () {
 			'news',
 		];
 		$post_id            = url_to_postid( $url );
-		if ( ! $post_id || false === array_search( get_post( $post_id )->post_type, $allowed_post_types ) ) {
+		if ( ! $post_id || false === array_search( get_post( $post_id )->post_type, $allowed_post_types, true ) ) {
 			return sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( $url ),

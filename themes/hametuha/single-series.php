@@ -332,7 +332,7 @@ endswitch;
 									if ( $review->amazon ) {
 										$url  = $series->get_kdp_url( get_the_ID() );
 										$icon = '<i class="icon-amazon"></i> Amazonレビュー';
-									} elseif ( (int) $review->comment_post_ID !== get_the_ID() ) {
+									} elseif ( get_the_ID() !== (int) $review->comment_post_ID ) {
 										$url  = get_comment_link( $review );
 										$icon = 'from 破滅派';
 									} elseif ( preg_match( '#^https?://.+#u', $review->comment_author_url ) ) {

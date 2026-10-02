@@ -27,9 +27,8 @@ class KdpWidget extends Widget {
 	 */
 	protected function widget_content( array $instance = [] ) {
 		$series = Series::get_instance();
-		extract( $instance );
-		/** @var string $number */
-		/** @var string $desc */
+		$number = $instance['number'] ?? 10;
+		$desc   = $instance['desc'] ?? '';
 		ob_start();
 		?>
 		<div class="widget-kdp-lead">
@@ -87,12 +86,14 @@ class KdpWidget extends Widget {
 	}
 
 	public function form( $instance ) {
-		$atts = shortcode_atts( array(
+		$atts   = shortcode_atts( array(
 			'title'  => '破滅派@KDP',
 			'number' => 10,
 			'desc'   => '',
 		), $instance );
-		extract( $atts );
+		$title  = $atts['title'];
+		$number = $atts['number'];
+		$desc   = $atts['desc'];
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">

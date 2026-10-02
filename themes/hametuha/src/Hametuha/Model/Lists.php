@@ -102,7 +102,7 @@ class Lists extends Model {
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
-					'created'    => current_time( 'timestamp' ),
+					'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 				]);
 				++$added;
 			}
@@ -130,7 +130,7 @@ class Lists extends Model {
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
-					'created'    => current_time( 'timestamp' ),
+					'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 				] );
 			}
 		}
@@ -161,7 +161,7 @@ class Lists extends Model {
 			'rel_type'   => 'list',
 			'subject_id' => $list_id,
 			'object_id'  => $post_id,
-			'created'    => current_time( 'timestamp' ),
+			'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 		] );
 	}
 

@@ -45,27 +45,6 @@ function get_current_post_type_label() {
 
 
 /**
- * 投稿が少なくとも一つの画像を持っているか否か
- * @global object $post
- * @global wpdb $wpdb
- *
- * @param mixed $post
- *
- * @return boolean
- */
-function has_image_attachment( $post = null ) {
-	if ( is_null( $post ) ) {
-		global $post;
-	} else {
-		$post = get_post( $post );
-	}
-	global $wpdb;
-	$sql = "SELECT ID FORM {$wpdb->posts} WHERE post_parent = %d AND post_type = 'attachment' AND post_mime_type LIKE 'image%'";
-
-	return (bool) $wpdb->get_var( $wpdb->prepare( $sql, $post->ID ) );
-}
-
-/**
  * media_side_load_imageのパクリ
  *
  * GIF非対応のため

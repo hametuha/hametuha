@@ -101,15 +101,15 @@ function hametuha_campaign_record( $term = null ) {
  */
 function hametuha_comment_point( $post_ids ) {
 	global $wpdb;
-	$in    = implode( ', ', array_map( 'intval', $post_ids ) );
-	$query = <<<SQL
-		SELECT user_id, COUNT( DISTINCT comment_post_ID ) AS comment_count
+	$post_ids = array_map( 'intval', $post_ids );
+	return $wpdb->get_results( $wpdb->prepare(
+		"SELECT user_id, COUNT( DISTINCT comment_post_ID ) AS comment_count
 		FROM {$wpdb->comments}
-		WHERE comment_post_ID IN ({$in})
+		WHERE comment_post_ID IN (" . implode( ', ', array_fill( 0, count( $post_ids ), '%d' ) ) . ')
 		  AND user_id > 0
-		GROUP BY user_id
-SQL;
-	return $wpdb->get_results( $query );
+		GROUP BY user_id',
+		$post_ids
+	) );
 }
 
 /**
@@ -281,7 +281,7 @@ function hametuha_valid_for_campaign( $campaign_id, $post = null ) {
 		return $error;
 	}
 	if ( hametuha_campaign_has_limit( $campaign_id ) ) {
-		if ( ( false !== array_search( $post->post_status, [ 'future', 'publish', 'private' ] ) )
+		if ( ( false !== array_search( $post->post_status, [ 'future', 'publish', 'private' ], true ) )
 			&& ! hametuha_is_available_campaign( $campaign, $post->post_date )
 		) {
 			$error->add( '500', '応募期限を過ぎています。' );

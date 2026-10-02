@@ -40,7 +40,7 @@ class Testimonial extends WpApi {
 				},
 			],
 		];
-		if ( in_array( $method, [ 'POST', 'PUT' ] ) ) {
+		if ( in_array( $method, [ 'POST', 'PUT' ], true ) ) {
 			$args = array_merge( $args, [
 				'testimonial-source' => [
 					'default'           => '',
@@ -56,7 +56,7 @@ class Testimonial extends WpApi {
 					'default'           => 0,
 					'type'              => 'integer',
 					'validate_callback' => function ( $rank ) {
-						return in_array( $rank, range( 0, 5 ) );
+						return in_array( (string) $rank, array_map( 'strval', range( 0, 5 ) ), true );
 					},
 				],
 				'testimonial-url'    => [

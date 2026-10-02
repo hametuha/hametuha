@@ -108,6 +108,6 @@ class HotPost extends CronBase {
 	 * @return int|string
 	 */
 	public function start_at() {
-		return strtotime( date_i18n( 'Y-m-d H:00:00', current_time( 'timestamp' ), true ) );
+		return strtotime( gmdate( 'Y-m-d H:00:00' ) );
 	}
 }

@@ -120,19 +120,15 @@ class Collaborators extends Singleton {
 	 * @return bool
 	 */
 	public function collaborator_exists( $series_id, $user_id, $only_valid = false ) {
-		$query  = <<<SQL
-			SELECT ID FROM {$this->relationships}
-			WHERE rel_type  = %d
-			  AND object_id = %d
-			  AND user_id   = %d
-SQL;
-		$wheres = [ $this->rel_type, $series_id, $user_id ];
-		if ( $only_valid ) {
-			$query .= ' AND location >= 0';
-		}
-		$query .= ' LIMIT 1';
-		array_unshift( $wheres, $query );
-		return (bool) $this->db->get_var( call_user_func_array( [ $this->db, 'prepare' ], $wheres ) );
+		return (bool) $this->db->get_var( $this->db->prepare(
+			$only_valid
+				? 'SELECT ID FROM %i WHERE rel_type = %s AND object_id = %d AND user_id = %d AND location >= 0 LIMIT 1'
+				: 'SELECT ID FROM %i WHERE rel_type = %s AND object_id = %d AND user_id = %d LIMIT 1',
+			$this->relationships,
+			$this->rel_type,
+			$series_id,
+			$user_id
+		) );
 	}
 
 	/**
@@ -339,12 +335,12 @@ SQL;
 	 */
 	public function total_invitations( $user_id ) {
 		global $wpdb;
-		$query = <<<SQL
-			SELECT COUNT( ID ) FROM {$this->relationships}
-			WHERE rel_type = %s
-			  AND user_id  = %d
-SQL;
-		return (int) $wpdb->get_var( $wpdb->prepare( $query, $this->rel_type, $user_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare(
+			'SELECT COUNT( ID ) FROM %i WHERE rel_type = %s AND user_id = %d',
+			$this->relationships,
+			$this->rel_type,
+			$user_id
+		) );
 	}
 
 	/**
@@ -409,18 +405,18 @@ SQL;
 	 */
 	public function get_margin_list( $series_id, $excludes = [] ) {
 		global $wpdb;
-		$query = <<<SQL
-			SELECT * FROM {$this->relationships}
-			WHERE rel_type  = %s
-			  AND object_id = %d
-			  AND location >= 0
-SQL;
-		if ( $excludes ) {
-			$excludes = (array) $excludes;
-			$query   .= sprintf( ' AND user_id NOT IN (%s)', implode( ', ', array_map( 'intval', $excludes ) ) );
-		}
-		$margins = [];
-		foreach ( $wpdb->get_results( $wpdb->prepare( $query, $this->rel_type, $series_id ) ) as $row ) {
+		$excludes = array_map( 'intval', (array) $excludes );
+		$rows     = $wpdb->get_results( $wpdb->prepare(
+			'SELECT * FROM %i WHERE rel_type = %s AND object_id = %d AND location >= 0',
+			$this->relationships,
+			$this->rel_type,
+			$series_id
+		) );
+		$margins  = [];
+		foreach ( $rows as $row ) {
+			if ( in_array( (int) $row->user_id, $excludes, true ) ) {
+				continue;
+			}
 			$margins[ $row->user_id ] = absint( $row->location * 100 );
 		}
 		return $margins;

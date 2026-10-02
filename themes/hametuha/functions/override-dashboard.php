@@ -22,7 +22,7 @@ add_action( 'admin_enqueue_scripts', function () {
  */
 function _hametuha_admin_dashboard_metaboxes( $screen_id ) {
 	global $wp_meta_boxes;
-	if ( $screen_id === 'dashboard' ) {
+	if ( 'dashboard' === $screen_id ) {
 		$meta_boxes = array(
 			'normal' => array(
 				'network_dashboard_right_now', // 現在の状況（ネットワーク管理）
@@ -86,7 +86,7 @@ add_filter( 'get_user_option_metaboxhidden_post', function ( $result, $option, $
 	$result                  = (array) $result;
 	$box_to_hide_from_author = array( 'authordiv' );
 	foreach ( $box_to_hide_from_author as $option ) {
-		if ( ! current_user_can( 'edit_others_posts' ) && false === array_search( $option, $result ) ) {
+		if ( ! current_user_can( 'edit_others_posts' ) && false === array_search( $option, $result, true ) ) {
 			$result[] = $option;
 		}
 	}

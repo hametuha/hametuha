@@ -94,10 +94,10 @@ TEXT;
 		}
 		$response = minico_share( $param );
 		if ( is_wp_error( $response ) ) {
-			var_dump( $response );
+			\WP_CLI::print_value( $response, [ 'format' => 'json' ] );
 			self::e( sprintf( '%s: %s', $response->get_error_code(), $response->get_error_message() ) );
 		}
-		var_dump( $response );
+		\WP_CLI::print_value( $response, [ 'format' => 'json' ] );
 		self::s( 'Message sent.' );
 	}
 

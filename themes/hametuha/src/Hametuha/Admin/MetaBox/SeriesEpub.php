@@ -225,7 +225,7 @@ TEXT;
 
 
 		<div class="misc-pub-section misc-pub-section--epub misc-pub-section--enroll">
-			<?php if ( false !== array_search( $status, [ 1, 2 ] ) ) : ?>
+			<?php if ( false !== array_search( $status, [ 1, 2 ], true ) ) : ?>
 			<label>
 				<span class="dashicons dashicons-money"></span> 販売価格:
 				<?php if ( current_user_can( 'edit_others_posts' ) ) : ?>

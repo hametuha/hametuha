@@ -59,7 +59,7 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 					'mode' => [
 						'required'          => true,
 						'validate_callback' => function ( $var ) {
-							return false !== array_search( $var, [ 'any', 'friends', 'authors' ] );
+							return false !== array_search( $var, [ 'any', 'friends', 'authors' ], true );
 						},
 					],
 					's'    => [

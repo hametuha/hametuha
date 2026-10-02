@@ -101,7 +101,7 @@ class EPub extends RestTemplate {
 
 		$id  = 'preview';
 		$dir = 'rtl' === $this->input->get( 'direction' ) ? 'rtl' : 'ltr';
-		if ( false !== array_search( $template, [ 'colophon', 'titlepage', 'contributors' ] ) ) {
+		if ( false !== array_search( $template, [ 'colophon', 'titlepage', 'contributors' ], true ) ) {
 			$dir = 'lrt';
 		}
 		nocache_headers();
@@ -284,7 +284,7 @@ class EPub extends RestTemplate {
 			$factory->opf->putXML();
 			$factory->container->putXML();
 			// Create ePub
-			$file_name = current_time( 'timestamp' ) . '.epub';
+			$file_name = time() . '.epub';
 			$type      = 'kdp';
 			$path      = sprintf( '%swp-content/hamepub/out/%s/%d', ABSPATH, $type, $series_id );
 			if ( ( ! is_dir( $path ) && ! mkdir( $path, 0755, true ) ) ) {

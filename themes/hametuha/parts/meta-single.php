@@ -50,7 +50,7 @@
 		<meta itemprop="datePublished" content="<?php echo mysql2date( DateTime::ISO8601, $post->post_date_gmt ); ?>">
 	</li>
 
-	<?php if ( in_array( get_post_type(), [ 'page', 'faq' ] ) && hametuha_remarkably_updated() ) : ?>
+	<?php if ( in_array( get_post_type(), [ 'page', 'faq' ], true ) && hametuha_remarkably_updated() ) : ?>
 	<li class="date list-inline-item">
 		<i class="icon-loop4"></i>
 		<?php the_modified_date( 'Y年m月d日（D）' ); ?>更新
