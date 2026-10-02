@@ -248,8 +248,8 @@ HTML;
 								<h2 class="mb-3 mt-3 text-center"><?php esc_html_e( '目次', 'hametuha' ); ?></h2>
 								<ul class="mb-3 mt-0">
 									<?php foreach ( $siblings as $sibling ) : ?>
-										<li class="<?php echo ( $sibling->ID === get_the_ID() ) ? 'current' : ''; ?>">
-											<?php if ( $sibling->ID === get_the_ID() ) : ?>
+										<li class="<?php echo ( get_the_ID() === $sibling->ID ) ? 'current' : ''; ?>">
+											<?php if ( get_the_ID() === $sibling->ID ) : ?>
 												<span><?php the_title(); ?> <i class="icon-reading"></i></span>
 											<?php else : ?>
 												<a href="<?php the_permalink( $sibling ); ?>"><?php echo get_the_title( $sibling ); ?></a>

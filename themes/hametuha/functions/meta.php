@@ -191,7 +191,7 @@ add_action( 'wp_head', function () {
 		$page  = get_post( get_option( 'page_on_front' ) );
 		$desc  = $page->post_excerpt;
 		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $page->ID ), 'full' )[0];
-	} elseif ( 'kdp' == get_query_var( 'meta_filter' ) ) {
+	} elseif ( 'kdp' === get_query_var( 'meta_filter' ) ) {
 		$url   = home_url( '/kdp/' );
 		$desc  = '破滅派初の電子書籍はAmazonのKindleで入手できます。';
 		$image = get_stylesheet_directory_uri() . '/assets/img/jumbotron/kdp.jpg';
@@ -225,7 +225,7 @@ add_action( 'wp_head', function () {
 			// Show product card
 			if ( is_singular( 'series' ) ) {
 				$series = \Hametuha\Model\Series::get_instance();
-				if ( 2 == $series->get_status( $post->ID ) ) {
+				if ( 2 === $series->get_status( $post->ID ) ) {
 					// If this is e-book and sold...
 					// $card               = 'product';
 					$twitters['label1'] = '価格';
@@ -272,7 +272,14 @@ add_action( 'wp_head', function () {
 	} elseif ( ( $class_name = get_query_var( 'api_class' ) ) ) {
 		$class_name = str_replace( '\\\\', '\\', $class_name );
 		if ( class_exists( $class_name ) && method_exists( $class_name::get_instance(), 'ogp' ) ) {
-			extract( $class_name::get_instance()->ogp( compact( 'image', 'title', 'url', 'type', 'desc', 'card', 'author' ) ) );
+			$ogp    = $class_name::get_instance()->ogp( compact( 'image', 'title', 'url', 'type', 'desc', 'card', 'author' ) );
+			$image  = $ogp['image'];
+			$title  = $ogp['title'];
+			$url    = $ogp['url'];
+			$type   = $ogp['type'];
+			$desc   = $ogp['desc'];
+			$card   = $ogp['card'];
+			$author = $ogp['author'];
 		}
 		$url = home_url( trailingslashit( explode( '?', $_SERVER['REQUEST_URI'] )[0] ) );
 	} elseif ( is_home() ) {

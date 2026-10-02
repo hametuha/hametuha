@@ -26,7 +26,7 @@ class AuthorPv extends AnalyticsPattern {
 	 */
 	public function handle_get( \WP_REST_Request $request ) {
 		// Create date dimension
-		$params = [
+		$params  = [
 			'start'     => $request->get_param( 'from' ),
 			'end'       => $request->get_param( 'to' ),
 			'post_type' => 'post,series,news',
@@ -37,21 +37,21 @@ class AuthorPv extends AnalyticsPattern {
 			$params['author'] = $user_id;
 		}
 		return new \WP_REST_Response( [
-			'start'          => $params['start'],
-			'end'            => $params['end'],
-			'records'        => array_map( function( $row ) {
+			'start'    => $params['start'],
+			'end'      => $params['end'],
+			'records'  => array_map( function ( $row ) {
 				list( $date, $post_type ) = $row;
-				$pv = $row[ count( $row ) - 1 ];
-				$post_type_obj = get_post_type_object( $post_type );
+				$pv                       = $row[ count( $row ) - 1 ];
+				$post_type_obj            = get_post_type_object( $post_type );
 				return [
 					'date'      => preg_replace( '#(\d{4})(\d{2})(\d{2})#u', '$1-$2-$3', $date ),
 					'post_type' => $post_type_obj ? $post_type_obj->label : $post_type,
 					'pv'        => (int) $pv,
 				];
 			}, $this->ga4->chronic_popularity( $params ) ),
-			'rankings'       => array_map( function( $rank ) {
+			'rankings' => array_map( function ( $rank ) {
 				list( $path ) = $rank;
-				$pv = $rank[ count( $rank ) - 1 ];
+				$pv           = $rank[ count( $rank ) - 1 ];
 				if ( $post_id = url_to_postid( home_url( $path ) ) ) {
 					$label = get_post_type_object( get_post_type( $post_id ) )->label;
 					$url   = get_permalink( $post_id );
@@ -65,10 +65,7 @@ class AuthorPv extends AnalyticsPattern {
 					'url'   => $url,
 					'pv'    => (int) $pv,
 				];
-			}, $this->ga4->popular_posts( array_merge( $params, [
-				'limit' => 100,
-			] ) ) ),
+			}, $this->ga4->popular_posts( array_merge( $params, [ 'limit' => 100 ] ) ) ),
 		] );
 	}
-
 }

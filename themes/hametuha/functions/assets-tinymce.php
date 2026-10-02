@@ -24,29 +24,29 @@ add_action( 'admin_head', function () {
 /**
  * TinyMCEの初期化配列を作成する
  *
- * @param array $initArray
+ * @param array $init_array
  *
  * @return array
  */
-add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
+add_filter( 'tiny_mce_before_init', function ( $init_array, $editor_id ) {
 
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 
 	$css_dir = get_stylesheet_directory() . '/assets/css';
-	if ( ! isset( $initArray['cache_suffix'] ) ) {
-		$initArray['cache_suffix'] = '?foo=var';
+	if ( ! isset( $init_array['cache_suffix'] ) ) {
+		$init_array['cache_suffix'] = '?foo=var';
 	}
-	$initArray['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'YmdHis', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
+	$init_array['cache_suffix'] .= sprintf( '&hametuha-%s', date_i18n( 'YmdHis', max( filemtime( $css_dir . '/editor-style.css' ), filemtime( $css_dir . '/editor-style-post.css' ) ) ) );
 
 	//選択できるブロック要素を変更
-	$initArray['block_formats'] = 'Paragraph=p;大見出し=h2;中見出し=h3;小見出し=h4;最小見出し=h5;整形済みテキスト=pre';
+	$init_array['block_formats'] = 'Paragraph=p;大見出し=h2;中見出し=h3;小見出し=h4;最小見出し=h5;整形済みテキスト=pre';
 	//使用できるタグを指定
-	if ( empty( $initArray['extended_valid_elements'] ) ) {
-		$initArray['extended_valid_elements'] = 'iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]';
+	if ( empty( $init_array['extended_valid_elements'] ) ) {
+		$init_array['extended_valid_elements'] = 'iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]';
 	} else {
-		$elements                             = explode( ',', $initArray['extended_valid_elements'] );
-		$elements[]                           = 'iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]';
-		$initArray['extended_valid_elements'] = implode( ',', $elements );
+		$elements                              = explode( ',', $init_array['extended_valid_elements'] );
+		$elements[]                            = 'iframe[id|class|title|style|align|frameborder|height|longdesc|marginheight|marginwidth|name|scrolling|src|width]';
+		$init_array['extended_valid_elements'] = implode( ',', $elements );
 	}
 	// 独自スタイル
 	$styles = [];
@@ -130,13 +130,13 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
 				break;
 		}
 	}
-	$initArray['style_formats'] = json_encode( $styles );
+	$init_array['style_formats'] = json_encode( $styles );
 
 	if ( ! is_admin() ) {
-		$initArray['menubar'] = false;
+		$init_array['menubar'] = false;
 	}
 
-	return $initArray;
+	return $init_array;
 }, 10001, 2 );
 
 
@@ -146,7 +146,7 @@ add_filter( 'tiny_mce_before_init', function ( $initArray, $editor_id ) {
  * @param WP_Post $post
  */
 add_action( 'edit_form_after_title', function ( WP_Post $post ) {
-	if ( 'post' == $post->post_type ) {
+	if ( 'post' === $post->post_type ) {
 		echo '<h3>本文</h3>';
 	}
 }, 10000 );

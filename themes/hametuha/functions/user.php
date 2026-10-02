@@ -196,7 +196,7 @@ function get_the_author_roles( $user_id = null ) {
  * @return string
  */
 function the_author_roles( $user_id = null, $echo = true ) {
-	if ( ! is_null( $user_id ) && $user_id == 0 ) {
+	if ( ! is_null( $user_id ) && 0 === (int) $user_id ) {
 		$roles = 'ゲスト';
 	} else {
 		$roles = get_the_author_roles( $user_id );
@@ -225,14 +225,16 @@ function get_author_work_count( $author_id = null ) {
 	if ( is_null( $author_id ) ) {
 		$author_id = get_the_author_meta( 'ID' );
 	}
-	$sql = <<<SQL
+	return (int) $wpdb->get_var( $wpdb->prepare(
+		<<<SQL
 		SELECT COUNT(ID)
 		FROM {$wpdb->posts}
 		WHERE post_author = %d
 		  AND post_type = 'post'
 		  AND post_status = 'publish'
-SQL;
-	return (int) $wpdb->get_var( $wpdb->prepare( $sql, $author_id ) );
+SQL,
+		$author_id
+	) );
 }
 
 /**
@@ -245,39 +247,19 @@ SQL;
  */
 function get_author_latest_published( $author_id ) {
 	global $wpdb;
-	$sql = <<<SQL
+
+	return (string) $wpdb->get_var( $wpdb->prepare(
+		<<<SQL
 		SELECT post_date FROM {$wpdb->posts}
 		WHERE post_status = 'publish' AND post_type = 'post'
 		 AND  post_author = %d
 		ORDER BY post_date DESC
 		LIMIT 1
-SQL;
-
-	return (string) $wpdb->get_var( $wpdb->prepare( $sql, $author_id ) );
+SQL,
+		$author_id
+	) );
 }
 
-
-
-/**
- * 登録されている投稿者の数を返す
- *
- * @param bool $doujin falseにすると投稿者以外のすべてのユーザー
- *
- * @return int
- */
-function get_author_count( $doujin = true ) {
-	global $wpdb;
-	$sql = <<<SQL
-		SELECT COUNT(ID) FROM {$wpdb->users} AS u
-		LEFT JOIN {$wpdb->usermeta} AS um
-		ON u.ID = um.user_id AND um.meta_key = '{$wpdb->prefix}user_level'
-SQL;
-	if ( $doujin ) {
-		$sql .= ' WHERE um.meta_value > 0';
-	}
-
-	return (int) $wpdb->get_var( $sql );
-}
 
 /**
  * ペンディング中のユーザーか否か
@@ -286,7 +268,7 @@ SQL;
 function is_pending_user() {
 	$user_id = get_current_user_id();
 	if ( $user_id ) {
-		return (bool) ( false !== array_search( 'pending', get_userdata( $user_id )->roles ) );
+		return (bool) ( false !== array_search( 'pending', get_userdata( $user_id )->roles, true ) );
 	} else {
 		return false;
 	}
@@ -298,7 +280,7 @@ function is_pending_user() {
  * @return bool|string
  */
 function is_doujin_profile_page() {
-	if ( \Hametuha\Rest\Doujin::class == str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match ) ) {
+	if ( \Hametuha\Rest\Doujin::class === str_replace( '\\\\', '\\', get_query_var( 'api_class' ) ) && preg_match( '#^/detail/([^/]+)/?$#', get_query_var( 'api_vars' ), $match ) ) {
 		return $match[1];
 	} else {
 		return false;
@@ -316,10 +298,10 @@ function is_doujin_profile_page() {
  */
 function hametuha_recent_authors( $num = 5, $days = 30 ) {
 	global $wpdb;
-	$now  = current_time( 'timestamp' ) - $days * 60 * 60 * 24;
-	$time = date_i18n( 'Y-m-d H:i:s', $now );
+	$time = wp_date( 'Y-m-d H:i:s', time() - $days * 60 * 60 * 24 );
 	// 最近のユーザーを取得
-	$query = <<<EOS
+	$users = $wpdb->get_results( $wpdb->prepare(
+		<<<EOS
 		SELECT u.*, p.ID AS post_id FROM {$wpdb->posts} AS p
 		INNER JOIN {$wpdb->users} AS u
 		ON p.post_author = u.ID
@@ -330,46 +312,14 @@ function hametuha_recent_authors( $num = 5, $days = 30 ) {
 		GROUP BY u.ID
 		ORDER BY u.user_registered DESC
 		LIMIT %d
-EOS;
-	$query = $wpdb->prepare( $query, $time, $time, $num );
-	$users = $wpdb->get_results( $query );
+EOS,
+		$time,
+		$time,
+		$num
+	) );
 	return array_map( function ( $user ) {
 		return new WP_User( $user );
 	}, $users );
-}
-
-
-/**
- * 投稿数の多い同人を返す
- *
- * @param int $period 遡る日数。0にするとすべての期間
- * @param int $num
- *
- * @return array
- */
-function get_vigorous_author( $period = 0, $num = 5 ) {
-	/** @var wpdb $wpdb */
-	global $wpdb;
-	$sub_query = '';
-	if ( $period ) {
-		$date      = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
-		$sub_query = $wpdb->prepare( 'AND p.post_date >= %s', $date );
-	}
-	$subquery = $period > 0 ? 'AND TO_DAYS(NOW()) - TO_DAYS(p.post_date) <= 30' : '';
-	$sql      = <<<SQL
-		SELECT DISTINCT u.*, COUNT(p.ID) AS count, SUM(CHAR_LENGTH(p.post_content)) AS length
-		FROM {$wpdb->users} AS u
-		LEFT JOIN {$wpdb->posts} AS p
-		ON u.ID = p.post_author
-		WHERE p.post_type = 'post'
-		  AND p.post_status = 'publish'
-		  {$subquery}
-		GROUP BY u.ID
-		ORDER BY length DESC
-		LIMIT 0, {$num}
-SQL;
-
-	return $wpdb->get_results( $sql );
 }
 
 
@@ -387,7 +337,7 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 		$total  = 1;
 		$filled = 1;
 		//メタキーを数える
-		$meta_keys    = [
+		$meta_keys      = [
 			'last_name',
 			'description',
 			'location',
@@ -396,18 +346,10 @@ function get_user_status_sufficient( $user_id, $doujin = true ) {
 			'favorite_authors',
 			'twitter',
 		];
-		$placeholders = array();
-		foreach ( $meta_keys as $key ) {
-			$placeholders[] = '%s';
-		}
-		$args           = array(
-			"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key IN (" . implode( ', ', $placeholders ) . ") AND meta_value != ''",
-			$user_id,
-		);
-		$meta_key_found = $wpdb->get_var( call_user_func_array( array(
-			$wpdb,
-			'prepare',
-		), array_merge( $args, $meta_keys ) ) );
+		$meta_key_found = $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(umeta_id) FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key IN (" . implode( ', ', array_fill( 0, count( $meta_keys ), '%s' ) ) . ") AND meta_value != ''",
+			array_merge( [ $user_id ], $meta_keys )
+		) );
 		//プロフィール写真
 		++$total;
 		if ( has_original_picture( $user_id ) || has_gravatar( $user_id ) ) {

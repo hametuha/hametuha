@@ -49,9 +49,9 @@ if ( $args['comment'] ) {
 }
 
 // レイアウトクラス
-$layout_class = $args['layout'] === 'horizontal' ? 'row mb-3' : 'mb-3';
-$label_class  = $args['layout'] === 'horizontal' ? 'col-sm-4 col-form-label' : 'form-label';
-$input_wrap   = $args['layout'] === 'horizontal' ? 'col-sm-8' : '';
+$layout_class = 'horizontal' === $args['layout'] ? 'row mb-3' : 'mb-3';
+$label_class  = 'horizontal' === $args['layout'] ? 'col-sm-4 col-form-label' : 'form-label';
+$input_wrap   = 'horizontal' === $args['layout'] ? 'col-sm-8' : '';
 
 ?>
 <form id="testimonial-form" class="testimonial-edit-form" data-id="<?php echo esc_attr( $id ); ?>" data-mode="<?php echo $is_edit ? 'edit' : 'add'; ?>"
@@ -60,7 +60,7 @@ $input_wrap   = $args['layout'] === 'horizontal' ? 'col-sm-8' : '';
 
 	<?php
 	// 編集モードでかつ、自分のseriesに紐づくコメントでない場合は基本フィールドを表示しない
-	$show_basic_fields = ! $is_edit || ( isset( $post ) && $post->ID == $comment->comment_post_ID );
+	$show_basic_fields = ! $is_edit || ( isset( $post ) && $post->ID === (int) $comment->comment_post_ID );
 	?>
 
 	<?php if ( $show_basic_fields && ! $args['twitter'] ) : ?>

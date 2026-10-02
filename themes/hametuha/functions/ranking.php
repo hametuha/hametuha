@@ -125,17 +125,21 @@ function hametuha_get_author_recent_works( $post = null, $limit = 5 ) {
 		return [];
 	}
 	global $wpdb;
-	$query = <<<SQL
+	$rows = $wpdb->get_results( $wpdb->prepare(
+		<<<SQL
 		SELECT * FROM {$wpdb->posts}
 		WHERE post_author = %d
 		AND post_type   = 'post'
 		AND post_status = 'publish'
 		ORDER BY post_date DESC
 		LIMIT 0,%d
-SQL;
+SQL,
+		$post->post_author,
+		$limit
+	) );
 	return array_map( function ( $row ) {
 		return new WP_Post( $row );
-	}, $wpdb->get_results( $wpdb->prepare( $query, $post->post_author, $limit ) ) );
+	}, $rows );
 }
 
 /**
@@ -219,7 +223,7 @@ function is_ranking( $type = '' ) {
 			case 'top':
 			case 'best':
 			case 'last_week':
-				return $type == $ranking;
+				return $type === $ranking;
 			default:
 				if ( empty( $type ) ) {
 					return true;

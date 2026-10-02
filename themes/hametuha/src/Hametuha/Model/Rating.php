@@ -69,16 +69,17 @@ class Rating extends Model {
 				'rel_type'  => $this->type,
 				'object_id' => $post_id,
 				'user_id'   => $user_id,
-				'location'  => $rank / 10
+				'location'  => $rank / 10,
 			] );
 		} else {
-			return $this->update( [
-				'location' => $rank / 10
-			], [
-				'rel_type'  => $this->type,
-				'object_id' => $post_id,
-				'user_id'   => $user_id
-			] );
+			return $this->update(
+				[ 'location' => $rank / 10 ],
+				[
+					'rel_type'  => $this->type,
+					'object_id' => $post_id,
+					'user_id'   => $user_id,
+				]
+			);
 		}
 	}
 
@@ -115,11 +116,11 @@ class Rating extends Model {
 			return null;
 		}
 		$rank = $this->select( "{$this->table}.location" )
-					 ->wheres( [
-						 "{$this->table}.rel_type = %s"  => $this->type,
-						 "{$this->table}.user_id = %d"   => $user_id,
-						 "{$this->table}.object_id = %d" => $post_id,
-					 ] )->get_var();
+					->wheres( [
+						"{$this->table}.rel_type = %s"  => $this->type,
+						"{$this->table}.user_id = %d"   => $user_id,
+						"{$this->table}.object_id = %d" => $post_id,
+					] )->get_var();
 		if ( is_null( $rank ) ) {
 			return null;
 		} else {
@@ -134,10 +135,10 @@ class Rating extends Model {
 	 *
 	 * @return null|float
 	 */
-	function get_post_rating( \WP_Post $post = null ) {
+	public function get_post_rating( \WP_Post $post = null ) {
 		$post = get_post( $post );
 		$this->select( "AVG({$this->table}.location)" )
-			 ->where( "{$this->table}.rel_type = %s", $this->type );
+			->where( "{$this->table}.rel_type = %s", $this->type );
 		if ( $this->is_series( $post ) ) {
 			$this->where( "{$this->posts}.post_parent = %d", $post->ID );
 		} else {
@@ -164,7 +165,7 @@ class Rating extends Model {
 			return 0;
 		}
 		$this->select( "COUNT({$this->table}.ID)" )
-			 ->where( "{$this->table}.rel_type = %s", $this->type );
+			->where( "{$this->table}.rel_type = %s", $this->type );
 		if ( $this->is_series( $post ) ) {
 			$this->where( "{$this->posts}.post_parent = %d", $post->ID );
 		} else {
@@ -182,7 +183,7 @@ class Rating extends Model {
 	 * @return int
 	 */
 	public function get_post_rating_count_all( \WP_Post $post = null ) {
-		$post = get_post( $post );
+		$post    = get_post( $post );
 		$ratings = [];
 		for ( $i = 5; $i > 0; $i-- ) {
 			$ratings[ $i ] = 0;
@@ -191,12 +192,12 @@ class Rating extends Model {
 			return $ratings;
 		}
 		$this->select( "location, COUNT({$this->table}.ID) as count" )
-			 ->where( "{$this->table}.rel_type = %s", $this->type )
+			->where( "{$this->table}.rel_type = %s", $this->type )
 			->where( "{$this->table}.object_id = %d", $post->ID )
 			->group_by( "{$this->table}.location" );
 		$result = $this->result( $this->build_query() );
 		foreach ( $result as $row ) {
-			$score = intval($row->location * 10 );
+			$score = intval( $row->location * 10 );
 			if ( isset( $ratings[ $score ] ) ) {
 				$ratings[ $score ] = (int) $row->count;
 			}
@@ -298,8 +299,8 @@ class Rating extends Model {
 			'paged'          => 1,
 			'posts_per_page' => 20,
 		] );
-		$paged          = $args[ 'paged' ];
-		$posts_per_page = $args[ 'posts_per_page' ];
+		$paged          = $args['paged'];
+		$posts_per_page = $args['posts_per_page'];
 		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
 		$wheres         = [
 			'r.rel_type = "rank"',
@@ -343,8 +344,8 @@ SQL;
 			'paged'          => 1,
 			'posts_per_page' => 20,
 		] );
-		$paged          = $args[ 'paged' ];
-		$posts_per_page = $args[ 'posts_per_page' ];
+		$paged          = $args['paged'];
+		$posts_per_page = $args['posts_per_page'];
 		$offset         = ( max( 1, $paged ) - 1 ) * $posts_per_page;
 		$wheres         = [
 			'r.rel_type = "rank"',

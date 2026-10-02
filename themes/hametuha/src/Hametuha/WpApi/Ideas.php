@@ -87,7 +87,7 @@ class Ideas extends IdeaApiPattern {
 				return new \WP_Error( 'server_error', '保存に失敗しました。あとでやり直してください。', [ 'status' => 500 ] );
 			}
 			$current_user = get_userdata( get_current_user_id() );
-			if ( get_current_user_id() != $post->post_author ) {
+			if ( get_current_user_id() !== (int) $post->post_author ) {
 				$notified = $this->notifications->add_idea_stocked( $post->post_author, $post->ID,
 					sprintf( '%sさんがあなたのアイデア「%s」をストックしました。', $current_user->display_name, $post->post_title ),
 				get_current_user_id() );
@@ -110,7 +110,7 @@ class Ideas extends IdeaApiPattern {
 		if ( ! ( $user = get_userdata( $request['user_id'] ) ) || ! $user->has_cap( 'edit_posts' ) ) {
 			return new \WP_Error( 'not_found', '指定されたユーザーは存在しません。', [ 'status' => 404 ] );
 		}
-		if ( $post->post_author == $user->ID ) {
+		if ( (int) $post->post_author === $user->ID ) {
 			return new \WP_Error( 'duplicated', sprintf( '%sさんはこのアイデアの作者です。', $post->post_title ), [ 'status' => 500 ] );
 		}
 		if ( $this->ideas->is_stocked( $user->ID, $post->ID, true ) ) {

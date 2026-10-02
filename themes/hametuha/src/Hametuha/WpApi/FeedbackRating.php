@@ -39,7 +39,7 @@ class FeedbackRating extends WpApi {
 				'required'          => true,
 				'type'              => 'integer',
 				'validate_callback' => function ( $var ) {
-					return in_array( $var, range( 0, 5 ) );
+					return in_array( (string) $var, array_map( 'strval', range( 0, 5 ) ), true );
 				},
 			];
 		}

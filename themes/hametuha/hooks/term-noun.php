@@ -27,7 +27,7 @@ add_action( 'nouns_edit_form_fields', function ( $tag, $taxonomy ) {
 					'prize'    => '文学賞',
 				] as $key => $genre ) :
 					?>
-					<option value="<?php echo $key; ?>"<?php selected( $current == $key ); ?>>
+					<option value="<?php echo $key; ?>"<?php selected( $current, $key ); ?>>
 						<?php echo $genre; ?>
 					</option>
 				<?php endforeach; ?>
@@ -92,7 +92,7 @@ add_action( 'nouns_edit_form_fields', function ( $tag, $taxonomy ) {
 	<tr class="noun-row" data-type="magazine,prize,person,company">
 		<th><label for="noun_genre_start">開始年（生年）</label></th>
 		<td>
-			<input type="number" name="noun_genre_start" id="noun_genre_start" placeholder="ex. <?php echo date( 'Y' ); ?>"
+			<input type="number" name="noun_genre_start" id="noun_genre_start" placeholder="ex. <?php echo gmdate( 'Y' ); ?>"
 					value="<?php echo esc_attr( get_term_meta( $tag->term_id, 'noun_genre_start', true ) ); ?>" />
 		</td>
 	</tr>

@@ -42,7 +42,7 @@ class CampaignController extends Singleton {
 				// 投稿ページではないので何もしない
 				return;
 			}
-			if ( (int) $post->post_author === get_current_user_id() ) {
+			if ( get_current_user_id() === (int) $post->post_author ) {
 				// 自分の投稿なので何もしない
 				return;
 			}

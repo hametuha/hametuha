@@ -26,13 +26,10 @@ class Recent extends Widget {
 	 * @return false|string|void
 	 */
 	protected function widget_content( array $instance = [] ) {
-		extract( $instance );
 		global $post;
-		/** @var string $post_type */
-		/** @var string $number */
-		/** @var string $layout */
-		/** @var string $thumbnail_size */
-		if ( in_array( $post_type, [ 'anpi', 'post' ] ) ) {
+		$post_type = $instance['post_type'] ?? 'post';
+		$number    = $instance['number'] ?? 10;
+		if ( in_array( $post_type, [ 'anpi', 'post' ], true ) ) {
 			$posts = hametuha_recent_posts( $number, $post_type );
 		} else {
 			$posts = get_posts( [
@@ -132,14 +129,18 @@ class Recent extends Widget {
 	 * @return string|void
 	 */
 	public function form( $instance ) {
-		$atts = shortcode_atts( array(
+		$atts           = shortcode_atts( array(
 			'title'          => '最新の投稿',
 			'post_type'      => 'post',
 			'number'         => 10,
 			'layout'         => '',
 			'thumbnail_size' => 'thumbnail',
 		), $instance );
-		extract( $atts );
+		$title          = $atts['title'];
+		$post_type      = $atts['post_type'];
+		$number         = $atts['number'];
+		$layout         = $atts['layout'];
+		$thumbnail_size = $atts['thumbnail_size'];
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
@@ -157,7 +158,7 @@ class Recent extends Widget {
 					<?php foreach ( get_post_types( array( 'public' => true ), 'objects' ) as $type ) : ?>
 						<option value="<?php echo $type->name; ?>"
 													<?php
-													if ( $post_type == $type->name ) {
+													if ( $post_type === $type->name ) {
 														echo ' selected="selected"';
 													}
 													?>
@@ -198,7 +199,7 @@ class Recent extends Widget {
 						?>
 						<option value="<?php echo $size; ?>" 
 													<?php
-													if ( $thumbnail_size == $size ) {
+													if ( $thumbnail_size === $size ) {
 														echo ' selected="selected"';
 													}
 													?>

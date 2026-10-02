@@ -119,9 +119,9 @@ SQL;
 	 * @return array
 	 */
 	public function the_posts( array $posts, \WP_Query $wp_query ) {
-		if ( $this->is_valid_query( $wp_query ) ) {
+		if ( $this->is_valid_query( $wp_query ) && ! empty( $posts ) ) {
 			$rank       = ( max( 1, (int) $wp_query->get( 'paged' ) ) - 1 ) * 10;
-			$current_pv = (int) $posts[0]->pv ?? 0;
+			$current_pv = isset( $posts[0]->pv ) ? (int) $posts[0]->pv : 0;
 			$buff       = -1;
 			foreach ( $posts as &$post ) {
 				// 順位を取得する

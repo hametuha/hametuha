@@ -4,7 +4,7 @@ global $wpdb, $wp_hamazon_parser, $hamazon_list, $paged;
 $paged = max( 1, absint( $paged ) );
 if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
 	$index    = isset( $_GET['SearchIndex'] ) ? (string) $_GET['SearchIndex'] : 'Blended';
-	$per_page = ( $index == 'Blended' ) ? 5 : 10;
+	$per_page = ( 'Blended' === $index ) ? 5 : 10;
 	$results  = $wp_hamazon_parser->search_with( $_GET['s'], $paged, $index );
 	$total    = ( is_wp_error( $results ) || $results->Items->Request->Errors ) ? 0 : $results->Items->TotalResults;
 } else {
@@ -31,7 +31,7 @@ if ( $total > 0 ) {
 			<?php foreach ( $wp_hamazon_parser->searchIndex as $k => $v ) : ?>
 			<option value="<?php echo $k; ?>"
 										<?php
-										if ( ( isset( $_GET['SearchIndex'] ) && $_GET['SearchIndex'] == $k ) || ( ! isset( $_GET['s'] ) && $k == 'Books' ) ) {
+										if ( ( isset( $_GET['SearchIndex'] ) && (string) $k === $_GET['SearchIndex'] ) || ( ! isset( $_GET['s'] ) && 'Books' === $k ) ) {
 											echo ' selected="selected"';}
 										?>
 			>

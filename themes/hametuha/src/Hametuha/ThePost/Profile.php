@@ -65,6 +65,7 @@ class Profile extends PostHelper {
 		switch ( $name ) {
 			case 'furigana':
 				$name = 'last_name';
+				// no break
 			case 'display_name':
 			case 'nicename':
 			case 'description':

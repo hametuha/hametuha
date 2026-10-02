@@ -44,7 +44,7 @@ if ( is_admin() ) {
 	 */
 	add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && ! current_user_can( 'edit_others_posts' ) && 'news' != $screen->post_type ) {
+		if ( $screen && $wp_query->is_main_query() && 'edit' === $screen->base && ! current_user_can( 'edit_others_posts' ) && 'news' !== $screen->post_type ) {
 			$wp_query->set( 'author', get_current_user_id() );
 		}
 	} );
@@ -113,9 +113,7 @@ HTML;
  * @return string
  */
 add_shortcode( 'file', function ( $atts, $content = '' ) {
-	extract( shortcode_atts( array(
-		'href' => '',
-	), $atts ) );
+	$href = shortcode_atts( [ 'href' => '' ], $atts )['href'];
 
 	return '<p class="center"><a target="_blank" href="' . $href . '" class="button flash-button">フルサイズで表示</a></p>';
 } );
@@ -178,13 +176,15 @@ add_filter( 'get_comments_number', function ( $count, $post_id ) {
 	if ( ! is_admin() && ( $post = get_post( $post_id ) ) ) {
 		/** @var wpdb $wpdb */
 		global $wpdb;
-		$query = <<<SQL
+		$count = (int) $wpdb->get_var( $wpdb->prepare(
+			<<<SQL
 			SELECT COUNT(comment_ID) FROM {$wpdb->comments}
 			WHERE comment_post_ID = %d
 			  AND comment_approved = '1'
 			  AND comment_type IN ( '', 'comment' )
-SQL;
-		$count = (int) $wpdb->get_var( $wpdb->prepare( $query, $post_id ) );
+SQL,
+			$post_id
+		) );
 	}
 
 	return $count;

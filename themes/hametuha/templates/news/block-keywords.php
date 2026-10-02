@@ -18,7 +18,7 @@ if ( is_tax( 'nouns' ) ) {
 
 if ( $terms = hamenew_popular_nouns( $term_id, $days, $limit ) ) :
 	usort( $terms, function ( $a, $b ) {
-		if ( $a->count == $b->count ) {
+		if ( (int) $a->count === (int) $b->count ) {
 			return 0;
 		} else {
 			return $a->count < $b->count ? 1 : -1;

@@ -18,7 +18,7 @@ add_action( 'template_redirect', function () {
  * FromがWordPressにならないように
  */
 add_filter( 'wp_mail_from_name', function ( $from_name ) {
-	if ( 'WordPress' == $from_name ) {
+	if ( 'WordPress' === $from_name ) {
 		$from_name = get_bloginfo( 'name' );
 	}
 

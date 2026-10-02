@@ -48,7 +48,7 @@ class RegistrationFirewall extends Singleton {
 	public function registration_errors( $errors, $login, $email ) {
 		// 合言葉をチェック
 		$message = filter_input( INPUT_POST, 'user_message' );
-		if ( $message !== self::OPEN_SESAMI ) {
+		if ( self::OPEN_SESAMI !== $message ) {
 			$errors->add( 'user_message', __( '<strong>エラー: </strong>合言葉が違います。「おはめつ」と入力してください。', 'hametuha' ) );
 		}
 		// ハニーポットをチェック

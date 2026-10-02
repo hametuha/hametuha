@@ -13,7 +13,7 @@ $title           = get_the_title();
 $title_display   = $should_censor ? hametuha_censor( $title ) : $title;
 $excerpt         = trim_long_sentence( get_the_excerpt(), 98 );
 $excerpt_display = $should_censor ? hametuha_censor( $excerpt ) : $excerpt;
-$censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
+$censored        = ! is_doujin_profile_page() && ( ( $title !== $title_display ) || ( $excerpt !== $excerpt_display ) );
 ?>
 <li data-post-id="<?php the_ID(); ?>" <?php post_class( 'media loop-media' ); ?>>
 	<a href="<?php the_permalink(); ?>" class="media__link media__link--nopad">
@@ -76,7 +76,7 @@ $censored        = ! is_doujin_profile_page() && ( ( $title != $title_display ) 
 				</li>
 				<li class="list-inline-item date">
 					<i class="icon-calendar2"></i> <?php echo hametuha_passed_time( $post->post_date ); ?>
-					<?php if ( rand( 0, 1 ) < 0.5 ) : // is_recent_date( $post->post_date, 3 ) ) : ?>
+					<?php if ( is_recent_date( $post->post_date, 3 ) ) : ?>
 						<span class="badge text-bg-danger"><?php esc_html_e( '新着', 'hametuha' ); ?></span>
 					<?php endif; ?>
 				</li>

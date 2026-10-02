@@ -184,9 +184,9 @@ HTML;
  */
 add_action( 'admin_notices', function () {
 	$screen = get_current_screen();
-	if ( 'post' == $screen->base && 'post' == $screen->post_type ) {
+	if ( 'post' === $screen->base && 'post' === $screen->post_type ) {
 		global $post;
-		if ( 'publish' != $post->post_status ) {
+		if ( 'publish' !== $post->post_status ) {
 			return;
 		}
 		?>
@@ -320,7 +320,7 @@ function hametuha_follow_btn( $author_id, $block = false ) {
 		$loaded = true;
 	}
 	if ( is_user_logged_in() ) :
-		if ( get_current_user_id() != $author_id ) :
+		if ( get_current_user_id() !== (int) $author_id ) :
 			$class_name = \Hametuha\Model\Follower::get_instance()->is_following( get_current_user_id(), $author_id )
 				? ' btn-following'
 				: '';

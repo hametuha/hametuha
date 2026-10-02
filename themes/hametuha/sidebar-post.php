@@ -133,7 +133,7 @@ $cur_comments = get_query_var( 'comments' );
 		$comment_groups = hametuha_comment_count_group();
 		$comment_label  = '';
 		foreach ( $comment_groups as $group ) {
-			if ( $group['count'] == $cur_comments ) {
+			if ( (int) $cur_comments === $group['count'] ) {
 				$comment_label = $group['label'];
 				break;
 			}

@@ -15,7 +15,7 @@ use Hametuha\Model\Series;
 function is_series( $post = null ) {
 	$post = get_post( $post );
 
-	return 'series' == get_post_type( $post->post_parent ) ? $post->post_parent : 0;
+	return 'series' === get_post_type( $post->post_parent ) ? $post->post_parent : 0;
 }
 
 /**
@@ -27,7 +27,7 @@ function is_series( $post = null ) {
  */
 function is_series_finished( $post = null ) {
 	$post = get_post( $post );
-	if ( 'series' == $post->post_type ) {
+	if ( 'series' === $post->post_type ) {
 		$series_id = $post->ID;
 	} else {
 		$series_id = $post->post_parent;
@@ -157,7 +157,7 @@ function get_series_price( $post = null ) {
 function get_kdp_remote_price( $post = null, $cache = true ) {
 	$post   = get_post( $post );
 	$series = Series::get_instance();
-	if ( 2 != $series->get_status( $post->ID ) ) {
+	if ( 2 !== $series->get_status( $post->ID ) ) {
 		return false;
 	}
 	$key   = 'kdp_price_' . $post->ID;
@@ -193,7 +193,7 @@ function is_series_price_unmatch( $post = null ) {
 	if ( ! ( is_numeric( $real_price ) && is_numeric( $request_price ) ) ) {
 		return false;
 	}
-	return $real_price != $request_price;
+	return (float) $real_price !== (float) $request_price;
 }
 
 /**
@@ -222,7 +222,8 @@ function hametuha_get_series_categories( $post = null ) {
 		return [];
 	}
 	global $wpdb;
-	$query   = <<<SQL
+	$results = $wpdb->get_results( $wpdb->prepare(
+		<<<SQL
 		SELECT t.*, tt.*
 		FROM {$wpdb->terms} AS t
 		INNER JOIN {$wpdb->term_taxonomy} AS tt
@@ -241,8 +242,9 @@ function hametuha_get_series_categories( $post = null ) {
 		ON relationships.term_taxonomy_id = tt.term_taxonomy_id
 		WHERE tt.taxonomy = 'category'
 		ORDER BY relationships.post_count DESC
-SQL;
-	$results = $wpdb->get_results( $wpdb->prepare( $query, $post->ID ) );
+SQL,
+		$post->ID
+	) );
 	return array_map( function ( $term ) {
 		return new WP_Term( $term );
 	}, $results );
@@ -278,19 +280,17 @@ function hametuha_get_series_children_counts( $series_ids ) {
 
 	// IDを整数に変換
 	$series_ids = array_map( 'absint', $series_ids );
-	$ids_string = implode( ',', $series_ids );
 
 	// 一度のクエリで全series の子投稿件数を取得
-	$query = "
-		SELECT post_parent, COUNT(*) as post_count
+	$results = $wpdb->get_results( $wpdb->prepare(
+		"SELECT post_parent, COUNT(*) as post_count
 		FROM {$wpdb->posts}
-		WHERE post_parent IN ({$ids_string})
+		WHERE post_parent IN (" . implode( ',', array_fill( 0, count( $series_ids ), '%d' ) ) . ")
 		  AND post_type = 'post'
 		  AND post_status IN ('publish', 'private')
-		GROUP BY post_parent
-	";
-
-	$results = $wpdb->get_results( $query );
+		GROUP BY post_parent",
+		$series_ids
+	) );
 
 	// series_id => count の連想配列に変換
 	$counts = [];

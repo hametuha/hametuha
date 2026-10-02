@@ -482,7 +482,7 @@ class UserSales extends Model {
 			$user->my_number = '';
 			$user->address   = '';
 			foreach ( $metas as $row ) {
-				if ( $row->user_id != $user->ID ) {
+				if ( (int) $row->user_id !== (int) $user->ID ) {
 					continue;
 				}
 				switch ( $row->meta_key ) {

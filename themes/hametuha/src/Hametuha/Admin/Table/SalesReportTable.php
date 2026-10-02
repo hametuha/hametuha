@@ -16,7 +16,7 @@ use WPametu\Http\Input;
 class SalesReportTable extends \WP_List_Table {
 
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct( array(
 			'singular' => 'sales_report',
 			'plural'   => 'sales_reports',
@@ -39,7 +39,7 @@ class SalesReportTable extends \WP_List_Table {
 	/**
 	 * @return array
 	 */
-	function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return [
 			'date' => [ 'date', true ],
 		];
@@ -80,7 +80,7 @@ class SalesReportTable extends \WP_List_Table {
 				printf( '%s <small>%s</small>', number_format( $item->royalty, 2 ), $item->currency );
 				break;
 			case 'unit':
-				if ( 'KENP' == $item->store ) {
+				if ( 'KENP' === $item->store ) {
 					$suffix = 'P';
 				} else {
 					$suffix = '部';
@@ -104,7 +104,7 @@ class SalesReportTable extends \WP_List_Table {
 	 * Returns string if nothing found
 	 * @return string
 	 */
-	function no_items() {
+	public function no_items() {
 		echo '売上がありません';
 	}
 

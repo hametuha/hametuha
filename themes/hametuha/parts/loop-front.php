@@ -20,7 +20,7 @@ if ( $should_censor ) {
 	$title_display   = $title;
 	$excerpt_display = $excerpt;
 }
-$censored = ! is_doujin_profile_page() && ( ( $title != $title_display ) || ( $excerpt != $excerpt_display ) );
+$censored = ! is_doujin_profile_page() && ( ( $title !== $title_display ) || ( $excerpt !== $excerpt_display ) );
 $no_desc  = $args['no_desc'];
 
 // 表示するカテゴリー
@@ -67,7 +67,7 @@ if ( isset( $tag_taxonomy[ get_post_type() ] ) ) {
 					<?php
 				endforeach;
 			}
-			if ( 'series' == get_post_type() ) :
+			if ( 'series' === get_post_type() ) :
 				?>
 				<small class="list-heading-category">
 					<?php

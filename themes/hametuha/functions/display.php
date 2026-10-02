@@ -103,7 +103,7 @@ HTML;
  * @return string
  */
 add_filter( 'wpametu_prg_message_class', function ( $markup, $messages, $class_name ) {
-	$class_name = 'alert ' . ( 'error' == $class_name ? 'alert-danger' : 'alert-success' );
+	$class_name = 'alert ' . ( 'error' === $class_name ? 'alert-danger' : 'alert-success' );
 	$html       = <<<HTML
         <div class="%s alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert">
@@ -224,8 +224,8 @@ function hametuha_format_pagination( $pagination, $size = '' ) {
 function hametuha_commment_display( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment;
 	$class_name         = [ $comment->comment_type, 'media' ];
-	$is_author          = get_the_author_meta( 'ID' ) == $comment->user_id;
-	if ( hametuha_get_anonymous_user()->ID == $comment->user_id ) {
+	$is_author          = (int) get_the_author_meta( 'ID' ) === (int) $comment->user_id;
+	if ( hametuha_get_anonymous_user()->ID === (int) $comment->user_id ) {
 		$is_author = false;
 	}
 	$class_name[] = $is_author ? 'author' : 'commentor';
@@ -289,7 +289,7 @@ endswitch;
 
 		<div class="comment-content" itemprop="text">
 			<?php
-			if ( $comment->comment_approved == '0' ) {
+			if ( '0' === $comment->comment_approved ) {
 				echo '<em class="comment-awaiting-moderation">このコメントは承認待ちです。</em>';
 			} else {
 				comment_text();
@@ -300,7 +300,7 @@ endswitch;
 		<div class="hidden" itemprop="url"><?php echo get_comment_link( $comment ); ?></div>
 
 		<div class="reply right">
-			<?php if ( $comment->comment_type == 'comment' || $comment->comment_type === '' ) : ?>
+			<?php if ( 'comment' === $comment->comment_type || '' === $comment->comment_type ) : ?>
 				<?php
 				comment_reply_link( array_merge( $args, array(
 					'reply_text' => '<i class="icon-reply"></i> このコメントに返信',

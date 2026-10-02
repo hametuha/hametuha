@@ -61,7 +61,7 @@ function hametuha_genre_static( $limit = 0 ) {
 		$cat->url = get_category_link( $cat );
 	}
 	usort( $categories, function ( $a, $b ) {
-		if ( $a->count == $b->count ) {
+		if ( (int) $a->count === (int) $b->count ) {
 			return 0;
 		} else {
 			return $a->count < $b->count ? 1 : - 1;
@@ -86,8 +86,9 @@ function hametuha_genre_static( $limit = 0 ) {
 function hametuha_recent_series( $limit = 5, $period = 90 ) {
 	/** @var wpdb $wpdb */
 	global $wpdb;
-	$date   = date_i18n( 'Y-m-d H:i:s', current_time( 'timestamp' ) - 60 * 60 * 24 * $period );
-	$sql    = <<<SQL
+	$date   = wp_date( 'Y-m-d H:i:s', time() - 60 * 60 * 24 * $period );
+	$rows   = $wpdb->get_results( $wpdb->prepare(
+		<<<SQL
 		select post_parent, COUNT(ID) AS children, MAX(post_date) AS latest
 		FROM {$wpdb->posts}
 		WHERE post_type = 'post'
@@ -97,10 +98,12 @@ function hametuha_recent_series( $limit = 5, $period = 90 ) {
 		GROUP BY post_parent
 		ORDER BY latest DESC
 		LIMIT %d
-SQL;
-	$sql    = $wpdb->prepare( $sql, $date, $limit * 2 );
+SQL,
+		$date,
+		$limit * 2
+	) );
 	$series = [];
-	foreach ( $wpdb->get_results( $sql ) as $row ) {
+	foreach ( $rows as $row ) {
 		$series[ $row->post_parent ] = $row;
 	}
 	if ( ! $series ) {

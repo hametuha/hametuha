@@ -35,12 +35,12 @@ get_template_part( 'templates/idea/form' );
 							「<?php the_title(); ?>」
 							<small class="d-inline-block">
 								<?php
-								echo ( get_current_user_id() == $post->post_author ) ? esc_html__( 'あなたのアイデア', 'hametuha' ) : esc_html__( 'アイデア', 'hametuha' );
+								echo ( get_current_user_id() === (int) $post->post_author ) ? esc_html__( 'あなたのアイデア', 'hametuha' ) : esc_html__( 'アイデア', 'hametuha' );
 								// ステータス
 								$class_name = in_array( get_post_status(), [
 									'private',
 									'protected',
-								] ) ? 'danger' : 'success';
+								], true ) ? 'danger' : 'success';
 								?>
 								<span
 									class="badge rounded-pill text-bg-<?php echo $class_name; ?>"><?php echo esc_html( get_post_status_object( get_post_status() )->label ); ?></span>
@@ -141,7 +141,7 @@ get_template_part( 'templates/idea/form' );
 							<div class="row">
 								<?php if ( current_user_can( 'read' ) ) : ?>
 									<div class="col-sm-4 col-xs-12">
-										<?php if ( get_current_user_id() == get_the_author_meta( 'ID' ) ) : ?>
+										<?php if ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
 											<button class="btn btn-primary btn-block" data-post-id="<?php the_ID(); ?>"">
 												編集する
 											</button>
@@ -199,11 +199,11 @@ get_template_part( 'templates/idea/form' );
 									foreach ( $ideas->get_stockers( get_the_ID() ) as $user ) :
 										?>
 										<li class="ideas__stocker">
-											<?php if ( $user->ID == get_current_user_id() || ! user_can( $user->ID, 'edit_posts ' ) ) : ?>
+											<?php if ( get_current_user_id() === (int) $user->ID || ! user_can( $user->ID, 'edit_posts ' ) ) : ?>
 												<span class="ideas__stocker--link">
 													<?php
 													echo get_avatar( $user->ID, 32 );
-													echo ( $user->ID == get_current_user_id() ) ? 'あなた' : esc_html( $user->display_name );
+													echo ( get_current_user_id() === (int) $user->ID ) ? 'あなた' : esc_html( $user->display_name );
 													?>
 												</span>
 											<?php else : ?>

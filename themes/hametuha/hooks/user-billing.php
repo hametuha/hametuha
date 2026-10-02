@@ -207,7 +207,7 @@ add_action( 'sharee_after_table', function ( $table_class ) {
  */
 add_action( 'wp_ajax_hametuha_gensen', function () {
 	try {
-		if ( ! wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce' ), 'gensen' ) ) {
+		if ( ! wp_verify_nonce( filter_input( INPUT_POST, '_wpnonce' ), 'gensen' ) || ! current_user_can( 'edit_users' ) ) {
 			throw new Exception( '不正なアクセスです。' );
 		}
 		$format = filter_input( INPUT_POST, 'format' );
@@ -221,34 +221,20 @@ add_action( 'wp_ajax_hametuha_gensen', function () {
 			default:
 				throw new \Exception( __( 'フォーマットの指定が不正です。', 'hametuha' ) );
 		}
-		$list = \Hametuha\Sharee\Models\RevenueModel::get_instance()->get_fixed_billing(
+		$list = \Hametuha\Master\Withholding::get_records(
 			filter_input( INPUT_POST, 'year' ),
-			filter_input( INPUT_POST, 'month' ),
-			[],
-			true
+			filter_input( INPUT_POST, 'month' )
 		);
 		if ( ! $list ) {
 			throw new Exception( '該当するデータがありませんでした。' );
 		}
 		header( 'Content-Type: application/octet-stream' );
-		header( sprintf( 'Content-Disposition: attachment; filename=deducting-%s.csv', date_i18n( 'YmdHis' ) ) );
+		header( sprintf( 'Content-Disposition: attachment; filename=deducting-%s.%s', date_i18n( 'YmdHis' ), $format ) );
 		header( 'Content-Transfer-Encoding: binary' );
 		$csv = new SplFileObject( 'php://output', 'w' );
-		foreach ( $list as $line ) {
-			$address = new Hametuha\Sharee\Master\Address( $line->object_id );
-			// 月、日、支払い先、適用、源泉前金額、源泉額、消費税、源泉徴収後金額、住所
-			$csv->fputcsv( [
-				mysql2date( 'm', $line->fixed ),
-				mysql2date( 'd', $line->fixed ),
-				$address->get_value( 'name' ),
-				'原稿料ほか',
-				round( $line->before_tax ),
-				round( $line->deducting ),
-				round( $line->tax ),
-				round( $line->total ),
-				$address->format_line(),
-				get_the_author_meta( 'display_name', $line->object_id ),
-			], $delimiter );
+		foreach ( $list as $record ) {
+			// 月、日、支払い先、適用、源泉前金額、源泉額、消費税、源泉徴収後金額、住所、屋号・PN
+			$csv->fputcsv( \Hametuha\Master\Withholding::to_columns( $record ), $delimiter );
 		}
 		exit;
 	} catch ( \Exception $e ) {

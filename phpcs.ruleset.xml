@@ -13,6 +13,9 @@
 		<exclude name="Squiz.Commenting.FileComment" />
 		<exclude name="Squiz.PHP.CommentedOutCode" />
 		<exclude name="Squiz.PHP.DisallowMultipleAssignments.Found" />
+		<!-- if ( $post = get_post() ) のような条件式内代入を許可する -->
+		<exclude name="Squiz.PHP.DisallowMultipleAssignments.FoundInControlStructure" />
+		<exclude name="Generic.CodeAnalysis.AssignmentInCondition" />
 		<exclude name="Squiz.Commenting.VariableComment.Missing" />
 		<exclude name="Squiz.Commenting.LongConditionClosingComment.Missing" />
 		<exclude name="WordPress.WP.I18n.SingleUnderscoreGetTextFunction" />
@@ -30,11 +33,33 @@
 		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment" />
 	</rule>
 
+	<!-- 外部のオブジェクト（DOM・外部API）のプロパティと、JSが読むJSONのキーは変えられない -->
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<properties>
+			<property name="allowed_custom_properties" type="array">
+				<element value="childNodes" />
+				<element value="nodeValue" />
+				<element value="contentType" />
+				<element value="ASIN" />
+				<element value="Items" />
+				<element value="searchIndex" />
+				<element value="totalResults" />
+				<element value="conjugateType" />
+				<element value="isAuthor" />
+				<element value="isEditor" />
+			</property>
+		</properties>
+	</rule>
+
 	<!-- Detect debug functions like var_dump, print_r -->
-	<rule ref="WordPress.PHP.DevelopmentFunctions"/>
+	<rule ref="WordPress.PHP.DevelopmentFunctions">
+		<!-- error_log は本番のエラー記録に使っている -->
+		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
+	</rule>
 
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*.css</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
 </ruleset>

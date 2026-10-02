@@ -4,7 +4,7 @@
 		<li class="nav-item"><a class="nav-link<?php echo ! get_query_var( 'category_name' ) ? ' active' : ''; ?>" href="<?php echo home_url( '/ranking/best/' ); ?>">全体ランキング</a></li>
 		<?php
 		foreach ( get_categories() as $cat ) {
-			printf( '<li class="nav-item"><a class="nav-link%s" href="%s">%s部門</a></li>', get_query_var( 'category_name' ) == $cat->slug ? ' active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
+			printf( '<li class="nav-item"><a class="nav-link%s" href="%s">%s部門</a></li>', get_query_var( 'category_name' ) === $cat->slug ? ' active' : '', home_url( '/ranking/best/' . $cat->slug . '/' ), esc_html( $cat->name ) );
 		}
 		?>
 	</ul>
@@ -57,11 +57,11 @@
 		$next           = $monthnum + 1;
 		$prev_year      = $prev % 12 ? $year : $year - 1;
 		$next_year      = $monthnum % 12 ? $year : $year + 1;
-		$calc_starts    = strtotime( '2014-08-23 00:00:00' );
+		$calc_starts    = (int) get_gmt_from_date( '2014-08-23 00:00:00', 'U' );
 		$week           = [ '月', '火', '水', '木', '金', '土', '日', '週間' ];
 		$start_of_month = sprintf( '%d-%02d-01 00:00:00', $year, $month );
 		$limit_of_month = date_i18n( 't', mktime( 0, 0, 0, $month, 1, $year ) );
-		$start_of_date  = array_search( date_i18n( 'D', strtotime( $start_of_month ) ), $week ) + 1;
+		$start_of_date  = array_search( date_i18n( 'D', strtotime( $start_of_month ) ), $week, true ) + 1;
 		$starting       = false;
 		$ended          = false;
 		$out_date       = 0;
@@ -95,9 +95,9 @@
 						<?php
 						if ( $starting && ! $ended ) :
 							++$out_date;
-							$calc_date     = current_time( 'timestamp' ) - 60 * 60 * 72;
-							$date_to_ouput = strtotime( sprintf( '%d/%02d/%02d', $year, $month, $out_date ) );
-							if ( $out_date == get_query_var( 'day' ) ) :
+							$calc_date     = time() - 60 * 60 * 72;
+							$date_to_ouput = (int) get_gmt_from_date( sprintf( '%d-%02d-%02d', $year, $month, $out_date ), 'U' );
+							if ( (int) get_query_var( 'day' ) === $out_date ) :
 								?>
 									<span class="on"><?php echo $out_date; ?></span>
 									<?php
@@ -114,7 +114,7 @@
 							&nbsp;
 						<?php endif; ?>
 				</td>
-				<?php if ( $l == 7 ) : ?>
+				<?php if ( 7 === $l ) : ?>
 					<?php if ( ! $unfixed ) : ?>
 						<td><a href="<?php echo home_url( sprintf( '/ranking/weekly/%04d%02d%02d/', $year, $month, $out_date ) ); ?>"><i class="icon-trophy-star"></i></a></td>
 					<?php else : ?>

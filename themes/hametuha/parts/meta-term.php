@@ -46,7 +46,7 @@ if ( ! isset( $keys[ $term_type ] ) ) {
 			<?php
 			switch ( $meta_key ) {
 				case 'frequency':
-					if ( 4 == $value ) {
+					if ( 4 === (int) $value ) {
 						echo '毎週';
 					} elseif ( 1 > $value ) {
 						printf( '年%d回', 12 * $value );
@@ -63,7 +63,7 @@ if ( ! isset( $keys[ $term_type ] ) ) {
 					echo esc_html( $value ) . '枚';
 					break;
 				case 'month':
-					if ( '*' == $value ) {
+					if ( '*' === $value ) {
 						echo '随時';
 					} else {
 						echo esc_html( $value ) . '月';

@@ -50,7 +50,7 @@ class Collaborators extends WpApi {
 				},
 			],
 		];
-		if ( in_array( $method, [ 'PUT', 'DELETE' ] ) ) {
+		if ( in_array( $method, [ 'PUT', 'DELETE' ], true ) ) {
 			$args['collaborator_id'] = [
 				'collaborator_id' => [
 					'required'          => true,

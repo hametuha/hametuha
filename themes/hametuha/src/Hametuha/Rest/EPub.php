@@ -95,17 +95,17 @@ class EPub extends RestTemplate {
 		global $post;
 		$post = get_post( $series_id );
 
-		if ( 'series' != $post->post_type || ! current_user_can( 'edit_post', $post->ID ) ) {
+		if ( 'series' !== $post->post_type || ! current_user_can( 'edit_post', $post->ID ) ) {
 			throw new \Exception( 'あなたにはプレビューする権利がありません。', 403 );
 		}
 
 		$id  = 'preview';
-		$dir = 'rtl' == $this->input->get( 'direction' ) ? 'rtl' : 'ltr';
-		if ( false !== array_search( $template, [ 'colophon', 'titlepage', 'contributors' ] ) ) {
+		$dir = 'rtl' === $this->input->get( 'direction' ) ? 'rtl' : 'ltr';
+		if ( false !== array_search( $template, [ 'colophon', 'titlepage', 'contributors' ], true ) ) {
 			$dir = 'lrt';
 		}
 		nocache_headers();
-		if ( 'content' == $template ) {
+		if ( 'content' === $template ) {
 			$post = get_post( $this->input->get( 'post_id' ) );
 			if ( ! $post || ! current_user_can( 'edit_post', $post->ID ) ) {
 				throw new \Exception( 'あなたにはプレビューする権利がありません。', 403 );
@@ -129,7 +129,7 @@ class EPub extends RestTemplate {
 			// Avoid time out
 			set_time_limit( 0 );
 			// Check capability
-			if ( ! $series || 'series' != $series->post_type || ! current_user_can( 'publish_epub', $series->ID ) ) {
+			if ( ! $series || 'series' !== $series->post_type || ! current_user_can( 'publish_epub', $series->ID ) ) {
 				throw new \Exception( 'あなたにはePubを取得する権利がありません。', 403 );
 			}
 			// Check ePub is published
@@ -248,7 +248,7 @@ class EPub extends RestTemplate {
 				if ( false !== strpos( $h['html'], '<script' ) ) {
 					$property[] = 'scripted';
 				}
-				if ( 'toc' == $key ) {
+				if ( 'toc' === $key ) {
 					$property[] = 'nav';
 				}
 				// Save add OPF
@@ -284,7 +284,7 @@ class EPub extends RestTemplate {
 			$factory->opf->putXML();
 			$factory->container->putXML();
 			// Create ePub
-			$file_name = current_time( 'timestamp' ) . '.epub';
+			$file_name = time() . '.epub';
 			$type      = 'kdp';
 			$path      = sprintf( '%swp-content/hamepub/out/%s/%d', ABSPATH, $type, $series_id );
 			if ( ( ! is_dir( $path ) && ! mkdir( $path, 0755, true ) ) ) {
@@ -334,7 +334,7 @@ class EPub extends RestTemplate {
 		$this->set_data( [
 			'authors'     => Collaborators::get_instance()->get_published_collaborators( $post->ID ),
 			'post'        => $post,
-			'is_vertical' => 'rtl' == $direction,
+			'is_vertical' => 'rtl' === $direction,
 		] );
 		switch ( $template ) {
 			case 'cover':
@@ -365,7 +365,7 @@ class EPub extends RestTemplate {
 				$this->title = get_post_meta( $post->ID, '_series_override', true ) ?: get_the_title( $post );
 				$this->set_data( [
 					'show_title'     => $this->series->get_title_visibility( $post->post_parent ),
-					'filtered_title' => 'rtl' == $direction ? $this->factory( $id )->parser->tcyiz( $this->title ) : $this->title,
+					'filtered_title' => 'rtl' === $direction ? $this->factory( $id )->parser->tcyiz( $this->title ) : $this->title,
 					'series_type'    => $this->series->get_series_type( $post->post_parent ),
 				] );
 				break;
@@ -460,7 +460,7 @@ class EPub extends RestTemplate {
 					$factory->opf->addGuide( 'dedication', "Text/{$key}.xhtml" );
 					break;
 				default:
-					if ( ( 'foreword' == $key || preg_match( '/^post-/', $key ) ) && ! $text ) {
+					if ( ( 'foreword' === $key || preg_match( '/^post-/', $key ) ) && ! $text ) {
 						$factory->opf->addGuide( 'text', "Text/{$key}.xhtml" );
 						$text = true;
 					}

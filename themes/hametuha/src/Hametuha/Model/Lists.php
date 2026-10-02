@@ -71,7 +71,7 @@ class Lists extends Model {
 	 */
 	public function user_can( $list_id, $user_id ) {
 		$list = get_post( $list_id );
-		if ( $list->post_author == $user_id ) {
+		if ( (int) $list->post_author === (int) $user_id ) {
 			return true;
 		} else {
 			$user = new \WP_User( $user_id );
@@ -102,7 +102,7 @@ class Lists extends Model {
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
-					'created'    => current_time( 'timestamp' ),
+					'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 				]);
 				++$added;
 			}
@@ -130,7 +130,7 @@ class Lists extends Model {
 					'rel_type'   => 'list',
 					'subject_id' => $list_id,
 					'object_id'  => $post_id,
-					'created'    => current_time( 'timestamp' ),
+					'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 				] );
 			}
 		}
@@ -161,7 +161,7 @@ class Lists extends Model {
 			'rel_type'   => 'list',
 			'subject_id' => $list_id,
 			'object_id'  => $post_id,
-			'created'    => current_time( 'timestamp' ),
+			'created'    => current_time( 'timestamp' ), // phpcs:ignore WordPress.DateTime.CurrentTimeTimestamp.Requested -- 既存データがローカル時刻のタイムスタンプ
 		] );
 	}
 

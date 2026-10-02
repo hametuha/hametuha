@@ -59,7 +59,7 @@ class UserReward extends WpApi {
 				$args['status'] = [
 					'default'           => 'all',
 					'validate_callback' => function ( $var ) {
-						return in_array( $var, [ 'all', '0', '1' ] ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
+						return in_array( (string) $var, [ 'all', '0', '1' ], true ) ?: new \WP_Error( 'malformat', '指定できるステータスは all, 0, 1 いずれかです。' );
 					},
 				];
 				break;
@@ -76,7 +76,7 @@ class UserReward extends WpApi {
 	 * @return \WP_REST_Response
 	 */
 	public function handle_get( $request ) {
-		$user_id  = 'me' == $request['user_id'] ? get_current_user_id() : $request['user_id'];
+		$user_id  = 'me' === $request['user_id'] ? get_current_user_id() : $request['user_id'];
 		$response = [
 			'total'     => 0,
 			'deducting' => 0,
@@ -93,7 +93,7 @@ class UserReward extends WpApi {
 		] ) as $sales ) {
 			$response['total']     += $sales->total;
 			$response['deducting'] += $sales->deducting;
-			$sales->paid            = '0000-00-00 00:00:00' != $sales->fixed;
+			$sales->paid            = '0000-00-00 00:00:00' !== $sales->fixed;
 			$sales->label           = $this->sales->type_label( $sales->revenue_type );
 			$response['records'][]  = $sales;
 		}
@@ -106,7 +106,7 @@ class UserReward extends WpApi {
 	 * @return bool
 	 */
 	public function permission_callback( $request ) {
-		if ( 'me' == $request->get_param( 'user_id' ) ) {
+		if ( 'me' === $request->get_param( 'user_id' ) ) {
 			return current_user_can( 'read' );
 		} else {
 			return current_user_can( 'edit_users' );

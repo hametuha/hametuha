@@ -48,7 +48,7 @@ class Sales extends Command {
 			}
 			$table->display();
 		} else {
-			if ( ! $force && false !== array_search( $year . $month, $record ) ) {
+			if ( ! $force && false !== array_search( $year . $month, $record, true ) ) {
 				self::e( sprintf( '%d年%d月%sのKDPセールスは記録済みです。', $year, $month, ( '01' !== $day ? $day . '日以降' : '' ) ) );
 			}
 			/** @var \WP_Error $errors */
@@ -101,7 +101,7 @@ class Sales extends Command {
 		$year                                 = isset( $assoc['year'] ) ? sprintf( '%04d', $assoc['year'] ) : $default_year;
 		$month                                = isset( $assoc['month'] ) ? sprintf( '%02d', $assoc['month'] ) : $default_month;
 		$force                                = isset( $assoc['force'] ) && $assoc['force'];
-		if ( ! $force && false !== array_search( $year . $month, $record ) ) {
+		if ( ! $force && false !== array_search( $year . $month, $record, true ) ) {
 			self::e( sprintf( '%d年%d月のニュース報酬は記録済みです。', $year, $month ) );
 		}
 		list( $done, $none ) = UserSales::get_instance()->save_news_report( $year, $month );

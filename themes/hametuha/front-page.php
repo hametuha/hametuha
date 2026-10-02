@@ -148,7 +148,7 @@ else :
 				</ul>
 				<p>
 					<a href="<?php echo home_url( '/ranking/last-week/' ); ?>" class="btn btn-outline-secondary w-100">
-						<?php esc_html_e( '先週のランキング', '' ); ?>
+						<?php esc_html_e( '先週のランキング', 'hametuha' ); ?>
 					</a>
 				</p>
 			</div>
@@ -596,7 +596,7 @@ endif;
 						$date  = new DateTime( 'now', wp_timezone() );
 						$start = new DateTime( '2007-03-02', wp_timezone() );
 						$diff  = $date->diff( $start );
-						printf( __( '<strong>%s年</strong>', 'hametuha' ), number_format( $diff->y ) );
+						printf( '<strong>%s</strong>', esc_html( sprintf( __( '%s年', 'hametuha' ), number_format( $diff->y ) ) ) );
 						if ( $diff->m ) {
 							printf( __( '%dヶ月', 'hametuha' ), $diff->m );
 						}

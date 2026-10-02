@@ -50,7 +50,7 @@
 		<meta itemprop="datePublished" content="<?php echo mysql2date( DateTime::ISO8601, $post->post_date_gmt ); ?>">
 	</li>
 
-	<?php if ( in_array( get_post_type(), [ 'page', 'faq' ] ) && hametuha_remarkably_updated() ) : ?>
+	<?php if ( in_array( get_post_type(), [ 'page', 'faq' ], true ) && hametuha_remarkably_updated() ) : ?>
 	<li class="date list-inline-item">
 		<i class="icon-loop4"></i>
 		<?php the_modified_date( 'Y年m月d日（D）' ); ?>更新
@@ -68,7 +68,7 @@
 	<!-- Edit link -->
 	<?php if ( current_user_can( 'edit_post', get_the_ID() ) && ! is_hamenew() ) : ?>
 		<li class="list-inline-item">
-			<?php if ( 'lists' == get_post_type() ) : ?>
+			<?php if ( 'lists' === get_post_type() ) : ?>
 				<button class="list-creator btn btn-primary btn-sm" title="リストを編集する" data-post-id="<?php the_ID(); ?>">
 					<i class="icon-pencil5"></i> 編集</button>
 				<button class="list-eraser btn btn-danger btn-sm" title="このリストを削除します。よろしいですか？　この操作は取り消せません" data-post-id="<?php the_ID(); ?>">
