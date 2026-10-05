@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "46d4288dbea48d47d4d0036cb4ad2283",
+    "content-hash": "8a9ddf793a9883728c800234ff3fde8a",
     "packages": [
         {
             "name": "dflydev/dot-access-data",
@@ -888,16 +888,16 @@
         },
         {
             "name": "hametuha/wpametu",
-            "version": "1.2.3",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hametuha/wpametu.git",
-                "reference": "7499d343927fd7697f1008f0a894433aaed6fa94"
+                "reference": "a7479fc9a73f755b5de4ec94b2b260b6fc0fd07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/7499d343927fd7697f1008f0a894433aaed6fa94",
-                "reference": "7499d343927fd7697f1008f0a894433aaed6fa94",
+                "url": "https://api.github.com/repos/hametuha/wpametu/zipball/a7479fc9a73f755b5de4ec94b2b260b6fc0fd07d",
+                "reference": "a7479fc9a73f755b5de4ec94b2b260b6fc0fd07d",
                 "shasum": ""
             },
             "require": {
@@ -933,9 +933,9 @@
             "description": "A WordPress Theme FrameWork.",
             "support": {
                 "issues": "https://github.com/hametuha/wpametu/issues",
-                "source": "https://github.com/hametuha/wpametu/tree/1.2.3"
+                "source": "https://github.com/hametuha/wpametu/tree/1.2.4"
             },
-            "time": "2025-12-22T07:32:10+00:00"
+            "time": "2026-10-05T14:14:06+00:00"
         },
         {
             "name": "kunoichi/ga-communicator",
@@ -4239,5 +4239,5 @@
         "php": ">=8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
