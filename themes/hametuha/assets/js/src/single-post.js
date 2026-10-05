@@ -10,8 +10,6 @@
 /*global _: true*/
 /* jshint nonew: false */
 
-Chart.defaults.global.responsive = true;
-
 
 /**
  * シングルポストで読み込む
@@ -232,10 +230,16 @@ Chart.defaults.global.responsive = true;
                   type: 'radar',
                   data: postScore.data,
                   options: {
-                    tooltips: {
-                      callbacks: {
-                        title: function (tip, data) {
-                          return postScore.labels[tip[0].datasetIndex][tip[0].index];
+                    // 点数は0〜100に丸めてある
+                    scales: {
+                      r: { min: 0, max: 100 }
+                    },
+                    plugins: {
+                      tooltip: {
+                        callbacks: {
+                          title: function (items) {
+                            return postScore.labels[items[0].datasetIndex][items[0].dataIndex];
+                          }
                         }
                       }
                     }
