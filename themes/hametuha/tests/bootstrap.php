@@ -59,6 +59,24 @@ function _register_theme() {
 }
 tests_add_filter( 'muplugins_loaded', '_register_theme' );
 
+/**
+ * テーマが前提にしているプラグインを読み込む
+ *
+ * themes/hametuha から見た ../../plugins（ローカルでもコンテナでも同じ位置関係）。
+ * 無ければ読み込まず、該当テストはスキップする。
+ */
+tests_add_filter( 'muplugins_loaded', function () {
+	$plugin_dir = dirname( dirname( dirname( __DIR__ ) ) ) . '/plugins';
+	foreach ( [ 'two-factor/two-factor.php' ] as $plugin ) {
+		if ( file_exists( $plugin_dir . '/' . $plugin ) ) {
+			require_once $plugin_dir . '/' . $plugin;
+		}
+	}
+} );
+
+
+// 管理者の2要素認証による権限制限は Test_TwoFactor 以外では切る（テストはセッションを持たない）
+tests_add_filter( 'hametuha_two_factor_enforced', '__return_false' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';

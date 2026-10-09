@@ -237,6 +237,31 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 
 古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
+## 管理者の2要素認証（#430）
+
+Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
+
+- **管理者だけが対象。** 使えるのは TOTP とバックアップコードのみ（メールは管理者のメール乗っ取りでパスワードリセットと同時に破られるので不可）。管理者以外には一切提供しない（hashboard のためプロフィール画面に入れない）
+- **管理者権限は「2要素認証を通ったセッション」にだけ与える。** それ以外のセッション（未設定・Gianism/hameslack のソーシャルログイン・アプリケーションパスワード）では `read` とロール名だけに落ちる。Gianism と hameslack は `wp_login` を発火せず `wp_set_auth_cookie()` を直接呼ぶため、2FA の画面を素通りする。経路を1つずつ塞ぐのではなく権限側で止めている
+  - ロール名を残すのは、hashboard が `has_cap( 'administrator' )` でプロフィール画面の可否を判定しているため。消すと設定画面に入れず締め出される
+- Gianism での管理者ログインは `gianism_before_set_login_cookie` で拒否（Gianism 本体のオプション化は hametuha/gianism#179）
+- プロフィール画面の REST 経由で TOTP を設定した直後はセッションが未認証のまま。**一度ログアウトして入り直す**と権限が戻る（管理画面の通知にリンクが出る）
+- 端末の記憶機能は無い（WordPress/two-factor#230）。「ログイン状態を保存」で14日に1回入力する程度
+
+### ユニットテスト
+
+テストは `wp_set_current_user()` だけでログインしセッションを持たないため、`tests/bootstrap.php` で `hametuha_two_factor_enforced` を false にして権限の制限を切っている。`Test_TwoFactor` だけが有効に戻す。
+
+### ロックアウトしたときの復旧
+
+認証アプリもバックアップコードも失った場合は、WP-CLI で2要素認証の設定を消す（WP-CLI には権限の制限がかからない）。
+
+```bash
+wp @production user meta delete <ユーザーID> _two_factor_enabled_providers
+```
+
+パスワードだけでログインできるようになる（権限は落ちた状態）。プロフィール画面で設定し直し、ログインし直す。
+
 ## 注意事項
 
 1. **node_modules**はGit管理しない（テーマの性質上）
@@ -432,6 +457,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **ideas** アイデア投稿機能に関連するファイル群
 - **anpi** 安否情報機能に関連するファイル群
 - **series** 連載機能に関連するファイル群
+- **two-factor** 管理者の2要素認証必須化に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
