@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66d24b76725303e43502134ab197a4e9",
+    "content-hash": "73e39e9767e371402a4fc49b5cb432fc",
     "packages": [
         {
             "name": "composer/installers",
@@ -758,6 +758,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/tinymce-advanced/"
+        },
+        {
+            "name": "wpackagist-plugin/two-factor",
+            "version": "0.17.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/two-factor/",
+                "reference": "tags/0.17.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/two-factor.0.17.0.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/two-factor/"
         },
         {
             "name": "wpackagist-plugin/wp-hamazon",
