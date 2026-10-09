@@ -75,8 +75,5 @@ tests_add_filter( 'muplugins_loaded', function () {
 } );
 
 
-// 管理者の2要素認証による権限制限は Test_TwoFactor 以外では切る（テストはセッションを持たない）
-tests_add_filter( 'hametuha_two_factor_enforced', '__return_false' );
-
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
