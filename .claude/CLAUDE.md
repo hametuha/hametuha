@@ -237,6 +237,27 @@ define( 'SKIP_RECAPTCHA_VERIFICATION', true );
 
 古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
+## 管理者の2要素認証（#430）
+
+Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
+
+- **管理者だけが対象。** 使えるのは TOTP とバックアップコードのみ（メールは管理者のメール乗っ取りでパスワードリセットと同時に破られるので不可）。管理者以外には一切提供しない（hashboard のためプロフィール画面に入れない）
+- **未設定の管理者には管理画面で通知するだけ。** 権限は止めない（管理者は1人で、本番有効化時に自分で設定する前提）
+- **ソーシャルログイン（Gianism / hameslack）は2FAを通らない。** `wp_login` を発火せず `wp_set_auth_cookie()` を直接呼ぶため。連携先（Google・Facebook・Slack 等）の乗っ取り対策を信頼して当面は許可している。前提は**管理者が連携しているアカウントすべてに2FAが設定されていること**
+  - 制御は Gianism 本体で行う予定（hametuha/gianism#179）。hameslack は Gianism の `set_auth_cookie()` を経由しておらずフックが効かない（hametuha/hameslack#58）
+  - 一度「2FAを通っていないセッションでは管理者権限を落とす」実装を試したが、仕組みが分かりにくく、ソーシャルログインを許す方針とも両立しないため採用しなかった（PR #431 の履歴参照）
+- 端末の記憶機能は無い（WordPress/two-factor#230）。「ログイン状態を保存」で14日に1回入力する程度
+
+### ロックアウトしたときの復旧
+
+認証アプリもバックアップコードも失った場合は、WP-CLI で2要素認証の設定を消す。
+
+```bash
+wp @production user meta delete <ユーザーID> _two_factor_enabled_providers
+```
+
+パスワードだけでログインできるようになるので、プロフィール画面で設定し直す。
+
 ## 注意事項
 
 1. **node_modules**はGit管理しない（テーマの性質上）
@@ -432,6 +453,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **ideas** アイデア投稿機能に関連するファイル群
 - **anpi** 安否情報機能に関連するファイル群
 - **series** 連載機能に関連するファイル群
+- **two-factor** 管理者の2要素認証必須化に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
