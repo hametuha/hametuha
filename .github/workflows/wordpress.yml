@@ -51,7 +51,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version-file: .node-version
 
       - name: Install Dependencies
         run: npm ci && composer install
@@ -68,7 +68,7 @@ jobs:
     #       continue-on-error を外してマージゲート化する。
     continue-on-error: true  # 当面は情報提供のみとし、CIをブロックしない
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v4
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/php@master
