@@ -12,7 +12,8 @@
 		"watch": "gulp watch",
 		"display": "gulp bs",
 		"gulp": "gulp",
-		"gulp:task": "gulp --tasks"
+		"gulp:task": "gulp --tasks",
+		"compress-images": "node bin/compress-images.js"
 	},
 	"author": "Hametuha inc.",
 	"license": "LGPL-3.0-or-later",
@@ -31,7 +32,6 @@
 		"gulp-autoprefixer": "^6.0.0",
 		"gulp-concat": "^2.6.0",
 		"gulp-filter": "^5.1.0",
-		"gulp-imagemin": "^5.0.3",
 		"gulp-jshint": "^2.1.0",
 		"gulp-load-plugins": "^2.0",
 		"gulp-notify": "^3.2.0",
@@ -41,8 +41,6 @@
 		"gulp-sass-glob": "^1.0.9",
 		"gulp-sourcemaps": "^2.6.4",
 		"gulp-uglify": "^3.0.1",
-		"imagemin-mozjpeg": "^8.0.0",
-		"imagemin-pngquant": "^6.0.1",
 		"jshint": "^2.9.1",
 		"jshint-stylish": "^2.0",
 		"md5-file": "^5.0.0",
@@ -50,12 +48,13 @@
 		"prop-types": "^15.7.2",
 		"sass": "^1.92.1",
 		"select2": "^4.0.5",
+		"sharp": "^0.34.0",
 		"vinyl-named": "^1.1.0",
 		"webpack": "^5.101.3",
 		"webpack-stream": "^6.1.2"
 	},
 	"engines": {
-		"node": "16.20.2"
+		"node": ">=22"
 	},
 	"dependencies": {}
 }
