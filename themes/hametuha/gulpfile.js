@@ -3,8 +3,6 @@ const fs = require( 'fs' );
 const md5File = require( 'md5-file' );
 const { glob } = require( 'glob' );
 const $ = require( 'gulp-load-plugins' )();
-const pngquant = require( 'imagemin-pngquant' );
-const mozjpeg = require( 'imagemin-mozjpeg' );
 const mergeStream = require( 'merge-stream' );
 const webpack = require( 'webpack-stream' );
 const webpackBundle = require( 'webpack' );
@@ -166,26 +164,6 @@ gulp.task( 'copylib', function () {
 	);
 } );
 
-// Image min
-gulp.task( 'imagemin', function () {
-	return gulp.src( './assets/img/src/**/*' )
-		.pipe( $.imagemin( [
-			pngquant( {
-				quality: '65-80',
-				speed: 1,
-				floyd: 0
-			} ),
-			mozjpeg( {
-				quality: 85,
-				progressive: true
-			} ),
-			$.imagemin.svgo(),
-			$.imagemin.optipng(),
-			$.imagemin.gifsicle()
-		] ) )
-		.pipe( gulp.dest( './assets/img' ) );
-} );
-
 // watch
 gulp.task( 'watch', function () {
 	// Make SASS
@@ -200,12 +178,10 @@ gulp.task( 'watch', function () {
 	gulp.watch( 'assets/js/src/**/*.js', gulp.task( 'jshint' ) );
 	// Build common js
 	gulp.watch( 'assets/js/src/common/**/*.js', gulp.task( 'commonjs' ) );
-	// Minify Image
-	gulp.watch( 'assets/img/src/**/*', gulp.task( 'imagemin' ) );
 } );
 
 // Build
-gulp.task( 'build', gulp.series( 'plumber', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass', 'imagemin' ), 'deps' ) );
+gulp.task( 'build', gulp.series( 'plumber', gulp.parallel( 'copylib', 'jshint', 'commonjs', 'js', 'jsx', 'sass' ), 'deps' ) );
 
 // Default Tasks
 gulp.task( 'default', gulp.series( 'watch' ) );
