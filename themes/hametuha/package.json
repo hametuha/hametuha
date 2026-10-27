@@ -20,7 +20,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.28.4",
 		"@babel/plugin-transform-react-jsx": "^7.0.0",
-		"@babel/preset-env": "^7.28.3",
+		"@babel/preset-env": "^8.0.7",
 		"babel-eslint": "^10.0.1",
 		"babel-loader": "^8.0.5",
 		"bootbox": "^6.0.0",
