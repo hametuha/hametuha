@@ -46,11 +46,11 @@
 		"md5-file": "^5.0.0",
 		"merge-stream": "^1.0.1",
 		"prop-types": "^15.7.2",
-		"sass": "^1.92.1",
-		"select2": "^4.0.5",
-		"sharp": "^0.34.0",
+		"sass": "^1.105.2",
+		"select2": "^4.1.0",
+		"sharp": "^0.35.5",
 		"vinyl-named": "^1.1.0",
-		"webpack": "^5.101.3",
+		"webpack": "^5.112.0",
 		"webpack-stream": "^6.1.2"
 	},
 	"engines": {
