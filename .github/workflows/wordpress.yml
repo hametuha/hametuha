@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        php: [ '8.2' ]        # PHP versions to check.
+        php: [ '8.2', '8.4' ]  # 本番が8.2の間は両方。本番切替後に8.2を外す
         wp: [ '6.8', 'latest' ]      # WordPress version to check.
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@main
@@ -26,7 +26,7 @@ jobs:
     name: PHP Syntax Check
     uses: tarosky/workflows/.github/workflows/phpcs.yml@main
     with:
-      version: 8.2
+      version: 8.4
 
   asset:
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.4
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
