@@ -89,7 +89,7 @@ class MetaboxFieldSeries extends Select {
 	 * @param \WP_Post|null $post 投稿
 	 * @return void
 	 */
-	protected function save( $value, \WP_Post $post = null ) {
+	protected function save( $value, ?\WP_Post $post = null ) {
 		switch ( $this->name ) {
 			case 'post_parent':
 				// Do nothing.
