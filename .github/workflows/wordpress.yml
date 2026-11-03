@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        php: [ '8.2' ]        # PHP versions to check.
+        php: [ '8.2', '8.4' ]  # 本番が8.2の間は両方。本番切替後に8.2を外す
         wp: [ '6.8', 'latest' ]      # WordPress version to check.
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@main
@@ -26,7 +26,7 @@ jobs:
     name: PHP Syntax Check
     uses: tarosky/workflows/.github/workflows/phpcs.yml@main
     with:
-      version: 8.2
+      version: 8.4
 
   asset:
     runs-on: ubuntu-latest
@@ -38,7 +38,7 @@ jobs:
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.4
           tools: composer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +51,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version-file: .node-version
 
       - name: Install Dependencies
         run: npm ci && composer install
@@ -64,11 +64,13 @@ jobs:
   vulnerability:
     name: Check Vulnerability
     runs-on: ubuntu-latest
+    # Dependabot の実行ではシークレット（SNYK_TOKEN）を読めないためスキップ
+    if: github.actor != 'dependabot[bot]'
     # TODO: 脆弱性ゼロ（オールグリーン）を達成したら status-check の needs に追加し、
     #       continue-on-error を外してマージゲート化する。
     continue-on-error: true  # 当面は情報提供のみとし、CIをブロックしない
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v4
 
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/php@master

@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.4-fpm
 
 # 必要なパッケージのインストール
 RUN apt-get update && apt-get install -y \
@@ -22,7 +22,7 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     && mv wp-cli.phar /usr/local/bin/wp
 
 # Node.jsとnpmのインストール
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
@@ -30,7 +30,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
 RUN docker-php-ext-configure zip \
     && docker-php-ext-install zip opcache mysqli pdo_mysql intl
 
-# Xdebug (開発環境用、PHP 8.2対応)
+# Xdebug (開発環境用、PHP 8.4対応)
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 

@@ -169,6 +169,24 @@ cd themes/hametuha && npm run jsx # JSXを含むES Nextの記法をトランス�
 cd themes/hametuha && npm run watch 
 ```
 
+#### 画像（assets/img）
+
+画像はビルドで圧縮しません。**追加・差し替えたときに一度だけ圧縮し、圧縮後のファイルをコミットします。**
+
+```bash
+# Git 上で追加・変更された assets/img の画像を、その場で圧縮する
+cd themes/hametuha && npm run compress-images
+# ファイルやディレクトリを指定する
+cd themes/hametuha && npm run compress-images -- assets/img/foo.png
+```
+
+- JPEG・PNG のみ対象（`sharp` を使用）。小さくならなかったファイルは書き換えない
+- 2回実行すると再圧縮で画質が落ちるので、**1枚につき1回だけ**
+- かつては `assets/img/src` の原本を gulp-imagemin でデプロイのたびに圧縮していたが、
+  ネイティブバイナリ依存で Node 22 以降・Apple Silicon で動かなくなったため廃止した（#434）。原本は Git 履歴にある
+
+Node のバージョンはリポジトリルートの `.node-version` で一元管理しています（CI もこれを読む）。
+
 トランスパイルには @kunoichi/grab-deps を一部使っており、これらのファイルではファイルヘッダーに依存関係が書いてあります。
 
 ```js

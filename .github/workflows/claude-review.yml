@@ -1,0 +1,94 @@
+name: Claude Code PR Review
+
+on:
+  workflow_run:
+    workflows: ["Hametuha CI Test"]
+    types: [completed]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  # CI 全パス後の自動レビュー（同一リポジトリのPRのみ）
+  setup:
+    if: |
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.actor.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.pr.outputs.number }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Get PR number
+        id: pr
+        run: |
+          PR_NUMBER=$(gh pr list --head "${{ github.event.workflow_run.head_branch }}" --json number --jq '.[0].number')
+          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  auto-review:
+    needs: setup
+    if: needs.setup.outputs.pr_number != ''
+    uses: tarosky/workflows/.github/workflows/claude-review.yml@main
+    with:
+      plugin_name: hametuha
+      ci_checks: "PHPUnit (WordPress 6.8 / latest), PHPCS, asset build, Snyk"
+      pr_number: ${{ fromJSON(needs.setup.outputs.pr_number) }}
+      head_sha: ${{ github.event.workflow_run.head_sha }}
+      custom_focus: |
+        - これはプラグインではなく、破滅派（hametuha.com）というサイト全体のリポジトリ。主な対象は themes/hametuha（テーマ）と mu-plugins。利用者は作家・読者で、投稿者権限のユーザーが多い
+        - 権限チェック: REST API の permission_callback、nonce、current_user_can。投稿者が他人の作品・ファイル・個人情報に触れられないか
+        - JS は @kunoichi/grab-deps のファイルヘッダー（@handle / @deps）で依存を解決している。ヘッダーの漏れや誤りはビルドでは検出されない
+        - キャッシュ系プラグイン（hamecache・memcached）はローカル・CI に無い。キャッシュが絡む変更は本番でしか再現しない点を指摘する
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+  # "@claude auto-review" で手動レビュー（メンバーのみ、PRコメントのみ）
+  manual-setup:
+    if: |
+      github.event_name == 'issue_comment' &&
+      contains(github.event.comment.body, '@claude auto-review') &&
+      github.event.issue.pull_request &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-latest
+    outputs:
+      pr_number: ${{ steps.pr.outputs.number }}
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+    steps:
+      - name: Get PR info
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.issue.number }}
+          HEAD_SHA=$(gh pr view "$PR_NUMBER" --repo "${{ github.repository }}" --json headRefOid --jq '.headRefOid')
+          echo "number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
+
+  manual-review:
+    needs: manual-setup
+    if: needs.manual-setup.outputs.pr_number != ''
+    uses: tarosky/workflows/.github/workflows/claude-review.yml@main
+    with:
+      plugin_name: hametuha
+      ci_checks: "PHPUnit (WordPress 6.8 / latest), PHPCS, asset build, Snyk"
+      pr_number: ${{ fromJSON(needs.manual-setup.outputs.pr_number) }}
+      head_sha: ${{ needs.manual-setup.outputs.head_sha }}
+      is_manual: true
+      custom_focus: |
+        - これはプラグインではなく、破滅派（hametuha.com）というサイト全体のリポジトリ。主な対象は themes/hametuha（テーマ）と mu-plugins。利用者は作家・読者で、投稿者権限のユーザーが多い
+        - 権限チェック: REST API の permission_callback、nonce、current_user_can。投稿者が他人の作品・ファイル・個人情報に触れられないか
+        - JS は @kunoichi/grab-deps のファイルヘッダー（@handle / @deps）で依存を解決している。ヘッダーの漏れや誤りはビルドでは検出されない
+        - キャッシュ系プラグイン（hamecache・memcached）はローカル・CI に無い。キャッシュが絡む変更は本番でしか再現しない点を指摘する
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
