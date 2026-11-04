@@ -4,13 +4,16 @@ on:
   release:
     types: [released]
 
+# ジョブごとに必要な権限だけを書く。書かなかった権限は none になる。
+permissions: {}
+
 jobs:
-  deploy_production:
-    name: Deploy to Production
+  # ビルドは外部のスクリプトやアクションを実行するので、AWS の認証情報を持たせない。
+  build:
+    name: Build Theme
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://hametuha.com
+    permissions:
+      contents: write # checkout と、リリースへの zip の添付
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -51,22 +54,18 @@ jobs:
         run: bash ./bin/build.sh ${{ github.event.release.tag_name }}
         working-directory: themes/hametuha
 
-      - name: Deploy to Production
-        uses: burnett01/rsync-deployments@7.0.2
-        with:
-          switches: --log-file=../../rsync.log --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --delete --itemize-changes --exclude-from=.distignore
-          path: themes/hametuha/
-          remote_path: ${{ vars.DEPLOY_PATH }}
-          remote_host: ${{ vars.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+      # artifact は zip になり、パーミッションとシンボリックリンクが消えるので tar で渡す。
+      # 除外は rsync 側（.distignore）に任せる。ここで余計に除くと、rsync --delete が本番から消してしまう。
+      - name: Pack the theme for deployment
+        run: tar --exclude=./node_modules -czf "$RUNNER_TEMP/theme.tar.gz" .
+        working-directory: themes/hametuha
 
-      - name: Upload rsync log
-        if: always()
+      - name: Upload the theme
         uses: actions/upload-artifact@v4
         with:
-          name: rsync-log
-          path: rsync.log
+          name: theme
+          path: ${{ runner.temp }}/theme.tar.gz
+          retention-days: 7
 
       - name: Create distribution zip
         run: |
@@ -86,6 +85,78 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # SSM Session Manager 経由の ssh で rsync する（hametuha/hametuha#435）。
+  # ロールは hametuha-infra の production-hametuha-github-deploy スタック。
+  # 信頼ポリシーは environment: production で絞っているので、このジョブから environment を外さないこと。
+  deploy_production:
+    name: Deploy to Production
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://hametuha.com
+    permissions:
+      id-token: write # OIDC で AWS のロールを引き受ける
+    steps:
+      - name: Download the theme
+        uses: actions/download-artifact@v4
+        with:
+          name: theme
+          path: ${{ runner.temp }}
+
+      - name: Unpack the theme
+        run: |
+          mkdir -p themes/hametuha
+          tar -xzf "$RUNNER_TEMP/theme.tar.gz" -C themes/hametuha
+
+      - name: Check session-manager-plugin
+        run: session-manager-plugin --version
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::561938084780:role/hametuha-github-deploy
+          aws-region: ap-northeast-1
+
+      # DEPLOY_HOST はインスタンス ID。SSM 経由でしか繋がらないので、通れば SSM を通った証明になる。
+      # --document-name を省略すると既定のシェル文書になり、IAM で拒否される。
+      # 経路は SSM が IAM で認証したインスタンスに直結するので、ホスト鍵は初回受け入れ（accept-new）にする。
+      - name: Setup SSH over SSM
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat > ~/.ssh/config <<EOF
+          Host production
+            HostName ${DEPLOY_HOST}
+            User ${DEPLOY_USER}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+            ProxyCommand aws ssm start-session --region ap-northeast-1 --target %h --document-name AWS-StartSSHSession --parameters portNumber=%p
+          EOF
+          chmod 600 ~/.ssh/config
+          ssh production true
+
+      - name: Deploy to Production
+        run: >-
+          rsync
+          --log-file="$GITHUB_WORKSPACE/rsync.log" --log-file-format="%o (%U %B) %l %b %f"
+          --checksum -rlpDv --delete --itemize-changes --exclude-from=.distignore
+          ./ "production:${{ vars.DEPLOY_PATH }}"
+        working-directory: themes/hametuha
+
+      - name: Upload rsync log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rsync-log
+          path: rsync.log
+
   notify:
     name: Notify Deployment
     needs: deploy_production
@@ -100,7 +171,7 @@ jobs:
           echo "Version: ${{ github.event.release.tag_name }}"
 
       - name: Deployment Failure Notification
-        if: needs.deploy_production.result == 'failure'
+        if: needs.deploy_production.result != 'success'
         run: |
           echo "❌ Deployment to production failed!"
           echo "Please check the logs and rollback if necessary."
@@ -111,6 +182,8 @@ jobs:
     needs: deploy_production
     runs-on: ubuntu-latest
     if: success()
+    permissions:
+      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
