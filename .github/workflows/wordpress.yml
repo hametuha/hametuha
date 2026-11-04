@@ -13,7 +13,7 @@ jobs:
   test:
     strategy:
       matrix:
-        php: [ '8.2', '8.4' ]  # 本番が8.2の間は両方。本番切替後に8.2を外す
+        php: [ '8.4' ]        # 本番のPHPと揃える
         wp: [ '6.8', 'latest' ]      # WordPress version to check.
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
     uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@main
