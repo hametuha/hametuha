@@ -179,6 +179,8 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_singular() || ! has_shortcode( get_queried_object()->post_content, 'contact-form-7' ) ) {
 		wp_dequeue_style( 'contact-form-7' );
 		wp_dequeue_script( 'contact-form-7' );
+		// CF7 本体の reCAPTCHA 連携が有効だと全ページで読み込まれるため外す。
+		// 連携を解除すれば読み込まれなくなるが、設定が残っていても漏れないよう残しておく（#458）。
 		wp_dequeue_script( 'google-recaptcha' );
 		wp_dequeue_script( 'wpcf7-recaptcha' );
 	}
