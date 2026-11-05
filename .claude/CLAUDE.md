@@ -235,15 +235,25 @@ composer wp -- user delete <ID> --yes
 
 検証で汚したデータ（メタ・投稿・アップロードファイル等）は必ず元に戻してください。`post_modified` は `wp post update` だと再度更新されてしまうので、戻すときは `wp db query` で直接 UPDATE します。
 
-#### reCAPTCHA のスキップ
+#### Cloudflare Turnstile（ログイン・登録・CF7 のボット対策）
 
-フォーム送信を検証する場合は `wp-config-local.php` に以下を設定します。
+ボット対策は Cloudflare Turnstile（プラグイン `simple-cloudflare-turnstile`）です（#458）。
+かつてはテーマ独自の reCAPTCHA v3（`Hametuha\Service\RecaptchaV3`）でしたが、削除しました。
 
-```php
-define( 'SKIP_RECAPTCHA_VERIFICATION', true );
+ローカルでは Cloudflare 公式の**常に通るテスト用キー**を使います。ウィジェットに「テスト専用です」と出ますが、
+ブラウザ操作（Playwright）でもそのままログイン・フォーム送信できるので、スキップ用の定数はありません。
+
+```bash
+composer wp -- option update cfturnstile_key 1x00000000000000000000AA
+composer wp -- option update cfturnstile_secret 1x0000000000000000000000000000000AA
+for o in cfturnstile_login cfturnstile_register cfturnstile_reset cfturnstile_cf7_all; do composer wp -- option update $o 1; done
+# キー保存後の「テスト済み」フラグ。これが yes でないと連携（ログイン・CF7）が読み込まれない
+composer wp -- option update cfturnstile_tested yes
 ```
 
-`wp-config-local.php` はdockerの起動時にしか同期されません。変更した場合は再起動 `composer restart` してください。
+- ログイン・登録画面の並び順はテーマの `assets/js/src/components/login-helper.js` が「または」の区切りの上へ移しています。
+  ウィジェット（`.cf-turnstile`）もこのリストに入れているので、フォームに要素を足すときはここも見ること
+- 古い `wp-config-local.php` に `SKIP_RECAPTCHA_VERIFICATION` が残っていても、いまは何の効果もありません
 
 #### かつて存在した自動ログイン機能について
 
