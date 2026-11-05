@@ -183,6 +183,9 @@ add_action( 'wp_enqueue_scripts', function () {
 		// 連携を解除すれば読み込まれなくなるが、設定が残っていても漏れないよう残しておく（#458）。
 		wp_dequeue_script( 'google-recaptcha' );
 		wp_dequeue_script( 'wpcf7-recaptcha' );
+		// CF7 本体の Turnstile 連携も全ページで読み込むため外す（#458）。
+		// ログイン画面の Turnstile は simple-cloudflare-turnstile の別ハンドル（cfturnstile）なので影響しない。
+		wp_dequeue_script( 'cloudflare-turnstile' );
 	}
 	// wp-pagenavi
 	wp_dequeue_style( 'wp-pagenavi' );

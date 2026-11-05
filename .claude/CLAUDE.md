@@ -237,18 +237,29 @@ composer wp -- user delete <ID> --yes
 
 #### Cloudflare Turnstile（ログイン・登録・CF7 のボット対策）
 
-ボット対策は Cloudflare Turnstile（プラグイン `simple-cloudflare-turnstile`）です（#458）。
+ボット対策は Cloudflare Turnstile です（#458）。**担当が2つに分かれている**ので注意。
+
+| 対象 | 担当 | スクリプトのハンドル |
+|---|---|---|
+| ログイン・登録・パスワードリセット | プラグイン `simple-cloudflare-turnstile` | `cfturnstile` |
+| Contact Form 7 | **CF7 本体の Turnstile 連携**（「インテグレーション」画面） | `cloudflare-turnstile` |
+
 かつてはテーマ独自の reCAPTCHA v3（`Hametuha\Service\RecaptchaV3`）でしたが、削除しました。
+CF7 本体の連携はフォームに `[turnstile]` タグが無くても自動でウィジェットを差し込み、スクリプトは全ページで読み込むため、
+CF7 の無いページでは `hooks/assets.php` で dequeue しています。
 
 ローカルでは Cloudflare 公式の**常に通るテスト用キー**を使います。ウィジェットに「テスト専用です」と出ますが、
 ブラウザ操作（Playwright）でもそのままログイン・フォーム送信できるので、スキップ用の定数はありません。
 
 ```bash
+# ログインまわり（simple-cloudflare-turnstile）
 composer wp -- option update cfturnstile_key 1x00000000000000000000AA
 composer wp -- option update cfturnstile_secret 1x0000000000000000000000000000000AA
-for o in cfturnstile_login cfturnstile_register cfturnstile_reset cfturnstile_cf7_all; do composer wp -- option update $o 1; done
-# キー保存後の「テスト済み」フラグ。これが yes でないと連携（ログイン・CF7）が読み込まれない
+for o in cfturnstile_login cfturnstile_register cfturnstile_reset; do composer wp -- option update $o 1; done
+# キー保存後の「テスト済み」フラグ。これが yes でないと連携が読み込まれない
 composer wp -- option update cfturnstile_tested yes
+# CF7（本体の連携）。プラグイン側の CF7 連携（cfturnstile_cf7_all）は本番で使っていないので有効にしない
+composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x00000000000000000000AA" => "1x0000000000000000000000000000000AA" ] );'
 ```
 
 - ログイン・登録画面の並び順はテーマの `assets/js/src/components/login-helper.js` が「または」の区切りの上へ移しています。
