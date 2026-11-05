@@ -106,6 +106,8 @@
 	padding: 10px 0;
 
 	&__list {
+		flex: 1;
+		min-width: 0;
 		padding: 0;
 		margin: 0;
 		overflow: hidden;
@@ -113,6 +115,7 @@
 		position: relative;
 	}
 
+	// 表示するのは is-active の1件だけ。切り替えは components/front-announcement.jsx（#327）
 	&__item {
 		list-style: none;
 		margin: 0;
@@ -124,19 +127,18 @@
 		top: 0;
 		left: 0;
 		right: 0;
-		animation: fade-in-out 12s infinite;
 		background-color: $white;
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 0.6s, visibility 0.6s;
 
-		&:nth-child(1) {
-			animation-delay: 0s;
+		&.is-active {
+			opacity: 1;
+			visibility: visible;
 		}
 
-		&:nth-child(2) {
-			animation-delay: 4s;
-		}
-
-		&:nth-child(3) {
-			animation-delay: 8s;
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
 		}
 
 		a {
@@ -180,28 +182,18 @@
 		}
 	}
 
+	&__counter {
+		flex-shrink: 0;
+		margin-left: 0.5em;
+		font-size: 12px;
+		color: $text-muted;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+
 	.btn {
 		padding-top: 7px;
 		padding-bottom: 7px;
-	}
-}
-
-@keyframes fade-in-out {
-	0% {
-		opacity: 0;
-		visibility: hidden;
-	}
-	1% {
-		opacity: 1;
-		visibility: visible;
-	}
-	33% {
-		opacity: 1;
-		visibility: visible;
-	}
-	34%, 100% {
-		opacity: 0;
-		visibility: hidden;
 	}
 }
 
