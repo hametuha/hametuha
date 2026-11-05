@@ -161,6 +161,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( is_singular( 'post' ) ) {
 		wp_enqueue_script( 'hametuha-single' );
 	}
+	// トップページのお知らせ切り替え（#327）
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'hametuha-front-announcement' );
+	}
 	// Series.
 	if ( is_singular( 'series' ) ) {
 		wp_enqueue_script( 'hametuha-series' );
