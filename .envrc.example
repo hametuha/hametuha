@@ -1,0 +1,10 @@
+# direnv 用設定。cp .envrc.example .envrc && direnv allow
+# .envrc は .gitignore 済み（公開リポジトリなので秘匿値はここに書かない）。
+
+# AWS: 本番の CloudWatch Logs 等の読み取り用。default が破滅派アカウント（alias: hametuha）
+# 取り違え確認: aws iam list-account-aliases → "hametuha" であること
+export AWS_PROFILE=default
+export AWS_REGION=ap-northeast-1
+
+# ローカル固有の値は .envrc.local に書く（gitignore 済み）
+[ -f .envrc.local ] && source_env .envrc.local

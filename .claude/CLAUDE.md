@@ -662,6 +662,33 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 3. `release` PRマージ → リリースドラフト作成
 4. リリース公開 → 本番環境へ自動デプロイ
 
+## 本番ログ（CloudWatch Logs）
+
+本番のログは CloudWatch Logs に集約されています。AWS の認証は direnv でこのリポジトリに固定します。
+
+```bash
+cp .envrc.example .envrc && direnv allow   # 初回のみ。.envrc は gitignore 済み
+aws iam list-account-aliases               # "hametuha" であることを確認（他のアカウントと取り違えない）
+```
+
+| ロググループ | 中身 |
+|---|---|
+| `/aws/ec2/hametuha/php-fpm/error` | PHP のエラー（Fatal・メモリ枯渇など） |
+| `/aws/ec2/hametuha/php-fpm/slow` | PHP-FPM のスローログ |
+| `/aws/ec2/hametuha/nginx/access` / `error` | nginx のアクセス・エラー |
+| `/aws/rds/instance/hametuha/slowquery` | RDS のスロークエリ |
+| `/aws/lambda/production-hametuha-health-check` | 死活監視 |
+
+**保持期間は30日**（RDS の error は90日、health-check は180日）。それより古い障害は追えないので、
+イシューに書くときはログの該当行を本文に貼っておくこと。
+
+```bash
+# 例: 直近7日の PHP メモリ枯渇
+aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
+  --start-time $(( ($(date +%s) - 7*86400) * 1000 )) \
+  --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
+```
+
 ## MCPサーバー（分析用）
 
 サイトのアクセス解析・検索パフォーマンス分析のため、以下のMCPサーバーを利用できます。
