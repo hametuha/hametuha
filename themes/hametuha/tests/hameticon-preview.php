@@ -27,7 +27,7 @@ foreach ($matches[1] as $name) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hameticon Font Preview</title>
-    <link rel="stylesheet" href="../dist/css/app.css">
+    <link rel="stylesheet" href="../assets/css/app.css">
     <style>
 
         * {

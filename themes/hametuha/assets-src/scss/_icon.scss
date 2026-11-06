@@ -3,13 +3,13 @@ $is-epub: false !default;
 @font-face {
   font-family: 'hameticon';
   @if $is-epub{
-    src: url('../../assets/fonts/hameticon.woff') format('woff');
+    src: url('../fonts/hameticon.woff') format('woff');
   } @else{
-    src:url('../../assets/fonts/hameticon.eot?#{$hash}');
-    src:url('../../assets/fonts/hameticon.eot?##{$hash}') format('embedded-opentype'),
-    url('../../assets/fonts/hameticon.woff?#{$hash}') format('woff'),
-    url('../../assets/fonts/hameticon.ttf?#{$hash}') format('truetype'),
-    url('../../assets/fonts/hameticon.svg?#{$hash}#hameticon') format('svg');
+    src:url('../fonts/hameticon.eot?#{$hash}');
+    src:url('../fonts/hameticon.eot?##{$hash}') format('embedded-opentype'),
+    url('../fonts/hameticon.woff?#{$hash}') format('woff'),
+    url('../fonts/hameticon.ttf?#{$hash}') format('truetype'),
+    url('../fonts/hameticon.svg?#{$hash}#hameticon') format('svg');
   }
   font-weight: normal;
   font-style: normal;

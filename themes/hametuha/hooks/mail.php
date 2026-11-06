@@ -156,6 +156,6 @@ if ( class_exists( 'Hametuha\Hamail\Pattern\Filters\UserFilterInputPattern' ) ) 
  * @return string[]
  */
 add_filter( 'hamail_css_path', function ( $path ) {
-	$path[] = get_template_directory() . '/dist/css/hamail.css';
+	$path[] = get_template_directory() . '/assets/css/hamail.css';
 	return $path;
 } );

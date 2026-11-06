@@ -7,14 +7,15 @@
     "url": "https://github.com/hametuha/hametuha.git"
   },
   "scripts": {
-    "package": "npm run clean && npm run copy-libs && npm run build:css && npm run build:js",
-    "clean": "rm -rf dist",
+    "package": "npm run clean && npm run copy-libs && npm run build:css && npm run build:blocks && npm run build:js",
+    "clean": "rm -rf assets/js assets/css assets/blocks assets/vendor",
     "copy-libs": "node bin/copy-libs.js",
-    "build:css": "sass ./assets/scss/:./dist/css/ --style=compressed --no-source-map --quiet-deps --load-path=node_modules --load-path=vendor --load-path=vendor/hametuha && postcss ./dist/css/**/*.css --use autoprefixer --replace --no-map",
-    "build:js": "grab-deps js assets/js dist/js && npm run dump",
-    "dump": "grab-deps dump dist/js,dist/css",
+    "build:css": "sass ./assets-src/scss/:./assets/css/ --style=compressed --no-source-map --quiet-deps --load-path=node_modules --load-path=vendor --load-path=vendor/hametuha && postcss ./assets/css/**/*.css --use autoprefixer --replace --no-map",
+    "build:js": "grab-deps js assets-src/js assets/js && npm run dump",
+    "dump": "grab-deps dump assets/js,assets/css",
     "watch": "npm-watch",
-    "compress-images": "node bin/compress-images.js"
+    "compress-images": "node bin/compress-images.js",
+    "build:blocks": "wp-scripts build --webpack-src-dir=assets-src/blocks --output-path=assets/blocks"
   },
   "author": "Hametuha inc.",
   "license": "LGPL-3.0-or-later",
@@ -37,13 +38,19 @@
   "watch": {
     "build:css": {
       "patterns": [
-        "assets/scss"
+        "assets-src/scss"
       ],
       "extensions": "scss"
     },
+    "build:blocks": {
+      "patterns": [
+        "assets-src/blocks"
+      ],
+      "extensions": "js,json,scss"
+    },
     "build:js": {
       "patterns": [
-        "assets/js"
+        "assets-src/js"
       ],
       "extensions": "js"
     }
@@ -51,13 +58,13 @@
   "grabDeps": {
     "namespace": "hametuha",
     "js": {
-      "srcDir": "assets/js",
-      "dumpDir": "dist/js",
+      "srcDir": "assets-src/js",
+      "dumpDir": "assets/js",
       "autoHandleGeneration": true
     },
     "css": {
-      "srcDir": "assets/scss",
-      "dumpDir": "dist/css",
+      "srcDir": "assets-src/scss",
+      "dumpDir": "assets/css",
       "autoHandleGeneration": true
     }
   }

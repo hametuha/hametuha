@@ -9,7 +9,7 @@
 		padding-top: $navbar-height;
 
 		&-text {
-			background: url("../../assets/img/jumbotron/hamenew.jpg?201608") bottom left no-repeat;
+			background: url("../img/jumbotron/hamenew.jpg?201608") bottom left no-repeat;
 			background-size: contain;
 			padding: 80px 40px 80px 30%;
 			-webkit-text-stroke: 2px white;
@@ -479,7 +479,7 @@
 
 		&__img {
 			height: 250px;
-			background: url("../../assets/img/jumbotron/hamenew-share.jpg") center center no-repeat;
+			background: url("../img/jumbotron/hamenew-share.jpg") center center no-repeat;
 			background-size: cover;
 			padding: 0;
 		}

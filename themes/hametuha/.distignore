@@ -15,8 +15,7 @@ phpcs.ruleset.xml
 phpunit.xml.dist
 README.md
 CLAUDE.md
-/assets/js
-/assets/scss
+/assets-src
 /bin
 tmp
 tests

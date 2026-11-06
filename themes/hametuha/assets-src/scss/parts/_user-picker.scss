@@ -23,7 +23,7 @@
 	&__loader {
 		display: none;
 		padding: 20px;
-		background: url('../../assets/img/ajax-loader-big.gif') center center no-repeat;
+		background: url('../img/ajax-loader-big.gif') center center no-repeat;
 		background-size: 33px 33px;
 
 		.loading + & {

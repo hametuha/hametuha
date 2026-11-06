@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /**
- * node_modules のライブラリを dist にコピーする（ビルドしないもの）
+ * node_modules のライブラリを assets/vendor にコピーする（ビルドしないもの）
  *
- * - Bootstrap 5（bundle 版）と bootbox を連結して dist/vendor/bootstrap.js にする
- * - select2 と日本語ファイル・CSS を dist/vendor/select2 にコピーする
+ * - Bootstrap 5（bundle 版）と bootbox を連結して assets/vendor/bootstrap.js にする
+ * - select2 と日本語ファイル・CSS を assets/vendor/select2 にコピーする
  *
- * dist/vendor は grab-deps dump の対象外（wp-dependencies.json に載せない）。
+ * assets/vendor は grab-deps dump の対象外（wp-dependencies.json に載せない）。
  *
  * 登録は hooks/assets.php で行っている。
  */
@@ -36,12 +36,12 @@ const read = ( file ) => fs.readFileSync( path.join( nodeModules, file ), 'utf8'
 console.log( 'Copying libraries:' );
 
 write(
-	'dist/vendor/bootstrap.js',
+	'assets/vendor/bootstrap.js',
 	[
 		read( 'bootstrap/dist/js/bootstrap.bundle.min.js' ),
 		read( 'bootbox/dist/bootbox.min.js' ),
 	].join( '\n;\n' )
 );
-write( 'dist/vendor/select2/select2.min.js', read( 'select2/dist/js/select2.min.js' ) );
-write( 'dist/vendor/select2/i18n/ja.js', read( 'select2/dist/js/i18n/ja.js' ) );
-write( 'dist/vendor/select2/select2.min.css', read( 'select2/dist/css/select2.min.css' ) );
+write( 'assets/vendor/select2/select2.min.js', read( 'select2/dist/js/select2.min.js' ) );
+write( 'assets/vendor/select2/i18n/ja.js', read( 'select2/dist/js/i18n/ja.js' ) );
+write( 'assets/vendor/select2/select2.min.css', read( 'select2/dist/css/select2.min.css' ) );

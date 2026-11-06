@@ -4,6 +4,6 @@
 	<meta charset="UTF-8" />
 	<title><?php wp_title( '' ); ?></title>
 	<meta name="viewport" content="width=device-width">
-	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri(); ?>/dist/css/epub.css?ver=<?php echo current_time( 'mysql' ); ?>" type="text/css" />
+	<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/epub.css?ver=<?php echo current_time( 'mysql' ); ?>" type="text/css" />
 </head>
 <body<?php do_action( 'epub_body_attr' ); ?>>
