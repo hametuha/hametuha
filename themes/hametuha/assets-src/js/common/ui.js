@@ -3,7 +3,8 @@
  */
 
 /*global Hametuha: true*/
-/*global Headroom: false*/
+
+import Headroom from './headroom';
 
 jQuery(document).ready(function ($) {
 

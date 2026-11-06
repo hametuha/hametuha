@@ -8,7 +8,6 @@
 .node-version
 .stylelintrc.json
 .wp_install_path
-gulpfile.js
 node_modules
 composer.lock
 package-lock.json
@@ -16,7 +15,7 @@ phpcs.ruleset.xml
 phpunit.xml.dist
 README.md
 CLAUDE.md
-webpack.config.js
+/assets-src
 /bin
 tmp
 tests

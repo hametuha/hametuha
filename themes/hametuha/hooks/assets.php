@@ -23,7 +23,7 @@ add_filter( 'wp_img_tag_add_auto_sizes', '__return_false' );
 add_action( 'init', function () {
 
 	// Bootstrap 5 (no jQuery dependency)
-	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/js/dist/bootstrap.js', [], '5.3.8', true );
+	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/vendor/bootstrap.js', [], '5.3.8', true );
 
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1&chws=1', null, null, false );
@@ -44,12 +44,12 @@ add_action( 'init', function () {
 	wp_register_script( 'recharts', 'https://unpkg.com/recharts@2.15.0/umd/Recharts.js', [ 'prop-types', 'react', 'react-dom' ], '2.15.0', true );
 
 	// Select2
-	wp_register_script( 'select2-src', get_template_directory_uri() . '/assets/js/dist/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
-	wp_register_script( 'select2', get_template_directory_uri() . '/assets/js/dist/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
-	wp_register_style( 'select2', get_template_directory_uri() . '/assets/css/select2.min.css', [], '4.0.3' );
+	wp_register_script( 'select2-src', get_template_directory_uri() . '/assets/vendor/select2/select2.min.js', [ 'jquery' ], '4.0.3', true );
+	wp_register_script( 'select2', get_template_directory_uri() . '/assets/vendor/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
+	wp_register_style( 'select2', get_template_directory_uri() . '/assets/vendor/select2/select2.min.css', [], '4.0.3' );
 
 	// メインJS
-	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/dist/common.js', [
+	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/common.js', [
 		'twitter-bootstrap',
 		'wp-api',
 		'font-plus',
@@ -58,7 +58,7 @@ add_action( 'init', function () {
 	wp_localize_script( 'hametuha-common', 'HametuhaGlobal', [] );
 
 	// シングルページ用JS
-	wp_register_script( 'hametuha-single', get_template_directory_uri() . '/assets/js/dist/single-post.js', [
+	wp_register_script( 'hametuha-single', get_template_directory_uri() . '/assets/js/single-post.js', [
 		'hametuha-common',
 		'chart-js',
 		'jquery-form',
@@ -67,19 +67,19 @@ add_action( 'init', function () {
 	], hametuha_version(), true );
 
 	// ログイン名変更用JS
-	wp_register_script( 'hametuha-login-changer', get_template_directory_uri() . '/assets/js/dist/components/login-change-helper.js', [
+	wp_register_script( 'hametuha-login-changer', get_template_directory_uri() . '/assets/js/components/login-change-helper.js', [
 		'jquery-form',
 		'hametuha-common',
 	], hametuha_version(), true );
 
 	// 同人になる用JS
-	wp_register_script( 'hametuha-become-author', get_template_directory_uri() . '/assets/js/dist/components/become-author.js', [
+	wp_register_script( 'hametuha-become-author', get_template_directory_uri() . '/assets/js/components/become-author.js', [
 		'jquery-form',
 		'hametuha-common',
 	], hametuha_version(), true );
 
 	// ソーシャル計測
-	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/dist/social.js', [ 'jquery' ], hametuha_version(), true );
+	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/social.js', [ 'jquery' ], hametuha_version(), true );
 
 	// メインCSS
 	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );
@@ -88,17 +88,17 @@ add_action( 'init', function () {
 	wp_register_style( 'hametuha-admin', get_template_directory_uri() . '/assets/css/admin.css', null, hametuha_version() );
 
 	// プロフィール変更用JS
-	wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/dist/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
+	wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
 
 	// フォローボタン
-	$path = '/assets/js/dist/components/follow-toggle.js';
+	$path = '/assets/js/components/follow-toggle.js';
 	wp_register_script( 'hametu-follow', get_stylesheet_directory_uri() . $path, [
 		'twitter-bootstrap',
 		'wp-api',
 	], filemtime( get_stylesheet_directory() . $path ), true );
 
 	// Watermark
-	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/dist/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
+	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
 
 	// 税金関係書類のCSS
 	wp_register_style( 'hametuha-accounting-paper', get_template_directory_uri() . '/assets/css/proof.css', [ 'hametuha-app' ], hametuha_version(), 'all' );

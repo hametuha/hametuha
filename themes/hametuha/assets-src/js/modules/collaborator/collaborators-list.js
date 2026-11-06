@@ -5,8 +5,8 @@
  * @deps wp-api-fetch, wp-element, moment
  */
 
-import CollaboratorAdd from "./_collaborator-add.jsx";
-import Collaborator from "./_collaborator.jsx";
+import CollaboratorAdd from "./_collaborator-add";
+import Collaborator from "./_collaborator";
 
 const { createRoot, render, useState, useEffect } = wp.element;
 

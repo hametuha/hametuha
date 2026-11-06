@@ -26,4 +26,7 @@ $warning: #eb763c;
   }
 }
 
-@import "admin/*";
+@import "admin/collaborator";
+@import "admin/general";
+@import "admin/series";
+@import "admin/tag-selector";

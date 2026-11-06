@@ -154,19 +154,28 @@ composer test
 
 ### JavaScript/CSS関連
 
-JS/CSSのトランスパイルおよび構文チェックは基本的にthemes/hametuhaの中で行います。
+JS/CSSのビルドは themes/hametuha の中で行います。破滅派のプラグイン群と同じく、
+**@kunoichi/grab-deps（中で @wordpress/scripts）＋ sass ＋ postcss（autoprefixer）** を使います（#361 で gulp から移行）。
+
+| 種類 | ソース | 出力 |
+|---|---|---|
+| JS | `assets-src/js/**/*.js` | `assets/js/` |
+| SCSS | `assets-src/scss/` | `assets/css/` |
+| エディタ用ブロック（block.json） | `assets-src/blocks/<名前>/` | `assets/blocks/<名前>/`（wp-scripts） |
+| そのままコピーするライブラリ（Bootstrap＋bootbox、select2） | `node_modules` | `assets/vendor/`（`bin/copy-libs.js`） |
+| 画像・フォント | `assets/img/`・`assets/fonts/` | （ソースのまま。Git 管理） |
+
+**`assets-src/` がソース、`assets/` が配布物。** `assets/` のうち `js`・`css`・`blocks`・`vendor` と `wp-dependencies.json` はビルドの生成物（`.gitignore` 済み）。
+デプロイ時は CI でビルドし、`assets-src/` は配布物から除外される（`.distignore`）。
 
 ```bash
-# ビルド
+# ビルド（clean → copy-libs → build:css → build:blocks → build:js → dump）
 cd themes/hametuha && npm run package
-# CSSのビルド
-cd themes/hametuha && npm run sass
-# JSのビルド（3種類あり、1つに統合予定）
-cd themes/hametuha && npm run commonjs # assets/js/src/common の中を連結して assets/js/src/common.js にする（廃止予定）
-cd themes/hametuha && npm run js # JSをミニファイする（廃止予定）
-cd themes/hametuha && npm run jsx # JSXを含むES Nextの記法をトランスパイルする
+# CSSだけ / JSだけ（JSは最後に wp-dependencies.json も作り直す）
+cd themes/hametuha && npm run build:css
+cd themes/hametuha && npm run build:js
 # 監視モード
-cd themes/hametuha && npm run watch 
+cd themes/hametuha && npm run watch
 ```
 
 #### 画像（assets/img）
@@ -187,7 +196,15 @@ cd themes/hametuha && npm run compress-images -- assets/img/foo.png
 
 Node のバージョンはリポジトリルートの `.node-version` で一元管理しています（CI もこれを読む）。
 
-トランスパイルには @kunoichi/grab-deps を一部使っており、これらのファイルではファイルヘッダーに依存関係が書いてあります。
+#### JS の書き方と依存関係（grab-deps）
+
+`assets-src/js` 以下の **.js ファイルは1本ずつ独立したスクリプト（ハンドル）としてビルド**され、
+`wp-dependencies.json` に登録されます。PHP（`hooks/assets.php`）がこれを読んで `wp_register_script` します。
+
+- **JSX も .js に書く**（以前は grab-deps 対応ファイルだけ便宜的に .jsx にしていたが、wp-scripts が .js の JSX を扱うので統一した）
+- **ハンドル名**は、ファイル先頭の `@handle` があればそれ。無ければ `hametuha-<ディレクトリ>-<ファイル名>` が自動で付く（`package.json` の `grabDeps`）
+- **依存関係**は、`import` した `@wordpress/*`（`wp-element` 等）や `jquery`、JSX の `react-jsx-runtime` が自動で入る。
+  グローバル変数で使うもの（`wp.apiFetch` を import せずに使う等）や、テーマ内の別ハンドルは `@deps` に書く
 
 ```js
 /*!
@@ -198,9 +215,13 @@ Node のバージョンはリポジトリルートの `.node-version` で一元�
  */
 ```
 
-これらの情報は wp-settings.json にまとめられ、PHPから自動で読み取られます。
-ハンドル名（@deps）や依存関係（@deps）が自動的に解決されます。
-grab-desp対応のJSファイルは便宜的に拡張子をJSXにしています。
+- ファイル同士は普通に `import` できる（読み込まれた側は呼び出し元にバンドルされる）。
+  `common.js` はかつて `common/*.js` を連結していたが、いまは import でまとめている
+- **`assets-src/js` の中に `blocks` という名前のディレクトリを作らない。** grab-deps がビルド後に出力先の `blocks` ディレクトリを丸ごと削除する
+- **エディタ用ブロックは `assets-src/blocks/<名前>/`**（`block.json` ＋ `index.js`）。wp-scripts でビルドし、`Hooks/Editor.php` が `assets/blocks/*/block.json` をすべて `register_block_type()` する。
+  `save()` の出力を変えると既存の記事が「無効なブロック」になるので注意
+- 手動で `wp_register_script` しているもの（`hametuha-common` など）は、`wp-dependencies.json` にも同じファイルが自動の名前で載る。
+  手動登録が先に動くので実害は無いが、いずれ json に一本化したい
 
 ### WP-CLI
 
@@ -262,7 +283,7 @@ composer wp -- option update cfturnstile_tested yes
 composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x00000000000000000000AA" => "1x0000000000000000000000000000000AA" ] );'
 ```
 
-- ログイン・登録画面の並び順はテーマの `assets/js/src/components/login-helper.js` が「または」の区切りの上へ移しています。
+- ログイン・登録画面の並び順はテーマの `assets-src/js/components/login-helper.js` が「または」の区切りの上へ移しています。
   ウィジェット（`.cf-turnstile`）もこのリストに入れているので、フォームに要素を足すときはここも見ること
 - 古い `wp-config-local.php` に `SKIP_RECAPTCHA_VERIFICATION` が残っていても、いまは何の効果もありません
 
@@ -392,8 +413,8 @@ WordPressテーマの開発では、1つの機能に関連するファイルが�
 
 - テンプレートファイル: `templates/news/`, `single-*.php`, `archive-*.php`
 - パーツテンプレート: `parts/loop-*.php`
-- スタイル: `assets/sass/parts/_*.scss`
-- JavaScript: `assets/js/src/components/*.jsx`
+- スタイル: `assets-src/scss/parts/_*.scss`
+- JavaScript: `assets-src/js/components/*.js`
 - PHPクラス: `src/Hametuha/Model/`, `src/Hametuha/Widget/`
 - フック: `hooks/*.php`
 - 関数: `functions/*.php`
