@@ -19,9 +19,58 @@
 
 @import "container";
 
-@import "parts/*";
+@import "parts/block_description";
+@import "parts/block_meta_date";
+@import "parts/book_list";
+@import "parts/campaign";
+@import "parts/card";
+@import "parts/comments";
+@import "parts/doujin";
+@import "parts/ebook";
+@import "parts/editor";
+@import "parts/embed";
+@import "parts/error";
+@import "parts/faq";
+@import "parts/feedback";
+@import "parts/form";
+@import "parts/header";
+@import "parts/heading";
+@import "parts/ideas";
+@import "parts/jumbotron";
+@import "parts/loop";
+@import "parts/modal";
+@import "parts/news";
+@import "parts/notification";
+@import "parts/pagination";
+@import "parts/ranking";
+@import "parts/related";
+@import "parts/requests";
+@import "parts/search";
+@import "parts/series";
+@import "parts/sidebar";
+@import "parts/slick-theme";
+@import "parts/slick";
+@import "parts/testimonials";
+@import "parts/twitter";
+@import "parts/user-picker";
+@import "parts/well";
+@import "parts/widget_taxonomy_list";
 
-@import "components/*";
+@import "components/amazon";
+@import "components/books";
+@import "components/footer";
+@import "components/front";
+@import "components/loading";
+@import "components/quotes";
+@import "components/resign";
+@import "components/share";
+@import "components/single_post";
+@import "components/stats";
+@import "components/submenu";
+@import "components/terms";
+@import "components/thread";
+@import "components/toast";
+@import "components/watermark";
 
-@import "print/*";
+@import "print/single";
 

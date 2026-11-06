@@ -50,12 +50,12 @@ class SeriesList extends SeriesBase {
 			if ( ! $this->is_series_editor() ) {
 				return;
 			}
-			wp_enqueue_script( 'series-helper', get_stylesheet_directory_uri() . '/assets/js/dist/admin/series-helper.js', [
+			wp_enqueue_script( 'series-helper', get_stylesheet_directory_uri() . '/dist/js/admin/series-helper.js', [
 				'jquery-ui-sortable',
 				'backbone',
 				'underscore',
 				'jquery-effects-highlight',
-			], filemtime( get_stylesheet_directory() . '/assets/js/dist/admin/series-helper.js' ), true );
+			], filemtime( get_stylesheet_directory() . '/dist/js/admin/series-helper.js' ), true );
 		} );
 		// Display errors if edited after publication.
 		add_action( 'admin_notices', [ $this, 'render_series_errors' ] );

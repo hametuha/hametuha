@@ -24,7 +24,7 @@ body.quote{
       background-color: nth($vars, 2);
       &:before{
         opacity: nth($vars, 3);
-        background-image: url("../img/quote/style-0#{$i}.png");
+        background-image: url("../../assets/img/quote/style-0#{$i}.png");
       }
       .quote-body{
         font-family: nth($vars, 4);

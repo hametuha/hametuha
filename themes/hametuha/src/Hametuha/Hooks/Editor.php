@@ -46,7 +46,7 @@ class Editor extends Singleton {
 			// No gutenberg.
 			return;
 		}
-		$asset_dir = get_template_directory() . '/assets/js/dist/blocks';
+		$asset_dir = get_template_directory() . '/dist/js/editor-blocks';
 		if ( ! is_dir( $asset_dir ) ) {
 			return;
 		}
@@ -61,10 +61,10 @@ class Editor extends Singleton {
 			$setting  = [
 				'editor_script' => $handle,
 			];
-			$css_path = get_template_directory() . '/assets/css/blocks/' . $name . '.css';
+			$css_path = get_template_directory() . '/dist/css/blocks/' . $name . '.css';
 			if ( file_exists( $css_path ) ) {
 				$css_version = filemtime( $css_path );
-				wp_register_style( $handle, get_template_directory_uri() . '/assets/css/blocks/' . $name . '.css', [], $css_version );
+				wp_register_style( $handle, get_template_directory_uri() . '/dist/css/blocks/' . $name . '.css', [], $css_version );
 				$setting['editor_style'] = $handle;
 			}
 			// TODO: Attributes can define from js.
@@ -119,7 +119,7 @@ class Editor extends Singleton {
 	 * Enqueue editor assets.
 	 */
 	public function editor_assets() {
-		$rel_path = '/assets/css/editor-style-block.css';
+		$rel_path = '/dist/css/editor-style-block.css';
 		wp_enqueue_style( 'hametuha-block-editor-style', get_template_directory_uri() . $rel_path, [], filemtime( get_template_directory() . $rel_path ) );
 	}
 

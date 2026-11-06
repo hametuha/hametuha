@@ -51,8 +51,7 @@ Thumbs.db
 
 # Theme build files
 /themes/hametuha/vendor/
-/themes/hametuha/assets/css/
-/themes/hametuha/assets/js/dist/
+/themes/hametuha/dist/
 /themes/hametuha/wp-dependencies.json
 /themes/hametuha/tests/sample/はい
 

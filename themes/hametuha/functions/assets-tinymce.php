@@ -12,10 +12,10 @@ add_action( 'admin_head', function () {
 	switch ( $screen->post_type ) {
 		case 'post':
 		case 'series':
-			add_editor_style( 'assets/css/editor-style-post.css' );
+			add_editor_style( 'dist/css/editor-style-post.css' );
 			break;
 		default:
-			add_editor_style( 'assets/css/editor-style.css' );
+			add_editor_style( 'dist/css/editor-style.css' );
 			break;
 	}
 } );
@@ -32,7 +32,7 @@ add_filter( 'tiny_mce_before_init', function ( $init_array, $editor_id ) {
 
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 
-	$css_dir = get_stylesheet_directory() . '/assets/css';
+	$css_dir = get_stylesheet_directory() . '/dist/css';
 	if ( ! isset( $init_array['cache_suffix'] ) ) {
 		$init_array['cache_suffix'] = '?foo=var';
 	}
@@ -159,7 +159,7 @@ add_action( 'edit_form_after_title', function ( WP_Post $post ) {
  * @return array
  */
 add_filter( 'mce_external_plugins', function ( array $plugin_array ) {
-	$plugin_array['hametuha'] = get_stylesheet_directory_uri() . '/assets/js/dist/admin/mce.js';
+	$plugin_array['hametuha'] = get_stylesheet_directory_uri() . '/dist/js/admin/mce.js';
 
 	return $plugin_array;
 } );

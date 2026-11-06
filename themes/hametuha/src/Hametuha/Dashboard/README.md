@@ -67,7 +67,7 @@ add_filter( 'hashboard_dashboard_blocks', function ( $blocks ) {
 } );
 ```
 
-**Reactコンポーネント:** `assets/js/src/hashboard/my-widget.jsx`
+**Reactコンポーネント:** `assets/js/hashboard/my-widget.js`
 
 ```jsx
 /*!
@@ -165,7 +165,7 @@ add_filter( 'hashboard_screens', function ( $screens ) {
 </div>
 ```
 
-**Reactコンポーネント:** `assets/js/src/hashboard/my-screen.jsx`
+**Reactコンポーネント:** `assets/js/hashboard/my-screen.js`
 
 ```jsx
 /*!
@@ -257,6 +257,6 @@ npm run gulp sass
 
 - `hooks/dashboard.php` - hashboard設定・フィルター
 - `hooks/assets.php` - スクリプト登録・エンキュー
-- `assets/js/src/hashboard/` - hashboard用JSXファイル
+- `assets/js/hashboard/` - hashboard用JSファイル
 - `assets/sass/hashboard.scss` - hashboard用スタイル
 - `templates/dashboard/` - 画面テンプレート

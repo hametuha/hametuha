@@ -1,61 +1,64 @@
 {
-	"name": "hametuha",
-	"homepage": "https://hametuha.com",
-	"description": "A WordPress Theme for Hametuha.",
-	"main": "gulpfile.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/hametuha/hametuha.git"
-	},
-	"scripts": {
-		"package": "gulp build",
-		"watch": "gulp watch",
-		"display": "gulp bs",
-		"gulp": "gulp",
-		"gulp:task": "gulp --tasks",
-		"compress-images": "node bin/compress-images.js"
-	},
-	"author": "Hametuha inc.",
-	"license": "LGPL-3.0-or-later",
-	"devDependencies": {
-		"@babel/core": "^7.28.4",
-		"@babel/plugin-transform-react-jsx": "^7.0.0",
-		"@babel/preset-env": "^7.28.3",
-		"babel-eslint": "^10.0.1",
-		"babel-loader": "^8.0.5",
-		"bootbox": "^6.0.0",
-		"bootstrap": "^5.3.8",
-		"eslint": "^5.4.0",
-		"eslint-plugin-wordpress": "^0.1.0",
-		"glob": "^13.0.6",
-		"gulp": "^4.0.0",
-		"gulp-autoprefixer": "^6.0.0",
-		"gulp-concat": "^2.6.0",
-		"gulp-filter": "^5.1.0",
-		"gulp-jshint": "^2.1.0",
-		"gulp-load-plugins": "^2.0",
-		"gulp-notify": "^3.2.0",
-		"gulp-plumber": "^1.2.0",
-		"gulp-rename": "^1.4.0",
-		"gulp-sass": "^5.1.0",
-		"gulp-sass-glob": "^1.0.9",
-		"gulp-sourcemaps": "^2.6.4",
-		"gulp-uglify": "^3.0.1",
-		"jshint": "^2.9.1",
-		"jshint-stylish": "^2.0",
-		"md5-file": "^5.0.0",
-		"merge-stream": "^1.0.1",
-		"prop-types": "^15.7.2",
-		"sass": "^1.105.2",
-		"select2": "^4.1.0",
-		"sharp": "^0.35.5",
-		"terser-webpack-plugin": "^5.6.1",
-		"vinyl-named": "^1.1.0",
-		"webpack": "^5.112.0",
-		"webpack-stream": "^6.1.2"
-	},
-	"engines": {
-		"node": ">=22"
-	},
-	"dependencies": {}
+  "name": "hametuha",
+  "homepage": "https://hametuha.com",
+  "description": "A WordPress Theme for Hametuha.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hametuha/hametuha.git"
+  },
+  "scripts": {
+    "package": "npm run clean && npm run copy-libs && npm run build:css && npm run build:js",
+    "clean": "rm -rf dist",
+    "copy-libs": "node bin/copy-libs.js",
+    "build:css": "sass ./assets/scss/:./dist/css/ --style=compressed --no-source-map --quiet-deps --load-path=node_modules --load-path=vendor --load-path=vendor/hametuha && postcss ./dist/css/**/*.css --use autoprefixer --replace --no-map",
+    "build:js": "grab-deps js assets/js dist/js && npm run dump",
+    "dump": "grab-deps dump dist/js,dist/css",
+    "watch": "npm-watch",
+    "compress-images": "node bin/compress-images.js"
+  },
+  "author": "Hametuha inc.",
+  "license": "LGPL-3.0-or-later",
+  "devDependencies": {
+    "@kunoichi/grab-deps": "^3.3.0",
+    "@wordpress/scripts": "^37.1.0",
+    "autoprefixer": "^10.6.2",
+    "bootbox": "^6.0.0",
+    "bootstrap": "^5.3.8",
+    "npm-watch": "^0.13.0",
+    "postcss": "^8.5.32",
+    "postcss-cli": "^12.0.0",
+    "sass": "^1.105.2",
+    "select2": "^4.1.0",
+    "sharp": "^0.35.5"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "watch": {
+    "build:css": {
+      "patterns": [
+        "assets/scss"
+      ],
+      "extensions": "scss"
+    },
+    "build:js": {
+      "patterns": [
+        "assets/js"
+      ],
+      "extensions": "js"
+    }
+  },
+  "grabDeps": {
+    "namespace": "hametuha",
+    "js": {
+      "srcDir": "assets/js",
+      "dumpDir": "dist/js",
+      "autoHandleGeneration": true
+    },
+    "css": {
+      "srcDir": "assets/scss",
+      "dumpDir": "dist/css",
+      "autoHandleGeneration": true
+    }
+  }
 }
