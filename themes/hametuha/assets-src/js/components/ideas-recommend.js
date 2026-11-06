@@ -14,12 +14,12 @@ const { toast } = wp.hametuha;
  */
 const collapse = () => {
 	// Bootstrap 5のモーダルを閉じる
-	const modalElement = document.getElementById( 'ideaRecommendForm');
+	const modalElement = document.getElementById( 'ideaRecommendForm' );
 	if ( modalElement ) {
 		modalElement.classList.remove( 'show' );
 	}
 	// フォームをリセット
-	$( '#idea-recommender' )[0]?.reset();
+	$( '#idea-recommender' )[ 0 ]?.reset();
 	$( '#recommend_to' ).val( '' ).trigger( 'change' );
 };
 
@@ -39,18 +39,21 @@ $( document ).on( 'submit', '#idea-recommender', function ( e ) {
 	$button.val( '送信中…' );
 	// リクエスト実行
 	apiFetch( {
-		path: `hametuha/v1/idea/${post_id}/?user_id=${recommend_to}`,
+		path: `hametuha/v1/idea/${ post_id }/?user_id=${ recommend_to }`,
 		method: 'PUT',
-	} ).then( ( response ) => {
-		toast( response.message );
-		// フォームを閉じる
-		collapse();
-	} ).catch( ( response ) => {
-		const message = response.message || '失敗しました。';
-		toast( message, 'danger', 'エラー' );
-	} ).finally( () => {
-		$button.attr( 'disabled', null ).val( originalText );
-	} );
+	} )
+		.then( ( response ) => {
+			toast( response.message );
+			// フォームを閉じる
+			collapse();
+		} )
+		.catch( ( response ) => {
+			const message = response.message || '失敗しました。';
+			toast( message, 'danger', 'エラー' );
+		} )
+		.finally( () => {
+			$button.attr( 'disabled', null ).val( originalText );
+		} );
 } );
 
 // キャンセルボタンのクリック処理

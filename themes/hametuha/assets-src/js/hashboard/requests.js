@@ -16,7 +16,7 @@ const { LoadingIndicator, Pagination, toast } = wp.hametuha;
  * Format date to localized string
  *
  * @param {string} dateString
- * @returns {string}
+ * @return {string}
  */
 const formatDate = ( dateString ) => {
 	if ( ! dateString ) {
@@ -34,6 +34,10 @@ const formatDate = ( dateString ) => {
 
 /**
  * Single request item component
+ * @param root0
+ * @param root0.request
+ * @param root0.onApprove
+ * @param root0.onDeny
  */
 const RequestItem = ( { request, onApprove, onDeny } ) => {
 	const approved = request.ratio >= 0;
@@ -44,7 +48,14 @@ const RequestItem = ( { request, onApprove, onDeny } ) => {
 	};
 
 	const handleDeny = () => {
-		if ( window.confirm( __( '辞退してもよろしいですか？　この操作は取り消せません。', 'hametuha' ) ) ) {
+		if (
+			window.confirm(
+				__(
+					'辞退してもよろしいですか？　この操作は取り消せません。',
+					'hametuha'
+				)
+			)
+		) {
 			onDeny( request.id, request.post_id );
 		}
 	};
@@ -56,16 +67,25 @@ const RequestItem = ( { request, onApprove, onDeny } ) => {
 				<small>{ formatDate( request.updated ) }</small>
 			</div>
 			<p className="mb-1 text-muted">
-				{ __( '作品集', 'hametuha' ) }『<a href={ request.permalink }>{ request.post_title }</a>』{ __( 'に', 'hametuha' ) } { request.name }{ __( 'さんが', 'hametuha' ) }（{ request.label }）{ __( 'として', 'hametuha' ) }
+				{ __( '作品集', 'hametuha' ) }『
+				<a href={ request.permalink }>{ request.post_title }</a>』
+				{ __( 'に', 'hametuha' ) } { request.name }
+				{ __( 'さんが', 'hametuha' ) }（{ request.label }）
+				{ __( 'として', 'hametuha' ) }
 				{ approved ? (
 					<strong>{ __( '参加中', 'hametuha' ) }</strong>
 				) : (
-					<span>{ __( '招待を受け付けています。', 'hametuha' ) }</span>
+					<span>
+						{ __( '招待を受け付けています。', 'hametuha' ) }
+					</span>
 				) }
-				{ __( '報酬はロイヤリティの', 'hametuha' ) } <strong>{ revenue }%</strong> { __( 'です。', 'hametuha' ) }
+				{ __( '報酬はロイヤリティの', 'hametuha' ) }{ ' ' }
+				<strong>{ revenue }%</strong> { __( 'です。', 'hametuha' ) }
 			</p>
 			<p className="text-muted text-end">
-				<small className="badge text-bg-light">{ __( 'アクション', 'hametuha' ) }</small>
+				<small className="badge text-bg-light">
+					{ __( 'アクション', 'hametuha' ) }
+				</small>
 			</p>
 			<p className="text-end hametuha-request-actions">
 				{ ! approved && (
@@ -89,6 +109,8 @@ const RequestItem = ( { request, onApprove, onDeny } ) => {
 
 /**
  * Request list component
+ * @param root0
+ * @param root0.type
  */
 const RequestList = ( { type } ) => {
 	const [ loading, setLoading ] = useState( false );
@@ -111,7 +133,8 @@ const RequestList = ( { type } ) => {
 			const data = await response.json();
 			setRequests( data );
 		} catch ( error ) {
-			const message = error?.message || __( 'エラーが発生しました。', 'hametuha' );
+			const message =
+				error?.message || __( 'エラーが発生しました。', 'hametuha' );
 			if ( toast ) {
 				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
 			}
@@ -124,69 +147,90 @@ const RequestList = ( { type } ) => {
 		fetchRequests( 1 );
 	}, [ fetchRequests ] );
 
-	const handleApprove = useCallback( async ( userId, postId ) => {
-		setLoading( true );
-		try {
-			const response = await apiFetch( {
-				path: '/hametuha/v1/collaborators/invitations/me',
-				method: 'POST',
-				data: {
-					series_id: postId,
-				},
-			} );
+	const handleApprove = useCallback(
+		async ( userId, postId ) => {
+			setLoading( true );
+			try {
+				const response = await apiFetch( {
+					path: '/hametuha/v1/collaborators/invitations/me',
+					method: 'POST',
+					data: {
+						series_id: postId,
+					},
+				} );
 
-			if ( toast ) {
-				toast( response.message, 'success', __( '成功', 'hametuha' ) );
+				if ( toast ) {
+					toast(
+						response.message,
+						'success',
+						__( '成功', 'hametuha' )
+					);
+				}
+				fetchRequests( currentPage );
+			} catch ( error ) {
+				let message = __( 'エラーが発生しました。', 'hametuha' );
+				if ( error?.message ) {
+					message += error.message;
+				}
+				if ( toast ) {
+					toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+				}
+				setLoading( false );
 			}
-			fetchRequests( currentPage );
-		} catch ( error ) {
-			let message = __( 'エラーが発生しました。', 'hametuha' );
-			if ( error?.message ) {
-				message += error.message;
-			}
-			if ( toast ) {
-				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
-			}
-			setLoading( false );
-		}
-	}, [ currentPage, fetchRequests ] );
+		},
+		[ currentPage, fetchRequests ]
+	);
 
-	const handleDeny = useCallback( async ( userId, postId ) => {
-		setLoading( true );
-		try {
-			const response = await apiFetch( {
-				path: '/hametuha/v1/collaborators/invitations/me',
-				method: 'DELETE',
-				data: {
-					series_id: postId,
-				},
-			} );
+	const handleDeny = useCallback(
+		async ( userId, postId ) => {
+			setLoading( true );
+			try {
+				const response = await apiFetch( {
+					path: '/hametuha/v1/collaborators/invitations/me',
+					method: 'DELETE',
+					data: {
+						series_id: postId,
+					},
+				} );
 
-			if ( toast ) {
-				toast( response.message, 'success', __( '成功', 'hametuha' ) );
+				if ( toast ) {
+					toast(
+						response.message,
+						'success',
+						__( '成功', 'hametuha' )
+					);
+				}
+				fetchRequests( currentPage );
+			} catch ( error ) {
+				let message = __( 'エラーが発生しました。', 'hametuha' );
+				if ( error?.message ) {
+					message += error.message;
+				}
+				if ( toast ) {
+					toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+				}
+				setLoading( false );
 			}
-			fetchRequests( currentPage );
-		} catch ( error ) {
-			let message = __( 'エラーが発生しました。', 'hametuha' );
-			if ( error?.message ) {
-				message += error.message;
-			}
-			if ( toast ) {
-				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
-			}
-			setLoading( false );
-		}
-	}, [ currentPage, fetchRequests ] );
+		},
+		[ currentPage, fetchRequests ]
+	);
 
-	const handlePageChange = useCallback( ( page ) => {
-		fetchRequests( page );
-	}, [ fetchRequests ] );
+	const handlePageChange = useCallback(
+		( page ) => {
+			fetchRequests( page );
+		},
+		[ fetchRequests ]
+	);
 
 	return (
-		<div className="hametuha-hb-request-list" style={ { position: 'relative' } }>
+		<div
+			className="hametuha-hb-request-list"
+			style={ { position: 'relative' } }
+		>
 			{ totalPages > 0 && (
 				<p className="text-muted text-end">
-					{ currentPage } / { totalPages }{ __( 'ページ', 'hametuha' ) }
+					{ currentPage } / { totalPages }
+					{ __( 'ページ', 'hametuha' ) }
 				</p>
 			) }
 
@@ -204,7 +248,9 @@ const RequestList = ( { type } ) => {
 			) : (
 				! loading && (
 					<div className="alert alert-secondary">
-						<p className="mb-0">{ __( 'リクエストはありません。', 'hametuha' ) }</p>
+						<p className="mb-0">
+							{ __( 'リクエストはありません。', 'hametuha' ) }
+						</p>
 					</div>
 				)
 			) }

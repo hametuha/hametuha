@@ -16,6 +16,7 @@ $gap: 8px;
 #registerform,
 #lostpasswordform,
 #resetpassform {
+
 	.button-primary {
 		background-color: #222;
 		border-color: #000;
@@ -41,18 +42,18 @@ $gap: 8px;
 		color: #ccc;
 		margin: $gap * 4 0;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			border-top: 1px solid #eee;
 			content: "";
 			flex-grow: 1;
 		}
 
-		&:before {
+		&::before {
 			margin-right: 1rem;
 		}
 
-		&:after {
+		&::after {
 			margin-left: 1rem;
 		}
 	}
@@ -112,6 +113,7 @@ $gap: 8px;
 
 // 登録フォームのデザイン
 .login-action-register {
+
 	#user_login,
 	#user_message {
 		margin-bottom: 5px;

@@ -12,7 +12,7 @@ const { __ } = wp.i18n;
 const { toast, formToData } = wp.hametuha;
 
 // 削除ボタンを押したらREST APIを叩く
-$( document ).on( 'click', '.testimonial-delete', function( e ) {
+$( document ).on( 'click', '.testimonial-delete', function ( e ) {
 	e.preventDefault();
 	const $button = $( this );
 	if ( $button.prop( 'disabled' ) ) {
@@ -22,14 +22,16 @@ $( document ).on( 'click', '.testimonial-delete', function( e ) {
 	$button.prop( 'disabled', true ).text( __( '削除中…', 'hametuha' ) );
 	apiFetch( {
 		path: $button.attr( 'data-path' ),
-		method: 'delete'
-	} ).then( ( res ) => {
-		toast( res.message, 'success', __( '削除完了', 'hametuha' ) );
-		$button.parents( '.testimonialList__item' ).remove();
-	} ).catch( ( res ) => {
-		toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
-		$button.prop( 'disabled', null ).text( __( '削除', 'hametuha' ) );
-	} );
+		method: 'delete',
+	} )
+		.then( ( res ) => {
+			toast( res.message, 'success', __( '削除完了', 'hametuha' ) );
+			$button.parents( '.testimonialList__item' ).remove();
+		} )
+		.catch( ( res ) => {
+			toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
+			$button.prop( 'disabled', null ).text( __( '削除', 'hametuha' ) );
+		} );
 } );
 
 // レビューの編集（編集専用）
@@ -40,11 +42,22 @@ $( document ).on( 'submit', '.testimonial-edit-form', function ( e ) {
 	const commentId = $form.attr( 'data-id' );
 
 	// 編集フィールド（基本 + 編集専用）
-	const fields = [ 'source', 'url', 'rank', 'text', 'display', 'priority', 'excerpt' ];
+	const fields = [
+		'source',
+		'url',
+		'rank',
+		'text',
+		'display',
+		'priority',
+		'excerpt',
+	];
 
-	const data = formToData( this, fields.map( ( name ) => {
-		return `testimonial-${name}`;
-	} ) );
+	const data = formToData(
+		this,
+		fields.map( ( name ) => {
+			return `testimonial-${ name }`;
+		} )
+	);
 
 	// 送信中の処理
 	$button.prop( 'disabled', true );
@@ -52,17 +65,19 @@ $( document ).on( 'submit', '.testimonial-edit-form', function ( e ) {
 	$button.val( __( '送信中…', 'hametuha' ) );
 
 	apiFetch( {
-		path: `hametuha/v1/testimonials/${commentId}/`,
+		path: `hametuha/v1/testimonials/${ commentId }/`,
 		method: 'put',
 		data,
-	} ).then( ( res ) => {
-		toast( res.message, 'success', __( '成功', 'hametuha' ) );
-		// 編集成功後はページをリロード
-		setTimeout( () => {
-			window.location.reload();
-		}, 1500 );
-	} ).catch( ( res ) => {
-		toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
-		$button.prop( 'disabled', false ).val( originalText );
-	} );
+	} )
+		.then( ( res ) => {
+			toast( res.message, 'success', __( '成功', 'hametuha' ) );
+			// 編集成功後はページをリロード
+			setTimeout( () => {
+				window.location.reload();
+			}, 1500 );
+		} )
+		.catch( ( res ) => {
+			toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
+			$button.prop( 'disabled', false ).val( originalText );
+		} );
 } );

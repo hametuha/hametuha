@@ -48,10 +48,11 @@
 		border-radius: 3px;
 		background-color: #f0f0f0;
 		color: $shade-font;
-		font-weight: normal;
+		font-weight: 400;
 	}
 
 	&__actions {
+
 		.btn + .btn {
 			margin-left: 10px;
 		}

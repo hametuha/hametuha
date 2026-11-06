@@ -9,11 +9,12 @@
 		padding-top: $navbar-height;
 
 		&-text {
-			background: url("../img/jumbotron/hamenew.jpg?201608") bottom left no-repeat;
+			background: url(../img/jumbotron/hamenew.jpg?201608) bottom left no-repeat;
 			background-size: contain;
 			padding: 80px 40px 80px 30%;
 			-webkit-text-stroke: 2px white;
 			paint-order: stroke fill;
+
 			@include mq-max($screen-sm-max) {
 				padding: 20px 0;
 			}
@@ -23,6 +24,7 @@
 			font-size: 3em;
 			margin-bottom: 0.5em;
 			font-family: $work-bold-sans;
+
 			@include mq-max($screen-xs-max) {
 				font-size: 2em;
 			}
@@ -32,6 +34,7 @@
 			font-size: 1.2em;
 			line-height: 1.4;
 			font-weight: $font-weight-bold;
+
 			@include mq-max($screen-xs-max) {
 				font-size: 1em;
 			}
@@ -63,16 +66,17 @@
 	}
 
 	&__title {
-		font-weight: bold;
+		font-weight: 700;
 		word-break: auto-phrase;
 
 		small {
-			font-weight: normal;
+			font-weight: 400;
 		}
 	}
 
 	& + .post-title-thumbnail {
 		margin-top: 20px;
+
 		@media only screen and (max-width: $screen-xs-max) {
 			margin-top: 0;
 		}
@@ -101,6 +105,7 @@
 			position: relative;
 			align-items: center;
 			min-height: 80px;
+
 			@include transition(background-color 0.3s ease-in-out, color 0.3s ease-in-out);
 
 			.news-card & {
@@ -123,7 +128,9 @@
 
 		&__image {
 			margin-bottom: 0.5em;
+
 			.news-list__vertical & {
+
 				@media only screen and (min-width: $screen-sm-max + 1) {
 					max-height: 200px;
 					overflow: hidden;
@@ -195,12 +202,14 @@
 			display: block;
 			padding: 15px;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				color: #000;
 				text-decoration: none;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				color: $brand-primary;
 				text-decoration: none;
 				background: #eee;
@@ -213,7 +222,7 @@
 		}
 
 		&__name {
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		&__position {
@@ -230,6 +239,7 @@
 	}
 
 	&-keywords {
+
 		&__link {
 			display: inline-block;
 			padding: 5px 10px;
@@ -241,13 +251,15 @@
 			border-radius: 2px;
 			transition: color 0.25s linear, background-color 0.25s linear;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				color: $brand-primary;
 				background-color: #fff;
 				text-decoration: none;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				color: #fff;
 				background-color: $brand-primary;
 			}
@@ -255,6 +267,7 @@
 	}
 
 	&-ad {
+
 		&--head {
 			margin-top: 20px;
 			margin-bottom: 20px;
@@ -287,6 +300,7 @@
 	}
 
 	&-related {
+
 		&__title {
 			margin: 0;
 		}
@@ -300,12 +314,13 @@
 	}
 
 	&-related {
+
 		@extend %divider-box;
 
 		&__title {
 			margin: 0 0 10px;
 			font-size: 18px;
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		&__list {
@@ -325,17 +340,19 @@
 	}
 
 	&-books {
+
 		@extend %divider-box;
 
 		&__title {
 			margin: 0 0 10px;
 			font-size: 18px;
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		&__list {
 			margin: 0 0 20px;
 			padding: 0;
+
 			@include clearfix();
 		}
 
@@ -352,7 +369,8 @@
 				border: none !important;
 				float: left;
 				width: 50%;
-				&:nth-child( 2n + 1 ) {
+
+				&:nth-child(2n + 1) {
 					clear: left;
 				}
 			}
@@ -363,14 +381,17 @@
 			max-width: 120px;
 			width: auto;
 			height: auto;
+
 			@media only screen and (max-width: $screen-xs-max) {
 				max-width: 80px;
 			}
 		}
 
 		&__desc {
+
 			.news-books__image + & {
 				margin-left: 120px + 20px;
+
 				@media only screen and (max-width: $screen-xs-max) {
 					margin-left: 80px + 10px;
 				}
@@ -386,12 +407,14 @@
 			display: block;
 			padding: 10px;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				color: #000;
 				text-decoration: none;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				background: #eee;
 				text-decoration: none;
 				color: $brand-primary;
@@ -402,7 +425,7 @@
 			font-size: 18px;
 			display: block;
 			margin-bottom: 10px;
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		&__author,
@@ -424,7 +447,7 @@
 
 		&__title {
 			font-size: 20px;
-			font-weight: bold;
+			font-weight: 700;
 		}
 
 		i {
@@ -432,6 +455,7 @@
 		}
 
 		&__map {
+
 			&--inner {
 				height: 250px;
 			}
@@ -458,7 +482,7 @@
 
 		&__title {
 			font-size: 16px;
-			font-weight: bold;
+			font-weight: 700;
 			text-align: center;
 		}
 
@@ -479,7 +503,7 @@
 
 		&__img {
 			height: 250px;
-			background: url("../img/jumbotron/hamenew-share.jpg") center center no-repeat;
+			background: url(../img/jumbotron/hamenew-share.jpg) center center no-repeat;
 			background-size: cover;
 			padding: 0;
 		}
@@ -500,6 +524,7 @@
 	}
 
 	&-pager {
+
 		@include clearfix();
 		margin: 20px 0 0;
 		padding: 0;
@@ -518,6 +543,7 @@
 			@media only screen and (max-width: $screen-sm-max) {
 				width: 100%;
 				float: none;
+
 				&:nth-child(even) a {
 					border-left: none;
 					border-top: 1px solid $thin-border;
@@ -526,6 +552,7 @@
 
 			&.previous a {
 				border-right: 1px solid $thin-border;
+
 				@media only screen and (max-width: $screen-sm-max) {
 					border-right: none;
 				}
@@ -564,7 +591,8 @@
 				box-sizing: content-box;
 				position: relative;
 
-				&:link, &:visited {
+				&:link,
+				&:visited {
 					color: #000;
 					text-decoration: none;
 				}
@@ -590,6 +618,7 @@
 	}
 
 	&-sidebar {
+
 		.widget-title {
 			font-weight: $font-weight-bold;
 		}

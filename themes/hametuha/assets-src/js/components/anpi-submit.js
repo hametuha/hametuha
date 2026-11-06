@@ -28,7 +28,6 @@ const AnpiSubmitComponent = () => {
 			if ( anpiButton ) {
 				e.preventDefault();
 				openModal();
-				return;
 			}
 		};
 
@@ -89,7 +88,12 @@ const AnpiSubmitComponent = () => {
 			} );
 
 			if ( response.success ) {
-				setMessage( __( 'めつかれさまでした。安否報告を受け付けました。', 'hametuha' ) );
+				setMessage(
+					__(
+						'めつかれさまでした。安否報告を受け付けました。',
+						'hametuha'
+					)
+				);
 				setMessageType( 'success' );
 				setTimeout( () => {
 					closeModal();
@@ -97,10 +101,14 @@ const AnpiSubmitComponent = () => {
 					window.location.href = response.post.url;
 				}, 1500 );
 			} else {
-				throw new Error( response.message || __( '投稿に失敗しました。', 'hametuha' ) );
+				throw new Error(
+					response.message || __( '投稿に失敗しました。', 'hametuha' )
+				);
 			}
 		} catch ( error ) {
-			setMessage( error.message || __( '投稿に失敗しました。', 'hametuha' ) );
+			setMessage(
+				error.message || __( '投稿に失敗しました。', 'hametuha' )
+			);
 			setMessageType( 'error' );
 		} finally {
 			setIsLoading( false );
@@ -169,17 +177,27 @@ const AnpiSubmitComponent = () => {
 									className="form-control"
 									rows="5"
 									value={ content }
-									onChange={ ( e ) => setContent( e.target.value ) }
+									onChange={ ( e ) =>
+										setContent( e.target.value )
+									}
 									disabled={ isLoading }
 									ref={ contentInputRef }
-									placeholder={ __( '安否情報を入力してください...', 'hametuha' ) }
+									placeholder={ __(
+										'安否情報を入力してください…',
+										'hametuha'
+									) }
 									required
 								/>
 							</div>
 
 							<p className="mt-3">
-								{ __( '長々と書きたい方はこちら 👉 ', 'hametuha' ) }
-								<a href="/wp-admin/edit.php?post_type=anpi">{ __( '長文安否報告', 'hametuha' ) }</a>
+								{ __(
+									'長々と書きたい方はこちら 👉 ',
+									'hametuha'
+								) }
+								<a href="/wp-admin/edit.php?post_type=anpi">
+									{ __( '長文安否報告', 'hametuha' ) }
+								</a>
 							</p>
 						</div>
 
@@ -197,7 +215,9 @@ const AnpiSubmitComponent = () => {
 								className="btn btn-primary"
 								disabled={ isLoading || ! content.trim() }
 							>
-								{ isLoading ? __( '送信中...', 'hametuha' ) : __( '投稿する', 'hametuha' ) }
+								{ isLoading
+									? __( '送信中…', 'hametuha' )
+									: __( '投稿する', 'hametuha' ) }
 							</button>
 						</div>
 					</form>

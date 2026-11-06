@@ -14,7 +14,7 @@ const { apiFetch } = wp;
  * イベント参加管理コンポーネント
  *
  * @param {Object} props
- * @returns {JSX.Element}
+ * @return {JSX.Element}
  */
 const EventParticipants = ( props ) => {
 	const [ state, setState ] = useState( {
@@ -29,7 +29,7 @@ const EventParticipants = ( props ) => {
 	} );
 
 	// デバウンス用タイマー（useRefを使用してレンダリング間で値を保持）
-	const commentTimer = useRef(null);
+	const commentTimer = useRef( null );
 
 	// DOM要素から投稿IDを取得
 	const container = document.getElementById( 'event-participants' );
@@ -39,11 +39,11 @@ const EventParticipants = ( props ) => {
 	 * イベント状態を取得
 	 */
 	const fetchEventStatus = useCallback( async () => {
-		if ( !postId ) {
+		if ( ! postId ) {
 			return;
 		}
 
-		setState( prev => ( { ...prev, loading: true } ) );
+		setState( ( prev ) => ( { ...prev, loading: true } ) );
 
 		try {
 			const data = await apiFetch( {
@@ -51,7 +51,7 @@ const EventParticipants = ( props ) => {
 				method: 'GET',
 			} );
 
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				loading: false,
 				inList: data.in_list,
@@ -61,7 +61,7 @@ const EventParticipants = ( props ) => {
 				count: data.count,
 			} ) );
 		} catch ( error ) {
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				loading: false,
 				error: 'データの取得に失敗しました。',
@@ -73,7 +73,7 @@ const EventParticipants = ( props ) => {
 	 * イベントに参加
 	 */
 	const participate = async () => {
-		setState( prev => ( { ...prev, loading: true, error: null } ) );
+		setState( ( prev ) => ( { ...prev, loading: true, error: null } ) );
 
 		try {
 			const data = await apiFetch( {
@@ -86,17 +86,17 @@ const EventParticipants = ( props ) => {
 
 			// 状態を更新して再取得
 			await fetchEventStatus();
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				message: '参加登録が完了しました。',
 			} ) );
 
 			// メッセージを3秒後に消す
 			setTimeout( () => {
-				setState( prev => ( { ...prev, message: null } ) );
+				setState( ( prev ) => ( { ...prev, message: null } ) );
 			}, 3000 );
 		} catch ( error ) {
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				loading: false,
 				error: error.message,
@@ -108,11 +108,11 @@ const EventParticipants = ( props ) => {
 	 * 参加をキャンセル
 	 */
 	const cancelParticipation = async () => {
-		if ( !confirm( '参加をキャンセルしてもよろしいですか？' ) ) {
+		if ( ! confirm( '参加をキャンセルしてもよろしいですか？' ) ) {
 			return;
 		}
 
-		setState( prev => ( { ...prev, loading: true, error: null } ) );
+		setState( ( prev ) => ( { ...prev, loading: true, error: null } ) );
 
 		try {
 			const data = await apiFetch( {
@@ -125,17 +125,17 @@ const EventParticipants = ( props ) => {
 
 			// 状態を更新して再取得
 			await fetchEventStatus();
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				message: '参加をキャンセルしました。',
 			} ) );
 
 			// メッセージを3秒後に消す
 			setTimeout( () => {
-				setState( prev => ( { ...prev, message: null } ) );
+				setState( ( prev ) => ( { ...prev, message: null } ) );
 			}, 3000 );
 		} catch ( error ) {
-			setState( prev => ( {
+			setState( ( prev ) => ( {
 				...prev,
 				loading: false,
 				error: error.message,
@@ -145,9 +145,10 @@ const EventParticipants = ( props ) => {
 
 	/**
 	 * コメントを更新（デバウンス付き）
+	 * @param text
 	 */
 	const updateComment = ( text ) => {
-		setState( prev => ( { ...prev, comment: text } ) );
+		setState( ( prev ) => ( { ...prev, comment: text } ) );
 
 		// 既存のタイマーをクリア
 		if ( commentTimer.current ) {
@@ -155,7 +156,7 @@ const EventParticipants = ( props ) => {
 		}
 
 		// 参加していない場合は更新しない
-		if ( !state.inList ) {
+		if ( ! state.inList ) {
 			return;
 		}
 
@@ -166,7 +167,7 @@ const EventParticipants = ( props ) => {
 					path: `hametuha/v1/participants/${ postId }/`,
 					method: 'PUT',
 					data: {
-						text: text,
+						text,
 					},
 				} );
 			} catch ( error ) {
@@ -190,19 +191,21 @@ const EventParticipants = ( props ) => {
 	}, [] );
 
 	return (
-		<div className={ state.loading ? 'event-participate-react loading' : 'event-participate-react' }>
+		<div
+			className={
+				state.loading
+					? 'event-participate-react loading'
+					: 'event-participate-react'
+			}
+		>
 			{ /* エラーメッセージ */ }
 			{ state.error && (
-				<div className="alert alert-danger">
-					{ state.error }
-				</div>
+				<div className="alert alert-danger">{ state.error }</div>
 			) }
 
 			{ /* 成功メッセージ */ }
 			{ state.message && (
-				<div className="alert alert-success">
-					{ state.message }
-				</div>
+				<div className="alert alert-success">{ state.message }</div>
 			) }
 
 			{ /* 参加/キャンセルボタン */ }
@@ -241,7 +244,10 @@ const EventParticipants = ( props ) => {
 					value={ state.comment }
 					onChange={ ( e ) => updateComment( e.target.value ) }
 					disabled={ state.loading }
-					placeholder={ __( '例・このイベントでとんでもないことが起きるのを楽しみにしています！', 'hametuha' ) }
+					placeholder={ __(
+						'例・このイベントでとんでもないことが起きるのを楽しみにしています！',
+						'hametuha'
+					) }
 				/>
 				<div className="form-helper">
 					参加にあたってなにかコメントがあれば書いてください。

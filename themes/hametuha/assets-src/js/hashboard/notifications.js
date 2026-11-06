@@ -14,6 +14,8 @@ const { LoadingIndicator, Pagination, toast } = wp.hametuha;
 
 /**
  * Notification list component
+ * @param root0
+ * @param root0.type
  */
 const NotificationList = ( { type } ) => {
 	const [ loading, setLoading ] = useState( false );
@@ -21,43 +23,56 @@ const NotificationList = ( { type } ) => {
 	const [ currentPage, setCurrentPage ] = useState( 1 );
 	const [ totalPages, setTotalPages ] = useState( 0 );
 
-	const fetchNotifications = useCallback( async ( page ) => {
-		setLoading( true );
-		try {
-			const response = await apiFetch( {
-				path: `/hametuha/v1/notifications/${ type }?paged=${ page }`,
-				parse: false,
-			} );
+	const fetchNotifications = useCallback(
+		async ( page ) => {
+			setLoading( true );
+			try {
+				const response = await apiFetch( {
+					path: `/hametuha/v1/notifications/${ type }?paged=${ page }`,
+					parse: false,
+				} );
 
-			const totalPagesHeader = response.headers.get( 'X-WP-TotalPages' );
-			setTotalPages( parseInt( totalPagesHeader, 10 ) || 0 );
-			setCurrentPage( page );
+				const totalPagesHeader =
+					response.headers.get( 'X-WP-TotalPages' );
+				setTotalPages( parseInt( totalPagesHeader, 10 ) || 0 );
+				setCurrentPage( page );
 
-			const data = await response.json();
-			setNotifications( data );
-		} catch ( error ) {
-			const message = error?.message || __( 'エラーが発生しました。', 'hametuha' );
-			if ( toast ) {
-				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+				const data = await response.json();
+				setNotifications( data );
+			} catch ( error ) {
+				const message =
+					error?.message ||
+					__( 'エラーが発生しました。', 'hametuha' );
+				if ( toast ) {
+					toast( message, 'danger', __( 'エラー', 'hametuha' ) );
+				}
+			} finally {
+				setLoading( false );
 			}
-		} finally {
-			setLoading( false );
-		}
-	}, [ type ] );
+		},
+		[ type ]
+	);
 
 	useEffect( () => {
 		fetchNotifications( 1 );
 	}, [ fetchNotifications ] );
 
-	const handlePageChange = useCallback( ( page ) => {
-		fetchNotifications( page );
-	}, [ fetchNotifications ] );
+	const handlePageChange = useCallback(
+		( page ) => {
+			fetchNotifications( page );
+		},
+		[ fetchNotifications ]
+	);
 
 	return (
-		<div className="hametuha-hb-notifications" style={ { position: 'relative' } }>
+		<div
+			className="hametuha-hb-notifications"
+			style={ { position: 'relative' } }
+		>
 			{ totalPages > 0 && (
 				<p className="text-muted text-end">
-					{ currentPage } / { totalPages }{ __( 'ページ', 'hametuha' ) }
+					{ currentPage } / { totalPages }
+					{ __( 'ページ', 'hametuha' ) }
 				</p>
 			) }
 
@@ -66,14 +81,18 @@ const NotificationList = ( { type } ) => {
 					<div
 						key={ `notification-${ index }` }
 						className="notification-loop"
-						dangerouslySetInnerHTML={ { __html: notification.rendered } }
+						dangerouslySetInnerHTML={ {
+							__html: notification.rendered,
+						} }
 					/>
 				) ) }
 			</div>
 
 			{ notifications.length === 0 && ! loading && (
 				<div className="alert alert-secondary">
-					<p className="mb-0">{ __( 'お知らせはありません。', 'hametuha' ) }</p>
+					<p className="mb-0">
+						{ __( 'お知らせはありません。', 'hametuha' ) }
+					</p>
 				</div>
 			) }
 

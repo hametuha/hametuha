@@ -14,14 +14,14 @@ const { createRoot, useState, useEffect, useCallback } = wp.element;
 /**
  * Pad number with leading zero
  * @param {number} num
- * @returns {string}
+ * @return {string}
  */
 const pad2 = ( num ) => ( '0' + num ).slice( -2 );
 
 /**
  * Generate date string YYYY-MM-DD
  * @param {Date} date
- * @returns {string}
+ * @return {string}
  */
 const formatDateString = ( date ) => {
 	return [
@@ -34,8 +34,8 @@ const formatDateString = ( date ) => {
 /**
  * Generate array of date labels between two dates
  * @param {string} from - Start date YYYY-MM-DD
- * @param {string} to - End date YYYY-MM-DD
- * @returns {string[]}
+ * @param {string} to   - End date YYYY-MM-DD
+ * @return {string[]}
  */
 const filledLabels = ( from, to ) => {
 	const start = new Date( from );
@@ -50,17 +50,17 @@ const filledLabels = ( from, to ) => {
 /**
  * Create empty array of zeros
  * @param {number} length
- * @returns {number[]}
+ * @return {number[]}
  */
 const skeleton = ( length ) => Array( length ).fill( 0 );
 
 /**
  * Fill dataset with PV data
- * @param {Object} dataSets
+ * @param {Object}   dataSets
  * @param {string[]} labels
- * @param {string} type
- * @param {string} date
- * @param {number} pv
+ * @param {string}   type
+ * @param {string}   date
+ * @param {number}   pv
  */
 const fillDataSet = ( dataSets, labels, type, date, pv ) => {
 	if ( ! dataSets[ type ] ) {
@@ -97,7 +97,9 @@ const StatsPV = ( { endpoint } ) => {
 	thirtyDaysAgo.setDate( thirtyDaysAgo.getDate() - 30 );
 
 	const [ loading, setLoading ] = useState( true );
-	const [ fromDate, setFromDate ] = useState( formatDateString( thirtyDaysAgo ) );
+	const [ fromDate, setFromDate ] = useState(
+		formatDateString( thirtyDaysAgo )
+	);
 	const [ toDate, setToDate ] = useState( formatDateString( now ) );
 	const [ rankings, setRankings ] = useState( [] );
 	const [ chartData, setChartData ] = useState( {} );
@@ -124,62 +126,76 @@ const StatsPV = ( { endpoint } ) => {
 		},
 	};
 
-	const fetchData = useCallback( async ( from, to ) => {
-		setLoading( true );
-		try {
-			const response = await wp.apiFetch( {
-				path: wp.url.addQueryArgs( endpoint, { from, to } ),
-			} );
-
-			// Process rankings
-			const processedRankings = response.rankings.map( ( item, i, arr ) => {
-				let rank = 1;
-				for ( let j = 0; j < arr.length; j++ ) {
-					if ( arr[ j ].pv > item.pv ) {
-						rank++;
-					} else {
-						break;
-					}
-				}
-				return { ...item, rank };
-			} );
-			setRankings( processedRankings );
-
-			// Process chart data
-			const labels = filledLabels( response.start, response.end );
-			const dataSets = {};
-
-			response.records.forEach( ( record ) => {
-				fillDataSet( dataSets, labels, record.post_type, record.date, record.pv );
-			} );
-
-			const datasets = [];
-			let colorIndex = 0;
-			for ( const prop in dataSets ) {
-				if ( ! dataSets.hasOwnProperty( prop ) ) {
-					continue;
-				}
-				const color = CHART_COLORS[ colorIndex % CHART_COLORS.length ].join( ', ' );
-				datasets.push( {
-					type: 'line',
-					lineTension: 0,
-					label: prop,
-					data: dataSets[ prop ],
-					backgroundColor: `rgb(${ color })`,
-					borderColor: `rgba(${ color }, .6)`,
+	const fetchData = useCallback(
+		async ( from, to ) => {
+			setLoading( true );
+			try {
+				const response = await wp.apiFetch( {
+					path: wp.url.addQueryArgs( endpoint, { from, to } ),
 				} );
-				colorIndex++;
-			}
 
-			setChartData( { labels, datasets } );
-		} catch ( error ) {
-			console.error( 'Failed to fetch stats:', error );
-			setRankings( [] );
-			setChartData( {} );
-		} finally {
-			setLoading( false );
-		}
-	}, [ endpoint ] );
+				// Process rankings
+				const processedRankings = response.rankings.map(
+					( item, i, arr ) => {
+						let rank = 1;
+						for ( let j = 0; j < arr.length; j++ ) {
+							if ( arr[ j ].pv > item.pv ) {
+								rank++;
+							} else {
+								break;
+							}
+						}
+						return { ...item, rank };
+					}
+				);
+				setRankings( processedRankings );
+
+				// Process chart data
+				const labels = filledLabels( response.start, response.end );
+				const dataSets = {};
+
+				response.records.forEach( ( record ) => {
+					fillDataSet(
+						dataSets,
+						labels,
+						record.post_type,
+						record.date,
+						record.pv
+					);
+				} );
+
+				const datasets = [];
+				let colorIndex = 0;
+				for ( const prop in dataSets ) {
+					if ( ! dataSets.hasOwnProperty( prop ) ) {
+						continue;
+					}
+					const color =
+						CHART_COLORS[ colorIndex % CHART_COLORS.length ].join(
+							', '
+						);
+					datasets.push( {
+						type: 'line',
+						lineTension: 0,
+						label: prop,
+						data: dataSets[ prop ],
+						backgroundColor: `rgb(${ color })`,
+						borderColor: `rgba(${ color }, .6)`,
+					} );
+					colorIndex++;
+				}
+
+				setChartData( { labels, datasets } );
+			} catch ( error ) {
+				console.error( 'Failed to fetch stats:', error );
+				setRankings( [] );
+				setChartData( {} );
+			} finally {
+				setLoading( false );
+			}
+		},
+		[ endpoint ]
+	);
 
 	// Initial fetch
 	useEffect( () => {
@@ -235,7 +251,9 @@ const StatsPV = ( { endpoint } ) => {
 				</div>
 			) }
 
-			<table className={ `table table-striped${ loading ? ' loading' : '' }` }>
+			<table
+				className={ `table table-striped${ loading ? ' loading' : '' }` }
+			>
 				<thead>
 					<tr>
 						<th className="cell-2 text-end">#</th>
@@ -254,23 +272,27 @@ const StatsPV = ( { endpoint } ) => {
 					) }
 					{ ! loading && rankings.length === 0 && (
 						<tr>
-							<td className="error text-center disabled" colSpan="4">
+							<td
+								className="error text-center disabled"
+								colSpan="4"
+							>
 								記録がありません。
 							</td>
 						</tr>
 					) }
-					{ ! loading && rankings.map( ( ranking, index ) => (
-						<tr key={ index }>
-							<td className="text-end">{ ranking.rank }</td>
-							<td className="text-start">
-								<a className="link" href={ ranking.url }>
-									{ ranking.title }
-								</a>
-							</td>
-							<td className="text-start">{ ranking.type }</td>
-							<td className="text-end">{ ranking.pv }</td>
-						</tr>
-					) ) }
+					{ ! loading &&
+						rankings.map( ( ranking, index ) => (
+							<tr key={ index }>
+								<td className="text-end">{ ranking.rank }</td>
+								<td className="text-start">
+									<a className="link" href={ ranking.url }>
+										{ ranking.title }
+									</a>
+								</td>
+								<td className="text-start">{ ranking.type }</td>
+								<td className="text-end">{ ranking.pv }</td>
+							</tr>
+						) ) }
 				</tbody>
 			</table>
 		</div>

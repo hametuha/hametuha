@@ -2,10 +2,12 @@
 // アイコンの点滅
 //
 @include keyframes(icon-blink) {
+
 	0% {
 		color: $navbar-default-link-color;
 		background-color: $navbar-default-bg;
 	}
+
 	100% {
 		color: $brand-danger;
 		background-color: lighten($brand-danger, 30);
@@ -14,10 +16,11 @@
 
 #header {
 	will-change: transform;
-	transition: transform .3s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 	background-color: $white;
 
 	&.headroom--unpinned {
+
 		@include head-room() {
 			transform: translateY(-100%);
 		}
@@ -35,6 +38,7 @@
 }
 
 .navbar {
+
 	&-header {
 		position: relative;
 	}
@@ -52,28 +56,30 @@
 		font-size: 1.25rem;
 		line-height: 1;
 		background-color: transparent;
-		border: 1px solid rgba(0, 0, 0, .1);
+		border: 1px solid rgba(0, 0, 0, 0.1);
 		border-radius: 0.25rem;
 		transition: box-shadow 0.15s ease-in-out;
 
 		&:hover {
-			background-color: rgba(0, 0, 0, .05);
+			background-color: rgba(0, 0, 0, 0.05);
 		}
 
 		&:focus {
-			box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+			box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 			outline: 0;
 		}
 
 		i {
 			font-size: 1.5rem;
-			color: rgba(0, 0, 0, .55);
+			color: rgba(0, 0, 0, 0.55);
 		}
 	}
 
 	// 書き込みボタン
 	&-write {
+
 		&.write-panel-btn {
+
 			i {
 				// color: $brand-primary;
 			}
@@ -89,7 +95,7 @@
 		left: 0;
 		top: 0;
 		text-align: center;
-		font-weight: bold;
+		font-weight: 700;
 		color: #666;
 	}
 
@@ -103,10 +109,13 @@
 
 		@media only screen and (max-width: $screen-xs-max) {
 			width: 100px;
+
 			.register {
 				display: none;
 			}
+
 			& > li.open {
+
 				.dropdown-menu {
 					position: absolute;
 					right: 0;
@@ -119,10 +128,12 @@
 					left: auto;
 					background-color: $navbar-default-bg;
 					border: 1px solid $navbar-default-border;
+
 					@include box-shadow(0 5px 5px 0 rgba(0, 0, 0, 0.4));
 				}
 			}
 		}
+
 		& > li:last-child .avatar {
 			width: $avatar-size;
 			height: $avatar-size;
@@ -141,6 +152,7 @@
 
 		// ヘッダー右のドロップダウン
 		.dropdown {
+
 			.dropdown-menu {
 				position: absolute;
 				right: 0;
@@ -169,6 +181,7 @@
 				}
 
 				&.has-notify {
+
 					@include animation(icon-blink 1s linear 0 infinite alternate);
 				}
 			}
@@ -214,15 +227,18 @@
 
 	.nav-pills {
 		gap: 10px;
+
 		a {
 			border: 1px solid $white;
 		}
+
 		a:link,
 		a:visited {
 			border-color: $white;
 			color: $white;
 			background-color: $primary;
 		}
+
 		a:hover,
 		a:active {
 			border-color: $white;
@@ -239,7 +255,6 @@
 		color: $gray-500;
 	}
 }
-
 
 
 //
@@ -290,6 +305,7 @@
 }
 
 #header {
+
 	& + #breadcrumb,
 	& + .sub-header {
 		padding-top: $navbar-height + $subnavbar-height;
@@ -323,7 +339,9 @@
 	}
 
 	a {
-		&:link, &:visited {
+
+		&:link,
+		&:visited {
 			color: $little-shade-font;
 			text-decoration: none;
 		}
@@ -340,6 +358,7 @@
 
 // ログインボタン
 .login-buttons a {
+
 	@extend %btn-hollow;
 	float: right;
 	margin-top: 8px;
@@ -347,6 +366,7 @@
 	margin-right: 10px;
 
 	&:last-child {
+
 		@media only screen and (max-width: 400px) {
 			display: none;
 		}
@@ -383,7 +403,8 @@
 			color: $gray-600;
 			text-decoration: none;
 			cursor: pointer;
-			&[aria-expanded="true"]{
+
+			&[aria-expanded="true"] {
 				background-color: $gray-100;
 			}
 
@@ -395,12 +416,14 @@
 			.close {
 				display: none;
 			}
-			&[aria-expanded="true"]{
+
+			&[aria-expanded="true"] {
 				background-color: $gray-100;
 
 				.close {
 					display: inline-block;
 				}
+
 				.open {
 					display: none;
 				}
@@ -446,10 +469,12 @@
 
 		// small要素のスタイル
 		small {
-			&:before {
+
+			&::before {
 				content: " (";
 			}
-			&:after {
+
+			&::after {
 				content: ")";
 			}
 		}
@@ -458,6 +483,7 @@
 	// サブメニューのスタイル
 	.collapse,
 	.collapsing {
+
 		.nav-link {
 			padding: 0.5rem 1rem;
 			font-size: 0.9rem;
@@ -491,9 +517,10 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, .8);
+	background: rgba(0, 0, 0, 0.8);
 	z-index: 100;
 	display: none;
+
 	@include transition(top 0.3s ease-in-out);
 
 	&.open {
@@ -521,6 +548,7 @@
 	&__actions {
 		padding: 0;
 		margin: 20px 0;
+
 		@media only screen and (max-width: $screen-xs-max) {
 			margin: 10px 0;
 		}
@@ -538,17 +566,20 @@
 		display: block;
 		padding: 20px;
 		font-size: 20px;
+
 		@media only screen and (max-width: $screen-xs-max) {
 			padding: 10px;
 			font-size: 14px;
 		}
 
-		&:link, &:visited {
+		&:link,
+		&:visited {
 			color: #000;
 			text-decoration: none;
 		}
 
-		&:hover, &:active {
+		&:hover,
+		&:active {
 			color: $brand-primary;
 			text-decoration: none;
 			background-color: #f9f9f9;
@@ -556,7 +587,7 @@
 	}
 
 	&__label {
-		font-weight: bold;
+		font-weight: 700;
 
 		i {
 			color: #aaa;

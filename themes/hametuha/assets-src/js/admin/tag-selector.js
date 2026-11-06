@@ -8,15 +8,35 @@
  */
 
 const { render, useState, useCallback, useMemo, useEffect } = wp.element;
-const { FormTokenField, Button, Modal, SearchControl, PanelBody, CheckboxControl } = wp.components;
+const {
+	FormTokenField,
+	Button,
+	Modal,
+	SearchControl,
+	PanelBody,
+	CheckboxControl,
+} = wp.components;
 const { __ } = wp.i18n;
 
 /**
  * タグ選択モーダルコンポーネント
+ * @param root0
+ * @param root0.isOpen
+ * @param root0.onClose
+ * @param root0.tagsByGenre
+ * @param root0.selectedTags
+ * @param root0.onTagsChange
  */
-const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsChange } ) => {
+const TagSelectorModal = ( {
+	isOpen,
+	onClose,
+	tagsByGenre,
+	selectedTags,
+	onTagsChange,
+} ) => {
 	const [ searchQuery, setSearchQuery ] = useState( '' );
-	const [ localSelectedTags, setLocalSelectedTags ] = useState( selectedTags );
+	const [ localSelectedTags, setLocalSelectedTags ] =
+		useState( selectedTags );
 
 	// 検索フィルタリング
 	const filteredTagsByGenre = useMemo( () => {
@@ -70,11 +90,14 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 			className="hametuha-tag-selector-modal"
 		>
 			<p className="hametuha-tag-selector-modal__description">
-				{ __( 'ジャンル別に整理されたタグから選択できます', 'hametuha' ) }
+				{ __(
+					'ジャンル別に整理されたタグから選択できます',
+					'hametuha'
+				) }
 			</p>
 
 			<div className="hametuha-tag-selector-modal__content">
-				{/* 左側: 選択中のタグ */}
+				{ /* 左側: 選択中のタグ */ }
 				<div className="hametuha-tag-selector-modal__selected">
 					<h4>
 						{ __( '選択中のタグ', 'hametuha' ) }
@@ -84,10 +107,15 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 					</h4>
 					<div className="hametuha-tag-selector-modal__tokens">
 						{ localSelectedTags.length === 0 ? (
-							<p className="description">{ __( 'タグが選択されていません', 'hametuha' ) }</p>
+							<p className="description">
+								{ __( 'タグが選択されていません', 'hametuha' ) }
+							</p>
 						) : (
 							localSelectedTags.map( ( tag ) => (
-								<span key={ tag } className="hametuha-tag-selector-modal__token">
+								<span
+									key={ tag }
+									className="hametuha-tag-selector-modal__token"
+								>
 									{ tag }
 									<button
 										type="button"
@@ -103,13 +131,13 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 					</div>
 				</div>
 
-				{/* 右側: 利用可能なタグ */}
+				{ /* 右側: 利用可能なタグ */ }
 				<div className="hametuha-tag-selector-modal__available">
 					<h4>{ __( '利用可能なタグ', 'hametuha' ) }</h4>
 					<SearchControl
 						value={ searchQuery }
 						onChange={ setSearchQuery }
-						placeholder={ __( 'タグを検索...', 'hametuha' ) }
+						placeholder={ __( 'タグを検索…', 'hametuha' ) }
 					/>
 					<div className="hametuha-tag-selector-modal__genres">
 						{ Object.keys( filteredTagsByGenre ).map( ( genre ) => (
@@ -119,29 +147,44 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 									<span>
 										{ genre }
 										<span className="hametuha-tag-selector-modal__genre-count">
-											{ filteredTagsByGenre[ genre ].length }
+											{
+												filteredTagsByGenre[ genre ]
+													.length
+											}
 										</span>
 									</span>
 								}
 								initialOpen={ false }
 							>
 								<div className="hametuha-tag-selector-modal__tag-list">
-									{ filteredTagsByGenre[ genre ].map( ( tag ) => (
-										<div
-											key={ tag.term_id }
-											className={ `hametuha-tag-selector-modal__tag-item ${
-												localSelectedTags.includes( tag.name ) ? 'is-selected' : ''
-											}` }
-											onClick={ () => toggleTag( tag.name ) }
-										>
-											<span className="hametuha-tag-selector-modal__tag-name">
-												{ tag.name }
-											</span>
-											{ localSelectedTags.includes( tag.name ) && (
-												<span className="hametuha-tag-selector-modal__check">&#10003;</span>
-											) }
-										</div>
-									) ) }
+									{ filteredTagsByGenre[ genre ].map(
+										( tag ) => (
+											<div
+												key={ tag.term_id }
+												className={ `hametuha-tag-selector-modal__tag-item ${
+													localSelectedTags.includes(
+														tag.name
+													)
+														? 'is-selected'
+														: ''
+												}` }
+												onClick={ () =>
+													toggleTag( tag.name )
+												}
+											>
+												<span className="hametuha-tag-selector-modal__tag-name">
+													{ tag.name }
+												</span>
+												{ localSelectedTags.includes(
+													tag.name
+												) && (
+													<span className="hametuha-tag-selector-modal__check">
+														&#10003;
+													</span>
+												) }
+											</div>
+										)
+									) }
 								</div>
 							</PanelBody>
 						) ) }
@@ -149,10 +192,11 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 				</div>
 			</div>
 
-			{/* フッター */}
+			{ /* フッター */ }
 			<div className="hametuha-tag-selector-modal__footer">
 				<span>
-					{ localSelectedTags.length }{ __( '個のタグを選択中', 'hametuha' ) }
+					{ localSelectedTags.length }
+					{ __( '個のタグを選択中', 'hametuha' ) }
 				</span>
 				<Button variant="primary" onClick={ handleComplete }>
 					{ __( '完了', 'hametuha' ) }
@@ -164,6 +208,10 @@ const TagSelectorModal = ( { isOpen, onClose, tagsByGenre, selectedTags, onTagsC
 
 /**
  * メインのタグセレクターコンポーネント
+ * @param root0
+ * @param root0.tagsByGenre
+ * @param root0.initialTags
+ * @param root0.hiddenInputId
  */
 const TagSelector = ( { tagsByGenre, initialTags, hiddenInputId } ) => {
 	const [ selectedTags, setSelectedTags ] = useState( initialTags );
@@ -181,36 +229,42 @@ const TagSelector = ( { tagsByGenre, initialTags, hiddenInputId } ) => {
 	}, [ tagsByGenre ] );
 
 	// hidden inputの更新
-	const updateHiddenInput = useCallback( ( tags ) => {
-		const hiddenInput = document.getElementById( hiddenInputId );
-		if ( hiddenInput ) {
-			hiddenInput.value = tags.join( ', ' );
-		}
-	}, [ hiddenInputId ] );
+	const updateHiddenInput = useCallback(
+		( tags ) => {
+			const hiddenInput = document.getElementById( hiddenInputId );
+			if ( hiddenInput ) {
+				hiddenInput.value = tags.join( ', ' );
+			}
+		},
+		[ hiddenInputId ]
+	);
 
 	// タグ変更時
-	const handleTagsChange = useCallback( ( newTags ) => {
-		// 日本語読点をカンマに変換
-		const normalizedTags = newTags.map( ( tag ) =>
-			typeof tag === 'string' ? tag.replace( /、/g, ',' ).trim() : tag
-		);
-		// カンマで分割されたタグを展開
-		const expandedTags = [];
-		normalizedTags.forEach( ( tag ) => {
-			if ( typeof tag === 'string' && tag.includes( ',' ) ) {
-				tag.split( ',' ).forEach( ( t ) => {
-					const trimmed = t.trim();
-					if ( trimmed && ! expandedTags.includes( trimmed ) ) {
-						expandedTags.push( trimmed );
-					}
-				} );
-			} else if ( tag && ! expandedTags.includes( tag ) ) {
-				expandedTags.push( tag );
-			}
-		} );
-		setSelectedTags( expandedTags );
-		updateHiddenInput( expandedTags );
-	}, [ updateHiddenInput ] );
+	const handleTagsChange = useCallback(
+		( newTags ) => {
+			// 日本語読点をカンマに変換
+			const normalizedTags = newTags.map( ( tag ) =>
+				typeof tag === 'string' ? tag.replace( /、/g, ',' ).trim() : tag
+			);
+			// カンマで分割されたタグを展開
+			const expandedTags = [];
+			normalizedTags.forEach( ( tag ) => {
+				if ( typeof tag === 'string' && tag.includes( ',' ) ) {
+					tag.split( ',' ).forEach( ( t ) => {
+						const trimmed = t.trim();
+						if ( trimmed && ! expandedTags.includes( trimmed ) ) {
+							expandedTags.push( trimmed );
+						}
+					} );
+				} else if ( tag && ! expandedTags.includes( tag ) ) {
+					expandedTags.push( tag );
+				}
+			} );
+			setSelectedTags( expandedTags );
+			updateHiddenInput( expandedTags );
+		},
+		[ updateHiddenInput ]
+	);
 
 	return (
 		<div className="hametuha-tag-selector">
@@ -218,7 +272,10 @@ const TagSelector = ( { tagsByGenre, initialTags, hiddenInputId } ) => {
 				value={ selectedTags }
 				suggestions={ allTagNames }
 				onChange={ handleTagsChange }
-				placeholder={ __( 'タグを入力してEnter（カンマ区切り可）', 'hametuha' ) }
+				placeholder={ __(
+					'タグを入力してEnter（カンマ区切り可）',
+					'hametuha'
+				) }
 				__experimentalExpandOnFocus={ true }
 				__experimentalAutoSelectFirstMatch={ true }
 			/>
@@ -233,7 +290,10 @@ const TagSelector = ( { tagsByGenre, initialTags, hiddenInputId } ) => {
 			</Button>
 
 			<p className="description hametuha-tag-selector__hint">
-				{ __( 'ヒント: カンマ区切りで複数入力可。詳細モードでジャンル別に選択できます。', 'hametuha' ) }
+				{ __(
+					'ヒント: カンマ区切りで複数入力可。詳細モードでジャンル別に選択できます。',
+					'hametuha'
+				) }
 			</p>
 
 			<TagSelectorModal

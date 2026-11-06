@@ -1,5 +1,6 @@
 // Global widget
 .widget {
+
 	img {
 		max-width: 100%;
 		width: auto;
@@ -19,18 +20,20 @@
 	}
 
 	&-kdp {
+
 		&-lead {
 			font-size: 14px;
 			margin: 10px;
 		}
 
 		&-list {
+
 			& + a {
 				margin-top: 50px;
 			}
 
 			.slick-dots > li {
-				float: left
+				float: left;
 			}
 		}
 
@@ -50,6 +53,7 @@
 }
 
 #sidebar {
+
 	@media only screen and (max-width: $screen-xs-max) {
 		margin-top: 40px;
 	}
@@ -74,6 +78,7 @@
 	}
 
 	.small-button {
+
 		@extend .btn;
 		@extend .btn-sm;
 		@extend .btn-default;
@@ -81,6 +86,7 @@
 	}
 
 	ul {
+
 		@extend .nav;
 		@extend .nav-pills;
 		@extend .nav-stacked;
@@ -119,6 +125,7 @@
 			margin-right: 0.5em;
 			width: 24px;
 			height: 24px;
+
 			@include border-radius(50%);
 			vertical-align: middle;
 		}
@@ -135,6 +142,7 @@
 	}
 
 	.anyway-feedback-popular-widget {
+
 		.count {
 			display: block;
 			text-align: center;
@@ -157,7 +165,8 @@
 
 	&__wrapper {
 		background-color: $gray-100;
-		&#sidebar{
+
+		&#sidebar {
 			margin-top: 0;
 		}
 	}

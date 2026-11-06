@@ -7,6 +7,7 @@
 }
 
 .media {
+
 	&__score {
 		margin-bottom: 0.5em;
 		color: #e9bc37;
@@ -18,6 +19,7 @@
 	}
 
 	&-header {
+
 		h2 {
 			display: flex;
 			justify-content: space-between;
@@ -27,33 +29,40 @@
 	}
 
 	&-body {
+
 		&__title {
 			color: #000;
 		}
 	}
 
 	&-series {
+
 		&-title {
 			font-weight: $font-weight-bold;
 		}
+
 		span {
 			margin-right: 0.5em;
+
 			&:last-child {
 				margin-right: 0;
 			}
 		}
+
 		&-tag {
 			display: inline-block;
 			font-size: 12px;
 			padding: 0.25em 0.5em;
-			border: 1px solid currentColor;
+			border: 1px solid currentcolor;
 			border-radius: 0.25em;
 		}
 	}
 
 	// 投稿
 	&.type-post {
+
 		&.rank-list {
+
 			& > a {
 				padding-left: 1em !important;
 			}
@@ -61,6 +70,7 @@
 	}
 
 	& > a.media__link {
+
 		&.media__link--nopad {
 			padding-left: 1em !important;
 
@@ -89,10 +99,13 @@
 }
 
 @media only screen and (max-width: $screen-xs-max) {
+
 	#comments {
 		font-size: 18px;
 	}
+
 	.media {
+
 		h2 {
 			font-size: 18px;
 		}
@@ -102,7 +115,9 @@
 			font-size: 12px;
 		}
 
-		.pull-left, .pull-right {
+		.pull-left,
+		.pull-right {
+
 			.avatar {
 				width: 40px;
 				height: 40px;
@@ -117,7 +132,9 @@
 			}
 		}
 	}
+
 	.archive-container {
+
 		.media > .pull-right {
 			margin: 0 0 10px;
 			float: none !important;
@@ -135,6 +152,7 @@
 
 // リスト
 .list {
+
 	&-title {
 		font-family: $work-title;
 		background-color: $footer-navbar-bg;
@@ -142,11 +160,12 @@
 		height: 40px;
 		line-height: 40px;
 		font-size: 20px;
+
 		@include ellipsis();
 		text-align: center;
 
 		&-inverse {
-			background-color: transparent;;
+			background-color: transparent;
 			color: $footer-navbar-bg;
 		}
 
@@ -167,6 +186,7 @@
 		margin-top: 10px;
 
 		.no-excerpt & {
+
 			@media only screen and (max-width: $screen-xs-max) {
 				display: none;
 			}
@@ -187,6 +207,7 @@
 			position: relative;
 			display: block;
 			padding: 10px;
+
 			@include transition(background-color 0.3s ease-in-out, color 0.3s ease-in-out);
 
 			&:link,
@@ -282,6 +303,7 @@
 			float: left;
 			width: 40px;
 			height: 40px;
+
 			@include border-radius(50%);
 			margin-bottom: 10px;
 		}
@@ -304,7 +326,7 @@
 			right: 10px;
 			top: 50%;
 			margin-top: -20px;
-			color: #ffff00;
+			color: #ff0;
 		}
 	}
 }

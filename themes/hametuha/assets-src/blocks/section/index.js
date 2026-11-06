@@ -5,7 +5,11 @@
  */
 
 import { registerBlockType } from '@wordpress/blocks';
-import { InnerBlocks, PanelColorSettings, InspectorControls } from '@wordpress/block-editor';
+import {
+	InnerBlocks,
+	PanelColorSettings,
+	InspectorControls,
+} from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import metadata from './block.json';
 
@@ -14,12 +18,17 @@ registerBlockType( metadata.name, {
 		return (
 			<>
 				<InspectorControls>
-					<PanelBody title="セクションレイアウト" className="hametuha-section-layout">
+					<PanelBody
+						title="セクションレイアウト"
+						className="hametuha-section-layout"
+					>
 						<ToggleControl
 							label="コンテナ"
 							checked={ !! attributes.withContainer }
 							onChange={ () => {
-								setAttributes( { withContainer: ! attributes.withContainer } );
+								setAttributes( {
+									withContainer: ! attributes.withContainer,
+								} );
 							} }
 							help="コンテナがあると、中身が中央によります。"
 						/>
@@ -30,14 +39,24 @@ registerBlockType( metadata.name, {
 						colorSettings={ [
 							{
 								value: attributes.backgroundColor,
-								onChange: ( value ) => setAttributes( { backgroundColor: value } ),
+								onChange: ( value ) =>
+									setAttributes( { backgroundColor: value } ),
 								label: '背景色',
 							},
 						] }
 					></PanelColorSettings>
 				</InspectorControls>
-				<div className={ className } style={ { backgroundColor: attributes.backgroundColor } }>
-					<div className={ attributes.withContainer ? 'container' : 'no-container' }>
+				<div
+					className={ className }
+					style={ { backgroundColor: attributes.backgroundColor } }
+				>
+					<div
+						className={
+							attributes.withContainer
+								? 'container'
+								: 'no-container'
+						}
+					>
 						<InnerBlocks templateLock={ false } />
 					</div>
 				</div>
@@ -47,8 +66,15 @@ registerBlockType( metadata.name, {
 
 	save( { className, attributes } ) {
 		return (
-			<section className={ className } style={ { backgroundColor: attributes.backgroundColor } }>
-				<div className={ attributes.withContainer ? 'container' : 'no-container' }>
+			<section
+				className={ className }
+				style={ { backgroundColor: attributes.backgroundColor } }
+			>
+				<div
+					className={
+						attributes.withContainer ? 'container' : 'no-container'
+					}
+				>
 					<InnerBlocks.Content />
 				</div>
 			</section>

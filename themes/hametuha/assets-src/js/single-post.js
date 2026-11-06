@@ -10,258 +10,303 @@
 /*global _: true*/
 /* jshint nonew: false */
 
-
 /**
  * シングルポストで読み込む
+ * @param $
  */
-(function($){
-    'use strict';
+( function ( $ ) {
+	'use strict';
 
-    Hametuha.views.Scroll = Backbone.View.extend({
+	Hametuha.views.Scroll = Backbone.View.extend( {
+		el: '#content-wrapper',
 
-        el: '#content-wrapper',
+		events: {},
 
-        events: {
-        },
+		tategaki: false,
 
-        tategaki: false,
+		scrollTop: 0,
 
-        scrollTop: 0,
+		ticker: null,
 
-        ticker: null,
+		slider: null,
 
-        slider: null,
+		max: 1000,
 
-        max: 1000,
+		timer: 0,
 
-        timer: 0,
+		toLast: false,
 
-        toLast: false,
+		animating: false,
 
-        animating: false,
+		limit: null,
 
-        limit: null,
+		initialize() {
+			_.bindAll(
+				this,
+				'getSliderPosition',
+				'toggleScrollBind',
+				'updateTicker',
+				'tickerHandler',
+				'scrollHandler',
+				'moveTo',
+				'finishAnimate',
+				'passedTime'
+			);
+			this.ticker = $( '<span id="slider-ticker">0%</span>' );
+			this.tategaki = Hametuha.isTategaki();
+			this.slider = $( '#slider' );
+			this.limit = $( '#post-author' );
+			this.bindScroll = true;
+			this.scrollTop = $( window ).scrollTop();
+			const position = 0;
 
-        initialize: function(){
-            _.bindAll(this, 'getSliderPosition', 'toggleScrollBind', 'updateTicker', 'tickerHandler', 'scrollHandler', 'moveTo', 'finishAnimate', 'passedTime');
-            this.ticker = $('<span id="slider-ticker">0%</span>');
-            this.tategaki = Hametuha.isTategaki();
-            this.slider = $('#slider');
-            this.limit = $('#post-author');
-            this.bindScroll = true;
-            this.scrollTop = $(window).scrollTop();
-            var position = 0;
+			this.slider.slider( {
+				max: this.max,
+				min: 0,
+				step: 1,
+				value: this.getSliderPosition( position ),
+				slide: this.updateTicker,
+				change: this.updateTicker,
+				stop: this.tickerHandler,
+			} );
+			this.slider.find( '.ui-slider-handle' ).append( this.ticker );
 
-            this.slider.slider({
-                max: this.max,
-                min: 0,
-                step: 1,
-                value: this.getSliderPosition(position),
-                slide: this.updateTicker,
-                change: this.updateTicker,
-                stop: this.tickerHandler
-            });
-            this.slider.find('.ui-slider-handle').append(this.ticker);
+			// スクロールの監視を開始
+			$( window ).on( 'resize scroll load', this.scrollHandler );
+			$( window ).on( 'toggle.scroll.hametuha', this.toggleScrollBind );
 
-            // スクロールの監視を開始
-            $(window).on('resize scroll load', this.scrollHandler);
-            $(window).on('toggle.scroll.hametuha', this.toggleScrollBind);
+			// タイマー登録
+			const date = new Date();
+			this.timer = date.getTime();
+		},
 
-            // タイマー登録
-            var date = new Date();
-            this.timer = date.getTime();
-        },
+		/**
+		 * 経過秒数を返す
+		 *
+		 * @return {number}
+		 */
+		passedTime() {
+			const date = new Date();
+			return Math.round( ( date.getTime() - this.timer ) / 1000 );
+		},
 
-        /**
-         * 経過秒数を返す
-         *
-         * @returns {number}
-         */
-        passedTime: function(){
-            var date = new Date();
-            return Math.round(( date.getTime() - this.timer) / 1000);
-        },
+		/**
+		 * Toggle Scroll bind
+		 *
+		 * @param e
+		 * @param toggle
+		 */
+		toggleScrollBind( e, toggle ) {
+			this.bindScroll = toggle;
+			if ( toggle ) {
+				$( window ).scrollTop( this.scrollTop );
+			}
+		},
 
-        /**
-         * Toggle Scroll bind
-         *
-         * @param e
-         * @param toggle
-         */
-        toggleScrollBind: function(e, toggle){
-            this.bindScroll = toggle;
-            if( toggle ){
-                $(window).scrollTop(this.scrollTop);
-            }
-        },
+		/**
+		 * スライドのポジションを取得する
+		 *
+		 * @param  position
+		 * @return {number}
+		 */
+		getSliderPosition( position ) {
+			return this.tategaki ? this.max - position : position;
+		},
 
-        /**
-         * スライドのポジションを取得する
-         *
-         * @param position
-         * @returns {number}
-         */
-        getSliderPosition: function(position){
-            return this.tategaki ? this.max - position : position;
-        },
+		/**
+		 * ティッカーの数字を更新
+		 *
+		 * @param event
+		 * @param ui
+		 */
+		updateTicker( event, ui ) {
+			if ( ! isNaN( ui.value ) ) {
+				this.ticker.text( ui.value / 10 + '%' );
+			}
+		},
 
-        /**
-         * ティッカーの数字を更新
-         *
-         * @param event
-         * @param ui
-         */
-        updateTicker: function(event, ui){
-            if( !isNaN(ui.value) ){
-                this.ticker.text(ui.value / 10 + '%');
-            }
-        },
+		/**
+		 * ティッカーを動かしたときのハンドラ
+		 *
+		 * @param event
+		 * @param ui
+		 */
+		tickerHandler( event, ui ) {
+			this.moveTo( ui.value / 1000 );
+		},
 
-        /**
-         * ティッカーを動かしたときのハンドラ
-         *
-         * @param event
-         * @param ui
-         */
-        tickerHandler: function(event, ui){
-            this.moveTo(ui.value / 1000);
-        },
+		/**
+		 * コンテンツを任意の位置に移動
+		 *
+		 * @param percent
+		 */
+		moveTo( percent ) {
+			const position =
+				( $( document ).height() - $( window ).height() ) * percent;
+			this.animating = true;
+			$( 'body, html' ).animate(
+				{ scrollTop: position },
+				'fast',
+				this.finishAnimate
+			);
+		},
 
-        /**
-         * コンテンツを任意の位置に移動
-         *
-         * @param percent
-         */
-        moveTo: function(percent){
-            var position = ($(document).height() - $(window).height()) * percent;
-            this.animating = true;
-            $('body, html').animate({ scrollTop: position }, 'fast', this.finishAnimate);
-        },
+		/**
+		 * アニメーションが終わったらフラグを折る
+		 */
+		finishAnimate() {
+			this.animating = false;
+		},
 
-        /**
-         * アニメーションが終わったらフラグを折る
-         */
-        finishAnimate: function(){
-            this.animating = false;
-        },
+		/**
+		 * スクロールハンドラ
+		 */
+		scrollHandler() {
+			if ( this.bindScroll ) {
+				this.scrollTop = $( window ).scrollTop();
+				const offset = $( document ).height() - $( window ).height(),
+					percent = Math.min(
+						1,
+						Math.max( 0, this.scrollTop / offset )
+					),
+					limitPos = this.limit.offset().top + 50;
+				if ( ! this.animating ) {
+					this.slider.slider(
+						'value',
+						parseInt( percent * 1000, 10 )
+					);
+				}
+				const ranker = $( '#work-end-ranker' );
+				if (
+					! this.toLast &&
+					limitPos < this.scrollTop + $( window ).height() &&
+					ranker.length
+				) {
+					this.toLast = true;
+					const postId = ranker.attr( 'data-post' );
+					Hametuha.ga.hitEvent( 'read', 'complete', postId );
+					Hametuha.ga.hitEvent(
+						'read',
+						'passed',
+						postId,
+						this.passedTime()
+					);
+					$( 'body' ).addClass( 'finish-reading' );
+				}
+			}
+		},
+	} );
 
-        /**
-         * スクロールハンドラ
-         */
-        scrollHandler: function(){
-            if( this.bindScroll ){
-                this.scrollTop = $(window).scrollTop();
-                var offset = $(document).height() - $(window).height(),
-                    percent = Math.min(1, Math.max(0, this.scrollTop / offset)),
-                    limitPos = this.limit.offset().top + 50;
-                if( !this.animating ){
-                    this.slider.slider('value', parseInt(percent * 1000, 10));
-                }
-                var ranker = $('#work-end-ranker');
-                if( !this.toLast && limitPos < this.scrollTop + $(window).height() && ranker.length ){
-                    this.toLast = true;
-                    var postId = ranker.attr('data-post');
-                    Hametuha.ga.hitEvent('read', 'complete', postId);
-                    Hametuha.ga.hitEvent('read', 'passed', postId, this.passedTime());
-                    $('body').addClass('finish-reading');
-                }
-            }
-        }
+	jQuery( document ).ready( function ( $ ) {
+		// 段落の行頭揃え
+		$( '.work-content p' ).each( function ( index, elt ) {
+			if (
+				! Hametuha.str.startYakumono( $( elt ).text() ) &&
+				! $( elt ).hasClass( 'wp-caption-text' ) &&
+				! $( elt ).attr( 'style' )
+			) {
+				$( elt ).addClass( 'indent' );
+			}
+		} );
 
-    });
+		// ナビゲーション
+		const defaultView = 'viewing-content',
+			$article = $( '#viewing-content' ),
+			$nav = $( '#footer-single' ),
+			resetView = function () {
+				$article.attr( 'id', defaultView ).removeClass( 'show-nav' );
+				$( window ).trigger( 'toggle.scroll.hametuha', [ true ] );
+			};
+		$nav.on( 'click', 'a.has-wrapper', function ( e ) {
+			e.preventDefault();
+			if ( $( this ).hasClass( 'active' ) ) {
+				$( this ).removeClass( 'active' );
+				// ビューをデフォルトに戻す
+				resetView();
+			} else {
+				// 全部オフにする
+				$nav.find( 'a' ).removeClass( 'active' );
+				$( this ).addClass( 'active' );
+				const target = $( this ).attr( 'href' ).replace( '#', '' );
+				if ( target.match( /reading-nav/ ) ) {
+					// ビューをデフォルトに戻す
+					$article.attr( 'id', defaultView ).addClass( 'show-nav' );
+				} else {
+					$article
+						.attr(
+							'id',
+							'viewing-' + target.replace( '-wrapper', '' )
+						)
+						.removeClass( 'show-nav' );
+					$( window ).trigger( 'toggle.scroll.hametuha', [ false ] );
+					$( window ).scrollTop( 0 );
+				}
+			}
+		} );
+		$( '.reset-viewer' ).click( function ( e ) {
+			e.preventDefault();
+			resetView();
+			$nav.find( 'a' ).removeClass( 'active' );
+		} );
 
+		// スクロール関係をまとめる
+		new Hametuha.views.Scroll();
 
-    jQuery(document).ready(function($){
+		// レーダーチャート
+		let $radar = $( '#single-radar' ),
+			ctx,
+			chart;
+		if ( $radar.length ) {
+			// Canvas APIは2025年現在全ブラウザでサポート済み、念のため最小限のチェック
+			if ( $radar.get( 0 ).getContext ) {
+				ctx = $radar.get( 0 ).getContext( '2d' );
+				chart = new Chart( ctx, {
+					type: 'radar',
+					data: postScore.data,
+					options: {
+						// 点数は0〜100に丸めてある
+						scales: {
+							r: { min: 0, max: 100 },
+						},
+						plugins: {
+							tooltip: {
+								callbacks: {
+									title( items ) {
+										return postScore.labels[
+											items[ 0 ].datasetIndex
+										][ items[ 0 ].dataIndex ];
+									},
+								},
+							},
+						},
+					},
+				} );
+			} else {
+				$radar.replaceWith(
+					'<p class="alert alert-danger">Canvasに対応していないため、ご利用の環境ではレーダーチャートを表示できません。</p>'
+				);
+			}
+		}
+	} );
 
-        // 段落の行頭揃え
-        $('.work-content p').each(function(index, elt){
-            if( !(Hametuha.str.startYakumono($(elt).text())) && !$(elt).hasClass('wp-caption-text') && !$(elt).attr('style') ){
-                $(elt).addClass('indent');
-            }
-        });
+	// 脚注
+	$( document ).on(
+		'click',
+		'.noteref-link,.footernote-link',
+		function ( e ) {
+			e.preventDefault();
+			const offset = 40 * 1.5;
+			const $elem = $( $( this ).attr( 'href' ) );
 
-        // ナビゲーション
-        var defaultView = 'viewing-content',
-            $article = $('#viewing-content'),
-            $nav = $('#footer-single'),
-            resetView = function(){
-                $article.attr('id', defaultView).removeClass('show-nav');
-                $(window).trigger('toggle.scroll.hametuha', [true]);
-            };
-        $nav.on('click', 'a.has-wrapper', function(e){
-            e.preventDefault();
-            if( $(this).hasClass('active') ){
-                $(this).removeClass('active');
-                // ビューをデフォルトに戻す
-                resetView();
-            }else{
-                // 全部オフにする
-                $nav.find('a').removeClass('active');
-                $(this).addClass('active');
-                var target = $(this).attr('href').replace('#', '');
-                if( target.match(/reading-nav/) ){
-                    // ビューをデフォルトに戻す
-                    $article.attr('id', defaultView).addClass('show-nav');
-                }else{
-                    $article.attr('id', 'viewing-' + target.replace('-wrapper','')).removeClass('show-nav');
-                    $(window).trigger('toggle.scroll.hametuha', [false]);
-                    $(window).scrollTop(0);
-                }
-
-            }
-        });
-        $('.reset-viewer').click(function(e){
-            e.preventDefault();
-            resetView();
-            $nav.find('a').removeClass('active');
-        });
-
-
-        // スクロール関係をまとめる
-        new Hametuha.views.Scroll();
-
-        // レーダーチャート
-        var $radar = $('#single-radar'), ctx, chart;
-        if( $radar.length ){
-            // Canvas APIは2025年現在全ブラウザでサポート済み、念のため最小限のチェック
-            if( $radar.get(0).getContext ){
-                ctx = $radar.get(0).getContext('2d');
-                chart = new Chart(ctx, {
-                  type: 'radar',
-                  data: postScore.data,
-                  options: {
-                    // 点数は0〜100に丸めてある
-                    scales: {
-                      r: { min: 0, max: 100 }
-                    },
-                    plugins: {
-                      tooltip: {
-                        callbacks: {
-                          title: function (items) {
-                            return postScore.labels[items[0].datasetIndex][items[0].dataIndex];
-                          }
-                        }
-                      }
-                    }
-                  }
-                });
-            }else{
-                $radar.replaceWith('<p class="alert alert-danger">Canvasに対応していないため、ご利用の環境ではレーダーチャートを表示できません。</p>');
-            }
-        }
-    });
-
-    // 脚注
-    $( document ).on( 'click', '.noteref-link,.footernote-link', function( e ) {
-        e.preventDefault();
-        var offset = 40 * 1.5;
-        var $elem  = $( $( this ).attr( 'href' ) );
-
-        if ( $elem.length ) {
-            $( 'body,html' ).animate( {
-                scrollTop: $elem.offset().top - offset,
-            }, 200, 'swing' );
-        }
-    } );
-
-})(jQuery);
+			if ( $elem.length ) {
+				$( 'body,html' ).animate(
+					{
+						scrollTop: $elem.offset().top - offset,
+					},
+					200,
+					'swing'
+				);
+			}
+		}
+	);
+} )( jQuery );

@@ -36,7 +36,7 @@ $shade-font: #888;
 $more-shade-font: #aaa;
 $clear-font: #000;
 $inverse-body: #fff;
-$start-font: #ffff00;
+$start-font: #ff0;
 $hover-bg: $thin-border;
 
 // リンク
@@ -45,25 +45,25 @@ $link-hover-bg: $thin-border;
 $link-active-bg: #e4e4ca;
 
 // ソーシャルアイコンの色
-$hametuha-color: #1F1C1D;
-$facebook-color: #3C5A95;
-$twitter-color: #58ACEB;
-$google-color: #DB4B3E;
-$line-color: #00DA13;
-$youtube-color: #D70000;
-$hatena-color: #576CEA;
+$hametuha-color: #1f1c1d;
+$facebook-color: #3c5a95;
+$twitter-color: #58aceb;
+$google-color: #db4b3e;
+$line-color: #00da13;
+$youtube-color: #d70000;
+$hatena-color: #576cea;
 $instagram-color: #833ab4;
-$github-color: #333333;
+$github-color: #333;
 $minicome-color: #252525;
-$ustream-color: #2F7BFF;
-$pocket-color: #F04057;
+$ustream-color: #2f7bff;
+$pocket-color: #f04057;
 
 // Button colors（Bootstrap 3互換性はbackward-compat/variables.scssで定義済み）
 
 // アイコンの色を決める
 @each $brand in (
-  facebook $facebook-color,
-  twitter $twitter-color,
+	facebook $facebook-color,
+	twitter $twitter-color,
   google $google-color,
   line $line-color,
   ha $hametuha-color,
@@ -75,29 +75,30 @@ $pocket-color: #F04057;
   ustream $ustream-color,
   pocket $pocket-color,
   hatena $hatena-color,
-){
-  [class^="icon-#{nth($brand, 1)}"]{
-    color: nth($brand, 2) !important;
-  }
+) {
+	[class^="icon-#{nth($brand, 1)}"] {
+		color: nth($brand, 2) !important;
+	}
 }
 
 // ボーダー
 $divide-border: 3px double $thin-border;
 
 // アイコンを読み込む
-@mixin hameticon(){
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  font-family: "hameticon";
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@mixin hameticon() {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	font-family: hameticon;
+	speak: none;
+	font-style: normal;
+	font-weight: 400;
+	font-variant: normal;
+	text-transform: none;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 
@@ -108,7 +109,7 @@ $divide-border: 3px double $thin-border;
 // ----------------------
 //
 // Bootstrap 5 フォント設定
-$font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,'游ゴシック',sans-serif !default;
+$font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,"游ゴシック",sans-serif !default;
 $font-family-serif:       Georgia, "游明朝体", "Yu Mincho", YuMincho, serif !default;
 $font-family-monospace:   SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
 $font-family-base:        $font-family-sans-serif !default;
@@ -116,17 +117,17 @@ $font-family-base:        $font-family-sans-serif !default;
 // Bootstrap 5 フォントサイズ設定
 $font-size-root: null !default;
 $font-size-base: 1rem !default;
-$font-size-sm: $font-size-base * .875 !default;
+$font-size-sm: $font-size-base * 0.875 !default;
 $font-size-lg: $font-size-base * 1.25 !default;
 
 // Bootstrap 5 フォントサイズマップ
 $font-sizes: (
-  1: $font-size-base * 2.5,
-  2: $font-size-base * 2,
-  3: $font-size-base * 1.75,
-  4: $font-size-base * 1.5,
-  5: $font-size-base * 1.25,
-  6: $font-size-base
+	1: $font-size-base * 2.5,
+	2: $font-size-base * 2,
+	3: $font-size-base * 1.75,
+	4: $font-size-base * 1.5,
+	5: $font-size-base * 1.25,
+	6: $font-size-base
 ) !default;
 
 // Bootstrap 5 フォントウェイト変数
@@ -157,11 +158,11 @@ $zindex-tooltip: 1080 !default;
 $zindex-toast: 1090 !default;
 
 $zindex-levels: (
-  n1: -1,
-  0: 0,
-  1: 1,
-  2: 2,
-  3: 3
+	n1: -1,
+	0: 0,
+	1: 1,
+	2: 2,
+	3: 3
 ) !default;
 // type square
 $work-body: TsukuAOldMinPr6N-R, serif;

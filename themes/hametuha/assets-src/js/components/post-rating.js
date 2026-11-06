@@ -15,7 +15,7 @@ const { toast } = wp.hametuha;
  * 星評価コンポーネント
  *
  * @param {Object} props
- * @param {number} props.postId - 投稿ID
+ * @param {number} props.postId        - 投稿ID
  * @param {number} props.initialRating - 初期評価値（0-5）
  */
 const StarRating = ( { postId, initialRating } ) => {
@@ -42,9 +42,15 @@ const StarRating = ( { postId, initialRating } ) => {
 			} );
 			setRating( newRating );
 			setIsEditing( false );
-			toast( response.message || __( '評価を更新しました。', 'hametuha' ), 'success' );
+			toast(
+				response.message || __( '評価を更新しました。', 'hametuha' ),
+				'success'
+			);
 		} catch ( error ) {
-			toast( error.message || __( '評価の更新に失敗しました。', 'hametuha' ), 'error' );
+			toast(
+				error.message || __( '評価の更新に失敗しました。', 'hametuha' ),
+				'error'
+			);
 		} finally {
 			setIsSaving( false );
 		}
@@ -52,6 +58,7 @@ const StarRating = ( { postId, initialRating } ) => {
 
 	/**
 	 * range inputの変更ハンドラー（デバウンス付き）
+	 * @param event
 	 */
 	const handleChange = ( event ) => {
 		const newRating = parseInt( event.target.value, 10 );
@@ -74,23 +81,32 @@ const StarRating = ( { postId, initialRating } ) => {
 	 * 評価テキストを取得
 	 */
 	const getRatingText = () => {
-		return <>
-			{ __( 'あなたの評価', 'hametuha' ) }
-			<br />
-			{ starText() }
-		</>
+		return (
+			<>
+				{ __( 'あなたの評価', 'hametuha' ) }
+				<br />
+				{ starText() }
+			</>
+		);
 	};
 
 	const starText = () => {
 		if ( 1 > tempRating ) {
-			return <span className="text-muted">{ __( '未評価', 'hametuha' ) }</span>
-		} else {
-			const stars = [];
-			for ( let i = 0; i < tempRating; i++ ) {
-				stars.push( <span className="text-star" key={ `text-star-${ i }` }>★</span> );
-			}
-			return stars;
+			return (
+				<span className="text-muted">
+					{ __( '未評価', 'hametuha' ) }
+				</span>
+			);
 		}
+		const stars = [];
+		for ( let i = 0; i < tempRating; i++ ) {
+			stars.push(
+				<span className="text-star" key={ `text-star-${ i }` }>
+					★
+				</span>
+			);
+		}
+		return stars;
 	};
 
 	/**
@@ -131,7 +147,7 @@ const StarRating = ( { postId, initialRating } ) => {
 					onClick={ handleCancel }
 					disabled={ isSaving }
 				>
-					{ __( '保存中...', 'hametuha' ) }
+					{ __( '保存中…', 'hametuha' ) }
 				</button>
 			</div>
 		);
@@ -155,7 +171,9 @@ const StarRating = ( { postId, initialRating } ) => {
 				className="btn btn-sm btn-outline-primary"
 				onClick={ startEditing }
 			>
-				{ rating === 0 ? __( '評価する', 'hametuha' ) : __( '評価を変更', 'hametuha' ) }
+				{ rating === 0
+					? __( '評価する', 'hametuha' )
+					: __( '評価を変更', 'hametuha' ) }
 			</button>
 		</div>
 	);

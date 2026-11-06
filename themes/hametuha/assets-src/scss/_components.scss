@@ -2,7 +2,8 @@ body.modal-open {
 	padding-right: 0 !important;
 }
 
-a[disabled], input[disabled] {
+a[disabled],
+input[disabled] {
 	cursor: not-allowed;
 }
 
@@ -20,6 +21,7 @@ a[disabled], input[disabled] {
 
 // テキストアライン
 .text {
+
 	&-left {
 		text-align: left !important;
 	}
@@ -36,7 +38,7 @@ a[disabled], input[disabled] {
 //区切り戦
 hr.divider {
 	margin: 20px 0;
-	border-color: currentColor;
+	border-color: currentcolor;
 }
 
 // ヘルプボタン
@@ -48,7 +50,8 @@ hr.divider {
 .btn {
 	// 半透明のボタン
 	&-trans {
-		background-color: rgba(0, 0, 0, .4);
+		background-color: rgba(0, 0, 0, 0.4);
+
 		@include border-radius(0);
 		border: 2px solid $inverse-body;
 		color: $inverse-body;
@@ -61,12 +64,15 @@ hr.divider {
 
 	// Amazon
 	&-amazon {
-		&:link, &:visited {
+
+		&:link,
+		&:visited {
 			color: #fff;
 			background-color: #000;
 		}
 
-		&:hover, &:active {
+		&:hover,
+		&:active {
 			color: #fff;
 			background-color: darken(orange, 20);
 		}
@@ -77,18 +83,21 @@ hr.divider {
 	}
 
 	&-link {
+
 		@each $var in (danger $brand-danger, warning $brand-warning) {
 			$name: nth($var, 1);
 			$color: nth($var, 2);
 			&--#{$name} {
 				color: $color;
 
-				&:link, &:visited {
+				&:link,
+				&:visited {
 					color: $color;
 					text-decoration: none;
 				}
 
-				&:hover, &:active {
+				&:hover,
+				&:active {
 					color: lighten($color, 10);
 					text-decoration: underline;
 				}
@@ -98,18 +107,21 @@ hr.divider {
 }
 
 %btn-hollow {
+
 	@extend .btn;
 	$btn-color: #000;
 	display: inline-block;
+
 	@include border-radius(3px);
 	padding: 9px 4px;
 	border: 1px solid $btn-color;
 	font-size: 14px;
 	line-height: 1;
-	transition: color .3s linear, background-color .3s linear, border-color .3s linear;
+	transition: color 0.3s linear, background-color 0.3s linear, border-color 0.3s linear;
 	position: relative;
 
-	&:link, &:visited {
+	&:link,
+	&:visited {
 		color: $btn-color !important;
 		background: transparent !important;
 	}
@@ -126,6 +138,7 @@ hr.divider {
 
 // 回転
 .rotation {
+
 	@include animation(rotation 1.5s linear infinite);
 }
 
@@ -135,7 +148,9 @@ i.rotation {
 
 // ハイライト
 @include bg-blink(highlight, #fff, #fff7ab);
+
 .highlighting {
+
 	@include animation(highlight 1.5s linear infinite);
 }
 
@@ -147,12 +162,14 @@ i.rotation {
 }
 
 .pager {
+
 	a {
 		max-width: 45%;
 	}
 }
 
 @include mq-max($screen-xs-max) {
+
 	.pager {
 		font-size: 12px;
 	}
@@ -164,6 +181,7 @@ i.rotation {
 
 // フィードバック
 .has-feedback {
+
 	.icon-checkmark,
 	.icon-spam,
 	.icon-close,
@@ -177,6 +195,7 @@ i.rotation {
 	}
 
 	&.loading {
+
 		.icon-loop3 {
 			display: block;
 			color: $more-shade-font;
@@ -184,6 +203,7 @@ i.rotation {
 	}
 
 	&.has-warning {
+
 		.icon-spam {
 			display: block;
 		}
@@ -195,6 +215,7 @@ i.rotation {
 	}
 
 	&.has-error {
+
 		.icon-close {
 			display: block;
 		}
@@ -206,6 +227,7 @@ i.rotation {
 	}
 
 	&.has-success {
+
 		.icon-checkmark {
 			display: block;
 		}
@@ -224,15 +246,19 @@ i.rotation {
 
 // タグコンテナ
 .tag-container {
+
 	a {
 		margin-top: 5px;
 		margin-right: 5px;
+
 		@extend .btn;
 		@extend .btn-default;
 		@extend .btn-xs;
 
 		i {
-			&:before {
+
+			&::before {
+
 				@include hameticon();
 				@extend .icon-plus-circle2, :before;
 			}
@@ -246,10 +272,13 @@ i.rotation {
 		}
 
 		&.me {
+
 			@extend .btn-danger;
 
 			i {
-				&:before {
+
+				&::before {
+
 					@extend .icon-close3, :before;
 				}
 
@@ -270,12 +299,14 @@ i.rotation {
 		display: block;
 	}
 }
+
 .alert > *:last-child {
 	margin-bottom: 0;
 }
 
 // スピナー
 .ui-autocomplete-input {
+
 	& + .form-control-feedback {
 		top: 0;
 		right: 50px;
@@ -285,7 +316,9 @@ i.rotation {
 }
 
 .ui-autocomplete-loading {
+
 	& + .form-control-feedback {
+
 		@include inline-block();
 	}
 }
@@ -293,7 +326,7 @@ i.rotation {
 
 .container-subtitle {
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: 700;
 	border-bottom: 1px dotted $more-shade-font;
 	margin: 1em 0.5em;
 	color: $shade-font;
@@ -305,20 +338,24 @@ i.rotation {
 // -------------------
 //
 .nav-sub {
+
 	& > li {
+
 		a {
 			margin-right: 5px;
 			margin-left: 5px;
-			transition: color .5s ease-in-out, background-color .5s ease-in-out;
+			transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out;
 			border-radius: 0;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				color: #fff;
 				text-decoration: none;
 				background-color: $brand-primary;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				color: #fff;
 				text-decoration: none;
 				background-color: lighten($brand-primary, 10);
@@ -347,6 +384,7 @@ i.rotation {
 	$image-pad: $image-size / 4;
 	padding: $image-pad $image-pad $image-pad $image-pad * 2 + $image-size;
 	margin: $image-pad 0;
+
 	.avatar {
 		width: $image-size;
 		height: $image-size;
@@ -360,7 +398,8 @@ i.rotation {
 	overflow: hidden;
 	z-index: 2;
 	position: relative;
-	&:after {
+
+	&::after {
 		position: absolute;
 		content: "";
 		display: block;
@@ -368,6 +407,7 @@ i.rotation {
 		left: 0;
 		bottom: 0;
 		width: 100%;
+
 		@include gradient-vertical(transparentize($color, 1), $color);
 	}
 }
@@ -385,6 +425,7 @@ i.rotation {
 	}
 
 	.avatar {
+
 		@extend .img-circle;
 	}
 
@@ -396,12 +437,15 @@ i.rotation {
 		line-height: 1.2;
 
 		&--long {
+
 			@include long-desc($navbar-default-bg);
 		}
 	}
 
 	&__actions {
-		a, button {
+
+		a,
+		button {
 			margin-right: 10px;
 
 			&:last-child {
@@ -422,6 +466,7 @@ ul.metadata {
 	color: #999;
 	padding: 7px 0;
 	margin-bottom: 20px;
+
 	@media only screen and (max-width: $screen-xs-max) {
 		padding-right: 0;
 		padding-left: 0;
@@ -435,6 +480,7 @@ ul.metadata {
 		padding: 0.25em 0.5em;
 
 		&:first-child {
+
 			@media only screen and (max-width: $screen-xs-max) {
 				border-left: 1px solid #ddd;
 				padding-left: 0.5em;
@@ -455,9 +501,10 @@ ul.metadata {
 	}
 
 	.loop-media {
+
 		h2 {
 			font-size: 22px;
-			font-weight: bold;
+			font-weight: 700;
 
 			small {
 				display: inline-block;
@@ -478,9 +525,11 @@ ul.metadata {
 		border-bottom: 1px solid $thin-border;
 
 		.media__link {
+
 			@extend .clearfix;
 			display: block;
 			padding: 1em;
+
 			@media only screen and (max-width: $screen-sm-max) {
 				padding: 1em 0.5em;
 			}
@@ -507,16 +556,20 @@ ul.metadata {
 	}
 
 	// 見出し
-	h3, h2 {
+	h3,
+	h2 {
 		margin-top: 0;
 	}
 
 	// アバター
-	.pull-left, .pull-right {
+	.pull-left,
+	.pull-right {
+
 		img {
 			height: auto;
 			width: auto;
 			max-width: 160px;
+
 			@media only screen and (max-width: $screen-sm-max) {
 				max-width: 80px;
 			}
@@ -525,6 +578,7 @@ ul.metadata {
 		.avatar {
 			width: 80px;
 			height: 80px;
+
 			@extend .img-circle;
 		}
 	}
@@ -540,6 +594,7 @@ ul.metadata {
 	.author-info .avatar {
 		width: 20px;
 		height: 20px;
+
 		@extend .img-circle;
 	}
 
@@ -572,6 +627,7 @@ ul.metadata {
 	margin: 2em 1em;
 
 	p {
+
 		@extend .lead;
 	}
 }
@@ -596,7 +652,7 @@ ul.metadata {
 		margin-top: 0;
 		text-align: center;
 		color: $shade-font;
-		font-weight: bold;
+		font-weight: 700;
 		font-size: 1.8em;
 	}
 
@@ -609,7 +665,9 @@ ul.metadata {
 	}
 
 	.dl-horizontal {
-		dt, dd {
+
+		dt,
+		dd {
 			margin-bottom: 10px;
 		}
 	}
@@ -657,13 +715,17 @@ ul.metadata {
 
 	.loading {
 		position: relative;
+
 		@extend %loading-indicator;
 	}
 }
 
 @media only screen and (max-width: $screen-xs-max) {
+
 	.event-detail {
+
 		.dl-horizontal {
+
 			dt {
 				margin-bottom: 5px;
 			}
@@ -672,6 +734,7 @@ ul.metadata {
 }
 
 caption.outdated {
+
 	@extend .text-danger;
 }
 
@@ -683,7 +746,10 @@ caption.outdated {
 
 // フィードバック
 .afb_container {
-	.good, .bad {
+
+	.good,
+	.bad {
+
 		@extend .btn;
 		@extend .btn-sm;
 
@@ -693,10 +759,12 @@ caption.outdated {
 	}
 
 	.good {
+
 		@extend .btn-outline-success;
 	}
 
 	.bad {
+
 		@extend .btn-outline-secondary;
 	}
 }
@@ -713,9 +781,10 @@ caption.outdated {
 	height: auto;
 	z-index: $zindex-navbar-fixed - 1;
 	will-change: transform, opacity, top;
-	transition: transform .3s ease-in-out, opacity .3s ease-in-out, top .3s ease-in-out;
+	transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, top 0.3s ease-in-out;
 
 	.header-hidden & {
+
 		@include head-room() {
 			top: 0;
 		}
@@ -765,11 +834,12 @@ caption.outdated {
 	}
 
 	@media only screen and (-webkit-min-device-pixel-ratio: 2),
-	only screen and (min--moz-device-pixel-ratio: 2),
-	only screen and (-o-min-device-pixel-ratio: 2 / 1),
+		only screen and (min--moz-device-pixel-ratio: 2),
+		only screen and (-o-min-device-pixel-ratio: 2 / 1),
 	only screen and (min-device-pixel-ratio: 2),
 	only screen and (min-resolution: 192dpi),
 	only screen and (min-resolution: 2dppx) {
+
 		&v-24 {
 			background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);
 			background-size: 160px 178px;
@@ -778,7 +848,9 @@ caption.outdated {
 }
 
 .post-content {
+
 	.row-block {
+
 		&__link {
 			display: block;
 		}
@@ -803,6 +875,7 @@ caption.outdated {
 
 // Jetpack Gallery
 .gallery-row {
+
 	.type-rectangular & {
 		margin-right: auto;
 		margin-left: auto;

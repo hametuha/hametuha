@@ -17,6 +17,9 @@ const { PostList } = globalThis.hb?.components || {};
 
 /**
  * Notification block component for dashboard
+ * @param root0
+ * @param root0.link
+ * @param root0.limit
  */
 const NotificationBlock = ( { link, limit = 3 } ) => {
 	const [ loading, setLoading ] = useState( false );
@@ -49,7 +52,9 @@ const NotificationBlock = ( { link, limit = 3 } ) => {
 					<div
 						key={ `notification-${ index }` }
 						className="notification-loop notification-loop-small"
-						dangerouslySetInnerHTML={ { __html: notification.rendered } }
+						dangerouslySetInnerHTML={ {
+							__html: notification.rendered,
+						} }
 					/>
 				) ) }
 			</div>
@@ -62,10 +67,14 @@ const NotificationBlock = ( { link, limit = 3 } ) => {
 };
 
 // Mount the notification block component
-const notificationContainer = document.getElementById( 'hametuha-notification-block' );
+const notificationContainer = document.getElementById(
+	'hametuha-notification-block'
+);
 if ( notificationContainer ) {
 	const link = notificationContainer.dataset.link || '';
-	createRoot( notificationContainer ).render( <NotificationBlock link={ link } /> );
+	createRoot( notificationContainer ).render(
+		<NotificationBlock link={ link } />
+	);
 }
 
 // Slack invitation button handler
@@ -85,7 +94,8 @@ if ( slackButton ) {
 				toast( response.message, 'success' );
 			}
 		} catch ( error ) {
-			const message = error?.message || __( 'エラーが発生しました。', 'hametuha' );
+			const message =
+				error?.message || __( 'エラーが発生しました。', 'hametuha' );
 			if ( toast ) {
 				toast( message, 'danger', __( 'エラー', 'hametuha' ) );
 			}
@@ -96,7 +106,9 @@ if ( slackButton ) {
 }
 
 // Mount announcement post list
-const announcementContainer = document.getElementById( 'hametuha-announcement-list' );
+const announcementContainer = document.getElementById(
+	'hametuha-announcement-list'
+);
 if ( announcementContainer && PostList ) {
 	const moreButton = announcementContainer.dataset.moreButton || '';
 	createRoot( announcementContainer ).render(

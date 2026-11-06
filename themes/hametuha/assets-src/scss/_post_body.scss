@@ -7,6 +7,7 @@
 	.wp-block-hametuha-section {
 		padding-top: 80px;
 		padding-bottom: 80px;
+
 		@include mq-max($screen-sm-max) {
 			padding-top: 40px;
 			padding-bottom: 40px;
@@ -16,7 +17,7 @@
 	.has-drop-cap {
 		text-indent: 0 !important;
 
-		&:first-letter {
+		&::first-letter {
 			line-height: 1;
 			font-size: 2.4em;
 			float: left;
@@ -31,13 +32,16 @@
 		float: left;
 		margin: 1em 1em 1em 0;
 	}
+
 	.alignright {
 		float: right;
 		margin: 1em 0 1em 1em;
 	}
+
 	.aligncenter {
 		margin: 1em auto;
 	}
+
 	img {
 		width: auto;
 		height: auto;
@@ -47,6 +51,7 @@
 			display: block;
 		}
 	}
+
 	.wp-caption {
 		max-width: 100%;
 
@@ -55,6 +60,7 @@
 			text-align: center;
 		}
 	}
+
 	.wp-caption-text {
 		font-size: 0.8em;
 		color: $text-muted;
@@ -68,7 +74,13 @@
 		color: #000;
 		font-size: 0.85em;
 
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+
 			&:first-child {
 				margin-top: 0;
 			}
@@ -102,19 +114,19 @@
 		text-decoration: none;
 		font-size: 0.8em;
 
-		&:before {
-			content: '〔';
+		&::before {
+			content: "〔";
 		}
 
-		&:after {
-			content: '〕';
+		&::after {
+			content: "〕";
 		}
 
 		&.footernote-ref {
 			counter-increment: noteref-id;
 
 			&::before {
-				content: counter(noteref-id) '. ';
+				content: counter(noteref-id) ". ";
 			}
 
 			&::after {
@@ -163,6 +175,7 @@
 	// 引用
 	blockquote.wp-block-quote,
 	.wp-block-pullquote blockquote {
+
 		&.is-large {
 			font-size: 2em;
 		}
@@ -173,13 +186,14 @@
 		padding: 1.5em;
 		margin: 1.5em 0;
 
-		p, cite {
+		p,
+		cite {
 			position: relative;
 			z-index: 2;
 		}
 
-		&:before {
-			content: '“';
+		&::before {
+			content: "“";
 			position: absolute;
 			line-height: 1;
 			top: 0;
@@ -193,10 +207,12 @@
 
 	// 罫線
 	hr {
+
 		&.wp-block-separator {
 			border-color: #000;
 			margin-top: 80px;
 			margin-bottom: 80px;
+
 			@include mq-max($screen-sm-max) {
 				margin-top: 40px;
 				margin-bottom: 40px;
@@ -213,18 +229,21 @@
 	}
 	// Button
 	.wp-block-button {
+
 		a {
-			transition: color .3s linear, background-color .3s linear, border-bottom-color .3s linear;
+			transition: color 0.3s linear, background-color 0.3s linear, border-bottom-color 0.3s linear;
 			border: 2px solid transparent;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				text-decoration: none;
 				color: #fff;
 				border-color: #000;
 				background-color: #000;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				text-decoration: none;
 				color: #000;
 				border-color: #000;
@@ -233,14 +252,18 @@
 		}
 
 		&.is-style-outline {
+
 			a {
-				&:link, &:visited {
+
+				&:link,
+				&:visited {
 					color: #000;
 					border-color: #000;
 					background-color: transparent;
 				}
 
-				&:hover, &:active {
+				&:hover,
+				&:active {
 					color: #fff;
 					border-color: #000;
 					background-color: #000;
@@ -249,40 +272,48 @@
 		}
 
 		@each $setting in (
-				(primary $brand-primary),
-				(success $brand-success),
+			(primary $brand-primary),
+			(success $brand-success),
 				(danger $brand-danger),
 				(warning $brand-warning)
 		) {
 			$class-name: nth($setting, 1);
 			$color: nth($setting, 2);
 			&.#{$class-name}, &.is-style-squared.#{$class-name} {
+
 				a.wp-block-button__link {
-					&:link, &:visited {
+
+					&:link,
+					&:visited {
 						color: #fff;
 						background-color: $color;
 						border-color: $color;
 					}
 
-					&:hover, &:active {
+					&:hover,
+					&:active {
 						color: $color;
-						background-color: transparent;;
+						background-color: transparent;
 						border-color: $color;
 					}
 				}
 			}
 			&.is-style-outline.#{$class-name} {
+
 				a {
-					&:link, &:visited {
-						color: $color;;
-						border-color: $color;;
+
+					&:link,
+					&:visited {
+						color: $color;
+						border-color: $color;
 						background-color: transparent;
 					}
 
-					&:hover, &:active {
+					&:hover,
+					&:active {
 						color: #fff;
-						border-color: $color;;
-						background-color: $color;;
+						border-color: $color;
+						background-color: $color;
 					}
 				}
 			}
@@ -294,8 +325,9 @@
 		font-style: italic;
 		font-family: $font-family-sans-serif;
 	}
+
 	.interviewee {
-		font-weight: bold;
+		font-weight: 700;
 		color: #000;
 	}
 
@@ -307,7 +339,8 @@
 		// ------------------------
 		//
 		// リンク
-		a:link, a:visited {
+		a:link,
+		a:visited {
 			text-decoration: underline;
 		}
 		// 文章
@@ -319,7 +352,12 @@
 			}
 		}
 		// 見出し
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			margin-top: 2em;
 			margin-bottom: 1em;
 			clear: both;
@@ -328,13 +366,14 @@
 				margin-top: 0;
 			}
 		}
+
 		h1 {
 			font-size: 3em;
-			font-weight: normal;
+			font-weight: 400;
 			padding-bottom: 0.5em;
 			position: relative;
 
-			&:after {
+			&::after {
 				position: absolute;
 				display: block;
 				content: "";
@@ -346,43 +385,48 @@
 				max-width: 150px;
 			}
 
-			&[style*="center"]:after {
+			&[style*="center"]::after {
 				left: 50%;
 				transform: translateX(-50%);
 			}
 
-			&[style*="right"]:after {
+			&[style*="right"]::after {
 				left: auto;
 				right: 0;
 			}
 		}
+
 		h2 {
 			font-size: 2em;
-			font-weight: normal;
+			font-weight: 400;
 			border-top: 1px solid #000;
 			border-bottom: 1px solid #000;
 			padding: 0.5em;
 		}
+
 		h3 {
 			font-size: 1.6em;
-			font-weight: bold;
+			font-weight: 700;
 		}
+
 		h4 {
 			font-size: 1.6em;
-			font-weight: normal;
+			font-weight: 400;
 			border-left: 5px solid #000;
 			padding-left: 0.5em;
 		}
+
 		h5 {
 			font-size: 1.4em;
-			font-weight: normal;
+			font-weight: 400;
 			border-bottom: 1px solid #000;
 			padding-bottom: 0.5em;
 		}
+
 		h6 {
 			color: #000;
 			font-size: 1em;
-			font-weight: bold;
+			font-weight: 700;
 		}
 		// 引用
 		blockquote {
@@ -393,19 +437,22 @@
 				text-align: right;
 			}
 		}
-		cite, q {
+
+		cite,
+		q {
 			font-style: italic;
 
-			&:before {
-				content: '“';
+			&::before {
+				content: "“";
 			}
 
-			&:after {
-				content: '”';
+			&::after {
+				content: "”";
 			}
 		}
 		// テーブル
 		table {
+
 			@extend .table;
 			@extend .table-striped;
 
@@ -416,7 +463,9 @@
 				min-width: auto;
 			}
 
-			th, td {
+			th,
+			td {
+
 				@media (min-width: 769px) {
 					white-space: normal; // 大画面では通常の折り返しに戻す
 				}
@@ -470,9 +519,10 @@
 		}
 
 		// インライン要素
-		abbr, acronym {
+		abbr,
+		acronym {
 			border-bottom: 3px dashed $thin-border;
-			font-weight: bold;
+			font-weight: 700;
 			font-family: serif;
 			cursor: help;
 		}
@@ -481,7 +531,8 @@
 			font-size: 2em;
 		}
 
-		del, strike {
+		del,
+		strike {
 			text-decoration: line-through;
 			color: #aaa;
 		}
@@ -493,6 +544,7 @@
 
 		em {
 			font-style: normal;
+
 			@include text-emphasis(sesame filled);
 		}
 
@@ -503,7 +555,8 @@
 			max-width: 100%;
 		}
 
-		object, iframe {
+		object,
+		iframe {
 			max-width: 100%;
 		}
 	} @else {
@@ -527,9 +580,14 @@
 			}
 		}
 
-		h1, h2, h3, h4, h5, h6 {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
 			margin: 1.5em 0 0.5em;
-			font-weight: normal;
+			font-weight: 400;
 			font-family: $work-bold;
 			clear: both;
 		}
@@ -569,6 +627,7 @@
 		// 引用
 		blockquote {
 			margin: 1em 0 1em 2em;
+
 			@include media-breakpoint-down(md) {
 				margin-left: 1em;
 			}
@@ -582,12 +641,12 @@
 				font-size: 0.85em;
 				text-align: right;
 
-				&:before {
-					content: '“';
+				&::before {
+					content: "“";
 				}
 
-				&:after {
-					content: '”';
+				&::after {
+					content: "”";
 				}
 			}
 
@@ -597,11 +656,12 @@
 		}
 
 		q {
-			&:before {
+
+			&::before {
 				content: "“";
 			}
 
-			&:after {
+			&::after {
 				content: "”";
 			}
 		}
@@ -610,7 +670,12 @@
 		aside {
 			font-family: $work-body-sans;
 
-			h1, h2, h3, h4, h5, h6 {
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
 				font-family: $work-bold-sans;
 			}
 		}
@@ -623,20 +688,23 @@
 			margin: 1em 0;
 
 			thead {
+
 				th {
 					color: $shade-font;
 					border-bottom: 3px double $shade-font;
 					font-family: sans-serif;
-					font-weight: bold;
+					font-weight: 700;
 				}
 			}
 
-			th, td {
+			th,
+			td {
 				border-bottom: 1px solid $shade-font;
 				padding: 0.5em;
 			}
 
 			tbody {
+
 				th {
 					border-right: 1px dotted $shade-font;
 				}
@@ -649,6 +717,7 @@
 		ol {
 			margin: 1em 0;
 			padding-inline-start: 1.5em;
+
 			ul,
 			dl,
 			ol {
@@ -658,6 +727,7 @@
 		}
 
 		dl {
+
 			dt {
 				font-family: $work-bold;
 				margin-top: 0.5em;
@@ -674,7 +744,8 @@
 
 
 		// その他
-		acronym, abbr {
+		acronym,
+		abbr {
 			cursor: help;
 			border-bottom: 2px dashed $shade-font;
 		}
@@ -687,7 +758,9 @@
 			font-style: italic;
 		}
 
-		del, s, strike {
+		del,
+		s,
+		strike {
 			color: $more-shade-font;
 			text-decoration: line-through;
 		}

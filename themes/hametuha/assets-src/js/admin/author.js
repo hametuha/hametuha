@@ -5,7 +5,7 @@
  * @deps select2
  */
 
-jQuery( document ).ready( function( $ ) {
+jQuery( document ).ready( function ( $ ) {
 	const $selector = $( '#post_author_override' );
 	if ( $selector.length ) {
 		// Make this pulldown to select2.

@@ -8,7 +8,7 @@
 
 	h3 {
 		font-size: 1.2em;
-		font-weight: bold;
+		font-weight: 700;
 		margin: 2em 0 1em;
 
 		&:first-child {
@@ -41,9 +41,12 @@
 
 // 背景色が点滅
 @include keyframes(ranker) {
-	0%, 100% {
+
+	0%,
+	100% {
 		color: yellow;
 	}
+
 	50% {
 		color: orange;
 	}
@@ -67,13 +70,13 @@
 
 		&:link,
 		&:visited {
-			color: currentColor;
+			color: currentcolor;
 			text-decoration: none;
 		}
 
 		&:hover,
 		&:active {
-			color: currentColor;
+			color: currentcolor;
 			text-decoration: none;
 			background-color: $gray-lighter;
 		}
@@ -89,6 +92,7 @@
 		line-height: 80px;
 		border-radius: 50%;
 		text-align: center;
+
 		strong {
 			font-size: 60px;
 		}
@@ -120,7 +124,7 @@
 		text-align: center;
 		padding-top: 20px;
 		font-size: 24px;
-		font-weight: normal;
+		font-weight: 400;
 		color: $more-shade-font;
 
 		.icon-new {
@@ -164,6 +168,7 @@
 	.avatar {
 		border-radius: 50%;
 		margin-right: 0.5em;
+
 		@media screen and (max-width: $screen-sm-max ) {
 			width: 24px;
 			height: 24px;
@@ -188,7 +193,8 @@
 		border-top: 3px double $thin-border;
 	}
 
-	th, td {
+	th,
+	td {
 		border: 1px solid $thin-border;
 		text-align: center;
 		padding: 0;
@@ -210,6 +216,7 @@
 
 			&.on {
 				color: $link-color;
+
 				@include animation(cell-blink 3s linear infinite);
 			}
 		}
@@ -217,7 +224,9 @@
 }
 
 @media only screen and (max-width: $screen-xs-max) {
+
 	.rank-list {
+
 		.pull-left {
 			width: 60px;
 			height: 60px;

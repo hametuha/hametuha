@@ -12,7 +12,11 @@ import metadata from './block.json';
 registerBlockType( metadata.name, {
 	edit( { className } ) {
 		return (
-			<div className={ [ className, 'container' ].filter( Boolean ).join( ' ' ) }>
+			<div
+				className={ [ className, 'container' ]
+					.filter( Boolean )
+					.join( ' ' ) }
+			>
 				<InnerBlocks templateLock={ false } />
 			</div>
 		);

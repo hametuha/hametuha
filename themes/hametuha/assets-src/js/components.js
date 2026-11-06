@@ -12,20 +12,19 @@ if ( ! window.wp.hametuha ) {
 /**
  * オブジェクトのプロパティ名からクラス名を表示する
  *
- * @param {object} classes key is class name, value is boolean.
- * @returns {string} Class names.
+ * @param {Object} classes key is class name, value is boolean.
+ * @return {string} Class names.
  */
-const classNames = ( classes )	=> {
+const classNames = ( classes ) => {
 	const attr = [];
-	Object.keys( classes ).forEach( (key) => {
+	Object.keys( classes ).forEach( ( key ) => {
 		if ( classes[ key ] ) {
 			attr.push( key );
 		}
-	});
+	} );
 	return attr.join( ' ' );
 };
 window.wp.hametuha.classNames = classNames;
-
 
 /**
  * Convert date object to string.
@@ -51,38 +50,38 @@ window.wp.hametuha.toDateTime = toDateTime;
  * - checkbox（複数）: 選択された値の配列
  * - その他（text, textarea, select, number等）: value
  *
- * @param {HTMLElement} form form要素
+ * @param {HTMLElement}   form  form要素
  * @param {Array<string>} names nameの配列
  * @return {Object}
  */
 const formToData = ( form, names ) => {
 	const formData = {};
 	names.forEach( ( name ) => {
-		const elements = form.querySelectorAll( `[name="${name}"]` );
+		const elements = form.querySelectorAll( `[name="${ name }"]` );
 		if ( elements.length === 0 ) {
 			return;
 		}
 
-		const firstElem = elements[0];
+		const firstElem = elements[ 0 ];
 		const type = firstElem.type;
 
 		if ( type === 'radio' ) {
 			// ラジオボタン: チェックされた要素のvalue
-			const checked = form.querySelector( `[name="${name}"]:checked` );
-			formData[name] = checked ? checked.value : null;
+			const checked = form.querySelector( `[name="${ name }"]:checked` );
+			formData[ name ] = checked ? checked.value : null;
 		} else if ( type === 'checkbox' ) {
 			if ( elements.length === 1 ) {
 				// 単一チェックボックス: boolean
-				formData[name] = firstElem.checked;
+				formData[ name ] = firstElem.checked;
 			} else {
 				// 複数チェックボックス: チェックされた要素のvalueの配列
-				formData[name] = Array.from( elements )
-					.filter( elem => elem.checked )
-					.map( elem => elem.value );
+				formData[ name ] = Array.from( elements )
+					.filter( ( elem ) => elem.checked )
+					.map( ( elem ) => elem.value );
 			}
 		} else {
 			// その他（text, textarea, select, number等）: valueをそのまま取得
-			formData[name] = firstElem.value;
+			formData[ name ] = firstElem.value;
 		}
 	} );
 	return formData;
@@ -96,11 +95,15 @@ window.wp.hametuha.formToData = formToData;
  * DOMの変更後に再度呼び出すことで動的に追加された要素にも対応可能
  */
 const initializeTooltips = () => {
-	const tooltipTriggerList = document.querySelectorAll( '[data-bs-toggle="tooltip"]' );
-	const tooltipList = Array.from( tooltipTriggerList ).map( tooltipTriggerEl => {
-		// Bootstrap 5ではbootstrap.Tooltipコンストラクタを使用
-		return new bootstrap.Tooltip( tooltipTriggerEl );
-	} );
+	const tooltipTriggerList = document.querySelectorAll(
+		'[data-bs-toggle="tooltip"]'
+	);
+	const tooltipList = Array.from( tooltipTriggerList ).map(
+		( tooltipTriggerEl ) => {
+			// Bootstrap 5ではbootstrap.Tooltipコンストラクタを使用
+			return new bootstrap.Tooltip( tooltipTriggerEl );
+		}
+	);
 	return tooltipList;
 };
 

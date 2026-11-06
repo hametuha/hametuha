@@ -11,7 +11,7 @@
 		padding: 20px;
 		max-width: 50vw;
 		display: flex;
-		flex-direction : column-reverse;
+		flex-direction: column-reverse;
 		align-items: flex-start;
 
 		@media screen and (max-width: 767px) {
@@ -25,14 +25,14 @@
 
 	// Toast item.
 	border-radius: 3px;
-	background-color: rgba( 255, 255, 255, .8 );
+	background-color: rgba(255, 255, 255, 0.8);
 	color: $shade-font;
-	border: 1px solid currentColor;
+	border: 1px solid currentcolor;
 	padding: 20px;
-	box-shadow: 0 0 10px rgba(0,0,0,.2);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	opacity: 0;
-	transform: translateY( -10px );
-	transition: opacity .3s ease, transform .3s ease;
+	transform: translateY(-10px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
 	backdrop-filter: blur(10px);
 
 	& + & {
@@ -42,28 +42,28 @@
 	@each $theme in ( primary, secondary, success, info, warning, danger ) {
 		// Only works with Bootstrap 4.
 		@if variable-exists( theme-colors ) {
-			$color: map-get( $theme-colors, $theme );
+			$color: map-get($theme-colors, $theme);
 			&-#{$theme} {
 				color: darken($color, 20);
-				background-color: rgba( $color, .3 );
+				background-color: rgba($color, 0.3);
 			}
 		}
 	}
 
 	&-on {
 		opacity: 1;
-		transform: translateY( 0 );
+		transform: translateY(0);
 	}
 
 	&-header {
 		font-size: 14px;
 		position: relative;
-		border-bottom: 1px solid currentColor;
+		border-bottom: 1px solid currentcolor;
 		margin-bottom: 10px;
 		padding-bottom: 10px;
 
 		button {
-			color: currentColor;
+			color: currentcolor;
 			position: absolute;
 			right: 0;
 			top: 0;
