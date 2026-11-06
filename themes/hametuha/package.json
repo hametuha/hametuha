@@ -21,7 +21,8 @@
     "fix:js": "wp-scripts lint-js --fix \"./assets-src/**/*.js\"",
     "fix:css": "wp-scripts lint-style --fix \"./assets-src/**/*.scss\"",
     "compress-images": "node bin/compress-images.js",
-    "build:blocks": "wp-scripts build --webpack-src-dir=assets-src/blocks --output-path=assets/blocks"
+    "build:blocks": "wp-scripts build --webpack-src-dir=assets-src/blocks --output-path=assets/blocks",
+    "prepare": "cd ../.. && husky themes/hametuha/.husky"
   },
   "author": "Hametuha inc.",
   "license": "LGPL-3.0-or-later",
@@ -76,5 +77,9 @@
       "dumpDir": "assets/css",
       "autoHandleGeneration": true
     }
+  },
+  "lint-staged": {
+    "assets-src/**/*.js": "wp-scripts lint-js",
+    "assets-src/**/*.scss": "wp-scripts lint-style"
   }
 }
