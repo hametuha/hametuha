@@ -27,7 +27,7 @@
 		"bootstrap": "^5.3.8",
 		"eslint": "^5.4.0",
 		"eslint-plugin-wordpress": "^0.1.0",
-		"glob": "^10.3.1",
+		"glob": "^13.0.6",
 		"gulp": "^4.0.0",
 		"gulp-autoprefixer": "^6.0.0",
 		"gulp-concat": "^2.6.0",
