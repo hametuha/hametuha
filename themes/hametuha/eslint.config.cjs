@@ -30,9 +30,19 @@ module.exports = [
 				// 外部スクリプト
 				gtag: 'readonly',
 				bootstrap: 'readonly',
+				bootbox: 'readonly',
 				moment: 'readonly',
 				Recharts: 'readonly',
 			},
+		},
+		settings: {
+			// @wordpress/* は WordPress が読み込むもの（wp-scripts が外部化する）。npm には入れない
+			'import/internal-regex': '^@wordpress/',
+		},
+		rules: {
+			'import/no-unresolved': [ 'error', { ignore: [ '^@wordpress/' ] } ],
+			// 全角スペースを判定する正規表現（/[ 　]/ など）で使っている
+			'no-irregular-whitespace': [ 'error', { skipRegExps: true } ],
 		},
 	},
 ];

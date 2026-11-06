@@ -27,7 +27,7 @@ $hametuha-border-style: 1px solid #ddd !default;
 				img {
 					max-width: 32px;
 
-					& + .notification__text {
+					+ .notification__text {
 						margin-left: 48px;
 					}
 				}

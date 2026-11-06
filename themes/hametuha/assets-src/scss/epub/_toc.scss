@@ -9,7 +9,7 @@ $toc-link-border: 1px solid #444;
 		counter-reset: section;
 		border-top: $toc-link-border;
 
-		& > li {
+		> li {
 			font-weight: 700;
 			list-style: none;
 			padding: 0.5em;
@@ -36,7 +36,7 @@ $toc-link-border: 1px solid #444;
 		ol {
 			border-top: none;
 
-			& > li {
+			> li {
 				font-weight: 400;
 				padding-left: 2em;
 				border-bottom: none;

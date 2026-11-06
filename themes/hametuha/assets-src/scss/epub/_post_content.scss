@@ -135,7 +135,7 @@
 
 			@include logical-property(0 0 0 2em);
 
-			& + dt {
+			+ dt {
 
 				@include logical-property(1em 0 0 1em);
 			}

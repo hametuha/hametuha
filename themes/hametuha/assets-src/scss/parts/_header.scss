@@ -1,6 +1,4 @@
-//
 // アイコンの点滅
-//
 @include keyframes(icon-blink) {
 
 	0% {
@@ -114,7 +112,7 @@
 				display: none;
 			}
 
-			& > li.open {
+			> li.open {
 
 				.dropdown-menu {
 					position: absolute;
@@ -134,7 +132,7 @@
 			}
 		}
 
-		& > li:last-child .avatar {
+		> li:last-child .avatar {
 			width: $avatar-size;
 			height: $avatar-size;
 			border-radius: 4px;
@@ -163,7 +161,7 @@
 
 		&.navbar-right > li {
 
-			& > a {
+			> a {
 				$avatar-pad: ($navbar-height - $avatar-size) / 2;
 				padding: $avatar-pad $avatar-pad / 2;
 				line-height: 1;
@@ -173,7 +171,7 @@
 					vertical-align: middle;
 				}
 
-				& > i {
+				> i {
 					$icon-pad: 4px;
 					font-size: $avatar-size - (2 * $icon-pad);
 					line-height: $avatar-size;
@@ -209,9 +207,7 @@
 	}
 }
 
-//
 // Sub header
-//
 .sub-header {
 
 	background: $hametuha-color;
@@ -257,9 +253,7 @@
 }
 
 
-//
 // ロゴマーク
-//
 .logo {
 	$logo-width: $navbar-height;
 	position: absolute;
@@ -268,7 +262,7 @@
 	height: $logo-width;
 	left: 50%;
 	top: 0;
-	margin-left: $logo-width  / -10 * 9;
+	margin-left: $logo-width / -10 * 9;
 
 	&:link,
 	&:visited {
@@ -306,18 +300,15 @@
 
 #header {
 
-	& + #breadcrumb,
-	& + .sub-header {
+	+ #breadcrumb,
+	+ .sub-header {
 		padding-top: $navbar-height + $subnavbar-height;
 	}
 }
 
 
-//
 // ぱんくずリスト
-//
 // ------------------
-//
 #breadcrumb {
 	position: relative;
 	background-color: transparent;
@@ -458,12 +449,12 @@
 		}
 
 		.icon-amazon {
-			color: orange;
+			color: #ffa500;
 			margin-right: 0.5rem;
 		}
 
 		.icon-heart {
-			color: red;
+			color: #f00;
 			margin-right: 0.5rem;
 		}
 

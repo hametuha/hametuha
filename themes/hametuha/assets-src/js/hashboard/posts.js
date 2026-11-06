@@ -195,7 +195,10 @@ class PostList extends Component {
 												</i>{ ' ' }
 												{ post.terms.map( ( term ) => {
 													return (
-														<a href={ term.url }>
+														<a
+															key={ term.url }
+															href={ term.url }
+														>
 															{ term.name }
 														</a>
 													);

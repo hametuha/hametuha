@@ -7,7 +7,7 @@ $page-links-color: $gray-800 !default;
 	font-family: sans-serif;
 	text-indent: 0 !important;
 
-	& > span,
+	> span,
 	a {
 		font-size: 14px;
 
@@ -23,7 +23,7 @@ $page-links-color: $gray-800 !default;
 		}
 	}
 
-	& > span {
+	> span {
 		background-color: $page-links-color;
 		color: $white;
 	}

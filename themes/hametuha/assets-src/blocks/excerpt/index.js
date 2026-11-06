@@ -13,60 +13,70 @@ import { __, sprintf } from '@wordpress/i18n';
 import metadata from './block.json';
 import './editor.scss';
 
-registerBlockType( metadata.name, {
-	edit( { attributes, className } ) {
-		const post = useSelect(
-			( select ) => select( 'core/editor' ).getCurrentPost(),
-			[]
+/**
+ * 編集画面
+ *
+ * @param {Object} props            ブロックのプロパティ
+ * @param {Object} props.attributes ブロックの属性
+ * @param {string} props.className  ブロックのクラス名
+ * @return {Element} 編集画面
+ */
+const Edit = ( { attributes, className } ) => {
+	const post = useSelect(
+		( select ) => select( 'core/editor' ).getCurrentPost(),
+		[]
+	);
+	const [ excerpt, setExcerpt ] = useEntityProp(
+		'postType',
+		post.type,
+		'excerpt',
+		post.id
+	);
+	const { max, min } = attributes;
+	let { placeholder } = attributes;
+	if ( 'news' === post.type ) {
+		placeholder = __(
+			'ニュースの内容を要約するリード文を書いてください。',
+			'hametuha'
 		);
-		const [ excerpt, setExcerpt ] = useEntityProp(
-			'postType',
-			post.type,
-			'excerpt',
-			post.id
-		);
-		const { max, min } = attributes;
-		let { placeholder } = attributes;
-		if ( 'news' === post.type ) {
-			placeholder = __(
-				'ニュースの内容を要約するリード文を書いてください。',
-				'hametuha'
-			);
-		}
-		const length = ( excerpt || '' ).length;
-		const ok = length < max && length > min;
-		const helperClass = [ 'hametuha-block-lead-status', ok ? 'ok' : 'ng' ];
+	}
+	const length = ( excerpt || '' ).length;
+	const ok = length < max && length > min;
+	const helperClass = [ 'hametuha-block-lead-status', ok ? 'ok' : 'ng' ];
+	const helperStatusText = sprintf(
 		// translators: %1$d: current length, %2$d: min, %3$d: max.
-		const helperStatusText = sprintf(
-			__( '現在%1$d文字: %2$d〜%3$d文字', 'hametuha' ),
-			length,
-			min,
-			max
-		);
-		return (
-			<div className={ className + '-container' }>
-				<RichText
-					className="hametuha-block-lead-text"
-					tagName="p"
-					allowedFormats={ [] }
-					aria-label={ __( 'リード文', 'hametuha' ) }
-					placeholder={ placeholder }
-					value={ excerpt }
-					onChange={ setExcerpt }
-				/>
-				<span className={ helperClass.join( ' ' ) }>
-					<span
-						className={
-							ok
-								? 'dashicons dashicons-yes'
-								: 'dashicons dashicons-warning'
-						}
-					></span>
-					{ helperStatusText }
-				</span>
-			</div>
-		);
-	},
+		__( '現在%1$d文字: %2$d〜%3$d文字', 'hametuha' ),
+		length,
+		min,
+		max
+	);
+	return (
+		<div className={ className + '-container' }>
+			<RichText
+				className="hametuha-block-lead-text"
+				tagName="p"
+				allowedFormats={ [] }
+				aria-label={ __( 'リード文', 'hametuha' ) }
+				placeholder={ placeholder }
+				value={ excerpt }
+				onChange={ setExcerpt }
+			/>
+			<span className={ helperClass.join( ' ' ) }>
+				<span
+					className={
+						ok
+							? 'dashicons dashicons-yes'
+							: 'dashicons dashicons-warning'
+					}
+				></span>
+				{ helperStatusText }
+			</span>
+		</div>
+	);
+};
+
+registerBlockType( metadata.name, {
+	edit: Edit,
 
 	save() {
 		return null;

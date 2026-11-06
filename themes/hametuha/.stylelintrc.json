@@ -2,6 +2,10 @@
 	"extends": "@wordpress/stylelint-config/scss-stylistic",
 	"rules": {
 		"selector-class-pattern": null,
+		"selector-id-pattern": null,
+		"no-invalid-position-at-import-rule": null,
+		"scss/at-extend-no-missing-placeholder": null,
+		"scss/no-global-function-names": null,
 		"value-keyword-case": [
 			"lower",
 			{
@@ -12,6 +16,18 @@
 			true,
 			{
 				"ignoreProperties": [ "page-break-after", "page-break-before", "page-break-inside" ]
+			}
+		],
+		"property-no-unknown": [
+			true,
+			{
+				"ignoreProperties": [ "/^mso-/", "text-combine", "text-stroke" ]
+			}
+		],
+		"font-family-no-missing-generic-family-keyword": [
+			true,
+			{
+				"ignoreFontFamilies": [ "hameticon" ]
 			}
 		]
 	}

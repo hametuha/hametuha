@@ -14,7 +14,7 @@
 	font-size: 28px;
 	width: 8em;
 	height: 2em;
-	line-height: 2em;
+	line-height: 2em; // stylelint-disable-line declaration-property-unit-allowed-list
 	text-align: center;
 	background-color: $footer-navbar-bg;
 	color: $inverse-body;

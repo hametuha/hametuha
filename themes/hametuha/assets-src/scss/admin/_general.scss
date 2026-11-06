@@ -146,7 +146,7 @@ div.admin-notice {
 		width: 100%;
 		margin-bottom: 5px;
 
-		& + span {
+		+ span {
 			color: #888;
 			font-size: 0.85em;
 		}
@@ -154,10 +154,6 @@ div.admin-notice {
 }
 
 .taxonomy-check {
-
-	&-list{
-
-	}
 
 	&-label {
 		display: block;

@@ -1,8 +1,7 @@
 /**
  * Description
+ * @param $
  */
-
-/*global wp: true*/
 
 ( function ( $ ) {
 	'use strict';

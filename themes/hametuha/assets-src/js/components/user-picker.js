@@ -5,8 +5,6 @@
  * @deps jquery, wp-api-fetch, hametuha-toast
  */
 
-/*global Hametuha: true*/
-
 const { apiFetch } = wp;
 const { toast } = wp.hametuha;
 const $ = jQuery;

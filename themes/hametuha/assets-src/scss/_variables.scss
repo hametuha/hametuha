@@ -1,13 +1,9 @@
-//
 // Bootstrap 3 → Bootstrap 5 移行
 // 後方互換性変数とミックスインを読み込み
-//
 @import "backward-compat/variables";
 @import "backward-compat/mixins";
 
-//
 // 既存のhametuha固有変数
-//
 // --------------------------------------------------------
 
 // Slick
@@ -15,12 +11,8 @@ $slick-loader-path: "../img/" !default;
 $slick-arrow-color: #888;
 
 
-//
-//
 // 色の設定
-//
 // ----------------------
-//
 $base-color: #444;
 
 $thin-border: #ddd;
@@ -40,7 +32,7 @@ $start-font: #ff0;
 $hover-bg: $thin-border;
 
 // リンク
-$link-active: red;
+$link-active: #f00;
 $link-hover-bg: $thin-border;
 $link-active-bg: #e4e4ca;
 
@@ -64,17 +56,17 @@ $pocket-color: #f04057;
 @each $brand in (
 	facebook $facebook-color,
 	twitter $twitter-color,
-  google $google-color,
-  line $line-color,
-  ha $hametuha-color,
-  hatebu $hatena-color,
-  instagram $instagram-color,
-  github $github-color,
-  minicome $minicome-color,
-  youtube $youtube-color,
-  ustream $ustream-color,
-  pocket $pocket-color,
-  hatena $hatena-color,
+	google $google-color,
+	line $line-color,
+	ha $hametuha-color,
+	hatebu $hatena-color,
+	instagram $instagram-color,
+	github $github-color,
+	minicome $minicome-color,
+	youtube $youtube-color,
+	ustream $ustream-color,
+	pocket $pocket-color,
+	hatena $hatena-color,
 ) {
 	[class^="icon-#{nth($brand, 1)}"] {
 		color: nth($brand, 2) !important;
@@ -102,12 +94,8 @@ $divide-border: 3px double $thin-border;
 }
 
 
-//
-//
 // フォントの設定
-//
 // ----------------------
-//
 // Bootstrap 5 フォント設定
 $font-family-sans-serif:  "Helvetica Neue", Helvetica, YuGothic,"游ゴシック",sans-serif !default;
 $font-family-serif:       Georgia, "游明朝体", "Yu Mincho", YuMincho, serif !default;

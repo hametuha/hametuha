@@ -4,7 +4,6 @@
 
 /*global FB: false*/
 /*global twttr: false*/
-/*global Hametuha: true*/
 /*global HametuhaSocial: false */
 
 ( function ( $ ) {

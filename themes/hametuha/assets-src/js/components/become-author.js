@@ -1,8 +1,7 @@
 /**
  * Description
+ * @param $
  */
-
-/*global Hametuha: true*/
 
 ( function ( $ ) {
 	'use strict';

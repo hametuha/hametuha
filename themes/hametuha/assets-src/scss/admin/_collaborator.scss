@@ -49,8 +49,8 @@
 		a,
 		button {
 
-			& + a,
-			& + button {
+			+ a,
+			+ button {
 				margin-left: 15px;
 			}
 		}
@@ -62,9 +62,6 @@
 		border-radius: 50%;
 		vertical-align: middle;
 		margin-right: 10px;
-	}
-
-	&-name{
 	}
 
 	&-revenue {

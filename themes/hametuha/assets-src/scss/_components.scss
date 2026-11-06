@@ -74,11 +74,11 @@ hr.divider {
 		&:hover,
 		&:active {
 			color: #fff;
-			background-color: darken(orange, 20);
+			background-color: darken(#ffa500, 20);
 		}
 
 		i {
-			color: orange;
+			color: #ffa500;
 		}
 	}
 
@@ -291,7 +291,7 @@ i.rotation {
 		}
 	}
 
-	& + .alert {
+	+ .alert {
 		display: none;
 	}
 
@@ -307,7 +307,7 @@ i.rotation {
 // スピナー
 .ui-autocomplete-input {
 
-	& + .form-control-feedback {
+	+ .form-control-feedback {
 		top: 0;
 		right: 50px;
 		color: $more-shade-font;
@@ -317,7 +317,7 @@ i.rotation {
 
 .ui-autocomplete-loading {
 
-	& + .form-control-feedback {
+	+ .form-control-feedback {
 
 		@include inline-block();
 	}
@@ -333,13 +333,11 @@ i.rotation {
 	padding-bottom: 0.5em;
 }
 
-//
 // サブナビゲーション
 // -------------------
-//
 .nav-sub {
 
-	& > li {
+	> li {
 
 		a {
 			margin-right: 5px;
@@ -373,11 +371,8 @@ i.rotation {
 }
 
 
-//
 // 著者情報
-//
 // --------------------
-//
 
 // 個別管理するためのミックスイン
 @mixin author-profile($image-size) {
@@ -456,11 +451,8 @@ i.rotation {
 }
 
 
-//
 // メタデータ用のインラインリスト
-//
 // --------------------
-//
 ul.metadata {
 	border-bottom: 1px solid #eee;
 	color: #999;
@@ -519,7 +511,7 @@ ul.metadata {
 		}
 	}
 
-	& > li {
+	> li {
 		margin-top: 0;
 		padding: 0;
 		border-bottom: 1px solid $thin-border;
@@ -637,11 +629,8 @@ ul.metadata {
 	margin: 20px 0;
 }
 
-//
 // イベント情報
-//
 // ---------------
-//
 .event-detail {
 	border-top: 2px solid $thin-border;
 	border-bottom: 2px solid $thin-border;
@@ -833,12 +822,14 @@ caption.outdated {
 		background: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24.png) no-repeat 0 0;
 	}
 
+	/* stylelint-disable media-feature-name-no-unknown -- 古いブラウザ向けのベンダー表記 */
 	@media only screen and (-webkit-min-device-pixel-ratio: 2),
 		only screen and (min--moz-device-pixel-ratio: 2),
 		only screen and (-o-min-device-pixel-ratio: 2 / 1),
-	only screen and (min-device-pixel-ratio: 2),
-	only screen and (min-resolution: 192dpi),
-	only screen and (min-resolution: 2dppx) {
+		only screen and (min-device-pixel-ratio: 2),
+		only screen and (min-resolution: 192dpi),
+		only screen and (min-resolution: 2dppx) {
+		/* stylelint-enable media-feature-name-no-unknown */
 
 		&v-24 {
 			background-image: url(//badges.instagram.com/static/images/ig-badge-view-sprite-24@2x.png);

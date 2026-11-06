@@ -12,7 +12,7 @@
 			background: url(../img/jumbotron/hamenew.jpg?201608) bottom left no-repeat;
 			background-size: contain;
 			padding: 80px 40px 80px 30%;
-			-webkit-text-stroke: 2px white;
+			-webkit-text-stroke: 2px #fff;
 			paint-order: stroke fill;
 
 			@include mq-max($screen-sm-max) {
@@ -74,7 +74,7 @@
 		}
 	}
 
-	& + .post-title-thumbnail {
+	+ .post-title-thumbnail {
 		margin-top: 20px;
 
 		@media only screen and (max-width: $screen-xs-max) {
@@ -327,7 +327,7 @@
 			padding: 0;
 			margin: 0;
 
-			& > i {
+			> i {
 				color: #ccc;
 			}
 		}

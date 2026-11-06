@@ -2,7 +2,6 @@
  * 破滅派投稿ページでだけ呼び出されるスクリプト
  */
 
-/*global Hametuha: true*/
 /*global postScore: true*/
 /*global Chart: true*/
 /*global Modernizr: true*/

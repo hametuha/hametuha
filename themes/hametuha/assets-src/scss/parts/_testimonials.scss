@@ -1,7 +1,7 @@
 // Testimonial star.
 i.icon-star6,
 i.icon-star5 {
-	color: yellow;
+	color: #ff0;
 	-webkit-text-stroke: 1px #ddd;
 	text-stroke: 1px #ddd;
 }
@@ -61,13 +61,9 @@ i.icon-star5 {
 	&-rating {
 		-webkit-text-stroke: 1px #888;
 		text-stroke: 1px #888;
-		color: yellow;
+		color: #ff0;
 		font-size: 1.2em;
 		text-align: center;
-	}
-
-	&-source {
-
 	}
 }
 

@@ -1,8 +1,5 @@
-//
 // hamazon
-//
 // ----------------------
-//
 
 div.tmkm-amazon-view {
 
@@ -12,7 +9,7 @@ div.tmkm-amazon-view {
 	margin: 1em auto;
 	padding: 1em 1.5em;
 	font-size: 12px;
-	font-familly: $font-family-sans-serif;
+	font-family: $font-family-sans-serif;
 
 	.alert & {
 		padding: 1em 0 0;
@@ -47,7 +44,7 @@ div.tmkm-amazon-view {
 	p {
 		margin: 0.5em 0;
 
-		& + p {
+		+ p {
 			margin-left: $width + 20;
 		}
 
@@ -123,7 +120,7 @@ div.tmkm-amazon-view {
 				float: none;
 			}
 
-			& + p {
+			+ p {
 				margin-left: $width;
 			}
 		}

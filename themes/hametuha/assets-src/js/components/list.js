@@ -29,7 +29,7 @@ $( document ).on( 'click', '.list-eraser', function ( e ) {
 					if ( $( 'body' ).hasClass( 'single-lists' ) ) {
 						setTimeout( () => {
 							// シングルページの場合はリスト一覧に移動
-							window.location.href = result.url;
+							window.location.href = res.url;
 						}, 1000 );
 					}
 				} )
@@ -74,7 +74,7 @@ $( document ).ready( function ( $ ) {
 							if ( ! $( 'ol.media-list > li' ).length ) {
 								$( 'ol.media-list' ).before(
 									'<div class="alert alert-danger">' +
-										result.message +
+										res.message +
 										'</div>'
 								);
 								setTimeout( function () {

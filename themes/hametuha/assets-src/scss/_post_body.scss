@@ -274,8 +274,8 @@
 		@each $setting in (
 			(primary $brand-primary),
 			(success $brand-success),
-				(danger $brand-danger),
-				(warning $brand-warning)
+			(danger $brand-danger),
+			(warning $brand-warning)
 		) {
 			$class-name: nth($setting, 1);
 			$color: nth($setting, 2);
@@ -333,11 +333,8 @@
 
 	// 普通の投稿
 	@if ($book == false) {
-		//
 		// 普通の投稿
-		//
 		// ------------------------
-		//
 		// リンク
 		a:link,
 		a:visited {
@@ -560,14 +557,11 @@
 			max-width: 100%;
 		}
 	} @else {
-		//
 		// 電子書籍
-		//
 		// ------------------------
-		//
 
 
-		& > *:first-child {
+		> *:first-child {
 			margin-top: 0;
 		}
 

@@ -2,8 +2,6 @@
  * Common UI Parts
  */
 
-/*global Hametuha: true*/
-
 import Headroom from './headroom';
 
 jQuery( document ).ready( function ( $ ) {

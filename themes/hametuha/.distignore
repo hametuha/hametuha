@@ -22,3 +22,5 @@ tests
 style.css.bak
 readme.txt.bak
 .stylelintignore
+.husky
+eslint-suppressions.json

@@ -63,13 +63,13 @@
 
 		&.rank-list {
 
-			& > a {
+			> a {
 				padding-left: 1em !important;
 			}
 		}
 	}
 
-	& > a.media__link {
+	> a.media__link {
 
 		&.media__link--nopad {
 			padding-left: 1em !important;
@@ -124,7 +124,7 @@
 			}
 		}
 
-		& > a.media__link {
+		> a.media__link {
 			padding-left: 110px;
 
 			.pseudo-thumbnail {
@@ -169,7 +169,7 @@
 			color: $footer-navbar-bg;
 		}
 
-		& + small {
+		+ small {
 			display: block;
 			text-align: center;
 			color: $more-shade-font;
@@ -258,8 +258,8 @@
 			height: auto;
 			float: left;
 
-			& + .list-heading,
-			& + .list-heading + .list-meta {
+			+ .list-heading,
+			+ .list-heading + .list-meta {
 				margin-left: 80px;
 			}
 		}

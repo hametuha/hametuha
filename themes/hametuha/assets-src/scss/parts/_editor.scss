@@ -4,16 +4,12 @@
 
 }
 
-//
 // Fix media uploader
-//
 .screen-reader-text {
 	display: none;
 }
 
-//
 // Fix tinyMCE
-//
 #wp-hamce {
 
 	&-media-buttons {
@@ -21,13 +17,8 @@
 	}
 }
 
-//
 // Editor
-//
 .hameditor {
-
-	&--anpi {
-	}
 
 	&__title {
 		font-size: 24px;

@@ -28,7 +28,7 @@
 
 		&-list {
 
-			& + a {
+			+ a {
 				margin-top: 50px;
 			}
 
@@ -72,9 +72,6 @@
 
 	img {
 		max-width: 100%;
-	}
-
-	.widget_sp_image-image-link {
 	}
 
 	.small-button {

@@ -44,7 +44,7 @@
 	}
 
 	&::after,
-	& li::after {
+	li::after {
 		content: "";
 		position: absolute;
 		display: block;
@@ -59,7 +59,7 @@
 		right: -1px;
 	}
 
-	& li::after {
+	li::after {
 		left: -1px;
 	}
 

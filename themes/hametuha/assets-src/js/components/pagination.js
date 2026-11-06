@@ -109,6 +109,7 @@ wp.hametuha.Pagination = ( props ) => {
 				{ computed.range().map( ( num ) => {
 					return (
 						<PageItem
+							key={ num }
 							number={ num }
 							active={ num === current }
 							onChange={ onChange }

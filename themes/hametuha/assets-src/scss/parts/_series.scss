@@ -1,8 +1,5 @@
 .series {
 
-	&__inner {
-	}
-
 	&__row {
 		padding: 2em 0;
 
@@ -297,9 +294,6 @@
 			@at-root a:visited &:after {
 				content: "";
 			}
-		}
-
-		&--counter {
 		}
 
 		&--author {

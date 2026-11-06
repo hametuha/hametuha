@@ -2,7 +2,6 @@
  * Description
  */
 
-/*global Hametuha: true*/
 /*global Backbone: true*/
 /*global _: true*/
 /*global HametuhaUserTag: true*/

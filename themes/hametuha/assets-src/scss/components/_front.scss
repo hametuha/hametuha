@@ -8,12 +8,6 @@
 		color: $white;
 		text-shadow: 0 0 5px $black;
 
-		&--title {
-		}
-
-		&--excerpt {
-		}
-
 		&--buttons {
 
 			a {
@@ -33,7 +27,7 @@
 		padding-top: 1px;
 	}
 
-	& + .front-container {
+	+ .front-container {
 		padding-top: 0;
 	}
 
@@ -91,7 +85,7 @@
 
 			&-facebook {
 
-				& > div {
+				> div {
 					width: 100%;
 					height: 230px;
 				}
@@ -321,10 +315,6 @@
 		border-bottom: 1px solid $thin-border;
 		text-align: center;
 		font-family: $work-title;
-
-		&--title {
-
-		}
 
 		&--score {
 			font-size: 1.2em;

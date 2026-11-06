@@ -1,7 +1,5 @@
-//
 // Typography
 //-------------------
-//
 @mixin logical-property($values, $is-margin: true) {
 
 	@if ($is-margin) {
@@ -56,10 +54,8 @@
 	}
 }
 
-//
 // Responsive utility
 //-------------------
-//
 @mixin head-room() {
 
 	@media only screen and ( max-width: $screen-xs-max ) {
@@ -67,10 +63,8 @@
 	}
 }
 
-//
 // Background sheet
 //-------------------
-//
 @mixin bg-sheet( $color: rgba(0, 0, 0, 0.2), $position: relative, $top: 0, $right: 0, $bottom: 0, $left: 0, $z-index: 1 ) {
 	position: $position;
 
@@ -88,10 +82,8 @@
 }
 
 
-//
 // Backward compats
 //-------------------
-//
 @mixin border-radius($radius) {
 	border-radius: $radius;
 }
@@ -111,10 +103,8 @@
 }
 
 
-//
 // Typograhpy
 //-------------------
-//
 
 @mixin text-justify() {
 	text-align: justify;

@@ -1,9 +1,7 @@
 /**
  * Description
+ * @param $
  */
-
-/*global Hametuha: true*/
-/*global wpApiSettings: true*/
 
 ( function ( $ ) {
 	'use strict';

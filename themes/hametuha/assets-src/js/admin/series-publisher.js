@@ -59,7 +59,7 @@ const HametuhaEpubGenerator = ( props ) => {
 				<ol className="hametuha-epub-file-list">
 					{ files.items.map( ( file ) => {
 						return (
-							<li>
+							<li key={ file.name }>
 								<code>{ file.name }</code>
 								<small style={ { marginLeft: '0.5em' } }>
 									{ file.updated }
