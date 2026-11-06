@@ -26,20 +26,12 @@
 			margin: 10px;
 		}
 
-		&-list {
-
-			+ a {
-				margin-top: 50px;
-			}
-
-			.slick-dots > li {
-				float: left;
-			}
+		.carousel + a {
+			margin-top: 15px;
 		}
 
 		&-item {
 			text-align: center;
-			display: none;
 
 			img {
 

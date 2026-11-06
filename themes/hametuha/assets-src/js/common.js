@@ -6,8 +6,6 @@
  */
 
 import './common/_hametuha';
-import './common/carousel';
 import './common/form';
 import './common/responsive-helper';
-import './common/slick';
 import './common/ui';

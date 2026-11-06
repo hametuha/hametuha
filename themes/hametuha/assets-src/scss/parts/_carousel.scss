@@ -1,0 +1,98 @@
+/**
+ * カルーセル（Swiper）
+ *
+ * Swiper 本体の CSS（node_modules）に、テーマの見た目（前後ボタン・ドット）を足す。
+ * かつての slick と同じく、灰色の丸い前後ボタンと、下に並ぶ黒いドット。
+ *
+ * @feature-group carousel
+ */
+
+@import "swiper/swiper";
+
+.carousel {
+	position: relative;
+
+	&__prev,
+	&__next {
+		position: absolute;
+		top: calc(50% - 9px); // 下のドットの高さの半分だけ上げる
+		z-index: 9;
+		width: 32px;
+		height: 32px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background-color: $carousel-arrow-color;
+		opacity: 0.75;
+		cursor: pointer;
+		transform: translateY(-50%);
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			width: 10px;
+			height: 10px;
+			border-top: 3px solid #fff;
+			border-left: 3px solid #fff;
+		}
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+		}
+
+		&.swiper-button-disabled {
+			opacity: 0.25;
+			cursor: default;
+		}
+
+		&.swiper-button-lock {
+			display: none;
+		}
+	}
+
+	&__prev {
+		left: 0;
+
+		&::before {
+			transform: translate(-30%, -50%) rotate(-45deg);
+		}
+	}
+
+	&__next {
+		right: 0;
+
+		&::before {
+			transform: translate(-70%, -50%) rotate(135deg);
+		}
+	}
+
+	&__dots {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		margin-top: 12px;
+
+		&.swiper-pagination-lock {
+			display: none;
+		}
+
+		.swiper-pagination-bullet {
+			display: block;
+			width: 6px;
+			height: 6px;
+			padding: 0;
+			border: none;
+			border-radius: 50%;
+			background-color: #000;
+			opacity: 0.25;
+			cursor: pointer;
+
+			&-active {
+				opacity: 0.75;
+			}
+		}
+	}
+}

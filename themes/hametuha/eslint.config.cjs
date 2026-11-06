@@ -13,7 +13,6 @@ module.exports = [
 			// ビルドの生成物
 			'assets/**',
 			// 同梱しているサードパーティのライブラリ（手を入れない）
-			'assets-src/js/common/slick.js',
 			'assets-src/js/common/headroom.js',
 		],
 	},
@@ -43,6 +42,11 @@ module.exports = [
 			'import/no-unresolved': [ 'error', { ignore: [ '^@wordpress/' ] } ],
 			// 全角スペースを判定する正規表現（/[ 　]/ など）で使っている
 			'no-irregular-whitespace': [ 'error', { skipRegExps: true } ],
+			// 機能ごとにファイルをまとめるタグ（CLAUDE.md の「Feature Group タグシステム」）
+			'jsdoc/check-tag-names': [
+				'error',
+				{ definedTags: [ 'feature-group' ] },
+			],
 		},
 	},
 ];
