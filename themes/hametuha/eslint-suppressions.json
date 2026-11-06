@@ -1,0 +1,517 @@
+{
+  "assets-src/js/admin/analytics.js": {
+    "no-alert": {
+      "count": 1
+    }
+  },
+  "assets-src/js/admin/announcement.js": {
+    "eqeqeq": {
+      "count": 3
+    },
+    "jsdoc/no-undefined-types": {
+      "count": 1
+    },
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    },
+    "no-var": {
+      "count": 1
+    }
+  },
+  "assets-src/js/admin/mce.js": {
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-var": {
+      "count": 1
+    }
+  },
+  "assets-src/js/admin/series-helper.js": {
+    "eqeqeq": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/admin/series-publisher.js": {
+    "@wordpress/i18n-translator-comments": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "assets-src/js/admin/tag-selector.js": {
+    "jsdoc/require-param-type": {
+      "count": 10
+    },
+    "jsx-a11y/click-events-have-key-events": {
+      "count": 1
+    },
+    "jsx-a11y/no-static-element-interactions": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/common/_hametuha.js": {
+    "jsdoc/require-returns-description": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 4
+    },
+    "prefer-const": {
+      "count": 2
+    }
+  },
+  "assets-src/js/common/carousel.js": {
+    "jsdoc/require-param-type": {
+      "count": 1
+    }
+  },
+  "assets-src/js/common/form.js": {
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "assets-src/js/components.js": {
+    "jsdoc/require-returns-description": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/anpi-submit.js": {
+    "@wordpress/i18n-no-flanking-whitespace": {
+      "count": 1
+    },
+    "@wordpress/no-global-active-element": {
+      "count": 1
+    },
+    "jsx-a11y/no-noninteractive-element-interactions": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/become-author.js": {
+    "jsdoc/require-param-type": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/edit-profile-helper.js": {
+    "jsdoc/require-param-type": {
+      "count": 1
+    },
+    "prefer-const": {
+      "count": 4
+    }
+  },
+  "assets-src/js/components/event-participants.js": {
+    "jsdoc/no-undefined-types": {
+      "count": 1
+    },
+    "jsdoc/require-param-type": {
+      "count": 1
+    },
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-console": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "assets-src/js/components/follow-toggle.js": {
+    "@wordpress/no-unused-vars-before-return": {
+      "count": 1
+    },
+    "jsdoc/require-param-type": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/front-announcement.js": {
+    "@wordpress/no-unused-vars-before-return": {
+      "count": 3
+    }
+  },
+  "assets-src/js/components/ideas-recommend.js": {
+    "@wordpress/no-unused-vars-before-return": {
+      "count": 2
+    },
+    "camelcase": {
+      "count": 5
+    }
+  },
+  "assets-src/js/components/ideas-stock.js": {
+    "@wordpress/no-unused-vars-before-return": {
+      "count": 2
+    },
+    "camelcase": {
+      "count": 2
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/ideas.js": {
+    "@wordpress/no-global-active-element": {
+      "count": 2
+    },
+    "jsx-a11y/no-noninteractive-element-interactions": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-nested-ternary": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/components/joint-review-input.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/list-creator.js": {
+    "camelcase": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/list-in-post.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "assets-src/js/components/list.js": {
+    "no-shadow": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/login-change-helper.js": {
+    "jsdoc/require-param-type": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    },
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/notification.js": {
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/pagination.js": {
+    "jsx-a11y/anchor-is-valid": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/post-rating.js": {
+    "jsdoc/require-param-type": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/post-review.js": {
+    "jsx-a11y/label-has-associated-control": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/post-search-helper.js": {
+    "no-console": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/toast.js": {
+    "jsdoc/require-returns-description": {
+      "count": 2
+    },
+    "no-shadow": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/user-picker.js": {
+    "eqeqeq": {
+      "count": 1
+    },
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/components/user-select.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/components/user-tag.js": {
+    "jsdoc/require-param-type": {
+      "count": 2
+    },
+    "jsdoc/require-returns-description": {
+      "count": 2
+    }
+  },
+  "assets-src/js/components/watermark.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/epub.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/hashboard/dashboard.js": {
+    "jsdoc/require-param-type": {
+      "count": 3
+    },
+    "no-console": {
+      "count": 1
+    }
+  },
+  "assets-src/js/hashboard/followers.js": {
+    "jsdoc/require-param-type": {
+      "count": 12
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-console": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "assets-src/js/hashboard/notifications.js": {
+    "jsdoc/require-param-type": {
+      "count": 2
+    }
+  },
+  "assets-src/js/hashboard/payment-table.js": {
+    "jsdoc/require-param-type": {
+      "count": 6
+    },
+    "jsdoc/require-returns-description": {
+      "count": 7
+    },
+    "no-shadow": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/hashboard/posts.js": {
+    "no-console": {
+      "count": 1
+    },
+    "no-unused-expressions": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/hashboard/requests.js": {
+    "jsdoc/require-param-type": {
+      "count": 6
+    },
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/hashboard/stats-audiences.js": {
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-shadow": {
+      "count": 3
+    }
+  },
+  "assets-src/js/hashboard/stats-pv.js": {
+    "jsdoc/require-returns-description": {
+      "count": 4
+    },
+    "no-console": {
+      "count": 1
+    }
+  },
+  "assets-src/js/hashboard/stats-traffic.js": {
+    "jsdoc/require-returns-description": {
+      "count": 1
+    },
+    "no-shadow": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/header.js": {
+    "jsx-a11y/anchor-is-valid": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "assets-src/js/modules/collaborator/_collaborator-add.js": {
+    "jsx-a11y/anchor-is-valid": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "assets-src/js/modules/collaborator/_collaborator.js": {
+    "jsx-a11y/label-has-associated-control": {
+      "count": 1
+    },
+    "no-alert": {
+      "count": 1
+    }
+  },
+  "assets-src/js/modules/collaborator/collaborators-list.js": {
+    "no-alert": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 5
+    }
+  },
+  "assets-src/js/modules/compiled-files.js": {
+    "@wordpress/no-unused-vars-before-return": {
+      "count": 2
+    },
+    "no-alert": {
+      "count": 7
+    },
+    "no-console": {
+      "count": 2
+    },
+    "no-unused-expressions": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "assets-src/js/profile-helper.js": {
+    "no-alert": {
+      "count": 2
+    },
+    "no-shadow": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 3
+    },
+    "no-var": {
+      "count": 1
+    }
+  },
+  "assets-src/js/single-post.js": {
+    "jsdoc/require-param-type": {
+      "count": 9
+    },
+    "jsdoc/require-returns-description": {
+      "count": 2
+    },
+    "no-shadow": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 2
+    },
+    "prefer-const": {
+      "count": 1
+    }
+  },
+  "assets-src/js/social.js": {
+    "no-unused-vars": {
+      "count": 4
+    },
+    "prefer-const": {
+      "count": 5
+    }
+  },
+  "bin/compress-images.js": {
+    "jsdoc/require-returns-description": {
+      "count": 2
+    },
+    "no-console": {
+      "count": 5
+    },
+    "prettier/prettier": {
+      "count": 7
+    }
+  },
+  "bin/copy-libs.js": {
+    "prettier/prettier": {
+      "count": 4
+    }
+  },
+  "eslint.config.cjs": {
+    "no-irregular-whitespace": {
+      "count": 1
+    }
+  }
+}

@@ -57,6 +57,10 @@ jobs:
         run: npm ci && composer install
         working-directory: themes/hametuha
 
+      - name: Lint JS/CSS
+        run: npm run lint
+        working-directory: themes/hametuha
+
       - name: Build Assets
         run: npm run package
         working-directory: themes/hametuha

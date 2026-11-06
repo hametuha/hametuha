@@ -15,7 +15,7 @@ const { __ } = wp.i18n;
 /**
  * Format number as Japanese Yen
  * @param {number|string} value
- * @returns {string}
+ * @return {string}
  */
 const formatMoney = ( value ) => {
 	const num = parseInt( value, 10 );
@@ -29,7 +29,7 @@ const formatMoney = ( value ) => {
  * Format currency with appropriate symbol
  * @param {string} value
  * @param {string} currency
- * @returns {string}
+ * @return {string}
  */
 const formatCurrency = ( value, currency ) => {
 	const price = value.toString().split( '.' );
@@ -63,7 +63,7 @@ const formatCurrency = ( value, currency ) => {
 /**
  * Get unit suffix based on store type
  * @param {string} store
- * @returns {string}
+ * @return {string}
  */
 const getUnitSuffix = ( store ) => {
 	return store === 'KENP' ? 'P' : '部';
@@ -72,7 +72,7 @@ const getUnitSuffix = ( store ) => {
 /**
  * Get display label for store
  * @param {string} store
- * @returns {string}
+ * @return {string}
  */
 const getStoreLabel = ( store ) => {
 	return store === 'Amazon' ? 'KDP' : store;
@@ -81,8 +81,8 @@ const getStoreLabel = ( store ) => {
 /**
  * Format date string
  * @param {string} dateStr
- * @param {string} format - 'MM', 'DD', 'YYYY/MM/DD'
- * @returns {string}
+ * @param {string} format  - 'MM', 'DD', 'YYYY/MM/DD'
+ * @return {string}
  */
 const formatDate = ( dateStr, format ) => {
 	if ( ! dateStr || dateStr === '0000-00-00 00:00:00' ) {
@@ -108,7 +108,7 @@ const formatDate = ( dateStr, format ) => {
  * Convert price to JPY equivalent
  * @param {number} price
  * @param {string} currency
- * @returns {number}
+ * @return {number}
  */
 const exchangeToJPY = ( price, currency ) => {
 	const rates = {
@@ -124,12 +124,15 @@ const exchangeToJPY = ( price, currency ) => {
  * Get number of days in a month
  * @param {number} year
  * @param {number} month
- * @returns {number}
+ * @return {number}
  */
 const getDaysInMonth = ( year, month ) => {
 	const days = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
 	// Leap year check
-	if ( month === 2 && ( ( year % 4 === 0 && year % 100 !== 0 ) || year % 400 === 0 ) ) {
+	if (
+		month === 2 &&
+		( ( year % 4 === 0 && year % 100 !== 0 ) || year % 400 === 0 )
+	) {
 		return 29;
 	}
 	return days[ month - 1 ];
@@ -141,7 +144,7 @@ const { toast } = globalThis.hb?.plugins || {};
 /**
  * Show toast message
  * @param {string} message
- * @param {string} type - 'success' | 'error'
+ * @param {string} type    - 'success' | 'error'
  */
 const showToast = ( message, type = 'error' ) => {
 	if ( toast ) {
@@ -156,8 +159,20 @@ const showToast = ( message, type = 'error' ) => {
 
 /**
  * Month selector component using Bootstrap 5
+ * @param root0
+ * @param root0.label
+ * @param root0.minYear
+ * @param root0.initialYear
+ * @param root0.initialMonth
+ * @param root0.onDateUpdated
  */
-const MonthSelector = ( { label, minYear = 2015, initialYear, initialMonth, onDateUpdated } ) => {
+const MonthSelector = ( {
+	label,
+	minYear = 2015,
+	initialYear,
+	initialMonth,
+	onDateUpdated,
+} ) => {
 	const currentYear = new Date().getFullYear();
 	const [ year, setYear ] = useState( initialYear );
 	const [ month, setMonth ] = useState( initialMonth );
@@ -170,8 +185,18 @@ const MonthSelector = ( { label, minYear = 2015, initialYear, initialMonth, onDa
 
 	// Month names
 	const monthNames = [
-		'1月', '2月', '3月', '4月', '5月', '6月',
-		'7月', '8月', '9月', '10月', '11月', '12月',
+		'1月',
+		'2月',
+		'3月',
+		'4月',
+		'5月',
+		'6月',
+		'7月',
+		'8月',
+		'9月',
+		'10月',
+		'11月',
+		'12月',
 	];
 
 	const handleSubmit = () => {
@@ -186,10 +211,14 @@ const MonthSelector = ( { label, minYear = 2015, initialYear, initialMonth, onDa
 				<select
 					className="form-select"
 					value={ year }
-					onChange={ ( e ) => setYear( parseInt( e.target.value, 10 ) ) }
+					onChange={ ( e ) =>
+						setYear( parseInt( e.target.value, 10 ) )
+					}
 				>
 					{ yearOptions.map( ( y ) => (
-						<option key={ y } value={ y }>{ y }年</option>
+						<option key={ y } value={ y }>
+							{ y }年
+						</option>
 					) ) }
 				</select>
 			</div>
@@ -197,10 +226,14 @@ const MonthSelector = ( { label, minYear = 2015, initialYear, initialMonth, onDa
 				<select
 					className="form-select"
 					value={ month }
-					onChange={ ( e ) => setMonth( parseInt( e.target.value, 10 ) ) }
+					onChange={ ( e ) =>
+						setMonth( parseInt( e.target.value, 10 ) )
+					}
 				>
 					{ monthNames.map( ( name, index ) => (
-						<option key={ index + 1 } value={ index + 1 }>{ name }</option>
+						<option key={ index + 1 } value={ index + 1 }>
+							{ name }
+						</option>
 					) ) }
 				</select>
 			</div>
@@ -280,7 +313,7 @@ const SalesHistory = ( { endpoint } ) => {
 				enabled: true,
 				mode: 'index',
 				callbacks: {
-					label: function( context ) {
+					label( context ) {
 						const label = context.dataset.label || '';
 						const value = context.raw;
 						if ( context.datasetIndex === 0 ) {
@@ -294,83 +327,114 @@ const SalesHistory = ( { endpoint } ) => {
 		},
 	} );
 
-	const fetchData = useCallback( async ( year, month ) => {
-		setLoading( true );
-		try {
-			const response = await wp.apiFetch( {
-				path: wp.url.addQueryArgs( endpoint, { year, month } ),
-			} );
+	const fetchData = useCallback(
+		async ( year, month ) => {
+			setLoading( true );
+			try {
+				const response = await wp.apiFetch( {
+					path: wp.url.addQueryArgs( endpoint, { year, month } ),
+				} );
 
-			setTotal( response.total );
-			setRecords( response.records );
+				setTotal( response.total );
+				setRecords( response.records );
 
-			// Build chart data
-			if ( ! response.records.length ) {
+				// Build chart data
+				if ( ! response.records.length ) {
+					setChartData( null );
+					return;
+				}
+
+				const daysInMonth = getDaysInMonth( year, month );
+				const labels = Array.from(
+					{ length: daysInMonth },
+					( _, i ) => i + 1
+				);
+				const priceData = new Array( daysInMonth ).fill( 0 );
+				const datasets = {};
+
+				response.records.forEach( ( record ) => {
+					const day =
+						parseInt(
+							record.date.replace( /^\d{4}-\d{2}-/, '' ),
+							10
+						) - 1;
+					priceData[ day ] += exchangeToJPY(
+						parseFloat( record.royalty ),
+						record.currency
+					);
+
+					const storeLabel = getStoreLabel( record.store );
+					if ( ! datasets[ storeLabel ] ) {
+						datasets[ storeLabel ] = new Array( daysInMonth ).fill(
+							0
+						);
+					}
+					datasets[ storeLabel ][ day ] += parseInt(
+						record.unit,
+						10
+					);
+				} );
+
+				const colors = [
+					'#039BE5',
+					'#388E3C',
+					'#7B1FA2',
+					'#F57C00',
+					'#0097A7',
+					'#455A64',
+				];
+				const chartDatasets = [
+					{
+						type: 'line',
+						label: '売上高',
+						yAxisID: 'y',
+						data: priceData,
+						backgroundColor: 'rgba(248,121,121,1)',
+						borderColor: 'rgba(248,121,121,.6)',
+						fill: false,
+					},
+				];
+
+				let colorIndex = 0;
+				for ( const prop in datasets ) {
+					if ( datasets.hasOwnProperty( prop ) ) {
+						chartDatasets.push( {
+							type: 'bar',
+							label: prop,
+							yAxisID: 'y1',
+							data: datasets[ prop ],
+							backgroundColor:
+								colors[ colorIndex % colors.length ],
+						} );
+						colorIndex++;
+					}
+				}
+
+				setChartData( { labels, datasets: chartDatasets } );
+			} catch ( error ) {
+				showToast(
+					error.message || 'データの取得ができませんでした。'
+				);
+				setRecords( [] );
 				setChartData( null );
-				return;
+			} finally {
+				setLoading( false );
 			}
-
-			const daysInMonth = getDaysInMonth( year, month );
-			const labels = Array.from( { length: daysInMonth }, ( _, i ) => i + 1 );
-			const priceData = new Array( daysInMonth ).fill( 0 );
-			const datasets = {};
-
-			response.records.forEach( ( record ) => {
-				const day = parseInt( record.date.replace( /^\d{4}-\d{2}-/, '' ), 10 ) - 1;
-				priceData[ day ] += exchangeToJPY( parseFloat( record.royalty ), record.currency );
-
-				const storeLabel = getStoreLabel( record.store );
-				if ( ! datasets[ storeLabel ] ) {
-					datasets[ storeLabel ] = new Array( daysInMonth ).fill( 0 );
-				}
-				datasets[ storeLabel ][ day ] += parseInt( record.unit, 10 );
-			} );
-
-			const colors = [ '#039BE5', '#388E3C', '#7B1FA2', '#F57C00', '#0097A7', '#455A64' ];
-			const chartDatasets = [
-				{
-					type: 'line',
-					label: '売上高',
-					yAxisID: 'y',
-					data: priceData,
-					backgroundColor: 'rgba(248,121,121,1)',
-					borderColor: 'rgba(248,121,121,.6)',
-					fill: false,
-				},
-			];
-
-			let colorIndex = 0;
-			for ( const prop in datasets ) {
-				if ( datasets.hasOwnProperty( prop ) ) {
-					chartDatasets.push( {
-						type: 'bar',
-						label: prop,
-						yAxisID: 'y1',
-						data: datasets[ prop ],
-						backgroundColor: colors[ colorIndex % colors.length ],
-					} );
-					colorIndex++;
-				}
-			}
-
-			setChartData( { labels, datasets: chartDatasets } );
-		} catch ( error ) {
-			showToast( error.message || 'データの取得ができませんでした。' );
-			setRecords( [] );
-			setChartData( null );
-		} finally {
-			setLoading( false );
-		}
-	}, [ endpoint ] );
+		},
+		[ endpoint ]
+	);
 
 	// Initial fetch
 	useEffect( () => {
 		fetchData( initialYear, initialMonth );
 	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const handleDateUpdate = useCallback( ( year, month ) => {
-		fetchData( year, month );
-	}, [ fetchData ] );
+	const handleDateUpdate = useCallback(
+		( year, month ) => {
+			fetchData( year, month );
+		},
+		[ fetchData ]
+	);
 
 	// Get components from hashboard (hb.components)
 	const MonthSelector = globalThis.hb?.components?.MonthSelector;
@@ -385,17 +449,27 @@ const SalesHistory = ( { endpoint } ) => {
 					minYear={ 2015 }
 					initialYear={ initialYear }
 					initialMonth={ initialMonth }
-					onDateUpdated={ ( year, month ) => handleDateUpdate( parseInt( year, 10 ), parseInt( month, 10 ) ) }
+					onDateUpdated={ ( year, month ) =>
+						handleDateUpdate(
+							parseInt( year, 10 ),
+							parseInt( month, 10 )
+						)
+					}
 				/>
 			) }
 
 			{ chartData && BarChart && (
 				<div className="hb-chart hb-chart-line">
-					<BarChart chartData={ chartData } options={ chartOptions } />
+					<BarChart
+						chartData={ chartData }
+						options={ chartOptions }
+					/>
 				</div>
 			) }
 
-			<table className={ `table table-striped highlight${ loading ? ' loading' : '' }` }>
+			<table
+				className={ `table table-striped highlight${ loading ? ' loading' : '' }` }
+			>
 				<thead>
 					<tr>
 						<th className="cell-2">月</th>
@@ -425,23 +499,41 @@ const SalesHistory = ( { endpoint } ) => {
 					) }
 					{ ! loading && records.length === 0 && (
 						<tr>
-							<td className="error text-center disabled" colSpan="8">
+							<td
+								className="error text-center disabled"
+								colSpan="8"
+							>
 								記録がありません。
 							</td>
 						</tr>
 					) }
-					{ ! loading && records.map( ( record, index ) => (
-						<tr key={ index }>
-							<td className="text-center">{ formatDate( record.date, 'MM' ) }</td>
-							<td className="text-center">{ formatDate( record.date, 'DD' ) }</td>
-							<td>{ record.post_title }</td>
-							<td className="text-end">{ formatCurrency( record.royalty, record.currency ) }</td>
-							<td className="text-end">{ record.unit }{ getUnitSuffix( record.store ) }</td>
-							<td className="text-start">{ record.place }</td>
-							<td className="text-start">{ record.type }</td>
-							<td className="text-start">{ getStoreLabel( record.store ) }</td>
-						</tr>
-					) ) }
+					{ ! loading &&
+						records.map( ( record, index ) => (
+							<tr key={ index }>
+								<td className="text-center">
+									{ formatDate( record.date, 'MM' ) }
+								</td>
+								<td className="text-center">
+									{ formatDate( record.date, 'DD' ) }
+								</td>
+								<td>{ record.post_title }</td>
+								<td className="text-end">
+									{ formatCurrency(
+										record.royalty,
+										record.currency
+									) }
+								</td>
+								<td className="text-end">
+									{ record.unit }
+									{ getUnitSuffix( record.store ) }
+								</td>
+								<td className="text-start">{ record.place }</td>
+								<td className="text-start">{ record.type }</td>
+								<td className="text-start">
+									{ getStoreLabel( record.store ) }
+								</td>
+							</tr>
+						) ) }
 				</tbody>
 			</table>
 		</>
@@ -460,24 +552,33 @@ const SalesRewards = ( { endpoint, isDeposit } ) => {
 	const [ available, setAvailable ] = useState( false );
 	const [ records, setRecords ] = useState( [] );
 
-	const fetchData = useCallback( async ( year, month, status ) => {
-		setLoading( true );
-		try {
-			const response = await wp.apiFetch( {
-				path: wp.url.addQueryArgs( endpoint, { year, month, status } ),
-			} );
+	const fetchData = useCallback(
+		async ( year, month, status ) => {
+			setLoading( true );
+			try {
+				const response = await wp.apiFetch( {
+					path: wp.url.addQueryArgs( endpoint, {
+						year,
+						month,
+						status,
+					} ),
+				} );
 
-			setTotal( response.total );
-			setTax( response.deducting );
-			setAvailable( response.enough );
-			setRecords( response.records );
-		} catch ( error ) {
-			showToast( error.message || 'データの取得ができませんでした。' );
-			setRecords( [] );
-		} finally {
-			setLoading( false );
-		}
-	}, [ endpoint ] );
+				setTotal( response.total );
+				setTax( response.deducting );
+				setAvailable( response.enough );
+				setRecords( response.records );
+			} catch ( error ) {
+				showToast(
+					error.message || 'データの取得ができませんでした。'
+				);
+				setRecords( [] );
+			} finally {
+				setLoading( false );
+			}
+		},
+		[ endpoint ]
+	);
 
 	// Initial fetch
 	useEffect( () => {
@@ -490,9 +591,12 @@ const SalesRewards = ( { endpoint, isDeposit } ) => {
 		}
 	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
 
-	const handleDateUpdate = useCallback( ( year, month ) => {
-		fetchData( year, month, 1 );
-	}, [ fetchData ] );
+	const handleDateUpdate = useCallback(
+		( year, month ) => {
+			fetchData( year, month, 1 );
+		},
+		[ fetchData ]
+	);
 
 	const MonthSelector = globalThis.hb?.components?.MonthSelector;
 	const Loading = globalThis.hb?.components?.LoadingIndicator;
@@ -505,11 +609,18 @@ const SalesRewards = ( { endpoint, isDeposit } ) => {
 					minYear={ 2015 }
 					initialYear={ initialYear }
 					initialMonth={ initialMonth }
-					onDateUpdated={ ( year, month ) => handleDateUpdate( parseInt( year, 10 ), parseInt( month, 10 ) ) }
+					onDateUpdated={ ( year, month ) =>
+						handleDateUpdate(
+							parseInt( year, 10 ),
+							parseInt( month, 10 )
+						)
+					}
 				/>
 			) }
 
-			<table className={ `table table-striped highlight${ loading ? ' loading' : '' }` }>
+			<table
+				className={ `table table-striped highlight${ loading ? ' loading' : '' }` }
+			>
 				<thead>
 					<tr>
 						<th className="cell-2 text-end">#</th>
@@ -551,35 +662,63 @@ const SalesRewards = ( { endpoint, isDeposit } ) => {
 				<tbody>
 					{ loading && Loading && (
 						<tr>
-							<td colSpan={ isDeposit ? 8 : 9 } className="text-center">
+							<td
+								colSpan={ isDeposit ? 8 : 9 }
+								className="text-center"
+							>
 								<Loading />
 							</td>
 						</tr>
 					) }
 					{ ! loading && records.length === 0 && (
 						<tr>
-							<td className="error text-center disabled" colSpan={ isDeposit ? 8 : 9 }>
+							<td
+								className="error text-center disabled"
+								colSpan={ isDeposit ? 8 : 9 }
+							>
 								記録がありません。
 							</td>
 						</tr>
 					) }
-					{ ! loading && records.map( ( record, index ) => (
-						<tr key={ index }>
-							<th>{ record.revenue_id }</th>
-							<td><strong>【{ record.label }】</strong>{ record.description }</td>
-							<td className="text-end">{ formatMoney( record.price ) }</td>
-							<td className="text-end">{ record.unit }</td>
-							<td className="text-end">{ formatMoney( record.tax ) }</td>
-							<td className="text-end">{ formatMoney( record.deducting ) }</td>
-							<td className="text-end">{ formatMoney( record.total ) }</td>
-							<td className="text-end">{ formatDate( record.created, 'YYYY/MM/DD' ) }</td>
-							{ ! isDeposit && (
-								<td className="text-end">
-									{ record.fixed === '0000-00-00 00:00:00' ? '---' : formatDate( record.fixed, 'YYYY/MM/DD' ) }
+					{ ! loading &&
+						records.map( ( record, index ) => (
+							<tr key={ index }>
+								<th>{ record.revenue_id }</th>
+								<td>
+									<strong>【{ record.label }】</strong>
+									{ record.description }
 								</td>
-							) }
-						</tr>
-					) ) }
+								<td className="text-end">
+									{ formatMoney( record.price ) }
+								</td>
+								<td className="text-end">{ record.unit }</td>
+								<td className="text-end">
+									{ formatMoney( record.tax ) }
+								</td>
+								<td className="text-end">
+									{ formatMoney( record.deducting ) }
+								</td>
+								<td className="text-end">
+									{ formatMoney( record.total ) }
+								</td>
+								<td className="text-end">
+									{ formatDate(
+										record.created,
+										'YYYY/MM/DD'
+									) }
+								</td>
+								{ ! isDeposit && (
+									<td className="text-end">
+										{ record.fixed === '0000-00-00 00:00:00'
+											? '---'
+											: formatDate(
+													record.fixed,
+													'YYYY/MM/DD'
+												) }
+									</td>
+								) }
+							</tr>
+						) ) }
 				</tbody>
 			</table>
 		</>
@@ -604,23 +743,28 @@ const SalesPayments = ( { endpoint } ) => {
 		yearOptions.push( y );
 	}
 
-	const fetchData = useCallback( async ( year ) => {
-		setLoading( true );
-		try {
-			const response = await wp.apiFetch( {
-				path: wp.url.addQueryArgs( endpoint, { year } ),
-			} );
+	const fetchData = useCallback(
+		async ( year ) => {
+			setLoading( true );
+			try {
+				const response = await wp.apiFetch( {
+					path: wp.url.addQueryArgs( endpoint, { year } ),
+				} );
 
-			setTotal( response.total );
-			setTax( response.deducting );
-			setRecords( response.records );
-		} catch ( error ) {
-			showToast( error.message || 'データの取得ができませんでした。' );
-			setRecords( [] );
-		} finally {
-			setLoading( false );
-		}
-	}, [ endpoint ] );
+				setTotal( response.total );
+				setTax( response.deducting );
+				setRecords( response.records );
+			} catch ( error ) {
+				showToast(
+					error.message || 'データの取得ができませんでした。'
+				);
+				setRecords( [] );
+			} finally {
+				setLoading( false );
+			}
+		},
+		[ endpoint ]
+	);
 
 	// Initial fetch
 	useEffect( () => {
@@ -651,7 +795,9 @@ const SalesPayments = ( { endpoint } ) => {
 				</select>
 			</div>
 
-			<table className={ `table table-striped highlight${ loading ? ' loading' : '' }` }>
+			<table
+				className={ `table table-striped highlight${ loading ? ' loading' : '' }` }
+			>
 				<thead>
 					<tr>
 						<th className="cell-2">月</th>
@@ -678,20 +824,32 @@ const SalesPayments = ( { endpoint } ) => {
 					) }
 					{ ! loading && records.length === 0 && (
 						<tr>
-							<td className="error text-center disabled" colSpan="5">
+							<td
+								className="error text-center disabled"
+								colSpan="5"
+							>
 								記録がありません。
 							</td>
 						</tr>
 					) }
-					{ ! loading && records.map( ( record, index ) => (
-						<tr key={ index }>
-							<td className="text-center">{ formatDate( record.fixed, 'MM' ) }</td>
-							<td className="text-center">{ formatDate( record.fixed, 'DD' ) }</td>
-							<td>{ record.display_name }</td>
-							<td className="text-end">{ formatMoney( record.total ) }</td>
-							<td className="text-end">{ formatMoney( record.deducting ) }</td>
-						</tr>
-					) ) }
+					{ ! loading &&
+						records.map( ( record, index ) => (
+							<tr key={ index }>
+								<td className="text-center">
+									{ formatDate( record.fixed, 'MM' ) }
+								</td>
+								<td className="text-center">
+									{ formatDate( record.fixed, 'DD' ) }
+								</td>
+								<td>{ record.display_name }</td>
+								<td className="text-end">
+									{ formatMoney( record.total ) }
+								</td>
+								<td className="text-end">
+									{ formatMoney( record.deducting ) }
+								</td>
+							</tr>
+						) ) }
 				</tbody>
 			</table>
 		</>
@@ -713,7 +871,11 @@ const SalesContainer = ( { endpoint, slug } ) => {
 		case 'payments':
 			return <SalesPayments endpoint={ endpoint } />;
 		default:
-			return <div className="alert alert-danger">{ __( '不明なページタイプです。', 'hametuha' ) } { slug }</div>;
+			return (
+				<div className="alert alert-danger">
+					{ __( '不明なページタイプです。', 'hametuha' ) } { slug }
+				</div>
+			);
 	}
 };
 
@@ -725,5 +887,7 @@ const container = document.getElementById( 'sales-container' );
 if ( container ) {
 	const endpoint = container.dataset.endpoint || '';
 	const slug = container.dataset.slug || 'history';
-	createRoot( container ).render( <SalesContainer endpoint={ endpoint } slug={ slug } /> );
+	createRoot( container ).render(
+		<SalesContainer endpoint={ endpoint } slug={ slug } />
+	);
 }

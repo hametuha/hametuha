@@ -1,0 +1,6 @@
+# git blame で無視するコミット（整形だけのもの）
+# GitHub の blame 表示は自動で読む。ローカルでは次を一度実行する:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# JS・SCSS をリントの自動修正で整形（#361 の後続、リント導入）
+33d218258b7140deaeb720b379d56d14bfbe212a

@@ -1,8 +1,5 @@
-//
 // シェアパネル
-//
 // ---------------
-//
 .share {
 
 	$height: 80px;
@@ -36,8 +33,9 @@
 		display: block;
 		padding: 0.5em 0.75em;
 		border-radius: 10px;
-		border: 2px solid currentColor;
+		border: 2px solid currentcolor;
 		font-weight: 700;
+
 		@include media-breakpoint-down(sm) {
 			border-radius: 50%;
 			border-width: 3px;
@@ -63,6 +61,7 @@
 			$brand: nth($var, 1);
 			$color: nth($var, 2);
 			&--#{$brand} {
+
 				&:link,
 				&:visited {
 					color: $color;
@@ -83,6 +82,7 @@
 			line-height: 1;
 			font-size: 14px;
 			vertical-align: text-bottom;
+
 			@include media-breakpoint-down(sm) {
 				vertical-align: middle;
 			}
@@ -92,6 +92,7 @@
 	&__text {
 		font-size: 14px;
 		margin-left: 0.125em;
+
 		@include media-breakpoint-down(sm) {
 			display: none;
 		}

@@ -1,6 +1,4 @@
 .series {
-	&__inner {
-	}
 
 	&__row {
 		padding: 2em 0;
@@ -8,7 +6,7 @@
 		&--cover {
 			background-color: $gray-dark;
 			color: #fff;
-			text-shadow: 0 0 3px rgba(0, 0, 0, .8);
+			text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
 		}
 
 		&--author {
@@ -41,9 +39,11 @@
 
 	// メタ情報
 	&__meta {
+
 		&--thumbnail {
 			max-height: 450px;
 			overflow: visible;
+
 			@media (max-width: $screen-xs-max) {
 				max-height: none;
 			}
@@ -52,6 +52,7 @@
 				max-width: 100%;
 				width: auto;
 				height: auto;
+
 				@include box-shadow(0 0 5px rgba(0, 0, 0, 0.6));
 				margin-bottom: 2rem;
 			}
@@ -60,6 +61,7 @@
 
 	// 題字
 	&__title {
+
 		&--work {
 			color: #fff;
 			display: block;
@@ -120,8 +122,10 @@
 	}
 
 	&__link {
+
 		a:nth-child(3) {
 			margin-left: 1em;
+
 			@media only screen and (max-width: #{$screen-sm-max}) {
 				margin-top: 0.5em;
 				margin-left: 0;
@@ -130,6 +134,7 @@
 
 		&--divider {
 			display: none;
+
 			@media only screen and (max-width: #{$screen-sm-max}) {
 				display: block;
 			}
@@ -181,6 +186,7 @@
 			left: 0;
 			transform: translateY(-50%);
 			width: 80px;
+
 			@include mq-max($screen-xs-max) {
 				width: 60px;
 			}
@@ -198,12 +204,14 @@
 		}
 
 		&--longdesc {
+
 			@include long-desc(#ebebeb);
 		}
 
 		&--profile {
 			position: relative;
 			padding-left: 100px;
+
 			@include mq-max($screen-xs-max) {
 				padding-left: 80px;
 			}
@@ -211,6 +219,7 @@
 			h3 {
 				margin-top: 0;
 				padding-right: 100px;
+
 				small {
 					font-size: 0.6em;
 					display: inline-block;
@@ -241,6 +250,7 @@
 		border-bottom: 1px solid #ddd;
 
 		&:first-child {
+
 			@include mq-max($screen-xs-max) {
 				border-top: 1px solid #ddd;
 			}
@@ -253,7 +263,7 @@
 		&--link {
 			display: block;
 			position: relative;
-			transition: color .3s linear;
+			transition: color 0.3s linear;
 
 			&:link {
 				color: #000;
@@ -265,7 +275,8 @@
 				text-decoration: none;
 			}
 
-			&:hover, &:active {
+			&:hover,
+			&:active {
 				text-decoration: none;
 				color: $brand-primary;
 			}
@@ -279,12 +290,10 @@
 			font-family: $work-body;
 			display: inline;
 			font-size: 1.4em;
+
 			@at-root a:visited &:after {
 				content: "";
 			}
-		}
-
-		&--counter {
 		}
 
 		&--author {
@@ -331,7 +340,9 @@
 
 	// Series Testimonial
 	&__testimonials {
+
 		&--stars {
+
 			i {
 				font-size: 3em;
 				margin: 0 0.2em;
@@ -366,6 +377,7 @@
 
 	h1 {
 		margin: 20px 0;
+
 		@extend .page-heading-title;
 		font-family: $work-body;
 	}
@@ -389,9 +401,11 @@
 	@media screen and (max-width: $screen-lg-min) {
 		grid-template-columns: repeat(3, 1fr);
 	}
+
 	@media screen and (max-width: $screen-md-min) {
 		grid-template-columns: repeat(2, 1fr);
 	}
+
 	@media screen and (max-width: $screen-xs-max) {
 		grid-template-columns: 1fr;
 	}
@@ -436,6 +450,7 @@
 	&-text {
 		text-align: center;
 		font-family: $work-bold;
+
 		span {
 			display: block;
 			line-height: 1.1;
@@ -447,8 +462,9 @@
 
 	&-title {
 		font-size: 18px;
-		margin-bottom:10px;
+		margin-bottom: 10px;
 	}
+
 	&-author {
 		font-size: 14px;
 	}
@@ -476,6 +492,7 @@
 				color: $gray;
 				text-decoration: none;
 			}
+
 			&:hover,
 			&:active {
 				color: #fff;
@@ -535,6 +552,7 @@
 
 	&__body {
 		padding: 1rem;
+
 		.has-kdp & {
 			padding-bottom: 50px;
 		}
@@ -551,6 +569,7 @@
 		margin-bottom: 1rem;
 
 		&--author {
+
 			.avatar {
 				width: 24px;
 				height: 24px;

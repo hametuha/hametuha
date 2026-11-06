@@ -10,12 +10,15 @@
 		margin: 0;
 		list-style: none;
 		flex-basis: 16%;
+
 		@include mq-max($screen-sm-max) {
 			flex-basis: 25%;
 		}
+
 		@include mq-max($screen-xs-max) {
 			flex-basis: 33%;
 		}
+
 		@include mq-max(320px) {
 			flex-basis: 50%;
 		}
@@ -24,14 +27,16 @@
 
 	&-link {
 		display: block;
-		transition: color .3s linear;
+		transition: color 0.3s linear;
 
-		&:link, &:visited {
+		&:link,
+		&:visited {
 			color: #444;
 			text-decoration: none;
 		}
 
-		&:hover, &:active {
+		&:hover,
+		&:active {
 			color: $brand-primary;
 			text-decoration: none;
 		}
@@ -43,10 +48,11 @@
 		height: auto;
 		margin-bottom: 10px;
 		opacity: 1;
-		transition: opacity .3s linear;
+		transition: opacity 0.3s linear;
 
-		a:hover &, a:active & {
-			opacity: .6;
+		a:hover &,
+		a:active & {
+			opacity: 0.6;
 		}
 	}
 

@@ -10,7 +10,6 @@ body.error {
 	}
 
 
-
 	#login-logo {
 		font-size: 100px;
 
@@ -31,9 +30,10 @@ body.error {
 		}
 
 		a {
+
 			&:link,
 			&:visited {
-				color: currentColor;
+				color: currentcolor;
 				text-decoration: underline;
 			}
 
@@ -45,7 +45,11 @@ body.error {
 		}
 
 		.btn {
-			&:link, &:visited, &:hover, &:active {
+
+			&:link,
+			&:visited,
+			&:hover,
+			&:active {
 				color: #fff;
 				text-decoration: none;
 			}
@@ -53,6 +57,7 @@ body.error {
 	}
 
 	.error-body {
+
 		&-divider {
 			margin: $error-gutter auto;
 			border-top: 1px solid $gray-dark;

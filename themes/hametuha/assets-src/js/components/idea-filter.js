@@ -17,7 +17,9 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		e.preventDefault();
 
 		// 1. 種別に応じてベースURLを決定
-		const selectedType = form.querySelector( 'input[name="idea_type"]:checked' );
+		const selectedType = form.querySelector(
+			'input[name="idea_type"]:checked'
+		);
 		const baseUrl = selectedType ? selectedType.dataset.url : '/ideas/';
 
 		// 2. クエリパラメータを構築
@@ -30,9 +32,13 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		}
 
 		// タグ（チェックされたものをカンマ区切りで）
-		const checkedTags = form.querySelectorAll( 'input[type="checkbox"][name="tag"]:checked' );
+		const checkedTags = form.querySelectorAll(
+			'input[type="checkbox"][name="tag"]:checked'
+		);
 		if ( checkedTags.length > 0 ) {
-			const tagValues = Array.from( checkedTags ).map( checkbox => checkbox.value );
+			const tagValues = Array.from( checkedTags ).map(
+				( checkbox ) => checkbox.value
+			);
 			params.append( 'tag', tagValues.join( ',' ) );
 		}
 
@@ -47,24 +53,30 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	} );
 
 	// タグのチェックボックスが変更されたときにhidden inputを更新
-	const tagCheckboxes = form.querySelectorAll( 'input[type="checkbox"][name="tag"]' );
-	const hiddenTagInput = form.querySelector( 'input[type="hidden"][name="tag"]' );
+	const tagCheckboxes = form.querySelectorAll(
+		'input[type="checkbox"][name="tag"]'
+	);
+	const hiddenTagInput = form.querySelector(
+		'input[type="hidden"][name="tag"]'
+	);
 
 	if ( hiddenTagInput && tagCheckboxes.length > 0 ) {
 		// 初期状態：hidden inputの値からチェックボックスを設定
-		const initialTags = hiddenTagInput.value ? hiddenTagInput.value.split( ',' ) : [];
-		tagCheckboxes.forEach( checkbox => {
+		const initialTags = hiddenTagInput.value
+			? hiddenTagInput.value.split( ',' )
+			: [];
+		tagCheckboxes.forEach( ( checkbox ) => {
 			if ( initialTags.includes( checkbox.value ) ) {
 				checkbox.checked = true;
 			}
 		} );
 
 		// チェックボックス変更時の処理
-		tagCheckboxes.forEach( checkbox => {
+		tagCheckboxes.forEach( ( checkbox ) => {
 			checkbox.addEventListener( 'change', () => {
 				const checkedValues = Array.from( tagCheckboxes )
-					.filter( cb => cb.checked )
-					.map( cb => cb.value );
+					.filter( ( cb ) => cb.checked )
+					.map( ( cb ) => cb.value );
 				hiddenTagInput.value = checkedValues.join( ',' );
 			} );
 		} );
@@ -72,7 +84,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	// ラジオボタン変更時にフォームのactionを更新（フォールバック用）
 	const typeRadios = form.querySelectorAll( 'input[name="idea_type"]' );
-	typeRadios.forEach( radio => {
+	typeRadios.forEach( ( radio ) => {
 		radio.addEventListener( 'change', () => {
 			if ( radio.checked && radio.dataset.url ) {
 				form.action = radio.dataset.url;

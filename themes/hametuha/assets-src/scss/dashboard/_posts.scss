@@ -9,6 +9,7 @@
 		padding: 20px;
 		border: 1px solid $thin-border;
 		border-bottom: none;
+
 		&:last-child {
 			border-top: 1px solid $thin-border;
 		}
@@ -16,6 +17,7 @@
 
 	&-header {
 		position: relative;
+
 		.badge {
 			position: absolute;
 			right: 0;
@@ -35,8 +37,8 @@
 
 		.hb-posts-list-review & {
 			font-size: 24px;
-			color: yellow;
-			-webkit-text-stroke: 1px gray;
+			color: #ff0;
+			-webkit-text-stroke: 1px #808080;
 		}
 	}
 
@@ -45,6 +47,7 @@
 		margin-left: 2em;
 		color: $shade-font;
 	}
+
 	&-dash {
 		transform: scale(1.5, 1);
 		margin-right: 2em;
@@ -60,7 +63,7 @@
 		border-radius: 3px;
 		padding: 0.5em;
 		font-size: 0.85em;
-		border: 1px solid currentColor;
+		border: 1px solid currentcolor;
 
 		&-publish,
 		&-future,

@@ -17,6 +17,7 @@
 
 		@media screen and (max-width: 769px) {
 			min-height: 330px;
+
 			.books-list:not(.slick-slider) {
 				max-height: 330px;
 			}
@@ -24,13 +25,11 @@
 
 		@media screen and (max-width: 480px) {
 			min-height: 250px;
+
 			.books-list:not(.slick-slider) {
 				max-height: 250px;
 			}
 		}
-	}
-
-	&-list {
 	}
 
 	&-item {

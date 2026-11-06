@@ -23,13 +23,14 @@
 
 			&:checked + span {
 				color: $white;
+
 				&::before {
 					background-color: $primary;
 				}
 			}
 		}
 
-		span  {
+		span {
 			font-size: 14px;
 
 			&::before {

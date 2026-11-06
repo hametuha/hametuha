@@ -1,18 +1,16 @@
 /**
  * Watermark handler.
  *
- * @package hametuha
+ * @package
  */
 
-jQuery(document).ready(function ($) {
+jQuery( document ).ready( function ( $ ) {
+	'use strict';
 
-  'use strict';
-
-  var $watermark = $( '#watermark' );
-  if ( $watermark.length ) {
-    $watermark.click( function(e) {
-      $(this).toggleClass( 'toggle' );
-    } );
-  }
-
-});
+	const $watermark = $( '#watermark' );
+	if ( $watermark.length ) {
+		$watermark.click( function ( e ) {
+			$( this ).toggleClass( 'toggle' );
+		} );
+	}
+} );

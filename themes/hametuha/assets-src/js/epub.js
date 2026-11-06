@@ -4,14 +4,15 @@
 
 /*global hoge: true*/
 
-(function ($) {
-    'use strict';
+( function ( $ ) {
+	'use strict';
 
-    $(document).ready(function(){
-        $(document).find('*').andSelf().contents().not('[nodeType=1]').each(function(index, txt){
-
-        });
-    });
-
-
-})(jQuery);
+	$( document ).ready( function () {
+		$( document )
+			.find( '*' )
+			.andSelf()
+			.contents()
+			.not( '[nodeType=1]' )
+			.each( function ( index, txt ) {} );
+	} );
+} )( jQuery );

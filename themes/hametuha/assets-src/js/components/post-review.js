@@ -57,22 +57,34 @@ const ReviewForm = ( props ) => {
 				];
 
 				return (
-					<div key={ `${ tag.slug }-container` } className="mb-2 pt-2 pb-2 feeling-control">
-						<h3 className="feeling-control__title text-center mb-2">{ tag.label }</h3>
+					<div
+						key={ `${ tag.slug }-container` }
+						className="mb-2 pt-2 pb-2 feeling-control"
+					>
+						<h3 className="feeling-control__title text-center mb-2">
+							{ tag.label }
+						</h3>
 						<div className="feeling-control__inputs row">
 							{ options.map( ( option, index ) => {
 								return (
-									<div className="col-4 text-center" key={ `${ tag.slug }-${ index }` }>
+									<div
+										className="col-4 text-center"
+										key={ `${ tag.slug }-${ index }` }
+									>
 										<label>
 											<input
 												type="radio"
 												name={ `feeling-${ tag.slug }` }
 												value={ option.value }
-												checked={ reviews[ tag.slug ] === option.value }
+												checked={
+													reviews[ tag.slug ] ===
+													option.value
+												}
 												onChange={ ( evt ) => {
 													setReviews( {
 														...reviews,
-														[ tag.slug ]: evt.target.value,
+														[ tag.slug ]:
+															evt.target.value,
 													} );
 												} }
 											/>
@@ -85,31 +97,48 @@ const ReviewForm = ( props ) => {
 					</div>
 				);
 			} ) }
-			<div className="text-center"><button disabled={ loading } className="btn btn-primary" onClick={ () => {
-				setLoading( true );
-				// REST APIに送るデータを構築
-				const data = {};
-				ReviewObjects.tags.forEach( ( tag ) => {
-					data[ tag.slug ] = reviews[ tag.slug ] || '';
-				} );
+			<div className="text-center">
+				<button
+					disabled={ loading }
+					className="btn btn-primary"
+					onClick={ () => {
+						setLoading( true );
+						// REST APIに送るデータを構築
+						const data = {};
+						ReviewObjects.tags.forEach( ( tag ) => {
+							data[ tag.slug ] = reviews[ tag.slug ] || '';
+						} );
 
-				apiFetch( {
-					path: `hametuha/v1/feedback/review/${ postId }/`,
-					method: 'POST',
-					data,
-				} ).then( ( res ) => {
-					toast( res.message );
-				} ).catch( ( res ) => {
-					toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
-				} ).finally( () => {
-					setLoading( false );
-				} );
-			} }>{ __( 'レビューを送信', 'hametuha' ) }</button></div>
+						apiFetch( {
+							path: `hametuha/v1/feedback/review/${ postId }/`,
+							method: 'POST',
+							data,
+						} )
+							.then( ( res ) => {
+								toast( res.message );
+							} )
+							.catch( ( res ) => {
+								toast(
+									res.message,
+									'danger',
+									__( 'エラー', 'hametuha' )
+								);
+							} )
+							.finally( () => {
+								setLoading( false );
+							} );
+					} }
+				>
+					{ __( 'レビューを送信', 'hametuha' ) }
+				</button>
+			</div>
 		</div>
 	);
 };
 
 const container = document.getElementById( 'review-container' );
 if ( container ) {
-	createRoot( container ).render( <ReviewForm postId={ container.dataset.postId } /> );
+	createRoot( container ).render(
+		<ReviewForm postId={ container.dataset.postId } />
+	);
 }

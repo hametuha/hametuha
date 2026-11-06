@@ -10,7 +10,7 @@ const { __ } = wp.i18n;
 /**
  * Ensure container.
  *
- * @returns {HTMLDivElement}
+ * @return {HTMLDivElement}
  */
 const getContainer = () => {
 	let div = document.getElementById( 'hametuha-toast-container' );
@@ -21,7 +21,7 @@ const getContainer = () => {
 		document.getElementsByTagName( 'body' )[ 0 ].appendChild( div );
 	}
 	return div;
-}
+};
 
 /**
  * Remove div element.
@@ -29,10 +29,10 @@ const getContainer = () => {
  * @param {HTMLDivElement} toast
  */
 const removeToast = ( toast ) => {
-	toast.classList.remove('hametuha-toast-on');
-	setTimeout(function(){
+	toast.classList.remove( 'hametuha-toast-on' );
+	setTimeout( function () {
 		toast.remove();
-	}, 300);
+	}, 300 );
 };
 
 /**
@@ -44,14 +44,16 @@ const removeToast = ( toast ) => {
  * @param {number} delay
  * @return {HTMLDivElement}
  */
-const toast = ( message, type='success', label='', delay= 7000 ) => {
+const toast = ( message, type = 'success', label = '', delay = 7000 ) => {
 	label = label || __( 'お知らせ', 'hametuha' );
 	// Create Wrapper.
 	const toast = document.createElement( 'div' );
-	toast.className = [ 'hametuha-toast', 'hametuha-toast-' + type ].join( ' ' );
+	toast.className = [ 'hametuha-toast', 'hametuha-toast-' + type ].join(
+		' '
+	);
 	// Create button.
 	const button = document.createElement( 'button' );
-	button.classList.add( 'hametuha-toast-close');
+	button.classList.add( 'hametuha-toast-close' );
 	button.setAttribute( 'type', 'button' );
 	button.setAttribute( 'data-dismiss', 'alert' );
 	button.setAttribute( 'aria-label', __( '閉じる', 'hametuha' ) );
@@ -72,18 +74,18 @@ const toast = ( message, type='success', label='', delay= 7000 ) => {
 	// Add to body.
 	getContainer().appendChild( toast );
 	// Set timeout to display.
-	setTimeout(function(){
-		toast.classList.add('hametuha-toast-on');
-	}, 10);
+	setTimeout( function () {
+		toast.classList.add( 'hametuha-toast-on' );
+	}, 10 );
 	// Add click handler.
-	button.addEventListener( 'click', function(){
+	button.addEventListener( 'click', function () {
 		removeToast( toast );
 	} );
 	// Remove alert because of timeout.
-	setTimeout(function(){
+	setTimeout( function () {
 		removeToast( toast );
 	}, delay );
 	return toast;
-}
+};
 
 wp.hametuha.toast = toast;

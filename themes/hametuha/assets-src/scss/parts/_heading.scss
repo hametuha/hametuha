@@ -1,7 +1,5 @@
 
-//
 //  ページヘッダー
-//
 .page-header {
 
 	small {
@@ -19,14 +17,13 @@
 		vertical-align: text-bottom;
 	}
 }
+
 h2.page-header {
 	margin-top: 40px;
 	font-weight: $font-weight-bold;
 }
 
-//
 // 新しいデカ文字のヘッダー
-//
 .page-heading {
 	padding: 3em 0;
 	font-size: 24px;
@@ -48,7 +45,7 @@ h2.page-header {
 		a:link,
 		a:visited {
 			text-decoration: underline;
-			color: currentColor;
+			color: currentcolor;
 		}
 
 		a:hover,
@@ -63,15 +60,13 @@ h2.page-header {
 	margin: 20px 0;
 	font-family: $font-family-serif;
 	padding: 20px 0 0;
-	border-top: 2px solid currentColor;
+	border-top: 2px solid currentcolor;
 }
 
-//
 // 一覧ページのヘッダー
-//
 // --------------------
-//
 .archive-meta {
+
 	h1 {
 		font-size: 28px;
 		font-family: $work-title;
@@ -107,6 +102,7 @@ h2.page-header {
 }
 
 .meta {
+
 	&--series {
 		margin-bottom: 1em;
 		border-bottom: $divide-border;

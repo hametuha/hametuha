@@ -20,6 +20,7 @@
 		max-width: 100%;
 		width: auto;
 		height: auto;
+
 		@include media-breakpoint-down(sm) {
 			max-width: 150px;
 		}
@@ -35,12 +36,14 @@
 	}
 
 	&__favorites {
+
 		dd {
 			margin-bottom: 0.5em;
 		}
 	}
 
 	&__item {
+
 		&--title {
 			font-size: 18px;
 			margin-bottom: 20px;
@@ -64,7 +67,8 @@
 			padding: 10px;
 			display: block;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				text-decoration: none;
 			}
 
@@ -79,11 +83,14 @@
 
 // Button
 .btn-follow {
-	.remove, .loading {
+
+	.remove,
+	.loading {
 		display: none;
 	}
 
 	&.btn-following {
+
 		.remove {
 			display: inline;
 		}
@@ -94,7 +101,9 @@
 	}
 
 	&--loading {
-		.remove, .add {
+
+		.remove,
+		.add {
 			display: none !important;
 		}
 
@@ -106,6 +115,7 @@
 
 
 .follower {
+
 	&__alert {
 		margin: 2em 0;
 	}
@@ -116,6 +126,7 @@
 		min-height: 300px;
 
 		&--loading {
+
 			@extend %loading-indicator;
 		}
 	}
@@ -133,17 +144,11 @@
 		}
 	}
 
-	&__name {
-
-	}
-
-	&__label {
-	}
-
 	&__avatar {
 		max-width: 96px;
 		width: auto;
 		height: auto;
+
 		@include media-breakpoint-down(sm) {
 			max-width: 100%;
 		}
@@ -151,6 +156,7 @@
 }
 
 .wpg-connect-table {
+
 	th {
 		font-size: 1em;
 		display: block;
@@ -173,6 +179,7 @@
 	margin: 40px 0 80px;
 
 	&-header {
+
 		@extend .dividing-header !optional;
 	}
 
@@ -217,7 +224,7 @@
 			display: block;
 			text-align: center;
 			font-size: 1.2em;
-			font-weight: bold;
+			font-weight: 700;
 
 			&:link,
 			&:visited {
@@ -232,7 +239,7 @@
 			}
 
 			&::after {
-				content: '';
+				content: "";
 				display: block;
 				position: absolute;
 				top: 0;

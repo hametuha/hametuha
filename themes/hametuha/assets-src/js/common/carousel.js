@@ -1,5 +1,6 @@
 /**
  * Description
+ * @param $
  */
 
 ( function ( $ ) {
@@ -20,17 +21,17 @@
 					breakpoint: 768,
 					settings: {
 						slidesToShow: 3,
-						slidesToScroll: 2
-					}
+						slidesToScroll: 2,
+					},
 				},
 				{
 					breakpoint: 480,
 					settings: {
 						slidesToShow: 2,
-						slidesToScroll: 1
-					}
-				}
-			]
+						slidesToScroll: 1,
+					},
+				},
+			],
 		} );
 
 		$( '.widget-kdp-list' ).slick( {
@@ -41,7 +42,7 @@
 			speed: 200,
 			cssEase: 'ease-in-out',
 			autoplay: true,
-			autoplaySpeed: 2000
+			autoplaySpeed: 2000,
 		} );
 
 		$( '.books-list' ).slick( {
@@ -58,18 +59,17 @@
 					breakpoint: 769,
 					settings: {
 						slidesToShow: 3,
-						slidesToScroll: 2
-					}
+						slidesToScroll: 2,
+					},
 				},
 				{
 					breakpoint: 480,
 					settings: {
 						slidesToShow: 2,
-						slidesToScroll: 1
-					}
+						slidesToScroll: 1,
+					},
 				},
 			],
 		} );
 	} );
-
 } )( jQuery );

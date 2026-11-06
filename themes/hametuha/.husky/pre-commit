@@ -1,0 +1,1 @@
+cd themes/hametuha && npx lint-staged

@@ -1,6 +1,6 @@
 .browserslistrc
 .editorconfig
-.eslintrc
+eslint.config.cjs
 .distignore
 .git
 .github
@@ -21,3 +21,6 @@ tmp
 tests
 style.css.bak
 readme.txt.bak
+.stylelintignore
+.husky
+eslint-suppressions.json

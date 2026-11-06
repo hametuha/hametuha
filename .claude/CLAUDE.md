@@ -178,6 +178,22 @@ cd themes/hametuha && npm run build:js
 cd themes/hametuha && npm run watch
 ```
 
+#### リント（ESLint・Stylelint）
+
+**WordPress 公式の設定（wp-scripts の既定）をそのまま使い、テーマ固有の差分だけを足しています。** 設定は `themes/hametuha/eslint.config.cjs` と `.stylelintrc.json`。
+
+```bash
+cd themes/hametuha && npm run lint      # JS と SCSS
+cd themes/hametuha && npm run fix       # 自動修正できるものを直す
+```
+
+- **コミット時に自動で走ります**（husky ＋ lint-staged。ステージしたファイルだけ）。フックは `npm install` の `prepare` で有効になる。CI（`Lint JS/CSS`）でも全体を検査する
+- **既存の違反（未使用変数・JSDoc・alert など）は `eslint-suppressions.json` に記録して見逃しています。** 新しく書いたコードには効く。
+  記録済みの違反を直すと「使われていない抑制」としてエラーになるので、`npx wp-scripts lint-js --prune-suppressions` で記録を減らしてコミットする。記録を増やす（`--suppress-all`）のは原則しない
+- 対象外: 同梱ライブラリ（`common/slick.js`・`common/headroom.js`）、アイコンフォントの定義（`_icon.scss`）
+- Stylelint はフォント名と `page-break-*` を書き換えないようにしてある（ePub リーダー向け。大文字小文字や `break-after` を解釈しないリーダーがある）
+- 整形だけのコミットは `.git-blame-ignore-revs` に載せている。ローカルの `git blame` では `git config blame.ignoreRevsFile .git-blame-ignore-revs` を一度実行する
+
 #### 画像（assets/img）
 
 画像はビルドで圧縮しません。**追加・差し替えたときに一度だけ圧縮し、圧縮後のファイルをコミットします。**

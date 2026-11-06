@@ -7,7 +7,7 @@
 
 const $ = jQuery;
 
-$( document ).ready( function() {
+$( document ).ready( function () {
 	const $form = $( '#post-filter-form' );
 	if ( ! $form.length ) {
 		return;
@@ -27,7 +27,7 @@ $( document ).ready( function() {
 	}
 
 	// ラジオボタン変更時の処理
-	$genreRadios.on( 'change', function() {
+	$genreRadios.on( 'change', function () {
 		const $selected = $( this );
 		const newAction = $selected.data( 'action' );
 
@@ -40,7 +40,7 @@ $( document ).ready( function() {
 	// タグ自由入力欄で日本語の「、」を「,」に自動変換
 	const $tagFreeInput = $form.find( '#tag-free-input' );
 	if ( $tagFreeInput.length ) {
-		$tagFreeInput.on( 'keyup', function() {
+		$tagFreeInput.on( 'keyup', function () {
 			const $input = $( this );
 			const value = $input.val();
 			// 日本語の読点（、）を半角カンマ（,）に変換
@@ -51,5 +51,3 @@ $( document ).ready( function() {
 		} );
 	}
 } );
-
-

@@ -1,90 +1,95 @@
 .collaborators {
 
-  &-list {
+	&-list {
 
-    table-layout: auto;
-    width: 100%;
-    margin: 1em 0;
-    border-collapse: collapse;
+		table-layout: auto;
+		width: 100%;
+		margin: 1em 0;
+		border-collapse: collapse;
 
-    th, td{
-      padding: 10px 15px;
-      border-bottom: 1px solid #ddd;
-    }
+		th,
+		td {
+			padding: 10px 15px;
+			border-bottom: 1px solid #ddd;
+		}
 
-    thead th{
-      border-bottom: 3px double #ddd;
-    }
-    tbody tr:last-child td{
-      border-bottom: 3px double #ddd;
-    }
+		thead th {
+			border-bottom: 3px double #ddd;
+		}
 
-    caption{
-      font-weight: bold;
-      text-align: left;
-      padding-bottom: 10px;
-    }
+		tbody tr:last-child td {
+			border-bottom: 3px double #ddd;
+		}
 
-    &-number{
-      text-align: right;
-      max-width: 2em;
-    }
+		caption {
+			font-weight: 700;
+			text-align: left;
+			padding-bottom: 10px;
+		}
 
-    .dashicons{
-      color: #ddd;
-      margin-right: 0.25em;
-      vertical-align: middle;
-    }
-  }
+		&-number {
+			text-align: right;
+			max-width: 2em;
+		}
 
-  &-item {
-    position: relative;
-  }
+		.dashicons {
+			color: #ddd;
+			margin-right: 0.25em;
+			vertical-align: middle;
+		}
+	}
 
-  &-actions{
-    text-align: center;
-    a,button{
-      & + a,
-      & + button{
-        margin-left: 15px;
-      }
-    }
-  }
+	&-item {
+		position: relative;
+	}
 
-  &-avatar{
-    width: 32px;
-    height: auto;
-    border-radius: 50%;
-    vertical-align: middle;
-    margin-right: 10px;
-  }
+	&-actions {
+		text-align: center;
 
-  &-name{
-  }
+		a,
+		button {
 
-  &-revenue{
+			+ a,
+			+ button {
+				margin-left: 15px;
+			}
+		}
+	}
 
-    max-width: 6em;
-    &-input{
-      width: 3em;
-      margin-right: 0.25em;
-    }
+	&-avatar {
+		width: 32px;
+		height: auto;
+		border-radius: 50%;
+		vertical-align: middle;
+		margin-right: 10px;
+	}
 
-    &-waiting{
-      color: $warning;
-    }
+	&-revenue {
 
-  }
+		max-width: 6em;
 
-  &-assigned{
-    text-align: right;
-    time{
-      font-family: monospace;
-    }
-  }
+		&-input {
+			width: 3em;
+			margin-right: 0.25em;
+		}
 
-  &-delete-link{
-    @extend %delete-link;
-  }
+		&-waiting {
+			color: $warning;
+		}
+
+	}
+
+	&-assigned {
+		text-align: right;
+
+		time {
+			font-family: monospace;
+		}
+	}
+
+	&-delete-link {
+
+		@extend %delete-link;
+	}
 
 }

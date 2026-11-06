@@ -10,6 +10,7 @@
 	align-items: center;
 
 	.small-button {
+
 		@extend .btn;
 		@extend .btn-default;
 		@extend .btn-sm;
@@ -33,7 +34,9 @@
 		margin-top: 0.5em;
 
 		a {
-			&:link, &:visited {
+
+			&:link,
+			&:visited {
 				color: darken($more-shade-font, 10);
 				text-decoration: underline;
 			}
@@ -56,6 +59,7 @@
 	line-height: 1.8;
 	padding-top: 30px;
 	padding-bottom: 30px;
+
 	@include text-justify();
 	@include post-style();
 }
@@ -68,11 +72,14 @@
 
 // スマートフォン用調整
 @media only screen and (max-width: $screen-xs-max) {
+
 	.page-header {
+
 		h1 {
 			font-size: 20px;
 		}
 	}
+
 	.post-content {
 		font-size: 16px;
 	}
@@ -92,7 +99,8 @@ body.single-post {
 }
 
 // ラッパー
-#content-wrapper, .overlay-container {
+#content-wrapper,
+.overlay-container {
 	position: fixed;
 	height: 100%;
 	width: 100%;
@@ -101,6 +109,7 @@ body.single-post {
 
 
 .overlay-container {
+
 	.container {
 		padding-top: $single-footer-height;
 		padding-bottom: $single-footer-height;
@@ -112,9 +121,10 @@ body.single-post {
 	position: fixed;
 	z-index: 20;
 	top: $navbar-height + $subnavbar-height;
-	transition: top .3s ease-in-out;
+	transition: top 0.3s ease-in-out;
 
 	.header-hidden & {
+
 		@include head-room() {
 			top: 0;
 		}
@@ -128,12 +138,14 @@ body.single-post {
 	background-color: $brand-warning;
 	line-height: $single-footer-height;
 
-	&:link, &:visited {
+	&:link,
+	&:visited {
 		color: $inverse-body;
 		text-decoration: none;
 	}
 
-	&:hover, &:active {
+	&:hover,
+	&:active {
 		background-color: $brand-danger;
 	}
 }
@@ -151,6 +163,7 @@ body.single-post {
 
 @each $name in content, finish, reviews, tags, comments {
 	#viewing-#{$name} ##{$name}-wrapper {
+
 		@extend %fix-overlay;
 	}
 }
@@ -194,12 +207,14 @@ body.single-post {
 				font-size: 11px;
 				position: relative;
 
-				&:link, &:visited {
+				&:link,
+				&:visited {
 					color: $inverse-body;
 					text-decoration: none;
 				}
 
-				&:hover, &:active {
+				&:hover,
+				&:active {
 					color: $inverse-body;
 					background-color: $brand-danger;
 				}
@@ -224,7 +239,9 @@ body.single-post {
 
 // ボタンの背景色が明滅
 @include bg-blink(blinker, $footer-navbar-bg, $brand-danger);
+
 .finish-reading .finished-container a {
+
 	@include animation(blinker 1.5s linear infinite);
 }
 
@@ -239,6 +256,7 @@ body.single-post {
 // シングルページサムネイル
 .single-post-thumbnail {
 	padding: 20px 0 20px;
+
 	@media only screen and (max-width: $screen-sm-max) {
 		padding: 0;
 	}
@@ -261,6 +279,7 @@ p.pixiv-embed-illust {
 	max-width: 970px;
 	margin-right: auto;
 	margin-left: auto;
+
 	@include media-breakpoint-down(lg) {
 		margin-right: 15px;
 		margin-left: 15px;
@@ -307,10 +326,12 @@ p.pixiv-embed-illust {
 		left: 15px;
 
 		a {
+
 			@include inline-block;
 			padding: 3px 5px;
 
-			&:link, &:visited {
+			&:link,
+			&:visited {
 				background-color: $clear-font;
 				color: $inverse-body;
 				text-decoration: none;
@@ -334,6 +355,7 @@ p.pixiv-embed-illust {
 		font-size: 32px;
 		text-align: center;
 		word-break: auto-phrase;
+
 		@media only screen and (max-width: $screen-xs-min) {
 			font-size: 24px;
 		}
@@ -346,7 +368,9 @@ p.pixiv-embed-illust {
 		text-align: center;
 
 		a {
-			&:link, &:visited {
+
+			&:link,
+			&:visited {
 				color: $shade-font;
 				text-decoration: none;
 			}
@@ -368,7 +392,9 @@ p.pixiv-embed-illust {
 		word-break: auto-phrase;
 
 		a {
-			&:link, &:visited {
+
+			&:link,
+			&:visited {
 				color: $clear-font;
 				text-decoration: none;
 			}
@@ -385,8 +411,10 @@ p.pixiv-embed-illust {
 
 	// リード
 	.desc {
+
 		@extend .text-justify;
 		margin: 2em 0;
+
 		&.with-terms {
 			margin-bottom: 1em;
 		}
@@ -394,6 +422,7 @@ p.pixiv-embed-illust {
 		border-top: 1px solid $thin-border;
 		border-bottom: 1px solid $thin-border;
 		font-size: 16px;
+
 		@media only screen and (max-width: $screen-xs-min) {
 			padding: 1em;
 			font-size: 14px;
@@ -403,20 +432,24 @@ p.pixiv-embed-illust {
 	// タグ
 	&-tags {
 		margin: 1em 0;
+
 		.desc + & {
 			margin-bottom: 2em;
 		}
 
 		padding: 0 2em;
 		font-size: 14px;
+
 		@media only screen and (max-width: $screen-xs-min) {
 			padding: 0 1em;
 		}
+
 		span {
 			font-weight: 700;
 			margin-right: 0.5em;
 			color: $shade-font;
 		}
+
 		.tag-link {
 			margin-right: 0.5em;
 			display: inline-block;
@@ -444,9 +477,11 @@ p.pixiv-embed-illust {
 	font-size: 18px;
 	line-height: 2.2;
 	position: relative;
+
 	@media only screen and (max-width: $screen-xs-min) {
 		font-size: 16px;
 	}
+
 	@extend .work-body;
 	@include post-style(true);
 	@include text-justify();
@@ -458,6 +493,7 @@ p.pixiv-embed-illust {
 		width: 100%;
 		height: 30%;
 		max-height: 200px;
+
 		@include gradient-vertical(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1), 0%, 80%);
 	}
 }
@@ -615,6 +651,7 @@ p.pixiv-embed-illust {
 
 			&.current {
 				background-color: $gray-200;
+
 				span {
 					color: $gray-700;
 				}
@@ -731,22 +768,27 @@ p.pixiv-embed-illust {
 .rating-table {
 	width: 100%;
 	table-layout: auto;
+
 	th {
 		width: 5em;
 		padding: 0.5em 0.5em 0.5em 0;
 	}
+
 	&-bar {
 		padding: 0.5em 0;
 		display: block;
+
 		&-bg {
 			background-color: $gray-200;
 			display: block;
 		}
+
 		&-inner {
 			display: block;
 			background-color: $start-font;
 		}
 	}
+
 	td:last-child {
 		padding: 0.5em 0 0.5em 0.5em;
 		width: 5em;
@@ -783,7 +825,7 @@ p.pixiv-embed-illust {
 		font-size: 12px;
 		text-align: center;
 		margin: 0 0 0.5em;
-		font-weight: bold;
+		font-weight: 700;
 	}
 
 	label.active {
@@ -800,7 +842,7 @@ p.pixiv-embed-illust {
 
 .selecting {
 	$size: 32px;
-	$bg: #FCF3E9;
+	$bg: #fcf3e9;
 
 	&-wrapper {
 		position: absolute;
@@ -809,18 +851,18 @@ p.pixiv-embed-illust {
 		transform: translate(-50%, -100%);
 		padding: 10px;
 		background: $bg;
-		box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, .2);
+		box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, 0.2);
 		color: #444;
 		font-family: $font-family-sans-serif !important;
 		margin-top: -30px;
 
-		&:after {
+		&::after {
 			content: "";
 			display: block;
 			clear: left;
 		}
 
-		&:before {
+		&::before {
 			content: "";
 			display: block;
 			position: absolute;
@@ -840,7 +882,7 @@ p.pixiv-embed-illust {
 		display: inline-block;
 		width: $size;
 		height: $size;
-		background: url('../img/minico/256x256.png') center center no-repeat;
+		background: url(../img/minico/256x256.png) center center no-repeat;
 		background-size: cover;
 		margin-right: 10px;
 		vertical-align: middle;
@@ -859,7 +901,7 @@ p.pixiv-embed-illust {
 
 		&:hover {
 			text-decoration: none;
-			background: rgba(0, 0, 0, .1);
+			background: rgba(0, 0, 0, 0.1);
 		}
 	}
 }

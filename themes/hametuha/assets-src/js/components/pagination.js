@@ -19,23 +19,33 @@ const PageItem = ( props ) => {
 		switch ( p.label ) {
 			case 'left':
 			case 'right':
-				return <i className="material-icons">{ p.label === 'left' ? 'chevron_left' : 'chevron_right' }</i>;
+				return (
+					<i className="material-icons">
+						{ p.label === 'left'
+							? 'chevron_left'
+							: 'chevron_right' }
+					</i>
+				);
 			case 'more_horiz':
 				return <i className="material-icons">more_horiz</i>;
 			default:
-				return <>{ p.number }</>
+				return <>{ p.number }</>;
 		}
 	};
 	return (
 		<li className={ classes }>
-			<a className="page-link" href="#" onClick={ e => {
-				e.preventDefault();
-				if ( disabled || active ) {
-					// Do nothing.
-					return false;
-				}
-				onChange( number );
-			} }>
+			<a
+				className="page-link"
+				href="#"
+				onClick={ ( e ) => {
+					e.preventDefault();
+					if ( disabled || active ) {
+						// Do nothing.
+						return false;
+					}
+					onChange( number );
+				} }
+			>
 				<Icon number={ number } label={ label } />
 			</a>
 		</li>
@@ -50,28 +60,28 @@ wp.hametuha.Pagination = ( props ) => {
 
 	const computed = {
 		max: 7,
-		hasPrev: function() {
+		hasPrev() {
 			return 1 < this.leftPad();
 		},
-		hasNext: function() {
+		hasNext() {
 			return this.rightPad() < total;
 		},
-		pad: function() {
+		pad() {
 			return Math.floor( ( this.max - 1 ) / 2 );
 		},
-		leftPad: function() {
+		leftPad() {
 			return Math.max( current - this.pad(), 1 );
 		},
-		rightPad: function() {
+		rightPad() {
 			return Math.min( current + this.pad(), total );
 		},
-		needLeft: function() {
+		needLeft() {
 			return 2 < this.leftPad();
 		},
-		needRight: function() {
-			return this.rightPad() < ( total - 1 );
+		needRight() {
+			return this.rightPad() < total - 1;
 		},
-		range: function() {
+		range() {
 			const range = [];
 			for ( let i = this.leftPad(), l = this.rightPad(); i <= l; i++ ) {
 				range.push( i );
@@ -83,15 +93,43 @@ wp.hametuha.Pagination = ( props ) => {
 	return (
 		<nav aria-label={ __( 'ページナビゲーション', 'hametuha' ) }>
 			<ul className="pagination justify-content-center">
-				<PageItem disabled={ ! computed.hasPrev() } label="left" number={ 1 } onChange={ onChange } />
-				{ computed.needLeft() && <PageItem label="more_horiz" disabled={ true } onChange={ onChange } /> }
-				{ computed.range().map( num => {
-					return <PageItem number={ num } active={ num === current } onChange={ onChange }/>
+				<PageItem
+					disabled={ ! computed.hasPrev() }
+					label="left"
+					number={ 1 }
+					onChange={ onChange }
+				/>
+				{ computed.needLeft() && (
+					<PageItem
+						label="more_horiz"
+						disabled={ true }
+						onChange={ onChange }
+					/>
+				) }
+				{ computed.range().map( ( num ) => {
+					return (
+						<PageItem
+							key={ num }
+							number={ num }
+							active={ num === current }
+							onChange={ onChange }
+						/>
+					);
 				} ) }
-				{ computed.needRight() && <PageItem label="more_horiz" disabled={ true } onChange={ onChange } /> }
-				<PageItem disabled={ ! computed.hasNext() } label="right" onChange={ onChange } number={ total } />
+				{ computed.needRight() && (
+					<PageItem
+						label="more_horiz"
+						disabled={ true }
+						onChange={ onChange }
+					/>
+				) }
+				<PageItem
+					disabled={ ! computed.hasNext() }
+					label="right"
+					onChange={ onChange }
+					number={ total }
+				/>
 			</ul>
 		</nav>
-
 	);
 };

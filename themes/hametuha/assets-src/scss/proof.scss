@@ -4,10 +4,11 @@
  */
 
 @page {
-	size: A4 portrait;
+	size: a4 portrait;
 }
 
 .paper {
+
 	&-table {
 		table-layout: auto;
 		width: 100%;
@@ -23,6 +24,7 @@
 			padding: 1em;
 			border: 1px solid #000;
 		}
+
 		tbody tr:first-child th {
 			border-top: 3px double #000;
 		}
@@ -40,7 +42,7 @@
 	&-no-result {
 		text-align: center;
 		font-size: 18pt;
-		margin: 3em 0
+		margin: 3em 0;
 	}
 
 	&-issued {

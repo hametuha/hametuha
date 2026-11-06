@@ -39,16 +39,13 @@
 			text-decoration: none;
 			color: $link-color;
 		}
+
 		a:hover,
 		a:active {
 			background-color: $link-color;
 			color: $white;
 			text-decoration: none;
 		}
-	}
-
-	&-item {
-
 	}
 
 }

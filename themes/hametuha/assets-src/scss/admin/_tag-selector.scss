@@ -6,6 +6,7 @@
 
 // メインコンポーネント
 .hametuha-tag-selector {
+
 	.components-form-token-field {
 		margin-bottom: 12px;
 	}
@@ -70,7 +71,7 @@
 	}
 
 	&__count {
-		font-weight: normal;
+		font-weight: 400;
 		color: #757575;
 		margin-left: 4px;
 	}
@@ -146,6 +147,7 @@
 		}
 
 		.components-panel__body-title {
+
 			.components-button {
 				padding: 12px 16px;
 			}
@@ -191,7 +193,7 @@
 
 	&__check {
 		color: #007cba;
-		font-weight: bold;
+		font-weight: 700;
 	}
 
 	// フッター
@@ -212,7 +214,9 @@
 
 // レスポンシブ対応
 @media screen and (max-width: 782px) {
+
 	.hametuha-tag-selector-modal {
+
 		.components-modal__content {
 			min-width: auto;
 			max-width: none;

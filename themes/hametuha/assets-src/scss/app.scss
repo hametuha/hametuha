@@ -1,24 +1,17 @@
 @charset "utf-8";
 
-[ng-cloak]{
-  opacity: 0;
+[ng-cloak] {
+	opacity: 0;
 }
 
 @import "bootstrap";
-
 @import "wpametu/assets/scss/animations";
-
 @import "mixins";
 
 // Loading indicator placeholder (must be imported before components)
-@import "components/loading";
-
 @import "components";
-
 @import "post_body";
-
 @import "container";
-
 @import "parts/block_description";
 @import "parts/block_meta_date";
 @import "parts/book_list";
@@ -55,7 +48,6 @@
 @import "parts/user-picker";
 @import "parts/well";
 @import "parts/widget_taxonomy_list";
-
 @import "components/amazon";
 @import "components/books";
 @import "components/footer";
@@ -71,6 +63,5 @@
 @import "components/thread";
 @import "components/toast";
 @import "components/watermark";
-
 @import "print/single";
 

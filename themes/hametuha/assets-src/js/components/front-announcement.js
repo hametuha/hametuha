@@ -13,7 +13,9 @@ const FIRST_DURATION = 10000;
 const DURATION = 5000;
 
 const init = ( nav ) => {
-	const items = Array.from( nav.querySelectorAll( '.front-announcement__item' ) );
+	const items = Array.from(
+		nav.querySelectorAll( '.front-announcement__item' )
+	);
 	const counter = nav.querySelector( '.front-announcement__counter' );
 	const current = nav.querySelector( '.front-announcement__current' );
 	if ( items.length < 2 ) {
@@ -44,10 +46,13 @@ const init = ( nav ) => {
 		if ( paused ) {
 			return;
 		}
-		timer = setTimeout( () => {
-			show( ( index + 1 ) % items.length );
-			schedule();
-		}, 0 === index ? FIRST_DURATION : DURATION );
+		timer = setTimeout(
+			() => {
+				show( ( index + 1 ) % items.length );
+				schedule();
+			},
+			0 === index ? FIRST_DURATION : DURATION
+		);
 	};
 
 	const pause = () => {

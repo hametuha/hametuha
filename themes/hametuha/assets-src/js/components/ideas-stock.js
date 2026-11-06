@@ -20,7 +20,9 @@ $( document ).on( 'click', 'button[data-stock]', function ( e ) {
 	switch ( method ) {
 		case 'DELETE':
 			// 実行前に確認
-			if ( ! window.confirm( 'ストックを解除します。よろしいですか？' ) ) {
+			if (
+				! window.confirm( 'ストックを解除します。よろしいですか？' )
+			) {
 				return;
 			}
 			newAction = 'post';
@@ -38,16 +40,21 @@ $( document ).on( 'click', 'button[data-stock]', function ( e ) {
 	$button.attr( 'disabled', true );
 	// リクエスト実行
 	apiFetch( {
-		path: `hametuha/v1/idea/${post_id}/`,
-		method: method,
-	} ).then( ( response ) => {
-		$button.attr( 'data-stock-action', newAction )
-			.attr( 'data-unstock', post_id ).text( newLabel );
-		toast( toastMessage );
-	} ).catch( ( response ) => {
-		const message = response.message || '失敗しました。';
-		toast( message, 'danger', 'エラー' );
-	} ).finally( () => {
-		$button.attr( 'disabled', null );
-	} );
+		path: `hametuha/v1/idea/${ post_id }/`,
+		method,
+	} )
+		.then( ( response ) => {
+			$button
+				.attr( 'data-stock-action', newAction )
+				.attr( 'data-unstock', post_id )
+				.text( newLabel );
+			toast( toastMessage );
+		} )
+		.catch( ( response ) => {
+			const message = response.message || '失敗しました。';
+			toast( message, 'danger', 'エラー' );
+		} )
+		.finally( () => {
+			$button.attr( 'disabled', null );
+		} );
 } );

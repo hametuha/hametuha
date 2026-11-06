@@ -1,106 +1,119 @@
 
 // フォームのローディング
-form{
-  legend{
-    padding-bottom: 10px;
-  }
-  position: relative;
-  &.loading{
-    @extend %loading-indicator;
-  }
+form {
+
+	legend {
+		padding-bottom: 10px;
+	}
+	position: relative;
+
+	&.loading {
+
+		@extend %loading-indicator;
+	}
 }
 
-.form{
-  &-legend{
-    color: #888;
-    text-align: center;
-    font-weight: bold;
-  }
-  &-fieldset{
-  }
-  &-helper{
-    font-size: 14px;
-    color: #666;
-    @at-root span#{&}{
-      margin-left: 1em;
-      font-size: 12px;
-    }
-    &-link{
-        margin: 0 0.5em;
-    }
-    &-sep{
-      color: #ccc;
-    }
-  }
-  &-required{
-    color: $brand-danger;
-  }
+.form {
+
+	&-legend {
+		color: #888;
+		text-align: center;
+		font-weight: 700;
+	}
+
+	&-helper {
+		font-size: 14px;
+		color: #666;
+
+		@at-root span#{&} {
+			margin-left: 1em;
+			font-size: 12px;
+		}
+
+		&-link {
+			margin: 0 0.5em;
+		}
+
+		&-sep {
+			color: #ccc;
+		}
+	}
+
+	&-required {
+		color: $brand-danger;
+	}
 }
 
-.mc-form{
-  label{
-    display: block;
-  }
+.mc-form {
+
+	label {
+		display: block;
+	}
 }
 
-#login-form{
+#login-form {
 
-  h1{
-    padding-top: 40px;
-    font-size: 80px;
-    a{
-      transition: opacity .3s linear;
-      &:link, &:visited{
-        color: #000;
-        text-decoration: none;
-      }
-      &:hover, &:active{
-        opacity: .8;
-        text-decoration: none;
-      }
-    }
-  }
+	h1 {
+		padding-top: 40px;
+		font-size: 80px;
 
-}
+		a {
+			transition: opacity 0.3s linear;
 
-#login-body{
-  max-width: 760px;
-  margin: 0 auto;
-}
+			&:link,
+			&:visited {
+				color: #000;
+				text-decoration: none;
+			}
 
-#become-author{
+			&:hover,
+			&:active {
+				opacity: 0.8;
+				text-decoration: none;
+			}
+		}
+	}
 
 }
 
-.post-content .wpcf7{
+#login-body {
+	max-width: 760px;
+	margin: 0 auto;
+}
 
-  &-response-output{
-    color: #fff;
-    border: none;
-    padding: 1em 2em;
-    border-radius: 2px;
-    margin: 2em 0;
-    background-color: $brand-danger;
-  }
-  &-mail-sent-ok{
-    background-color: $brand-success;
-  }
-  &-mail-sent-ng,
-  &-aborted {
-    background: $brand-danger;
-  }
-  &-spam-blocked,
-  &-validation-errors,
-  &-acceptance-missing {
-    background: $brand-warning;
-  }
+.post-content .wpcf7 {
 
-  &-not-valid-tip{
-    color: $brand-danger;
-  }
-  .use-floating-validation-tip span.wpcf7-not-valid-tip{
-    border-color: $brand-danger;
-  }
+	&-response-output {
+		color: #fff;
+		border: none;
+		padding: 1em 2em;
+		border-radius: 2px;
+		margin: 2em 0;
+		background-color: $brand-danger;
+	}
+
+	&-mail-sent-ok {
+		background-color: $brand-success;
+	}
+
+	&-mail-sent-ng,
+	&-aborted {
+		background: $brand-danger;
+	}
+
+	&-spam-blocked,
+	&-validation-errors,
+	&-acceptance-missing {
+		background: $brand-warning;
+	}
+
+	&-not-valid-tip {
+		color: $brand-danger;
+	}
+
+	.use-floating-validation-tip span.wpcf7-not-valid-tip {
+		border-color: $brand-danger;
+	}
 }
 
 .helper-block {

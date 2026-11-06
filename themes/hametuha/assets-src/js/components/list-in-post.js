@@ -16,20 +16,23 @@ const { toast } = wp.hametuha;
 // リスト追加フォーム
 $( document ).on( 'submit', '.list-save-manager', function ( e ) {
 	e.preventDefault();
-	var form = $( this );
+	const form = $( this );
 	form.addClass( 'loading' );
 	form.ajaxSubmit( {
-		success: function ( result ) {
+		success( result ) {
 			form.find( 'input[type=submit]' ).attr( 'disabled', false );
 			form.removeClass( 'loading' );
-			var msg = $( '<div class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button></div>' );
-			msg.addClass( 'alert-' + ( result.success ? 'success' : 'danger' ) )
-				.append( '<span>' + result.message + '</span>' );
+			const msg = $(
+				'<div class="alert alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">閉じる</span></button></div>'
+			);
+			msg.addClass(
+				'alert-' + ( result.success ? 'success' : 'danger' )
+			).append( '<span>' + result.message + '</span>' );
 			form.prepend( msg );
 			setTimeout( function () {
 				msg.find( 'button' ).trigger( 'click' );
 			}, 5000 );
-		}
+		},
 	} );
 } );
 
@@ -38,18 +41,29 @@ const ListItem = ( props ) => {
 	const id = `list-for-${ list.id }`;
 	return (
 		<div className="form-check form-switch mb-3" key={ id }>
-			<input className="form-check-input" type="checkbox" role="switch" id={ id } value={ list.id } checked={ list.includes } onChange={ ( evt ) => {
-				evt.preventDefault();
-				onChangeHandler( list.id, ! list.includes );
-			} } />
+			<input
+				className="form-check-input"
+				type="checkbox"
+				role="switch"
+				id={ id }
+				value={ list.id }
+				checked={ list.includes }
+				onChange={ ( evt ) => {
+					evt.preventDefault();
+					onChangeHandler( list.id, ! list.includes );
+				} }
+			/>
 			<label className="form-check-label" htmlFor={ id }>
-				{ list.title }
-				（{list.count}）
-				{ ( 'private' === list.status ) && (
-					<span className="badge text-bg-danger">{ __( '非公開', 'hametuha' ) }</span>
+				{ list.title }（{ list.count }）
+				{ 'private' === list.status && (
+					<span className="badge text-bg-danger">
+						{ __( '非公開', 'hametuha' ) }
+					</span>
 				) }
-				{ ( list.recommended ) && (
-					<span className="badge text-bg-success">{ __( 'オススメ', 'hametuha' ) }</span>
+				{ list.recommended && (
+					<span className="badge text-bg-success">
+						{ __( 'オススメ', 'hametuha' ) }
+					</span>
 				) }
 			</label>
 		</div>
@@ -64,14 +78,17 @@ const ListSelector = ( props ) => {
 	const syncLists = useCallback( () => {
 		setLoading( true );
 		apiFetch( {
-			path: `hametuha/v1/lists/all/?includes=${ postId }`
-		} ).then( ( res ) => {
-			updatePosts( res );
-		} ).catch( ( res ) => {
-			toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
-		} ).finally( () => {
-			setLoading( false );
-		} );
+			path: `hametuha/v1/lists/all/?includes=${ postId }`,
+		} )
+			.then( ( res ) => {
+				updatePosts( res );
+			} )
+			.catch( ( res ) => {
+				toast( res.message, 'danger', __( 'エラー', 'hametuha' ) );
+			} )
+			.finally( () => {
+				setLoading( false );
+			} );
 	}, [ postId ] );
 
 	// 初期化
@@ -86,10 +103,18 @@ const ListSelector = ( props ) => {
 		};
 
 		// jQueryで監視
-		$( document ).on( 'created.hametuha', '.list-create-form', handleListCreated );
+		$( document ).on(
+			'created.hametuha',
+			'.list-create-form',
+			handleListCreated
+		);
 
 		return () => {
-			$( document ).off( 'created.hametuha', '.list-create-form', handleListCreated );
+			$( document ).off(
+				'created.hametuha',
+				'.list-create-form',
+				handleListCreated
+			);
 		};
 	}, [ syncLists ] );
 	// リストが変更された
@@ -98,28 +123,39 @@ const ListSelector = ( props ) => {
 		setLoading( true );
 		apiFetch( {
 			method: 'put',
-			path: `hametuha/v1/lists/${listId}/?post_id=${postId}&action=${action}`,
-		} ).then( ( res ) => {
-			// 成功
-			const newArray = [];
-			for ( const list of posts ) {
-				if ( list.id === listId ) {
-					list.includes = newStatus;
-					list.count += newStatus ? 1 : -1;
+			path: `hametuha/v1/lists/${ listId }/?post_id=${ postId }&action=${ action }`,
+		} )
+			.then( ( res ) => {
+				// 成功
+				const newArray = [];
+				for ( const list of posts ) {
+					if ( list.id === listId ) {
+						list.includes = newStatus;
+						list.count += newStatus ? 1 : -1;
+					}
+					newArray.push( list );
 				}
-				newArray.push( list );
-			}
-			updatePosts( newArray );
-			toast( newStatus ? __( 'リストに追加しました。', 'hametuha' ) : __( 'リストから削除しました。', 'hametuha' ) );
-		} ).catch( ( res ) => {
-			toast( res.message, 'danger', 'エラー' );
-		} ).finally( () => {
-			setLoading( false );
-		} );
+				updatePosts( newArray );
+				toast(
+					newStatus
+						? __( 'リストに追加しました。', 'hametuha' )
+						: __( 'リストから削除しました。', 'hametuha' )
+				);
+			} )
+			.catch( ( res ) => {
+				toast( res.message, 'danger', 'エラー' );
+			} )
+			.finally( () => {
+				setLoading( false );
+			} );
 	};
 
 	if ( ! posts.length ) {
-		return <div className="alert alert-warning">{ __( '登録されているリストがありません。', 'hametuha' ) }</div>
+		return (
+			<div className="alert alert-warning">
+				{ __( '登録されているリストがありません。', 'hametuha' ) }
+			</div>
+		);
 	}
 	const classNames = [ 'mb-3', 'd-relative' ];
 	if ( loading ) {
@@ -128,7 +164,14 @@ const ListSelector = ( props ) => {
 	return (
 		<div className={ classNames.join( ' ' ) }>
 			{ posts.map( ( list ) => {
-				return <ListItem key={ list.id } list={ list } postId={ postId } onChangeHandler={ onChangeHandler } />
+				return (
+					<ListItem
+						key={ list.id }
+						list={ list }
+						postId={ postId }
+						onChangeHandler={ onChangeHandler }
+					/>
+				);
 			} ) }
 		</div>
 	);
@@ -137,6 +180,8 @@ const ListSelector = ( props ) => {
 document.addEventListener( 'DOMContentLoaded', () => {
 	const container = document.getElementById( 'list-form' );
 	if ( container ) {
-		createRoot( container ).render( <ListSelector postId={ container.dataset.postId } /> );
+		createRoot( container ).render(
+			<ListSelector postId={ container.dataset.postId } />
+		);
 	}
 } );

@@ -14,25 +14,26 @@
 
 // Main styles
 body {
-  // Basic body styles
+	// Basic body styles
 }
 
 .minHeight {
-  min-height: 150px;
+	min-height: 150px;
 }
 
 .clearfix {
-  &:after {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-  }
+
+	&::after {
+		content: "";
+		display: block;
+		height: 0;
+		clear: both;
+	}
 }
 
 // Site icon styles
 .hb-site-icon {
-  max-width: 100px !important;
+	max-width: 100px !important;
 }
 
 // Import component styles

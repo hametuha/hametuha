@@ -3,11 +3,13 @@
 	padding: 0;
 	margin: 0;
 	display: flex;
+
 	@include mq-max($screen-md-min) {
 		flex-wrap: wrap;
 	}
 
 	&-wrapper {
+
 		#header + & {
 			padding-top: $navbar-height;
 		}
@@ -23,7 +25,7 @@
 		position: relative;
 
 		&::before {
-			transition: width .3s linear;
+			transition: width 0.3s linear;
 			z-index: 1;
 			position: absolute;
 			content: "";
@@ -42,7 +44,7 @@
 	}
 
 	&::after,
-	& li::after {
+	li::after {
 		content: "";
 		position: absolute;
 		display: block;
@@ -52,10 +54,12 @@
 		width: 2px;
 		background-color: #eee;
 	}
+
 	&::after {
 		right: -1px;
 	}
-	& li::after {
+
+	li::after {
 		left: -1px;
 	}
 

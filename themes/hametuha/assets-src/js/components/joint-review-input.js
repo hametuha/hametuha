@@ -35,12 +35,17 @@ const formatNumber = ( value ) => {
 const JointReviewInput = ( { termId, allotment, works, distribution } ) => {
 	const initial = {};
 	works.forEach( ( work ) => {
-		initial[ work.id ] = work.own ? 0 : parseFloat( distribution[ work.id ] || 0 );
+		initial[ work.id ] = work.own
+			? 0
+			: parseFloat( distribution[ work.id ] || 0 );
 	} );
 	const [ scores, setScores ] = useState( initial );
 	const [ isSaving, setIsSaving ] = useState( false );
 
-	const sum = works.reduce( ( acc, work ) => acc + ( parseFloat( scores[ work.id ] ) || 0 ), 0 );
+	const sum = works.reduce(
+		( acc, work ) => acc + ( parseFloat( scores[ work.id ] ) || 0 ),
+		0
+	);
 	const remaining = allotment - sum;
 	const canSubmit = Math.abs( remaining ) <= EPSILON && ! isSaving;
 
@@ -69,15 +74,22 @@ const JointReviewInput = ( { termId, allotment, works, distribution } ) => {
 				method: 'POST',
 				data: { scores },
 			} );
-			toast( response.message || __( '採点を保存しました。', 'hametuha' ), 'success' );
+			toast(
+				response.message || __( '採点を保存しました。', 'hametuha' ),
+				'success'
+			);
 		} catch ( error ) {
-			toast( error.message || __( '採点の保存に失敗しました。', 'hametuha' ), 'error' );
+			toast(
+				error.message || __( '採点の保存に失敗しました。', 'hametuha' ),
+				'error'
+			);
 		} finally {
 			setIsSaving( false );
 		}
 	};
 
-	const remainingClass = Math.abs( remaining ) <= EPSILON ? 'text-success' : 'text-danger';
+	const remainingClass =
+		Math.abs( remaining ) <= EPSILON ? 'text-success' : 'text-danger';
 
 	return (
 		<div className="joint-review-input">
@@ -85,17 +97,29 @@ const JointReviewInput = ( { termId, allotment, works, distribution } ) => {
 				<tbody>
 					{ works.map( ( work ) => (
 						<tr key={ work.id }>
-							<th className="joint-review-input__work">{ work.title }</th>
+							<th className="joint-review-input__work">
+								{ work.title }
+							</th>
 							<td className="joint-review-input__field">
 								{ work.own ? (
-									<span className="text-muted">{ __( '自作品（採点不可）', 'hametuha' ) }</span>
+									<span className="text-muted">
+										{ __(
+											'自作品（採点不可）',
+											'hametuha'
+										) }
+									</span>
 								) : (
 									<input
 										type="number"
 										min="0"
 										step="0.1"
 										value={ scores[ work.id ] }
-										onChange={ ( event ) => handleChange( work.id, event.target.value ) }
+										onChange={ ( event ) =>
+											handleChange(
+												work.id,
+												event.target.value
+											)
+										}
 										disabled={ isSaving }
 										className="form-control"
 										title={ work.title }
@@ -126,33 +150,37 @@ const JointReviewInput = ( { termId, allotment, works, distribution } ) => {
 				onClick={ handleSubmit }
 				disabled={ ! canSubmit }
 			>
-				{ isSaving ? __( '保存中…', 'hametuha' ) : __( '採点を保存する', 'hametuha' ) }
+				{ isSaving
+					? __( '保存中…', 'hametuha' )
+					: __( '採点を保存する', 'hametuha' ) }
 			</button>
 		</div>
 	);
 };
 
 // すべてのコンテナを検索してマウントする。
-document.querySelectorAll( '.hametuha-joint-review-input' ).forEach( ( container ) => {
-	const termId = parseInt( container.dataset.termId, 10 );
-	const allotment = parseFloat( container.dataset.allotment ) || 0;
-	let works = [];
-	let distribution = {};
-	try {
-		works = JSON.parse( container.dataset.works || '[]' );
-		distribution = JSON.parse( container.dataset.distribution || '{}' );
-	} catch ( e ) {
-		works = [];
-	}
+document
+	.querySelectorAll( '.hametuha-joint-review-input' )
+	.forEach( ( container ) => {
+		const termId = parseInt( container.dataset.termId, 10 );
+		const allotment = parseFloat( container.dataset.allotment ) || 0;
+		let works = [];
+		let distribution = {};
+		try {
+			works = JSON.parse( container.dataset.works || '[]' );
+			distribution = JSON.parse( container.dataset.distribution || '{}' );
+		} catch ( e ) {
+			works = [];
+		}
 
-	if ( termId && works.length ) {
-		createRoot( container ).render(
-			<JointReviewInput
-				termId={ termId }
-				allotment={ allotment }
-				works={ works }
-				distribution={ distribution }
-			/>
-		);
-	}
-} );
+		if ( termId && works.length ) {
+			createRoot( container ).render(
+				<JointReviewInput
+					termId={ termId }
+					allotment={ allotment }
+					works={ works }
+					distribution={ distribution }
+				/>
+			);
+		}
+	} );

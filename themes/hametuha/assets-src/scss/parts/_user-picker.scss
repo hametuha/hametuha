@@ -2,6 +2,7 @@
 .user-picker {
 
 	&__input {
+
 		.filled & {
 			display: none;
 
@@ -11,10 +12,11 @@
 	&__placeholder {
 		padding: 0;
 
-		&.empty:after {
+		&.empty::after {
 			content: "該当するものが見つかりませんでした";
 			display: block;
 			text-align: center;
+
 			@extend .text-warning;
 			margin: 1em 0;
 		}
@@ -23,7 +25,7 @@
 	&__loader {
 		display: none;
 		padding: 20px;
-		background: url('../img/ajax-loader-big.gif') center center no-repeat;
+		background: url(../img/ajax-loader-big.gif) center center no-repeat;
 		background-size: 33px 33px;
 
 		.loading + & {
@@ -35,6 +37,7 @@
 		list-style: none;
 		position: relative;
 		border-bottom: 1px solid $gray-500;
+
 		&:last-child {
 			border-bottom: none;
 		}
@@ -51,7 +54,9 @@
 					display: inline-block;
 				}
 
-				&:hover, &:active {
+				&:hover,
+				&:active {
+
 					i {
 						color: $brand-danger;
 					}
@@ -71,6 +76,7 @@
 		}
 
 		img {
+
 			@extend .img-circle;
 			width: auto;
 			height: auto;

@@ -16,7 +16,6 @@ const postType = div?.dataset?.postType || '';
 const as = div?.dataset?.as || '';
 
 class PostList extends Component {
-
 	constructor( props ) {
 		super( props );
 
@@ -41,7 +40,7 @@ class PostList extends Component {
 			switch ( as ) {
 				case 'reader':
 					path = 'hametuha/v1/reading/' + this.props.postType;
-					break
+					break;
 				case 'author':
 				default:
 					path = 'hametuha/v1/mine/' + this.props.postType;
@@ -49,33 +48,42 @@ class PostList extends Component {
 			}
 			apiFetch( {
 				path: addQueryArgs( path, args ),
-			} ).then( res => {
-				this.setState( {
-					posts: res.posts,
-					totalPage: res.total,
-					currentPage: page,
-				}, () => {
-					// Push stateでURLを変更
-					const params = {};
-					if ( 1 < page ) {
-						params.paged = page;
-					}
-					if ( args.s ) {
-						params.s = args.s;
-					}
-					const url = addQueryArgs( location.pathname, params );
-					try {
-						history.pushState( {}, null, url );
-					} catch ( e ) {
-						// Ignore
-					}
+			} )
+				.then( ( res ) => {
+					this.setState(
+						{
+							posts: res.posts,
+							totalPage: res.total,
+							currentPage: page,
+						},
+						() => {
+							// Push stateでURLを変更
+							const params = {};
+							if ( 1 < page ) {
+								params.paged = page;
+							}
+							if ( args.s ) {
+								params.s = args.s;
+							}
+							const url = addQueryArgs(
+								location.pathname,
+								params
+							);
+							try {
+								history.pushState( {}, null, url );
+							} catch ( e ) {
+								// Ignore
+							}
+						}
+					);
+				} )
+				.catch( ( res ) => {
+					// todo: エラーを出す
+					window.console && console.log( res );
+				} )
+				.finally( () => {
+					this.setState( { loading: false } );
 				} );
-			} ).catch( res => {
-				// todo: エラーを出す
-				window.console && console.log( res );
-			} ).finally( () => {
-				this.setState( { loading: false } );
-			} );
 		} );
 	}
 
@@ -85,21 +93,40 @@ class PostList extends Component {
 
 	render() {
 		const { posts, currentPage, totalPage, loading } = this.state;
-		const mainclass =  [ 'hb-posts-list', 'hb-posts-list-' + this.props.postType ];
+		const mainclass = [
+			'hb-posts-list',
+			'hb-posts-list-' + this.props.postType,
+		];
 		return (
 			<div className="hb-posts-list-wrapper">
-
 				<div className="input-group mb-3">
-					<input type="text" className="form-control" placeholder={ __( '検索ワードを入れてください', 'hametuha' ) }
-						   aria-label={ __( '検索ワードを入れてください', 'hametuha' ) } aria-describedby="button-search2" onChange={ e => {
-							   this.setState( { s: e.target.value } );
-					} } />
+					<input
+						type="text"
+						className="form-control"
+						placeholder={ __(
+							'検索ワードを入れてください',
+							'hametuha'
+						) }
+						aria-label={ __(
+							'検索ワードを入れてください',
+							'hametuha'
+						) }
+						aria-describedby="button-search2"
+						onChange={ ( e ) => {
+							this.setState( { s: e.target.value } );
+						} }
+					/>
 					<div className="input-group-append">
-						<button className="btn btn-outline-secondary" type="button" id="button-search2" onClick={ e => {
+						<button
+							className="btn btn-outline-secondary"
+							type="button"
+							id="button-search2"
+							onClick={ ( e ) => {
 								e.preventDefault();
 								this.fetch( 1 );
-							} }>
-								{ __( '検索', 'hametuha' ) }
+							} }
+						>
+							{ __( '検索', 'hametuha' ) }
 						</button>
 					</div>
 				</div>
@@ -108,60 +135,110 @@ class PostList extends Component {
 					<ul className={ mainclass.join( ' ' ) }>
 						{ posts.map( ( post ) => {
 							const metadata = [];
-							Object.keys( post.metas ).forEach( key => {
+							Object.keys( post.metas ).forEach( ( key ) => {
 								metadata.push(
 									<span className="hb-posts-list-meta">
-										<i className="material-icons">{ key }</i>
+										<i className="material-icons">
+											{ key }
+										</i>
 										{ post.metas[ key ] }
 									</span>
 								);
 							} );
 							return (
-								<li className="hb-posts-list-item" key={ post.ID }>
+								<li
+									className="hb-posts-list-item"
+									key={ post.ID }
+								>
 									<header className="hb-posts-list-header">
-										<h3 className={ [ 'hb-posts-list-title', 'hb-posts-list-title-' + post.status.name ].join( ' ' ) }>
+										<h3
+											className={ [
+												'hb-posts-list-title',
+												'hb-posts-list-title-' +
+													post.status.name,
+											].join( ' ' ) }
+										>
 											{ post.title }
 											{ !! post.parent && (
 												<small className="hb-posts-list-parent">
-													<span className="hb-posts-list-dash">—</span>
-													<a href={ post.parent.url }>{ post.parent.title }</a>
+													<span className="hb-posts-list-dash">
+														—
+													</span>
+													<a href={ post.parent.url }>
+														{ post.parent.title }
+													</a>
 												</small>
 											) }
 										</h3>
 										{ post.new && (
-											<span className="badge badge-danger">{ __( '新着', 'hametuha' ) }</span>
+											<span className="badge badge-danger">
+												{ __( '新着', 'hametuha' ) }
+											</span>
 										) }
 									</header>
 									<div className="hb-posts-list-body">
 										<span className="hb-posts-list-meta">
-											<span className={ [ 'hb-posts-list-status', 'hb-posts-list-status-' + post.status.name ].join( ' ' ) }>
+											<span
+												className={ [
+													'hb-posts-list-status',
+													'hb-posts-list-status-' +
+														post.status.name,
+												].join( ' ' ) }
+											>
 												{ post.status.label }
 											</span>
 										</span>
-										{ !!post.terms.length && (
+										{ !! post.terms.length && (
 											<span className="hb-posts-list-meta">
-												<i className="material-icons">sell</i> { post.terms.map( ( term ) => {
-													return <a href={ term.url }>{ term.name }</a>
-											} ) }
-
+												<i className="material-icons">
+													sell
+												</i>{ ' ' }
+												{ post.terms.map( ( term ) => {
+													return (
+														<a
+															key={ term.url }
+															href={ term.url }
+														>
+															{ term.name }
+														</a>
+													);
+												} ) }
 											</span>
 										) }
-										{ !! metadata.length && (
-											metadata.map( meta => meta )
-										) }
+										{ !! metadata.length &&
+											metadata.map( ( meta ) => meta ) }
 										<span className="hb-posts-list-meta">
-											<i className="material-icons">calendar_month</i> { post.date }
+											<i className="material-icons">
+												calendar_month
+											</i>{ ' ' }
+											{ post.date }
 										</span>
 										{ post.updated && (
 											<span className="hb-posts-list-meta">
-												<i className="material-icons">update</i> { post.modified }
+												<i className="material-icons">
+													update
+												</i>{ ' ' }
+												{ post.modified }
 											</span>
 										) }
 									</div>
 									<footer className="hb-posts-list-footer">
-										<a className="btn btn-secondary btn-sm" href={ post.url } target="_blank" rel="noopener noreferrer"> { __( '確認', 'hametuha' ) }</a>
+										<a
+											className="btn btn-secondary btn-sm"
+											href={ post.url }
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{ ' ' }
+											{ __( '確認', 'hametuha' ) }
+										</a>
 										{ !! post.edit_url && (
-											<a className="btn btn-primary btn-sm" href={ post.edit_url}>{ __( '編集', 'hametuha' ) }</a>
+											<a
+												className="btn btn-primary btn-sm"
+												href={ post.edit_url }
+											>
+												{ __( '編集', 'hametuha' ) }
+											</a>
 										) }
 									</footer>
 								</li>
@@ -170,27 +247,37 @@ class PostList extends Component {
 					</ul>
 				) : (
 					<div className="alert alert-light" role="alert">
-						<h4 className="alert-heading">{ __( '見つかりませんでした', 'hametuha' ) }</h4>
+						<h4 className="alert-heading">
+							{ __( '見つかりませんでした', 'hametuha' ) }
+						</h4>
 						<p>
-							{ __( '該当する条件のデータは見つかりませんでした。', 'hametuha' ) }
+							{ __(
+								'該当する条件のデータは見つかりませんでした。',
+								'hametuha'
+							) }
 						</p>
 						<hr />
 						<p className="mb-0">
-							{ __( '新しい作品を投稿して、破滅派を盛り上げてください。', 'hametuha' ) }
+							{ __(
+								'新しい作品を投稿して、破滅派を盛り上げてください。',
+								'hametuha'
+							) }
 						</p>
 					</div>
 				) }
 
-				<Pagination current={ currentPage } total={ totalPage } onChange={ ( num ) => {
-					this.fetch( num );
-				} }/>
+				<Pagination
+					current={ currentPage }
+					total={ totalPage }
+					onChange={ ( num ) => {
+						this.fetch( num );
+					} }
+				/>
 				<LoadingIndicator loading={ loading } />
 			</div>
 		);
 	}
-
 }
-
 
 if ( div ) {
 	if ( createRoot ) {

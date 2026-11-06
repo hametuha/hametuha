@@ -24,7 +24,7 @@ const IdeasComponent = () => {
 		title: '',
 		content: '',
 		status: 'publish',
-		genre: ''
+		genre: '',
 	} );
 
 	const modalRef = useRef( null );
@@ -91,7 +91,7 @@ const IdeasComponent = () => {
 			title: '',
 			content: '',
 			status: 'publish',
-			genre: ''
+			genre: '',
 		} );
 		setIsModalOpen( true );
 		setMessage( '' );
@@ -115,7 +115,7 @@ const IdeasComponent = () => {
 		try {
 			// Fetch idea data
 			const response = await apiFetch( {
-				path: `/hametuha/v1/idea/${postId}/`,
+				path: `/hametuha/v1/idea/${ postId }/`,
 				method: 'GET',
 			} );
 
@@ -124,11 +124,13 @@ const IdeasComponent = () => {
 					title: response.title || '',
 					content: response.content || '',
 					status: response.status || 'publish',
-					genre: response.genre || ''
+					genre: response.genre || '',
 				} );
 			}
 		} catch ( error ) {
-			setMessage( __( 'アイデアの読み込みに失敗しました。', 'hametuha' ) );
+			setMessage(
+				__( 'アイデアの読み込みに失敗しました。', 'hametuha' )
+			);
 			setMessageType( 'error' );
 		} finally {
 			setIsLoading( false );
@@ -143,7 +145,7 @@ const IdeasComponent = () => {
 			title: '',
 			content: '',
 			status: 'publish',
-			genre: ''
+			genre: '',
 		} );
 		setMessage( '' );
 		setIsDeleting( false );
@@ -161,9 +163,9 @@ const IdeasComponent = () => {
 
 	const handleInputChange = ( e ) => {
 		const { name, value } = e.target;
-		setFormData( prev => ( {
+		setFormData( ( prev ) => ( {
 			...prev,
-			[ name ]: value
+			[ name ]: value,
 		} ) );
 	};
 
@@ -174,15 +176,17 @@ const IdeasComponent = () => {
 
 		try {
 			const method = editMode ? 'PUT' : 'POST';
-			const data = editMode ? { ...formData, post_id: editPostId } : formData;
+			const data = editMode
+				? { ...formData, post_id: editPostId }
+				: formData;
 
 			const response = await fetch( '/wp-json/hametuha/v1/idea/mine/', {
-				method: method,
+				method,
 				headers: {
 					'Content-Type': 'application/json',
 					'X-WP-Nonce': wpApiSettings.nonce,
 				},
-				body: JSON.stringify( data )
+				body: JSON.stringify( data ),
 			} );
 
 			const result = await response.json();
@@ -201,7 +205,9 @@ const IdeasComponent = () => {
 					}
 				}, 1500 );
 			} else {
-				setMessage( result.message || __( 'エラーが発生しました。', 'hametuha' ) );
+				setMessage(
+					result.message || __( 'エラーが発生しました。', 'hametuha' )
+				);
 				setMessageType( 'error' );
 			}
 		} catch ( error ) {
@@ -213,9 +219,15 @@ const IdeasComponent = () => {
 	};
 
 	const handleDelete = async () => {
-		if ( ! editPostId ) return;
+		if ( ! editPostId ) {
+			return;
+		}
 
-		if ( ! confirm( __( 'このアイデアを削除してよろしいですか？', 'hametuha' ) ) ) {
+		if (
+			! confirm(
+				__( 'このアイデアを削除してよろしいですか？', 'hametuha' )
+			)
+		) {
 			return;
 		}
 
@@ -224,7 +236,7 @@ const IdeasComponent = () => {
 
 		try {
 			const response = await apiFetch( {
-				path: `/hametuha/v1/idea/mine/?post_id=${editPostId}`,
+				path: `/hametuha/v1/idea/mine/?post_id=${ editPostId }`,
 				method: 'DELETE',
 			} );
 
@@ -236,7 +248,9 @@ const IdeasComponent = () => {
 					window.location.href = '/ideas/';
 				}, 1500 );
 			} else {
-				setMessage( response.message || __( '削除に失敗しました。', 'hametuha' ) );
+				setMessage(
+					response.message || __( '削除に失敗しました。', 'hametuha' )
+				);
 				setMessageType( 'error' );
 			}
 		} catch ( error ) {
@@ -255,19 +269,24 @@ const IdeasComponent = () => {
 
 	return (
 		<div className="ideas-component">
-			{/* Floating Action Button */ }
+			{ /* Floating Action Button */ }
 			<button
 				className="ideas-fab"
 				onClick={ openModal }
 				aria-label={ __( '新しいアイデアを投稿', 'hametuha' ) }
 				title={ __( '新しいアイデアを投稿', 'hametuha' ) }
 			>
-				<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+				<svg
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+				>
 					<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
 				</svg>
 			</button>
 
-			{/* Modal */ }
+			{ /* Modal */ }
 			{ isModalOpen && (
 				<div
 					className="modal fade show d-block"
@@ -279,10 +298,15 @@ const IdeasComponent = () => {
 				>
 					<div className="modal-dialog modal-lg">
 						<div className="modal-content">
-							{/* Modal Header */ }
+							{ /* Modal Header */ }
 							<div className="modal-header">
 								<h5 className="modal-title" id="ideaModalTitle">
-									{ editMode ? __( 'アイデアを編集', 'hametuha' ) : __( '新しいアイデアを投稿', 'hametuha' ) }
+									{ editMode
+										? __( 'アイデアを編集', 'hametuha' )
+										: __(
+												'新しいアイデアを投稿',
+												'hametuha'
+											) }
 								</h5>
 								<button
 									type="button"
@@ -292,9 +316,9 @@ const IdeasComponent = () => {
 								/>
 							</div>
 
-							{/* Modal Body */ }
+							{ /* Modal Body */ }
 							<div className="modal-body">
-								{/* Message */ }
+								{ /* Message */ }
 								{ message && (
 									<div
 										className={ `alert ${ messageType === 'success' ? 'alert-success' : 'alert-danger' } mb-3` }
@@ -305,12 +329,18 @@ const IdeasComponent = () => {
 									</div>
 								) }
 
-								{/* Form */ }
+								{ /* Form */ }
 								<form onSubmit={ handleSubmit }>
-									{/* Title field */ }
+									{ /* Title field */ }
 									<div className="mb-3">
-										<label htmlFor="ideaTitle" className="form-label">
-											{ __( 'タイトル', 'hametuha' ) } <span className="text-danger">*</span>
+										<label
+											htmlFor="ideaTitle"
+											className="form-label"
+										>
+											{ __( 'タイトル', 'hametuha' ) }{ ' ' }
+											<span className="text-danger">
+												*
+											</span>
 										</label>
 										<input
 											type="text"
@@ -322,17 +352,32 @@ const IdeasComponent = () => {
 											required
 											ref={ titleInputRef }
 											aria-describedby="ideaTitleHelp"
-											placeholder={ __( 'ex. 永遠の偏差値ゼロ', 'hametuha' ) }
+											placeholder={ __(
+												'ex. 永遠の偏差値ゼロ',
+												'hametuha'
+											) }
 										/>
-										<div id="ideaTitleHelp" className="form-text">
-											{ __( 'アイデアのタイトルを入力してください', 'hametuha' ) }
+										<div
+											id="ideaTitleHelp"
+											className="form-text"
+										>
+											{ __(
+												'アイデアのタイトルを入力してください',
+												'hametuha'
+											) }
 										</div>
 									</div>
 
-									{/* Content field */ }
+									{ /* Content field */ }
 									<div className="mb-3">
-										<label htmlFor="ideaContent" className="form-label">
-											{ __( '内容', 'hametuha' ) } <span className="text-danger">*</span>
+										<label
+											htmlFor="ideaContent"
+											className="form-label"
+										>
+											{ __( '内容', 'hametuha' ) }{ ' ' }
+											<span className="text-danger">
+												*
+											</span>
 										</label>
 										<textarea
 											className="form-control"
@@ -343,17 +388,32 @@ const IdeasComponent = () => {
 											onChange={ handleInputChange }
 											required
 											aria-describedby="ideaContentHelp"
-											placeholder={ __( 'ex. 元零戦の搭乗員である佐藤函火粉（はこひこ）が現代に蘇り、高校生活を送ることになる。しかし、彼の成績は一向に上がらず……', 'hametuha' ) }
+											placeholder={ __(
+												'ex. 元零戦の搭乗員である佐藤函火粉（はこひこ）が現代に蘇り、高校生活を送ることになる。しかし、彼の成績は一向に上がらず……',
+												'hametuha'
+											) }
 										/>
-										<div id="ideaContentHelp" className="form-text">
-											{ __( 'アイデアの詳細を入力してください', 'hametuha' ) }
+										<div
+											id="ideaContentHelp"
+											className="form-text"
+										>
+											{ __(
+												'アイデアの詳細を入力してください',
+												'hametuha'
+											) }
 										</div>
 									</div>
 
-									{/* Genre field */ }
+									{ /* Genre field */ }
 									<div className="mb-3">
-										<label htmlFor="ideaGenre" className="form-label">
-											{ __( 'ジャンル', 'hametuha' ) } <span className="text-danger">*</span>
+										<label
+											htmlFor="ideaGenre"
+											className="form-label"
+										>
+											{ __( 'ジャンル', 'hametuha' ) }{ ' ' }
+											<span className="text-danger">
+												*
+											</span>
 										</label>
 										<select
 											className="form-select"
@@ -364,21 +424,41 @@ const IdeasComponent = () => {
 											required
 											aria-describedby="ideaGenreHelp"
 										>
-											<option value="">{ __( 'ジャンルを選択してください', 'hametuha' ) }</option>
-											{ HametuhaIdeaTags && HametuhaIdeaTags.map( genre => (
-												<option key={ genre.id } value={ genre.id }>
-													{ genre.name }
-												</option>
-											) ) }
+											<option value="">
+												{ __(
+													'ジャンルを選択してください',
+													'hametuha'
+												) }
+											</option>
+											{ HametuhaIdeaTags &&
+												HametuhaIdeaTags.map(
+													( genre ) => (
+														<option
+															key={ genre.id }
+															value={ genre.id }
+														>
+															{ genre.name }
+														</option>
+													)
+												) }
 										</select>
-										<div id="ideaGenreHelp" className="form-text">
-											{ __( 'アイデアのジャンルを選択してください', 'hametuha' ) }
+										<div
+											id="ideaGenreHelp"
+											className="form-text"
+										>
+											{ __(
+												'アイデアのジャンルを選択してください',
+												'hametuha'
+											) }
 										</div>
 									</div>
 
-									{/* Status field */ }
+									{ /* Status field */ }
 									<div className="mb-3">
-										<label htmlFor="ideaStatus" className="form-label">
+										<label
+											htmlFor="ideaStatus"
+											className="form-label"
+										>
 											{ __( '公開設定', 'hametuha' ) }
 										</label>
 										<select
@@ -389,17 +469,30 @@ const IdeasComponent = () => {
 											onChange={ handleInputChange }
 											aria-describedby="ideaStatusHelp"
 										>
-											<option value="publish">{ __( '公開', 'hametuha' ) }</option>
-											<option value="private">{ __( '非公開（自分専用）', 'hametuha' ) }</option>
+											<option value="publish">
+												{ __( '公開', 'hametuha' ) }
+											</option>
+											<option value="private">
+												{ __(
+													'非公開（自分専用）',
+													'hametuha'
+												) }
+											</option>
 										</select>
-										<div id="ideaStatusHelp" className="form-text">
-											{ __( '非公開にしておいて、特定の人にだけ見せることは可能です。', 'hametuha' ) }
+										<div
+											id="ideaStatusHelp"
+											className="form-text"
+										>
+											{ __(
+												'非公開にしておいて、特定の人にだけ見せることは可能です。',
+												'hametuha'
+											) }
 										</div>
 									</div>
 								</form>
 							</div>
 
-							{/* Modal Footer */ }
+							{ /* Modal Footer */ }
 							<div className="modal-footer">
 								{ editMode && (
 									<button
@@ -410,8 +503,12 @@ const IdeasComponent = () => {
 									>
 										{ isDeleting ? (
 											<>
-												<span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
-												{ __( '削除中...', 'hametuha' ) }
+												<span
+													className="spinner-border spinner-border-sm me-2"
+													role="status"
+													aria-hidden="true"
+												/>
+												{ __( '削除中…', 'hametuha' ) }
 											</>
 										) : (
 											__( '削除', 'hametuha' )
@@ -434,12 +531,19 @@ const IdeasComponent = () => {
 								>
 									{ isLoading ? (
 										<>
-											<span className="spinner-border spinner-border-sm me-2" role="status"
-												aria-hidden="true" />
-											{ editMode ? __( '更新中...', 'hametuha' ) : __( '投稿中...', 'hametuha' ) }
+											<span
+												className="spinner-border spinner-border-sm me-2"
+												role="status"
+												aria-hidden="true"
+											/>
+											{ editMode
+												? __( '更新中…', 'hametuha' )
+												: __( '投稿中…', 'hametuha' ) }
 										</>
+									) : editMode ? (
+										__( '更新する', 'hametuha' )
 									) : (
-										editMode ? __( '更新する', 'hametuha' ) : __( '投稿する', 'hametuha' )
+										__( '投稿する', 'hametuha' )
 									) }
 								</button>
 							</div>
@@ -448,7 +552,7 @@ const IdeasComponent = () => {
 				</div>
 			) }
 
-			{/* Modal backdrop */ }
+			{ /* Modal backdrop */ }
 			{ isModalOpen && <div className="modal-backdrop fade show" /> }
 		</div>
 	);
