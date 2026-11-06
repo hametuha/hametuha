@@ -13,6 +13,8 @@ jQuery( document ).ready( function( $ ) {
   if ( $divider.length ) {
     $.each( [
       '#reg_passmail',
+      '.cf-turnstile',
+      '.cf-turnstile-br',
       '.forgetmenot',
       'p.submit'
     ], function( index, selector ) {

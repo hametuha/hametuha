@@ -39,34 +39,43 @@ if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_pos
 <?php
 /**
  * 告知エリア
+ *
+ * 最新の1件を表示し、JS（components/front-announcement.jsx）で順に切り替える（#327）。
  */
+$announcement = new WP_Query( [
+	'post_type'      => 'announcement',
+	'posts_per_page' => 3,
+	'post_status'    => 'publish',
+] );
 ?>
 	<div class="container">
-		<nav class="front-announcement row align-items-center">
-			<ul class="col-10 front-announcement__list">
-				<?php
-				$announcement = new WP_Query( [
-					'post_type'      => 'announcement',
-					'posts_per_page' => 3,
-					'post_status'    => 'publish',
-				] );
-				while ( $announcement->have_posts() ) :
-					$announcement->the_post();
-					?>
-					<li class="front-announcement__item">
-						<a class="d-flex justify-content-start" href="<?php the_permalink(); ?>">
-							<time class="date d-inline-block" datetime="<?php echo the_time( DATETIME::ATOM ); ?>">
-								<strong>【お知らせ】</strong><strong
-									class="d-none d-sm-inline"><?php the_date(); ?></strong>
-							</time>
-							<span><?php the_title(); ?></span>
-						</a>
-					</li>
+		<nav class="front-announcement row align-items-center" aria-label="お知らせ">
+			<div class="col-10 d-flex align-items-center">
+				<ul class="front-announcement__list">
 					<?php
-				endwhile;
-				wp_reset_postdata()
-				?>
-			</ul>
+					while ( $announcement->have_posts() ) :
+						$announcement->the_post();
+						?>
+						<li class="front-announcement__item<?php echo 0 === $announcement->current_post ? ' is-active' : ''; ?>">
+							<a class="d-flex justify-content-start" href="<?php the_permalink(); ?>">
+								<time class="date d-inline-block" datetime="<?php echo the_time( DATETIME::ATOM ); ?>">
+									<strong>【お知らせ】</strong><strong
+										class="d-none d-sm-inline"><?php the_date(); ?></strong>
+								</time>
+								<span><?php the_title(); ?></span>
+							</a>
+						</li>
+						<?php
+					endwhile;
+					wp_reset_postdata()
+					?>
+				</ul>
+				<?php if ( 1 < $announcement->post_count ) : ?>
+					<span class="front-announcement__counter" hidden>
+						<span class="front-announcement__current">1</span> / <?php echo number_format_i18n( $announcement->post_count ); ?>
+					</span>
+				<?php endif; ?>
+			</div>
 			<p class="col-2 mb-0">
 				<a href="<?php echo get_post_type_archive_link( 'announcement' ); ?>" class="btn btn-secondary w-100">
 					<span class="d-none d-sm-inline">お知らせ一覧</span> <i class="icon-arrow-right6"></i>

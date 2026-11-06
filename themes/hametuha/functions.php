@@ -54,10 +54,6 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 			$class_name::register();
 		}
 	}
-	// Register recaptcha
-	if ( class_exists( 'Hametuha\Service\RecaptchaV3' ) ) {
-		\Hametuha\Service\RecaptchaV3::get_instance();
-	}
 	// ga-communicator
 	if ( class_exists( '\Kunoichi\GaCommunicator' ) ) {
 		\Kunoichi\GaCommunicator::get_instance()->locale();
