@@ -169,6 +169,12 @@ add_action( 'wp_head', function () {
  * OGPを出力する
  */
 add_action( 'wp_head', function () {
+	// ダッシュボード（hashboard）では出さない。
+	// hashboard が自分で <title> を出す（テーマが title-tag 非対応のため）。ここでも出すと二重になり、
+	// description・canonical も is_home() 扱いで新着一覧のものになってしまう。根本対応は #473。
+	if ( get_query_var( 'hashboard' ) ) {
+		return;
+	}
 	//初期値を設定
 	$image    = get_template_directory_uri() . '/assets/img/facebook-logo-2016.png';
 	$title    = wp_title( '|', false, 'right' );
@@ -374,7 +380,8 @@ add_filter( 'wp_robots', function ( $robots ) {
  * 2. rel=prev, rel=next を出力
  */
 add_action( 'wp_head', function () {
-	if ( is_front_page() ) {
+	// ダッシュボード（hashboard）は is_home() 扱いになり、新着一覧の URL が出てしまうので除く。
+	if ( is_front_page() || get_query_var( 'hashboard' ) ) {
 		return;
 	}
 	$paged = get_query_var( 'paged' );
