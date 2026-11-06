@@ -1,6 +1,6 @@
 .browserslistrc
 .editorconfig
-.eslintrc
+eslint.config.cjs
 .distignore
 .git
 .github
@@ -8,7 +8,6 @@
 .node-version
 .stylelintrc.json
 .wp_install_path
-gulpfile.js
 node_modules
 composer.lock
 package-lock.json
@@ -16,9 +15,12 @@ phpcs.ruleset.xml
 phpunit.xml.dist
 README.md
 CLAUDE.md
-webpack.config.js
+/assets-src
 /bin
 tmp
 tests
 style.css.bak
 readme.txt.bak
+.stylelintignore
+.husky
+eslint-suppressions.json

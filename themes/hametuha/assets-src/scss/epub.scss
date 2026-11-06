@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+// Bootstrap 5 imports with custom variables
+@import "bootstrap/scss/functions";
+@import "variables"; // Custom variables (includes backward-compat)
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/reboot";
+@import "bootstrap/scss/buttons"; // Required for .btn class
+@import "bootstrap/scss/utilities";
+
+
+//$is-epub: true;
+//@import "icon";
+
+@import "mixins";
+@import "epub/ads";
+@import "epub/colophon";
+@import "epub/common";
+@import "epub/cover";
+@import "epub/creators";
+@import "epub/post_content";
+@import "epub/toc";

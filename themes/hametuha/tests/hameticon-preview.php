@@ -6,7 +6,7 @@
  */
 
 // Read the icon definitions from SCSS file
-$scss_file = __DIR__ . '/../assets/sass/_icon.scss';
+$scss_file = __DIR__ . '/../assets-src/scss/_icon.scss';
 $scss_content = file_get_contents($scss_file);
 
 // Extract icon class names (simpler approach - just get class names)

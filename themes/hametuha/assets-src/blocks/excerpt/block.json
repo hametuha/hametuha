@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 1,
+	"name": "hametuha/excerpt",
+	"title": "リード文",
+	"category": "layout",
+	"icon": "edit-page",
+	"keywords": [ "リード", "lead", "excerpt", "layout" ],
+	"textdomain": "hametuha",
+	"attributes": {
+		"placeholder": {
+			"type": "string",
+			"default": "リード文を入力してください"
+		},
+		"max": {
+			"type": "number",
+			"default": 200
+		},
+		"min": {
+			"type": "number",
+			"default": 40
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css"
+}

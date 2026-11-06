@@ -1,0 +1,37 @@
+/*!
+ * Admin file for Hametuha
+ *
+ * @package hametuha
+ */
+$break-point: 782px;
+
+$danger: #dc3232;
+$warning: #eb763c;
+
+@mixin small-screen() {
+
+	@media only screen and (max-width: $break-point) {
+		@content;
+	}
+}
+
+%delete-link {
+	transition: color 0.3s linear;
+
+	&:link,
+	&:visited {
+		color: $danger;
+		text-decoration: underline;
+	}
+
+	&:hover,
+	&:active {
+		color: lighten($danger, 10);
+		text-decoration: underline;
+	}
+}
+
+@import "admin/collaborator";
+@import "admin/general";
+@import "admin/series";
+@import "admin/tag-selector";

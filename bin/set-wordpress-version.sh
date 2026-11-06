@@ -13,15 +13,18 @@ fi
 
 WP_VERSION=$1
 
+# sed -i の書き方は GNU 版と BSD 版（macOS 標準）で違う。OS ではなく sed 自体で判定する
+# （macOS でも Homebrew の GNU sed が sed として入っていることがある）
+if sed --version >/dev/null 2>&1; then
+    sed_inplace() { sed -i "$@"; }
+else
+    sed_inplace() { sed -i '' "$@"; }
+fi
+
 # .envファイルのバージョンを更新
 if [ -f .env ]; then
     if grep -q "WORDPRESS_VERSION=" .env; then
-        # macOS/BSD sedとGNU sed両対応
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' "s/WORDPRESS_VERSION=.*/WORDPRESS_VERSION=$WP_VERSION/" .env
-        else
-            sed -i "s/WORDPRESS_VERSION=.*/WORDPRESS_VERSION=$WP_VERSION/" .env
-        fi
+        sed_inplace "s/WORDPRESS_VERSION=.*/WORDPRESS_VERSION=$WP_VERSION/" .env
     else
         echo "WORDPRESS_VERSION=$WP_VERSION" >> .env
     fi
@@ -40,12 +43,7 @@ if [ -f composer.json ]; then
         COMPOSER_VERSION="$WP_VERSION"
     fi
     
-    # macOS/BSD sedとGNU sed両対応
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/\"johnpbloch\/wordpress\": \"[^\"]*\"/\"johnpbloch\/wordpress\": \"$COMPOSER_VERSION\"/" composer.json
-    else
-        sed -i "s/\"johnpbloch\/wordpress\": \"[^\"]*\"/\"johnpbloch\/wordpress\": \"$COMPOSER_VERSION\"/" composer.json
-    fi
+    sed_inplace "s/\"johnpbloch\/wordpress\": \"[^\"]*\"/\"johnpbloch\/wordpress\": \"$COMPOSER_VERSION\"/" composer.json
     echo "Updated composer.json with johnpbloch/wordpress:$COMPOSER_VERSION"
 fi
 

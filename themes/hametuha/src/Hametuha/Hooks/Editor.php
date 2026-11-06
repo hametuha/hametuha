@@ -40,54 +40,12 @@ class Editor extends Singleton {
 
 	/**
 	 * Register All Blocks.
+	 *
+	 * assets-src/blocks/<名前>/ を wp-scripts でビルドした assets/blocks/<名前>/（block.json 付き）を登録する。
 	 */
 	public function register_blocks() {
-		if ( ! function_exists( 'register_block_type' ) ) {
-			// No gutenberg.
-			return;
-		}
-		$asset_dir = get_template_directory() . '/assets/js/dist/blocks';
-		if ( ! is_dir( $asset_dir ) ) {
-			return;
-		}
-		foreach ( scandir( $asset_dir ) as $file ) {
-			if ( ! preg_match( '/^([^._].*)\.js$/u', $file, $match ) ) {
-				continue;
-			}
-			list( $file_name, $name ) = $match;
-			$block_name               = 'hametuha/' . $name;
-			$handle                   = 'hametuha-block-' . $name;
-			// Set handle.
-			$setting  = [
-				'editor_script' => $handle,
-			];
-			$css_path = get_template_directory() . '/assets/css/blocks/' . $name . '.css';
-			if ( file_exists( $css_path ) ) {
-				$css_version = filemtime( $css_path );
-				wp_register_style( $handle, get_template_directory_uri() . '/assets/css/blocks/' . $name . '.css', [], $css_version );
-				$setting['editor_style'] = $handle;
-			}
-			// TODO: Attributes can define from js.
-			switch ( $name ) {
-				case 'excerpt':
-					$setting['attributes'] = [
-						'placeholder' => [
-							'type'    => 'string',
-							'default' => __( 'リード文を入力してください', 'hametuha' ),
-						],
-						'max'         => [
-							'type'    => 'number',
-							'default' => 200,
-						],
-						'min'         => [
-							'type'    => 'number',
-							'default' => 40,
-						],
-					];
-					break;
-			}
-			$setting = apply_filters( 'hametuha_editor_block_setting', $setting, $handle );
-			register_block_type( $block_name, $setting );
+		foreach ( glob( get_template_directory() . '/assets/blocks/*/block.json' ) as $block_json ) {
+			register_block_type( dirname( $block_json ) );
 		}
 	}
 

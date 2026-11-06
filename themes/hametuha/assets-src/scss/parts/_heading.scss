@@ -1,0 +1,122 @@
+
+//  ページヘッダー
+.page-header {
+
+	small {
+		font-weight: $font-weight-normal;
+		color: $shade-font;
+		margin-bottom: 0.5em;
+	}
+
+	.single & {
+		margin-bottom: 0;
+	}
+
+	.badge {
+		font-size: 0.6em;
+		vertical-align: text-bottom;
+	}
+}
+
+h2.page-header {
+	margin-top: 40px;
+	font-weight: $font-weight-bold;
+}
+
+// 新しいデカ文字のヘッダー
+.page-heading {
+	padding: 3em 0;
+	font-size: 24px;
+	font-family: $work-body;
+
+	@media only screen and ( max-width: $screen-sm-max ) {
+		font-size: 16px;
+	}
+
+	&-title {
+		font-size: 3em;
+		font-weight: 400;
+		margin-bottom: 1em;
+	}
+
+	&-desc {
+		font-size: 16px;
+
+		a:link,
+		a:visited {
+			text-decoration: underline;
+			color: currentcolor;
+		}
+
+		a:hover,
+		a:active {
+			color: $link-color;
+			text-decoration: none;
+		}
+	}
+}
+
+.dividing-header {
+	margin: 20px 0;
+	font-family: $font-family-serif;
+	padding: 20px 0 0;
+	border-top: 2px solid currentcolor;
+}
+
+// 一覧ページのヘッダー
+// --------------------
+.archive-meta {
+
+	h1 {
+		font-size: 28px;
+		font-family: $work-title;
+
+		.label {
+			font-family: sans-serif;
+			margin-left: 0.5em;
+		}
+	}
+
+	.desc {
+		font-family: $work-title;
+
+		p {
+			margin-bottom: 1em;
+			color: $little-shade-font;
+			padding-left: 1em;
+			padding-right: 1em;
+
+			&:first-child {
+				padding-top: 2em;
+				margin-top: 2em;
+				border-top: $divide-border;
+			}
+
+			&:last-child {
+				padding-bottom: 2em;
+				margin-bottom: 2em;
+				border-bottom: $divide-border;
+			}
+		}
+	}
+}
+
+.meta {
+
+	&--series {
+		margin-bottom: 1em;
+		border-bottom: $divide-border;
+		padding-bottom: 1em;
+	}
+
+	&__thumbnail {
+		padding-top: 0.5em;
+		text-align: center;
+
+		img {
+			max-width: 100%;
+			height: auto;
+			width: auto;
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 1,
+	"name": "hametuha/section",
+	"title": "セクション",
+	"category": "layout",
+	"icon": "excerpt-view",
+	"keywords": [ "section", "セクション" ],
+	"textdomain": "hametuha",
+	"attributes": {
+		"backgroundColor": {
+			"type": "string",
+			"default": "transparent"
+		},
+		"withContainer": {
+			"type": "boolean",
+			"default": true
+		}
+	},
+	"editorScript": "file:./index.js"
+}

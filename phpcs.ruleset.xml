@@ -62,4 +62,6 @@
 	<exclude-pattern>*.css</exclude-pattern>
 	<exclude-pattern>*/vendor/*</exclude-pattern>
 	<exclude-pattern>*/tests/*</exclude-pattern>
+	<!-- wp-scripts が生成する依存定義（assets/blocks/*/index.asset.php） -->
+	<exclude-pattern>*.asset.php</exclude-pattern>
 </ruleset>
