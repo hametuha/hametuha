@@ -235,15 +235,36 @@ composer wp -- user delete <ID> --yes
 
 検証で汚したデータ（メタ・投稿・アップロードファイル等）は必ず元に戻してください。`post_modified` は `wp post update` だと再度更新されてしまうので、戻すときは `wp db query` で直接 UPDATE します。
 
-#### reCAPTCHA のスキップ
+#### Cloudflare Turnstile（ログイン・登録・CF7 のボット対策）
 
-フォーム送信を検証する場合は `wp-config-local.php` に以下を設定します。
+ボット対策は Cloudflare Turnstile です（#458）。**担当が2つに分かれている**ので注意。
 
-```php
-define( 'SKIP_RECAPTCHA_VERIFICATION', true );
+| 対象 | 担当 | スクリプトのハンドル |
+|---|---|---|
+| ログイン・登録・パスワードリセット | プラグイン `simple-cloudflare-turnstile` | `cfturnstile` |
+| Contact Form 7 | **CF7 本体の Turnstile 連携**（「インテグレーション」画面） | `cloudflare-turnstile` |
+
+かつてはテーマ独自の reCAPTCHA v3（`Hametuha\Service\RecaptchaV3`）でしたが、削除しました。
+CF7 本体の連携はフォームに `[turnstile]` タグが無くても自動でウィジェットを差し込み、スクリプトは全ページで読み込むため、
+CF7 の無いページでは `hooks/assets.php` で dequeue しています。
+
+ローカルでは Cloudflare 公式の**常に通るテスト用キー**を使います。ウィジェットに「テスト専用です」と出ますが、
+ブラウザ操作（Playwright）でもそのままログイン・フォーム送信できるので、スキップ用の定数はありません。
+
+```bash
+# ログインまわり（simple-cloudflare-turnstile）
+composer wp -- option update cfturnstile_key 1x00000000000000000000AA
+composer wp -- option update cfturnstile_secret 1x0000000000000000000000000000000AA
+for o in cfturnstile_login cfturnstile_register cfturnstile_reset; do composer wp -- option update $o 1; done
+# キー保存後の「テスト済み」フラグ。これが yes でないと連携が読み込まれない
+composer wp -- option update cfturnstile_tested yes
+# CF7（本体の連携）。プラグイン側の CF7 連携（cfturnstile_cf7_all）は本番で使っていないので有効にしない
+composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x00000000000000000000AA" => "1x0000000000000000000000000000000AA" ] );'
 ```
 
-`wp-config-local.php` はdockerの起動時にしか同期されません。変更した場合は再起動 `composer restart` してください。
+- ログイン・登録画面の並び順はテーマの `assets/js/src/components/login-helper.js` が「または」の区切りの上へ移しています。
+  ウィジェット（`.cf-turnstile`）もこのリストに入れているので、フォームに要素を足すときはここも見ること
+- 古い `wp-config-local.php` に `SKIP_RECAPTCHA_VERIFICATION` が残っていても、いまは何の効果もありません
 
 #### かつて存在した自動ログイン機能について
 
@@ -640,6 +661,33 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 2. `master` マージ → `release` へのPR自動作成
 3. `release` PRマージ → リリースドラフト作成
 4. リリース公開 → 本番環境へ自動デプロイ
+
+## 本番ログ（CloudWatch Logs）
+
+本番のログは CloudWatch Logs に集約されています。AWS の認証は direnv でこのリポジトリに固定します。
+
+```bash
+cp .envrc.example .envrc && direnv allow   # 初回のみ。.envrc は gitignore 済み
+aws iam list-account-aliases               # "hametuha" であることを確認（他のアカウントと取り違えない）
+```
+
+| ロググループ | 中身 |
+|---|---|
+| `/aws/ec2/hametuha/php-fpm/error` | PHP のエラー（Fatal・メモリ枯渇など） |
+| `/aws/ec2/hametuha/php-fpm/slow` | PHP-FPM のスローログ |
+| `/aws/ec2/hametuha/nginx/access` / `error` | nginx のアクセス・エラー |
+| `/aws/rds/instance/hametuha/slowquery` | RDS のスロークエリ |
+| `/aws/lambda/production-hametuha-health-check` | 死活監視 |
+
+**保持期間は30日**（RDS の error は90日、health-check は180日）。それより古い障害は追えないので、
+イシューに書くときはログの該当行を本文に貼っておくこと。
+
+```bash
+# 例: 直近7日の PHP メモリ枯渇
+aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
+  --start-time $(( ($(date +%s) - 7*86400) * 1000 )) \
+  --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
+```
 
 ## MCPサーバー（分析用）
 

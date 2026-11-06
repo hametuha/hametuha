@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73e39e9767e371402a4fc49b5cb432fc",
+    "content-hash": "34f7df5fcb52a84d43cf95c79035a67a",
     "packages": [
         {
             "name": "composer/installers",
@@ -704,6 +704,24 @@
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/regenerate-thumbnails/"
+        },
+        {
+            "name": "wpackagist-plugin/simple-cloudflare-turnstile",
+            "version": "1.44.5",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/simple-cloudflare-turnstile/",
+                "reference": "tags/1.44.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/simple-cloudflare-turnstile.1.44.5.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-plugin",
+            "homepage": "https://wordpress.org/plugins/simple-cloudflare-turnstile/"
         },
         {
             "name": "wpackagist-plugin/taro-ad-fields",
@@ -3160,7 +3178,7 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2"
+        "php": "8.4"
     },
     "plugin-api-version": "2.9.0"
 }

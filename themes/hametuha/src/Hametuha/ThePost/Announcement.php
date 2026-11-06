@@ -360,7 +360,7 @@ class Announcement extends PostHelper {
 			$taxonomy = '';
 			foreach ( $categories as $cat ) {
 				$taxonomy   = $cat->taxonomy;
-				$term_ids[] = (int) $taxonomy->term_id;
+				$term_ids[] = (int) $cat->term_id;
 			}
 			$args['tax_query'] = [
 				[

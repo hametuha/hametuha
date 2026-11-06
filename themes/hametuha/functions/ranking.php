@@ -29,7 +29,7 @@ add_shortcode('ranking_url', function ( $atts = [], $content = '' ) {
  *
  * @param WP_Post $post
  */
-function the_ranking( \WP_Post $post = null ) {
+function the_ranking( ?\WP_Post $post = null ) {
 	echo number_format( get_the_ranking( $post ) );
 }
 
@@ -57,7 +57,7 @@ function get_latest_ranking_day( $format = '' ) {
  * @param WP_Post $post
  * @return int
  */
-function get_the_ranking( \WP_Post $post = null ) {
+function get_the_ranking( ?\WP_Post $post = null ) {
 	$post = get_post( $post );
 	return isset( $post->rank ) ? $post->rank : 1;
 }

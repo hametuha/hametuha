@@ -135,7 +135,7 @@ class Rating extends Model {
 	 *
 	 * @return null|float
 	 */
-	public function get_post_rating( \WP_Post $post = null ) {
+	public function get_post_rating( ?\WP_Post $post = null ) {
 		$post = get_post( $post );
 		$this->select( "AVG({$this->table}.location)" )
 			->where( "{$this->table}.rel_type = %s", $this->type );
@@ -159,7 +159,7 @@ class Rating extends Model {
 	 *
 	 * @return int
 	 */
-	public function get_post_rating_count( \WP_Post $post = null ) {
+	public function get_post_rating_count( ?\WP_Post $post = null ) {
 		$post = get_post( $post );
 		if ( ! $post ) {
 			return 0;
@@ -182,7 +182,7 @@ class Rating extends Model {
 	 *
 	 * @return int
 	 */
-	public function get_post_rating_count_all( \WP_Post $post = null ) {
+	public function get_post_rating_count_all( ?\WP_Post $post = null ) {
 		$post    = get_post( $post );
 		$ratings = [];
 		for ( $i = 5; $i > 0; $i-- ) {
