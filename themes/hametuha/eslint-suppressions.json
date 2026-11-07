@@ -82,11 +82,6 @@
       "count": 2
     }
   },
-  "assets-src/js/common/carousel.js": {
-    "jsdoc/require-param-type": {
-      "count": 1
-    }
-  },
   "assets-src/js/common/form.js": {
     "no-alert": {
       "count": 1
