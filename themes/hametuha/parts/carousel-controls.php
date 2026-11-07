@@ -2,7 +2,7 @@
 /**
  * カルーセル（Swiper）の前後ボタンとページ送りのドット
  *
- * .carousel の中、.swiper の後ろに置く。動かしているのは assets-src/js/common/carousel.js。
+ * .carousel の中、.swiper の後ろに置く。動かしているのは assets-src/js/components/carousel.js。
  *
  * @feature-group carousel
  */
