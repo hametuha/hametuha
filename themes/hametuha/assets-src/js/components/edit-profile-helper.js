@@ -1,6 +1,8 @@
-/**
- * Description
- * @param $
+/*!
+ * 管理画面のプロフィール編集（画像の選択）
+ *
+ * @handle hametuha-user-edit
+ * @deps jquery, jquery-effects-highlight
  */
 
 ( function ( $ ) {

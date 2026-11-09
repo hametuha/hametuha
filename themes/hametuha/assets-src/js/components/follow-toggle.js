@@ -1,6 +1,8 @@
-/**
- * Description
- * @param $
+/*!
+ * フォローボタン
+ *
+ * @handle hametu-follow
+ * @deps twitter-bootstrap, wp-api
  */
 
 ( function ( $ ) {

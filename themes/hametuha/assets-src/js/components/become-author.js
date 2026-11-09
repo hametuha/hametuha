@@ -1,6 +1,8 @@
-/**
- * Description
- * @param $
+/*!
+ * 同人になるフォーム
+ *
+ * @handle hametuha-become-author
+ * @deps jquery-form, hametuha-common
  */
 
 ( function ( $ ) {

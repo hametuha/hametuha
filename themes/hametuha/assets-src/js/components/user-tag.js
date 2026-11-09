@@ -1,5 +1,8 @@
-/**
- * Description
+/*!
+ * 作品へのユーザータグ
+ *
+ * @handle hametuha-user-tag
+ * @deps backbone, jquery-ui-autocomplete
  */
 
 /*global Backbone: true*/

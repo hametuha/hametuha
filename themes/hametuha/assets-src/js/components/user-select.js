@@ -1,5 +1,8 @@
-/**
- * Description
+/*!
+ * 同人を選ぶセレクトボックス（select2）
+ *
+ * @handle hametuha-user-select
+ * @deps select2
  */
 
 /*global HametuhaUserSelect: true*/

@@ -1,7 +1,8 @@
-/**
+/*!
  * Watermark handler.
  *
- * @package
+ * @handle hametuha-watermark
+ * @deps jquery
  */
 
 jQuery( document ).ready( function ( $ ) {

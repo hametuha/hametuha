@@ -1,5 +1,7 @@
 /*!
  * Series edit helper
+ *
+ * @deps jquery-ui-sortable, backbone, underscore, jquery-effects-highlight
  */
 
 /*global Backbone: true*/

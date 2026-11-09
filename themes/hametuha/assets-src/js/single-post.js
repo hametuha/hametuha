@@ -1,5 +1,8 @@
-/**
+/*!
  * 破滅派投稿ページでだけ呼び出されるスクリプト
+ *
+ * @handle hametuha-single
+ * @deps hametuha-common, chart-js, jquery-form, jquery-touch-punch, jquery-ui-slider
  */
 
 /*global postScore: true*/

@@ -110,17 +110,11 @@
     }
   },
   "assets-src/js/components/become-author.js": {
-    "jsdoc/require-param-type": {
-      "count": 1
-    },
     "prefer-const": {
       "count": 1
     }
   },
   "assets-src/js/components/edit-profile-helper.js": {
-    "jsdoc/require-param-type": {
-      "count": 1
-    },
     "prefer-const": {
       "count": 4
     }
@@ -147,9 +141,6 @@
   },
   "assets-src/js/components/follow-toggle.js": {
     "@wordpress/no-unused-vars-before-return": {
-      "count": 1
-    },
-    "jsdoc/require-param-type": {
       "count": 1
     },
     "no-unused-vars": {
@@ -224,9 +215,6 @@
     }
   },
   "assets-src/js/components/login-change-helper.js": {
-    "jsdoc/require-param-type": {
-      "count": 1
-    },
     "no-alert": {
       "count": 1
     },

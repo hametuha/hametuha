@@ -3,6 +3,9 @@
  *
  * 以前は common/*.js を連結して作っていた（gulp）。いまは import でまとめる（#361）。
  * 順番は連結していたときと同じ。_hametuha.js が window.Hametuha を作るので先頭に置く。
+ *
+ * @handle hametuha-common
+ * @deps twitter-bootstrap, wp-api, font-plus, hametuheader
  */
 
 import './common/_hametuha';

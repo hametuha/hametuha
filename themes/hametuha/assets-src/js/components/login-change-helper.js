@@ -1,6 +1,8 @@
-/**
- * Description
- * @param $
+/*!
+ * ログイン名の変更フォーム
+ *
+ * @handle hametuha-login-changer
+ * @deps jquery-form, hametuha-common
  */
 
 ( function ( $ ) {

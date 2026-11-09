@@ -1,5 +1,8 @@
-/**
+/*!
  * bodyタグの開始直後に読み込まれる
+ *
+ * @handle hametuha-social
+ * @deps jquery
  */
 
 /*global FB: false*/
