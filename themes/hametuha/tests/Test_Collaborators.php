@@ -25,19 +25,7 @@ class Test_Collaborators extends WP_UnitTestCase {
 
 	public function test_collaborator_exists_checks_relation_type() {
 		global $wpdb;
-		$wpdb->query( <<<SQL
-			CREATE TABLE IF NOT EXISTS {$wpdb->prefix}user_content_relationships (
-				ID bigint unsigned NOT NULL AUTO_INCREMENT,
-				rel_type varchar(10) NOT NULL DEFAULT 'favorite',
-				object_id bigint unsigned NOT NULL,
-				user_id bigint unsigned NOT NULL,
-				location decimal(10,9) NOT NULL,
-				content text NOT NULL,
-				updated datetime NOT NULL,
-				PRIMARY KEY (ID)
-			)
-SQL
-		);
+		$this->create_relationships_table();
 		$series_id     = $this->create_published( 'series', self::factory()->user->create(), 0 );
 		$user_id       = self::factory()->user->create();
 		$collaborators = Collaborators::get_instance();
@@ -55,6 +43,80 @@ SQL
 
 		$wpdb->insert( "{$wpdb->prefix}user_content_relationships", array_merge( $relation, [ 'rel_type' => 'collabo' ] ) );
 		$this->assertTrue( $collaborators->collaborator_exists( $series_id, $user_id ) );
+	}
+
+	public function test_add_collaborator_saves_type() {
+		$this->create_relationships_table();
+		$series_id     = $this->create_published( 'series', self::factory()->user->create( [ 'role' => 'author' ] ), 0 );
+		$user_id       = self::factory()->user->create( [ 'role' => 'author' ] );
+		$collaborators = Collaborators::get_instance();
+
+		$added = $collaborators->add_collaborator( $series_id, $user_id, 'illustrator', -0.1 );
+		$this->assertInstanceOf( WP_User::class, $added );
+		$this->assertSame( 'illustrator', $added->collaboration_type );
+	}
+
+	public function test_add_collaborator_rejects_unknown_type() {
+		$this->create_relationships_table();
+		$series_id = $this->create_published( 'series', self::factory()->user->create( [ 'role' => 'author' ] ), 0 );
+		$user_id   = self::factory()->user->create( [ 'role' => 'author' ] );
+
+		$result = Collaborators::get_instance()->add_collaborator( $series_id, $user_id, 'unknown', -0.1 );
+		$this->assertWPError( $result );
+		$this->assertSame( 'invalid_collaborator_type', $result->get_error_code() );
+	}
+
+	public function test_update_collaborator_keeps_invitation_waiting() {
+		$this->create_relationships_table();
+		$series_id     = $this->create_published( 'series', self::factory()->user->create( [ 'role' => 'author' ] ), 0 );
+		$user_id       = self::factory()->user->create( [ 'role' => 'author' ] );
+		$collaborators = Collaborators::get_instance();
+		$collaborators->add_collaborator( $series_id, $user_id, 'writer', -0.1 );
+
+		// 承認待ちのまま役割と報酬を変える。承認済みになってはいけない
+		$this->assertTrue( $collaborators->update_collaborator( $series_id, $user_id, 20, 'translator' ) );
+		$updated = $collaborators->collaborator( $series_id, $user_id );
+		$this->assertSame( 'translator', $updated->collaboration_type );
+		$this->assertEqualsWithDelta( -0.2, (float) $updated->ratio, 0.0001 );
+		$this->assertFalse( $collaborators->collaborator_exists( $series_id, $user_id, true ) );
+	}
+
+	public function test_update_collaborator_changes_type_only() {
+		$this->create_relationships_table();
+		$series_id     = $this->create_published( 'series', self::factory()->user->create( [ 'role' => 'author' ] ), 0 );
+		$user_id       = self::factory()->user->create( [ 'role' => 'author' ] );
+		$collaborators = Collaborators::get_instance();
+		$collaborators->add_collaborator( $series_id, $user_id, 'writer', -0.1 );
+		$collaborators->confirm_invitation( $series_id, $user_id );
+
+		// 報酬はそのまま、役割だけ変える（DB 上は「変更なし」ではないが、報酬が同じでもエラーにならないこと）
+		$this->assertTrue( $collaborators->update_collaborator( $series_id, $user_id, 10, 'illustrator' ) );
+		// まったく同じ内容で更新しても成功する
+		$this->assertTrue( $collaborators->update_collaborator( $series_id, $user_id, 10, 'illustrator' ) );
+
+		$users = $collaborators->get_published_collaborators( $series_id );
+		$this->assertSame( 'イラストレーター', $users[ $user_id ]->label );
+		$this->assertWPError( $collaborators->update_collaborator( $series_id, $user_id, 10, 'unknown' ) );
+	}
+
+	/**
+	 * 関係のテーブルを作る
+	 */
+	protected function create_relationships_table() {
+		global $wpdb;
+		$wpdb->query( <<<SQL
+			CREATE TABLE IF NOT EXISTS {$wpdb->prefix}user_content_relationships (
+				ID bigint unsigned NOT NULL AUTO_INCREMENT,
+				rel_type varchar(10) NOT NULL DEFAULT 'favorite',
+				object_id bigint unsigned NOT NULL,
+				user_id bigint unsigned NOT NULL,
+				location decimal(10,9) NOT NULL,
+				content text NOT NULL,
+				updated datetime NOT NULL,
+				PRIMARY KEY (ID)
+			)
+SQL
+		);
 	}
 
 	/**
