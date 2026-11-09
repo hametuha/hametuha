@@ -2,11 +2,14 @@
  * コラボレーターを表示する
  *
  */
+import CollaboratorType from './_collaborator-type';
+
 const { useState } = wp.element;
 
 export default function Collaborator( props ) {
 	const { user } = props;
 	const [ ratio, setRatio ] = useState( user.ratio );
+	const [ type, setType ] = useState( user.type || 'writer' );
 	const className = [ 'collaborators-item' ];
 	const assigned = user.assigned;
 	return (
@@ -21,7 +24,8 @@ export default function Collaborator( props ) {
 				<a className="collaborators-name" href={ user.url }>
 					{ user.name }
 				</a>
-				<small>（{ user.label }）</small>
+				&nbsp;
+				<CollaboratorType value={ type } onChange={ setType } />
 			</td>
 			<td className="collaborators-revenue">
 				{ ratio < 0 ? (
@@ -57,18 +61,17 @@ export default function Collaborator( props ) {
 				</time>
 			</td>
 			<td className="collaborators-actions">
-				{ 0 > user.ratio ? null : (
-					<button
-						className="button"
-						style={ { marginRight: '0.5em' } }
-						onClick={ ( e ) => {
-							e.preventDefault();
-							props.updateHandler( user.id, ratio );
-						} }
-					>
-						更新
-					</button>
-				) }
+				<button
+					className="button"
+					style={ { marginRight: '0.5em' } }
+					onClick={ ( e ) => {
+						e.preventDefault();
+						// 承認待ちは報酬を変えられないので、招待したときの報酬をそのまま送る。
+						props.updateHandler( user.id, Math.abs( ratio ), type );
+					} }
+				>
+					更新
+				</button>
 				<button
 					className="button collaborators-delete-link"
 					onClick={ ( e ) => {

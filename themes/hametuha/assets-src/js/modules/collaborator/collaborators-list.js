@@ -16,7 +16,6 @@ const CollaboratorContainer = ( props ) => {
 	const [ loading, setLoading ] = useState( true );
 	const [ collaborators, setCollaborators ] = useState( [] );
 	const { postId } = props;
-	const { shareType } = CollaboratorsList;
 	useEffect( () => {
 		wp.apiFetch( {
 			path: `/hametuha/v1/collaborators/${ postId }`,
@@ -41,7 +40,7 @@ const CollaboratorContainer = ( props ) => {
 		setCollaborators( newCollaborators );
 	};
 
-	const updateHandler = ( userId, ratio ) => {
+	const updateHandler = ( userId, ratio, type ) => {
 		setLoading( true );
 		wp.apiFetch( {
 			path: `/hametuha/v1/collaborators/${ postId }`,
@@ -49,22 +48,20 @@ const CollaboratorContainer = ( props ) => {
 			data: {
 				collaborator_id: userId,
 				margin: ratio,
+				type,
 			},
 		} )
 			.then( ( res ) => {
-				const newCollaborators = [];
-				for ( const collaborator of collaborators ) {
-					if ( collaborator.id === userId ) {
-						collaborator.ratio = ratio;
-					}
-					newCollaborators.push( collaborator );
-				}
-				setCollaborators( newCollaborators );
+				setCollaborators(
+					collaborators.map( ( collaborator ) =>
+						collaborator.id === userId ? res.user : collaborator
+					)
+				);
 			} )
 			.catch( ( res ) => {
 				alert( res.message || '更新できませんでした。' );
 			} )
-			.finally( ( res ) => {
+			.finally( () => {
 				setLoading( false );
 			} );
 	};
@@ -104,7 +101,7 @@ const CollaboratorContainer = ( props ) => {
 			<thead>
 				<tr>
 					<th className="collaborators-list-number">#</th>
-					<th style={ { textAlign: 'left' } }>名前</th>
+					<th style={ { textAlign: 'left' } }>名前・役割</th>
 					<th style={ { textAlign: 'left' } }>報酬</th>
 					<th className="collaborators-assigned">追加日時</th>
 					<th>アクション</th>

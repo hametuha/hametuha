@@ -150,6 +150,11 @@ class Collaborators extends Singleton {
 				'status' => 400,
 			] );
 		}
+		if ( ! $this->is_valid_type( $type ) ) {
+			return new \WP_Error( 'invalid_collaborator_type', '協力者の役割が正しくありません。', [
+				'status' => 400,
+			] );
+		}
 		// Is it possible to add?
 		$margin          = intval( $location * -100 );
 		$margin_is_valid = $this->is_margin_possible( $series_id, $margin, $user_id );
@@ -344,33 +349,68 @@ SQL;
 	}
 
 	/**
-	 * Update user's margin.
+	 * 協力者の報酬と役割を更新する
 	 *
-	 * @param int $series_id
-	 * @param int $user_id
-	 * @param int $margin
-	 * @return bool|\WP_Error
+	 * 承認待ち（location が負）の招待は、符号を保ったまま更新する。
+	 * 正にすると、本人が承認していないのに承認済みになってしまう。
+	 *
+	 * @param int    $series_id
+	 * @param int    $user_id
+	 * @param int    $margin 報酬（%）
+	 * @param string $type   役割。$collaborator_type のキー
+	 * @return true|\WP_Error
 	 */
-	public function update_margin( $series_id, $user_id, $margin ) {
+	public function update_collaborator( $series_id, $user_id, $margin, $type ) {
+		$current = $this->collaborator( $series_id, $user_id );
+		if ( ! $current ) {
+			return new \WP_Error( 'invalid_collaborator', '協力者が見つかりません。', [
+				'status' => 404,
+			] );
+		}
+		if ( ! $this->is_valid_type( $type ) ) {
+			return new \WP_Error( 'invalid_collaborator_type', '協力者の役割が正しくありません。', [
+				'status' => 400,
+			] );
+		}
 		$margin_is_valid = $this->is_margin_possible( $series_id, $margin, $user_id );
 		if ( is_wp_error( $margin_is_valid ) ) {
 			return $margin_is_valid;
 		}
-		global $wpdb;
-		$result = $wpdb->update(
+		$location = $margin / 100;
+		if ( 0 > (float) $current->ratio ) {
+			$location *= -1;
+		}
+		$result = $this->db->update(
 			$this->relationships,
-			[ 'location' => $margin / 100 ],
+			[
+				'location' => $location,
+				'content'  => $type,
+			],
 			[
 				'rel_type'  => $this->rel_type,
 				'object_id' => $series_id,
 				'user_id'   => $user_id,
 			],
-			[ '%f' ],
+			[ '%f', '%s' ],
 			[ '%s', '%d', '%d' ]
 		);
-		return $result ?: new \WP_Error( 'failed_update', '報酬を更新できませんでした。', [
-			'status' => 500,
-		] );
+		// 変更が無いと 0 件が返るので、false（失敗）だけをエラーにする。
+		if ( false === $result ) {
+			return new \WP_Error( 'failed_update', '協力者の情報を更新できませんでした。', [
+				'status' => 500,
+			] );
+		}
+		return true;
+	}
+
+	/**
+	 * 協力者の役割として正しいか
+	 *
+	 * @param string $type 役割
+	 * @return bool
+	 */
+	public function is_valid_type( $type ) {
+		return is_string( $type ) && array_key_exists( $type, $this->collaborator_type );
 	}
 
 	/**
