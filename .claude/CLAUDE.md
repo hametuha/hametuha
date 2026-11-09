@@ -190,7 +190,7 @@ cd themes/hametuha && npm run fix       # 自動修正できるものを直す
 - **コミット時に自動で走ります**（husky ＋ lint-staged。ステージしたファイルだけ）。フックは `npm install` の `prepare` で有効になる。CI（`Lint JS/CSS`）でも全体を検査する
 - **既存の違反（未使用変数・JSDoc・alert など）は `eslint-suppressions.json` に記録して見逃しています。** 新しく書いたコードには効く。
   記録済みの違反を直すと「使われていない抑制」としてエラーになるので、`npx wp-scripts lint-js --prune-suppressions` で記録を減らしてコミットする。記録を増やす（`--suppress-all`）のは原則しない
-- 対象外: 同梱ライブラリ（`common/slick.js`・`common/headroom.js`）、アイコンフォントの定義（`_icon.scss`）
+- 対象外: 同梱ライブラリ（`common/headroom.js`）、アイコンフォントの定義（`_icon.scss`）
 - Stylelint はフォント名と `page-break-*` を書き換えないようにしてある（ePub リーダー向け。大文字小文字や `break-after` を解釈しないリーダーがある）
 - 整形だけのコミットは `.git-blame-ignore-revs` に載せている。ローカルの `git blame` では `git config blame.ignoreRevsFile .git-blame-ignore-revs` を一度実行する
 
@@ -530,6 +530,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **anpi** 安否情報機能に関連するファイル群
 - **series** 連載機能に関連するファイル群
 - **two-factor** 管理者の2要素認証必須化に関連するファイル群
+- **carousel** カルーセル（Swiper）に関連するファイル群
 
 ### 新しいFeature Groupの追加
 

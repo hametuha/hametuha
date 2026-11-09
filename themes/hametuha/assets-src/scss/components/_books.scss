@@ -10,7 +10,7 @@
 		margin-top: 40px;
 		min-height: 420px;
 
-		.books-list:not(.slick-slider) {
+		.books-list:not(.swiper-initialized) {
 			overflow: hidden;
 			max-height: 420px;
 		}
@@ -18,7 +18,7 @@
 		@media screen and (max-width: 769px) {
 			min-height: 330px;
 
-			.books-list:not(.slick-slider) {
+			.books-list:not(.swiper-initialized) {
 				max-height: 330px;
 			}
 		}
@@ -26,7 +26,7 @@
 		@media screen and (max-width: 480px) {
 			min-height: 250px;
 
-			.books-list:not(.slick-slider) {
+			.books-list:not(.swiper-initialized) {
 				max-height: 250px;
 			}
 		}

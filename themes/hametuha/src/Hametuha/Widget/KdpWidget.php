@@ -59,9 +59,11 @@ class KdpWidget extends Widget {
 			wp_cache_set( $key, $posts, 'kdp_widget', 60 * 30 );
 		}
 		?>
-		<div class="widget-kdp-list">
+		<div class="carousel" data-carousel="kdp-widget">
+		<div class="widget-kdp-list swiper">
+			<div class="swiper-wrapper">
 			<?php foreach ( $posts as $post ) : ?>
-				<div class="widget-kdp-item">
+				<div class="widget-kdp-item swiper-slide">
 					<a class="widget-kdp-link" href="<?php echo esc_url( get_the_permalink( $post ) ); ?>">
 						<?php
 						echo geT_the_post_thumbnail(  $post, 'medium', [
@@ -74,7 +76,10 @@ class KdpWidget extends Widget {
 					</a>
 				</div>
 			<?php endforeach; ?>
-		</div>
+			</div><!-- //.swiper-wrapper -->
+		</div><!-- //.widget-kdp-list -->
+		<?php get_template_part( 'parts/carousel-controls' ); ?>
+		</div><!-- //.carousel -->
 		<a href="<?php echo home_url( '/kdp/' ); ?>" class="btn btn-amazon btn-block">
 			<i class="icon-amazon"></i> <?php esc_html_e( '電子書籍一覧', 'hametuha' ); ?>
 		</a>
