@@ -33,7 +33,9 @@ $args = wp_parse_args( $args, [
 		</div>
 	<?php endif; ?>
 
-	<div class="books-list">
+	<div class="carousel" data-carousel="books">
+	<div class="books-list swiper">
+	<div class="swiper-wrapper">
 
 		<?php
 		$counter = 0;
@@ -48,7 +50,7 @@ $args = wp_parse_args( $args, [
 				$title .= sprintf( '（税抜%s円）', number_format( $book['price'] ) );
 			}
 			?>
-			<div class="books-item">
+			<div class="books-item swiper-slide">
 				<a class="books-link" href="<?php echo esc_attr( $book['url'] ); ?>" target="_blank" rel="noopener noreferrer">
 					<img loading="lazy" class="books-cover"
 						src="<?php echo esc_url( $img['url'] ); ?>"
@@ -59,7 +61,10 @@ $args = wp_parse_args( $args, [
 
 		<?php endforeach; ?>
 
-	</div>
+	</div><!-- //.swiper-wrapper -->
+	</div><!-- //.books-list -->
+	<?php get_template_part( 'parts/carousel-controls' ); ?>
+	</div><!-- //.carousel -->
 	<p class="text-center mt-5">
 		<a class="btn btn-primary" href="https://minico.me">
 			<?php esc_html_e( '破滅派の通販サイトを見る', 'hametuha' ); ?>

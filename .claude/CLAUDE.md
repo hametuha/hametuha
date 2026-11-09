@@ -154,20 +154,45 @@ composer test
 
 ### JavaScript/CSS関連
 
-JS/CSSのトランスパイルおよび構文チェックは基本的にthemes/hametuhaの中で行います。
+JS/CSSのビルドは themes/hametuha の中で行います。破滅派のプラグイン群と同じく、
+**@kunoichi/grab-deps（中で @wordpress/scripts）＋ sass ＋ postcss（autoprefixer）** を使います（#361 で gulp から移行）。
+
+| 種類 | ソース | 出力 |
+|---|---|---|
+| JS | `assets-src/js/**/*.js` | `assets/js/` |
+| SCSS | `assets-src/scss/` | `assets/css/` |
+| エディタ用ブロック（block.json） | `assets-src/blocks/<名前>/` | `assets/blocks/<名前>/`（wp-scripts） |
+| そのままコピーするライブラリ（Bootstrap＋bootbox、select2） | `node_modules` | `assets/vendor/`（`bin/copy-libs.js`） |
+| 画像・フォント | `assets/img/`・`assets/fonts/` | （ソースのまま。Git 管理） |
+
+**`assets-src/` がソース、`assets/` が配布物。** `assets/` のうち `js`・`css`・`blocks`・`vendor` と `wp-dependencies.json` はビルドの生成物（`.gitignore` 済み）。
+デプロイ時は CI でビルドし、`assets-src/` は配布物から除外される（`.distignore`）。
 
 ```bash
-# ビルド
+# ビルド（clean → copy-libs → build:css → build:blocks → build:js → dump）
 cd themes/hametuha && npm run package
-# CSSのビルド
-cd themes/hametuha && npm run sass
-# JSのビルド（3種類あり、1つに統合予定）
-cd themes/hametuha && npm run commonjs # assets/js/src/common の中を連結して assets/js/src/common.js にする（廃止予定）
-cd themes/hametuha && npm run js # JSをミニファイする（廃止予定）
-cd themes/hametuha && npm run jsx # JSXを含むES Nextの記法をトランスパイルする
+# CSSだけ / JSだけ（JSは最後に wp-dependencies.json も作り直す）
+cd themes/hametuha && npm run build:css
+cd themes/hametuha && npm run build:js
 # 監視モード
-cd themes/hametuha && npm run watch 
+cd themes/hametuha && npm run watch
 ```
+
+#### リント（ESLint・Stylelint）
+
+**WordPress 公式の設定（wp-scripts の既定）をそのまま使い、テーマ固有の差分だけを足しています。** 設定は `themes/hametuha/eslint.config.cjs` と `.stylelintrc.json`。
+
+```bash
+cd themes/hametuha && npm run lint      # JS と SCSS
+cd themes/hametuha && npm run fix       # 自動修正できるものを直す
+```
+
+- **コミット時に自動で走ります**（husky ＋ lint-staged。ステージしたファイルだけ）。フックは `npm install` の `prepare` で有効になる。CI（`Lint JS/CSS`）でも全体を検査する
+- **既存の違反（未使用変数・JSDoc・alert など）は `eslint-suppressions.json` に記録して見逃しています。** 新しく書いたコードには効く。
+  記録済みの違反を直すと「使われていない抑制」としてエラーになるので、`npx wp-scripts lint-js --prune-suppressions` で記録を減らしてコミットする。記録を増やす（`--suppress-all`）のは原則しない
+- 対象外: 同梱ライブラリ（`common/headroom.js`）、アイコンフォントの定義（`_icon.scss`）
+- Stylelint はフォント名と `page-break-*` を書き換えないようにしてある（ePub リーダー向け。大文字小文字や `break-after` を解釈しないリーダーがある）
+- 整形だけのコミットは `.git-blame-ignore-revs` に載せている。ローカルの `git blame` では `git config blame.ignoreRevsFile .git-blame-ignore-revs` を一度実行する
 
 #### 画像（assets/img）
 
@@ -187,7 +212,15 @@ cd themes/hametuha && npm run compress-images -- assets/img/foo.png
 
 Node のバージョンはリポジトリルートの `.node-version` で一元管理しています（CI もこれを読む）。
 
-トランスパイルには @kunoichi/grab-deps を一部使っており、これらのファイルではファイルヘッダーに依存関係が書いてあります。
+#### JS の書き方と依存関係（grab-deps）
+
+`assets-src/js` 以下の **.js ファイルは1本ずつ独立したスクリプト（ハンドル）としてビルド**され、
+`wp-dependencies.json` に登録されます。PHP（`hooks/assets.php`）がこれを読んで `wp_register_script` します。
+
+- **JSX も .js に書く**（以前は grab-deps 対応ファイルだけ便宜的に .jsx にしていたが、wp-scripts が .js の JSX を扱うので統一した）
+- **ハンドル名**は、ファイル先頭の `@handle` があればそれ。無ければ `hametuha-<ディレクトリ>-<ファイル名>` が自動で付く（`package.json` の `grabDeps`）
+- **依存関係**は、`import` した `@wordpress/*`（`wp-element` 等）や `jquery`、JSX の `react-jsx-runtime` が自動で入る。
+  グローバル変数で使うもの（`wp.apiFetch` を import せずに使う等）や、テーマ内の別ハンドルは `@deps` に書く
 
 ```js
 /*!
@@ -198,9 +231,17 @@ Node のバージョンはリポジトリルートの `.node-version` で一元�
  */
 ```
 
-これらの情報は wp-settings.json にまとめられ、PHPから自動で読み取られます。
-ハンドル名（@deps）や依存関係（@deps）が自動的に解決されます。
-grab-desp対応のJSファイルは便宜的に拡張子をJSXにしています。
+- ファイル同士は普通に `import` できる（読み込まれた側は呼び出し元にバンドルされる）。
+  `common.js` はかつて `common/*.js` を連結していたが、いまは import でまとめている
+- **`assets-src/js` の中に `blocks` という名前のディレクトリを作らない。** grab-deps がビルド後に出力先の `blocks` ディレクトリを丸ごと削除する
+- **エディタ用ブロックは `assets-src/blocks/<名前>/`**（`block.json` ＋ `index.js`）。wp-scripts でビルドし、`Hooks/Editor.php` が `assets/blocks/*/block.json` をすべて `register_block_type()` する。
+  `save()` の出力を変えると既存の記事が「無効なブロック」になるので注意
+- **テーマのアセット（`assets/js`・`assets/css`）は PHP で `wp_register_*` しない。** `hooks/assets.php` が `wp-dependencies.json` をまとめて登録する（#478）。
+  使う側は `wp_enqueue_script( 'ハンドル名' )` だけを書く。バージョンはファイルの hash なので、中身が変われば URL も変わる
+  （`hametuha_version()` は `style.css` の `Version:` を返し、ローカルでは `nightly` 固定になってブラウザが古い版をキャッシュするので使わない）
+- SCSS にも同じヘッダーが書ける（`/*!` で始めると圧縮後も残る）。`@charset` がある場合はその直後に置く
+- **`@handle` にファイル名と同じ名前（`series-helper.js` に `@handle series-helper` など）を書くと無視され、自動の名前になる。** grab-deps が「未指定」と区別できないため
+- PHP で手動登録するのは、外部 CDN（unpkg・FontAwesome 等）と `assets/vendor/`（Bootstrap・select2）だけ
 
 ### WP-CLI
 
@@ -237,21 +278,32 @@ composer wp -- user delete <ID> --yes
 
 #### Cloudflare Turnstile（ログイン・登録・CF7 のボット対策）
 
-ボット対策は Cloudflare Turnstile（プラグイン `simple-cloudflare-turnstile`）です（#458）。
+ボット対策は Cloudflare Turnstile です（#458）。**担当が2つに分かれている**ので注意。
+
+| 対象 | 担当 | スクリプトのハンドル |
+|---|---|---|
+| ログイン・登録・パスワードリセット | プラグイン `simple-cloudflare-turnstile` | `cfturnstile` |
+| Contact Form 7 | **CF7 本体の Turnstile 連携**（「インテグレーション」画面） | `cloudflare-turnstile` |
+
 かつてはテーマ独自の reCAPTCHA v3（`Hametuha\Service\RecaptchaV3`）でしたが、削除しました。
+CF7 本体の連携はフォームに `[turnstile]` タグが無くても自動でウィジェットを差し込み、スクリプトは全ページで読み込むため、
+CF7 の無いページでは `hooks/assets.php` で dequeue しています。
 
 ローカルでは Cloudflare 公式の**常に通るテスト用キー**を使います。ウィジェットに「テスト専用です」と出ますが、
 ブラウザ操作（Playwright）でもそのままログイン・フォーム送信できるので、スキップ用の定数はありません。
 
 ```bash
+# ログインまわり（simple-cloudflare-turnstile）
 composer wp -- option update cfturnstile_key 1x00000000000000000000AA
 composer wp -- option update cfturnstile_secret 1x0000000000000000000000000000000AA
-for o in cfturnstile_login cfturnstile_register cfturnstile_reset cfturnstile_cf7_all; do composer wp -- option update $o 1; done
-# キー保存後の「テスト済み」フラグ。これが yes でないと連携（ログイン・CF7）が読み込まれない
+for o in cfturnstile_login cfturnstile_register cfturnstile_reset; do composer wp -- option update $o 1; done
+# キー保存後の「テスト済み」フラグ。これが yes でないと連携が読み込まれない
 composer wp -- option update cfturnstile_tested yes
+# CF7（本体の連携）。プラグイン側の CF7 連携（cfturnstile_cf7_all）は本番で使っていないので有効にしない
+composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x00000000000000000000AA" => "1x0000000000000000000000000000000AA" ] );'
 ```
 
-- ログイン・登録画面の並び順はテーマの `assets/js/src/components/login-helper.js` が「または」の区切りの上へ移しています。
+- ログイン・登録画面の並び順はテーマの `assets-src/js/components/login-helper.js` が「または」の区切りの上へ移しています。
   ウィジェット（`.cf-turnstile`）もこのリストに入れているので、フォームに要素を足すときはここも見ること
 - 古い `wp-config-local.php` に `SKIP_RECAPTCHA_VERIFICATION` が残っていても、いまは何の効果もありません
 
@@ -381,8 +433,8 @@ WordPressテーマの開発では、1つの機能に関連するファイルが�
 
 - テンプレートファイル: `templates/news/`, `single-*.php`, `archive-*.php`
 - パーツテンプレート: `parts/loop-*.php`
-- スタイル: `assets/sass/parts/_*.scss`
-- JavaScript: `assets/js/src/components/*.jsx`
+- スタイル: `assets-src/scss/parts/_*.scss`
+- JavaScript: `assets-src/js/components/*.js`
 - PHPクラス: `src/Hametuha/Model/`, `src/Hametuha/Widget/`
 - フック: `hooks/*.php`
 - 関数: `functions/*.php`
@@ -482,6 +534,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **anpi** 安否情報機能に関連するファイル群
 - **series** 連載機能に関連するファイル群
 - **two-factor** 管理者の2要素認証必須化に関連するファイル群
+- **carousel** カルーセル（Swiper）に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
@@ -650,6 +703,33 @@ ssh ec2-user@your-ec2-instance 'echo "YOUR_PUBLIC_KEY" >> ~/.ssh/authorized_keys
 2. `master` マージ → `release` へのPR自動作成
 3. `release` PRマージ → リリースドラフト作成
 4. リリース公開 → 本番環境へ自動デプロイ
+
+## 本番ログ（CloudWatch Logs）
+
+本番のログは CloudWatch Logs に集約されています。AWS の認証は direnv でこのリポジトリに固定します。
+
+```bash
+cp .envrc.example .envrc && direnv allow   # 初回のみ。.envrc は gitignore 済み
+aws iam list-account-aliases               # "hametuha" であることを確認（他のアカウントと取り違えない）
+```
+
+| ロググループ | 中身 |
+|---|---|
+| `/aws/ec2/hametuha/php-fpm/error` | PHP のエラー（Fatal・メモリ枯渇など） |
+| `/aws/ec2/hametuha/php-fpm/slow` | PHP-FPM のスローログ |
+| `/aws/ec2/hametuha/nginx/access` / `error` | nginx のアクセス・エラー |
+| `/aws/rds/instance/hametuha/slowquery` | RDS のスロークエリ |
+| `/aws/lambda/production-hametuha-health-check` | 死活監視 |
+
+**保持期間は30日**（RDS の error は90日、health-check は180日）。それより古い障害は追えないので、
+イシューに書くときはログの該当行を本文に貼っておくこと。
+
+```bash
+# 例: 直近7日の PHP メモリ枯渇
+aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
+  --start-time $(( ($(date +%s) - 7*86400) * 1000 )) \
+  --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
+```
 
 ## MCPサーバー（分析用）
 

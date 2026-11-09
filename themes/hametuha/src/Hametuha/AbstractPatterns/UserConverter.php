@@ -27,7 +27,7 @@ trait UserConverter {
 			'ratio'      => $user->ratio * 100,
 			'assigned'   => $user->assigned,
 			'type'       => $user->collaboration_type,
-			'label'      => $this->collaborators->collaborator_type[ $user->collaboration_type ],
+			'label'      => $this->collaborators->collaborator_type[ $user->collaboration_type ] ?? $this->collaborators->collaborator_type['writer'],
 			'post_id'    => (int) $user->post_id,
 			'post_title' => get_the_title( $user->post_id ),
 			'permalink'  => get_permalink( $user->post_id ),

@@ -239,12 +239,8 @@ class Doujin extends RestTemplate implements OgpCustomizer {
 	 */
 	protected function format( $data ) {
 		if ( isset( $data['reviews'] ) ) {
-			$path = '/assets/js/dist/admin/profile.js';
-			wp_enqueue_script( 'hametha-profile', get_stylesheet_directory_uri() . $path, [
-				'jquery',
-				'google-jsapi',
-			], filemtime( get_stylesheet_directory() . $path ), true );
-			wp_localize_script( 'hametha-profile', 'HametuhaReviews', $data['reviews'] );
+			wp_enqueue_script( 'hametuha-profile' );
+			wp_localize_script( 'hametuha-profile', 'HametuhaReviews', $data['reviews'] );
 		}
 		$this->load_template( 'templates/doujin/base' );
 	}

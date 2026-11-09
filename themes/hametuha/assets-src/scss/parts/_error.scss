@@ -1,0 +1,84 @@
+$error-gutter: 40px;
+
+body.error {
+
+	background-color: $gray-lighter;
+
+	.container {
+		padding-top: $error-gutter;
+		max-width: 768px;
+	}
+
+
+	#login-logo {
+		font-size: 100px;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+
+	.error-container {
+		margin: $error-gutter 0;
+		padding: $error-gutter / 2;
+		border: 3px solid $gray-dark;
+		background-color: #fff;
+
+		> *:last-child {
+			margin-bottom: 0;
+		}
+
+		a {
+
+			&:link,
+			&:visited {
+				color: currentcolor;
+				text-decoration: underline;
+			}
+
+			&:hover,
+			&:active {
+				color: $gray-lighter;
+				text-decoration: none;
+			}
+		}
+
+		.btn {
+
+			&:link,
+			&:visited,
+			&:hover,
+			&:active {
+				color: #fff;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.error-body {
+
+		&-divider {
+			margin: $error-gutter auto;
+			border-top: 1px solid $gray-dark;
+			width: 100%;
+			max-width: 200px;
+		}
+
+		h1 {
+			font-size: 18px;
+			margin-bottom: $error-gutter;
+		}
+
+		h2 {
+			font-size: 16px;
+			margin: $error-gutter 0;
+
+		}
+	}
+
+	.error-footer {
+		margin-top: $error-gutter;
+	}
+}
+

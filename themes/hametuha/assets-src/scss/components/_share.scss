@@ -1,0 +1,100 @@
+// シェアパネル
+// ---------------
+.share {
+
+	$height: 80px;
+
+	&__container {
+		margin-top: $height * 0.25;
+		margin-bottom: $height * 0.25;
+		display: flex;
+		justify-content: center;
+		gap: 0.75rem;
+
+		p {
+			margin: 0;
+		}
+
+		.shareContainer__wrapper * {
+			padding-top: $height / 2;
+			padding-bottom: $height / 2;
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+	}
+
+	&__item {
+		text-align: center;
+		margin: 0;
+		padding: 0;
+	}
+
+	&__button {
+		display: block;
+		padding: 0.5em 0.75em;
+		border-radius: 10px;
+		border: 2px solid currentcolor;
+		font-weight: 700;
+
+		@include media-breakpoint-down(sm) {
+			border-radius: 50%;
+			border-width: 3px;
+		}
+
+		&:link,
+		&:visited {
+			text-decoration: none;
+		}
+
+		&:hover,
+		&:active {
+			text-decoration: none;
+			color: #fff;
+		}
+
+		@each $var in (
+			facebook $facebook-color,
+			twitter $twitter-color,
+			hatena $hatena-color,
+			line $line-color,
+		) {
+			$brand: nth($var, 1);
+			$color: nth($var, 2);
+			&--#{$brand} {
+
+				&:link,
+				&:visited {
+					color: $color;
+					border-color: $color;
+				}
+
+				&:hover,
+				&:active {
+					color: #fff;
+					background-color: $color;
+					border-color: $color;
+				}
+			}
+		}
+
+		i {
+			color: inherit !important;
+			line-height: 1;
+			font-size: 14px;
+			vertical-align: text-bottom;
+
+			@include media-breakpoint-down(sm) {
+				vertical-align: middle;
+			}
+		}
+	}
+
+	&__text {
+		font-size: 14px;
+		margin-left: 0.125em;
+
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
+	}
+}

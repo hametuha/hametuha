@@ -51,8 +51,10 @@ Thumbs.db
 
 # Theme build files
 /themes/hametuha/vendor/
+/themes/hametuha/assets/js/
 /themes/hametuha/assets/css/
-/themes/hametuha/assets/js/dist/
+/themes/hametuha/assets/blocks/
+/themes/hametuha/assets/vendor/
 /themes/hametuha/wp-dependencies.json
 /themes/hametuha/tests/sample/はい
 
@@ -67,6 +69,8 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+.envrc
+.envrc.local
 .mcp.json
 
 # Composer auth

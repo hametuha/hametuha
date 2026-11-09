@@ -395,7 +395,7 @@ function hametuha_user_selector( $name, $selected = 0, $id = '', $mode = 'any', 
 		esc_attr( $name ),
 		esc_attr( $id )
 	);
-	wp_enqueue_script( 'hametuha-user-select', get_template_directory_uri() . '/assets/js/dist/components/user-select.js', [ 'select2' ], hametuha_version(), true );
+	wp_enqueue_script( 'hametuha-user-select' );
 	wp_localize_script( 'hametuha-user-select', 'HametuhaUserSelect', [
 		'endpoint' => rest_url( '/hametuha/v1/doujin/search/' ),
 		'nonce'    => wp_create_nonce( 'wp_rest' ),

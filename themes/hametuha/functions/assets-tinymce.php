@@ -159,7 +159,7 @@ add_action( 'edit_form_after_title', function ( WP_Post $post ) {
  * @return array
  */
 add_filter( 'mce_external_plugins', function ( array $plugin_array ) {
-	$plugin_array['hametuha'] = get_stylesheet_directory_uri() . '/assets/js/dist/admin/mce.js';
+	$plugin_array['hametuha'] = get_stylesheet_directory_uri() . '/assets/js/admin/mce.js';
 
 	return $plugin_array;
 } );

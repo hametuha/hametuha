@@ -1,0 +1,907 @@
+// 投稿タイプを示すバー
+.post-type-bar {
+	margin: 0;
+	padding: 0.5em 0;
+	color: $shade-font;
+	border-top: 1px solid $thin-border;
+	border-bottom: 1px solid $thin-border;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	.small-button {
+
+		@extend .btn;
+		@extend .btn-default;
+		@extend .btn-sm;
+	}
+}
+
+// サムネイル
+.post-title-thumbnail {
+	text-align: center;
+
+	img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+	}
+
+	p {
+		color: $more-shade-font;
+		font-size: 11px;
+		text-align: center;
+		margin-top: 0.5em;
+
+		a {
+
+			&:link,
+			&:visited {
+				color: darken($more-shade-font, 10);
+				text-decoration: underline;
+			}
+
+			&:hover {
+				text-decoration: none;
+				color: $link-active;
+			}
+
+			&:active {
+				color: lighten($link-active, 20);
+			}
+		}
+	}
+}
+
+// 投稿本文
+.post-content {
+	font-size: 1.4em;
+	line-height: 1.8;
+	padding-top: 30px;
+	padding-bottom: 30px;
+
+	@include text-justify();
+	@include post-style();
+}
+
+.post-blocks {
+	font-family: $font-family-serif;
+	padding-top: $navbar-height;
+	padding-bottom: 0;
+}
+
+// スマートフォン用調整
+@media only screen and (max-width: $screen-xs-max) {
+
+	.page-header {
+
+		h1 {
+			font-size: 20px;
+		}
+	}
+
+	.post-content {
+		font-size: 16px;
+	}
+}
+
+// シングルページのフッター
+$single-footer-height: 40px;
+
+
+body.single-post {
+	padding: $navbar-height + $subnavbar-height 0 $single-footer-height;
+
+	article {
+		min-height: 100%;
+		overflow: hidden;
+	}
+}
+
+// ラッパー
+#content-wrapper,
+.overlay-container {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	left: 100%;
+}
+
+
+.overlay-container {
+
+	.container {
+		padding-top: $single-footer-height;
+		padding-bottom: $single-footer-height;
+		max-width: 640px;
+	}
+}
+
+.overlay-close {
+	position: fixed;
+	z-index: 20;
+	top: $navbar-height + $subnavbar-height;
+	transition: top 0.3s ease-in-out;
+
+	.header-hidden & {
+
+		@include head-room() {
+			top: 0;
+		}
+	}
+
+	border: none;
+	width: 100%;
+	height: $single-footer-height;
+	text-align: center;
+	display: block;
+	background-color: $brand-warning;
+	line-height: $single-footer-height;
+
+	&:link,
+	&:visited {
+		color: $inverse-body;
+		text-decoration: none;
+	}
+
+	&:hover,
+	&:active {
+		background-color: $brand-danger;
+	}
+}
+
+#viewing-content .overlay-close {
+	display: none;
+}
+
+%fix-overlay {
+	position: relative;
+	height: auto;
+	width: auto;
+	left: 0;
+}
+
+@each $name in content, finish, reviews, tags, comments {
+	#viewing-#{$name} ##{$name}-wrapper {
+
+		@extend %fix-overlay;
+	}
+}
+
+
+// フッター
+#footer-single {
+	position: fixed;
+	z-index: 20;
+	bottom: 0;
+	width: 100%;
+	height: $single-footer-height;
+	overflow: hidden;
+	background-color: $footer-navbar-bg;
+
+	ul {
+		height: $single-footer-height;
+		margin: 0;
+		padding: 0;
+
+		li {
+			width: 33.3333%;
+
+			float: left;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			border-right: 1px solid rgba(0, 0, 0, 0.4);
+			border-left: 1px solid rgba(255, 255, 255, 0.4);
+
+			&:last-child {
+				border-right-color: rgba(255, 255, 255, 0.4);
+			}
+
+			a {
+				-webkit-text-size-adjust: none;
+				height: $single-footer-height;
+				padding: 4px 0;
+				display: block;
+				text-align: center;
+				font-size: 11px;
+				position: relative;
+
+				&:link,
+				&:visited {
+					color: $inverse-body;
+					text-decoration: none;
+				}
+
+				&:hover,
+				&:active {
+					color: $inverse-body;
+					background-color: $brand-danger;
+				}
+
+				&.active {
+					background-color: $brand-primary;
+				}
+
+				i {
+					font-size: 20px;
+				}
+
+				.badge {
+					position: absolute;
+					right: 4px;
+					top: 4px;
+				}
+			}
+		}
+	}
+}
+
+// ボタンの背景色が明滅
+@include bg-blink(blinker, $footer-navbar-bg, $brand-danger);
+
+.finish-reading .finished-container a {
+
+	@include animation(blinker 1.5s linear infinite);
+}
+
+
+// シングルページは最大幅決定
+#single-post-wrap {
+	margin: 0 auto;
+	max-width: $screen-md-max;
+}
+
+
+// シングルページサムネイル
+.single-post-thumbnail {
+	padding: 20px 0 20px;
+
+	@media only screen and (max-width: $screen-sm-max) {
+		padding: 0;
+	}
+
+	img {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+	}
+}
+
+p.pixiv-embed-illust {
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+
+// メインカラムの最大幅を制限
+.work-wrapper {
+	max-width: 970px;
+	margin-right: auto;
+	margin-left: auto;
+
+	@include media-breakpoint-down(lg) {
+		margin-right: 15px;
+		margin-left: 15px;
+	}
+}
+
+// 本文フォント
+.work-body {
+	font-family: $work-body;
+}
+
+// 作品タイトルメタ
+.work-meta {
+	position: relative;
+	font-family: $work-title;
+
+	// 枠
+	.inner {
+		margin: 3em auto 5em;
+	}
+
+	// タイトル、著者名などの主要パーツ
+	&-main {
+		min-height: 50vh;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	// 文字数
+	.length {
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		color: $more-shade-font;
+		font-size: 12px;
+	}
+
+
+	// ジャンル
+	.genre {
+		position: absolute;
+		top: 15px;
+		left: 15px;
+
+		a {
+
+			@include inline-block;
+			padding: 3px 5px;
+
+			&:link,
+			&:visited {
+				background-color: $clear-font;
+				color: $inverse-body;
+				text-decoration: none;
+			}
+
+			&:hover {
+				background-color: $shade-font;
+				text-decoration: none;
+				color: $inverse-body;
+			}
+
+			&:active {
+				background-color: $link-active;
+				color: $inverse-body;
+			}
+		}
+	}
+
+	// タイトル
+	h1 {
+		font-size: 32px;
+		text-align: center;
+		word-break: auto-phrase;
+
+		@media only screen and (max-width: $screen-xs-min) {
+			font-size: 24px;
+		}
+	}
+
+	// シリーズ名
+	.series,
+	.campaign {
+		word-break: auto-phrase;
+		text-align: center;
+
+		a {
+
+			&:link,
+			&:visited {
+				color: $shade-font;
+				text-decoration: none;
+			}
+
+			&:hover {
+				color: $link-hover-color;
+			}
+
+			&:active {
+				color: $link-active;
+			}
+		}
+	}
+
+	// 作者名
+	.author {
+		font-size: 18px;
+		text-align: center;
+		word-break: auto-phrase;
+
+		a {
+
+			&:link,
+			&:visited {
+				color: $clear-font;
+				text-decoration: none;
+			}
+
+			&:hover {
+				color: $link-hover-color;
+			}
+
+			&:active {
+				color: $link-active;
+			}
+		}
+	}
+
+	// リード
+	.desc {
+
+		@extend .text-justify;
+		margin: 2em 0;
+
+		&.with-terms {
+			margin-bottom: 1em;
+		}
+		padding: 2em;
+		border-top: 1px solid $thin-border;
+		border-bottom: 1px solid $thin-border;
+		font-size: 16px;
+
+		@media only screen and (max-width: $screen-xs-min) {
+			padding: 1em;
+			font-size: 14px;
+		}
+	}
+
+	// タグ
+	&-tags {
+		margin: 1em 0;
+
+		.desc + & {
+			margin-bottom: 2em;
+		}
+
+		padding: 0 2em;
+		font-size: 14px;
+
+		@media only screen and (max-width: $screen-xs-min) {
+			padding: 0 1em;
+		}
+
+		span {
+			font-weight: 700;
+			margin-right: 0.5em;
+			color: $shade-font;
+		}
+
+		.tag-link {
+			margin-right: 0.5em;
+			display: inline-block;
+
+			&:link,
+			&:visited {
+				color: $gray-dark;
+				text-decoration: underline;
+			}
+
+			&:hover,
+			&:active {
+				color: $shade-font;
+				text-decoration: none;
+			}
+		}
+
+	}
+
+}
+
+
+// 投稿本文
+.work-content {
+	font-size: 18px;
+	line-height: 2.2;
+	position: relative;
+
+	@media only screen and (max-width: $screen-xs-min) {
+		font-size: 16px;
+	}
+
+	@extend .work-body;
+	@include post-style(true);
+	@include text-justify();
+
+	.content-hide-cover {
+		position: absolute;
+		bottom: 3em;
+		left: 0;
+		width: 100%;
+		height: 30%;
+		max-height: 200px;
+
+		@include gradient-vertical(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1), 0%, 80%);
+	}
+}
+
+// 終わりを示すマーク
+#work-end-ranker {
+	clear: both;
+	margin: 1em 0;
+
+	i {
+		font-size: 24px;
+		color: $more-shade-font;
+	}
+}
+
+.pub-date {
+	font-family: $work-title;
+	color: $shade-font;
+}
+
+// タグ
+.post-tags {
+	margin: 40px 0;
+	text-align: center;
+}
+
+// ナビゲーション
+.series-pager {
+	margin: 20px 0 0;
+	padding: 0;
+	border-top: $divide-border;
+	border-bottom: 1px solid $thin-border;
+	display: flex;
+	align-items: stretch;
+
+	&-title {
+		font-family: $work-title;
+	}
+
+	li {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		width: 50%;
+		box-sizing: border-box;
+
+		&.next {
+			text-align: right;
+			border-left: 1px solid $thin-border;
+		}
+	}
+
+	&-text {
+		display: block;
+
+		.next & {
+			text-align: right;
+		}
+	}
+
+	&-link {
+		height: 100%;
+		display: block;
+		position: relative;
+		font-size: 16px;
+		padding: 10px 20px;
+
+		.previous & {
+			padding-left: 40px;
+		}
+
+		.next & {
+			padding-right: 40px;
+		}
+
+		&:link,
+		&:visited {
+			color: $primary;
+			text-decoration: none;
+		}
+
+		&:hover,
+		&:active {
+			color: $primary;
+			text-decoration: none;
+			background: $gray-200;
+		}
+	}
+
+	&-icon {
+		$icon-pad: 15px;
+
+		.previous & {
+			left: $icon-pad;
+		}
+
+		.next & {
+			right: $icon-pad;
+		}
+
+		position: absolute;
+		color: #999;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}
+
+// コピーライト
+#single-post-footernote {
+	text-align: center;
+	margin: 1em 0 3em;
+	padding-bottom: 3em;
+	border-bottom: $divide-border;
+	color: $shade-font;
+	font-family: $work-title;
+	font-size: 16px;
+
+	.series-pager + & {
+		margin-top: 0;
+	}
+}
+
+// 終わりを示すマーク
+.finish-nav {
+	font-size: 1.4em;
+	color: $more-shade-font;
+	text-align: center;
+	margin: 1em 0;
+
+	i {
+		margin-top: 0.5em;
+		font-size: 1.8em;
+	}
+}
+
+.series-toc {
+	margin: 20px auto;
+
+	h2 {
+		font-size: 1em;
+		font-weight: $font-weight-bold;
+	}
+
+	ul {
+		padding: 0;
+		border-bottom: 1px solid $thin-border;
+		border-top: 1px solid $thin-border;
+
+		li {
+			margin: 0;
+			display: flex;
+			list-style: none;
+			justify-content: space-between;
+			padding: 0.5em;
+
+			&.current {
+				background-color: $gray-200;
+
+				span {
+					color: $gray-700;
+				}
+			}
+
+			span,
+			a {
+				font-weight: $font-weight-bold;
+			}
+		}
+	}
+}
+
+// シェア
+#post-share {
+	margin-bottom: 1em;
+
+	h4 {
+		color: $more-shade-font;
+	}
+
+	.input-group {
+		margin-top: 1em;
+	}
+}
+
+// 著者パーツ
+.single-author-section {
+	margin: 2em 0;
+	padding: 2em 0;
+	background-color: $navbar-default-bg;
+
+	.author-profile {
+		border-top: none;
+		border-bottom: none;
+	}
+}
+
+// おすすめ
+.recommend-wrapper {
+	padding-bottom: 40px;
+}
+
+// 評価
+#post-detail {
+	padding-bottom: 0.5em;
+	margin-bottom: 1em;
+	border-bottom: 3px double $shade-font;
+
+	h3 {
+		font-size: 14px;
+		font-family: $work-title;
+		color: $shade-font;
+		padding-bottom: 0.5em;
+		margin-bottom: 1.5em;
+		border-bottom: 3px double $shade-font;
+	}
+}
+
+// 星
+.post-rank-counter {
+	padding-left: 140px;
+	position: relative;
+
+	i {
+		font-size: 20px;
+		-webkit-text-stroke: 1px $more-shade-font;
+		margin-right: 0.25em;
+	}
+
+	.back-ground {
+		position: absolute;
+		left: 0;
+		top: 0;
+
+		i {
+			color: $more-shade-font;
+		}
+	}
+
+	.fore-ground {
+		position: absolute;
+		left: 0;
+		top: 0;
+
+		i {
+			color: $start-font;
+		}
+	}
+}
+
+// 星のトグル
+.star-rating {
+	text-align: center;
+
+	i {
+		font-size: 20px;
+		color: $more-shade-font;
+		-webkit-text-stroke: 1px $more-shade-font;
+
+		&.active {
+			color: $start-font;
+			-webkit-text-stroke: 1px #000;
+		}
+	}
+}
+
+.rating-container {
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	border-bottom: 3px double $thin-border;
+}
+
+.rating-table {
+	width: 100%;
+	table-layout: auto;
+
+	th {
+		width: 5em;
+		padding: 0.5em 0.5em 0.5em 0;
+	}
+
+	&-bar {
+		padding: 0.5em 0;
+		display: block;
+
+		&-bg {
+			background-color: $gray-200;
+			display: block;
+		}
+
+		&-inner {
+			display: block;
+			background-color: $start-font;
+		}
+	}
+
+	td:last-child {
+		padding: 0.5em 0 0.5em 0.5em;
+		width: 5em;
+	}
+}
+
+.hametuha-post-rating {
+	text-align: center;
+
+	.text-star {
+		font-size: 1.2em;
+	}
+}
+
+.text-star {
+	color: $start-font;
+	-webkit-text-stroke: 1px #000;
+}
+
+// 評価ボタン
+.review-labels {
+	padding: 0.5em 0;
+	border-bottom: 1px dotted $thin-border;
+
+	&:first-child {
+		border-top: 1px dotted $thin-border;
+	}
+
+	&:nth-child(even) {
+		background-color: #f9f9f9;
+	}
+
+	h4 {
+		font-size: 12px;
+		text-align: center;
+		margin: 0 0 0.5em;
+		font-weight: 700;
+	}
+
+	label.active {
+		background-color: $btn-success-bg;
+		color: #fff;
+	}
+}
+
+// レーダーチャート
+#single-radar {
+	width: 100%;
+}
+
+
+.selecting {
+	$size: 32px;
+	$bg: #fcf3e9;
+
+	&-wrapper {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translate(-50%, -100%);
+		padding: 10px;
+		background: $bg;
+		box-shadow: 0 -3px 5px 0 rgba(0, 0, 0, 0.2);
+		color: #444;
+		font-family: $font-family-sans-serif !important;
+		margin-top: -30px;
+
+		&::after {
+			content: "";
+			display: block;
+			clear: left;
+		}
+
+		&::before {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 50%;
+			margin-left: -10px;
+			top: 100%;
+			width: 0;
+			height: 0;
+			border-top: 10px solid $bg;
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-bottom: 0 solid transparent;
+		}
+	}
+
+	&-icon {
+		display: inline-block;
+		width: $size;
+		height: $size;
+		background: url(../img/minico/256x256.png) center center no-repeat;
+		background-size: cover;
+		margin-right: 10px;
+		vertical-align: middle;
+	}
+
+	&-desc {
+		font-size: 14px;
+		color: #444;
+		white-space: nowrap;
+	}
+
+	&-button {
+		text-align: center;
+		padding: 5px;
+		border-radius: 50%;
+
+		&:hover {
+			text-decoration: none;
+			background: rgba(0, 0, 0, 0.1);
+		}
+	}
+}

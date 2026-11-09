@@ -52,16 +52,21 @@ class Collaborators extends WpApi {
 		];
 		if ( in_array( $method, [ 'PUT', 'DELETE' ], true ) ) {
 			$args['collaborator_id'] = [
-				'collaborator_id' => [
-					'required'          => true,
-					'type'              => 'integer',
-					'description'       => 'ID of user who is added as collaborator.',
-					'validate_callback' => function ( $var, \WP_REST_Request $request ) {
-						return is_numeric( $var ) && $this->collaborators->collaborator_exists( $request->get_param( 'series_id' ), $var );
-					},
-				],
+				'required'          => true,
+				'type'              => 'integer',
+				'description'       => 'ID of user who is added as collaborator.',
+				'validate_callback' => function ( $var, \WP_REST_Request $request ) {
+					return is_numeric( $var ) && $this->collaborators->collaborator_exists( $request->get_param( 'series_id' ), $var );
+				},
 			];
 		}
+		$type_arg = [
+			'type'              => 'string',
+			'description'       => '協力者の役割（writer, editor, designer, illustrator, translator, producer）',
+			'validate_callback' => function ( $var ) {
+				return $this->collaborators->is_valid_type( $var );
+			},
+		];
 		switch ( $method ) {
 			case 'GET':
 				return array_merge( $args, [
@@ -91,6 +96,9 @@ class Collaborators extends WpApi {
 							return is_numeric( $var ) && ( 0 < $var ) && ( 0 < 100 );
 						},
 					],
+					'type'         => array_merge( $type_arg, [
+						'default' => 'writer',
+					] ),
 				] );
 			case 'PUT':
 				return array_merge( $args, [
@@ -102,6 +110,7 @@ class Collaborators extends WpApi {
 							return is_numeric( $var ) && ( 100 >= $var && 0 <= $var );
 						},
 					],
+					'type'   => $type_arg,
 				] );
 			default:
 				return $args;
@@ -135,8 +144,7 @@ class Collaborators extends WpApi {
 			return new \WP_Error( 'invalid_author', '指定されたユーザーは存在しないか、破滅派同人ではありません。' );
 		}
 		$margin = $request->get_param( 'margin' );
-		// TODO: allow type to be changed.
-		$result = $this->collaborators->add_collaborator( $request->get_param( 'series_id' ), $author->ID, 'writer', $margin / 100 * -1 );
+		$result = $this->collaborators->add_collaborator( $request->get_param( 'series_id' ), $author->ID, $request->get_param( 'type' ), $margin / 100 * -1 );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -144,30 +152,37 @@ class Collaborators extends WpApi {
 	}
 
 	/**
-	 * Update margin.
+	 * 報酬と役割を更新する
 	 *
 	 * @param \WP_REST_Request $request
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function handle_put( $request ) {
-		$margin       = $request->get_param( 'margin' );
+		$margin       = (int) $request->get_param( 'margin' );
 		$collaborator = get_userdata( $request->get_param( 'collaborator_id' ) );
 		$series_id    = $request->get_param( 'series_id' );
-		$response     = $this->collaborators->update_margin( $series_id, $collaborator->ID, $margin );
+		$current      = $this->collaborators->collaborator( $series_id, $collaborator->ID );
+		// 役割を省略したら今の役割のまま。
+		$type     = $request->get_param( 'type' ) ?: $current->collaboration_type;
+		$response = $this->collaborators->update_collaborator( $series_id, $collaborator->ID, $margin, $type );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		}
-		/**
-		 * Executed when collaborator setting is updated.
-		 *
-		 * @param \WP_User $collaborator
-		 * @param int      $series_id
-		 * @param int      $margin
-		 */
-		do_action( 'hametuha_collaborators_updated', $collaborator, $series_id, $margin );
+		// 報酬が変わったときだけ通知する（役割だけの変更でメールを送らない）。
+		if ( absint( round( $current->ratio * 100 ) ) !== $margin ) {
+			/**
+			 * Executed when collaborator's margin is updated.
+			 *
+			 * @param \WP_User $collaborator
+			 * @param int      $series_id
+			 * @param int      $margin
+			 */
+			do_action( 'hametuha_collaborators_updated', $collaborator, $series_id, $margin );
+		}
 		return new \WP_REST_Response( [
 			'success' => true,
-			'message' => sprintf( '%sさんの報酬を%d%%に変更しました。', $collaborator->display_name, $margin ),
+			'message' => sprintf( '%sさんの情報を更新しました。', $collaborator->display_name ),
+			'user'    => $this->to_array( $this->collaborators->collaborator( $series_id, $collaborator->ID ) ),
 		] );
 	}
 

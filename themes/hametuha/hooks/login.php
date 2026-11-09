@@ -24,8 +24,8 @@ add_filter( 'login_headertext', function () {
  * Change icon if site icon is set.
  */
 add_action( 'login_head', function () {
-	wp_enqueue_style( 'hametuha-login-screen', get_stylesheet_directory_uri() . '/assets/css/login.css', [], hametuha_version() );
-	wp_enqueue_script( 'hametuha-login-helper', get_stylesheet_directory_uri() . '/assets/js/dist/components/login-helper.js', [ 'jquery' ], hametuha_version(), true );
+	wp_enqueue_style( 'hametuha-login-screen' );
+	wp_enqueue_script( 'hametuha-login-helper' );
 	wp_localize_script( 'hametuha-login-helper', 'HametuhaLoginHelper', [
 		'submitLabel'      => __( 'Agree with Contract and Register', 'hametuha' ),
 		'loginPlaceHolder' => __( 'e.g. hametu_tarou', 'hametuha' ),
