@@ -48,65 +48,8 @@ add_action( 'init', function () {
 	wp_register_script( 'select2', get_template_directory_uri() . '/assets/vendor/select2/i18n/ja.js', [ 'select2-src' ], '4.0.3', true );
 	wp_register_style( 'select2', get_template_directory_uri() . '/assets/vendor/select2/select2.min.css', [], '4.0.3' );
 
-	// メインJS
-	wp_register_script( 'hametuha-common', get_template_directory_uri() . '/assets/js/common.js', [
-		'twitter-bootstrap',
-		'wp-api',
-		'font-plus',
-		'hametuheader',
-	], hametuha_version(), true );
-	wp_localize_script( 'hametuha-common', 'HametuhaGlobal', [] );
-
-	// シングルページ用JS
-	wp_register_script( 'hametuha-single', get_template_directory_uri() . '/assets/js/single-post.js', [
-		'hametuha-common',
-		'chart-js',
-		'jquery-form',
-		'jquery-touch-punch',
-		'jquery-ui-slider',
-	], hametuha_version(), true );
-
-	// ログイン名変更用JS
-	wp_register_script( 'hametuha-login-changer', get_template_directory_uri() . '/assets/js/components/login-change-helper.js', [
-		'jquery-form',
-		'hametuha-common',
-	], hametuha_version(), true );
-
-	// 同人になる用JS
-	wp_register_script( 'hametuha-become-author', get_template_directory_uri() . '/assets/js/components/become-author.js', [
-		'jquery-form',
-		'hametuha-common',
-	], hametuha_version(), true );
-
-	// ソーシャル計測
-	wp_register_script( 'hametuha-social', get_template_directory_uri() . '/assets/js/social.js', [ 'jquery' ], hametuha_version(), true );
-
-	// メインCSS
-	wp_register_style( 'hametuha-app', get_template_directory_uri() . '/assets/css/app.css', [ 'font-awesome' ], hametuha_version() );
-
-	// 管理画面用CSS
-	wp_register_style( 'hametuha-admin', get_template_directory_uri() . '/assets/css/admin.css', null, hametuha_version() );
-
-	// プロフィール変更用JS
-	wp_register_script( 'hametuha-user-edit', get_template_directory_uri() . '/assets/js/components/edit-profile-helper.js', [ 'jquery-effects-highlight' ] );
-
-	// フォローボタン
-	$path = '/assets/js/components/follow-toggle.js';
-	wp_register_script( 'hametu-follow', get_stylesheet_directory_uri() . $path, [
-		'twitter-bootstrap',
-		'wp-api',
-	], filemtime( get_stylesheet_directory() . $path ), true );
-
-	// Watermark
-	wp_register_script( 'hametuha-watermark', get_template_directory_uri() . '/assets/js/components/watermark.js', [ 'jquery' ], hametuha_version(), true );
-
-	// 税金関係書類のCSS
-	wp_register_style( 'hametuha-accounting-paper', get_template_directory_uri() . '/assets/css/proof.css', [ 'hametuha-app' ], hametuha_version(), 'all' );
-
-	// Register all hashboard.
-	wp_register_style( 'hametuha-hashboard', get_template_directory_uri() . '/assets/css/hashboard.css', [ 'hb-app' ], hametuha_version() );
-
-	// Load wp-dependencies.json.
+	// テーマのアセット（assets/js・assets/css）は wp-dependencies.json からまとめて登録する（#478）。
+	// ハンドル名と依存はソース先頭の @handle・@deps に書く。バージョンはファイルの hash。
 	$deps = get_template_directory() . '/wp-dependencies.json';
 	if ( file_exists( $deps ) ) {
 		$assets = json_decode( file_get_contents( $deps ), true );
@@ -132,7 +75,8 @@ add_action( 'init', function () {
 			}
 		}
 	}
-	// todo: fix wpdeps
+
+	wp_localize_script( 'hametuha-common', 'HametuhaGlobal', [] );
 
 	// Add custom script.
 	wp_localize_script( 'hametuha-components', 'HametuhaComponents', [

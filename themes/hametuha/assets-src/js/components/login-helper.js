@@ -1,5 +1,8 @@
 /*!
  * Login helper
+ *
+ * @handle hametuha-login-helper
+ * @deps jquery
  */
 
 /* global HametuhaLoginHelper: false */

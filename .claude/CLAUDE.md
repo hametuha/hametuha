@@ -236,8 +236,12 @@ Node のバージョンはリポジトリルートの `.node-version` で一元�
 - **`assets-src/js` の中に `blocks` という名前のディレクトリを作らない。** grab-deps がビルド後に出力先の `blocks` ディレクトリを丸ごと削除する
 - **エディタ用ブロックは `assets-src/blocks/<名前>/`**（`block.json` ＋ `index.js`）。wp-scripts でビルドし、`Hooks/Editor.php` が `assets/blocks/*/block.json` をすべて `register_block_type()` する。
   `save()` の出力を変えると既存の記事が「無効なブロック」になるので注意
-- 手動で `wp_register_script` しているもの（`hametuha-common` など）は、`wp-dependencies.json` にも同じファイルが自動の名前で載る。
-  手動登録が先に動くので実害は無いが、いずれ json に一本化したい
+- **テーマのアセット（`assets/js`・`assets/css`）は PHP で `wp_register_*` しない。** `hooks/assets.php` が `wp-dependencies.json` をまとめて登録する（#478）。
+  使う側は `wp_enqueue_script( 'ハンドル名' )` だけを書く。バージョンはファイルの hash なので、中身が変われば URL も変わる
+  （`hametuha_version()` は `style.css` の `Version:` を返し、ローカルでは `nightly` 固定になってブラウザが古い版をキャッシュするので使わない）
+- SCSS にも同じヘッダーが書ける（`/*!` で始めると圧縮後も残る）。`@charset` がある場合はその直後に置く
+- **`@handle` にファイル名と同じ名前（`series-helper.js` に `@handle series-helper` など）を書くと無視され、自動の名前になる。** grab-deps が「未指定」と区別できないため
+- PHP で手動登録するのは、外部 CDN（unpkg・FontAwesome 等）と `assets/vendor/`（Bootstrap・select2）だけ
 
 ### WP-CLI
 

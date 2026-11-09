@@ -1,5 +1,8 @@
-/**
+/*!
  * ユーザーのレビューを表示する
+ *
+ * @handle hametuha-profile
+ * @deps jquery, google-jsapi
  */
 
 /*global HametuhaReviews: true*/
