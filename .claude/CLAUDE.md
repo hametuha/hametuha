@@ -322,8 +322,12 @@ composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x0000000000000000000
 php-fpm の再起動など、一瞬サイトが止まる作業の前に、**いまサイトを見ているログイン中のユーザー**へトーストで知らせる仕組み。
 
 - **操作は「設定 → 緊急告知」**（`src/Hametuha/Hooks/EmergencyNotice.php`）。タイトル・本文・期限を入れて保存すると、`wp-content/uploads/notification.json` に書き出す。「告知を取り下げる」か本文を空にして保存すると、ファイルを消す
-- **正は option（`hametuha_emergency_notice`）、ファイルは書き出しにすぎない。** ファイルが消えても、画面で「保存」し直せば戻る（値が同じでも書き出す）
-- `assets-src/js/components/emergency-notice.js` がこのファイルを120秒ごとに取得し、あれば表示する。対象はフロントと hashboard（`wp_enqueue_scripts`）。wp-admin には出ない
+- **正は option（`hametuha_emergency_notice`）、ファイルは書き出しにすぎない。** ファイルが消えても、画面で「保存」し直せば戻る（値が同じでも書き出す）。`register_setting` は `init` で登録しているので、`wp option update` から保存しても同じく整形・書き出しされる
+- `assets-src/js/components/emergency-notice.js` がこのファイルを120秒ごとに取得し、あれば表示する。出し方は画面で変える
+  - フロント・hashboard: トースト（`hametuha-toast`）
+  - 管理画面のブロックエディター: エディター上部の通知（`core/notices`）
+  - それ以外の管理画面（**原稿（`post`）はクラシックエディター**）: 見出しの下の `.notice-warning`
+  - 管理画面にはトーストの CSS（`app.css`）が無いので、トーストは使わない
 - タイトルか本文を変えると id が変わり、一度閉じた人にももう一度出る。期限だけの変更では出し直さない。ユーザーが×で閉じると `localStorage` に記録される（閉じずにページを移動したら次のページでもう一度出る）
 - 期限を過ぎたら出ない（消し忘れ対策）。本文・タイトルはテキストとして表示する（HTML は使えない）
 - 反映は最大120秒遅れる。URL に `?t=<120秒ごとの番号>` を付けるので、同じ窓の中ではキャッシュが効く

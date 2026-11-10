@@ -3,9 +3,13 @@
  *
  * 平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと（#452）。
  *
+ * 出し方は画面で変える。
+ * - フロント・hashboard: トースト（hametuha-toast。PHP 側でフロントだけ読み込む）
+ * - ブロックエディター: エディター上部の通知（core/notices）
+ * - それ以外の管理画面（原稿のクラシックエディターを含む）: 見出しの下の .notice
+ *
  * @feature-group emergency-notice
  * @handle hametuha-emergency-notice
- * @deps hametuha-toast
  */
 
 const config = window.HametuhaEmergencyNotice || {};
@@ -47,6 +51,117 @@ const dismiss = ( id ) => {
 };
 
 /**
+ * ブロックエディターの画面か
+ *
+ * @return {boolean} core/editor のストアがあれば true
+ */
+const isBlockEditor = () => {
+	const data = window.wp && window.wp.data;
+	return !! ( data && data.select( 'core/editor' ) );
+};
+
+/**
+ * ブロックエディターの上部に出す
+ *
+ * @param {string}     title
+ * @param {string}     message
+ * @param {() => void} onDismiss
+ */
+const showInBlockEditor = ( title, message, onDismiss ) => {
+	window.wp.data
+		.dispatch( 'core/notices' )
+		.createNotice(
+			'warning',
+			title ? `${ title }：${ message }` : message,
+			{
+				id: 'hametuha-emergency-notice',
+				isDismissible: true,
+				onDismiss,
+			}
+		);
+};
+
+/**
+ * 管理画面の見出しの下に .notice を出す
+ *
+ * @param {string}     title
+ * @param {string}     message
+ * @param {() => void} onDismiss
+ */
+const showInAdmin = ( title, message, onDismiss ) => {
+	const notice = document.createElement( 'div' );
+	notice.className =
+		'notice notice-warning is-dismissible hametuha-emergency-notice';
+	const p = document.createElement( 'p' );
+	p.style.whiteSpace = 'pre-line';
+	if ( title ) {
+		const strong = document.createElement( 'strong' );
+		strong.textContent = title;
+		p.appendChild( strong );
+		p.appendChild( document.createTextNode( '\n' ) );
+	}
+	p.appendChild( document.createTextNode( message ) );
+	notice.appendChild( p );
+	const button = document.createElement( 'button' );
+	button.type = 'button';
+	button.className = 'notice-dismiss';
+	const label = document.createElement( 'span' );
+	label.className = 'screen-reader-text';
+	label.textContent = '閉じる';
+	button.appendChild( label );
+	button.addEventListener( 'click', () => {
+		notice.remove();
+		onDismiss();
+	} );
+	notice.appendChild( button );
+	// WordPress が通知を並べる位置（.wp-header-end）。無ければ見出しの後ろ、最後は本文の先頭
+	const anchor =
+		document.querySelector( '.wp-header-end' ) ||
+		document.querySelector(
+			'#wpbody-content .wrap > h1, #wpbody-content .wrap > h2'
+		);
+	if ( anchor ) {
+		anchor.after( notice );
+	} else {
+		const body =
+			document.getElementById( 'wpbody-content' ) || document.body;
+		body.prepend( notice );
+	}
+};
+
+/**
+ * 画面に合わせて表示する
+ *
+ * 閉じるまで表示し続ける。閉じたときだけ既読にするので、
+ * 読まずにページを移動した人には次のページでもう一度出る。
+ *
+ * @param {string} id
+ * @param {string} title
+ * @param {string} message
+ */
+const show = ( id, title, message ) => {
+	const onDismiss = () => dismiss( id );
+	if ( document.body.classList.contains( 'wp-admin' ) ) {
+		if ( isBlockEditor() ) {
+			showInBlockEditor( title, message, onDismiss );
+		} else {
+			showInAdmin( title, message, onDismiss );
+		}
+		return;
+	}
+	// 約1日（実質、閉じるまで）
+	const toast = window.wp.hametuha.toast(
+		message,
+		'warning',
+		title,
+		86400000
+	);
+	toast
+		.querySelector( '.hametuha-toast-close' )
+		.addEventListener( 'click', onDismiss );
+};
+
+/**
  * 通知を取得して表示する
  */
 const check = async () => {
@@ -72,17 +187,11 @@ const check = async () => {
 			return; // 消し忘れ対策
 		}
 		shownId = id;
-		// 閉じるまで表示し続ける（約1日）。閉じたときだけ既読にするので、
-		// 読まずにページを移動した人には次のページでもう一度出る。
-		const toast = window.wp.hametuha.toast(
-			String( data.message ),
-			'warning',
+		show(
+			id,
 			data.title ? String( data.title ) : '',
-			86400000
+			String( data.message )
 		);
-		toast
-			.querySelector( '.hametuha-toast-close' )
-			.addEventListener( 'click', () => dismiss( id ) );
 	} catch {
 		// 通知はベストエフォート。失敗は無視する
 	}

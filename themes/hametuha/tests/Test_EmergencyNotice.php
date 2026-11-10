@@ -63,6 +63,12 @@ class Test_EmergencyNotice extends WP_UnitTestCase {
 		$this->assertFileDoesNotExist( EmergencyNotice::path() );
 	}
 
+	public function test_delete_option_removes_file() {
+		update_option( EmergencyNotice::OPTION, [ 'message' => '止まります' ] );
+		delete_option( EmergencyNotice::OPTION );
+		$this->assertFileDoesNotExist( EmergencyNotice::path(), 'option を消したら告知も消える' );
+	}
+
 	public function test_id_changes_only_when_text_changes() {
 		$notice = EmergencyNotice::get_instance();
 		update_option( EmergencyNotice::OPTION, [ 'title' => 'A', 'message' => '止まります' ] );

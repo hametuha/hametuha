@@ -9,8 +9,8 @@ use WPametu\Pattern\Singleton;
  *
  * 設定 → 緊急告知 で入力した内容を option に保存し、保存のたびに
  * uploads/notification.json へ書き出す（空なら削除する）。
- * フロントと hashboard では、ログイン中のユーザーがこのファイルを
- * 120秒ごとに取得してトーストで表示する（assets-src/js/components/emergency-notice.js）。
+ * フロント・hashboard・管理画面で、ログイン中のユーザーがこのファイルを
+ * 120秒ごとに取得して表示する（assets-src/js/components/emergency-notice.js）。
  *
  * 正は option。ファイルは公開用の書き出しにすぎないので、消えても「保存」し直せば戻る。
  *
@@ -44,11 +44,13 @@ class EmergencyNotice extends Singleton {
 	 */
 	protected function __construct( array $setting = array() ) {
 		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-		add_action( 'admin_init', [ $this, 'register_setting' ] );
+		add_action( 'init', [ $this, 'register_setting' ] );
 		add_action( 'add_option_' . self::OPTION, [ $this, 'on_add_option' ], 10, 2 );
 		add_action( 'update_option_' . self::OPTION, [ $this, 'on_update_option' ], 10, 2 );
 		add_filter( 'pre_update_option_' . self::OPTION, [ $this, 'on_unchanged_option' ], 10, 2 );
+		add_action( 'delete_option_' . self::OPTION, [ $this, 'on_delete_option' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue' ] );
 	}
 
 	/**
@@ -93,12 +95,27 @@ class EmergencyNotice extends Singleton {
 	}
 
 	/**
-	 * ログイン中ユーザーにポーリング用のスクリプトを読み込む
+	 * フロント・hashboard: ログイン中ユーザーにスクリプトとトーストを読み込む
 	 */
 	public function enqueue() {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
+		wp_enqueue_script( 'hametuha-toast' );
+		$this->enqueue_script();
+	}
+
+	/**
+	 * 管理画面: 原稿の編集中の人にも知らせる（トーストは使わず、WordPress の通知で出す）
+	 */
+	public function admin_enqueue() {
+		$this->enqueue_script();
+	}
+
+	/**
+	 * ポーリング用のスクリプトを読み込む
+	 */
+	private function enqueue_script() {
 		wp_enqueue_script( 'hametuha-emergency-notice' );
 		wp_localize_script( 'hametuha-emergency-notice', 'HametuhaEmergencyNotice', [
 			'url'      => self::url(),
@@ -197,6 +214,13 @@ class EmergencyNotice extends Singleton {
 	}
 
 	/**
+	 * option が削除されたとき（wp option delete など）は告知も取り下げる
+	 */
+	public function on_delete_option() {
+		$this->publish( self::defaults() );
+	}
+
+	/**
 	 * 値が変わらないまま保存されたとき
 	 *
 	 * update_option() は値が同じだと update_option_{$option} を呼ばない。
@@ -267,7 +291,7 @@ class EmergencyNotice extends Singleton {
 			<h1>緊急告知</h1>
 			<p>
 				サーバーの再起動など、一瞬サイトが止まる作業の前に、<strong>いまサイトを見ているログイン中のユーザー</strong>へ知らせます。
-				フロントと hashboard で、最大<?php echo esc_html( self::INTERVAL ); ?>秒遅れてトーストが出ます（管理画面には出ません）。
+				フロント・hashboard ではトースト、管理画面（原稿の編集画面を含む）では画面上部の通知として、最大<?php echo esc_html( self::INTERVAL ); ?>秒遅れて出ます。
 			</p>
 
 			<h2>いまの状態</h2>
