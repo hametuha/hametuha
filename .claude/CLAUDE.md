@@ -320,22 +320,17 @@ composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x0000000000000000000
 ## ログイン中ユーザーへの緊急告知（#452）
 
 php-fpm の再起動など、一瞬サイトが止まる作業の前に、**いまサイトを見ているログイン中のユーザー**へトーストで知らせる仕組み。
-`assets-src/js/components/emergency-notice.js` が `wp-content/uploads/notification.json` を120秒ごとに取得し、あれば表示する。
 
-```bash
-# 告知を出す（本番の uploads に置く）
-echo '{ "id": "20261110-phpfpm", "title": "メンテナンスのお知らせ", "message": "15:00ごろ、設定変更のため数秒間アクセスできなくなります。", "until": "2026-11-10T15:30:00+09:00" }' > wp-content/uploads/notification.json
-# 告知を消す
-rm wp-content/uploads/notification.json
-```
-
-- `id` ごとに一度だけ。ユーザーが×で閉じると `localStorage` に記録され、同じ `id` は出なくなる（閉じずにページを移動したら次のページでもう一度出る）
-- `until` を過ぎたら出ない（消し忘れ対策）。`message`・`title` はテキストとして表示する（HTML は使えない）
+- **操作は「設定 → 緊急告知」**（`src/Hametuha/Hooks/EmergencyNotice.php`）。タイトル・本文・期限を入れて保存すると、`wp-content/uploads/notification.json` に書き出す。「告知を取り下げる」か本文を空にして保存すると、ファイルを消す
+- **正は option（`hametuha_emergency_notice`）、ファイルは書き出しにすぎない。** ファイルが消えても、画面で「保存」し直せば戻る（値が同じでも書き出す）
+- `assets-src/js/components/emergency-notice.js` がこのファイルを120秒ごとに取得し、あれば表示する。対象はフロントと hashboard（`wp_enqueue_scripts`）。wp-admin には出ない
+- タイトルか本文を変えると id が変わり、一度閉じた人にももう一度出る。期限だけの変更では出し直さない。ユーザーが×で閉じると `localStorage` に記録される（閉じずにページを移動したら次のページでもう一度出る）
+- 期限を過ぎたら出ない（消し忘れ対策）。本文・タイトルはテキストとして表示する（HTML は使えない）
 - 反映は最大120秒遅れる。URL に `?t=<120秒ごとの番号>` を付けるので、同じ窓の中ではキャッシュが効く
 - JSON は公開 URL なので、機微な内容は書かない
-- 対象はフロントと hashboard（`wp_enqueue_scripts`）。wp-admin には出ない
 - **平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと。** 渡すと、ログイン中の全員が120秒ごとに WordPress の404ページを生成させることになる。
-  ローカルは `docker/nginx/default.conf` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある。本番の nginx にも同じものが要る
+  ローカルは `docker/nginx/default.conf`、本番は hametuha/hametuha-infra の `05-cloudflare-ssl.sh` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある（hametuha/hametuha-infra#51）
+- uploads を S3 などに移したら、`EmergencyNotice::publish()` の書き出し先を変える必要がある（いまはローカルファイルに `file_put_contents` している）
 
 ## 管理者の2要素認証（#430）
 
