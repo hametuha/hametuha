@@ -113,12 +113,13 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( is_singular( 'series' ) ) {
 		wp_enqueue_script( 'hametuha-series' );
 	}
-	// ログイン中ユーザーへの緊急告知（uploads/notification.json）
+	// ログイン中ユーザーへの緊急告知（uploads/notification.json）#452
 	if ( is_user_logged_in() ) {
-		wp_enqueue_script( 'hametuha-admin-notice' );
+		wp_enqueue_script( 'hametuha-emergency-notice' );
 		$upload = wp_upload_dir();
-		wp_localize_script( 'hametuha-admin-notice', 'HametuhaAdminNotice', [
-			'url'      => $upload['baseurl'] . '/notification.json',
+		wp_localize_script( 'hametuha-emergency-notice', 'HametuhaEmergencyNotice', [
+			// baseurl は siteurl のスキームのままなので、表示中のページに合わせる（混在コンテンツ対策）
+			'url'      => set_url_scheme( $upload['baseurl'] . '/notification.json' ),
 			'interval' => 120,
 		] );
 	}

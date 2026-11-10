@@ -317,6 +317,26 @@ composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x0000000000000000000
 
 古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
+## ログイン中ユーザーへの緊急告知（#452）
+
+php-fpm の再起動など、一瞬サイトが止まる作業の前に、**いまサイトを見ているログイン中のユーザー**へトーストで知らせる仕組み。
+`assets-src/js/components/emergency-notice.js` が `wp-content/uploads/notification.json` を120秒ごとに取得し、あれば表示する。
+
+```bash
+# 告知を出す（本番の uploads に置く）
+echo '{ "id": "20261110-phpfpm", "title": "メンテナンスのお知らせ", "message": "15:00ごろ、設定変更のため数秒間アクセスできなくなります。", "until": "2026-11-10T15:30:00+09:00" }' > wp-content/uploads/notification.json
+# 告知を消す
+rm wp-content/uploads/notification.json
+```
+
+- `id` ごとに一度だけ。ユーザーが×で閉じると `localStorage` に記録され、同じ `id` は出なくなる（閉じずにページを移動したら次のページでもう一度出る）
+- `until` を過ぎたら出ない（消し忘れ対策）。`message`・`title` はテキストとして表示する（HTML は使えない）
+- 反映は最大120秒遅れる。URL に `?t=<120秒ごとの番号>` を付けるので、同じ窓の中ではキャッシュが効く
+- JSON は公開 URL なので、機微な内容は書かない
+- 対象はフロントと hashboard（`wp_enqueue_scripts`）。wp-admin には出ない
+- **平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと。** 渡すと、ログイン中の全員が120秒ごとに WordPress の404ページを生成させることになる。
+  ローカルは `docker/nginx/default.conf` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある。本番の nginx にも同じものが要る
+
 ## 管理者の2要素認証（#430）
 
 Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
@@ -535,6 +555,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **series** 連載機能に関連するファイル群
 - **two-factor** 管理者の2要素認証必須化に関連するファイル群
 - **carousel** カルーセル（Swiper）に関連するファイル群
+- **emergency-notice** ログイン中ユーザーへの緊急告知（`uploads/notification.json`）に関連するファイル群
 
 ### 新しいFeature Groupの追加
 

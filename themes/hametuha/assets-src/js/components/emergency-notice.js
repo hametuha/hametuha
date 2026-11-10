@@ -1,38 +1,47 @@
 /*!
  * ログイン中ユーザーへの緊急告知（uploads/notification.json をポーリング）
  *
- * @feature-group admin-notice
- * @handle hametuha-admin-notice
+ * 平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと（#452）。
+ *
+ * @feature-group emergency-notice
+ * @handle hametuha-emergency-notice
  * @deps hametuha-toast
  */
 
-const config = window.HametuhaAdminNotice || {};
+const config = window.HametuhaEmergencyNotice || {};
 const INTERVAL = ( config.interval || 120 ) * 1000;
-const STORAGE_KEY = 'hametuha-admin-notice-dismissed';
+const STORAGE_KEY = 'hametuha-emergency-notice-dismissed';
 
 /**
- * 既読かどうか
+ * このページで表示中の通知 ID。ポーリングのたびに同じトーストを重ねないため。
+ *
+ * @type {string|null}
+ */
+let shownId = null;
+
+/**
+ * 閉じた（既読にした）かどうか
  *
  * @param {string} id
- * @return {boolean} 既読ならtrue
+ * @return {boolean} 閉じていれば true
  */
 const isDismissed = ( id ) => {
 	try {
 		return window.localStorage.getItem( STORAGE_KEY ) === id;
-	} catch ( e ) {
+	} catch {
 		return false;
 	}
 };
 
 /**
- * 既読にする
+ * 閉じたことを記録する
  *
  * @param {string} id
  */
 const dismiss = ( id ) => {
 	try {
 		window.localStorage.setItem( STORAGE_KEY, id );
-	} catch ( e ) {
+	} catch {
 		// localStorage が使えなくても動作は継続する
 	}
 };
@@ -44,7 +53,7 @@ const check = async () => {
 	if ( ! config.url ) {
 		return;
 	}
-	// 120秒単位で固定したタイムスタンプ。同じ窓の中ではCloudflareのキャッシュが効く。
+	// 間隔ごとに固定したタイムスタンプ。同じ窓の中では同じ URL になり、キャッシュが効く。
 	const bucket = Math.floor( Date.now() / INTERVAL );
 	try {
 		const res = await fetch( config.url + '?t=' + bucket );
@@ -56,21 +65,25 @@ const check = async () => {
 			return;
 		}
 		const id = String( data.id || data.message );
-		if ( isDismissed( id ) ) {
+		if ( id === shownId || isDismissed( id ) ) {
 			return;
 		}
 		if ( data.until && Date.parse( data.until ) < Date.now() ) {
 			return; // 消し忘れ対策
 		}
-		dismiss( id );
-		// 閉じるまで表示し続ける（約1日）
-		window.wp.hametuha.toast(
+		shownId = id;
+		// 閉じるまで表示し続ける（約1日）。閉じたときだけ既読にするので、
+		// 読まずにページを移動した人には次のページでもう一度出る。
+		const toast = window.wp.hametuha.toast(
 			String( data.message ),
 			'warning',
-			data.title || '',
+			data.title ? String( data.title ) : '',
 			86400000
 		);
-	} catch ( e ) {
+		toast
+			.querySelector( '.hametuha-toast-close' )
+			.addEventListener( 'click', () => dismiss( id ) );
+	} catch {
 		// 通知はベストエフォート。失敗は無視する
 	}
 };
