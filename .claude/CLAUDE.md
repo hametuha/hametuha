@@ -317,6 +317,25 @@ composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x0000000000000000000
 
 古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
+## ログイン中ユーザーへの緊急告知（#452）
+
+php-fpm の再起動など、一瞬サイトが止まる作業の前に、**いまサイトを見ているログイン中のユーザー**へトーストで知らせる仕組み。
+
+- **操作は「設定 → 緊急告知」**（`src/Hametuha/Hooks/EmergencyNotice.php`）。タイトル・本文・期限を入れて保存すると、`wp-content/uploads/notification.json` に書き出す。「告知を取り下げる」か本文を空にして保存すると、ファイルを消す
+- **正は option（`hametuha_emergency_notice`）、ファイルは書き出しにすぎない。** ファイルが消えても、画面で「保存」し直せば戻る（値が同じでも書き出す）。`register_setting` は `init` で登録しているので、`wp option update` から保存しても同じく整形・書き出しされる
+- `assets-src/js/components/emergency-notice.js` がこのファイルを120秒ごとに取得し、あれば表示する。出し方は画面で変える
+  - フロント・hashboard: トースト（`hametuha-toast`）
+  - 管理画面のブロックエディター: エディター上部の通知（`core/notices`）
+  - それ以外の管理画面（**原稿（`post`）はクラシックエディター**）: 見出しの下の `.notice-warning`
+  - 管理画面にはトーストの CSS（`app.css`）が無いので、トーストは使わない
+- タイトルか本文を変えると id が変わり、一度閉じた人にももう一度出る。期限だけの変更では出し直さない。ユーザーが×で閉じると `localStorage` に記録される（閉じずにページを移動したら次のページでもう一度出る）
+- 期限を過ぎたら出ない（消し忘れ対策）。本文・タイトルはテキストとして表示する（HTML は使えない）
+- 反映は最大120秒遅れる。URL に `?t=<120秒ごとの番号>` を付けるので、同じ窓の中ではキャッシュが効く
+- JSON は公開 URL なので、機微な内容は書かない
+- **平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと。** 渡すと、ログイン中の全員が120秒ごとに WordPress の404ページを生成させることになる。
+  ローカルは `docker/nginx/default.conf`、本番は hametuha/hametuha-infra の `05-cloudflare-ssl.sh` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある（hametuha/hametuha-infra#51）
+- uploads を S3 などに移したら、`EmergencyNotice::publish()` の書き出し先を変える必要がある（いまはローカルファイルに `file_put_contents` している）
+
 ## 管理者の2要素認証（#430）
 
 Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
@@ -535,6 +554,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **series** 連載機能に関連するファイル群
 - **two-factor** 管理者の2要素認証必須化に関連するファイル群
 - **carousel** カルーセル（Swiper）に関連するファイル群
+- **emergency-notice** ログイン中ユーザーへの緊急告知（`uploads/notification.json`）に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
