@@ -37,7 +37,7 @@ $query = new WP_Query( [
 							<?php hametuha_follow_btn( $this->doujin->ID ); ?>
 
 							<?php if ( hametuha_user_allow_contact( $this->doujin->ID ) && $query->have_posts() ) : ?>
-								<a class="btn btn-success" href="<?php echo hametuha_user_contact_url( $query->posts[0] ); ?>">問い合わせ</a>
+								<a class="btn btn-success" href="<?php echo esc_url( hametuha_user_contact_url( $query->posts[0] ) ); ?>" rel="nofollow">問い合わせ</a>
 							<?php endif; ?>
 						</h1>
 
