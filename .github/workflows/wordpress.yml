@@ -14,9 +14,9 @@ jobs:
     strategy:
       matrix:
         php: [ '8.4' ]        # 本番のPHPと揃える
-        wp: [ '6.8', 'latest' ]      # WordPress version to check.
+        wp: [ '7.1', 'latest' ]      # 本番（7.1）と最新
     name: WordPress ${{ matrix.wp }} in PHP ${{ matrix.php }} UnitTest
-    uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@main
+    uses: tarosky/workflows/.github/workflows/wp-unit-test.yml@fix/wp-unit-test-drop-svn
     with:
       php_version: ${{ matrix.php }}
       wp_version: ${{ matrix.wp }}
