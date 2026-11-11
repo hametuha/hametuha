@@ -1,0 +1,106 @@
+name: Lighthouse CI
+
+# 本番の代表ページの Web Vitals を週1回測り、「悪い（poor）」の範囲を超えたらイシューを立てる（#490）。
+# 目的は致命的な悪化に気づくこと。細かい改善の評価には使わない（ラボ計測は利用者の体感と一致しない）。
+# 測る URL は Percy の snapshots.yml と共通。
+
+on:
+  schedule:
+    # 毎週月曜 3:00（JST）
+    - cron: '0 18 * * 0'
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/lighthouse.yml'
+      - '.github/scripts/lighthouse-summary.mjs'
+      - '.lighthouserc.json'
+      - 'snapshots.yml'
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  LHCI_VERSION: 0.15.1
+  ISSUE_TITLE: 'Lighthouse CI: Web Vitals が「悪い」の範囲を超えたページがある'
+
+jobs:
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/scripts
+            .lighthouserc.json
+            .node-version
+            snapshots.yml
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+
+      - name: Build URL list from snapshots.yml
+        id: urls
+        run: |
+          # Percy 用の ?vrt=percy は外す。付けると GA のタグが出なくなり、実際より軽く測ってしまう
+          args=""
+          for u in $(yq -r '.[].url' snapshots.yml | sed -E 's/[?&]vrt=percy$//'); do
+            args="$args --url=$u"
+          done
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+
+      - name: Collect
+        run: npx --yes @lhci/cli@${LHCI_VERSION} collect ${{ steps.urls.outputs.args }}
+
+      - name: Assert
+        id: assert
+        continue-on-error: true
+        run: npx --yes @lhci/cli@${LHCI_VERSION} assert
+
+      - name: Save reports
+        if: always()
+        run: npx --yes @lhci/cli@${LHCI_VERSION} upload
+
+      - name: Summary
+        if: always()
+        run: |
+          node .github/scripts/lighthouse-summary.mjs > summary.md
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports
+          retention-days: 30
+
+      # 定期実行で落ちたときだけイシューにする。同じタイトルのイシューが開いていれば、コメントを足す
+      - name: Report as issue
+        if: steps.assert.outcome == 'failure' && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            cat summary.md
+            echo
+            echo "レポート（HTML）は実行結果の artifact にある: $RUN_URL"
+          } > body.md
+          number=$(gh issue list -R "$GITHUB_REPOSITORY" --state open --search "in:title \"$ISSUE_TITLE\"" --json number,title \
+            --jq "map(select(.title == env.ISSUE_TITLE)) | .[0].number // empty")
+          if [ -n "$number" ]; then
+            gh issue comment "$number" -R "$GITHUB_REPOSITORY" -F body.md
+          else
+            gh issue create -R "$GITHUB_REPOSITORY" -t "$ISSUE_TITLE" -F body.md
+          fi
+
+      - name: Fail if thresholds exceeded
+        if: steps.assert.outcome == 'failure'
+        run: exit 1

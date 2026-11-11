@@ -751,6 +751,17 @@ aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
   --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
 ```
 
+## 表示速度の定期計測（Lighthouse CI・#490）
+
+`.github/workflows/lighthouse.yml` が毎週月曜 3:00（JST）に本番の代表ページを測る。**目的は致命的な悪化に気づくことで、細かい改善の評価には使わない**（ラボ計測は利用者の体感と一致しない）。
+
+- 測る URL は Percy の `snapshots.yml` と共通（`?vrt=percy` は外して測る。付けると GA のタグが出ず、実際より軽くなる）
+- モバイルのシミュレーションで各 URL 3 回測り、中央値で判定する
+- しきい値は「良い」ではなく**「悪い（poor）」の境界**: LCP 4秒・CLS 0.25・TBT 600ms（ラボでは INP を測れないので TBT で代える）。`.lighthouserc.json` と `.github/scripts/lighthouse-summary.mjs` の両方に書いてあるので、変えるときは揃える
+- 定期実行で超えたら「Lighthouse CI: Web Vitals が…」というイシューを立てる。開いていれば、そこにコメントを足す
+- ログインが要る画面は測らない。サーバー側の遅さは CloudWatch のアラーム（`php-response-p95` など）で見る
+- 手で回すとき: Actions の「Lighthouse CI」→ Run workflow。ローカルなら `npx @lhci/cli@0.15.1 collect --url=https://hametuha.com/`（結果は `.lighthouseci/`、gitignore 済み）
+
 ## MCPサーバー（分析用）
 
 サイトのアクセス解析・検索パフォーマンス分析のため、以下のMCPサーバーを利用できます。
