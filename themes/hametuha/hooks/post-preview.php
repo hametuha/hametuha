@@ -25,7 +25,7 @@ add_action( 'wp_footer', function () {
 		$label = 'プレビュー';
 	} elseif ( 'private' === get_queried_object()->post_status ) {
 		$class = 'red';
-		$label = '<i class="fa fa-lock"></i> 非公開';
+		$label = '<i class="icon-lock"></i> 非公開';
 	}
 	if ( $label ) {
 		wp_enqueue_script( 'hametuha-watermark' );
