@@ -337,6 +337,7 @@ HTML;
  * 1. 特定の投稿で「検索エンジンに表示しない」がオンになっていたら、
  * noindexを出力する。
  * 2. 作者がスパムだったら検索エンジンに表示しない。
+ * 3. ランキングの2ページ目以降と、作者への問い合わせページは noindex にする。
  *
  * @see wp_robots()
  * @parma string[] $robogts robots string.
@@ -369,6 +370,10 @@ add_filter( 'wp_robots', function ( $robots ) {
 		if ( $noindex ) {
 			return wp_robots_no_robots( $robots );
 		}
+	} elseif ( is_page( 'inquiry/for-author' ) ) {
+		// 作者への問い合わせは ?work=作品ID で作品の数だけ URL があり、
+		// クローラーに辿られて負荷になっていた（#491）。検索に出す意味も無い
+		return wp_robots_no_robots( $robots );
 	}
 	return $robots;
 } );
