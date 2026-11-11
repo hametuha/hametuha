@@ -1,0 +1,30 @@
+{
+	"ci": {
+		"collect": {
+			"numberOfRuns": 3,
+			"settings": {
+				"onlyCategories": [ "performance" ]
+			}
+		},
+		"assert": {
+			"assertions": {
+				"largest-contentful-paint": [
+					"error",
+					{ "maxNumericValue": 4000, "aggregationMethod": "median-run" }
+				],
+				"cumulative-layout-shift": [
+					"error",
+					{ "maxNumericValue": 0.25, "aggregationMethod": "median-run" }
+				],
+				"total-blocking-time": [
+					"error",
+					{ "maxNumericValue": 600, "aggregationMethod": "median-run" }
+				]
+			}
+		},
+		"upload": {
+			"target": "filesystem",
+			"outputDir": ".lighthouseci/reports"
+		}
+	}
+}

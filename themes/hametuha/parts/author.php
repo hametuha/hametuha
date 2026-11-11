@@ -40,7 +40,7 @@ $author_id = (int) get_the_author_meta( 'ID' );
 			</a>
 			<?php hametuha_follow_btn( $author_id, false ); ?>
 			<?php if ( hametuha_user_allow_contact( get_the_author_meta( 'ID' ) ) ) : ?>
-				<a class="btn btn-success" href="<?php echo hametuha_user_contact_url(); ?>">
+				<a class="btn btn-success" href="<?php echo esc_url( hametuha_user_contact_url() ); ?>" rel="nofollow">
 					問い合わせ
 				</a>
 			<?php endif; ?>

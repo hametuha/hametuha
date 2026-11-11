@@ -317,6 +317,25 @@ composer wp -- eval 'WPCF7::update_option( "turnstile", [ "1x0000000000000000000
 
 古い `wp-config-local.php` にこの定数が残っていても、いまは何の効果もありません。削除して構いません。
 
+## ログイン中ユーザーへの緊急告知（#452）
+
+php-fpm の再起動など、一瞬サイトが止まる作業の前に、**いまサイトを見ているログイン中のユーザー**へトーストで知らせる仕組み。
+
+- **操作は「設定 → 緊急告知」**（`src/Hametuha/Hooks/EmergencyNotice.php`）。タイトル・本文・期限を入れて保存すると、`wp-content/uploads/notification.json` に書き出す。「告知を取り下げる」か本文を空にして保存すると、ファイルを消す
+- **正は option（`hametuha_emergency_notice`）、ファイルは書き出しにすぎない。** ファイルが消えても、画面で「保存」し直せば戻る（値が同じでも書き出す）。`register_setting` は `init` で登録しているので、`wp option update` から保存しても同じく整形・書き出しされる
+- `assets-src/js/components/emergency-notice.js` がこのファイルを120秒ごとに取得し、あれば表示する。出し方は画面で変える
+  - フロント・hashboard: トースト（`hametuha-toast`）
+  - 管理画面のブロックエディター: エディター上部の通知（`core/notices`）
+  - それ以外の管理画面（**原稿（`post`）はクラシックエディター**）: 見出しの下の `.notice-warning`
+  - 管理画面にはトーストの CSS（`app.css`）が無いので、トーストは使わない
+- タイトルか本文を変えると id が変わり、一度閉じた人にももう一度出る。期限だけの変更では出し直さない。ユーザーが×で閉じると `localStorage` に記録される（閉じずにページを移動したら次のページでもう一度出る）
+- 期限を過ぎたら出ない（消し忘れ対策）。本文・タイトルはテキストとして表示する（HTML は使えない）
+- 反映は最大120秒遅れる。URL に `?t=<120秒ごとの番号>` を付けるので、同じ窓の中ではキャッシュが効く
+- JSON は公開 URL なので、機微な内容は書かない
+- **平常時はファイルが無く 404 になる。nginx でこのパスを PHP に渡さないこと。** 渡すと、ログイン中の全員が120秒ごとに WordPress の404ページを生成させることになる。
+  ローカルは `docker/nginx/default.conf`、本番は hametuha/hametuha-infra の `05-cloudflare-ssl.sh` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある（hametuha/hametuha-infra#51）
+- uploads を S3 などに移したら、`EmergencyNotice::publish()` の書き出し先を変える必要がある（いまはローカルファイルに `file_put_contents` している）
+
 ## 管理者の2要素認証（#430）
 
 Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
@@ -535,6 +554,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **series** 連載機能に関連するファイル群
 - **two-factor** 管理者の2要素認証必須化に関連するファイル群
 - **carousel** カルーセル（Swiper）に関連するファイル群
+- **emergency-notice** ログイン中ユーザーへの緊急告知（`uploads/notification.json`）に関連するファイル群
 
 ### 新しいFeature Groupの追加
 
@@ -730,6 +750,17 @@ aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
   --start-time $(( ($(date +%s) - 7*86400) * 1000 )) \
   --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
 ```
+
+## 表示速度の定期計測（Lighthouse CI・#490）
+
+`.github/workflows/lighthouse.yml` が毎週月曜 3:00（JST）に本番の代表ページを測る。**目的は致命的な悪化に気づくことで、細かい改善の評価には使わない**（ラボ計測は利用者の体感と一致しない）。
+
+- 測る URL は Percy の `snapshots.yml` と共通（`?vrt=percy` は外して測る。付けると GA のタグが出ず、実際より軽くなる）
+- モバイルのシミュレーションで各 URL 3 回測り、中央値で判定する
+- しきい値は「良い」ではなく**「悪い（poor）」の境界**: LCP 4秒・CLS 0.25・TBT 600ms（ラボでは INP を測れないので TBT で代える）。`.lighthouserc.json` と `.github/scripts/lighthouse-summary.mjs` の両方に書いてあるので、変えるときは揃える
+- 定期実行で超えたら「Lighthouse CI: Web Vitals が…」というイシューを立てる。開いていれば、そこにコメントを足す
+- ログインが要る画面は測らない。サーバー側の遅さは CloudWatch のアラーム（`php-response-p95` など）で見る
+- 手で回すとき: Actions の「Lighthouse CI」→ Run workflow。ローカルなら `npx @lhci/cli@0.15.1 collect --url=https://hametuha.com/`（結果は `.lighthouseci/`、gitignore 済み）
 
 ## MCPサーバー（分析用）
 
