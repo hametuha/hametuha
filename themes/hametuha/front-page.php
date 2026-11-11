@@ -8,12 +8,20 @@ get_header(); ?>
 
 <?php
 the_post();
-$style = '';
-if ( has_post_thumbnail() && ( $thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ) ) ) {
-	$style = "background-image: url('{$thumbnail[0]}')";
-}
 ?>
-	<div class="front-container" style="<?php echo $style; ?>">
+	<div class="front-container">
+		<?php
+		// ヒーローの画像はトップの LCP。CSS の背景だとブラウザが見つけるのが遅れるので <img> で出す（#496）
+		if ( has_post_thumbnail() ) {
+			the_post_thumbnail( 'full', [
+				'class'         => 'front-container__bg',
+				'alt'           => '',
+				'sizes'         => '100vw',
+				'fetchpriority' => 'high',
+				'loading'       => false,
+			] );
+		}
+		?>
 		<div class="container">
 			<div class="front-container__hero pt-5 pb-5">
 				<h1 class="front-container__hero--title">後ろ向きのまま前へ進め！</h1>
