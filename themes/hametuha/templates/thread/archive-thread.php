@@ -51,10 +51,10 @@ get_template_part( 'templates/thread/header-thread' );
 								<div class="flex-grow-1">
 								<?php echo get_avatar( get_the_author_meta( 'ID' ), 32 ); ?>
 								<?php if ( 'private' === get_post_status() ) : ?>
-									<i class="fa fa-lock text-warning"></i>
+									<i class="icon-lock text-warning"></i>
 								<?php endif; ?>
 								<?php if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) : ?>
-									<i class="fa fa-check-circle text-success"></i>
+									<i class="icon-checkmark-circle text-success"></i>
 								<?php endif; ?>
 								<?php the_title(); ?>
 								<?php if ( hamethread_recently_commented() || is_new_post() ) : ?>
