@@ -34,7 +34,7 @@ foreach ( $all_rating as $count ) {
 	</p>
 	<?php if ( ! is_user_logged_in() ) : ?>
 		<p class="text-center text-muted">
-			<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link">ログイン</a>すると、星の数によって冷酷な評価を突きつけることができます。
+			<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link" rel="nofollow">ログイン</a>すると、星の数によって冷酷な評価を突きつけることができます。
 		</p>
 	<?php elseif ( get_current_user_id() === (int) get_the_author_meta( 'ID' ) ) : ?>
 		<p class="text-center text-muted">

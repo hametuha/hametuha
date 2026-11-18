@@ -72,8 +72,8 @@ function hametuha_user_write_actions() {
 		], $actions );
 	} else {
 		$actions = array_merge( [
-			'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', '' ],
-			'key3'  => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', false, false ],
+			'enter' => [ wp_login_url( $_SERVER['REQUEST_URI'] ), 'ログインする', 'すでにアカウントをお持ちの方はこちらからログインしてください。', '', 'rel="nofollow"' ],
+			'key3'  => [ wp_registration_url(), '登録する', 'アカウントをお持ちでない方は新たに登録してください。', '', 'rel="nofollow"' ],
 		], $actions );
 	}
 	if ( current_user_can( 'edit_posts' ) ) {

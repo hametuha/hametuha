@@ -87,7 +87,7 @@ if ( $announcement->can_participate() ) :
 				<?php else : ?>
 					<div class="alert alert-warning event-detail-alert">
 						<p class="text-center">
-							イベントに参加するには<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link">ログイン</a>する必要があります。
+							イベントに参加するには<a href="<?php echo wp_login_url( get_permalink() ); ?>" class="alert-link" rel="nofollow">ログイン</a>する必要があります。
 						</p>
 						<p class="text-center">
 							<a class="btn btn-success btn-lg" href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">ログインして参加</a>
