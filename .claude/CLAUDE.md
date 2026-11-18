@@ -784,7 +784,8 @@ aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
 
 - **`.mcp.json` はGit管理していません**（`.gitignore` 済み）。認証用のサービスアカウント鍵へのパスを含むため、共有しません。
   - したがって、これらのMCPサーバーは **`.mcp.json` が各自のローカルに設定されていれば使える** という位置づけです。設定がなければツール自体が現れません。
-  - 設定例（鍵のパスは各自の環境に合わせる）: `google-analytics-mcp` は `pipx run analytics-mcp`、`google-search-console` は `npx -y mcp-server-gsc` を使い、`GOOGLE_APPLICATION_CREDENTIALS` にサービスアカウント鍵のパスを指定。
+  - 雛形は `.mcp.example.json`。`cp .mcp.example.json .mcp.json` して、`GOOGLE_APPLICATION_CREDENTIALS`（サービスアカウント鍵のパス）と `GOOGLE_PROJECT_ID` を各自の値にする。`google-analytics-mcp` は `pipx run analytics-mcp`、`google-search-console` は `npx -y mcp-server-gsc` で起動する
+  - Node をリポジトリの `.node-version` ではなく mise の新しい版で動かしたいときは、`npx` を `~/.local/share/mise/shims/npx` のような絶対パスにする
 - 権限は **分析（読み取り）用途のみ**を想定。Search Consoleは `siteRestrictedUser` 権限のため、サイトマップ送信やインデックス登録などの書き込み系操作は使えません。
 
 ## 今後の課題
