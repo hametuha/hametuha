@@ -69,9 +69,17 @@ function hametuha_campaign_record( $term = null ) {
 				];
 			}
 		}
-		// Calculate comment total
+		// Calculate comment total. 採点せずコメントだけした人も読み専として加える
 		foreach ( hametuha_comment_point( array_keys( $post_ids ) ) as $row ) {
-			$participants[ $row->user_id ]['comment_total'] = (int) $row->comment_count;
+			$user_id = (int) $row->user_id;
+			if ( ! array_key_exists( $user_id, $participants ) ) {
+				$participants[ $user_id ] = [
+					'author'        => false,
+					'comment_total' => 0,
+					'rate_total'    => 0,
+				];
+			}
+			$participants[ $user_id ]['comment_total'] = (int) $row->comment_count;
 		}
 		// Add base record
 		foreach ( $participants as $id => $vars ) {
