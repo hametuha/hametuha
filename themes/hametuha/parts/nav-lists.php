@@ -14,7 +14,7 @@ if ( current_user_can( 'read' ) ) {
 	<p>
 		破滅派の読者が作成した作品のリストです。編集部作成したオススメリストもあります。
 		<?php if ( ! is_user_logged_in() ) : ?>
-		作成するには<a class="alert-link" href="<?php echo wp_login_url( '/your/lists/' ); ?>">ログイン</a>する必要があります。
+		作成するには<a class="alert-link" href="<?php echo wp_login_url( '/your/lists/' ); ?>" rel="nofollow">ログイン</a>する必要があります。
 		<?php endif; ?>
 	</p>
 	<p>
