@@ -49,9 +49,14 @@
 
 <?php else : ?>
 	<?php
-		$year           = get_query_var( 'year' );
-		$month          = get_query_var( 'monthnum' );
-		$day            = get_query_var( 'day' );
+		$year  = (int) get_query_var( 'year' );
+		$month = (int) get_query_var( 'monthnum' );
+	if ( is_ranking( 'last_week' ) ) {
+		// URL に年月が無いので、先週の日曜日の月を表示する
+		list( , $last_sunday ) = hametuha_last_week_range();
+		$year                  = (int) $last_sunday->format( 'Y' );
+		$month                 = (int) $last_sunday->format( 'n' );
+	}
 		$monthnum       = ( $year * 12 ) + $month;
 		$prev           = $monthnum - 1;
 		$next           = $monthnum + 1;

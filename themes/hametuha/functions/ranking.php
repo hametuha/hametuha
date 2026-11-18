@@ -7,6 +7,18 @@
 
 use Hametuha\QueryHighJack\RankingQuery;
 
+/**
+ * 「先週のランキング」の期間（月曜日〜日曜日）を返す
+ *
+ * 集計が揃うのを待つため、直前の木曜日より前の日曜日を週の終わりとする。
+ *
+ * @return DateTimeImmutable[] [ 月曜日, 日曜日 ]
+ */
+function hametuha_last_week_range() {
+	$sunday = ( new DateTimeImmutable( 'now', wp_timezone() ) )->modify( 'Previous Thursday' )->modify( 'Previous Sunday' );
+	return [ $sunday->modify( 'Previous Monday' ), $sunday ];
+}
+
 
 /**
  * ランキングURLのショートコード
