@@ -63,7 +63,8 @@ class BestQuery extends QueryHighJack {
 	 * @return array
 	 */
 	public function the_posts( array $posts, \WP_Query $wp_query ) {
-		if ( ! $this->is_valid_query( $wp_query ) ) {
+		// 範囲外のページでは投稿が無い
+		if ( ! $posts || ! $this->is_valid_query( $wp_query ) ) {
 			return $posts;
 		}
 		// 1件目のPVより多い投稿の数を返す
