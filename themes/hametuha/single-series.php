@@ -373,7 +373,7 @@ endswitch;
 							</a>
 						<?php endif; ?>
 					<?php else : ?>
-						<a class="btn btn-primary btn-lg" href="<?php echo wp_login_url( get_permalink() ); ?>">
+						<a class="btn btn-primary btn-lg" href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">
 							<i class="icon-enter3"></i> ログインしてレビュー
 						</a>
 					<?php endif; ?>

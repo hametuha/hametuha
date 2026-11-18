@@ -35,7 +35,7 @@ $jr_user_id   = get_current_user_id();
 			<?php
 			printf(
 				/* translators: %s: login url */
-				wp_kses_post( __( '採点状況は<a href="%s" class="alert-link">ログイン</a>すると確認できます。', 'hametuha' ) ),
+				wp_kses_post( __( '採点状況は<a href="%s" class="alert-link" rel="nofollow">ログイン</a>すると確認できます。', 'hametuha' ) ),
 				esc_url( wp_login_url( get_term_link( $jr_term ) ) )
 			);
 			?>

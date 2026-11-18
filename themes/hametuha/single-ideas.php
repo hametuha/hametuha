@@ -123,7 +123,7 @@ get_template_part( 'templates/idea/form' );
 									<div class="alert alert-danger text-center">
 										破滅派に投稿されたアイデアを見るためには、<br />
 										<a class="alert-link"
-											href="<?php echo wp_login_url( get_permalink() ); ?>">ログイン</a>
+											href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">ログイン</a>
 										が必要です。<br />
 										ケチですいません……
 									</div>

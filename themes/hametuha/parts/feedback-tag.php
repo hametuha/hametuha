@@ -46,7 +46,7 @@ if ( empty( $tags ) ) {
 		</form>
 	<?php else : ?>
 		<p class="alert alert-warning">
-			タグ付け機能は会員限定です。<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>">ログインまたは新規登録</a>をしてください。
+			タグ付け機能は会員限定です。<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">ログインまたは新規登録</a>をしてください。
 		</p>
 	<?php endif; ?>
 </div><!-- //.your-tags -->

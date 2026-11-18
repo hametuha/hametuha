@@ -128,8 +128,8 @@ endswitch;
 			<?php else : ?>
 				<div class="alert alert-warning">
 					<p>
-						コメントをするには<a class="alert-link" href="<?php echo wp_registration_url(); ?>">ユーザー登録</a>をした上で
-						<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>">ログイン</a>する必要があります。
+						コメントをするには<a class="alert-link" href="<?php echo wp_registration_url(); ?>" rel="nofollow">ユーザー登録</a>をした上で
+						<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">ログイン</a>する必要があります。
 					</p>
 				</div>
 			<?php endif; ?>

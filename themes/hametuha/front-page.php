@@ -685,7 +685,7 @@ endif;
 						</a>
 					<?php endif; ?>
 				<?php else : ?>
-					<a class="btn btn-lg btn-primary" href="<?php echo wp_login_url(); ?>">
+					<a class="btn btn-lg btn-primary" href="<?php echo wp_login_url(); ?>" rel="nofollow">
 						破滅派にログイン
 					</a>
 				<?php endif; ?>

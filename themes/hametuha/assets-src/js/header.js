@@ -270,6 +270,7 @@ class HametuHeader extends Component {
 					<li className="login-buttons">
 						<a
 							className="login"
+							rel="nofollow"
 							href={ this.state.login_url }
 							onClick={ ( e ) => {
 								this.handleClick( e );
@@ -279,6 +280,7 @@ class HametuHeader extends Component {
 						</a>
 						<a
 							className="register"
+							rel="nofollow"
 							href={ this.state.register }
 							onClick={ ( e ) => {
 								this.handleClick( e );
