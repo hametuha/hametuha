@@ -329,15 +329,15 @@
         },
         {
             "name": "wpackagist-plugin/ai-provider-for-google",
-            "version": "1.2.1",
+            "version": "1.3.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/ai-provider-for-google/",
-                "reference": "tags/1.2.1"
+                "reference": "tags/1.3.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/ai-provider-for-google.1.2.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/ai-provider-for-google.1.3.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -401,15 +401,15 @@
         },
         {
             "name": "wpackagist-plugin/contact-form-7",
-            "version": "6.2.4.1",
+            "version": "6.2.5",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/contact-form-7/",
-                "reference": "tags/6.2.4.1"
+                "reference": "tags/6.2.5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/contact-form-7.6.2.4.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/contact-form-7.6.2.5.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -545,15 +545,15 @@
         },
         {
             "name": "wpackagist-plugin/hamail",
-            "version": "2.8.2",
+            "version": "2.9.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/hamail/",
-                "reference": "tags/2.8.2"
+                "reference": "tags/2.9.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/hamail.2.8.2.zip"
+                "url": "https://downloads.wordpress.org/plugin/hamail.2.9.0.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -563,15 +563,15 @@
         },
         {
             "name": "wpackagist-plugin/hamelp",
-            "version": "2.6.0",
+            "version": "2.6.1",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/hamelp/",
-                "reference": "tags/2.6.0"
+                "reference": "tags/2.6.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/hamelp.2.6.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/hamelp.2.6.1.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -689,15 +689,15 @@
         },
         {
             "name": "wpackagist-plugin/simple-cloudflare-turnstile",
-            "version": "1.44.5",
+            "version": "1.44.6",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/simple-cloudflare-turnstile/",
-                "reference": "tags/1.44.5"
+                "reference": "tags/1.44.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/simple-cloudflare-turnstile.1.44.5.zip"
+                "url": "https://downloads.wordpress.org/plugin/simple-cloudflare-turnstile.1.44.6.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
@@ -3048,15 +3048,15 @@
         },
         {
             "name": "wpackagist-plugin/wp-mail-smtp",
-            "version": "4.10.3",
+            "version": "4.10.4",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wp-mail-smtp/",
-                "reference": "tags/4.10.3"
+                "reference": "tags/4.10.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.4.10.3.zip"
+                "url": "https://downloads.wordpress.org/plugin/wp-mail-smtp.4.10.4.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
