@@ -190,15 +190,8 @@ SQL;
 				$wheres[] = $this->db->prepare( 'calc_date = %s', $day );
 				break;
 			case 'last_week':
-				// 先週の木曜日を基準に、その週の日曜日（週の終わり）を取得
-				$now = new \DateTime( 'now', wp_timezone() );
-				$now->modify( 'Previous Thursday' );
-				$now->modify( 'Previous Sunday' );
-				$sunday = $now->format( 'Y-m-d' );
-				// 日曜日の週の月曜日（週の始まり）を取得
-				$now->modify( 'Previous Monday' );
-				$monday   = $now->format( 'Y-m-d' );
-				$wheres[] = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday, $sunday );
+				list( $monday, $sunday ) = hametuha_last_week_range();
+				$wheres[]                = $this->db->prepare( 'calc_date BETWEEN %s AND %s', $monday->format( 'Y-m-d' ), $sunday->format( 'Y-m-d' ) );
 				break;
 			case 'range':
 				// TODO: 範囲指定に対応する。対応未定。

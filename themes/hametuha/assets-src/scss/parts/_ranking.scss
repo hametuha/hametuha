@@ -199,6 +199,11 @@
 		text-align: center;
 		padding: 0;
 
+		// 表示中のランキングの期間（日別はその日、週間は月〜日）
+		&.is-highlighted {
+			background-color: rgba($link-color, 0.1);
+		}
+
 		a {
 			display: block;
 			padding: 0.5em;
