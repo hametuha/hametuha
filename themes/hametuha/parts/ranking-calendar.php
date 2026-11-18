@@ -75,7 +75,7 @@
 		$week      = [ '月', '火', '水', '木', '金', '土', '日', '週間' ];
 		// 集計の始まりと、集計が確定している最後の日（3日前）
 		$calc_starts = '2014-08-23';
-		$fixed_until = ( new DateTimeImmutable( 'now', $tz ) )->modify( '-72 hours' )->format( 'Y-m-d' );
+		$fixed_until = ( new DateTimeImmutable( '@' . ( time() - 72 * HOUR_IN_SECONDS ) ) )->setTimezone( $tz )->format( 'Y-m-d' );
 		$first_day   = new DateTimeImmutable( sprintf( '%04d-%02d-01', $year, $month ), $tz );
 		$last_day    = $first_day->modify( 'last day of this month' )->format( 'Y-m-d' );
 	?>
