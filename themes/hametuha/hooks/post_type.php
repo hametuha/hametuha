@@ -176,7 +176,10 @@ add_filter( 'single_template', function ( $template ) {
  * @return WP_REST_Response
  */
 add_filter( 'rest_prepare_post', function ( WP_REST_Response $response, $post, $request ) {
-	$response->data['content'] = $response->data['excerpt'];
+	// _fields で content を求められていなければ何もしない。excerpt も無ければ空にする
+	if ( array_key_exists( 'content', $response->data ) ) {
+		$response->data['content'] = $response->data['excerpt'] ?? [ 'rendered' => '' ];
+	}
 
 	return $response;
 }, 10, 3 );
