@@ -39,7 +39,7 @@ if ( ! $records ) {
 			?>
 				<tr>
 					<th class="campaign-score-user">
-					<?php if ( $var['author'] ) : ?>
+					<?php if ( ! empty( $var['author'] ) ) : ?>
 							<?php echo get_avatar( $user_id ); ?>
 						<?php else : ?>
 							<img src="<?php echo get_template_directory_uri(); ?>/assets/img/mystery-man.png" alt="" class="avatar" />
@@ -47,14 +47,14 @@ if ( ! $records ) {
 						<span class="campaign-score-user-title">
 
 						<?php
-						if ( $var['author'] ) {
-							echo esc_html( $user->display_name );
+						if ( ! empty( $var['author'] ) ) {
+							echo esc_html( $user ? $user->display_name : '退会者' );
 						} else {
 							echo '読み専';
 						}
 						?>
 
-						<?php if ( $var['author'] ) : ?>
+						<?php if ( ! empty( $var['author'] ) ) : ?>
 								<span class="label label-danger">書</span>
 							<?php else : ?>
 								<span class="label label-default">読</span>

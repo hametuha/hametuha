@@ -28,15 +28,6 @@ add_action( 'init', function () {
 	// FontPlus
 	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1&chws=1', null, null, false );
 
-	// FontAwesome
-	wp_register_style( 'font-awesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css', [], '5.6.3' );
-	add_filter( 'style_loader_tag', function ( $tag, $handle, $src, $media ) {
-		if ( 'font-awesome' !== $handle ) {
-			return $tag;
-		}
-		return str_replace( '/>', "integrity='sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/' crossorigin='anonymous' />", $tag );
-	}, 10, 4 );
-
 	// Prop Types (versioned URL to avoid redirects)
 	wp_register_script( 'prop-types', 'https://unpkg.com/prop-types@15.8.1/prop-types.min.js', [ 'react' ], '15.8.1', true );
 

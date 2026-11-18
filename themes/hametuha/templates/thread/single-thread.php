@@ -66,10 +66,10 @@ get_template_part( 'templates/thread/header-thread' );
 								<?php
 								$notices = [];
 								if ( 'private' === get_post_status() ) {
-									$notices[] = '<small class="text-warning"><i class="fa fa-lock text-warning"></i> 非公開</small>';
+									$notices[] = '<small class="text-warning"><i class="icon-lock text-warning"></i> 非公開</small>';
 								}
 								if ( function_exists( 'hamethread_is_resolved' ) && hamethread_is_resolved() ) {
-									$notices[] = '<small class="text-success"><i class="fa fa-check-circle"></i> 解決済み</small>';
+									$notices[] = '<small class="text-success"><i class="icon-checkmark-circle"></i> 解決済み</small>';
 								}
 								if ( $notices ) {
 									$notices[] = '<br />';

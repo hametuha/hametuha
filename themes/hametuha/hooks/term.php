@@ -447,3 +447,35 @@ add_filter( 'terms_clauses', function ( $clauses, $taxonomies, $args ) {
 	return $clauses;
 }, 10, 3 );
 
+
+/**
+ * タームの実体が無いタームアーカイブは404にする
+ *
+ * /ranking/0/00/18/ のような URL は %category%/%post_id% のルールに落ち、
+ * category_name=ranking/0 になる。コアは最後の区切り「0」を空とみなして絞り込みを捨てるので、
+ * is_category() なのにタームの無い「全記事一覧」が200で返ってしまう。
+ *
+ * @param bool     $preempt  Whether to short-circuit default header status handling.
+ * @param WP_Query $wp_query WP_Query object.
+ * @return bool
+ */
+add_filter( 'pre_handle_404', function ( $preempt, $wp_query ) {
+	if ( $preempt ) {
+		return $preempt;
+	}
+	// 検索（/?s=…&tag=…）も is_tag() になるが、結果の有無はコアの判定に任せる
+	if ( $wp_query->is_search() || ! ( $wp_query->is_category() || $wp_query->is_tag() || $wp_query->is_tax() ) ) {
+		return $preempt;
+	}
+	if ( $wp_query->get_queried_object() instanceof WP_Term ) {
+		return $preempt;
+	}
+	// 取得済みの記事が残ると、redirect_canonical がその記事へ301で飛ばすので空にする
+	$wp_query->posts      = [];
+	$wp_query->post       = null;
+	$wp_query->post_count = 0;
+	$wp_query->set_404();
+	status_header( 404 );
+	nocache_headers();
+	return true;
+}, 10, 2 );
