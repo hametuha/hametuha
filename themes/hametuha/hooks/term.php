@@ -463,7 +463,8 @@ add_filter( 'pre_handle_404', function ( $preempt, $wp_query ) {
 	if ( $preempt ) {
 		return $preempt;
 	}
-	if ( ! ( $wp_query->is_category() || $wp_query->is_tag() || $wp_query->is_tax() ) ) {
+	// 検索（/?s=…&tag=…）も is_tag() になるが、結果の有無はコアの判定に任せる
+	if ( $wp_query->is_search() || ! ( $wp_query->is_category() || $wp_query->is_tag() || $wp_query->is_tax() ) ) {
 		return $preempt;
 	}
 	if ( $wp_query->get_queried_object() instanceof WP_Term ) {
