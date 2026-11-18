@@ -51,25 +51,33 @@
 	<?php
 		$year  = (int) get_query_var( 'year' );
 		$month = (int) get_query_var( 'monthnum' );
+		$tz    = wp_timezone();
+		// ハイライトする期間（Y-m-d）。日別はその日、週間・先週は月曜日〜日曜日
+		$hl_start = '';
+		$hl_end   = '';
 	if ( is_ranking( 'last_week' ) ) {
 		// URL に年月が無いので、先週の日曜日の月を表示する
-		list( , $last_sunday ) = hametuha_last_week_range();
-		$year                  = (int) $last_sunday->format( 'Y' );
-		$month                 = (int) $last_sunday->format( 'n' );
+		list( $last_monday, $last_sunday ) = hametuha_last_week_range();
+		$year                              = (int) $last_sunday->format( 'Y' );
+		$month                             = (int) $last_sunday->format( 'n' );
+		$hl_start                          = $last_monday->format( 'Y-m-d' );
+		$hl_end                            = $last_sunday->format( 'Y-m-d' );
+	} elseif ( is_ranking( 'daily' ) || is_ranking( 'weekly' ) ) {
+		$queried  = new DateTimeImmutable( sprintf( '%04d-%02d-%02d', $year, $month, (int) get_query_var( 'day' ) ), $tz );
+		$hl_end   = $queried->format( 'Y-m-d' );
+		$hl_start = is_ranking( 'weekly' ) ? $queried->modify( '-6 days' )->format( 'Y-m-d' ) : $hl_end;
 	}
-		$monthnum       = ( $year * 12 ) + $month;
-		$prev           = $monthnum - 1;
-		$next           = $monthnum + 1;
-		$prev_year      = $prev % 12 ? $year : $year - 1;
-		$next_year      = $monthnum % 12 ? $year : $year + 1;
-		$calc_starts    = (int) get_gmt_from_date( '2014-08-23 00:00:00', 'U' );
-		$week           = [ '月', '火', '水', '木', '金', '土', '日', '週間' ];
-		$start_of_month = sprintf( '%d-%02d-01 00:00:00', $year, $month );
-		$limit_of_month = date_i18n( 't', mktime( 0, 0, 0, $month, 1, $year ) );
-		$start_of_date  = array_search( date_i18n( 'D', strtotime( $start_of_month ) ), $week, true ) + 1;
-		$starting       = false;
-		$ended          = false;
-		$out_date       = 0;
+		$monthnum  = ( $year * 12 ) + $month;
+		$prev      = $monthnum - 1;
+		$next      = $monthnum + 1;
+		$prev_year = $prev % 12 ? $year : $year - 1;
+		$next_year = $monthnum % 12 ? $year : $year + 1;
+		$week      = [ '月', '火', '水', '木', '金', '土', '日', '週間' ];
+		// 集計の始まりと、集計が確定している最後の日（3日前）
+		$calc_starts = '2014-08-23';
+		$fixed_until = ( new DateTimeImmutable( 'now', $tz ) )->modify( '-72 hours' )->format( 'Y-m-d' );
+		$first_day   = new DateTimeImmutable( sprintf( '%04d-%02d-01', $year, $month ), $tz );
+		$last_day    = $first_day->modify( 'last day of this month' )->format( 'Y-m-d' );
 	?>
 
 	<table class="calendar-year">
@@ -85,54 +93,45 @@
 			</tr>
 		</thead>
 		<tbody>
-		<?php for ( $i = 0; $i < 5; $i++ ) : ?>
+		<?php
+		// 1日を含む週の月曜日から、月末を含む週まで1週ずつ並べる
+		for ( $monday = $first_day->modify( 'monday this week' ); $monday->format( 'Y-m-d' ) <= $last_day; $monday = $monday->modify( '+1 week' ) ) :
+			?>
 		<tr>
-			<?php for ( $l = 1; $l <= 7; $l++ ) : ?>
-				<?php
-				if ( ! $starting && $l === $start_of_date && ! $ended ) {
-					$starting = true;
-				} elseif ( $starting && $out_date >= $limit_of_month ) {
-					$ended = true;
-				}
-					$unfixed = true;
-				?>
-				<td>
-						<?php
-						if ( $starting && ! $ended ) :
-							++$out_date;
-							$calc_date     = time() - 60 * 60 * 72;
-							$date_to_ouput = (int) get_gmt_from_date( sprintf( '%d-%02d-%02d', $year, $month, $out_date ), 'U' );
-							if ( (int) get_query_var( 'day' ) === $out_date ) :
-								?>
-									<span class="on"><?php echo $out_date; ?></span>
-									<?php
-								elseif ( $date_to_ouput > $calc_date || $date_to_ouput < $calc_starts ) :
-									?>
-									<span><?php echo $out_date; ?></span>
-									<?php
-									else :
-										$unfixed = false;
-										?>
-									<a href="<?php echo home_url( sprintf( '/ranking/%d/%02d/%02d/', $year, $month, $out_date ) ); ?>"><?php echo $out_date; ?></a>
-								<?php endif; ?>
-						<?php else : ?>
-							&nbsp;
-						<?php endif; ?>
-				</td>
-				<?php if ( 7 === $l ) : ?>
-					<?php if ( ! $unfixed ) : ?>
-						<td><a href="<?php echo home_url( sprintf( '/ranking/weekly/%04d%02d%02d/', $year, $month, $out_date ) ); ?>"><i class="icon-trophy-star"></i></a></td>
-					<?php else : ?>
-						<td><span><i class="icon-trophy2"></i></span></td>
-					<?php endif; ?>
-				<?php endif; ?>
-			<?php endfor; ?>
-		</tr>
 			<?php
-			if ( $ended ) {
-				break;
-			} endfor;
-		?>
+			for ( $l = 0; $l < 7; $l++ ) :
+				$date     = $monday->modify( "+{$l} days" );
+				$ymd      = $date->format( 'Y-m-d' );
+				$in_month = (int) $date->format( 'n' ) === $month;
+				$is_hl    = $in_month && $hl_start && $hl_start <= $ymd && $ymd <= $hl_end;
+				?>
+				<td<?php echo $is_hl ? ' class="is-highlighted"' : ''; ?>>
+				<?php if ( ! $in_month ) : ?>
+					&nbsp;
+				<?php elseif ( is_ranking( 'daily' ) && $ymd === $hl_end ) : ?>
+					<span class="on"><?php echo $date->format( 'j' ); ?></span>
+				<?php elseif ( $ymd > $fixed_until || $ymd < $calc_starts ) : ?>
+					<span><?php echo $date->format( 'j' ); ?></span>
+				<?php else : ?>
+					<a href="<?php echo home_url( '/ranking/' . $date->format( 'Y/m/d' ) . '/' ); ?>"><?php echo $date->format( 'j' ); ?></a>
+				<?php endif; ?>
+				</td>
+			<?php endfor; ?>
+			<?php
+			$sunday     = $monday->modify( '+6 days' )->format( 'Y-m-d' );
+			$is_week_hl = $hl_start && $sunday === $hl_end && ! is_ranking( 'daily' );
+			?>
+			<td<?php echo $is_week_hl ? ' class="is-highlighted"' : ''; ?>>
+			<?php if ( is_ranking( 'weekly' ) && $is_week_hl ) : ?>
+				<span class="on"><i class="icon-trophy-star"></i></span>
+			<?php elseif ( $sunday > $fixed_until || $sunday < $calc_starts ) : ?>
+				<span><i class="icon-trophy2"></i></span>
+			<?php else : ?>
+				<a href="<?php echo home_url( '/ranking/weekly/' . str_replace( '-', '', $sunday ) . '/' ); ?>"><i class="icon-trophy-star"></i></a>
+			<?php endif; ?>
+			</td>
+		</tr>
+		<?php endfor; ?>
 		</tbody>
 	</table>
 
