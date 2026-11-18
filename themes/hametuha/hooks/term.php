@@ -470,6 +470,15 @@ add_filter( 'pre_handle_404', function ( $preempt, $wp_query ) {
 	if ( $wp_query->get_queried_object() instanceof WP_Term ) {
 		return $preempt;
 	}
+	// /?tag=a,b のように複数指定すると代表のタームは決まらないので、指定されたタームが1つでも実在すれば任せる
+	$queried_terms = $wp_query->tax_query ? $wp_query->tax_query->queried_terms : [];
+	foreach ( $queried_terms as $taxonomy => $query ) {
+		foreach ( (array) $query['terms'] as $term ) {
+			if ( get_term_by( $query['field'], $term, $taxonomy ) ) {
+				return $preempt;
+			}
+		}
+	}
 	// 取得済みの記事が残ると、redirect_canonical がその記事へ301で飛ばすので空にする
 	$wp_query->posts      = [];
 	$wp_query->post       = null;
