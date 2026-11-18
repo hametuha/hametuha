@@ -90,7 +90,12 @@ add_filter( 'wp_title', function ( $original_title, $sep, $seplocation ) {
 	} elseif ( is_tax( 'topic' ) ) {
 		$title = sprintf( 'トピック「%s」を含む掲示板', get_queried_object()->name );
 	} elseif ( is_author() ) {
-		$title = get_queried_object()->display_name . 'の作品一覧';
+		// /lists/by/<user>/ では queried object が投稿タイプになるので、クエリの author から引く
+		$user = get_userdata( (int) get_query_var( 'author' ) );
+		if ( ! $user ) {
+			return $original_title . get_bloginfo( 'name' );
+		}
+		$title = sprintf( is_post_type_archive( 'lists' ) ? '%sによる選書' : '%sの作品一覧', $user->display_name );
 	} elseif ( is_search() ) {
 		$title = sprintf( '「%s」の検索結果', get_search_query() );
 	} elseif ( is_page() ) {

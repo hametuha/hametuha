@@ -198,12 +198,17 @@ add_action( 'bcn_after_fill', function ( bcn_breadcrumb_trail $bcn ) {
 	if ( ! is_author() ) {
 		return;
 	}
+	// /lists/by/<user>/ では queried object が投稿タイプになるので、クエリの author から引く
+	$user = get_userdata( (int) get_query_var( 'author' ) );
+	if ( ! $user ) {
+		return;
+	}
 	$trails = [];
 	foreach ( $bcn->trail as $item ) {
 		/** @var bcn_breadcrumb $item */
 		if ( in_array( 'home', $item->get_types(), true ) ) {
 			// 同人詳細ページを追加
-			$trails [] = new bcn_breadcrumb( get_queried_object()->display_name, null, [ 'post-author' ], hametuha_author_url( get_queried_object()->ID ), '', true );
+			$trails [] = new bcn_breadcrumb( $user->display_name, null, [ 'post-author' ], hametuha_author_url( $user->ID ), '', true );
 			// 作者一覧ページへ
 			$trails [] = new bcn_breadcrumb( __( '執筆者一覧', 'hametuha' ), null, [ 'authors' ], home_url( '/authors/' ), '', true );
 		}
