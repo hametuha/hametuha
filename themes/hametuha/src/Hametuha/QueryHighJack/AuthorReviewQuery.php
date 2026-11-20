@@ -64,6 +64,22 @@ class AuthorReviewQuery extends QueryHighJack {
 	}
 
 	/**
+	 * 取得する列を posts_request の SQL と揃える
+	 *
+	 * SQL は posts_request で丸ごと差し替えるので、この値自体は使われない。
+	 * ただし WP_Query は、列が既定のままだと結果を「投稿 ID の一覧」としてオブジェクトキャッシュに保存し、
+	 * 2回目以降は ID から投稿を読み直す。そうなると SQL で足した列（post_type・score・work_count）が消える。
+	 * 列を変えたクエリはキャッシュしない決まりなので、実際の列をここでも名乗っておく。
+	 *
+	 * @param string    $fields
+	 * @param \WP_Query $wp_query
+	 * @return string
+	 */
+	public function posts_fields( $fields, \WP_Query $wp_query ) {
+		return $this->is_valid_query( $wp_query ) ? 'p.*, post_type, score, work_count' : $fields;
+	}
+
+	/**
 	 * Get recent request
 	 *
 	 * @param string $request
