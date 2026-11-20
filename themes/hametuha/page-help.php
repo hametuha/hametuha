@@ -10,6 +10,13 @@ get_template_part( 'templates/faq/header-faq' );
 ?>
 
 <section class="help-center-latest">
+	<?php
+	// LCP の画像。CSS の背景だとブラウザが見つけるのが遅れるので <img> で出す（#496 と同じ）
+	printf(
+		'<img class="help-center-latest__bg" src="%s" alt="" width="2000" height="788" fetchpriority="high" decoding="async" />',
+		esc_url( get_template_directory_uri() . '/assets/img/jumbotron/help.jpg' )
+	);
+	?>
 
 	<div class="container">
 		<div class="row justify-content-center">
