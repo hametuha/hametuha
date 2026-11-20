@@ -26,6 +26,13 @@ $count = $wp_query->found_posts;
 ?>
 <div class="news-eyecatch container">
 	<div class="news-eyecatch-text">
+		<?php
+		// LCP の画像。CSS の背景だとブラウザが見つけるのが遅れるので <img> で出す（#496 と同じ）
+		printf(
+			'<img class="news-eyecatch-bg" src="%s" alt="" width="1200" height="600" fetchpriority="high" decoding="async" />',
+			esc_url( get_template_directory_uri() . '/assets/img/jumbotron/hamenew.jpg' )
+		);
+		?>
 		<h1 class="news-eyecatch-title">
 			<?php echo esc_html( $title ); ?>
 		</h1>

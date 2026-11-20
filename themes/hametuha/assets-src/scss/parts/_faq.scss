@@ -3,9 +3,23 @@
 .help-center {
 
 	&-latest {
-		background: url(../img/jumbotron/help.jpg) center center no-repeat;
-		background-size: cover;
+		position: relative;
 		padding: 40px 0;
+
+		// 背景の画像（LCP なので CSS の背景ではなく <img> にしている）
+		&__bg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center center;
+
+			+ .container {
+				position: relative;
+			}
+		}
 
 		&-list {
 			margin: 20px 0;

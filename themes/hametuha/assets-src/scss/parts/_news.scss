@@ -9,15 +9,30 @@
 		padding-top: $navbar-height;
 
 		&-text {
-			background: url(../img/jumbotron/hamenew.jpg?201608) bottom left no-repeat;
-			background-size: contain;
+			position: relative;
 			padding: 80px 40px 80px 30%;
+
+			// 文字は画像の上に重ねる
+			> :not(.news-eyecatch-bg) {
+				position: relative;
+			}
 			-webkit-text-stroke: 2px #fff;
 			paint-order: stroke fill;
 
 			@include mq-max($screen-sm-max) {
 				padding: 20px 0;
 			}
+		}
+
+		// 背景の画像（LCP なので CSS の背景ではなく <img> にしている）
+		&-bg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			object-position: left bottom;
 		}
 
 		&-title {
