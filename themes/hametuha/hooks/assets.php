@@ -98,6 +98,9 @@ add_action( 'wp_enqueue_scripts', function () {
 	// Common Scripts (hashboardでは読み込まない - Bootstrap重複回避)
 	if ( ! get_query_var( 'hashboard' ) ) {
 		wp_enqueue_script( 'hametuha-common' );
+	}
+	// FontPlus は PV で課金されるので、本文や一覧で多用するページだけで読み込む（#495）
+	if ( hametuha_use_font_plus() ) {
 		wp_enqueue_script( 'font-plus' );
 	}
 	// Single post.
@@ -187,3 +190,19 @@ add_action( 'init', function () {
 	wp_deregister_script( 'jquery-core' );
 	wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, true );
 } );
+
+/**
+ * FontPlus（筑紫明朝）を読み込むページか
+ *
+ * FontPlus は PV で課金される。2026-11 に本番で実測したところ、多くのページでは
+ * ページ見出しなど数か所にしか使っていなかったので、本文や一覧で多用するページに絞る（#495）。
+ * ほかのページでは、CSS に指定してある代わりの書体（serif）で表示される。
+ *
+ * @return bool
+ */
+function hametuha_use_font_plus() {
+	return is_front_page()
+		|| is_singular( [ 'post', 'series' ] ) // 作品・連載
+		|| 'kdp' === get_query_var( 'meta_filter' ) // 電子書籍の一覧（/kdp/）
+		|| is_ranking();
+}
