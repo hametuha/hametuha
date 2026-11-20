@@ -5,7 +5,7 @@
  * 順番は連結していたときと同じ。_hametuha.js が window.Hametuha を作るので先頭に置く。
  *
  * @handle hametuha-common
- * @deps twitter-bootstrap, wp-api, font-plus, hametuheader
+ * @deps twitter-bootstrap, wp-api, hametuheader
  */
 
 import './common/_hametuha';
