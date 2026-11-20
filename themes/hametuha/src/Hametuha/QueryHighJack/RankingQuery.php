@@ -61,6 +61,22 @@ class RankingQuery extends QueryHighJack {
 
 
 	/**
+	 * 取得する列を posts_request の SQL と揃える
+	 *
+	 * SQL は posts_request で丸ごと差し替えるので、この値自体は使われない。
+	 * ただし WP_Query は、列が既定のままだと結果を「投稿 ID の一覧」としてオブジェクトキャッシュに保存し、
+	 * 2回目以降は ID から投稿を読み直す。そうなると SQL で足した列（pv。PV が 0 と表示され、同点の順位も崩れていた）が消える。
+	 * 列を変えたクエリはキャッシュしない決まりなので、実際の列をここでも名乗っておく。
+	 *
+	 * @param string    $fields
+	 * @param \WP_Query $wp_query
+	 * @return string
+	 */
+	public function posts_fields( $fields, \WP_Query $wp_query ) {
+		return $this->is_valid_query( $wp_query ) ? 'p.*, ranking.pv' : $fields;
+	}
+
+	/**
 	 * ランキング取得用にpost_requestを書き換え
 	 *
 	 * @param string $request
