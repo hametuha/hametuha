@@ -383,7 +383,7 @@ HTML;
 				<?php else : ?>
 
 					<p class="alert alert-warning">
-						リスト機能を利用するには<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>">ログイン</a>する必要があります。
+						リスト機能を利用するには<a class="alert-link" href="<?php echo wp_login_url( get_permalink() ); ?>" rel="nofollow">ログイン</a>する必要があります。
 					</p>
 
 				<?php endif; ?>
