@@ -25,8 +25,15 @@ add_action( 'init', function () {
 	// Bootstrap 5 (no jQuery dependency)
 	wp_register_script( 'twitter-bootstrap', get_template_directory_uri() . '/assets/vendor/bootstrap.js', [], '5.3.8', true );
 
-	// FontPlus
-	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1&chws=1', null, null, false );
+	// FontPlus（明朝体）。同期で読むと描画が止まるので defer にする（#495）。
+	// FontPlus は DOMContentLoaded で文字を集めてフォントを頼むので、defer でもフォントが届く時刻は変わらない。
+	// async は不可（DOMContentLoaded の後に実行されると、フォントを読み込まない）。
+	// display=swap: フォントが届くまでシステムの明朝体で出す（FontPlus の公式パラメータ）。
+	// 同期のスクリプトから依存されると WordPress が defer を外すので、ほかのスクリプトの @deps に入れないこと。
+	wp_register_script( 'font-plus', '//webfont.fontplus.jp/accessor/script/fontplus.js?xnZANi~MEp8%3D&aa=1&chws=1&display=swap', [], null, [
+		'in_footer' => false,
+		'strategy'  => 'defer',
+	] );
 
 	// Prop Types (versioned URL to avoid redirects)
 	wp_register_script( 'prop-types', 'https://unpkg.com/prop-types@15.8.1/prop-types.min.js', [ 'react' ], '15.8.1', true );
@@ -91,6 +98,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	// Common Scripts (hashboardでは読み込まない - Bootstrap重複回避)
 	if ( ! get_query_var( 'hashboard' ) ) {
 		wp_enqueue_script( 'hametuha-common' );
+		wp_enqueue_script( 'font-plus' );
 	}
 	// Single post.
 	if ( is_singular( 'post' ) ) {
