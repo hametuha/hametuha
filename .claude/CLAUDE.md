@@ -336,13 +336,18 @@ php-fpm の再起動など、一瞬サイトが止まる作業の前に、**い�
   ローカルは `docker/nginx/default.conf`、本番は hametuha/hametuha-infra の `05-cloudflare-ssl.sh` に `location = /wp-content/uploads/notification.json { try_files $uri =404; }` を入れてある（hametuha/hametuha-infra#51）
 - uploads を S3 などに移したら、`EmergencyNotice::publish()` の書き出し先を変える必要がある（いまはローカルファイルに `file_put_contents` している）
 
-## 管理者の2要素認証（#430）
+## 管理者・編集者の2要素認証（#430）
 
 Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hametuha/Hooks/TwoFactor.php`。
 
-- **管理者だけが対象。** 使えるのは TOTP とバックアップコードのみ（メールは管理者のメール乗っ取りでパスワードリセットと同時に破られるので不可）。管理者以外には一切提供しない（hashboard のためプロフィール画面に入れない）
+- **ロールごとの方針は `TwoFactor::POLICIES`。** 複数のロールを持つユーザーは、上に書いたロール（管理者）の方針に従う
+  - **管理者**: TOTP とバックアップコードのみ（メールは管理者のメール乗っ取りでパスワードリセットと同時に破られるので不可）
+  - **編集者**: メールの確認コードを**強制**（`TwoFactor::FORCED`）。設定は不要で、本人は外せない。パスワードの使い回し・漏洩には効くが、メールの乗っ取りには効かない。**ログインがメールの到達に依存する**ので、メールが届かないときは編集者がログインできなくなる
+    - 「設定 → Two-Factor」のサイト全体の設定でメールを外すと、編集者は**ログインできなくなる**（パスワードだけで通さないよう fail closed にしてある）。管理者には管理画面でエラーを出す
+    - 強制分はユーザーの保存値に残さない（`strip_forced_from_meta()`）。残っていると、編集者を管理者に昇格させたとき、管理者に使えないメールだけが残って締め出される
+  - それ以外のロールには一切提供しない（hashboard のためプロフィール画面に入れない。投稿者・購読者が選べるようにするのは hashboard 側の対応が要る）
 - **未設定の管理者には管理画面で通知するだけ。** 権限は止めない（管理者は1人で、本番有効化時に自分で設定する前提）
-- **ソーシャルログイン（Gianism / hameslack）は2FAを通らない。** `wp_login` を発火せず `wp_set_auth_cookie()` を直接呼ぶため。連携先（Google・Facebook・Slack 等）の乗っ取り対策を信頼して当面は許可している。前提は**管理者が連携しているアカウントすべてに2FAが設定されていること**
+- **ソーシャルログイン（Gianism / hameslack）は2FAを通らない。** `wp_login` を発火せず `wp_set_auth_cookie()` を直接呼ぶため。連携先（Google・Facebook・Slack 等）の乗っ取り対策を信頼して当面は許可している。前提は**管理者・編集者が連携しているアカウントすべてに2FAが設定されていること**
   - 制御は Gianism 本体で行う予定（hametuha/gianism#179）。hameslack は Gianism の `set_auth_cookie()` を経由しておらずフックが効かない（hametuha/hameslack#58）
   - 一度「2FAを通っていないセッションでは管理者権限を落とす」実装を試したが、仕組みが分かりにくく、ソーシャルログインを許す方針とも両立しないため採用しなかった（PR #431 の履歴参照）
 - 端末の記憶機能は無い（WordPress/two-factor#230）。「ログイン状態を保存」で14日に1回入力する程度
@@ -552,7 +557,7 @@ grep -r "@feature-group \(news\|ideas\|anpi\)" themes/hametuha/
 - **ideas** アイデア投稿機能に関連するファイル群
 - **anpi** 安否情報機能に関連するファイル群
 - **series** 連載機能に関連するファイル群
-- **two-factor** 管理者の2要素認証必須化に関連するファイル群
+- **two-factor** 管理者・編集者の2要素認証必須化に関連するファイル群
 - **carousel** カルーセル（Swiper）に関連するファイル群
 - **emergency-notice** ログイン中ユーザーへの緊急告知（`uploads/notification.json`）に関連するファイル群
 
