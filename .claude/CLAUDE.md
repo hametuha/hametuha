@@ -351,6 +351,8 @@ Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hame
   - 制御は Gianism 本体で行う予定（hametuha/gianism#179）。hameslack は Gianism の `set_auth_cookie()` を経由しておらずフックが効かない（hametuha/hameslack#58）
   - 一度「2FAを通っていないセッションでは管理者権限を落とす」実装を試したが、仕組みが分かりにくく、ソーシャルログインを許す方針とも両立しないため採用しなかった（PR #431 の履歴参照）
 - 端末の記憶機能は無い（WordPress/two-factor#230）。「ログイン状態を保存」で14日に1回入力する程度
+- **アプリケーションパスワードは管理者だけ**（`Hooks/ApplicationPasswords.php`・#533）。2FA を通らない長期の資格情報なので、編集者に許すとメールの確認コードの抜け道になる。
+  `wp_is_application_passwords_available_for_user` で止めているので、発行（画面・REST）だけでなく認証も止まる（管理者から降格すると既存のパスワードも使えなくなる）。端末の認証を通した編集者に許すかは将来検討
 
 ### ロックアウトしたときの復旧
 
