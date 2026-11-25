@@ -47,6 +47,32 @@ class Test_TwoFactor extends WP_UnitTestCase {
 		$this->assertTrue( Two_Factor_Core::is_user_using_two_factor( $editor ), '本人は外せない' );
 	}
 
+	public function test_editor_is_not_let_in_when_email_is_disabled_site_wide() {
+		// サイト全体の設定で、メールを外して保存した
+		update_option( Two_Factor_Core::ENABLED_PROVIDERS_OPTION_KEY, [ 'Two_Factor_Totp', 'Two_Factor_Backup_Codes' ] );
+		$editor = self::factory()->user->create( [ 'role' => 'editor' ] );
+		$this->assertNull( Two_Factor_Core::get_primary_provider_for_user( $editor ), '前提: メールが使えない' );
+		$this->assertTrue( Two_Factor_Core::is_user_using_two_factor( $editor ), 'パスワードだけでは通さない（fail closed）' );
+		$this->assertSame( [ 'Two_Factor_Email' ], TwoFactor::disabled_forced_providers(), '管理者に知らせる材料' );
+
+		wp_set_current_user( self::factory()->user->create( [ 'role' => 'administrator' ] ) );
+		ob_start();
+		TwoFactor::get_instance()->admin_notice();
+		$this->assertStringContainsString( '編集者がログインできません', ob_get_clean(), '管理者に知らせる' );
+	}
+
+	public function test_promoted_editor_is_not_locked_out() {
+		$user_id = self::factory()->user->create( [ 'role' => 'editor' ] );
+		// ユーザー編集画面で保存すると、Two Factor がロール変更より先にメールを保存する
+		update_user_meta( $user_id, Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY, [ 'Two_Factor_Email' ] );
+		TwoFactor::get_instance()->strip_forced_from_meta( $user_id );
+		$this->assertSame( [], get_user_meta( $user_id, Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY, true ), '強制分は保存しない' );
+
+		( new WP_User( $user_id ) )->set_role( 'administrator' );
+		$this->assertNotWPError( Two_Factor_Core::get_available_providers_for_user( $user_id ), '昇格後も締め出されない' );
+		$this->assertFalse( Two_Factor_Core::is_user_using_two_factor( $user_id ), '管理者として未設定に戻る（通知で設定を促す）' );
+	}
+
 	public function test_admin_is_not_forced() {
 		$admin = self::factory()->user->create( [ 'role' => 'administrator' ] );
 		$this->assertFalse( Two_Factor_Core::is_user_using_two_factor( $admin ), '管理者は自分で TOTP を設定する（強制しない）' );

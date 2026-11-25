@@ -49,6 +49,9 @@ class TwoFactor extends Singleton {
 		add_filter( 'two_factor_enabled_providers_for_user', [ $this, 'filter_enabled' ], 10, 2 );
 		add_filter( 'two_factor_is_required_for_user', [ $this, 'filter_required' ], 10, 2 );
 		add_action( 'admin_notices', [ $this, 'admin_notice' ] );
+		// Two Factor の保存（優先度10）のあとで、強制するプロバイダーを保存値から外す
+		add_action( 'personal_options_update', [ $this, 'strip_forced_from_meta' ], 11 );
+		add_action( 'edit_user_profile_update', [ $this, 'strip_forced_from_meta' ], 11 );
 	}
 
 	/**
@@ -113,7 +116,52 @@ class TwoFactor extends Singleton {
 	 * @return bool
 	 */
 	public function filter_required( $required, $user ) {
-		return self::get_role( $user ) ? $required : false;
+		$role = self::get_role( $user );
+		if ( ! $role ) {
+			return false;
+		}
+		// 強制するロールは、サイト全体の設定でメールが無効になっていても通さない（fail closed）。
+		// プロバイダーが無いのでログインは失敗するが、パスワードだけで通すよりよい。管理者には admin_notice で知らせる
+		if ( ! empty( self::FORCED[ $role ] ) ) {
+			return true;
+		}
+		return $required;
+	}
+
+	/**
+	 * 強制するプロバイダーをユーザーの保存値に残さない
+	 *
+	 * 強制分は filter_enabled() で毎回足すので、保存する必要がない。
+	 * 残っていると、編集者をユーザー編集画面で管理者に昇格させたとき、管理者には使えないメールだけが
+	 * 保存値に残り、Two Factor が「プロバイダーが消えた」とみなしてログインを拒否する。
+	 *
+	 * @param int $user_id User ID.
+	 * @return void
+	 */
+	public function strip_forced_from_meta( $user_id ) {
+		$role = self::get_role( $user_id );
+		if ( ! $role || empty( self::FORCED[ $role ] ) ) {
+			return;
+		}
+		$stored = get_user_meta( $user_id, \Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY, true );
+		if ( ! is_array( $stored ) ) {
+			return;
+		}
+		$rest = array_values( array_diff( $stored, self::FORCED[ $role ] ) );
+		if ( $rest !== $stored ) {
+			update_user_meta( $user_id, \Two_Factor_Core::ENABLED_PROVIDERS_USER_META_KEY, $rest );
+		}
+	}
+
+	/**
+	 * 強制するプロバイダーのうち、サイト全体の設定で無効になっているもの
+	 *
+	 * @return string[]
+	 */
+	public static function disabled_forced_providers() {
+		$registered = array_keys( \Two_Factor_Core::get_providers() );
+		$forced     = array_unique( array_merge( ...array_values( self::FORCED ) ) );
+		return array_values( array_diff( $forced, $registered ) );
 	}
 
 	/**
@@ -125,7 +173,18 @@ class TwoFactor extends Singleton {
 	 */
 	public function admin_notice() {
 		$user = wp_get_current_user();
-		if ( 'administrator' !== self::get_role( $user ) || \Two_Factor_Core::is_user_using_two_factor( $user->ID ) ) {
+		if ( 'administrator' !== self::get_role( $user ) ) {
+			return;
+		}
+		$disabled = self::disabled_forced_providers();
+		if ( $disabled ) {
+			printf(
+				'<div class="notice notice-error"><p>2要素認証の設定で %s が無効になっているため、編集者がログインできません。<a href="%s">有効にしてください</a>。</p></div>',
+				esc_html( implode( ', ', $disabled ) ),
+				esc_url( admin_url( 'options-general.php?page=two-factor-settings' ) )
+			);
+		}
+		if ( \Two_Factor_Core::is_user_using_two_factor( $user->ID ) ) {
 			return;
 		}
 		printf(
