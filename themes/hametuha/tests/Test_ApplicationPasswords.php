@@ -56,6 +56,20 @@ class Test_ApplicationPasswords extends WP_UnitTestCase {
 		];
 	}
 
+	public function test_authorize_screen_is_blocked_before_saving() {
+		$admin = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		wp_set_current_user( $admin );
+		do_action( 'load-authorize-application.php' );
+		$this->assertTrue( true, '管理者は承認画面に進める' );
+
+		$editor = self::factory()->user->create( [ 'role' => 'editor' ] );
+		wp_set_current_user( $editor );
+		// テーマが wp_die の画面を差し替えている（優先度1000）ので、テスト用のハンドラーを後から戻す
+		add_filter( 'wp_die_handler', [ $this, 'get_wp_die_handler' ], 1001 );
+		$this->expectException( WPDieException::class );
+		do_action( 'load-authorize-application.php' );
+	}
+
 	public function test_existing_password_stops_working_after_demotion() {
 		// REST・XML-RPC のリクエスト中でないと、アプリケーションパスワードでの認証は試みられない
 		add_filter( 'application_password_is_api_request', '__return_true' );

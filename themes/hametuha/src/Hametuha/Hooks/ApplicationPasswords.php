@@ -33,6 +33,31 @@ class ApplicationPasswords extends Singleton {
 	 */
 	protected function __construct( array $setting = array() ) {
 		add_filter( 'wp_is_application_passwords_available_for_user', [ $this, 'filter_available' ], 10, 2 );
+		add_action( 'load-authorize-application.php', [ $this, 'guard_authorize_screen' ] );
+	}
+
+	/**
+	 * アプリ連携の承認画面で、保存より先に可否を確かめる
+	 *
+	 * コアの authorize-application.php は、JavaScript 無効時のフォーム送信（POST）で
+	 * パスワードを保存してから可否を確かめる。管理者のときに開いた画面を降格後に送信すると
+	 * 発行できてしまうので、画面の読み込み時点で止める。
+	 *
+	 * @return void
+	 */
+	public function guard_authorize_screen() {
+		if ( wp_is_application_passwords_available_for_user( wp_get_current_user() ) ) {
+			return;
+		}
+		wp_die(
+			esc_html__( 'Application passwords are not available for your account. Please contact the site administrator for assistance.', 'default' ),
+			esc_html__( 'Cannot Authorize Application', 'default' ),
+			[
+				'response'  => 403,
+				'link_text' => esc_html__( 'Go Back', 'default' ),
+				'link_url'  => admin_url(),
+			]
+		);
 	}
 
 	/**
