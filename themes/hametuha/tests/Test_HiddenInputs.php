@@ -31,9 +31,14 @@ class Test_HiddenInputs extends WP_UnitTestCase {
 	public function test_round_trip() {
 		$params = [
 			's'      => '"愛" & <檸檬>',
+			'entity' => 'Tom &amp; Jerry',
 			'length' => [ 'short', 'long' ],
 			't'      => [ 'SF', 'ミステリー' ],
 			'nested' => [ 'a' => '1', 'b' => [ 'x', 'y' ] ],
+			'rows'   => [
+				[ 'a' => '1', 'b' => '2' ],
+				[ 'a' => '3', 'b' => '4' ],
+			],
 		];
 		$this->assertSame( $params, $this->round_trip( $params ), 'フォームで送ると元のクエリに戻る' );
 	}

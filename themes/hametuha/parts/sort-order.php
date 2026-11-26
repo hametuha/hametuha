@@ -46,6 +46,11 @@ switch ( $orderby ) {
 		break;
 }
 
+// 検索は orderby が空だと関連度順になる（WP_Query）ので、新着順は投稿日を明示する
+if ( is_search() ) {
+	$args['date']['orderby'] = 'date';
+}
+
 // 引き継ぐ絞り込み。並び順とページ番号は引き継がない
 $keep = wp_unslash( $_GET );
 unset( $keep['order'], $keep['orderby'], $keep['paged'] );
