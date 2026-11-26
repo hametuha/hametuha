@@ -758,6 +758,21 @@ aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
   --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
 ```
 
+## Cloudflare API
+
+hametuha.com は Cloudflare（Pro プラン）を通っています。セキュリティイベントやボット対策の調査では、このリポジトリから Cloudflare の API を叩きます。
+トークンとゾーン ID は `.envrc` に書きます（`.envrc.example` の `CLOUDFLARE_API_TOKEN`・`CLOUDFLARE_ZONE_ID`。値はコミットしない）。
+
+```bash
+# トークンが有効か（アカウント単位のトークンはこの確かめ方では通らない）
+curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/user/tokens/verify
+# セキュリティイベントなどの集計は GraphQL（https://api.cloudflare.com/client/v4/graphql）。zoneTag に CLOUDFLARE_ZONE_ID を入れる
+```
+
+- **ボット対策の設定を変えたら、検索エンジンを止めていないかをその場で確かめる。** 2026-11 に AI の学習用クローラーを止める設定で、本物の Googlebot・bingbot まで 403 にしていた（#491）。
+  GraphQL の `firewallEventsAdaptiveGroups` を `userAgent_like: "%Googlebot%"` などで絞り、`clientASNDescription` が Google LLC・Microsoft Corporation のブロックが無いかを見る
+- 設定は、いまは管理画面で変えている。IaC に載せるかは hametuha/hametuha-infra#83 で判断する
+
 ## 表示速度の定期計測（Lighthouse CI・#490）
 
 `.github/workflows/lighthouse.yml` が毎週月曜 3:00（JST）に本番の代表ページを測る。**目的は致命的な悪化に気づくことで、細かい改善の評価には使わない**（ラボ計測は利用者の体感と一致しない）。
