@@ -2,6 +2,10 @@
 /**
  * 投稿一覧で並び順を変えるナビゲーション
  *
+ * タブはリンクではなく、GET のフォームのボタンにしている。
+ * リンクだとクローラーが「並び順 × ページ送り」の組み合わせをたどり続け、
+ * /latest/page/152/?order=asc&orderby=popular のような URL まで掘られていたため。
+ * フォームは今の絞り込み（キーワード・タグ・文字数など）を hidden で引き継ぐ。
  */
 list( $uri ) = explode( '?', $_SERVER['REQUEST_URI'] );
 
@@ -41,25 +45,30 @@ switch ( $orderby ) {
 		}
 		break;
 }
+
+// 引き継ぐ絞り込み。並び順とページ番号は引き継がない
+$keep = wp_unslash( $_GET );
+unset( $keep['order'], $keep['orderby'], $keep['paged'] );
+
+$tabs = [
+	'date' => '新着順',
+];
+if ( is_tag() || is_category() || is_home() || ( is_search() && ! get_query_var( 'post_type' ) ) ) {
+	$tabs['popular'] = '人気';
+}
 ?>
 <!-- Nav tabs -->
 <ul class="nav nav-tabs nav-tabs--archive">
-	<li role="presentation" class="nav-item">
-		<a class="<?php echo implode( ' ', $current['date'] ); ?>"
-		href="<?php echo add_query_arg( $args['date'], $base ); ?>" aria-controls="latest">
-			新着順
-			<i class="icon-arrow-down"></i>
-			<i class="icon-arrow-up"></i>
-		</a>
-	</li>
-	<?php if ( is_tag() || is_category() || is_home() || ( is_search() && ! get_query_var( 'post_type' ) ) ) : ?>
+	<?php foreach ( $tabs as $key => $label ) : ?>
 		<li role="presentation" class="nav-item">
-			<a class="<?php echo implode( ' ', $current['popular'] ); ?>"
-			href="<?php echo add_query_arg( $args['popular'], $base ); ?>" aria-controls="profile">
-				人気
-				<i class="icon-arrow-down"></i>
-				<i class="icon-arrow-up"></i>
-			</a>
+			<form method="get" action="<?php echo esc_url( $base ); ?>">
+				<?php hametuha_hidden_inputs( array_merge( $keep, $args[ $key ] ) ); ?>
+				<button type="submit" class="<?php echo esc_attr( implode( ' ', $current[ $key ] ) ); ?>">
+					<?php echo esc_html( $label ); ?>
+					<i class="icon-arrow-down"></i>
+					<i class="icon-arrow-up"></i>
+				</button>
+			</form>
 		</li>
-	<?php endif; ?>
+	<?php endforeach; ?>
 </ul>

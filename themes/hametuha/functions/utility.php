@@ -402,3 +402,29 @@ function needs_left_sidebar() {
 		is_singular( 'series' )
 	);
 }
+
+/**
+ * クエリ文字列の値を hidden の input として出力する
+ *
+ * GET のフォームで今の絞り込みを引き継ぐときに使う。
+ * 配列は `length[]=a&length[]=b` の形（連想配列なら `name[key]`）で出す。
+ *
+ * @param array  $params クエリの値。wp_unslash() 済みのもの。
+ * @param string $prefix 入れ子のときの親の名前。
+ * @return void
+ */
+function hametuha_hidden_inputs( array $params, $prefix = '' ) {
+	$is_list = array_values( $params ) === $params;
+	foreach ( $params as $key => $value ) {
+		if ( '' === $prefix ) {
+			$name = (string) $key;
+		} else {
+			$name = $is_list ? $prefix . '[]' : sprintf( '%s[%s]', $prefix, $key );
+		}
+		if ( is_array( $value ) ) {
+			hametuha_hidden_inputs( $value, $name );
+			continue;
+		}
+		printf( '<input type="hidden" name="%s" value="%s" />', esc_attr( $name ), esc_attr( $value ) );
+	}
+}
