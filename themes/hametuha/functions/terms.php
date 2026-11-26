@@ -154,6 +154,43 @@ function hametuha_queried_tags( $query = null ) {
 }
 
 /**
+ * 絞り込みに指定された認定（qualification のスラッグ）を返す
+ *
+ * ?qualified[]=joint-review-winner の形。カンマ区切りも受ける。存在しない認定は捨てる。
+ *
+ * @param WP_Query|null $query 指定しない場合はメインクエリ
+ * @return WP_Term[]
+ */
+function hametuha_queried_qualifications( $query = null ) {
+	if ( is_null( $query ) ) {
+		global $wp_query;
+		$query = $wp_query;
+	}
+	$values = $query->get( 'qualified' );
+	if ( empty( $values ) ) {
+		return [];
+	}
+	$slugs = [];
+	foreach ( (array) $values as $value ) {
+		foreach ( explode( ',', (string) $value ) as $slug ) {
+			$slug = sanitize_title( $slug );
+			if ( $slug ) {
+				$slugs[] = $slug;
+			}
+		}
+	}
+	if ( ! $slugs ) {
+		return [];
+	}
+	$terms = get_terms( [
+		'taxonomy'   => 'qualification',
+		'slug'       => array_values( array_unique( $slugs ) ),
+		'hide_empty' => false,
+	] );
+	return is_wp_error( $terms ) ? [] : $terms;
+}
+
+/**
  * Get tags from recent posts with minimum total count
  *
  * @param int $recent_days 最近の投稿の日数（デフォルト30日）
@@ -219,4 +256,34 @@ function hametuha_get_popular_recent_tags( $recent_days = 30, $min_count = 10, $
 	set_transient( $transient_key, $tags, 3 * HOUR_IN_SECONDS );
 
 	return $tags;
+}
+
+/**
+ * URL のパスで開いているターム一覧のターム（/keyword/sf/ の SF など）
+ *
+ * get_queried_object() や is_tag() は使わない。?t= や ?tag= の絞り込みでも変わり、
+ * /keyword/sf/?t=ミステリー がミステリーの一覧、/?s=愛&tag=sf がタグの一覧と判定されるため（#538）。
+ * リライトで URL のパスから取り出したクエリ変数だけを見る。
+ *
+ * @return WP_Term|null
+ */
+function hametuha_path_term() {
+	global $wp;
+	if ( empty( $wp->matched_rule ) ) {
+		return null;
+	}
+	foreach ( get_taxonomies( [ 'public' => true ], 'objects' ) as $taxonomy ) {
+		$var = $taxonomy->query_var;
+		// クエリ文字列で来たものはパスではない
+		if ( ! $var || empty( $wp->query_vars[ $var ] ) || isset( $_GET[ $var ] ) ) {
+			continue;
+		}
+		// 階層のあるジャンルは parent/child の形で来る
+		$slugs = explode( '/', trim( (string) $wp->query_vars[ $var ], '/' ) );
+		$term  = get_term_by( 'slug', end( $slugs ), $taxonomy->name );
+		if ( $term ) {
+			return $term;
+		}
+	}
+	return null;
 }

@@ -31,49 +31,41 @@
 // タブ
 .nav-tabs--archive {
 
-	li {
+	// タブはフォームのボタン（parts/sort-order.php）。
+	// 選択中のタブにマウスを乗せると、押したあとの並び順の矢印を出す
+	.icon-arrow-up {
+		display: none;
+	}
+
+	.nav-link.active:hover {
 
 		.icon-arrow-up {
+			display: inline-block;
+		}
+
+		.icon-arrow-down {
+			display: none;
+		}
+	}
+
+	.nav-link.asc {
+
+		.icon-arrow-up {
+			display: inline-block;
+		}
+
+		.icon-arrow-down {
 			display: none;
 		}
 
-		.active {
+		&.active:hover {
 
-			a:hover {
-				cursor: pointer;
-
-				.icon-arrow-up {
-					display: inline-block;
-				}
-
-				.icon-arrow-down {
-					display: none;
-				}
-			}
-		}
-
-		.asc {
-
-			.icon-arrow-up {
+			.icon-arrow-down {
 				display: inline-block;
 			}
 
-			.icon-arrow-down {
+			.icon-arrow-up {
 				display: none;
-			}
-
-			&.active {
-
-				a:hover {
-
-					.icon-arrow-down {
-						display: inline-block;
-					}
-
-					.icon-arrow-up {
-						display: none;
-					}
-				}
 			}
 		}
 	}

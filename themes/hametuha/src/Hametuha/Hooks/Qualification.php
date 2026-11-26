@@ -24,59 +24,84 @@ class Qualification extends Singleton {
 	 */
 	public function register_taxonomy() {
 		\register_taxonomy( self::TAXONOMY, [ 'post' ], [
-			'label'             => __( '認定', 'hametuha' ),
-			'public'            => true,
-			'show_ui'           => true,
-			'show_admin_column' => true,
-			'show_in_nav_menus' => false,
-			'show_tagcloud'     => false,
-			'hierarchical'      => false,
-			'rewrite'           => [
+			'label'                => __( '認定', 'hametuha' ),
+			'public'               => true,
+			'show_ui'              => true,
+			'show_admin_column'    => true,
+			'show_in_nav_menus'    => false,
+			'show_tagcloud'        => false,
+			'hierarchical'         => false,
+			'rewrite'              => [
 				'with_front' => false,
 				'slug'       => 'qualification',
 			],
-			'capabilities'      => [
+			'capabilities'         => [
 				'manage_terms' => 'manage_options',
 				'edit_terms'   => 'manage_options',
 				'delete_terms' => 'manage_options',
 				'assign_terms' => 'edit_others_posts',
 			],
-			'meta_box_cb'       => function ( \WP_Post $post ) {
-				$terms = wp_get_post_terms( $post->ID, self::TAXONOMY );
-				if ( current_user_can( 'edit_others_posts' ) ) {
-					$options = get_terms( self::TAXONOMY, [
-						'hide_empty' => false,
-					] );
-					$name    = sprintf( 'tax_input[%s]', self::TAXONOMY );
-					$term    = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->term_id : '';
-					?>
-					<select name="<?php echo esc_attr( $name ); ?>">
-						<option value="" <?php selected( '', $term ); ?>><?php esc_html_e( '指定なし', 'hametuha' ); ?></option>
-						<?php
-						foreach ( $options as $option ) {
-							printf(
-								'<option value="%s"%s>%s</option>',
-								esc_attr( $option->name ),
-								selected( $option->term_id, $term, false ),
-								esc_attr( $option->name )
-							);
-						}
-						?>
-					</select>
-					<?php
-				} else {
-					if ( $terms && ! is_wp_error( $terms ) ) {
-						array_map( function ( $term ) {
-							printf( '<p><strong><span style="color: green;" class="dashicons dashicons-yes"></span> %s</strong></p>', esc_html( $term->name ) );
-						}, $terms );
-					} else {
-						sprintf(
-							'<p class="description">%s</p>',
-							esc_html__( 'この作品にはまだ認証はついていません。', 'hametuha' )
-						);
-					}
-				}
-			},
+			// 複数の認定を付けられるよう、チェックボックスで term_id を送る
+			'meta_box_cb'          => [ $this, 'meta_box' ],
+			'meta_box_sanitize_cb' => [ $this, 'sanitize_input' ],
 		] );
+	}
+
+	/**
+	 * 送られてきた認定を整える
+	 *
+	 * 編集画面のチェックボックスは term_id の配列、クイック編集は名前のカンマ区切りで来る。
+	 *
+	 * @param string       $taxonomy タクソノミー
+	 * @param array|string $terms    送られてきた値
+	 * @return array
+	 */
+	public function sanitize_input( $taxonomy, $terms ) {
+		if ( is_array( $terms ) ) {
+			return taxonomy_meta_box_sanitize_cb_checkboxes( $taxonomy, $terms );
+		}
+		return taxonomy_meta_box_sanitize_cb_input( $taxonomy, $terms );
+	}
+
+	/**
+	 * 編集画面の「認定」ボックス
+	 *
+	 * 付けられるのは編集者以上（assign_terms）。それ以外の人には付いている認定を見せるだけ。
+	 *
+	 * @param \WP_Post $post 投稿
+	 */
+	public function meta_box( \WP_Post $post ) {
+		$current = wp_get_object_terms( $post->ID, self::TAXONOMY, [ 'fields' => 'ids' ] );
+		$current = is_wp_error( $current ) ? [] : array_map( 'intval', $current );
+		if ( ! current_user_can( get_taxonomy( self::TAXONOMY )->cap->assign_terms ) ) {
+			if ( $current ) {
+				foreach ( $current as $term_id ) {
+					printf( '<p><strong><span style="color: green;" class="dashicons dashicons-yes"></span> %s</strong></p>', esc_html( get_term( $term_id )->name ) );
+				}
+			} else {
+				printf( '<p class="description">%s</p>', esc_html__( 'この作品にはまだ認定はついていません。', 'hametuha' ) );
+			}
+			return;
+		}
+		$name = sprintf( 'tax_input[%s][]', self::TAXONOMY );
+		// すべて外したときも送られるように（0 はコアが取り除くので、認定が空になる）
+		printf( '<input type="hidden" name="%s" value="0" />', esc_attr( $name ) );
+		$terms = get_terms( [
+			'taxonomy'   => self::TAXONOMY,
+			'hide_empty' => false,
+		] );
+		if ( ! $terms || is_wp_error( $terms ) ) {
+			printf( '<p class="description">%s</p>', esc_html__( '認定がまだ登録されていません。', 'hametuha' ) );
+			return;
+		}
+		foreach ( $terms as $term ) {
+			printf(
+				'<label style="display: block; margin-bottom: 4px;"><input type="checkbox" name="%s" value="%d"%s /> %s</label>',
+				esc_attr( $name ),
+				$term->term_id,
+				checked( in_array( $term->term_id, $current, true ), true, false ),
+				esc_html( $term->name )
+			);
+		}
 	}
 }

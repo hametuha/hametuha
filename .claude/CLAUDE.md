@@ -351,6 +351,8 @@ Two Factor プラグイン（wp.org `two-factor`）＋ `themes/hametuha/src/Hame
   - 制御は Gianism 本体で行う予定（hametuha/gianism#179）。hameslack は Gianism の `set_auth_cookie()` を経由しておらずフックが効かない（hametuha/hameslack#58）
   - 一度「2FAを通っていないセッションでは管理者権限を落とす」実装を試したが、仕組みが分かりにくく、ソーシャルログインを許す方針とも両立しないため採用しなかった（PR #431 の履歴参照）
 - 端末の記憶機能は無い（WordPress/two-factor#230）。「ログイン状態を保存」で14日に1回入力する程度
+- **アプリケーションパスワードは管理者だけ**（`Hooks/ApplicationPasswords.php`・#533）。2FA を通らない長期の資格情報なので、編集者に許すとメールの確認コードの抜け道になる。
+  `wp_is_application_passwords_available_for_user` で止めているので、発行（画面・REST）だけでなく認証も止まる（管理者から降格すると既存のパスワードも使えなくなる）。端末の認証を通した編集者に許すかは将来検討
 
 ### ロックアウトしたときの復旧
 
@@ -755,6 +757,21 @@ aws logs filter-log-events --log-group-name /aws/ec2/hametuha/php-fpm/error \
   --start-time $(( ($(date +%s) - 7*86400) * 1000 )) \
   --filter-pattern '"Allowed memory size"' --query 'events[].message' --output text
 ```
+
+## Cloudflare API
+
+hametuha.com は Cloudflare（Pro プラン）を通っています。セキュリティイベントやボット対策の調査では、このリポジトリから Cloudflare の API を叩きます。
+トークンとゾーン ID は `.envrc` に書きます（`.envrc.example` の `CLOUDFLARE_API_TOKEN`・`CLOUDFLARE_ZONE_ID`。値はコミットしない）。
+
+```bash
+# トークンが有効か（アカウント単位のトークンはこの確かめ方では通らない）
+curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" https://api.cloudflare.com/client/v4/user/tokens/verify
+# セキュリティイベントなどの集計は GraphQL（https://api.cloudflare.com/client/v4/graphql）。zoneTag に CLOUDFLARE_ZONE_ID を入れる
+```
+
+- **ボット対策の設定を変えたら、検索エンジンを止めていないかをその場で確かめる。** 2026-11 に AI の学習用クローラーを止める設定で、本物の Googlebot・bingbot まで 403 にしていた（#491）。
+  GraphQL の `firewallEventsAdaptiveGroups` を `userAgent_like: "%Googlebot%"` などで絞り、`clientASNDescription` が Google LLC・Microsoft Corporation のブロックが無いかを見る
+- 設定は、いまは管理画面で変えている。IaC に載せるかは hametuha/hametuha-infra#83 で判断する
 
 ## 表示速度の定期計測（Lighthouse CI・#490）
 
