@@ -7,8 +7,9 @@ wp_enqueue_script( 'hametuha-components-post-search-helper' );
 $queried_object = get_queried_object();
 // カテゴリー
 $current_cat = get_query_var( 'cat' );
-// 現在していされているタグを取得
-$current_tags = hametuha_queried_tags();
+// 現在していされているタグを取得（$query_tags は ?t= の分だけ。タグの一覧のタグはパスにある）
+$query_tags   = hametuha_queried_tags();
+$current_tags = $query_tags;
 if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
 	$current_tags[] = $queried_object->name;
 }
@@ -38,11 +39,21 @@ $cur_comments = get_query_var( 'comments' );
 	// 現在のURLパラメータを取得
 	$current_params = $_GET;
 
+	// バッジを外したときの行き先。タグ・ジャンルなどの一覧では、その一覧にとどまる（#538）。
+	// その一覧のタグ・ジャンル自体を外すときだけ、一覧を出て /latest/ に行く（ほかの条件は引き継ぐ）
+	$filter_base = ( is_category() || is_tag() || is_tax() ) ? get_term_link( $queried_object ) : '';
+	if ( ! $filter_base || is_wp_error( $filter_base ) ) {
+		$filter_base = home_url( 'latest' );
+	}
+	$filter_url = function ( array $params, $leave_archive = false ) use ( $filter_base ) {
+		return add_query_arg( $params, $leave_archive ? home_url( 'latest' ) : $filter_base );
+	};
+
 	// キーワード検索
 	if ( ! empty( $search_keyword ) ) {
 		$params_without_s = $current_params;
 		unset( $params_without_s['s'] );
-		$url              = add_query_arg( $params_without_s, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_s );
 		$active_filters[] = [
 			'label' => sprintf( 'キーワード: %s', esc_html( $search_keyword ) ),
 			'url'   => $url,
@@ -54,7 +65,7 @@ $cur_comments = get_query_var( 'comments' );
 		$category           = get_category( $current_cat );
 		$params_without_cat = $current_params;
 		unset( $params_without_cat['cat'] );
-		$url              = add_query_arg( $params_without_cat, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_cat, is_category() );
 		$active_filters[] = [
 			'label' => sprintf( 'ジャンル: %s', esc_html( $category->name ) ),
 			'url'   => $url,
@@ -64,12 +75,12 @@ $cur_comments = get_query_var( 'comments' );
 	// タグ
 	foreach ( $current_tags as $tag_name ) {
 		$params_without_tag      = $current_params;
-		$remaining_tags          = array_diff( $current_tags, [ $tag_name ] );
+		$remaining_tags          = array_diff( $query_tags, [ $tag_name ] );
 		$params_without_tag['t'] = $remaining_tags;
 		if ( empty( $remaining_tags ) ) {
 			unset( $params_without_tag['t'] );
 		}
-		$url              = add_query_arg( $params_without_tag, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_tag, is_tag() && $tag_name === $queried_object->name );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
 			'url'   => $url,
@@ -86,7 +97,7 @@ $cur_comments = get_query_var( 'comments' );
 				$cur_years['from'] ? $cur_years['from'] . '年' : '',
 				$cur_years['to'] ? $cur_years['to'] . '年' : ''
 			),
-			'url'   => add_query_arg( $params_without_years, home_url( 'latest' ) ),
+			'url'   => $filter_url( $params_without_years ),
 		];
 	}
 
@@ -101,7 +112,7 @@ $cur_comments = get_query_var( 'comments' );
 				if ( empty( $remaining_length ) ) {
 					unset( $params_without_length['length'] );
 				}
-				$url              = add_query_arg( $params_without_length, home_url( 'latest' ) );
+				$url              = $filter_url( $params_without_length );
 				$active_filters[] = [
 					'label' => sprintf( '文字数: %s', esc_html( $length_categories[ $length_key ]['label'] ) ),
 					'url'   => $url,
@@ -120,7 +131,7 @@ $cur_comments = get_query_var( 'comments' );
 		];
 		$params_without_rating = $current_params;
 		unset( $params_without_rating['rating'] );
-		$url              = add_query_arg( $params_without_rating, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_rating );
 		$active_filters[] = [
 			'label' => sprintf( '評価: %s', isset( $rating_labels[ $cur_rating ] ) ? $rating_labels[ $cur_rating ] : $cur_rating ),
 			'url'   => $url,
@@ -136,7 +147,7 @@ $cur_comments = get_query_var( 'comments' );
 			if ( empty( $remaining_reviews ) ) {
 				unset( $params_without_review['reaction'] );
 			}
-			$url              = add_query_arg( $params_without_review, home_url( 'latest' ) );
+			$url              = $filter_url( $params_without_review );
 			$active_filters[] = [
 				'label' => sprintf( '感想: %s', esc_html( $review_tag ) ),
 				'url'   => $url,
@@ -156,7 +167,7 @@ $cur_comments = get_query_var( 'comments' );
 		}
 		$params_without_comments = $current_params;
 		unset( $params_without_comments['comments'] );
-		$url              = add_query_arg( $params_without_comments, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_comments );
 		$active_filters[] = [
 			'label' => sprintf( 'コメント数: %s', esc_html( $comment_label ? $comment_label : $cur_comments . '件以上' ) ),
 			'url'   => $url,
