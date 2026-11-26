@@ -402,3 +402,51 @@ function needs_left_sidebar() {
 		is_singular( 'series' )
 	);
 }
+
+/**
+ * クエリ文字列の値を hidden の input として出力する
+ *
+ * GET のフォームで今の絞り込みを引き継ぐときに使う。
+ * 配列は `length[]=a&length[]=b` の形（連想配列なら `name[key]`）で出す。
+ * 入れ子の配列は `name[0][key]` のように添字を明示する（`[]` だと要素がばらける）。
+ *
+ * @param array  $params クエリの値。wp_unslash() 済みのもの。
+ * @param string $prefix 入れ子のときの親の名前。
+ * @return void
+ */
+function hametuha_hidden_inputs( array $params, $prefix = '' ) {
+	$is_list = array_values( $params ) === $params;
+	foreach ( $params as $key => $value ) {
+		if ( '' === $prefix ) {
+			$name = (string) $key;
+		} elseif ( $is_list && ! is_array( $value ) ) {
+			$name = $prefix . '[]';
+		} else {
+			$name = sprintf( '%s[%s]', $prefix, $key );
+		}
+		if ( is_array( $value ) ) {
+			hametuha_hidden_inputs( $value, $name );
+			continue;
+		}
+		// esc_attr() は既存の文字参照（&amp; など）を二重にエンコードしないため、
+		// 検索語が文字どおり「&amp;」だと送信後に「&」へ変わってしまう。常にエンコードする
+		printf(
+			'<input type="hidden" name="%s" value="%s" />',
+			htmlspecialchars( $name, ENT_QUOTES, 'UTF-8' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- 二重エンコードが必要なため
+			htmlspecialchars( (string) $value, ENT_QUOTES, 'UTF-8' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- 同上
+		);
+	}
+}
+
+/**
+ * 作品一覧（/latest/）の URL
+ *
+ * 「設定 → 表示設定」で投稿ページに指定した固定ページの URL。
+ * get_post_type_archive_link( 'post' ) は、投稿ページが未設定ならトップページを返す
+ * （get_permalink( get_option( 'page_for_posts' ) ) だと、未設定のとき表示中の投稿の URL になる）。
+ *
+ * @return string
+ */
+function hametuha_posts_page_url() {
+	return (string) get_post_type_archive_link( 'post' );
+}

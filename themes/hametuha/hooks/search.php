@@ -32,6 +32,8 @@ add_filter( 'query_vars', function ( $vars ) {
 	$vars[] = 'length'; // 長さ
 	$vars[] = 'comments'; // コメント数
 	$vars[] = 'rating'; // レーティング（星評価の平均）
+	$vars[] = 'year_from'; // 投稿年（この年から）
+	$vars[] = 'year_to'; // 投稿年（この年まで）
 	$vars[] = 'author_not_flagged'; // 指定されたフラグを持つユーザーを除外
 	$vars[] = 'author_flagged'; // 指定されたフラグを持つユーザーのみ
 	return $vars;
@@ -63,6 +65,33 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
 
 		$query->set( 'tax_query', $tax_query );
 	}
+} );
+
+/**
+ * 投稿年で絞り込み
+ *
+ * クエリパラメータ:
+ * - year_from=2015: 2015年1月1日以降
+ * - year_to=2019: 2019年12月31日まで
+ *
+ * 「コロナ禍前のSF」のように、時期で作品を探すため（#281）。
+ */
+add_action( 'pre_get_posts', function ( WP_Query $query ) {
+	$range = hametuha_queried_year_range( $query );
+	if ( ! $range['from'] && ! $range['to'] ) {
+		return;
+	}
+	// inclusive にすると、after は1月1日 0:00 以降、before は12月31日 23:59:59 まで
+	$clause = [ 'inclusive' => true ];
+	if ( $range['from'] ) {
+		$clause['after'] = [ 'year' => $range['from'] ];
+	}
+	if ( $range['to'] ) {
+		$clause['before'] = [ 'year' => $range['to'] ];
+	}
+	// 既存の日付条件があれば、ひとかたまりのまま AND でつなぐ（OR の条件や単一条件の形を壊さない）
+	$current = $query->get( 'date_query' );
+	$query->set( 'date_query', $current ? [ 'relation' => 'AND', $current, $clause ] : [ $clause ] );
 } );
 
 /**

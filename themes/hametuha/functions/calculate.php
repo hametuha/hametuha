@@ -247,3 +247,44 @@ function hametuha_get_site_stats() {
 
 	return $stats;
 }
+
+/**
+ * 投稿年で絞り込むときに選べる年
+ *
+ * 破滅派の最初の作品は2007年。新しい順に並べる。
+ *
+ * @return int[]
+ */
+function hametuha_post_years() {
+	return range( (int) current_time( 'Y' ), 2007 );
+}
+
+/**
+ * 投稿年の絞り込み（year_from・year_to）を取り出す
+ *
+ * 選べる年の外の値は無視する。開始と終了が逆なら入れ替える。
+ *
+ * @param WP_Query|null $query クエリ。省略するとメインクエリ。
+ * @return array{from:int, to:int} 指定が無い側は 0
+ */
+function hametuha_queried_year_range( $query = null ) {
+	if ( ! $query ) {
+		global $wp_query;
+		$query = $wp_query;
+	}
+	$years = hametuha_post_years();
+	$range = [];
+	foreach ( [ 'from', 'to' ] as $key ) {
+		// 「2019-12-31」などを (int) で 2019 にしないよう、4桁の数字だけを受け付ける
+		$year          = (string) $query->get( 'year_' . $key );
+		$year          = preg_match( '/\A\d{4}\z/', $year ) ? (int) $year : 0;
+		$range[ $key ] = in_array( $year, $years, true ) ? $year : 0;
+	}
+	if ( $range['from'] && $range['to'] && $range['from'] > $range['to'] ) {
+		$range = [
+			'from' => $range['to'],
+			'to'   => $range['from'],
+		];
+	}
+	return $range;
+}

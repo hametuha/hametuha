@@ -4,14 +4,16 @@
  */
 wp_enqueue_script( 'hametuha-components-post-search-helper' );
 
-$queried_object = get_queried_object();
+// URL のパスで開いているターム一覧（/keyword/sf/・/genre/essaie/ など）。それ以外は null
+$path_term = hametuha_path_term();
+$path_tag  = ( $path_term && 'post_tag' === $path_term->taxonomy ) ? $path_term->name : '';
 // カテゴリー
 $current_cat = get_query_var( 'cat' );
-// 現在していされているタグを取得
-$current_tags = hametuha_queried_tags();
-if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
-	$current_tags[] = $queried_object->name;
-}
+// 現在していされているタグを取得（$query_tags は ?t= の分だけ。タグの一覧のタグはパスにある）
+$query_tags   = hametuha_queried_tags();
+$current_tags = $path_tag ? array_merge( [ $path_tag ], $query_tags ) : $query_tags;
+// 投稿年
+$cur_years = hametuha_queried_year_range();
 // 文字の長さ
 $cur_length = isset( $_GET['length'] ) ? (array) $_GET['length'] : [];
 // 星による評価
@@ -36,11 +38,24 @@ $cur_comments = get_query_var( 'comments' );
 	// 現在のURLパラメータを取得
 	$current_params = $_GET;
 
+	// 作品一覧（「投稿ページ」に指定した固定ページ。/latest/）
+	$latest_url = hametuha_posts_page_url();
+
+	// バッジを外したときの行き先。タグ・ジャンルなどの一覧では、その一覧にとどまる（#538）。
+	// その一覧のタグ・ジャンル自体を外すときだけ、一覧を出て /latest/ に行く（ほかの条件は引き継ぐ）
+	$filter_base = $path_term ? get_term_link( $path_term ) : '';
+	if ( ! $filter_base || is_wp_error( $filter_base ) ) {
+		$filter_base = $latest_url;
+	}
+	$filter_url = function ( array $params, $leave_archive = false ) use ( $filter_base, $latest_url ) {
+		return add_query_arg( $params, $leave_archive ? $latest_url : $filter_base );
+	};
+
 	// キーワード検索
 	if ( ! empty( $search_keyword ) ) {
 		$params_without_s = $current_params;
 		unset( $params_without_s['s'] );
-		$url              = add_query_arg( $params_without_s, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_s );
 		$active_filters[] = [
 			'label' => sprintf( 'キーワード: %s', esc_html( $search_keyword ) ),
 			'url'   => $url,
@@ -52,7 +67,7 @@ $cur_comments = get_query_var( 'comments' );
 		$category           = get_category( $current_cat );
 		$params_without_cat = $current_params;
 		unset( $params_without_cat['cat'] );
-		$url              = add_query_arg( $params_without_cat, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_cat, $path_term && 'category' === $path_term->taxonomy );
 		$active_filters[] = [
 			'label' => sprintf( 'ジャンル: %s', esc_html( $category->name ) ),
 			'url'   => $url,
@@ -60,17 +75,38 @@ $cur_comments = get_query_var( 'comments' );
 	}
 
 	// タグ
-	foreach ( $current_tags as $tag_name ) {
-		$params_without_tag      = $current_params;
-		$remaining_tags          = array_diff( $current_tags, [ $tag_name ] );
-		$params_without_tag['t'] = $remaining_tags;
-		if ( empty( $remaining_tags ) ) {
-			unset( $params_without_tag['t'] );
+	// パスのタグ（一覧そのもの）を外すと一覧を出て、?t= はそのまま引き継ぐ
+	if ( $path_tag ) {
+		$active_filters[] = [
+			'label' => sprintf( 'タグ: %s', esc_html( $path_tag ) ),
+			'url'   => $filter_url( $current_params, true ),
+		];
+	}
+	// ?t= のタグは、その1つだけを外して一覧にとどまる（パスのタグと同名でも別に扱う）
+	foreach ( $query_tags as $tag_name ) {
+		$params_without_tag = $current_params;
+		$remaining_tags     = array_values( array_diff( $query_tags, [ $tag_name ] ) );
+		unset( $params_without_tag['t'] );
+		if ( $remaining_tags ) {
+			$params_without_tag['t'] = $remaining_tags;
 		}
-		$url              = add_query_arg( $params_without_tag, home_url( 'latest' ) );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
-			'url'   => $url,
+			'url'   => $filter_url( $params_without_tag ),
+		];
+	}
+
+	// 投稿年
+	if ( $cur_years['from'] || $cur_years['to'] ) {
+		$params_without_years = $current_params;
+		unset( $params_without_years['year_from'], $params_without_years['year_to'] );
+		$active_filters[] = [
+			'label' => sprintf(
+				'投稿年: %s〜%s',
+				$cur_years['from'] ? $cur_years['from'] . '年' : '',
+				$cur_years['to'] ? $cur_years['to'] . '年' : ''
+			),
+			'url'   => $filter_url( $params_without_years ),
 		];
 	}
 
@@ -85,7 +121,7 @@ $cur_comments = get_query_var( 'comments' );
 				if ( empty( $remaining_length ) ) {
 					unset( $params_without_length['length'] );
 				}
-				$url              = add_query_arg( $params_without_length, home_url( 'latest' ) );
+				$url              = $filter_url( $params_without_length );
 				$active_filters[] = [
 					'label' => sprintf( '文字数: %s', esc_html( $length_categories[ $length_key ]['label'] ) ),
 					'url'   => $url,
@@ -104,7 +140,7 @@ $cur_comments = get_query_var( 'comments' );
 		];
 		$params_without_rating = $current_params;
 		unset( $params_without_rating['rating'] );
-		$url              = add_query_arg( $params_without_rating, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_rating );
 		$active_filters[] = [
 			'label' => sprintf( '評価: %s', isset( $rating_labels[ $cur_rating ] ) ? $rating_labels[ $cur_rating ] : $cur_rating ),
 			'url'   => $url,
@@ -120,7 +156,7 @@ $cur_comments = get_query_var( 'comments' );
 			if ( empty( $remaining_reviews ) ) {
 				unset( $params_without_review['reaction'] );
 			}
-			$url              = add_query_arg( $params_without_review, home_url( 'latest' ) );
+			$url              = $filter_url( $params_without_review );
 			$active_filters[] = [
 				'label' => sprintf( '感想: %s', esc_html( $review_tag ) ),
 				'url'   => $url,
@@ -140,7 +176,7 @@ $cur_comments = get_query_var( 'comments' );
 		}
 		$params_without_comments = $current_params;
 		unset( $params_without_comments['comments'] );
-		$url              = add_query_arg( $params_without_comments, home_url( 'latest' ) );
+		$url              = $filter_url( $params_without_comments );
 		$active_filters[] = [
 			'label' => sprintf( 'コメント数: %s', esc_html( $comment_label ? $comment_label : $cur_comments . '件以上' ) ),
 			'url'   => $url,
@@ -159,7 +195,7 @@ $cur_comments = get_query_var( 'comments' );
 			<?php endforeach; ?>
 		</div>
 
-		<a class="btn btn-sm btn-secondary" id="clear-all-filters" href="<?php echo home_url( 'latest' ); ?>">
+		<a class="btn btn-sm btn-secondary" id="clear-all-filters" href="<?php echo esc_url( $latest_url ); ?>">
 			<?php esc_html_e( 'すべてクリア', 'hametuha' ); ?>
 		</a>
 	</div>
@@ -171,7 +207,11 @@ $cur_comments = get_query_var( 'comments' );
 
 			<h2 class="post-search__title h5 mb-3">作品検索</h2>
 
-			<form method="get" action="<?php echo home_url( '/latest/' ); ?>" id="post-filter-form">
+			<form method="get" action="<?php echo esc_url( $latest_url ); ?>" id="post-filter-form">
+				<?php
+				// 条件を変えても、今の並び順（タブで選んだもの）を引き継ぐ
+				hametuha_hidden_inputs( array_intersect_key( wp_unslash( $_GET ), array_flip( [ 'order', 'orderby' ] ) ) );
+				?>
 
 				<!-- おすすめタグ -->
 				<?php
@@ -221,7 +261,7 @@ $cur_comments = get_query_var( 'comments' );
 									<input class="form-check-input" type="radio" name="genre"
 										value="" id="genre-all"
 										<?php checked( '', $current_cat ); ?>
-										data-action="<?php echo esc_url( home_url( 'latest' ) ); ?>">
+										data-action="<?php echo esc_url( $latest_url ); ?>">
 									<label class="form-check-label" for="genre-all"><?php esc_html_e( 'すべてのジャンル', 'hametuha' ); ?></label>
 								</div>
 								<?php
@@ -288,6 +328,42 @@ $cur_comments = get_query_var( 'comments' );
 						</div>
 					</div>
 
+					<!-- 投稿年 -->
+					<?php $has_years = $cur_years['from'] || $cur_years['to']; ?>
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button<?php echo $has_years ? '' : ' collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#yearFilter" aria-expanded="<?php echo $has_years ? 'true' : 'false'; ?>" aria-controls="yearFilter">
+								投稿年
+							</button>
+						</h3>
+						<div id="yearFilter" class="accordion-collapse<?php echo $has_years ? '' : ' collapse'; ?>">
+							<div class="accordion-body">
+								<div class="d-flex align-items-center gap-2">
+									<?php
+									foreach ( [
+										'from' => '開始年',
+										'to'   => '終了年',
+									] as $year_key => $year_label ) :
+										if ( 'to' === $year_key ) {
+											echo '<span>〜</span>';
+										}
+										?>
+										<label class="visually-hidden" for="year-<?php echo esc_attr( $year_key ); ?>"><?php echo esc_html( $year_label ); ?></label>
+										<select class="form-select form-select-sm" name="year_<?php echo esc_attr( $year_key ); ?>" id="year-<?php echo esc_attr( $year_key ); ?>">
+											<option value=""<?php selected( 0, $cur_years[ $year_key ] ); ?>>指定なし</option>
+											<?php foreach ( hametuha_post_years() as $year ) : ?>
+												<option value="<?php echo esc_attr( $year ); ?>"<?php selected( $year, $cur_years[ $year_key ] ); ?>><?php echo esc_html( $year ); ?>年</option>
+											<?php endforeach; ?>
+										</select>
+									<?php endforeach; ?>
+								</div>
+								<small class="form-text text-muted">
+									<?php esc_html_e( '片方だけでも指定できます（例・2019年まで）', 'hametuha' ); ?>
+								</small>
+							</div>
+						</div>
+					</div>
+
 					<!-- 長さ -->
 					<div class="accordion-item">
 						<h3 class="accordion-header">
@@ -322,7 +398,7 @@ $cur_comments = get_query_var( 'comments' );
 									<?php
 									printf(
 										wp_kses_post( __( '長編は<a href="%1$s">%2$s</a>からお探しください', 'hametuha' ) ),
-										esc_url( get_post_type_archive_link( 'serires' ) ),
+										esc_url( get_post_type_archive_link( 'series' ) ),
 										esc_html( get_post_type_object( 'series' )->label )
 									);
 									?>

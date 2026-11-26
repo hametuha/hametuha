@@ -294,7 +294,7 @@ add_action( 'wp_head', function () {
 		}
 		$url = home_url( trailingslashit( explode( '?', $_SERVER['REQUEST_URI'] )[0] ) );
 	} elseif ( is_home() ) {
-		$url  = get_permalink( get_option( 'page_for_posts' ) );
+		$url  = hametuha_posts_page_url();
 		$desc = '破滅派の新着投稿一覧です。';
 	} else {
 		$url = home_url( trailingslashit( explode( '?', $_SERVER['REQUEST_URI'] )[0] ) );
@@ -403,7 +403,7 @@ add_action( 'wp_head', function () {
 	} elseif ( is_author() ) {
 		$url = get_author_posts_url( get_queried_object_id() );
 	} elseif ( is_home() ) {
-		$url = get_permalink( get_option( 'page_for_posts' ) );
+		$url = hametuha_posts_page_url();
 	}
 	if ( ! $url || is_wp_error( $url ) ) {
 		return;
