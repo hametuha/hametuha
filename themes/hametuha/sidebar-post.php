@@ -4,15 +4,14 @@
  */
 wp_enqueue_script( 'hametuha-components-post-search-helper' );
 
-$queried_object = get_queried_object();
+// URL のパスで開いているターム一覧（/keyword/sf/・/genre/essaie/ など）。それ以外は null
+$path_term = hametuha_path_term();
+$path_tag  = ( $path_term && 'post_tag' === $path_term->taxonomy ) ? $path_term->name : '';
 // カテゴリー
 $current_cat = get_query_var( 'cat' );
 // 現在していされているタグを取得（$query_tags は ?t= の分だけ。タグの一覧のタグはパスにある）
 $query_tags   = hametuha_queried_tags();
-$current_tags = $query_tags;
-if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
-	$current_tags[] = $queried_object->name;
-}
+$current_tags = $path_tag ? array_merge( [ $path_tag ], $query_tags ) : $query_tags;
 // 投稿年
 $cur_years = hametuha_queried_year_range();
 // 文字の長さ
@@ -44,7 +43,7 @@ $cur_comments = get_query_var( 'comments' );
 
 	// バッジを外したときの行き先。タグ・ジャンルなどの一覧では、その一覧にとどまる（#538）。
 	// その一覧のタグ・ジャンル自体を外すときだけ、一覧を出て /latest/ に行く（ほかの条件は引き継ぐ）
-	$filter_base = ( is_category() || is_tag() || is_tax() ) ? get_term_link( $queried_object ) : '';
+	$filter_base = $path_term ? get_term_link( $path_term ) : '';
 	if ( ! $filter_base || is_wp_error( $filter_base ) ) {
 		$filter_base = $latest_url;
 	}
@@ -68,7 +67,7 @@ $cur_comments = get_query_var( 'comments' );
 		$category           = get_category( $current_cat );
 		$params_without_cat = $current_params;
 		unset( $params_without_cat['cat'] );
-		$url              = $filter_url( $params_without_cat, is_category() );
+		$url              = $filter_url( $params_without_cat, $path_term && 'category' === $path_term->taxonomy );
 		$active_filters[] = [
 			'label' => sprintf( 'ジャンル: %s', esc_html( $category->name ) ),
 			'url'   => $url,
@@ -76,17 +75,24 @@ $cur_comments = get_query_var( 'comments' );
 	}
 
 	// タグ
-	foreach ( $current_tags as $tag_name ) {
-		$params_without_tag      = $current_params;
-		$remaining_tags          = array_diff( $query_tags, [ $tag_name ] );
-		$params_without_tag['t'] = $remaining_tags;
-		if ( empty( $remaining_tags ) ) {
-			unset( $params_without_tag['t'] );
+	// パスのタグ（一覧そのもの）を外すと一覧を出て、?t= はそのまま引き継ぐ
+	if ( $path_tag ) {
+		$active_filters[] = [
+			'label' => sprintf( 'タグ: %s', esc_html( $path_tag ) ),
+			'url'   => $filter_url( $current_params, true ),
+		];
+	}
+	// ?t= のタグは、その1つだけを外して一覧にとどまる（パスのタグと同名でも別に扱う）
+	foreach ( $query_tags as $tag_name ) {
+		$params_without_tag = $current_params;
+		$remaining_tags     = array_values( array_diff( $query_tags, [ $tag_name ] ) );
+		unset( $params_without_tag['t'] );
+		if ( $remaining_tags ) {
+			$params_without_tag['t'] = $remaining_tags;
 		}
-		$url              = $filter_url( $params_without_tag, is_tag() && $tag_name === $queried_object->name );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
-			'url'   => $url,
+			'url'   => $filter_url( $params_without_tag ),
 		];
 	}
 
