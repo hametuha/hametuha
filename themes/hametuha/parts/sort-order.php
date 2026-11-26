@@ -53,7 +53,8 @@ unset( $keep['order'], $keep['orderby'], $keep['paged'] );
 $tabs = [
 	'date' => '新着順',
 ];
-if ( is_tag() || is_category() || is_home() || ( is_search() && ! get_query_var( 'post_type' ) ) ) {
+// 検索は hooks/search.php が post_type=post を入れるので、post も作品の検索として扱う
+if ( is_tag() || is_category() || is_home() || ( is_search() && in_array( get_query_var( 'post_type' ), [ '', 'post' ], true ) ) ) {
 	$tabs['popular'] = '人気';
 }
 ?>
