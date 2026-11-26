@@ -39,7 +39,7 @@ $cur_comments = get_query_var( 'comments' );
 	$current_params = $_GET;
 
 	// 作品一覧（「投稿ページ」に指定した固定ページ。/latest/）
-	$latest_url = get_post_type_archive_link( 'post' );
+	$latest_url = hametuha_posts_page_url();
 
 	// バッジを外したときの行き先。タグ・ジャンルなどの一覧では、その一覧にとどまる（#538）。
 	// その一覧のタグ・ジャンル自体を外すときだけ、一覧を出て /latest/ に行く（ほかの条件は引き継ぐ）

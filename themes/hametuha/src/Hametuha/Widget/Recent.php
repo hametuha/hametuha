@@ -50,7 +50,7 @@ class Recent extends Widget {
 			}
 			wp_reset_postdata();
 			$out .= '</ul>';
-			$link = 'post' === $post_type ? home_url( '/latest/' ) : get_post_type_archive_link( $post_type );
+			$link = 'post' === $post_type ? hametuha_posts_page_url() : get_post_type_archive_link( $post_type );
 			$out .= '<p class="right"><a class="btn btn-sm btn-default btn-block" href="' . $link . '">一覧</a></p>';
 
 			return $out;

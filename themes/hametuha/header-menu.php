@@ -55,7 +55,7 @@ ob_start();
 
 			<li class="nav-item">
 				<div class="nav-link-group d-flex justify-content-between align-items-center">
-					<a class="nav-link flex-grow-1" href="<?php echo get_permalink( get_option( 'page_for_posts' ) ); ?>">
+					<a class="nav-link flex-grow-1" href="<?php echo esc_url( hametuha_posts_page_url() ); ?>">
 						すべての作品
 					</a>
 					<button class="btn btn-sm btn-link nav-toggle" data-bs-toggle="collapse" data-bs-target="#worksSubmenu" aria-expanded="false">
