@@ -73,6 +73,9 @@ Thumbs.db
 .envrc.local
 .mcp.json
 
+# Playwright MCP の作業ファイル（コンソールログ・ページのスナップショット）
+.playwright-mcp/
+
 # Composer auth
 auth.json
 
