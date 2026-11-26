@@ -12,6 +12,8 @@ $current_tags = hametuha_queried_tags();
 if ( is_a( $queried_object, 'WP_Term' ) && 'post_tag' === $queried_object->taxonomy ) {
 	$current_tags[] = $queried_object->name;
 }
+// 投稿年
+$cur_years = hametuha_queried_year_range();
 // 文字の長さ
 $cur_length = isset( $_GET['length'] ) ? (array) $_GET['length'] : [];
 // 星による評価
@@ -71,6 +73,20 @@ $cur_comments = get_query_var( 'comments' );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
 			'url'   => $url,
+		];
+	}
+
+	// 投稿年
+	if ( $cur_years['from'] || $cur_years['to'] ) {
+		$params_without_years = $current_params;
+		unset( $params_without_years['year_from'], $params_without_years['year_to'] );
+		$active_filters[] = [
+			'label' => sprintf(
+				'投稿年: %s〜%s',
+				$cur_years['from'] ? $cur_years['from'] . '年' : '',
+				$cur_years['to'] ? $cur_years['to'] . '年' : ''
+			),
+			'url'   => add_query_arg( $params_without_years, home_url( 'latest' ) ),
 		];
 	}
 
@@ -288,6 +304,42 @@ $cur_comments = get_query_var( 'comments' );
 									<?php
 								endforeach;
 								?>
+							</div>
+						</div>
+					</div>
+
+					<!-- 投稿年 -->
+					<?php $has_years = $cur_years['from'] || $cur_years['to']; ?>
+					<div class="accordion-item">
+						<h3 class="accordion-header">
+							<button class="accordion-button<?php echo $has_years ? '' : ' collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#yearFilter" aria-expanded="<?php echo $has_years ? 'true' : 'false'; ?>" aria-controls="yearFilter">
+								投稿年
+							</button>
+						</h3>
+						<div id="yearFilter" class="accordion-collapse<?php echo $has_years ? '' : ' collapse'; ?>">
+							<div class="accordion-body">
+								<div class="d-flex align-items-center gap-2">
+									<?php
+									foreach ( [
+										'from' => '開始年',
+										'to'   => '終了年',
+									] as $year_key => $year_label ) :
+										if ( 'to' === $year_key ) {
+											echo '<span>〜</span>';
+										}
+										?>
+										<label class="visually-hidden" for="year-<?php echo esc_attr( $year_key ); ?>"><?php echo esc_html( $year_label ); ?></label>
+										<select class="form-select form-select-sm" name="year_<?php echo esc_attr( $year_key ); ?>" id="year-<?php echo esc_attr( $year_key ); ?>">
+											<option value=""<?php selected( 0, $cur_years[ $year_key ] ); ?>>指定なし</option>
+											<?php foreach ( hametuha_post_years() as $year ) : ?>
+												<option value="<?php echo esc_attr( $year ); ?>"<?php selected( $year, $cur_years[ $year_key ] ); ?>><?php echo esc_html( $year ); ?>年</option>
+											<?php endforeach; ?>
+										</select>
+									<?php endforeach; ?>
+								</div>
+								<small class="form-text text-muted">
+									<?php esc_html_e( '片方だけでも指定できます（例・2019年まで）', 'hametuha' ); ?>
+								</small>
 							</div>
 						</div>
 					</div>
