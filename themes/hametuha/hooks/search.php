@@ -34,6 +34,7 @@ add_filter( 'query_vars', function ( $vars ) {
 	$vars[] = 'rating'; // レーティング（星評価の平均）
 	$vars[] = 'year_from'; // 投稿年（この年から）
 	$vars[] = 'year_to'; // 投稿年（この年まで）
+	$vars[] = 'qualified'; // 認定（複数指定はOR）
 	$vars[] = 'author_not_flagged'; // 指定されたフラグを持つユーザーを除外
 	$vars[] = 'author_flagged'; // 指定されたフラグを持つユーザーのみ
 	return $vars;
@@ -92,6 +93,30 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
 	// 既存の日付条件があれば、ひとかたまりのまま AND でつなぐ（OR の条件や単一条件の形を壊さない）
 	$current = $query->get( 'date_query' );
 	$query->set( 'date_query', $current ? [ 'relation' => 'AND', $current, $clause ] : [ $clause ] );
+} );
+
+/**
+ * 認定で絞り込み
+ *
+ * クエリパラメータ:
+ * - qualified[]=joint-review-winner&qualified[]=...: いずれかの認定が付いた作品（OR）
+ *
+ * ?qualification= はタクソノミーの一覧（is_tax）になってしまうので、別の名前で受ける。
+ */
+add_action( 'pre_get_posts', function ( WP_Query $query ) {
+	if ( empty( $query->get( 'qualified' ) ) ) {
+		return;
+	}
+	$terms = hametuha_queried_qualifications( $query );
+	// 存在しない認定だけが指定されたら、何もヒットさせない（条件を黙って捨てない）
+	$tax_query   = $query->get( 'tax_query' ) ?: [];
+	$tax_query[] = [
+		'taxonomy' => 'qualification',
+		'field'    => 'term_id',
+		'terms'    => $terms ? wp_list_pluck( $terms, 'term_id' ) : [ 0 ],
+		'operator' => 'IN',
+	];
+	$query->set( 'tax_query', $tax_query );
 } );
 
 /**

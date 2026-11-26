@@ -154,6 +154,43 @@ function hametuha_queried_tags( $query = null ) {
 }
 
 /**
+ * 絞り込みに指定された認定（qualification のスラッグ）を返す
+ *
+ * ?qualified[]=joint-review-winner の形。カンマ区切りも受ける。存在しない認定は捨てる。
+ *
+ * @param WP_Query|null $query 指定しない場合はメインクエリ
+ * @return WP_Term[]
+ */
+function hametuha_queried_qualifications( $query = null ) {
+	if ( is_null( $query ) ) {
+		global $wp_query;
+		$query = $wp_query;
+	}
+	$values = $query->get( 'qualified' );
+	if ( empty( $values ) ) {
+		return [];
+	}
+	$slugs = [];
+	foreach ( (array) $values as $value ) {
+		foreach ( explode( ',', (string) $value ) as $slug ) {
+			$slug = sanitize_title( $slug );
+			if ( $slug ) {
+				$slugs[] = $slug;
+			}
+		}
+	}
+	if ( ! $slugs ) {
+		return [];
+	}
+	$terms = get_terms( [
+		'taxonomy'   => 'qualification',
+		'slug'       => array_values( array_unique( $slugs ) ),
+		'hide_empty' => false,
+	] );
+	return is_wp_error( $terms ) ? [] : $terms;
+}
+
+/**
  * Get tags from recent posts with minimum total count
  *
  * @param int $recent_days 最近の投稿の日数（デフォルト30日）

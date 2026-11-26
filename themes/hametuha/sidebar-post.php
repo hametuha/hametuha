@@ -12,6 +12,10 @@ $current_cat = get_query_var( 'cat' );
 // 現在していされているタグを取得（$query_tags は ?t= の分だけ。タグの一覧のタグはパスにある）
 $query_tags   = hametuha_queried_tags();
 $current_tags = $path_tag ? array_merge( [ $path_tag ], $query_tags ) : $query_tags;
+// 認定（パスの /qualification/xxx/ と ?qualified[]= の両方）
+$path_qualification   = ( $path_term && 'qualification' === $path_term->taxonomy ) ? $path_term : null;
+$query_qualifications = hametuha_queried_qualifications();
+$cur_qualifications   = array_merge( $path_qualification ? [ $path_qualification->term_id ] : [], wp_list_pluck( $query_qualifications, 'term_id' ) );
 // 投稿年
 $cur_years = hametuha_queried_year_range();
 // 文字の長さ
@@ -93,6 +97,27 @@ $cur_comments = get_query_var( 'comments' );
 		$active_filters[] = [
 			'label' => sprintf( 'タグ: %s', esc_html( $tag_name ) ),
 			'url'   => $filter_url( $params_without_tag ),
+		];
+	}
+
+	// 認定
+	// パスの認定（一覧そのもの）を外すと一覧を出る。?qualified[]= は1つずつ外す
+	if ( $path_qualification ) {
+		$active_filters[] = [
+			'label' => sprintf( '認定: %s', $path_qualification->name ),
+			'url'   => $filter_url( $current_params, true ),
+		];
+	}
+	foreach ( $query_qualifications as $qualification ) {
+		$params_without_qualification = $current_params;
+		$remaining_qualifications     = array_values( array_diff( wp_list_pluck( $query_qualifications, 'slug' ), [ $qualification->slug ] ) );
+		unset( $params_without_qualification['qualified'] );
+		if ( $remaining_qualifications ) {
+			$params_without_qualification['qualified'] = $remaining_qualifications;
+		}
+		$active_filters[] = [
+			'label' => sprintf( '認定: %s', $qualification->name ),
+			'url'   => $filter_url( $params_without_qualification ),
 		];
 	}
 
@@ -327,6 +352,46 @@ $cur_comments = get_query_var( 'comments' );
 							</div>
 						</div>
 					</div>
+
+					<!-- 認定 -->
+					<?php
+					// 作品のある認定だけ出す。ただし選択中のものは0件でも残す（再送信で黙って外れないように）
+					$qualifications = get_terms( [
+						'taxonomy'   => 'qualification',
+						'hide_empty' => false,
+					] );
+					$qualifications = is_wp_error( $qualifications ) ? [] : array_filter( $qualifications, function ( $qualification ) use ( $cur_qualifications ) {
+						return $qualification->count > 0 || in_array( $qualification->term_id, $cur_qualifications, true );
+					} );
+					if ( $qualifications ) :
+						$has_qualifications = ! empty( $cur_qualifications );
+						?>
+						<div class="accordion-item">
+							<h3 class="accordion-header">
+								<button class="accordion-button<?php echo $has_qualifications ? '' : ' collapsed'; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#qualificationFilter" aria-expanded="<?php echo $has_qualifications ? 'true' : 'false'; ?>" aria-controls="qualificationFilter">
+									認定
+								</button>
+							</h3>
+							<div id="qualificationFilter" class="accordion-collapse<?php echo $has_qualifications ? '' : ' collapse'; ?>">
+								<div class="accordion-body">
+									<?php foreach ( $qualifications as $qualification ) : ?>
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox"
+												name="qualified[]" value="<?php echo esc_attr( $qualification->slug ); ?>"
+												<?php checked( in_array( $qualification->term_id, $cur_qualifications, true ) ); ?>
+												id="qualification-<?php echo esc_attr( $qualification->term_id ); ?>">
+											<label class="form-check-label" for="qualification-<?php echo esc_attr( $qualification->term_id ); ?>">
+												<?php echo esc_html( $qualification->name ); ?>
+											</label>
+										</div>
+									<?php endforeach; ?>
+									<small class="form-text text-muted">
+										<?php esc_html_e( '複数選ぶと、いずれかの認定がある作品（OR条件）', 'hametuha' ); ?>
+									</small>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 
 					<!-- 投稿年 -->
 					<?php $has_years = $cur_years['from'] || $cur_years['to']; ?>
