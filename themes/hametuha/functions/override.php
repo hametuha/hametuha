@@ -66,8 +66,11 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 	if ( $orderby = $wp_query->get( 'orderby' ) ) {
 		switch ( $orderby ) {
 			case 'popular':
-				$wp_query->set( 'orderby', 'meta_value_num' );
-				$wp_query->set( 'meta_key', '_current_pv' );
+				// meta_key で並べると、PV がまだ集計されていない（公開直後の）作品が結果から消える。
+				// JOIN と ORDER BY は posts_clauses で自前で足す（下）。
+				// meta_query の OR + NOT EXISTS でも書けるが、PV の無い投稿が別のメタの行と結合され、その値で並んでしまう
+				$wp_query->set( 'hametuha_popular', ( 'ASC' === strtoupper( (string) $wp_query->get( 'order' ) ) ) ? 'ASC' : 'DESC' );
+				$wp_query->set( 'orderby', 'date' );
 				break;
 			case 'social':
 				$wp_query->set( 'orderby', 'meta_value_num' );
@@ -79,6 +82,22 @@ add_action( 'pre_get_posts', function ( WP_Query &$wp_query ) {
 		}
 	}
 } );
+
+/**
+ * 人気順（orderby=popular）の並び替え
+ *
+ * PV（_current_pv）の無い作品も残し、0 として並べる。同じ PV なら新しい順。
+ */
+add_filter( 'posts_clauses', function ( $clauses, WP_Query $wp_query ) {
+	$order = $wp_query->get( 'hametuha_popular' );
+	if ( ! in_array( $order, [ 'ASC', 'DESC' ], true ) ) {
+		return $clauses;
+	}
+	global $wpdb;
+	$clauses['join']   .= " LEFT JOIN {$wpdb->postmeta} AS hametuha_pv ON hametuha_pv.post_id = {$wpdb->posts}.ID AND hametuha_pv.meta_key = '_current_pv'";
+	$clauses['orderby'] = "COALESCE( CAST( hametuha_pv.meta_value AS SIGNED ), 0 ) {$order}, {$wpdb->posts}.post_date DESC";
+	return $clauses;
+}, 10, 2 );
 
 /**
  * Theme My Loginにno cache headersを吐かせる

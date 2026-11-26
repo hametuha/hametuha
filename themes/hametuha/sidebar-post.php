@@ -172,6 +172,10 @@ $cur_comments = get_query_var( 'comments' );
 			<h2 class="post-search__title h5 mb-3">作品検索</h2>
 
 			<form method="get" action="<?php echo home_url( '/latest/' ); ?>" id="post-filter-form">
+				<?php
+				// 条件を変えても、今の並び順（タブで選んだもの）を引き継ぐ
+				hametuha_hidden_inputs( array_intersect_key( wp_unslash( $_GET ), array_flip( [ 'order', 'orderby' ] ) ) );
+				?>
 
 				<!-- おすすめタグ -->
 				<?php
@@ -322,7 +326,7 @@ $cur_comments = get_query_var( 'comments' );
 									<?php
 									printf(
 										wp_kses_post( __( '長編は<a href="%1$s">%2$s</a>からお探しください', 'hametuha' ) ),
-										esc_url( get_post_type_archive_link( 'serires' ) ),
+										esc_url( get_post_type_archive_link( 'series' ) ),
 										esc_html( get_post_type_object( 'series' )->label )
 									);
 									?>
