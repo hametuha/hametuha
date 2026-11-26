@@ -18,7 +18,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          ref: release
+          # ブランチではなくリリースのタグを取る。ビルドまでに release が進むと、
+          # 入れた Version（タグ）と中身がずれ、改ざん検知（タグのファイルと比べる）が誤検知する
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
@@ -60,11 +62,25 @@ jobs:
         run: tar --exclude=./node_modules -czf "$RUNNER_TEMP/theme.tar.gz" .
         working-directory: themes/hametuha
 
+      # テーマの外にある、本番の wp-content に置くファイル（mu-plugins と drop-in）。
+      # hametuha-infra の改ざん検知が、このリリースのタグの同じファイルと本番を比べる（hametuha/hametuha-infra#62）。
+      # 置くファイルを増やしたら、改ざん検知（hametuha-integrity スタックの SiteFiles）にも足す。
+      # mu-plugins の hametuha-config.php と hametuha-opcache-admin.php はローカル環境専用なので置かない
+      - name: Pack the site files for deployment
+        run: >-
+          tar -czf "$RUNNER_TEMP/site.tar.gz"
+          mu-plugins/hametuha-slow-log.php
+          mu-plugins/hametuha-vrt-trigger.php
+          db-error.php
+          maintenance.php
+
       - name: Upload the theme
         uses: actions/upload-artifact@v4
         with:
           name: theme
-          path: ${{ runner.temp }}/theme.tar.gz
+          path: |
+            ${{ runner.temp }}/theme.tar.gz
+            ${{ runner.temp }}/site.tar.gz
           retention-days: 7
 
       - name: Create distribution zip
@@ -108,6 +124,8 @@ jobs:
         run: |
           mkdir -p themes/hametuha
           tar -xzf "$RUNNER_TEMP/theme.tar.gz" -C themes/hametuha
+          mkdir -p site
+          tar -xzf "$RUNNER_TEMP/site.tar.gz" -C site
 
       - name: Check session-manager-plugin
         run: session-manager-plugin --version
@@ -149,6 +167,24 @@ jobs:
           --checksum -rlpDv --delete --itemize-changes --exclude-from=.distignore
           ./ "production:${{ vars.DEPLOY_PATH }}"
         working-directory: themes/hametuha
+
+      # 置くだけで、本番にしかないものは消さない（--delete しない）。
+      # 本番にだけある mu-plugin や drop-in は、hametuha-infra の改ざん検知が「知らないファイル」として通知する
+      - name: Deploy the site files to Production
+        env:
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+        run: |
+          wp_content="${DEPLOY_PATH%/themes/*}"
+          # DEPLOY_PATH が .../wp-content/themes/<テーマ> の形でなければ、置き場所を誤るので止める
+          case "$wp_content" in
+            "$DEPLOY_PATH" | "" ) echo "::error::DEPLOY_PATH has no /themes/: $DEPLOY_PATH"; exit 1 ;;
+            */wp-content) ;;
+            *) echo "::error::unexpected wp-content path: $wp_content"; exit 1 ;;
+          esac
+          opts=(--log-file="$GITHUB_WORKSPACE/rsync.log" --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --itemize-changes)
+          rsync "${opts[@]}" mu-plugins/ "production:$wp_content/mu-plugins/"
+          rsync "${opts[@]}" db-error.php maintenance.php "production:$wp_content/"
+        working-directory: site
 
       - name: Upload rsync log
         if: always()
