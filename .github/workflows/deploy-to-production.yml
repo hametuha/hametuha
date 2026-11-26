@@ -18,7 +18,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          ref: release
+          # ブランチではなくリリースのタグを取る。ビルドまでに release が進むと、
+          # 入れた Version（タグ）と中身がずれ、改ざん検知（タグのファイルと比べる）が誤検知する
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Setup PHP with composer
         uses: shivammathur/setup-php@v2
