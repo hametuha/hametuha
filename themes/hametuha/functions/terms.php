@@ -220,3 +220,33 @@ function hametuha_get_popular_recent_tags( $recent_days = 30, $min_count = 10, $
 
 	return $tags;
 }
+
+/**
+ * URL のパスで開いているターム一覧のターム（/keyword/sf/ の SF など）
+ *
+ * get_queried_object() や is_tag() は使わない。?t= や ?tag= の絞り込みでも変わり、
+ * /keyword/sf/?t=ミステリー がミステリーの一覧、/?s=愛&tag=sf がタグの一覧と判定されるため（#538）。
+ * リライトで URL のパスから取り出したクエリ変数だけを見る。
+ *
+ * @return WP_Term|null
+ */
+function hametuha_path_term() {
+	global $wp;
+	if ( empty( $wp->matched_rule ) ) {
+		return null;
+	}
+	foreach ( get_taxonomies( [ 'public' => true ], 'objects' ) as $taxonomy ) {
+		$var = $taxonomy->query_var;
+		// クエリ文字列で来たものはパスではない
+		if ( ! $var || empty( $wp->query_vars[ $var ] ) || isset( $_GET[ $var ] ) ) {
+			continue;
+		}
+		// 階層のあるジャンルは parent/child の形で来る
+		$slugs = explode( '/', trim( (string) $wp->query_vars[ $var ], '/' ) );
+		$term  = get_term_by( 'slug', end( $slugs ), $taxonomy->name );
+		if ( $term ) {
+			return $term;
+		}
+	}
+	return null;
+}
