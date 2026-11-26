@@ -168,15 +168,21 @@ jobs:
           ./ "production:${{ vars.DEPLOY_PATH }}"
         working-directory: themes/hametuha
 
-      # mu-plugins は --delete で、リポジトリに無いものを本番から消す（置き場所をデプロイだけにする）。
-      # wp-content 直下は --delete しない（object-cache.php、uploads などがある）
+      # 置くだけで、本番にしかないものは消さない（--delete しない）。
+      # 本番にだけある mu-plugin や drop-in は、hametuha-infra の改ざん検知が「知らないファイル」として通知する
       - name: Deploy the site files to Production
         env:
           DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
         run: |
           wp_content="${DEPLOY_PATH%/themes/*}"
+          # DEPLOY_PATH が .../wp-content/themes/<テーマ> の形でなければ、置き場所を誤るので止める
+          case "$wp_content" in
+            "$DEPLOY_PATH" | "" ) echo "::error::DEPLOY_PATH has no /themes/: $DEPLOY_PATH"; exit 1 ;;
+            */wp-content) ;;
+            *) echo "::error::unexpected wp-content path: $wp_content"; exit 1 ;;
+          esac
           opts=(--log-file="$GITHUB_WORKSPACE/rsync.log" --log-file-format="%o (%U %B) %l %b %f" --checksum -rlpDv --itemize-changes)
-          rsync "${opts[@]}" --delete mu-plugins/ "production:$wp_content/mu-plugins/"
+          rsync "${opts[@]}" mu-plugins/ "production:$wp_content/mu-plugins/"
           rsync "${opts[@]}" db-error.php maintenance.php "production:$wp_content/"
         working-directory: site
 
