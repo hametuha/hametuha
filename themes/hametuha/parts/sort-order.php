@@ -11,23 +11,36 @@ list( $uri ) = explode( '?', $_SERVER['REQUEST_URI'] );
 
 $base = preg_replace( '#/page/[0-9]+/?#', '/', $uri );
 
+// キーワード検索は、orderby が空だと WP_Query が関連度順（タイトルに含むものが先）にする。
+// そのときは「関連度順」を既定のタブにし、新着順は投稿日を明示する
+$relevance = is_search() && '' !== (string) get_query_var( 's' );
+
 $order   = get_query_var( 'order' );
 $order   = ( 'asc' === strtolower( $order ) ) ? 'asc' : 'desc';
-$orderby = filter_input( INPUT_GET, 'orderby' ) ?: 'date';
+$orderby = filter_input( INPUT_GET, 'orderby' ) ?: ( $relevance ? 'relevance' : 'date' );
+if ( ! $relevance && 'relevance' === $orderby ) {
+	$orderby = 'date';
+}
 
 // 全体のクエリ
 $args    = [
-	'date'    => [],
-	'popular' => [
+	'relevance' => [],
+	'date'      => $relevance ? [ 'orderby' => 'date' ] : [],
+	'popular'   => [
 		'orderby' => 'popular',
 		'order'   => 'desc',
 	],
 ];
 $current = [
-	'date'    => [ 'nav-link' ],
-	'popular' => [ 'nav-link' ],
+	'relevance' => [ 'nav-link' ],
+	'date'      => [ 'nav-link' ],
+	'popular'   => [ 'nav-link' ],
 ];
 switch ( $orderby ) {
+	case 'relevance':
+		// 昇順・降順は無い
+		$current['relevance'][] = 'active';
+		break;
 	case 'popular':
 		$current['popular'][] = 'active';
 		if ( 'desc' === $order ) {
@@ -46,18 +59,15 @@ switch ( $orderby ) {
 		break;
 }
 
-// 検索は orderby が空だと関連度順になる（WP_Query）ので、新着順は投稿日を明示する
-if ( is_search() ) {
-	$args['date']['orderby'] = 'date';
-}
-
 // 引き継ぐ絞り込み。並び順とページ番号は引き継がない
 $keep = wp_unslash( $_GET );
 unset( $keep['order'], $keep['orderby'], $keep['paged'] );
 
-$tabs = [
-	'date' => '新着順',
-];
+$tabs = [];
+if ( $relevance ) {
+	$tabs['relevance'] = '関連度順';
+}
+$tabs['date'] = '新着順';
 // 検索は hooks/search.php が post_type=post を入れるので、post も作品の検索として扱う
 if ( is_tag() || is_category() || is_home() || ( is_search() && in_array( get_query_var( 'post_type' ), [ '', 'post' ], true ) ) ) {
 	$tabs['popular'] = '人気';
@@ -71,8 +81,10 @@ if ( is_tag() || is_category() || is_home() || ( is_search() && in_array( get_qu
 				<?php hametuha_hidden_inputs( array_merge( $keep, $args[ $key ] ) ); ?>
 				<button type="submit" class="<?php echo esc_attr( implode( ' ', $current[ $key ] ) ); ?>">
 					<?php echo esc_html( $label ); ?>
-					<i class="icon-arrow-down"></i>
-					<i class="icon-arrow-up"></i>
+					<?php if ( 'relevance' !== $key ) : ?>
+						<i class="icon-arrow-down"></i>
+						<i class="icon-arrow-up"></i>
+					<?php endif; ?>
 				</button>
 			</form>
 		</li>
