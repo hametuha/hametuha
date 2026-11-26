@@ -437,3 +437,16 @@ function hametuha_hidden_inputs( array $params, $prefix = '' ) {
 		);
 	}
 }
+
+/**
+ * 作品一覧（/latest/）の URL
+ *
+ * 「設定 → 表示設定」で投稿ページに指定した固定ページの URL。
+ * get_post_type_archive_link( 'post' ) は、投稿ページが未設定ならトップページを返す
+ * （get_permalink( get_option( 'page_for_posts' ) ) だと、未設定のとき表示中の投稿の URL になる）。
+ *
+ * @return string
+ */
+function hametuha_posts_page_url() {
+	return (string) get_post_type_archive_link( 'post' );
+}

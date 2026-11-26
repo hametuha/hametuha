@@ -297,7 +297,7 @@ else :
 						?>
 					</ul>
 					<p>
-						<a href="<?php echo home_url( '/latest/' ); ?>"
+						<a href="<?php echo esc_url( hametuha_posts_page_url() ); ?>"
 							class="btn btn-outline-secondary w-100">すべての新着投稿</a>
 					</p>
 				</div>
