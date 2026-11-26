@@ -89,9 +89,9 @@ add_action( 'pre_get_posts', function ( WP_Query $query ) {
 	if ( $range['to'] ) {
 		$clause['before'] = [ 'year' => $range['to'] ];
 	}
-	$date_query   = $query->get( 'date_query' ) ?: [];
-	$date_query[] = $clause;
-	$query->set( 'date_query', $date_query );
+	// 既存の日付条件があれば、ひとかたまりのまま AND でつなぐ（OR の条件や単一条件の形を壊さない）
+	$current = $query->get( 'date_query' );
+	$query->set( 'date_query', $current ? [ 'relation' => 'AND', $current, $clause ] : [ $clause ] );
 } );
 
 /**

@@ -275,7 +275,9 @@ function hametuha_queried_year_range( $query = null ) {
 	$years = hametuha_post_years();
 	$range = [];
 	foreach ( [ 'from', 'to' ] as $key ) {
-		$year          = (int) $query->get( 'year_' . $key );
+		// 「2019-12-31」などを (int) で 2019 にしないよう、4桁の数字だけを受け付ける
+		$year          = (string) $query->get( 'year_' . $key );
+		$year          = preg_match( '/\A\d{4}\z/', $year ) ? (int) $year : 0;
 		$range[ $key ] = in_array( $year, $years, true ) ? $year : 0;
 	}
 	if ( $range['from'] && $range['to'] && $range['from'] > $range['to'] ) {

@@ -64,5 +64,22 @@ class Test_YearFilter extends WP_UnitTestCase {
 
 	public function test_invalid_year_is_ignored() {
 		$this->assertSame( [ 2018, 2019, 2020, 2022 ], $this->years( [ 'year_from' => 'abc', 'year_to' => 1999 ] ), '選べない年は無視する' );
+		$this->assertSame( [ 2018, 2019, 2020, 2022 ], $this->years( [ 'year_to' => '2019-12-31' ] ), '4桁の数字以外は無視する' );
+	}
+
+	public function test_and_with_existing_date_query() {
+		$this->assertSame( [ 2019 ], $this->years( [
+			'year_to'    => 2019,
+			'date_query' => [ 'after' => '2019-01-01', 'inclusive' => true ],
+		] ), '単一条件の形の既存条件も残る' );
+		$this->assertSame( [ 2018, 2019 ], $this->years( [
+			'year_to'    => 2019,
+			'date_query' => [
+				'relation' => 'OR',
+				[ 'year' => 2018 ],
+				[ 'year' => 2022 ],
+				[ 'year' => 2019 ],
+			],
+		] ), 'OR の既存条件とは AND でつなぐ' );
 	}
 }
